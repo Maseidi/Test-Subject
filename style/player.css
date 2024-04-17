@@ -1,0 +1,102 @@
+@keyframes walk {
+  0% {
+    height: 8px;
+  }
+  100% {
+    height: 14px;
+  }
+}
+
+.player {
+  position: absolute;
+  z-index: 10;
+}
+
+.player > .player-collider {
+  width: 34px;
+  height: 34px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.player > .player-collider > .player-body {
+  width: 22px;
+  height: 12px;
+  background-color: green;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid black;
+  border-radius: 1px;
+  position: relative;
+  transition: 300ms;
+}
+
+.player > .player-collider > .player-body > .player-head {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: black;
+}
+
+.player > .player-collider > .player-body::after,
+.player > .player-collider > .player-body::before {
+  content: "";
+  position: absolute;
+  width: 4px;
+  height: 12px;
+  top: 1px;
+  background-color: wheat;
+  border: 1px solid black;
+  border-radius: 1px;
+}
+
+.player > .player-collider > .player-body::after {
+  left: 100%;
+}
+
+.player > .player-collider > .player-body::before {
+  right: 100%;
+}
+
+.walk > .player-collider > .player-body::after,
+.walk > .player-collider > .player-body::before,
+.run > .player-collider > .player-body::after,
+.run > .player-collider > .player-body::before {
+  animation-name: walk;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  animation-fill-mode: both;
+}
+
+.player > .player-collider > .player-body::after {
+  animation-direction: alternate;
+}
+
+.player > .player-collider > .player-body::before {
+  animation-direction: alternate-reverse;
+}
+
+.walk > .player-collider > .player-body::after {
+  animation-duration: 600ms;
+}
+
+.walk > .player-collider > .player-body::before {
+  animation-duration: 600ms;
+}
+
+.run > .player-collider > .player-body::after {
+  animation-duration: 400ms;
+}
+
+.run > .player-collider > .player-body::before {
+  animation-duration: 400ms;
+}
+
+.player-collider > .forward-detector {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+}
