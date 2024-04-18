@@ -1,6 +1,5 @@
-import { getCurrentRoom, getMapEl, getPlayer } from "./elements.js"
-import { managePlayerAngle } from "./player-angle.js"
-import { addClass, collide, removeClass } from "./util.js"
+import { getMapEl, getPlayer } from "./elements.js"
+import { addClass, removeClass } from "./util.js"
 import { 
     getAllowMove,
     getDownPressed,
@@ -13,17 +12,14 @@ import {
     getRightPressed,
     getSprint,
     getUpPressed,
-    setAllowMove,
     setMapX,
     setMapY, 
     setPlayerX, 
     setPlayerY} from "./variables.js"
 
-export const playerMovementAndDirection = () => {
+export const managePlayerMovement = () => {
     if ( getUpPressed() || getDownPressed() || getLeftPressed() || getRightPressed() ) {
         animatePlayer(true)
-        managePlayerAngle()
-        playerFrontCollision()
         move()
         return
     }
@@ -43,18 +39,6 @@ const animatePlayer = (input) => {
     }
     removeClass(getPlayer(), 'walk')
     removeClass(getPlayer(), 'run')
-}
-
-const playerFrontCollision = () => {
-    setAllowMove(true)
-    Array.from(getCurrentRoom().children).filter((elem) => {
-        return elem.classList.contains('solid')
-    }).forEach((solid) => {
-        if ( collide(getPlayer().firstElementChild.children[1], solid, 12) ) {
-            setAllowMove(false)
-            return
-        }       
-    })  
 }
 
 const move = () => {

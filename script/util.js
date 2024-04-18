@@ -29,9 +29,13 @@ export const angleOfTwoPoints = (x1, y1, x2, y2) => {
 }
 
 export const addClass = (elem, className) => {
-    if ( !elem.classList.contains(className) ) elem.classList.add(className)
+    if ( !containsClass(elem, className) ) elem.classList.add(className)
 }
 
 export const removeClass = (elem, className) => {
-    if ( elem.classList.contains(className) ) elem.classList.remove(className)
+    if ( containsClass(elem, className) ) elem.classList.remove(className)
+}
+
+export const containsClass = (elem, className) => {
+    return elem.classList.contains(className)
 }
