@@ -79,18 +79,12 @@
   animation-direction: alternate-reverse;
 }
 
-.walk > .player-collider > .player-body::after {
-  animation-duration: 600ms;
-}
-
+.walk > .player-collider > .player-body::after,
 .walk > .player-collider > .player-body::before {
   animation-duration: 600ms;
 }
 
-.run > .player-collider > .player-body::after {
-  animation-duration: 400ms;
-}
-
+.run > .player-collider > .player-body::after,
 .run > .player-collider > .player-body::before {
   animation-duration: 400ms;
 }

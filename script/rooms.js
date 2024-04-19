@@ -493,14 +493,243 @@ export const rooms = new Map([
             new Hor_BL_Wall(400, 0),
             new Hor_BR_Wall(400, 0),
             new AbstractWall(300, 700, 0, undefined, 0, undefined),
-            new AbstractWall(300, 700, undefined, 0, 0, undefined)
+            new AbstractWall(300, 700, undefined, 0, 0, undefined),
+            new AbstractWall(700, 100, 150, undefined, undefined, 700)
         ],[
             new BottomLoader_FromLeft("room-38", 200, 400),
-            new LeftLoader_FromBottom("room-42", 300, 300),
-            new LeftLoader_FromBottom("room-43", 300, 900),
-            new RightLoader_FromBottom("room-44", 300, 300),
-            new RightLoader_FromBottom("room-45", 300, 900),
-            new TopLoader_FromLeft("room-46", 200, 400)
+            new LeftLoader_FromBottom("room-41", 300, 300),
+            new LeftLoader_FromBottom("room-42", 300, 900),
+            new RightLoader_FromBottom("room-43", 300, 300),
+            new RightLoader_FromBottom("room-44", 300, 900),
+            new TopLoader_FromLeft("room-45", 200, 400)
+        ])
+    ],
+    ["room-41", 
+        new Room(1000, 700, [
+            new Ver_TR_Wall(200, 0),
+            new Ver_BR_Wall(200, 0),
+            new Hor_TR_Wall(175, 0),
+            new Hor_TR_Wall(175, 275),
+            new Hor_TL_Wall(175, 0),
+            new Hor_TL_Wall(175, 275),
+            new Hor_BL_Wall(1000, 0),
+            new Ver_TL_Wall(700, 0),
+            new AbstractWall(500, 100, undefined, 0, undefined, 0),
+            new AbstractWall(100, 500, 0, undefined, 0, undefined),
+            new AbstractWall(100, 100, 300, undefined, 300, undefined),
+            new AbstractWall(100, 100, undefined, 300, 300, undefined),
+        ],[
+            new RightLoader_FromBottom("room-40", 300, 200),
+            new TopLoader_FromLeft("room-46", 100, 175),
+            new TopLoader_FromLeft("room-47", 100, 450),
+            new TopLoader_FromRight("room-48", 100, 175),
+        ])
+    ],
+    ["room-46", 
+        new Room(150, 1000, [
+            new Ver_TL_Wall(1000, 0),
+            new Ver_TR_Wall(1000, 0),
+            new Hor_TL_Wall(25, 0),
+            new Hor_TR_Wall(25, 0),
+            new Hor_BL_Wall(25, 0),
+            new Hor_BR_Wall(25, 0),
+        ],[
+            new BottomLoader_FromLeft("room-41", 100, 25),
+            new TopLoader_FromLeft("room-49", 100, 25)
+        ])
+    ],
+    ["room-47", 
+        new Room(150, 1500, [
+            new Ver_TL_Wall(1500, 0),
+            new Ver_TR_Wall(1500, 0),
+            new Hor_TL_Wall(25, 0),
+            new Hor_TR_Wall(25, 0),
+            new Hor_BL_Wall(25, 0),
+            new Hor_BR_Wall(25, 0),
+        ],[
+            new BottomLoader_FromLeft("room-41", 100, 25),
+            new TopLoader_FromLeft("room-50", 100, 25)
+        ])
+    ],
+    ["room-48", 
+        new Room(150, 2000, [
+            new Ver_TL_Wall(2000, 0),
+            new Ver_TR_Wall(2000, 0),
+            new Hor_TL_Wall(25, 0),
+            new Hor_TR_Wall(25, 0),
+            new Hor_BL_Wall(25, 0),
+            new Hor_BR_Wall(25, 0),
+        ],[
+            new BottomLoader_FromLeft("room-41", 100, 25),
+            new TopLoader_FromLeft("room-51", 100, 25)
+        ])
+    ],
+    ["room-49", 
+        new Room(1000, 1000, [
+            new Hor_TL_Wall(1000, 0),
+            new Ver_TL_Wall(1000, 0),
+            new Ver_TR_Wall(1000, 0),
+            new Hor_BL_Wall(900, 0),
+            new AbstractWall(100, 100, 200, undefined, 200, undefined),
+            new AbstractWall(100, 100, 200, undefined, undefined, 200),
+            new AbstractWall(100, 100, undefined, 200, 200, undefined),
+            new AbstractWall(100, 100, undefined, 200, undefined, 200)
+        ],[
+            new BottomLoader_FromRight("room-46", 100, 0)
+        ])
+    ],
+    ["room-50", 
+        new Room(1000, 1000, [
+            new Hor_TL_Wall(1000, 0),
+            new Ver_TL_Wall(1000, 0),
+            new Ver_TR_Wall(1000, 0),
+            new Hor_BL_Wall(450, 0),
+            new Hor_BR_Wall(450, 0),
+            new AbstractWall(100, 100, 200, undefined, 200, undefined),
+            new AbstractWall(100, 100, 200, undefined, undefined, 200),
+            new AbstractWall(100, 100, undefined, 200, 200, undefined),
+            new AbstractWall(100, 100, undefined, 200, undefined, 200)
+        ],[
+            new BottomLoader_FromRight("room-47", 100, 450)
+        ])
+    ],
+    ["room-51", 
+        new Room(1000, 1000, [
+            new Hor_TL_Wall(1000, 0),
+            new Ver_TL_Wall(1000, 0),
+            new Ver_TR_Wall(1000, 0),
+            new Hor_BR_Wall(900, 0),
+            new AbstractWall(100, 100, 200, undefined, 200, undefined),
+            new AbstractWall(100, 100, 200, undefined, undefined, 200),
+            new AbstractWall(100, 100, undefined, 200, 200, undefined),
+            new AbstractWall(100, 100, undefined, 200, undefined, 200)
+        ],[
+            new BottomLoader_FromLeft("room-48", 100, 0)
+        ])
+    ],
+    ["room-42", 
+        new Room(1000, 700, [
+            new Hor_TL_Wall(1000, 0),
+            new Hor_BL_Wall(1000, 0),
+            new Ver_TL_Wall(700, 0),
+            new Ver_TR_Wall(200, 0),
+            new Ver_BR_Wall(200, 0),
+        ],[
+            new RightLoader_FromTop("room-40", 300, 200)
+        ])
+    ],
+    ["room-43", 
+        new Room(1000, 700, [
+            new Hor_TL_Wall(1000, 0),
+            new Hor_BL_Wall(1000, 0),
+            new Ver_TR_Wall(700, 0),
+            new Ver_TL_Wall(200, 0),
+            new Ver_BL_Wall(200, 0),
+        ],[
+            new LeftLoader_FromTop("room-40", 300, 200)
+        ])
+    ],
+    ["room-44", 
+        new Room(1000, 700, [
+            new Ver_TL_Wall(200, 0),
+            new Ver_BL_Wall(200, 0),
+            new Hor_BR_Wall(175, 0),
+            new Hor_BR_Wall(175, 275),
+            new Hor_BL_Wall(175, 0),
+            new Hor_BL_Wall(175, 275),
+            new Hor_TL_Wall(1000, 0),
+            new Ver_TR_Wall(700, 0),
+            new AbstractWall(500, 100, 0, undefined, 0, undefined),
+            new AbstractWall(100, 500, undefined, 0, undefined, 0),
+            new AbstractWall(100, 100, 300, undefined, 300, undefined),
+            new AbstractWall(100, 100, undefined, 300, 300, undefined),
+        ],[
+            new LeftLoader_FromBottom("room-40", 300, 200),
+            new BottomLoader_FromLeft("room-52", 100, 175),
+            new BottomLoader_FromLeft("room-53", 100, 450),
+            new BottomLoader_FromRight("room-54", 100, 175),
+        ])
+    ],
+    ["room-52", 
+        new Room(150, 1000, [
+            new Ver_TL_Wall(1000, 0),
+            new Ver_TR_Wall(1000, 0),
+            new Hor_TL_Wall(25, 0),
+            new Hor_TR_Wall(25, 0),
+            new Hor_BL_Wall(25, 0),
+            new Hor_BR_Wall(25, 0),
+        ],[
+            new TopLoader_FromLeft("room-44", 100, 25),
+            new BottomLoader_FromLeft("room-55", 100, 25)
+        ])
+    ],
+    ["room-53", 
+        new Room(150, 1500, [
+            new Ver_TL_Wall(1500, 0),
+            new Ver_TR_Wall(1500, 0),
+            new Hor_TL_Wall(25, 0),
+            new Hor_TR_Wall(25, 0),
+            new Hor_BL_Wall(25, 0),
+            new Hor_BR_Wall(25, 0),
+        ],[
+            new TopLoader_FromLeft("room-44", 100, 25),
+            new BottomLoader_FromLeft("room-56", 100, 25)
+        ])
+    ],
+    ["room-54", 
+        new Room(150, 2000, [
+            new Ver_TL_Wall(2000, 0),
+            new Ver_TR_Wall(2000, 0),
+            new Hor_TL_Wall(25, 0),
+            new Hor_TR_Wall(25, 0),
+            new Hor_BL_Wall(25, 0),
+            new Hor_BR_Wall(25, 0),
+        ],[
+            new TopLoader_FromLeft("room-44", 100, 25),
+            new BottomLoader_FromLeft("room-57", 100, 25)
+        ])
+    ],
+    ["room-55", 
+        new Room(1000, 1000, [
+            new Hor_TL_Wall(900, 100),
+            new Ver_TL_Wall(1000, 0),
+            new Ver_TR_Wall(1000, 0),
+            new Hor_BR_Wall(1000, 0),
+            new AbstractWall(100, 100, 200, undefined, 200, undefined),
+            new AbstractWall(100, 100, 200, undefined, undefined, 200),
+            new AbstractWall(100, 100, undefined, 200, 200, undefined),
+            new AbstractWall(100, 100, undefined, 200, undefined, 200)
+        ],[
+            new TopLoader_FromLeft("room-52", 100, 0)
+        ])
+    ],
+    ["room-56", 
+        new Room(1000, 1000, [
+            new Hor_TL_Wall(450, 0),
+            new Hor_TR_Wall(450, 0),
+            new Ver_TL_Wall(1000, 0),
+            new Ver_TR_Wall(1000, 0),
+            new Hor_BR_Wall(1000, 0),
+            new AbstractWall(100, 100, 200, undefined, 200, undefined),
+            new AbstractWall(100, 100, 200, undefined, undefined, 200),
+            new AbstractWall(100, 100, undefined, 200, 200, undefined),
+            new AbstractWall(100, 100, undefined, 200, undefined, 200)
+        ],[
+            new TopLoader_FromLeft("room-53", 100, 450)
+        ])
+    ],
+    ["room-57", 
+        new Room(1000, 1000, [
+            new Hor_TR_Wall(900, 100),
+            new Ver_TL_Wall(1000, 0),
+            new Ver_TR_Wall(1000, 0),
+            new Hor_BR_Wall(1000, 0),
+            new AbstractWall(100, 100, 200, undefined, 200, undefined),
+            new AbstractWall(100, 100, 200, undefined, undefined, 200),
+            new AbstractWall(100, 100, undefined, 200, 200, undefined),
+            new AbstractWall(100, 100, undefined, 200, undefined, 200)
+        ],[
+            new TopLoader_FromRight("room-54", 100, 0)
         ])
     ],
 ])
