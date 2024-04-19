@@ -13,6 +13,18 @@ import {
     setPlayerAngle,
     setPlayerAngleState } from "./variables.js"
 
+const ANGLE_STATE_MAP = new Map([
+    [0, 0],
+    [45, 1],
+    [90, 2],
+    [135, 3],
+    [180, 4],
+    [-180, 4],
+    [-135, 5],
+    [-90, 6],
+    [-45, 7]
+])    
+
 export const cursorAngle = (e) => {
     setAimingPlayerAngle(
         angleOfTwoPoints(
@@ -32,28 +44,18 @@ export const managePlayerAngle = () => {
 const manageAimModeAngle = () => {
     if ( getAimMode() ) {
         getPlayer().firstElementChild.firstElementChild.style.transform = `rotateZ(${getAimingPlayerAngle()}deg)`
-        handleBreakpoint()
+        handleBreakpoints()
     }
 }
 
-const handleBreakpoint = () => {
-    const angleMap = new Map([
-        [0, 0],
-        [45, 1],
-        [90, 2],
-        [135, 3],
-        [180, 4],
-        [-135, 5],
-        [-90, 6],
-        [-45, 7]
-    ])
+const handleBreakpoints = () => {
     const sign = getAimingPlayerAngle() < 0 ? -1 : 1
     const q = getAimingPlayerAngle() / (sign * 45)
-    console.log(sign * Math.floor(q) * 45)
     if ( (q - Math.floor(q)) < 0.5 )
         setPlayerAngle(sign * Math.floor(q) * 45)
     else
         setPlayerAngle(sign * (Math.floor(q) + 1) * 45)
+    setPlayerAngleState(ANGLE_STATE_MAP.get(getPlayerAngle()))
 }
 
 const manageNonAimModeAngle = () => {
@@ -84,17 +86,17 @@ const manageNonAimModeAngle = () => {
             newState = getAimMode() ? getPlayerAngleState() : 6
             replaceForwardDetector('100%', 'calc(50% - 2px)')
         }
-
-        if ( newState === getPlayerAngleState() ) return
       
-        let diff = newState - getPlayerAngleState()
+        if ( !getAimMode() ) {
+            let diff = newState - getPlayerAngleState()
         
-        if (Math.abs(diff) > 4 && diff >= 0) diff = -(8 - diff)
-        else if (Math.abs(diff) > 4 && diff < 0) diff = 8 - Math.abs(diff)
+            if (Math.abs(diff) > 4 && diff >= 0) diff = -(8 - diff)
+            else if (Math.abs(diff) > 4 && diff < 0) diff = 8 - Math.abs(diff)
         
-        setPlayerAngle(getPlayerAngle() + diff * 45)
-        getPlayer().firstElementChild.firstElementChild.style.transform = `rotateZ(${getPlayerAngle()}deg)`
-        setPlayerAngleState(newState)
+            setPlayerAngle(getPlayerAngle() + diff * 45)
+            getPlayer().firstElementChild.firstElementChild.style.transform = `rotateZ(${getPlayerAngle()}deg)`
+            setPlayerAngleState(newState)
+        }
     }
 }
 

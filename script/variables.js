@@ -176,3 +176,19 @@ export const setAimMode = (val) => {
 export const getAimMode = () => {
     return aimMode
 }
+
+let weaponWheel = ["1", "2", "3", "4"]
+export const setWeaponWheel = (val) => {
+    weaponWheel = val
+}
+export const getWeaponWheel = () => {
+    return weaponWheel
+}
+
+let equippedWeapon = null
+export const setEquippedWeapon = (val) => {
+    equippedWeapon = val
+}
+export const getEquippedWeapon = () => {
+    return equippedWeapon
+}

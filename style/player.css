@@ -108,7 +108,7 @@
 }
 
 .aim > .player-collider > .player-body::after, .aim > .player-collider > .player-body::before {
-  top: 3px;
+  top: 2px;
   height: 20px;
   border-radius: 2px;
 }

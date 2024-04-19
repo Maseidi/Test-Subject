@@ -1,8 +1,11 @@
 import { cursorAngle } from "./player-angle.js"
 import { 
     getAimMode,
+    getEquippedWeapon,
+    getWeaponWheel,
     setAimMode,
     setDownPressed,
+    setEquippedWeapon,
     setLeftPressed,
     setRightPressed,
     setSprintPressed,
@@ -10,40 +13,50 @@ import {
 
 export const control = () => {
     window.addEventListener("keydown", (e) => {
-        if ( e.key === "w" || e.key === "W" ) {
+        const KEY = e.key
+        if ( KEY === "w" || KEY === "W" ) {
             setUpPressed(true)
         }
-        if ( e.key === "a" || e.key === "A" ) {
+        if ( KEY === "a" || KEY === "A" ) {
             setLeftPressed(true)
         }
-        if ( e.key === "s" || e.key === "S" ) {
+        if ( KEY === "s" || KEY === "S" ) {
             setDownPressed(true)
         }
-        if ( e.key === "d" || e.key === "D" ) {
+        if ( KEY === "d" || KEY === "D" ) {
             setRightPressed(true)
         }
-        if ( e.key === "Shift" ) {
+        if ( KEY === "Shift" ) {
             setAimMode(false)
             setSprintPressed(true)
         }
-        if ( e.key === "e" || e.key === "E") {
-            setAimMode(!getAimMode())
+        if ( KEY === "e" || KEY === "E") {
+            if ( getEquippedWeapon() !== null  ) setAimMode(!getAimMode())
+        }
+        if ( KEY === "1" || KEY === "2" || KEY === "3" || KEY === "4") {
+            if ( getWeaponWheel()[Number(KEY) - 1] === getEquippedWeapon() ) {
+                setEquippedWeapon(null)
+                setAimMode(false)
+                return
+            }
+            setEquippedWeapon(getWeaponWheel()[Number(KEY) - 1])
         }
     })
     window.addEventListener("keyup", (e) => {
-        if ( e.key === "w" || e.key === "W" ) {
+        const KEY = e.key
+        if ( KEY === "w" || KEY === "W" ) {
             setUpPressed(false)
         }
-        if ( e.key === "a" || e.key === "A" ) {
+        if ( KEY === "a" || KEY === "A" ) {
             setLeftPressed(false)
         }
-        if ( e.key === "s" || e.key === "S" ) {
+        if ( KEY === "s" || KEY === "S" ) {
             setDownPressed(false)
         }
-        if ( e.key === "d" || e.key === "D" ) {
+        if ( KEY === "d" || KEY === "D" ) {
             setRightPressed(false)
         }
-        if ( e.key === "Shift" ) {
+        if ( KEY === "Shift" ) {
             setSprintPressed(false)
         }
     })
