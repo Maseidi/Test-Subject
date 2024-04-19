@@ -1,6 +1,7 @@
 import { getMapEl, getPlayer } from "./elements.js"
 import { addClass, removeClass } from "./util.js"
 import { 
+    getAimMode,
     getAllowMove,
     getDownPressed,
     getLeftPressed,
@@ -27,7 +28,7 @@ export const managePlayerMovement = () => {
 }
 
 const animatePlayer = (input) => {
-    if ( input ) {
+    if ( input && !getAimMode() ) {
         if ( getSprint() ) {  
             addClass(getPlayer(), 'run')
             removeClass(getPlayer(), 'walk')
@@ -70,7 +71,9 @@ const move = () => {
 }
 
 const normalizeSpeed = () => {
-    let speed = getSprint() ? 2 * getPlayerSpeed() : getPlayerSpeed()
+    let speed
+    speed = getSprint() ? 2 * getPlayerSpeed() : getPlayerSpeed()
+    speed = getAimMode() ? speed / 3 : speed
     if ((getUpPressed() && getLeftPressed()) || (getUpPressed() && getRightPressed()) || 
         (getDownPressed() && getLeftPressed()) || (getDownPressed() && getRightPressed()) ) {
             speed /= 1.41

@@ -1,4 +1,5 @@
 import { 
+    getAimMode,
     getAllowMove,
     getDownPressed,
     getLeftPressed,
@@ -12,7 +13,8 @@ import {
     setStamina } from "./variables.js"
 
 export const manageSprint = () => {
-    if ( getSprintPressed() && (getLeftPressed() || getRightPressed() || getUpPressed() || getDownPressed())) {
+    if ( getSprintPressed() && !getAimMode() 
+    && (getLeftPressed() || getRightPressed() || getUpPressed() || getDownPressed())) {
         if ( !getRefillStamina() && getAllowMove()) {
             setSprint(true)
             setStamina(getStamina() - 2)

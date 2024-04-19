@@ -110,7 +110,15 @@ export const getPlayerAngle = () => {
     return playerAngle
 }
 
-let playerSpeed = 20
+let aimingPlayerAngle
+export const setAimingPlayerAngle = (val) => {
+    aimingPlayerAngle = val
+}
+export const getAimingPlayerAngle = () => {
+    return aimingPlayerAngle
+}
+
+let playerSpeed = 5
 export const setPlayerSpeed = (val) => {
     playerSpeed = val
 }
@@ -159,4 +167,12 @@ export const setSprintPressed = (val) => {
 
 export const getSprintPressed = () => {
     return sprintPressed
+}
+
+let aimMode = false
+export const setAimMode = (val) => {
+    aimMode = val
+}
+export const getAimMode = () => {
+    return aimMode
 }

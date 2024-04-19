@@ -4,6 +4,7 @@ import { manageSprint } from "./player-sprint.js"
 import { manageEntities } from "./room-entity-manager.js"
 import { startUp } from "./startup.js"
 import { managePlayerAngle } from "./player-angle.js"
+import { manageAim } from "./player-aim.js"
 
 export const play = () => {
     startUp()
@@ -11,6 +12,7 @@ export const play = () => {
 
     window.setInterval(() => {
         manageSprint()
+        manageAim()
         managePlayerAngle()
         manageEntities()
         managePlayerMovement()

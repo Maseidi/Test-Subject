@@ -1,40 +1,87 @@
 import { getPlayer } from "./elements.js"
+import { angleOfTwoPoints } from "./util.js"
 import {
+    getAimMode,
+    getAimingPlayerAngle,
     getDownPressed,
     getLeftPressed,
     getPlayerAngle,
     getPlayerAngleState,
     getRightPressed,
     getUpPressed,
+    setAimingPlayerAngle,
     setPlayerAngle,
     setPlayerAngleState } from "./variables.js"
 
+export const cursorAngle = (e) => {
+    setAimingPlayerAngle(
+        angleOfTwoPoints(
+            getPlayer().getBoundingClientRect().x + 17, 
+            getPlayer().getBoundingClientRect().y + 17,
+            e.clientX,
+            e.clientY
+        )
+    )
+}
+
 export const managePlayerAngle = () => {
+    manageAimModeAngle()
+    manageNonAimModeAngle()
+}  
+
+const manageAimModeAngle = () => {
+    if ( getAimMode() ) {
+        getPlayer().firstElementChild.firstElementChild.style.transform = `rotateZ(${getAimingPlayerAngle()}deg)`
+        handleBreakpoint()
+    }
+}
+
+const handleBreakpoint = () => {
+    const angleMap = new Map([
+        [0, 0],
+        [45, 1],
+        [90, 2],
+        [135, 3],
+        [180, 4],
+        [-135, 5],
+        [-90, 6],
+        [-45, 7]
+    ])
+    const sign = getAimingPlayerAngle() < 0 ? -1 : 1
+    const q = getAimingPlayerAngle() / (sign * 45)
+    console.log(sign * Math.floor(q) * 45)
+    if ( (q - Math.floor(q)) < 0.5 )
+        setPlayerAngle(sign * Math.floor(q) * 45)
+    else
+        setPlayerAngle(sign * (Math.floor(q) + 1) * 45)
+}
+
+const manageNonAimModeAngle = () => {
     if ( getUpPressed() || getDownPressed() || getLeftPressed() || getRightPressed() ) {
         let newState = getPlayerAngleState()
         if (getUpPressed() && getRightPressed()) {
-            newState = 5        
+            newState = getAimMode() ? getPlayerAngleState() : 5       
             replaceForwardDetector('100%', '-4px')
         } else if (getUpPressed() && getLeftPressed()) {
-            newState = 3
+            newState = getAimMode() ? getPlayerAngleState() : 3
             replaceForwardDetector('-4px', '-4px')
         } else if (getDownPressed() && getRightPressed()) {
-            newState = 7
+            newState = getAimMode() ? getPlayerAngleState() : 7
             replaceForwardDetector('100%', 'calc(100% + 4px)')
         } else if (getDownPressed() && getLeftPressed()) {
-            newState = 1
+            newState = getAimMode() ? getPlayerAngleState() : 1
             replaceForwardDetector('-4px', 'calc(100% + 4px)')
         } else if (getDownPressed()) {
-            newState = 0
+            newState = getAimMode() ? getPlayerAngleState() : 0
             replaceForwardDetector('calc(50% - 2px)', '100%')
         } else if (getLeftPressed()) {
-            newState = 2
+            newState = getAimMode() ? getPlayerAngleState() : 2
             replaceForwardDetector('-4px', 'calc(50% - 2px)')
         } else if (getUpPressed()) {
-            newState = 4
+            newState = getAimMode() ? getPlayerAngleState() : 4
             replaceForwardDetector('calc(50% - 2px)', '-4px')
         } else if (getRightPressed()) {
-            newState = 6
+            newState = getAimMode() ? getPlayerAngleState() : 6
             replaceForwardDetector('100%', 'calc(50% - 2px)')
         }
 
@@ -49,7 +96,7 @@ export const managePlayerAngle = () => {
         getPlayer().firstElementChild.firstElementChild.style.transform = `rotateZ(${getPlayerAngle()}deg)`
         setPlayerAngleState(newState)
     }
-}        
+}
 
 const replaceForwardDetector = (left, top) => {
     const forwardDetector = getPlayer().firstElementChild.children[1]

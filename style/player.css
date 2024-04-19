@@ -94,3 +94,25 @@
   width: 4px;
   height: 4px;
 }
+
+.aim > .player-collider > .player-body::after {
+  transform: rotateZ(40deg);
+  left: unset;
+  right: 2px;
+}
+
+.aim > .player-collider > .player-body::before {
+  transform: rotateZ(-40deg);
+  right: unset;
+  left: 2px;
+}
+
+.aim > .player-collider > .player-body::after, .aim > .player-collider > .player-body::before {
+  top: 3px;
+  height: 20px;
+  border-radius: 2px;
+}
+
+.aim > .player-collider > .player-body {
+  transition: 0ms !important;
+}

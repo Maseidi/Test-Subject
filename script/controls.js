@@ -1,4 +1,12 @@
-import { setDownPressed, setLeftPressed, setRightPressed, setSprintPressed, setUpPressed } from "./variables.js"
+import { cursorAngle } from "./player-angle.js"
+import { 
+    getAimMode,
+    setAimMode,
+    setDownPressed,
+    setLeftPressed,
+    setRightPressed,
+    setSprintPressed,
+    setUpPressed } from "./variables.js"
 
 export const control = () => {
     window.addEventListener("keydown", (e) => {
@@ -15,7 +23,11 @@ export const control = () => {
             setRightPressed(true)
         }
         if ( e.key === "Shift" ) {
+            setAimMode(false)
             setSprintPressed(true)
+        }
+        if ( e.key === "e" || e.key === "E") {
+            setAimMode(!getAimMode())
         }
     })
     window.addEventListener("keyup", (e) => {
@@ -35,5 +47,8 @@ export const control = () => {
             setSprintPressed(false)
         }
     })
+    onmousemove = (e) => {
+        cursorAngle(e)
+    }
 
 }
