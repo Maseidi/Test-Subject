@@ -611,22 +611,26 @@ export const rooms = new Map([
         new Room(1000, 700, [
             new Hor_TL_Wall(1000, 0),
             new Hor_BL_Wall(1000, 0),
-            new Ver_TL_Wall(700, 0),
+            new Ver_TL_Wall(300, 0),
+            new Ver_BL_Wall(300, 0),
             new Ver_TR_Wall(200, 0),
             new Ver_BR_Wall(200, 0),
         ],[
-            new RightLoader_FromTop("room-40", 300, 200)
+            new RightLoader_FromTop("room-40", 300, 200),
+            new LeftLoader_FromTop("room-58", 100, 300)
         ])
     ],
     ["room-43", 
         new Room(1000, 700, [
             new Hor_TL_Wall(1000, 0),
             new Hor_BL_Wall(1000, 0),
-            new Ver_TR_Wall(700, 0),
+            new Ver_TR_Wall(300, 0),
+            new Ver_BR_Wall(300, 0),
             new Ver_TL_Wall(200, 0),
             new Ver_BL_Wall(200, 0),
         ],[
-            new LeftLoader_FromTop("room-40", 300, 200)
+            new LeftLoader_FromTop("room-40", 300, 200),
+            new RightLoader_FromTop("room-59", 100, 300)
         ])
     ],
     ["room-44", 
@@ -730,6 +734,65 @@ export const rooms = new Map([
             new AbstractWall(100, 100, undefined, 200, undefined, 200)
         ],[
             new TopLoader_FromRight("room-54", 100, 0)
+        ])
+    ],
+    ["room-45", 
+        new Room(1200, 1200, [
+            new Hor_BL_Wall(500, 0),
+            new Hor_BR_Wall(500, 0),
+            new Hor_TL_Wall(1200, 0),
+            new Ver_TL_Wall(1200, 0),
+            new Ver_TR_Wall(1200, 0),
+            new AbstractWall(100, 800, 200, undefined, 200, undefined),
+            new AbstractWall(100, 800, undefined, 200, 200, undefined)
+        ],[
+            new BottomLoader_FromLeft("room-40", 200, 500)
+        ])
+    ],
+    ["room-58", 
+        new Room(800, 800, [
+            new Hor_BL_Wall(800, 0),
+            new Ver_TL_Wall(800, 0),
+            new AbstractWall(700, 700, undefined, 0, 0, undefined)
+        ],[
+            new RightLoader_FromBottom("room-42", 100, 0),
+            new TopLoader_FromLeft("room-60", 100, 0)
+        ])
+    ],
+    ["room-59", 
+        new Room(800, 800, [
+            new Hor_TL_Wall(800, 0),
+            new Ver_TR_Wall(800, 0),
+            new AbstractWall(700, 700, 0, undefined, undefined, 0)
+        ],[
+            new LeftLoader_FromTop("room-43", 100, 0),
+            new BottomLoader_FromRight("room-61", 100, 0)
+        ])
+    ],
+    ["room-60", 
+        new Room(700, 1400, [
+            new Hor_BL_Wall(300, 0),
+            new Hor_BR_Wall(300, 0),
+            new Ver_TL_Wall(1400, 0),
+            new Ver_TR_Wall(1400, 0),
+            new Hor_TL_Wall(700, 0),
+            new AbstractWall(220, 570, 0, undefined, undefined, 0),
+            new AbstractWall(220, 570, undefined, 0, undefined, 0)
+        ],[
+            new BottomLoader_FromLeft("room-58", 100, 300)
+        ])
+    ],
+    ["room-61", 
+        new Room(700, 1400, [
+            new Hor_TL_Wall(300, 0),
+            new Hor_TR_Wall(300, 0),
+            new Ver_TL_Wall(1400, 0),
+            new Ver_TR_Wall(1400, 0),
+            new Hor_BL_Wall(700, 0),
+            new AbstractWall(220, 570, 0, undefined, 0, undefined),
+            new AbstractWall(220, 570, undefined, 0, 0, undefined)
+        ],[
+            new TopLoader_FromLeft("room-59", 100, 300)
         ])
     ],
 ])

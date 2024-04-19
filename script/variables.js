@@ -38,7 +38,7 @@ export const getPrevRoomId = () => {
     return prevRoomId
 }
 
-let currentRoomId = "room-57"
+let currentRoomId = "room-16"
 export const setCurrentRoomId = (val) => {
     currentRoomId = val
 }
@@ -110,7 +110,7 @@ export const getPlayerAngle = () => {
     return playerAngle
 }
 
-let playerSpeed = 5
+let playerSpeed = 20
 export const setPlayerSpeed = (val) => {
     playerSpeed = val
 }
