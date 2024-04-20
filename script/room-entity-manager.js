@@ -1,7 +1,7 @@
-import { getCurrentRoom, getPlayer } from "./elements.js"
+import { getCurrentRoom, getCurrentRoomLoaders, getCurrentRoomSolid, getPlayer } from "./elements.js"
 import { loadCurrentRoom } from "./room-loader.js"
 import { rooms } from "./rooms.js"
-import { collide, containsClass } from "./util.js"
+import { collide } from "./util.js"
 import { getCurrentRoomId,
     getPrevRoomId,
     getRoomLeft,
@@ -13,26 +13,32 @@ import { getCurrentRoomId,
     setRoomTop } from "./variables.js"
 
 export const manageEntities = () => {
+    hitSolid()
+    enterNewRoom()
+}
+
+const hitSolid = () => {
     setAllowMove(true)
-    Array.from(getCurrentRoom().children).forEach((elem) => {
-        hitSolid(elem)
-        enterNewRoom(elem)
+    Array.from(getCurrentRoomSolid()).forEach((solid) => {
+        if ( collide(getPlayer().firstElementChild.children[1], solid, 12) ) {
+            setAllowMove(false)
+            return
+        }
     })
 }
 
-const hitSolid = (elem) => {
-    if ( containsClass(elem, 'solid') && collide(getPlayer().firstElementChild.children[1], elem, 12)) setAllowMove(false)
-}
-
-const enterNewRoom = (elem) => {
-    if ( containsClass(elem, 'loader') && collide(getPlayer().firstElementChild, elem, 0) ) {
-        const cpu = window.getComputedStyle(elem)
-        setPrevRoomId(getCurrentRoomId())
-        setCurrentRoomId(elem.classList[0])
-        calculateNewRoomLeftAndTop(cpu.left, cpu.top)
-        getCurrentRoom().remove()
-        loadCurrentRoom()
-    }
+const enterNewRoom = () => {
+    Array.from(getCurrentRoomLoaders()).forEach((loader) => {
+        if ( collide(getPlayer().firstElementChild, loader, 0) ) {
+            const cpu = window.getComputedStyle(loader)
+            setPrevRoomId(getCurrentRoomId())
+            setCurrentRoomId(loader.classList[0])
+            calculateNewRoomLeftAndTop(cpu.left, cpu.top)
+            getCurrentRoom().remove()
+            loadCurrentRoom() 
+            return   
+        }
+    })
 }
 
 const calculateNewRoomLeftAndTop = (cpuLeft, cpuTop) => {

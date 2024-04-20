@@ -22,6 +22,22 @@ export const getCurrentRoom = () => {
     return currentRoom
 }
 
+let currentRoomSolid
+export const setCurrentRoomSolid = (val) => {
+    currentRoomSolid = val
+}
+export const getCurrentRoomSolid = () => {
+    return currentRoomSolid
+}
+
+let currentRoomLoaders
+export const setCurrentRoomLoaders = (val) => {
+    currentRoomLoaders = val
+}
+export const getCurrentRoomLoaders = () => {
+    return currentRoomLoaders
+}
+
 let player
 export const setPlayer = (val) => {
     player = val

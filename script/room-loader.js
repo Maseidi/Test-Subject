@@ -1,10 +1,18 @@
-import { getRoomContainer, setCurrentRoom } from "./elements.js";
-import { rooms } from "./rooms.js";
-import { addClass } from "./util.js";
-import { getCurrentRoomId, getRoomLeft, getRoomTop } from "./variables.js";
+import { getCurrentRoomLoaders,
+     getCurrentRoomSolid,
+     getRoomContainer,
+     setCurrentRoom,
+     setCurrentRoomLoaders,
+     setCurrentRoomSolid
+     } from "./elements.js"
+import { rooms } from "./rooms.js"
+import { addClass, addToArray } from "./util.js"
+import { getCurrentRoomId, getRoomLeft, getRoomTop } from "./variables.js"
 
 export const loadCurrentRoom = () => {
     const room = rooms.get(getCurrentRoomId())
+    setCurrentRoomSolid([])
+    setCurrentRoomLoaders([])
     
     const roomToRender = document.createElement("div")
     addClass(roomToRender, `${getCurrentRoomId()}`)
@@ -29,6 +37,7 @@ export const loadCurrentRoom = () => {
         if ( elem.top !== undefined ) wall.style.top = `${elem.top}px`
         if ( elem.bottom !== undefined ) wall.style.bottom = `${elem.bottom}px`
         roomToRender.append(wall)
+        addToArray(getCurrentRoomSolid, setCurrentRoomSolid, wall)
     })
 
     Array.from(room.loaders).forEach((elem) => {
@@ -44,6 +53,7 @@ export const loadCurrentRoom = () => {
         if ( elem.top !== undefined ) loader.style.top = `${elem.top}px`
         if ( elem.bottom !== undefined ) loader.style.bottom = `${elem.bottom}px`
         roomToRender.append(loader)
+        addToArray(getCurrentRoomLoaders, setCurrentRoomLoaders, loader)
     })
 
     setCurrentRoom(roomToRender)

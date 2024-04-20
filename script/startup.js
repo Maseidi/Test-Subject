@@ -1,8 +1,8 @@
-import { getMapEl, setMapEl, setRoomContainer } from "./elements.js";
-import { loadPlayer } from "./player-loader.js";
-import { loadCurrentRoom } from "./room-loader.js";
-import { addClass } from "./util.js";
-import { getMapX, getMapY } from "./variables.js";
+import { getMapEl, setMapEl, setRoomContainer } from "./elements.js"
+import { loadPlayer } from "./player-loader.js"
+import { loadCurrentRoom } from "./room-loader.js"
+import { addClass } from "./util.js"
+import { getMapX, getMapY } from "./variables.js"
 
 export const startUp = () => {
     const root = document.getElementById("root")

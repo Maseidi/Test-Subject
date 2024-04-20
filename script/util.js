@@ -25,7 +25,7 @@ export const angleOfTwoPoints = (x1, y1, x2, y2) => {
         result = (-Math.acos((AB ** 2 + CB ** 2 - AC ** 2) / (2 * AB * CB)) * 180) / Math.PI + 90
     else if (x1 > x2 && y1 > y2) 
         result = (Math.acos((AB ** 2 + CB ** 2 - AC ** 2) / (2 * AB * CB)) * 180) / Math.PI + 90
-    return result;
+    return result
 }
 
 export const addClass = (elem, className) => {
@@ -38,4 +38,10 @@ export const removeClass = (elem, className) => {
 
 export const containsClass = (elem, className) => {
     return elem.classList.contains(className)
+}
+
+export const addToArray = (getter, setter, elem) => {
+    let copyArr = getter()
+    copyArr.push(elem)
+    setter(copyArr)
 }

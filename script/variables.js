@@ -86,12 +86,12 @@ export const getRightPressed = () => {
     return rightPressed
 }
 
-let LeftPressed = false
+let leftPressed = false
 export const setLeftPressed = (val) => {
-    LeftPressed = val
+    leftPressed = val
 }
 export const getLeftPressed = () => {
-    return LeftPressed
+    return leftPressed
 }
 
 let playerAngleState = 0
