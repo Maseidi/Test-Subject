@@ -73,15 +73,7 @@ export const control = () => {
             }
     }
 
-    onmousemove = (e) => {
-        setAimingPlayerAngle(angleOfTwoPoints(
-            getPlayer().getBoundingClientRect().x + 17, 
-            getPlayer().getBoundingClientRect().y + 17,
-            e.clientX,
-            e.clientY
-        ))
-        setAimingPlayerAngle(getAimingPlayerAngle() || 1)
-    }
+    onmousemove = (e) => aimAngle(e)
 }
 
 const wDown = () => {
@@ -162,4 +154,14 @@ const stopWalkingAnimation = () => {
         removeClass(getPlayer(), 'walk')
         removeClass(getPlayer(), 'run')
     }
+}
+
+const aimAngle = (e) => {
+    setAimingPlayerAngle(angleOfTwoPoints(
+        getPlayer().getBoundingClientRect().x + 17, 
+        getPlayer().getBoundingClientRect().y + 17,
+        e.clientX,
+        e.clientY
+    ))
+    setAimingPlayerAngle(getAimingPlayerAngle() || 1)
 }
