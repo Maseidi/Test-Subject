@@ -1,20 +1,16 @@
+import { isMoving } from "./util.js"
 import { 
     getAimMode,
     getAllowMove,
-    getDownPressed,
-    getLeftPressed,
     getRefillStamina,
-    getRightPressed,
     getSprintPressed,
     getStamina,
-    getUpPressed,
     setRefillStamina,
     setSprint,
     setStamina } from "./variables.js"
 
 export const manageSprint = () => {
-    if ( getSprintPressed() && !getAimMode() 
-    && (getLeftPressed() || getRightPressed() || getUpPressed() || getDownPressed())) {
+    if ( getSprintPressed() && !getAimMode() && isMoving()) {
         if ( !getRefillStamina() && getAllowMove()) {
             setSprint(true)
             setStamina(getStamina() - 2)

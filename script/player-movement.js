@@ -1,5 +1,5 @@
 import { getMapEl, getPlayer } from "./elements.js"
-import { addClass, removeClass } from "./util.js"
+import { isMoving } from "./util.js"
 import { 
     getAimMode,
     getAllowMove,
@@ -19,55 +19,31 @@ import {
     setPlayerY} from "./variables.js"
 
 export const managePlayerMovement = () => {
-    if ( getUpPressed() || getDownPressed() || getLeftPressed() || getRightPressed() ) {
-        animatePlayer(true)
-        move()
-        return
-    }
-    animatePlayer(false)
-}
-
-const animatePlayer = (input) => {
-    if ( input && !getAimMode() ) {
-        if ( getSprint() ) {  
-            addClass(getPlayer(), 'run')
-            removeClass(getPlayer(), 'walk')
-            return
-        }
-        addClass(getPlayer(), 'walk')
-        removeClass(getPlayer(), 'run')
-        return
-    }
-    removeClass(getPlayer(), 'walk')
-    removeClass(getPlayer(), 'run')
+    if ( isMoving() && getAllowMove() ) move()
 }
 
 const move = () => {
-    if ( getAllowMove() ) {
-        let speed = normalizeSpeed()
-        if ( getUpPressed() ) {
-            setMapY(getMapY() + speed)
-            setPlayerY(getPlayerY() - speed)
-        }
-        if ( getDownPressed() ) {
-            setMapY(getMapY() - speed)
-            setPlayerY(getPlayerY() + speed)
-        }
-        if ( getLeftPressed() ) {
-            setMapX(getMapX() + speed)
-            setPlayerX(getPlayerX() - speed)
-        }
-        if ( getRightPressed() ) {
-            setMapX(getMapX() - speed)
-            setPlayerX(getPlayerX() + speed)
-        }
-        getMapEl().style.left = `${getMapX()}px`
-        getMapEl().style.top = `${getMapY()}px`
-        getPlayer().style.left = `${getPlayerX()}px`
-        getPlayer().style.top = `${getPlayerY()}px`
-        return
+    let speed = normalizeSpeed()
+    if ( getUpPressed() ) {
+        setMapY(getMapY() + speed)
+        setPlayerY(getPlayerY() - speed)
     }
-    animatePlayer(false)
+    if ( getDownPressed() ) {
+        setMapY(getMapY() - speed)
+        setPlayerY(getPlayerY() + speed)
+    }
+    if ( getLeftPressed() ) {
+        setMapX(getMapX() + speed)
+        setPlayerX(getPlayerX() - speed)
+    }
+    if ( getRightPressed() ) {
+        setMapX(getMapX() - speed)
+        setPlayerX(getPlayerX() + speed)
+    }
+    getMapEl().style.left = `${getMapX()}px`
+    getMapEl().style.top = `${getMapY()}px`
+    getPlayer().style.left = `${getPlayerX()}px`
+    getPlayer().style.top = `${getPlayerY()}px`        
 }
 
 const normalizeSpeed = () => {

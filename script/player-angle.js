@@ -1,5 +1,5 @@
 import { getPlayer } from "./elements.js"
-import { angleOfTwoPoints } from "./util.js"
+import { isMoving } from "./util.js"
 import {
     getAimMode,
     getAimingPlayerAngle,
@@ -9,7 +9,6 @@ import {
     getPlayerAngleState,
     getRightPressed,
     getUpPressed,
-    setAimingPlayerAngle,
     setPlayerAngle,
     setPlayerAngleState } from "./variables.js"
 
@@ -24,17 +23,6 @@ const ANGLE_STATE_MAP = new Map([
     [-90, 6],
     [-45, 7]
 ])    
-
-export const cursorAngle = (e) => {
-    setAimingPlayerAngle(
-        angleOfTwoPoints(
-            getPlayer().getBoundingClientRect().x + 17, 
-            getPlayer().getBoundingClientRect().y + 17,
-            e.clientX,
-            e.clientY
-        )
-    )
-}
 
 export const managePlayerAngle = () => {
     manageAimModeAngle()
@@ -59,7 +47,7 @@ const handleBreakpoints = () => {
 }
 
 const manageNonAimModeAngle = () => {
-    if ( getUpPressed() || getDownPressed() || getLeftPressed() || getRightPressed() ) {
+    if ( isMoving() ) {
         let newState = getPlayerAngleState()
         if (getUpPressed() && getRightPressed()) {
             newState = getAimMode() ? getPlayerAngleState() : 5       
