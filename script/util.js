@@ -1,3 +1,5 @@
+import { getDownPressed, getLeftPressed, getRightPressed, getUpPressed } from "./variables.js"
+
 export const collide = (first, second, offset) => {
     const firstBound = first.getBoundingClientRect()
     const secondBound = second.getBoundingClientRect()
@@ -44,4 +46,8 @@ export const addToArray = (getter, setter, elem) => {
     let copyArr = getter()
     copyArr.push(elem)
     setter(copyArr)
+}
+
+export const checkMoving = () => {
+    return getUpPressed() || getDownPressed() || getLeftPressed() || getRightPressed()
 }
