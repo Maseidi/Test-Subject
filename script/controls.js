@@ -3,7 +3,7 @@ import { addClass, angleOfTwoPoints, checkMoving, removeClass } from "./util.js"
 import { 
     getAimMode,
     getEquippedWeapon,
-    getSprintPressed,
+    getSprint,
     getWeaponWheel,
     setAimMode,
     setAimingPlayerAngle,
@@ -77,33 +77,34 @@ export const control = () => {
 
 const wDown = () => {
     setUpPressed(true)
-    if ( !getAimMode() ) {
-        if ( getSprintPressed() ) addClass(getPlayer(getPlayer(), 'run'))
-        else addClass(getPlayer(), 'walk')
-    }
+    startWalkingAnimation()
 }
 
 const aDown = () => {
     setLeftPressed(true)
-    if ( !getAimMode() ) {
-        if ( getSprintPressed() ) addClass(getPlayer(getPlayer(), 'run'))
-        else addClass(getPlayer(), 'walk')
-    }
+    startWalkingAnimation()
 }
 
 const sDown = () => {
     setDownPressed(true)
-    if ( !getAimMode() ) {
-        if ( getSprintPressed() ) addClass(getPlayer(getPlayer(), 'run'))
-        else addClass(getPlayer(), 'walk')
-    }
+    startWalkingAnimation()
 }
 
 const dDown = () => {
     setRightPressed(true)
+    startWalkingAnimation()
+}
+
+const startWalkingAnimation = () => {
     if ( !getAimMode() ) {
-        if ( getSprintPressed() ) addClass(getPlayer(getPlayer(), 'run'))
-        else addClass(getPlayer(), 'walk')
+        if ( getSprint() ) {
+            addClass(getPlayer(), 'run')
+            removeClass(getPlayer(), 'walk')
+        }
+        else {
+            addClass(getPlayer(), 'walk')
+            removeClass(getPlayer(), 'run')
+        }
     }
 }
 
@@ -111,7 +112,10 @@ const shiftDown = () => {
     setAimMode(false)
     setSprintPressed(true)
     removeClass(getPlayer(), 'aim')
-    if (checkMoving()) addClass(getPlayer(), 'run')
+    if (checkMoving() && getSprint()) {
+        addClass(getPlayer(), 'run')
+        removeClass(getPlayer(), 'walk')
+    }
 }
 
 const eDown = () => {
