@@ -9,6 +9,7 @@ import {
     getPlayerAngleState,
     getRightPressed,
     getUpPressed,
+    setAimingPlayerAngle,
     setPlayerAngle,
     setPlayerAngleState } from "./variables.js"
 
@@ -31,6 +32,7 @@ export const managePlayerAngle = () => {
 
 const manageAimModeAngle = () => {
     if ( getAimMode() ) {
+        setAimingPlayerAngle(getAimingPlayerAngle() || 1)
         getPlayer().firstElementChild.firstElementChild.style.transform = `rotateZ(${getAimingPlayerAngle()}deg)`
         handleBreakpoints()
     }

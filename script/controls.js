@@ -106,6 +106,7 @@ const eDown = () => {
         }
         else {
             removeClass(getPlayer(), 'aim')
+            addClass(getPlayer(), 'walk')
         }
     }
 }
@@ -163,5 +164,4 @@ const aimAngle = (e) => {
         e.clientX,
         e.clientY
     ))
-    setAimingPlayerAngle(getAimingPlayerAngle() || 1)
 }
