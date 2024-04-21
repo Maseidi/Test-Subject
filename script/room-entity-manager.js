@@ -1,8 +1,8 @@
 import { getCurrentRoom, getCurrentRoomLoaders, getCurrentRoomSolid, getPlayer } from "./elements.js"
 import { loadCurrentRoom } from "./room-loader.js"
 import { rooms } from "./rooms.js"
-import { collide } from "./util.js"
-import { getCurrentRoomId,
+import { collide, removeClass } from "./util.js"
+import { getAllowMove, getCurrentRoomId,
     getPrevRoomId,
     getRoomLeft,
     getRoomTop,
@@ -22,6 +22,8 @@ const hitSolid = () => {
     Array.from(getCurrentRoomSolid()).forEach((solid) => {
         if ( collide(getPlayer().firstElementChild.children[1], solid, 12) ) {
             setAllowMove(false)
+            removeClass(getPlayer(), 'walk')
+            removeClass(getPlayer(), 'run')
             return
         }
     })

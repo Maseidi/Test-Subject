@@ -110,7 +110,7 @@ export const getPlayerAngle = () => {
     return playerAngle
 }
 
-let aimingPlayerAngle
+let aimingPlayerAngle = 0
 export const setAimingPlayerAngle = (val) => {
     aimingPlayerAngle = val
 }

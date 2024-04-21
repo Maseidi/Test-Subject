@@ -2,7 +2,7 @@ import { getPlayer } from "./elements.js"
 import { addClass, angleOfTwoPoints, isMoving, removeClass } from "./util.js"
 import { 
     getAimMode,
-    getAimingPlayerAngle,
+    getAllowMove,
     getEquippedWeapon,
     getWeaponWheel,
     setAimMode,
@@ -74,25 +74,27 @@ export const control = () => {
     }
 
     onmousemove = (e) => aimAngle(e)
+
 }
 
 const wDown = () => {
-    setUpPressed(true)
-    if ( !getAimMode() ) addClass(getPlayer(), 'walk')
+    enableDirection(setUpPressed)
 }
 
 const aDown = () => {
-    setLeftPressed(true)
-    if ( !getAimMode() ) addClass(getPlayer(), 'walk')
+    enableDirection(setLeftPressed)
 }
 
 const sDown = () => {
-    setDownPressed(true)
-    if ( !getAimMode() ) addClass(getPlayer(), 'walk')
+    enableDirection(setDownPressed)
 }
 
 const dDown = () => {
-    setRightPressed(true)
+    enableDirection(setRightPressed)
+}
+
+const enableDirection = (setPressed) => {
+    setPressed(true)
     if ( !getAimMode() ) addClass(getPlayer(), 'walk')
 }
 
@@ -106,7 +108,7 @@ const eDown = () => {
         }
         else {
             removeClass(getPlayer(), 'aim')
-            addClass(getPlayer(), 'walk')
+            if ( isMoving() ) addClass(getPlayer(), 'walk')
         }
     }
 }
@@ -123,25 +125,28 @@ const weaponSlotDown = (key) => {
 
 const shiftDown = () => {
     setSprintPressed(true)
+    setAimMode(false)
+    removeClass(getPlayer(), 'aim')
 }
 
 const wUp = () => {
-    setUpPressed(false)
-    stopWalkingAnimation()
+    disableDirection(setUpPressed)
 }
 
 const aUp = () => {
-    setLeftPressed(false)
-    stopWalkingAnimation()
+    disableDirection(setLeftPressed)
 }
 
 const sUp = () => {
-    setDownPressed(false)
-    stopWalkingAnimation()
+    disableDirection(setDownPressed)
 }
 
 const dUp = () => {
-    setRightPressed(false)
+    disableDirection(setRightPressed)
+}
+
+const disableDirection = (setPressed) => {
+    setPressed(false)
     stopWalkingAnimation()
 }
 
@@ -158,10 +163,11 @@ const stopWalkingAnimation = () => {
 }
 
 const aimAngle = (e) => {
-    setAimingPlayerAngle(angleOfTwoPoints(
-        getPlayer().getBoundingClientRect().x + 17, 
-        getPlayer().getBoundingClientRect().y + 17,
-        e.clientX,
-        e.clientY
-    ))
+    const angle = angleOfTwoPoints(
+            getPlayer().getBoundingClientRect().x + 17, 
+            getPlayer().getBoundingClientRect().y + 17,
+            e.clientX,
+            e.clientY
+        )
+    if ( angle ) setAimingPlayerAngle(angle)
 }
