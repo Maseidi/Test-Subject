@@ -2,7 +2,6 @@ import { getPlayer } from "./elements.js"
 import { addClass, angleOfTwoPoints, isMoving, removeClass } from "./util.js"
 import { 
     getAimMode,
-    getAllowMove,
     getEquippedWeapon,
     getWeaponWheel,
     setAimMode,

@@ -22,8 +22,6 @@ const hitSolid = () => {
     Array.from(getCurrentRoomSolid()).forEach((solid) => {
         if ( collide(getPlayer().firstElementChild.children[1], solid, 12) ) {
             setAllowMove(false)
-            removeClass(getPlayer(), 'walk')
-            removeClass(getPlayer(), 'run')
             return
         }
     })

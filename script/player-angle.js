@@ -67,7 +67,6 @@ const manageNonAimModeAngle = () => {
             newState = changeState(6, '100%', 'calc(50% - 2px)')
               
         if ( !getAimMode() ) {
-            if ( getPlayerAngleState() === newState ) return
             let diff = newState - getPlayerAngleState()
         
             if (Math.abs(diff) > 4 && diff >= 0) 

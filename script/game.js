@@ -8,6 +8,8 @@ import { managePlayerAngle } from "./player-angle.js"
 export const play = () => {
     startUp()
     control()
+    console.log(window.innerWidth / 2);
+    console.log(window.innerHeight / 2);
 
     window.setInterval(() => {
         manageSprint()
