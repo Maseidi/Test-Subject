@@ -15,36 +15,38 @@ import {
 
 export const control = () => {
     onkeydown = (e) => {
-        switch ( e.key ) {
-            case "w":
-            case "W":
-                wDown()
-                break
-            case "a":
-            case "A":
-                aDown()
-                break
-            case "s":
-            case "S":
-                sDown()
-                break
-            case "d":
-            case "D":
-                dDown()
-                break
-            case "e":                
-            case "E":
-                eDown()
-                break
-            case "1":                    
-            case "2":                    
-            case "3":                    
-            case "4":
-                weaponSlotDown(e.key)
-                break  
-            case "Shift":
-                shiftDown()
-                break                      
+        if ( !e.repeat ) {
+            switch ( e.key ) {
+                case "w":
+                case "W":
+                    wDown()
+                    break
+                case "a":
+                case "A":
+                    aDown()
+                    break
+                case "s":
+                case "S":
+                    sDown()
+                    break
+                case "d":
+                case "D":
+                    dDown()
+                    break
+                case "e":                
+                case "E":
+                    eDown()
+                    break
+                case "1":                    
+                case "2":                    
+                case "3":                    
+                case "4":
+                    weaponSlotDown(e.key)
+                    break  
+                case "Shift":
+                    shiftDown()
+                    break                      
+            }
         }
     }
     
