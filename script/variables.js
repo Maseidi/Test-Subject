@@ -22,7 +22,7 @@ export const getPlayerX = () => {
     return playerX
 }
 
-let playerY = 50000 + window.innerHeight / 2 - 17
+let playerY = 50000 + window.innerHeight / 2 + 13
 export const setPlayerY = (val) => {
     playerY = val
 }
