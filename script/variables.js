@@ -14,7 +14,7 @@ export const getMapY = () => {
     return mapY
 }
 
-let playerX = 50750
+let playerX = 50000 + window.innerWidth / 2 - 17
 export const setPlayerX = (val) => {
     playerX = val
 }
@@ -22,7 +22,7 @@ export const getPlayerX = () => {
     return playerX
 }
 
-let playerY = 50400
+let playerY = 50000 + window.innerHeight / 2 - 17
 export const setPlayerY = (val) => {
     playerY = val
 }

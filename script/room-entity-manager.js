@@ -1,8 +1,8 @@
 import { getCurrentRoom, getCurrentRoomLoaders, getCurrentRoomSolid, getPlayer } from "./elements.js"
 import { loadCurrentRoom } from "./room-loader.js"
 import { rooms } from "./rooms.js"
-import { collide, removeClass } from "./util.js"
-import { getAllowMove, getCurrentRoomId,
+import { collide } from "./util.js"
+import { getCurrentRoomId,
     getPrevRoomId,
     getRoomLeft,
     getRoomTop,
