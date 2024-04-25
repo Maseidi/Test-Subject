@@ -12,13 +12,19 @@ class Interactable {
 
 export class PC extends Interactable {
     constructor(left, top) {
-        super(50, left, top, "pc", "Save game", true, null)
+        super(50, left, top, "computer", "Save game", true, null)
     }
 }
 
 export class Stash extends Interactable {
     constructor(left, top) {
         super(80, left, top, "stash", "Open stash", true, null)
+    }
+}
+
+export class VendingMachine extends Interactable {
+    constructor(left, top) {
+        super(35, left, top, "vending-machine", "Trade", true, null)
     }
 }
 
@@ -42,7 +48,7 @@ export class Coin extends Drop {
 
 export class HardDrive extends Drop {
     constructor(left, top, amount) {
-        super(30, left, top, "hard-drive", "Pick up", amount)
+        super(30, left, top, "harddrive", "Pick up", amount)
     }
 }
 

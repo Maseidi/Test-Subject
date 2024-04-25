@@ -1,8 +1,10 @@
 import { getPlayer } from "./elements.js"
+import { itemPickup } from "./inventory.js"
 import { addClass, angleOfTwoPoints, isMoving, removeClass } from "./util.js"
 import { 
     getAimMode,
     getEquippedWeapon,
+    getIntObj,
     getWeaponWheel,
     setAimMode,
     setAimingPlayerAngle,
@@ -45,7 +47,11 @@ export const control = () => {
                     break  
                 case "Shift":
                     shiftDown()
-                    break                      
+                    break
+                case "F":
+                case "f":
+                    fDown()
+                    break                          
             }
         }
     }
@@ -128,6 +134,10 @@ const shiftDown = () => {
     setSprintPressed(true)
     setAimMode(false)
     removeClass(getPlayer(), 'aim')
+}
+
+const fDown = () => {
+    if ( getIntObj() && getIntObj().getAttribute("amount") ) itemPickup(getIntObj().getAttribute("name"))
 }
 
 const wUp = () => {

@@ -1,4 +1,4 @@
-import { Bandage, Coin, HardDrive, MagnumAmmo, PC, PistolAmmo, RifleAmmo, ShotgunShells, SmgAmmo, Stash, WeaponDrop } from "./interactables.js"
+import { Bandage, Coin, HardDrive, MagnumAmmo, PC, PistolAmmo, RifleAmmo, ShotgunShells, SmgAmmo, Stash, VendingMachine, WeaponDrop } from "./interactables.js"
 import { 
     BottomLoader_FromLeft,
     BottomLoader_FromRight,
@@ -62,7 +62,8 @@ export const rooms = new Map([
             new ShotgunShells(300, 800, 11),
             new SmgAmmo(200, 400, 10),
             new MagnumAmmo(500, 100, 1),
-            new RifleAmmo(400, 100, 2)
+            new RifleAmmo(400, 100, 2),
+            new VendingMachine(900, 100)
         ])
     ],
     ["room-2", 

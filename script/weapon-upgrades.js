@@ -9,7 +9,7 @@ class WeaponUpgradeDetail {
 } 
 
 export const WeaponUpgradeDetails = new Map([
-    ["1858", new WeaponUpgradeDetail(
+    ["remington-1858", new WeaponUpgradeDetail(
         [1000, 1250, 1500, 1750, 2000],
         [300, 350, 400, 450, 500],
         [5, 4.5, 4, 3.5, 3],

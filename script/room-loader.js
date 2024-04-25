@@ -7,7 +7,7 @@ import { getCurrentRoomInteractables, getCurrentRoomLoaders,
      setCurrentRoomSolid
      } from "./elements.js"
 import { rooms } from "./rooms.js"
-import { addClass } from "./util.js"
+import { addAttribute, addClass } from "./util.js"
 import { getCurrentRoomId, getRoomLeft, getRoomTop } from "./variables.js"
 
 export const loadCurrentRoom = () => {
@@ -73,7 +73,8 @@ const renderLoaders = (room, roomToRender) => {
 const renderInteractables = (room, roomToRender) => {
     Array.from(room.interactables).forEach((interactable) => {
         const int = document.createElement("div")
-        addClass(int, interactable.name)
+        addAttribute("name", interactable.name.replace("-", ""), int)
+        if (interactable.amount) addAttribute("amount", interactable.amount, int)
         int.style.position = `absolute`
         int.style.left = `${interactable.left}px`
         int.style.top = `${interactable.top}px`
@@ -121,7 +122,9 @@ const renderPopUp = (int, interactable) => {
 const renderTitle = (popup, interactable) => {
     const title = document.createElement("p")
     title.style.textTransform = `capitalize`
-    title.textContent = interactable.amount ? `x${interactable.amount} ${interactable.name}` : `${interactable.name}`
+    let content = interactable.amount ? `x${interactable.amount} ${interactable.name}` : `${interactable.name}`
+    content = content.replace("-", " ")
+    title.textContent = content
     popup.append(title)
 }
 

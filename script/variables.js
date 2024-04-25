@@ -200,3 +200,11 @@ export const setWeaponId = (val) => {
 export const getWeaponId = () => {
     return weaponId
 }
+
+let intObj
+export const setIntObj = (val) => {
+    intObj = val
+}
+export const getIntObj = () => {
+    return intObj
+}

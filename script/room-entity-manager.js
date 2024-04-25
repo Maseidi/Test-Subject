@@ -8,6 +8,7 @@ import { getCurrentRoomId,
     getRoomTop,
     setAllowMove,
     setCurrentRoomId,
+    setIntObj,
     setPrevRoomId,
     setRoomLeft,
     setRoomTop } from "./variables.js"
@@ -65,11 +66,13 @@ const calculateNewRoomLeftAndTop = (cpuLeft, cpuTop) => {
 }
 
 const hitInteractables = () => {
+    setIntObj(undefined)
     Array.from(getCurrentRoomInteractables()).forEach((int) => {
         const popup = int.children[1]
         if ( collide(getPlayer().firstElementChild, int, 20) ) {
             popup.style.bottom = `calc(100% + 20px)`
             popup.style.opacity = `1`
+            setIntObj(int)
             return
         }
         popup.style.bottom = `calc(100% - 20px)`

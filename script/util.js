@@ -41,3 +41,9 @@ export const containsClass = (elem, className) => {
 export const isMoving = () => {
     return getUpPressed() || getDownPressed() || getLeftPressed() || getRightPressed()
 }
+
+export const addAttribute = (name, value, parent) => {
+    const attr = document.createAttribute(name)
+    attr.value = value
+    parent.setAttributeNode(attr)
+}
