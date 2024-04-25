@@ -38,7 +38,7 @@ export const getPrevRoomId = () => {
     return prevRoomId
 }
 
-let currentRoomId = "room-16"
+let currentRoomId = "room-1"
 export const setCurrentRoomId = (val) => {
     currentRoomId = val
 }
@@ -177,7 +177,7 @@ export const getAimMode = () => {
     return aimMode
 }
 
-let weaponWheel = ["1", "2", "3", "4"]
+let weaponWheel = [1, 2, 3, 4]
 export const setWeaponWheel = (val) => {
     weaponWheel = val
 }
@@ -191,4 +191,12 @@ export const setEquippedWeapon = (val) => {
 }
 export const getEquippedWeapon = () => {
     return equippedWeapon
+}
+
+let weaponId = 1
+export const setWeaponId = (val) => {
+    weaponId = val
+}
+export const getWeaponId = () => {
+    return weaponId
 }
