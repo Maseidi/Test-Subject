@@ -1,4 +1,4 @@
-import { getCurrentRoom, getCurrentRoomLoaders, getCurrentRoomSolid, getPlayer } from "./elements.js"
+import { getCurrentRoom, getCurrentRoomInteractables, getCurrentRoomLoaders, getCurrentRoomSolid, getPlayer } from "./elements.js"
 import { loadCurrentRoom } from "./room-loader.js"
 import { rooms } from "./rooms.js"
 import { collide } from "./util.js"
@@ -15,6 +15,7 @@ import { getCurrentRoomId,
 export const manageEntities = () => {
     hitSolid()
     enterNewRoom()
+    hitInteractables()
 }
 
 const hitSolid = () => {
@@ -60,5 +61,18 @@ const calculateNewRoomLeftAndTop = (cpuLeft, cpuTop) => {
             left = loader.left === -26 ? loader.left + 52 : loader.left
         setRoomLeft(getRoomLeft() - left + Number(cpuLeft.replace('px', '')))
         setRoomTop(getRoomTop() - top + Number(cpuTop.replace('px', '')))
+    })
+}
+
+const hitInteractables = () => {
+    Array.from(getCurrentRoomInteractables()).forEach((int) => {
+        const popup = int.children[1]
+        if ( collide(getPlayer().firstElementChild, int, 20) ) {
+            popup.style.bottom = `calc(100% + 20px)`
+            popup.style.opacity = `1`
+            return
+        }
+        popup.style.bottom = `calc(100% - 20px)`
+        popup.style.opacity = `0`
     })
 }

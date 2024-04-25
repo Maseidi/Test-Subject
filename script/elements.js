@@ -38,6 +38,14 @@ export const getCurrentRoomLoaders = () => {
     return currentRoomLoaders
 }
 
+let currentRoomInteractables
+export const setCurrentRoomInteractables = (val) => {
+    currentRoomInteractables = val
+}
+export const getCurrentRoomInteractables = () => {
+    return currentRoomInteractables
+}
+
 let player
 export const setPlayer = (val) => {
     player = val

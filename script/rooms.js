@@ -1,3 +1,4 @@
+import { Bandage, Coin, HardDrive, MagnumAmmo, PC, PistolAmmo, RifleAmmo, ShotgunShells, SmgAmmo, Stash, WeaponDrop } from "./interactables.js"
 import { 
     BottomLoader_FromLeft,
     BottomLoader_FromRight,
@@ -19,11 +20,12 @@ import {
     Ver_TR_Wall } from "./walls.js"
 
 class Room {
-    constructor(width, height, walls, loaders) {
+    constructor(width, height, walls, loaders, interactables) {
         this.width = width
         this.height = height
         this.walls = walls
         this.loaders = loaders
+        this.interactables = interactables
     }
 }
 
@@ -49,6 +51,18 @@ export const rooms = new Map([
             new LeftLoader_FromBottom("room-6", 100, 300),
             new LeftLoader_FromTop("room-7", 100, 300),
             new TopLoader_FromLeft("room-8", 200, 450),
+        ],[
+            new Coin(100, 100, 2),
+            new Bandage(300, 300, 1),
+            new HardDrive(500, 500, 3),
+            new PC(700, 700),
+            new Stash(900, 900),
+            new WeaponDrop(700, 900, "riotgun"),
+            new PistolAmmo(200, 700, 10),
+            new ShotgunShells(300, 800, 11),
+            new SmgAmmo(200, 400, 10),
+            new MagnumAmmo(500, 100, 1),
+            new RifleAmmo(400, 100, 2)
         ])
     ],
     ["room-2", 
