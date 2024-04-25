@@ -1,4 +1,4 @@
-class OwnedWeapon {
+export class OwnedWeapon {
     constructor(id, name, damageLvl, rangeLvl, reloadSpeedLvl, magazineLvl, fireRateLvl) {
         this.id = id
         this.name = name

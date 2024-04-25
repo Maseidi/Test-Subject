@@ -7,7 +7,7 @@ import { getCurrentRoomInteractables, getCurrentRoomLoaders,
      setCurrentRoomSolid
      } from "./elements.js"
 import { rooms } from "./rooms.js"
-import { addAttribute, addClass } from "./util.js"
+import { addAttribute, addClass, addToArray } from "./util.js"
 import { getCurrentRoomId, getRoomLeft, getRoomTop } from "./variables.js"
 
 export const loadCurrentRoom = () => {
@@ -48,7 +48,7 @@ const renderWalls = (room, roomToRender) => {
         if ( elem.top !== undefined ) wall.style.top = `${elem.top}px`
         if ( elem.bottom !== undefined ) wall.style.bottom = `${elem.bottom}px`
         roomToRender.append(wall)
-        getCurrentRoomSolid().push(wall)
+        addToArray(getCurrentRoomSolid, setCurrentRoom, wall)
     })
 }
 
@@ -66,13 +66,15 @@ const renderLoaders = (room, roomToRender) => {
         if ( elem.top !== undefined ) loader.style.top = `${elem.top}px`
         if ( elem.bottom !== undefined ) loader.style.bottom = `${elem.bottom}px`
         roomToRender.append(loader)
-        getCurrentRoomLoaders().push(loader)
+        addToArray(getCurrentRoomLoaders, setCurrentRoomLoaders, loader)
     })
 }
 
 const renderInteractables = (room, roomToRender) => {
+    if ( !room.interactables ) return
     Array.from(room.interactables).forEach((interactable) => {
         const int = document.createElement("div")
+        addClass(int, interactable.name)
         addAttribute("name", interactable.name.replace("-", ""), int)
         if (interactable.amount) addAttribute("amount", interactable.amount, int)
         int.style.position = `absolute`
@@ -87,8 +89,8 @@ const renderInteractables = (room, roomToRender) => {
         renderPopUp(int, interactable)
 
         roomToRender.append(int)
-        if ( interactable.solid ) getCurrentRoomSolid().push(int)
-        getCurrentRoomInteractables().push(int)
+        if ( interactable.solid ) addToArray(getCurrentRoomSolid, setCurrentRoomSolid, int)
+        addToArray(getCurrentRoomInteractables, setCurrentRoomInteractables, int)
     })
 }
 

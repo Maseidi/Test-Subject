@@ -1,4 +1,6 @@
-import { getIntObj, setIntObj } from "./variables.js"
+import { OwnedWeapon, getOwnedWeapons, setOwnedWeapons } from "./owned-weapons.js"
+import { addToArray } from "./util.js"
+import { getIntObj, getWeaponId, setIntObj, setWeaponId } from "./variables.js"
 
 let inventory = {
     bandage: 0,
@@ -9,7 +11,7 @@ let inventory = {
     mauser: 0,
     mp5k: 0,
     p90: 0,
-    pistolAmmo: 0,
+    pistolammo: 0,
     pistol: 0,
     pistol2: 0,
     pistol3: 0,
@@ -17,13 +19,13 @@ let inventory = {
     ppsh: 0,
     remington1858: 0,
     revolver: 0,
-    rifleAmmo: 0,
+    rifleammo: 0,
     riotgun: 0,
-    shotgunShells: 0,
+    shotgunshells: 0,
     shotgun: 0,
     shotgun2: 0,
     shotgun3: 0,
-    smgAmmo: 0,
+    smgammo: 0,
     sniper: 0,
     sniper2: 0,
     sniper3: 0,
@@ -31,9 +33,18 @@ let inventory = {
     uzi: 0
 }
 
+export const setInventory = (val) => {
+    inventory = val
+}
+export const getInventory = () => {
+    return inventory
+}
+
 export const itemPickup = () => {
     const name = getIntObj().getAttribute("name")
     const amount = getIntObj().getAttribute("amount")
+
+    weaponPickup(name, amount)
     
     const prevAmount = inventory[name]
     inventory = {
@@ -43,4 +54,26 @@ export const itemPickup = () => {
 
     getIntObj().remove()
     setIntObj(undefined)
+}
+
+const weaponPickup = (name) => {
+    if ( name !== 'bandage' && name !== 'coin' && name !== 'harddrive' && !name.endsWith('ammo') && !name.endsWith('shells') ) {
+        if ( !checkIfFits() ) return
+        const weapon = new OwnedWeapon(
+            getWeaponId(),
+            getIntObj().classList[0],
+            1,
+            1,
+            1,
+            1,
+            1
+        )
+        addToArray(getOwnedWeapons, setOwnedWeapons, weapon)
+        setWeaponId(getWeaponId() + 1)
+    }
+
+}   
+
+const checkIfFits = () => {
+
 }

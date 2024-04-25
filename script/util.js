@@ -47,3 +47,9 @@ export const addAttribute = (name, value, parent) => {
     attr.value = value
     parent.setAttributeNode(attr)
 }
+
+export const addToArray = (getter, setter, value) => {
+    let copyArr = getter()
+    copyArr.push(value)
+    setter(copyArr)
+}

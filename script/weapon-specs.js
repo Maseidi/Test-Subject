@@ -1,157 +1,158 @@
 class Weapon {
     constructor(
-        name,
         height,
         bg,
         antiVirus,
-        automatic) {
+        automatic,
+        space) {
         this.name = name
         this.height = height
         this.bg = bg
         this.antiVirus = antiVirus
         this.automatic = automatic
+        this.space = space
     }
 }
 
 export const weapons = new Map([
-    ["1858", new Weapon(
-        "remington-1858",
+    ["remington-1858", new Weapon(
         12,
         "lightgray",
         "blue",
-        false
+        false,
+        2
     )],
     ["revolver", new Weapon(
-        "revolver",
         10,
         "lightgray",
         "purple",
-        false
+        false,
+        1
     )],
     ["mauser", new Weapon(
-        "mauser",
         8,
         "lightgray",
         "red",
-        false
+        false,
+        1
     )],
     ["pistol", new Weapon(
-        "pistol",
         6,
         "lightgray",
         "green",
-        false
+        false,
+        1
     )],
     ["pistol2", new Weapon(
-        "pistol2",
         8,
         "lightgray",
         "yellow",
-        false
+        false,
+        1
     )],
     ["pistol3", new Weapon(
-        "pistol3",
         6,
         "lightgray",
         "blue",
-        false
+        false,
+        1
     )],
     ["pistol4", new Weapon(
-        "pistol4",
         8,
         "lightgray",
         "purple",
-        false
+        false,
+        1
     )],
     ["famas", new Weapon(
-        "famas",
         10,
         "lightgray",
         "red",
-        true
+        true,
+        2
     )],
     ["mp5k", new Weapon(
-        "mp5k",
         8,
         "lightgray",
         "green",
-        true
+        true,
+        1
     )],
     ["p90", new Weapon(
-        "p90",
         10,
         "lightgray",
         "yellow",
-        true
+        true,
+        1
     )],
     ["ppsh", new Weapon(
-        "ppsh",
         8,
         "lightgray",
         "blue",
-        true
+        true,
+        1
     )],
     ["uzi", new Weapon(
-        "uzi",
         6,
         "lightgray",
         "purple",
-        true
+        true,
+        1
     )],
     ["shotgun", new Weapon(
-        "shotgun",
         12,
         "lightgray",
         "red",
-        false
+        false,
+        2
     )],
     ["shotgun2", new Weapon(
-        "shotgun2",
         14,
         "lightgray",
         "green",
-        false
+        false,
+        2
     )],
     ["shotgun3", new Weapon(
-        "shotgun3",
         10,
         "lightgray",
         "yellow",
-        false
+        false,
+        2
     )],
     ["riotgun", new Weapon(
-        "riotgun",
         12,
         "lightgray",
         "blue",
-        false
+        false,
+        3
     )],
     ["spas", new Weapon(
-        "spas",
         8,
         "lightgray",
         "purple",
-        false
+        false,
+        2
     )],
     ["sniper", new Weapon(
-        "sniper",
         12,
         "lightgray",
         "red",
-        false
+        false,
+        2
     )],
     ["sniper2", new Weapon(
-        "sniper2",
         14,
         "lightgray",
         "green",
-        false
+        false,
+        2
     )],
     ["sniper3", new Weapon(
-        "sniper3",
         10,
         "lightgray",
         "yellow",
-        false
+        false,
+        2
     )]
 ])
