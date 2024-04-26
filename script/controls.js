@@ -125,6 +125,7 @@ const weaponSlotDown = (key) => {
         setEquippedWeapon(null)
         setAimMode(false)
         removeClass(getPlayer(), 'aim')
+        if (isMoving()) addClass(getPlayer(), 'walk')
         return
     }
     setEquippedWeapon(getWeaponWheel()[Number(key) - 1])

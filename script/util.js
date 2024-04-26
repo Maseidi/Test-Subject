@@ -53,3 +53,9 @@ export const addToArray = (getter, setter, value) => {
     copyArr.push(value)
     setter(copyArr)
 }
+
+export const putToMap = (getter, setter, key, value) => {
+    let copyMap = getter()
+    copyMap.set(key, value)
+    setter(copyMap)
+}

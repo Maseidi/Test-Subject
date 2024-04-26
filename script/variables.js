@@ -177,7 +177,7 @@ export const getAimMode = () => {
     return aimMode
 }
 
-let weaponWheel = [1, 2, 3, 4]
+let weaponWheel = [null, null, null, null]
 export const setWeaponWheel = (val) => {
     weaponWheel = val
 }
@@ -199,4 +199,12 @@ export const setIntObj = (val) => {
 }
 export const getIntObj = () => {
     return intObj
+}
+
+let lootId = 0
+export const setLootId = (val) => {
+    lootId = val
+}
+export const getLootId = () => {
+    return lootId
 }

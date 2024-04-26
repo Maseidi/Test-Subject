@@ -66,15 +66,17 @@ const renderLoaders = (room, roomToRender) => {
 
 const renderInteractables = (room, roomToRender) => {
     if ( !room.interactables ) return
-    Array.from(room.interactables).forEach((interactable) => {
-        renderInteractable(roomToRender, interactable)
+    Array.from(room.interactables).forEach((interactable, index) => {
+        if (interactable) renderInteractable(roomToRender, interactable, index)
     })
 }
 
-const renderInteractable = (root, interactable) => {
+const renderInteractable = (root, interactable, index) => {
     const int = document.createElement("div")
+    int.id = index
     addClass(int, 'interactable')
     addAttribute("name", interactable.name, int)
+    addAttribute("title", interactable.title, int)
     if (interactable.amount) addAttribute("amount", interactable.amount, int)
     if (interactable.space) addAttribute("space", interactable.space, int)
     int.style.left = `${interactable.left}px`
