@@ -141,7 +141,7 @@ const weaponSlotDown = (key) => {
         renderWeapon()
     } else {
         removeClass(getPlayer(), 'aim')
-        addClass(getPlayer(), 'walk')
+        if (isMoving()) addClass(getPlayer(), 'walk')
         setAimMode(false)
     }
 }
