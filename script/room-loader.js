@@ -76,6 +76,7 @@ const renderInteractable = (root, interactable) => {
     addClass(int, 'interactable')
     addAttribute("name", interactable.name, int)
     if (interactable.amount) addAttribute("amount", interactable.amount, int)
+    if (interactable.space) addAttribute("space", interactable.space, int)
     int.style.left = `${interactable.left}px`
     int.style.top = `${interactable.top}px`
     int.style.width = `${interactable.width}px`

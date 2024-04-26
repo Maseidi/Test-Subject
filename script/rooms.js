@@ -1,4 +1,13 @@
-import { Bandage, Coin, HardDrive, MagnumAmmo, PC, PistolAmmo, RifleAmmo, ShotgunShells, SmgAmmo, Stash, VendingMachine, WeaponDrop } from "./interactables.js"
+import { PC, Stash, VendingMachine } from "./interactables.js"
+import { Bandage,
+    Coin,
+    HardDrive,
+    MagnumAmmo,
+    PistolAmmo,
+    RifleAmmo,
+    ShotgunShells,
+    SmgAmmo,
+    WeaponDrop } from "./drops.js"
 import { 
     BottomLoader_FromLeft,
     BottomLoader_FromRight,
@@ -57,7 +66,7 @@ export const rooms = new Map([
             new HardDrive(500, 500, 3),
             new PC(700, 700),
             new Stash(900, 900),
-            new WeaponDrop(700, 900, "riotgun", "riotgun"),
+            new WeaponDrop(700, 900, "remington1858", "remington 1858"),
             new PistolAmmo(200, 700, 10),
             new ShotgunShells(300, 800, 11),
             new SmgAmmo(200, 400, 10),
