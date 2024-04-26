@@ -8,7 +8,7 @@ class WeaponUpgradeDetail {
     }
 } 
 
-export const WeaponUpgradeDetails = new Map([
+const weaponUpgradeDetails = new Map([
     ["remington1858", new WeaponUpgradeDetail(
         [1000, 1250, 1500, 1750, 2000],
         [300, 350, 400, 450, 500],
@@ -150,3 +150,7 @@ export const WeaponUpgradeDetails = new Map([
         [1.8, 1.6, 1.5, 1.4, 1.2]
     )]
 ])
+
+export const getUpgradeDetails = () => {
+    return weaponUpgradeDetails
+}

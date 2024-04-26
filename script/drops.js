@@ -1,5 +1,5 @@
 import { Interactable } from "./interactables.js"
-import { weapons } from "./weapon-specs.js"
+import { getWeaponSpecs } from "./weapon-specs.js"
 
 class Drop extends Interactable {
     constructor(width, left, top, name, title, popup, amount, space) {
@@ -57,6 +57,6 @@ export class RifleAmmo extends Drop {
 
 export class WeaponDrop extends Drop {
     constructor(left, top, name, title) {
-        super(70, left, top, name, title, "Pick up", 1, weapons.get(name).space)
+        super(70, left, top, name, title, "Pick up", 1, getWeaponSpecs().get(name).space)
     }
 }

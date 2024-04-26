@@ -14,6 +14,7 @@ import {
     setRightPressed,
     setSprintPressed,
     setUpPressed } from "./variables.js"
+import { removeWeapon, renderWeapon } from "./weapon-loader.js"
 
 export const control = () => {
     onkeydown = (e) => {
@@ -116,9 +117,11 @@ const eDown = () => {
             removeClass(getPlayer(), 'walk')
             removeClass(getPlayer(), 'run')
             addClass(getPlayer(), 'aim')
+            renderWeapon()
         }
         else {
             removeClass(getPlayer(), 'aim')
+            removeWeapon()
             if ( isMoving() ) addClass(getPlayer(), 'walk')
         }
     }
@@ -139,6 +142,7 @@ const shiftDown = () => {
     setSprintPressed(true)
     setAimMode(false)
     removeClass(getPlayer(), 'aim')
+    removeWeapon()
 }
 
 const fDown = () => {

@@ -15,7 +15,7 @@ class Weapon {
     }
 }
 
-export const weapons = new Map([
+const weapons = new Map([
     ["remington1858", new Weapon(
         "magnumAmmo",
         12,
@@ -177,3 +177,7 @@ export const weapons = new Map([
         2
     )]
 ])
+
+export const getWeaponSpecs = () => {
+    return weapons
+}
