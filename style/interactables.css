@@ -1,0 +1,52 @@
+.interactable {
+    position: absolute;
+    user-select: none;
+    object-fit: cover;
+}
+
+.interactable > img {
+    width: 100%;
+}
+
+.interactable > div {
+    background: rgba(0, 0, 0, 0.67);
+    border-radius: 5px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(3.3px);
+    -webkit-backdrop-filter: blur(3.3px);
+    z-index: 20;
+    color: wheat;
+    position: absolute;
+    padding: 10px;
+    width: max-content;
+    text-align: center;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: calc(100% - 20px);
+    transition: 300ms;
+}
+
+.interactable > div > p {
+    text-transform: capitalize;
+}
+
+.interactable > div > div:nth-of-type(1) {
+    width: 100%;
+    height: 1px;
+    background-color: wheat;
+    margin: 10px auto;
+}
+
+.interactable > div > div:nth-of-type(2) {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: left;
+    align-items: center;
+    gap: 10px;
+}
+
+.interactable > div > div:nth-of-type(2) > p:nth-of-type(1) {
+    border: 1px solid wheat;
+    padding: 2px 7px;
+}

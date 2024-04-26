@@ -42,7 +42,6 @@ const renderWalls = (room, roomToRender) => {
         wall.style.backgroundColor = `#2b2b2b`
         wall.style.width = `${elem.width}px`
         wall.style.height = `${elem.height}px`
-        wall.style.backgroundColor = `darkgray`
         if ( elem.left !== undefined ) wall.style.left = `${elem.left}px`
         if ( elem.right !== undefined ) wall.style.right = `${elem.right}px`
         if ( elem.top !== undefined ) wall.style.top = `${elem.top}px`
@@ -74,20 +73,14 @@ const renderInteractables = (room, roomToRender) => {
     if ( !room.interactables ) return
     Array.from(room.interactables).forEach((interactable) => {
         const int = document.createElement("div")
-        addClass(int, interactable.name)
+        addClass(int, 'interactable')
         addAttribute("name", interactable.name, int)
         if (interactable.amount) addAttribute("amount", interactable.amount, int)
-        int.style.position = `absolute`
         int.style.left = `${interactable.left}px`
         int.style.top = `${interactable.top}px`
-        int.style.height = `fit-content`
         int.style.width = `${interactable.width}px`
-        int.style.objectFit = `cover`
-        int.style.userSelect = `none`
-
         renderImage(int, interactable)
         renderPopUp(int, interactable)
-
         roomToRender.append(int)
         if ( interactable.solid ) addToArray(getCurrentRoomSolid, setCurrentRoomSolid, int)
         addToArray(getCurrentRoomInteractables, setCurrentRoomInteractables, int)
@@ -96,34 +89,22 @@ const renderInteractables = (room, roomToRender) => {
 
 const renderImage = (int, interactable) => {
     const image = document.createElement("img")
-    image.style.width = `100%`
     image.src = `../assets/images/${interactable.name}.png`
     int.append(image)
 }
 
 const renderPopUp = (int, interactable) => {
     const popup = document.createElement("div")
-    addClass(popup, 'bg-theme')
-    popup.style.position = `absolute`
-    popup.style.padding = `10px`
-    popup.style.width = `max-content`
-    popup.style.textAlign = `center`
-    popup.style.left = `50%`
-    popup.style.transform = `translateX(-50%)`
     popup.style.bottom = `calc(100% - 20px)`
     popup.style.opacity = `0`
-    popup.style.transition = `300ms`
-
     renderTitle(popup, interactable)
     renderLine(popup)
     renderDescription(popup, interactable)
-
     int.append(popup)
 }
 
 const renderTitle = (popup, interactable) => {
     const title = document.createElement("p")
-    title.style.textTransform = `capitalize`
     let content = interactable.amount ? `x${interactable.amount} ${interactable.title}` : `${interactable.title}`
     title.textContent = content
     popup.append(title)
@@ -131,30 +112,15 @@ const renderTitle = (popup, interactable) => {
 
 const renderLine = (popup) => {
     const line = document.createElement("div")
-    line.style.width = `100%`
-    line.style.height = `1px`
-    line.style.backgroundColor = `wheat`
-    line.style.margin = `10px auto`
     popup.append(line)
 }
 
 const renderDescription = (popup, interactable) => {
     const descContainer = document.createElement("div")
-    descContainer.style.width = `100%`
-    descContainer.style.display = `flex`
-    descContainer.style.flexDirection = `row`
-    descContainer.style.justifyContent = `left`
-    descContainer.style.alignItems = `center`
-    descContainer.style.gap = `10px`
-
     const fButton = document.createElement("p")
     fButton.textContent = "F"
-    fButton.style.border = `1px solid wheat`
-    fButton.style.padding = `2px 7px`
-
     const descText = document.createElement("p")
     descText.textContent = `${interactable.popup}`
-
     descContainer.append(fButton)
     descContainer.append(descText)
     popup.append(descContainer)
