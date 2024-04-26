@@ -57,7 +57,7 @@ export const rooms = new Map([
             new HardDrive(500, 500, 3),
             new PC(700, 700),
             new Stash(900, 900),
-            new WeaponDrop(700, 900, "riotgun"),
+            new WeaponDrop(700, 900, "riotgun", "riotgun"),
             new PistolAmmo(200, 700, 10),
             new ShotgunShells(300, 800, 11),
             new SmgAmmo(200, 400, 10),

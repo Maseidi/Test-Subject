@@ -75,7 +75,7 @@ const renderInteractables = (room, roomToRender) => {
     Array.from(room.interactables).forEach((interactable) => {
         const int = document.createElement("div")
         addClass(int, interactable.name)
-        addAttribute("name", interactable.name.replace("-", ""), int)
+        addAttribute("name", interactable.name, int)
         if (interactable.amount) addAttribute("amount", interactable.amount, int)
         int.style.position = `absolute`
         int.style.left = `${interactable.left}px`
@@ -124,8 +124,7 @@ const renderPopUp = (int, interactable) => {
 const renderTitle = (popup, interactable) => {
     const title = document.createElement("p")
     title.style.textTransform = `capitalize`
-    let content = interactable.amount ? `x${interactable.amount} ${interactable.name}` : `${interactable.name}`
-    content = content.replace("-", " ")
+    let content = interactable.amount ? `x${interactable.amount} ${interactable.title}` : `${interactable.title}`
     title.textContent = content
     popup.append(title)
 }

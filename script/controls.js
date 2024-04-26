@@ -1,5 +1,4 @@
 import { getPlayer } from "./elements.js"
-import { itemPickup } from "./inventory.js"
 import { addClass, angleOfTwoPoints, isMoving, removeClass } from "./util.js"
 import { 
     getAimMode,
@@ -137,7 +136,7 @@ const shiftDown = () => {
 }
 
 const fDown = () => {
-    if ( getIntObj() && getIntObj().getAttribute("amount") ) itemPickup(getIntObj().getAttribute("name"))
+    console.log(1);
 }
 
 const wUp = () => {

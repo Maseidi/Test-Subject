@@ -14,7 +14,7 @@ export const getMapY = () => {
     return mapY
 }
 
-let playerX = 50000 + window.innerWidth / 2 - 17
+let playerX = 50750
 export const setPlayerX = (val) => {
     playerX = val
 }
@@ -22,7 +22,7 @@ export const getPlayerX = () => {
     return playerX
 }
 
-let playerY = 50000 + window.innerHeight / 2 + 13
+let playerY = 50400
 export const setPlayerY = (val) => {
     playerY = val
 }
@@ -191,14 +191,6 @@ export const setEquippedWeapon = (val) => {
 }
 export const getEquippedWeapon = () => {
     return equippedWeapon
-}
-
-let weaponId = 1
-export const setWeaponId = (val) => {
-    weaponId = val
-}
-export const getWeaponId = () => {
-    return weaponId
 }
 
 let intObj

@@ -15,7 +15,7 @@ class Weapon {
 }
 
 export const weapons = new Map([
-    ["remington-1858", new Weapon(
+    ["remington1858", new Weapon(
         12,
         "lightgray",
         "blue",
