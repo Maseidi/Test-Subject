@@ -208,3 +208,11 @@ export const setLootId = (val) => {
 export const getLootId = () => {
     return lootId
 }
+
+let target
+export const setTarget = (val) => {
+    target = val
+}
+export const getTarget = () => {
+    return target
+}

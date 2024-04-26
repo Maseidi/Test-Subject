@@ -1,6 +1,6 @@
 import { getPlayer } from "./elements.js"
 import { pickupDrop } from "./inventory.js"
-import { addClass, angleOfTwoPoints, isMoving, removeClass } from "./util.js"
+import { addClass, angleOfTwoPoints, containsClass, isMoving, removeClass } from "./util.js"
 import { 
     getAimMode,
     getEquippedWeapon,
@@ -128,6 +128,7 @@ const eDown = () => {
 }
 
 const weaponSlotDown = (key) => {
+    removeWeapon()
     if ( getWeaponWheel()[Number(key) - 1] === getEquippedWeapon() ) {
         setEquippedWeapon(null)
         setAimMode(false)
@@ -136,6 +137,13 @@ const weaponSlotDown = (key) => {
         return
     }
     setEquippedWeapon(getWeaponWheel()[Number(key) - 1])
+    if ( getEquippedWeapon() && getAimMode() ) {
+        renderWeapon()
+    } else {
+        removeClass(getPlayer(), 'aim')
+        addClass(getPlayer(), 'walk')
+        setAimMode(false)
+    }
 }
 
 const shiftDown = () => {
