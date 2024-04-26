@@ -1,13 +1,14 @@
 class Weapon {
     constructor(
+        ammoType,
         height,
-        bg,
+        color,
         antiVirus,
         automatic,
         space) {
-        this.name = name
+        this.ammoType = ammoType
         this.height = height
-        this.bg = bg
+        this.color = color
         this.antiVirus = antiVirus
         this.automatic = automatic
         this.space = space
@@ -16,6 +17,7 @@ class Weapon {
 
 export const weapons = new Map([
     ["remington1858", new Weapon(
+        "magnumAmmo",
         12,
         "lightgray",
         "blue",
@@ -23,6 +25,7 @@ export const weapons = new Map([
         2
     )],
     ["revolver", new Weapon(
+        "magnumAmmo",
         10,
         "lightgray",
         "purple",
@@ -30,6 +33,7 @@ export const weapons = new Map([
         1
     )],
     ["mauser", new Weapon(
+        "pistolAmmo",
         8,
         "lightgray",
         "red",
@@ -37,6 +41,7 @@ export const weapons = new Map([
         1
     )],
     ["pistol", new Weapon(
+        "pistolAmmo",
         6,
         "lightgray",
         "green",
@@ -44,6 +49,7 @@ export const weapons = new Map([
         1
     )],
     ["pistol2", new Weapon(
+        "pistolAmmo",
         8,
         "lightgray",
         "yellow",
@@ -51,6 +57,7 @@ export const weapons = new Map([
         1
     )],
     ["pistol3", new Weapon(
+        "pistolAmmo",
         6,
         "lightgray",
         "blue",
@@ -58,6 +65,7 @@ export const weapons = new Map([
         1
     )],
     ["pistol4", new Weapon(
+        "pistolAmmo",
         8,
         "lightgray",
         "purple",
@@ -65,6 +73,7 @@ export const weapons = new Map([
         1
     )],
     ["famas", new Weapon(
+        "smgAmmo",
         10,
         "lightgray",
         "red",
@@ -72,6 +81,7 @@ export const weapons = new Map([
         2
     )],
     ["mp5k", new Weapon(
+        "smgAmmo",
         8,
         "lightgray",
         "green",
@@ -79,6 +89,7 @@ export const weapons = new Map([
         1
     )],
     ["p90", new Weapon(
+        "smgAmmo",
         10,
         "lightgray",
         "yellow",
@@ -86,6 +97,7 @@ export const weapons = new Map([
         1
     )],
     ["ppsh", new Weapon(
+        "smgAmmo",
         8,
         "lightgray",
         "blue",
@@ -93,6 +105,7 @@ export const weapons = new Map([
         1
     )],
     ["uzi", new Weapon(
+        "smgAmmo",
         6,
         "lightgray",
         "purple",
@@ -100,6 +113,7 @@ export const weapons = new Map([
         1
     )],
     ["shotgun", new Weapon(
+        "shotgunShells",
         12,
         "lightgray",
         "red",
@@ -107,6 +121,7 @@ export const weapons = new Map([
         2
     )],
     ["shotgun2", new Weapon(
+        "shotgunShells",
         14,
         "lightgray",
         "green",
@@ -114,6 +129,7 @@ export const weapons = new Map([
         2
     )],
     ["shotgun3", new Weapon(
+        "shotgunShells",
         10,
         "lightgray",
         "yellow",
@@ -121,6 +137,7 @@ export const weapons = new Map([
         2
     )],
     ["riotgun", new Weapon(
+        "shotgunShells",
         12,
         "lightgray",
         "blue",
@@ -128,6 +145,7 @@ export const weapons = new Map([
         3
     )],
     ["spas", new Weapon(
+        "shotgunShells",
         8,
         "lightgray",
         "purple",
@@ -135,6 +153,7 @@ export const weapons = new Map([
         2
     )],
     ["sniper", new Weapon(
+        "rifleAmmo",
         12,
         "lightgray",
         "red",
@@ -142,6 +161,7 @@ export const weapons = new Map([
         2
     )],
     ["sniper2", new Weapon(
+        "rifleAmmo",
         14,
         "lightgray",
         "green",
@@ -149,6 +169,7 @@ export const weapons = new Map([
         2
     )],
     ["sniper3", new Weapon(
+        "rifleAmmo",
         10,
         "lightgray",
         "yellow",
