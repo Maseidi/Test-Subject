@@ -15,10 +15,6 @@ export const startUp = () => {
 const renderMap = (root) => {
     const map = document.createElement("div")
     addClass(map, 'map')
-    map.style.width = `100000px`
-    map.style.height = `100000px`
-    map.style.backgroundColor = `#2b2b2b`
-    map.style.position = `absolute`
     map.style.left = `${getMapX()}px`
     map.style.top = `${getMapY()}px`
     setMapEl(map)

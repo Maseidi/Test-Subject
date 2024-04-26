@@ -15,7 +15,6 @@ export const loadCurrentRoom = () => {
     setCurrentRoomSolid([])
     setCurrentRoomLoaders([])
     setCurrentRoomInteractables([])
-    
     const roomToRender = document.createElement("div")
     addClass(roomToRender, `${getCurrentRoomId()}`)
     roomToRender.style.width = `${room.width}px`
@@ -24,11 +23,9 @@ export const loadCurrentRoom = () => {
     roomToRender.style.left = `${getRoomLeft()}px`
     roomToRender.style.top = `${getRoomTop()}px`
     roomToRender.style.backgroundColor = `lightgray`
-
     renderWalls(room, roomToRender)
     renderLoaders(room, roomToRender)
     renderInteractables(room, roomToRender)
-
     setCurrentRoom(roomToRender)
     getRoomContainer().append(roomToRender)
 }
@@ -38,14 +35,13 @@ const renderWalls = (room, roomToRender) => {
         const wall = document.createElement("div")
         addClass(wall, `wall-${index+1}`)
         addClass(wall, 'solid')
-        wall.style.position = `absolute`
-        wall.style.backgroundColor = `#2b2b2b`
+        wall.style.backgroundColor = `darkgray`
         wall.style.width = `${elem.width}px`
         wall.style.height = `${elem.height}px`
         if ( elem.left !== undefined ) wall.style.left = `${elem.left}px`
-        if ( elem.right !== undefined ) wall.style.right = `${elem.right}px`
+        else if ( elem.right !== undefined ) wall.style.right = `${elem.right}px`
         if ( elem.top !== undefined ) wall.style.top = `${elem.top}px`
-        if ( elem.bottom !== undefined ) wall.style.bottom = `${elem.bottom}px`
+        else if ( elem.bottom !== undefined ) wall.style.bottom = `${elem.bottom}px`
         roomToRender.append(wall)
         addToArray(getCurrentRoomSolid, setCurrentRoom, wall)
     })
@@ -56,14 +52,13 @@ const renderLoaders = (room, roomToRender) => {
         const loader = document.createElement("div")
         addClass(loader, elem.className)
         addClass(loader, 'loader')
-        loader.style.position = `absolute`
         loader.style.width = `${elem.width}px`
         loader.style.height = `${elem.height}px`
         loader.style.backgroundColor = `blue`
         if ( elem.left !== undefined ) loader.style.left = `${elem.left}px`
-        if ( elem.right !== undefined ) loader.style.right = `${elem.right}px`
+        else if ( elem.right !== undefined ) loader.style.right = `${elem.right}px`
         if ( elem.top !== undefined ) loader.style.top = `${elem.top}px`
-        if ( elem.bottom !== undefined ) loader.style.bottom = `${elem.bottom}px`
+        else if ( elem.bottom !== undefined ) loader.style.bottom = `${elem.bottom}px`
         roomToRender.append(loader)
         addToArray(getCurrentRoomLoaders, setCurrentRoomLoaders, loader)
     })
@@ -72,19 +67,23 @@ const renderLoaders = (room, roomToRender) => {
 const renderInteractables = (room, roomToRender) => {
     if ( !room.interactables ) return
     Array.from(room.interactables).forEach((interactable) => {
-        const int = document.createElement("div")
-        addClass(int, 'interactable')
-        addAttribute("name", interactable.name, int)
-        if (interactable.amount) addAttribute("amount", interactable.amount, int)
-        int.style.left = `${interactable.left}px`
-        int.style.top = `${interactable.top}px`
-        int.style.width = `${interactable.width}px`
-        renderImage(int, interactable)
-        renderPopUp(int, interactable)
-        roomToRender.append(int)
-        if ( interactable.solid ) addToArray(getCurrentRoomSolid, setCurrentRoomSolid, int)
-        addToArray(getCurrentRoomInteractables, setCurrentRoomInteractables, int)
+        renderInteractable(roomToRender, interactable)
     })
+}
+
+const renderInteractable = (root, interactable) => {
+    const int = document.createElement("div")
+    addClass(int, 'interactable')
+    addAttribute("name", interactable.name, int)
+    if (interactable.amount) addAttribute("amount", interactable.amount, int)
+    int.style.left = `${interactable.left}px`
+    int.style.top = `${interactable.top}px`
+    int.style.width = `${interactable.width}px`
+    renderImage(int, interactable)
+    renderPopUp(int, interactable)
+    root.append(int)
+    if ( interactable.solid ) addToArray(getCurrentRoomSolid, setCurrentRoomSolid, int)
+    addToArray(getCurrentRoomInteractables, setCurrentRoomInteractables, int)
 }
 
 const renderImage = (int, interactable) => {
