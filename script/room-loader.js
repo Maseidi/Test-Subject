@@ -19,7 +19,6 @@ export const loadCurrentRoom = () => {
     addClass(roomToRender, `${getCurrentRoomId()}`)
     roomToRender.style.width = `${room.width}px`
     roomToRender.style.height = `${room.height}px`
-    roomToRender.style.position = `absolute`
     roomToRender.style.left = `${getRoomLeft()}px`
     roomToRender.style.top = `${getRoomTop()}px`
     roomToRender.style.backgroundColor = `lightgray`
@@ -75,10 +74,10 @@ const renderInteractable = (root, interactable, index) => {
     const int = document.createElement("div")
     int.id = index
     addClass(int, 'interactable')
-    addAttribute("name", interactable.name, int)
-    addAttribute("title", interactable.title, int)
-    if (interactable.amount) addAttribute("amount", interactable.amount, int)
-    if (interactable.space) addAttribute("space", interactable.space, int)
+    addAttribute(int, "name", interactable.name)
+    addAttribute(int, "title", interactable.title)
+    if (interactable.amount) addAttribute(int, "amount", interactable.amount)
+    if (interactable.space) addAttribute(int, "space", interactable.space)
     int.style.left = `${interactable.left}px`
     int.style.top = `${interactable.top}px`
     int.style.width = `${interactable.width}px`

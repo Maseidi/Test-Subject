@@ -4,6 +4,6 @@
     background-color: #2b2b2b;
 }
 
-.loader, .solid, .map {
+.loader, .solid, .map, .room-container > div {
     position: absolute;
 }

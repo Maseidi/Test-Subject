@@ -42,10 +42,10 @@ export const isMoving = () => {
     return getUpPressed() || getDownPressed() || getLeftPressed() || getRightPressed()
 }
 
-export const addAttribute = (name, value, parent) => {
+export const addAttribute = (elem, name, value) => {
     const attr = document.createAttribute(name)
     attr.value = value
-    parent.setAttributeNode(attr)
+    elem.setAttributeNode(attr)
 }
 
 export const addToArray = (getter, setter, value) => {

@@ -17,6 +17,7 @@ import {
 
 export const control = () => {
     onkeydown = (e) => {
+        e.preventDefault()
         if ( !e.repeat ) {
             switch ( e.key ) {
                 case "w":
@@ -51,7 +52,10 @@ export const control = () => {
                 case "F":
                 case "f":
                     fDown()
-                    break                          
+                    break   
+                case "Tab":
+                    openInventory()
+                    break
             }
         }
     }
@@ -139,6 +143,10 @@ const shiftDown = () => {
 
 const fDown = () => {
     if ( getIntObj() && getIntObj().getAttribute("amount") ) pickupDrop()
+}
+
+const openInventory = () => {
+    
 }
 
 const wUp = () => {
