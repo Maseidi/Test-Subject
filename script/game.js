@@ -17,5 +17,6 @@ export const play = () => {
         manageEntities()
         managePlayerMovement()
         manageAim()
+        console.log(getTarget());
     }, 1000 / 60)
 }
