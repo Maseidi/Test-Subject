@@ -128,7 +128,7 @@
 }
 
 .player > .player-collider > .player-body > .weapon > .laser {
-  width: 1px;
+  width: 0.25px;
   position: absolute;
   left: 50%;
   transform: translateX(-50%);

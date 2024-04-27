@@ -71,11 +71,25 @@ const searchEmpty = () => {
                 inventory[i][j] = new Item(getLootId(), dropName, diff, dropSpace)
                 for ( let k = 1; k < dropSpace; k++ ) inventory[i][j+k] = "taken"
                 updateAmount(dropAmount - diff)
+                if ( Number(getIntObj().getAttribute("amount")) > 0 && inventoryFull() ) return
                 searchEmpty()
                 return
             }
         }
     }
+}
+
+const inventoryFull = () => {
+    let isFull = true
+    for (const row of inventory) {
+        for ( const item of row ) {
+            if ( item === null ) {
+                isFull = false
+                return
+            }
+        }
+    }  
+    return isFull 
 }
 
 const updateAmount = (newValue) => {

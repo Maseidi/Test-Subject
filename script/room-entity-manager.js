@@ -11,15 +11,15 @@ import { getCurrentRoomId,
     setIntObj,
     setPrevRoomId,
     setRoomLeft,
-    setRoomTop } from "./variables.js"
+    setRoomTop} from "./variables.js"
 
 export const manageEntities = () => {
-    hitSolid()
-    enterNewRoom()
-    hitInteractables()
+    manageSolidObjects()
+    manageLoaders()
+    manageInteractables()
 }
 
-const hitSolid = () => {
+const manageSolidObjects = () => {
     setAllowMove(true)
     Array.from(getCurrentRoomSolid()).forEach((solid) => {
         if ( collide(getPlayer().firstElementChild.children[1], solid, 12) ) {
@@ -29,7 +29,7 @@ const hitSolid = () => {
     })
 }
 
-const enterNewRoom = () => {
+const manageLoaders = () => {
     Array.from(getCurrentRoomLoaders()).forEach((loader) => {
         if ( collide(getPlayer().firstElementChild, loader, 0) ) {
             const cpu = window.getComputedStyle(loader)
@@ -65,7 +65,7 @@ const calculateNewRoomLeftAndTop = (cpuLeft, cpuTop) => {
     })
 }
 
-const hitInteractables = () => {
+const manageInteractables = () => {
     setIntObj(undefined)
     Array.from(getCurrentRoomInteractables()).forEach((int) => {
         const popup = int.children[1]
