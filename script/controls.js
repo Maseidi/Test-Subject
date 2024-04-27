@@ -5,11 +5,13 @@ import {
     getAimMode,
     getEquippedWeapon,
     getIntObj,
+    getInventoryOpen,
     getWeaponWheel,
     setAimMode,
     setAimingPlayerAngle,
     setDownPressed,
     setEquippedWeapon,
+    setInventoryOpen,
     setLeftPressed,
     setRightPressed,
     setSprintPressed,
@@ -158,7 +160,7 @@ const fDown = () => {
 }
 
 const openInventory = () => {
-    
+    setInventoryOpen(!getInventoryOpen())
 }
 
 const wUp = () => {

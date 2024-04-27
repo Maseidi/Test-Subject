@@ -216,3 +216,11 @@ export const setTarget = (val) => {
 export const getTarget = () => {
     return target
 }
+
+let inventoryOpen = false
+export const setInventoryOpen = (val) => {
+    inventoryOpen = val
+}
+export const getInventoryOpen = () => {
+    return inventoryOpen
+}
