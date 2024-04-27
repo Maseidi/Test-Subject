@@ -5,14 +5,14 @@ import { manageEntities } from "./room-entity-manager.js"
 import { startUp } from "./startup.js"
 import { managePlayerAngle } from "./player-angle.js"
 import { manageAim } from "./aim-shoot-manager.js"
-import { getInventoryOpen } from "./variables.js"
+import { getPause } from "./variables.js"
 
 export const play = () => {
     startUp()
     control()
 
     window.setInterval(() => {
-        if ( !getInventoryOpen() ) {
+        if ( !getPause() ) {
             manageSprint()
             managePlayerAngle()
             manageEntities()

@@ -1,18 +1,19 @@
 import { getPlayer } from "./elements.js"
 import { pickupDrop } from "./inventory.js"
-import { addClass, angleOfTwoPoints, containsClass, isMoving, removeClass } from "./util.js"
+import { addClass, angleOfTwoPoints, isMoving, removeClass } from "./util.js"
 import { 
     getAimMode,
     getEquippedWeapon,
     getIntObj,
-    getInventoryOpen,
+    getPause,
+    getSprintPressed,
     getWeaponWheel,
     setAimMode,
     setAimingPlayerAngle,
     setDownPressed,
     setEquippedWeapon,
-    setInventoryOpen,
     setLeftPressed,
+    setPause,
     setRightPressed,
     setSprintPressed,
     setUpPressed } from "./variables.js"
@@ -109,10 +110,11 @@ const dDown = () => {
 
 const enableDirection = (setPressed) => {
     setPressed(true)
-    if ( !getAimMode() ) addClass(getPlayer(), 'walk')
+    if ( !getAimMode() && !getPause() ) addClass(getPlayer(), 'walk')
 }
 
 const eDown = () => {
+    if ( getPause() ) return
     if ( getEquippedWeapon() !== null  ) {
         setAimMode(!getAimMode())
         if ( getAimMode() ) {
@@ -130,6 +132,7 @@ const eDown = () => {
 }
 
 const weaponSlotDown = (key) => {
+    if ( getPause() ) return
     removeWeapon()
     if ( getWeaponWheel()[Number(key) - 1] === getEquippedWeapon() ) {
         setEquippedWeapon(null)
@@ -150,6 +153,11 @@ const weaponSlotDown = (key) => {
 
 const shiftDown = () => {
     setSprintPressed(true)
+    if ( getPause() ) return
+    startSprint()
+}
+
+const startSprint = () => {
     setAimMode(false)
     removeClass(getPlayer(), 'aim')
     removeWeapon()
@@ -160,7 +168,23 @@ const fDown = () => {
 }
 
 const openInventory = () => {
-    setInventoryOpen(!getInventoryOpen())
+    managePause()
+}
+
+const managePause = () => {
+    setPause(!getPause())
+    if ( getPause() ) {
+        removeClass(getPlayer(), 'run')
+        removeClass(getPlayer(), 'walk')
+        return
+    }
+    if ( isMoving() ) {
+        if ( !getAimMode() ) {
+            addClass(getPlayer(), 'walk')
+            return
+        }
+        if ( getSprintPressed() ) startSprint()
+    } 
 }
 
 const wUp = () => {

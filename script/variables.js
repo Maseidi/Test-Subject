@@ -217,10 +217,10 @@ export const getTarget = () => {
     return target
 }
 
-let inventoryOpen = false
-export const setInventoryOpen = (val) => {
-    inventoryOpen = val
+let pause = false
+export const setPause = (val) => {
+    pause = val
 }
-export const getInventoryOpen = () => {
-    return inventoryOpen
+export const getPause = () => {
+    return pause
 }
