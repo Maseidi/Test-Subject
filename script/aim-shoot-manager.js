@@ -7,7 +7,7 @@ let counter = 0
 export const manageAim = () => {
     if ( containsClass(getPlayer(), 'aim') ) {
         counter++
-        if ( counter === 10 ) {
+        if ( counter === 12 ) {
             counter = 0
             setTarget(null)
         } 
