@@ -122,12 +122,11 @@ const eDown = () => {
             removeClass(getPlayer(), 'run')
             addClass(getPlayer(), 'aim')
             renderWeapon()
+            return
         }
-        else {
-            removeClass(getPlayer(), 'aim')
-            removeWeapon()
-            if ( isMoving() ) addClass(getPlayer(), 'walk')
-        }
+        removeClass(getPlayer(), 'aim')
+        removeWeapon()
+        if ( isMoving() ) addClass(getPlayer(), 'walk')
     }
 }
 
@@ -144,11 +143,11 @@ const weaponSlotDown = (key) => {
     setEquippedWeapon(getWeaponWheel()[Number(key) - 1])
     if ( getEquippedWeapon() && getAimMode() ) {
         renderWeapon()
-    } else {
-        removeClass(getPlayer(), 'aim')
-        if (isMoving()) addClass(getPlayer(), 'walk')
-        setAimMode(false)
+        return
     }
+    removeClass(getPlayer(), 'aim')
+    if (isMoving()) addClass(getPlayer(), 'walk')
+    setAimMode(false)
 }
 
 const shiftDown = () => {

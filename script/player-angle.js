@@ -48,7 +48,7 @@ const handleBreakpoints = () => {
 
 const manageNonAimModeAngle = () => {
     if ( isMoving() ) {
-        let newState = getPlayerAngleState()
+        let newState
         if (getUpPressed() && getRightPressed()) 
             newState = changeState(5, '100%', '-4px')      
         else if (getUpPressed() && getLeftPressed()) 
