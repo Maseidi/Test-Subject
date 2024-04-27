@@ -164,7 +164,7 @@ const startSprint = () => {
 }
 
 const fDown = () => {
-    if ( getIntObj() && getIntObj().getAttribute("amount") ) pickupDrop()
+    if ( !getPause() && getIntObj() && getIntObj().getAttribute("amount") ) pickupDrop()
 }
 
 const openInventory = () => {
@@ -221,6 +221,7 @@ const stopWalkingAnimation = () => {
 }
 
 const aimAngle = (e) => {
+    if ( getPause() ) return
     const angle = angleOfTwoPoints(
             getPlayer().getBoundingClientRect().x + 17, 
             getPlayer().getBoundingClientRect().y + 17,
