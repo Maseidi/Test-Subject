@@ -15,11 +15,13 @@ const MAX_PACKSIZE = {
 }
 
 class Item {
-    constructor(id, name, amount, space) {
+    constructor(id, name, amount, space, heading, description) {
         this.id = id
         this.name = name
         this.amount = amount
         this.space = space
+        this.heading = heading
+        this.description = description
     }
 }
 
@@ -65,6 +67,8 @@ const searchEmpty = () => {
     if ( dropAmount === 0 ) return
     const dropName = getIntObj().getAttribute("name")
     const dropSpace = Number(getIntObj().getAttribute("space"))
+    const dropHeading = getIntObj().getAttribute("heading")
+    const dropDesc = getIntObj().getAttribute("desc")
     const pack = MAX_PACKSIZE[dropName] || 1
     for (let i = 0; i < inventory.length; i++) {
         for ( let j = 0; j < inventory[i].length; j++ ) {
@@ -72,7 +76,7 @@ const searchEmpty = () => {
             if ( item === null && j + dropSpace <= 4 ) {
                 let diff = Math.min(pack, dropAmount)
                 setLootId(getLootId() + 1)
-                inventory[i][j] = new Item(getLootId(), dropName, diff, dropSpace)
+                inventory[i][j] = new Item(getLootId(), dropName, diff, dropSpace, dropHeading, dropDesc)
                 for ( let k = 1; k < dropSpace; k++ ) inventory[i][j+k] = "taken"
                 updateAmount(dropAmount - diff)
                 if ( Number(getIntObj().getAttribute("amount")) > 0 && inventoryFull() ) return
@@ -98,7 +102,7 @@ const inventoryFull = () => {
 
 const updateAmount = (newValue) => {
     getIntObj().setAttribute("amount", newValue)
-    getIntObj().children[1].children[0].textContent = `x${newValue} ${getIntObj().getAttribute("title")}`
+    getIntObj().children[1].children[0].textContent = `x${newValue} ${getIntObj().getAttribute("heading")}`
     rooms.get(getCurrentRoomId()).interactables = 
     Array.from(rooms.get(getCurrentRoomId()).interactables).map((int, index) => {
         return index === Number(getIntObj().getAttribute("id")) ? {

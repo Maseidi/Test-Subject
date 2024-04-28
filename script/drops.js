@@ -2,61 +2,61 @@ import { Interactable } from "./interactables.js"
 import { getWeaponSpecs } from "./weapon-specs.js"
 
 class Drop extends Interactable {
-    constructor(width, left, top, name, title, popup, amount, space) {
-        super(width, left, top, name, title, popup, false, amount, space)
+    constructor(width, left, top, name, heading, popup, amount, space, description) {
+        super(width, left, top, name, heading, popup, false, amount, space, description)
     }
 }
 
 export class Bandage extends Drop {
     constructor(left, top, amount) {
-        super(50, left, top, "bandage", "bandage", "Pick up", amount, 1)
+        super(50, left, top, "bandage", "bandage", "Pick up", amount, 1, "Might come in handy in case of injuries")
     }
 }
 
 export class Coin extends Drop {
     constructor(left, top, amount) {
-        super(25, left, top, "coin", "coin", "Pick up", amount, 1)
+        super(25, left, top, "coin", "coin", "Pick up", amount, 1, "A neccesity when interacting with the vending machine")
     }
 }
 
 export class HardDrive extends Drop {
     constructor(left, top, amount) {
-        super(30, left, top, "hardDrive", "hard drive", "Pick up", amount, 1)
+        super(30, left, top, "hardDrive", "hard drive", "Pick up", amount, 1, "PC needs one of these to save your progress")
     }
 }
 
 export class PistolAmmo extends Drop {
     constructor(left, top, amount) {
-        super(50, left, top, "pistolAmmo", "pistol ammo", "Pick up", amount, 1)
+        super(50, left, top, "pistolAmmo", "pistol ammo", "Pick up", amount, 1, "Ammo for all sorts of handguns")
     }
 }
 
 export class ShotgunShells extends Drop {
     constructor(left, top, amount) {
-        super(40, left, top, "shotgunShells", "shotgun shells", "Pick up", amount, 1)
+        super(40, left, top, "shotgunShells", "shotgun shells", "Pick up", amount, 1, "Shells for all sorts of shotguns")
     }
 }
 
 export class MagnumAmmo extends Drop {
     constructor(left, top, amount) {
-        super(40, left, top, "magnumAmmo", "magnum ammo", "Pick up", amount, 1)
+        super(40, left, top, "magnumAmmo", "magnum ammo", "Pick up", amount, 1, "Ammo for all sorts of magnums")
     }
 }
 
 export class SmgAmmo extends Drop {
     constructor(left, top, amount) {
-        super(40, left, top, "smgAmmo", "smg ammo", "Pick up", amount, 1)
+        super(40, left, top, "smgAmmo", "smg ammo", "Pick up", amount, 1, "Ammo for all sorts of sub-machine guns")
     }
 }
 
 export class RifleAmmo extends Drop {
     constructor(left, top, amount) {
-        super(30, left, top, "rifleAmmo", "rifle ammo", "Pick up", amount, 1)
+        super(30, left, top, "rifleAmmo", "rifle ammo", "Pick up", amount, 1, "Ammo for all sorts of rifles")
     }
 }
 
 export class WeaponDrop extends Drop {
-    constructor(left, top, name, title) {
-        super(70, left, top, name, title, "Pick up", 1, getWeaponSpecs().get(name).space)
+    constructor(left, top, name, heading) {
+        super(70, left, top, name, heading, "Pick up", 1, getWeaponSpecs().get(name).space, getWeaponSpecs().get(name).description)
     }
 }

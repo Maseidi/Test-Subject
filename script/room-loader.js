@@ -75,9 +75,10 @@ const renderInteractable = (root, interactable, index) => {
     int.id = index
     addClass(int, 'interactable')
     addAttribute(int, "name", interactable.name)
-    addAttribute(int, "title", interactable.title)
+    addAttribute(int, "heading", interactable.heading)
     if (interactable.amount) addAttribute(int, "amount", interactable.amount)
     if (interactable.space) addAttribute(int, "space", interactable.space)
+    if (interactable.description) addAttribute(int, "desc", interactable.description)
     int.style.left = `${interactable.left}px`
     int.style.top = `${interactable.top}px`
     int.style.width = `${interactable.width}px`
@@ -98,17 +99,17 @@ const renderPopUp = (int, interactable) => {
     const popup = document.createElement("div")
     popup.style.bottom = `calc(100% - 20px)`
     popup.style.opacity = `0`
-    renderTitle(popup, interactable)
+    renderHeading(popup, interactable)
     renderLine(popup)
     renderDescription(popup, interactable)
     int.append(popup)
 }
 
-const renderTitle = (popup, interactable) => {
-    const title = document.createElement("p")
-    let content = interactable.amount ? `x${interactable.amount} ${interactable.title}` : `${interactable.title}`
-    title.textContent = content
-    popup.append(title)
+const renderHeading = (popup, interactable) => {
+    const heading = document.createElement("p")
+    let content = interactable.amount ? `x${interactable.amount} ${interactable.heading}` : `${interactable.heading}`
+    heading.textContent = content
+    popup.append(heading)
 }
 
 const renderLine = (popup) => {

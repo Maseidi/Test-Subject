@@ -20,18 +20,21 @@
     flex-flow: row wrap;
 }
 
-.inventory-ui > .inventory > div {
+.inventory-ui > .inventory > .block {
     position: relative;
     height: 70px;
     border: 1px solid rgba(255, 255, 255, 0.2);
     background-color: rgba(245, 222, 179, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-.inventory-ui > .inventory > div:hover::after {
+.inventory-ui > .inventory > .block:hover::after, .inventory-ui > .weapon-wheel > div:hover:after {
     opacity: 1;
 }
 
-.inventory-ui > .inventory > div::after {
+.inventory-ui > .inventory > .block::after, .inventory-ui > .weapon-wheel > div::after {
     content: "";
     width: 100%;
     height: 100%;
@@ -43,12 +46,12 @@
     transition: 300ms;
 }
 
-.inventory-ui > .inventory > div > img {
-    width: 100%;
-    height: 100%;
+.inventory-ui > .inventory > .block > img {
+    width: 80%;
+    height: 80%;
 }
 
-.inventory-ui > .inventory > div > .amount {
+.inventory-ui > .inventory > .block > .amount {
     padding: 5px;
     background-color: black;
     position: absolute;
@@ -56,4 +59,64 @@
     bottom: 0;
     color: white;
     z-index: 1;
+}
+
+.inventory-ui > .inventory > .description {
+    position: absolute;
+    width: 100%;
+    left: 0;
+    top: 100%;
+    padding: 20px 0;
+}
+
+.inventory-ui > .inventory > .description > h2 {
+    text-transform: capitalize;
+    color: white;
+}
+
+.inventory-ui > .inventory > .description > p {
+    font-size: 16px;
+    margin-top: 10px;
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.inventory-ui > .weapon-wheel {
+    position: absolute;
+    left: 400px;
+    top: 50%;
+    transform : translateY(-50%);
+}
+
+.inventory-ui > .weapon-wheel > div {
+    position: absolute;
+    height: 70px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.inventory-ui > .weapon-wheel > div > img {
+    height: 100%;
+}
+
+.inventory-ui > .weapon-wheel > div:nth-of-type(1) {
+    top: -120px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.inventory-ui > .weapon-wheel > div:nth-of-type(2) {
+    top: 50%;
+    left: -120px;
+    transform: translateY(-50%);
+}
+
+.inventory-ui > .weapon-wheel > div:nth-of-type(3) {
+    bottom: -120px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.inventory-ui > .weapon-wheel > div:nth-of-type(4) {
+    top: 50%;
+    right: -120px;
+    transform: translateY(-50%);
 }
