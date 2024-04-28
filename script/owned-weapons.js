@@ -1,8 +1,9 @@
 import { getWeaponSpecs } from "./weapon-specs.js"
 
 export class OwnedWeapon {
-    constructor(name, damageLvl, rangeLvl, reloadSpeedLvl, magazineLvl, fireRateLvl) {
+    constructor(name, currMag, damageLvl, rangeLvl, reloadSpeedLvl, magazineLvl, fireRateLvl) {
         this.name = name
+        this.currMag = currMag
         this.damageLvl = damageLvl
         this.rangeLvl = rangeLvl
         this.reloadSpeedLvl = reloadSpeedLvl
@@ -32,6 +33,10 @@ export class OwnedWeapon {
 
     getSpace() {
         return getWeaponSpecs().get(this.name).space
+    }
+
+    getCurrMag() {
+        return this.currMag
     }
 
     getDamage() {

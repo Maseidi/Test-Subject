@@ -14,6 +14,14 @@ export const getRoomContainer = () => {
     return roomContainer
 }
 
+let pauseContainer
+export const setPauseContainer = (val) => {
+    pauseContainer = val
+}
+export const getPauseContainer = () => {
+    return pauseContainer
+}
+
 let currentRoom
 export const setCurrentRoom = (val) => {
     currentRoom = val

@@ -1,0 +1,59 @@
+.inventory-ui {
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.67);
+    backdrop-filter: blur(3.3px);
+    -webkit-backdrop-filter: blur(3.3px);
+    z-index: 100;
+    position: fixed;
+    left: 0;
+    top: 0;
+}
+
+.inventory-ui > .inventory {
+    width: 400px;
+    position: absolute;
+    right: 200px;
+    top: 50%;
+    transform : translateY(-50%);
+    display: flex;
+    flex-flow: row wrap;
+}
+
+.inventory-ui > .inventory > div {
+    position: relative;
+    height: 70px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background-color: rgba(245, 222, 179, 0.1);
+}
+
+.inventory-ui > .inventory > div:hover::after {
+    opacity: 1;
+}
+
+.inventory-ui > .inventory > div::after {
+    content: "";
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    background-color: rgba(255, 255, 255, 0.1);
+    opacity: 0;
+    transition: 300ms;
+}
+
+.inventory-ui > .inventory > div > img {
+    width: 100%;
+    height: 100%;
+}
+
+.inventory-ui > .inventory > div > .amount {
+    padding: 5px;
+    background-color: black;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    color: white;
+    z-index: 1;
+}

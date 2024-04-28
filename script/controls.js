@@ -1,4 +1,5 @@
 import { getPlayer } from "./elements.js"
+import { removeInventory, renderInventory } from "./inventory-ui.js"
 import { pickupDrop } from "./inventory.js"
 import { addClass, angleOfTwoPoints, isMoving, removeClass } from "./util.js"
 import { 
@@ -6,6 +7,7 @@ import {
     getEquippedWeapon,
     getIntObj,
     getPause,
+    getPauseCause,
     getSprintPressed,
     getWeaponWheel,
     setAimMode,
@@ -14,6 +16,7 @@ import {
     setEquippedWeapon,
     setLeftPressed,
     setPause,
+    setPauseCause,
     setRightPressed,
     setSprintPressed,
     setUpPressed } from "./variables.js"
@@ -167,7 +170,15 @@ const fDown = () => {
 }
 
 const openInventory = () => {
+    if ( getPause() && getPauseCause() !== "inventory" ) return
     managePause()
+    if ( getPause() ) {
+        setPauseCause("inventory")
+        renderInventory()
+        return
+    }
+    setPauseCause(null)
+    removeInventory()
 }
 
 const managePause = () => {

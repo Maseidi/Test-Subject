@@ -224,3 +224,11 @@ export const setPause = (val) => {
 export const getPause = () => {
     return pause
 }
+
+let pauseCause
+export const setPauseCause = (val) => {
+    pauseCause = val
+}
+export const getPauseCause = () => {
+    return pauseCause
+}

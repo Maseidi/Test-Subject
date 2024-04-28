@@ -32,6 +32,10 @@ let inventory = [
     [undefined, undefined, undefined, undefined],
 ]
 
+export const getInventory = () => {
+    return inventory
+}
+
 export const pickupDrop = () => {
     searchPack()
     searchEmpty()
@@ -115,7 +119,7 @@ const removeDrop = () => {
 
 const handleNewWeaponPickup = () => {
     putToMap(getOwnedWeapons, setOwnedWeapons, getLootId(), new OwnedWeapon(
-        getIntObj().getAttribute("name"), 1, 1, 1, 1, 1
+        getIntObj().getAttribute("name"), 0, 1, 1, 1, 1, 1
     ))
     updateWeaponWheel()
 }
