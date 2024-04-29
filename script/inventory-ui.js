@@ -1,23 +1,29 @@
 import { getPauseContainer } from "./elements.js"
 import { getInventory } from "./inventory.js"
 import { getOwnedWeapons } from "./owned-weapons.js"
-import { addAttribute, addClass } from "./util.js"
+import { addAttribute, addClass, containsClass } from "./util.js"
 import { getWeaponWheel } from "./variables.js"
 import { getWeaponSpecs } from "./weapon-specs.js"
 
 export const renderInventory = () => {
-    const invUi = document.createElement("div")
-    addClass(invUi, 'inventory-ui')
-    renderBlocks(invUi)
-    renderHeadingAndDescription(invUi)
-    eventListeners(invUi)
-    renderWeaponWheel(invUi)
-    getPauseContainer().append(invUi)
+    renderBackground()
+    renderBlocks()
+    renderHeadingAndDescription()
+    inventoryEvents()
+    renderWeaponWheel()
 }
 
-const renderBlocks = (invUi) => {
+const renderBackground = () => {
+    const background = document.createElement("div")
+    addClass(background, 'inventory-ui')
+    getPauseContainer().append(background)
+}
+
+const renderBlocks = () => {
+    const background = getPauseContainer().firstElementChild
     const inventory = document.createElement("div")
     addClass(inventory, 'inventory')
+    console.log(getInventory());
     getInventory().forEach((row) => {
         row.forEach((block) => {
             const theBlock = document.createElement("div")
@@ -33,8 +39,10 @@ const renderBlocks = (invUi) => {
                 if ( getWeaponSpecs().get(block.name) === undefined ) amountText.textContent = `${block.amount}`
                 else amountText.textContent = `${getOwnedWeapons().get(block.id).getCurrMag()}`
                 amount.append(amountText)
-                addAttribute(theBlock, 'description', block.description)
+                addAttribute(theBlock, 'id', block.id)
+                addAttribute(theBlock, 'name', block.name)
                 addAttribute(theBlock, 'heading', block.heading)
+                addAttribute(theBlock, 'description', block.description)
                 theBlock.append(amount)
             }
             if ( !skip ) {                
@@ -50,32 +58,116 @@ const renderBlocks = (invUi) => {
             }          
         })
     })
-    invUi.append(inventory)
+    background.append(inventory)
 }
 
-const renderHeadingAndDescription = (invUi) => {
+const renderHeadingAndDescription = () => {
+    const background = getPauseContainer().firstElementChild
     const desc = document.createElement("div")
     addClass(desc, 'description')
     const heading = document.createElement("h2")
     desc.append(heading)
     const paragraph = document.createElement("p")
     desc.append(paragraph)
-    invUi.firstElementChild.append(desc)
+    background.firstElementChild.append(desc)
 }
 
-const eventListeners = (invUi) => {
-    Array.from(invUi.firstElementChild.children).forEach((item) => {
-        item.addEventListener('mousemove', () => {
-            const desc = document.querySelector(".description")
-            const heading = item.getAttribute('heading')
-            const description = item.getAttribute('description')
-            if (heading) desc.children[0].textContent = `${heading}`
-            if (description) desc.children[1].textContent = `${description}`
+const inventoryEvents = () => {
+    const background = getPauseContainer().firstElementChild
+    Array.from(background.firstElementChild.children)
+        .filter((block) => block.getAttribute('heading') && block.getAttribute('description'))
+        .forEach((item) => {
+            descriptionEvent(item)
+            removeDescriptionEvent(item)
+            optionsEvent(item)
+            closeOptionsEvent(item)
         })
+}
+
+const descriptionEvent = (item) => {
+    item.addEventListener('mousemove', () => {
+        const desc = document.querySelector(".description")
+        const heading = item.getAttribute('heading')
+        const description = item.getAttribute('description')
+        if (heading) desc.children[0].textContent = `${heading}`
+        if (description) desc.children[1].textContent = `${description}`
     })
 }
 
-const renderWeaponWheel = (invUi) => {
+const removeDescriptionEvent = (item) => {
+    item.addEventListener('mouseleave', () => {
+        const desc = document.querySelector(".description")
+        desc.children[0].textContent = ``
+        desc.children[1].textContent = ``
+    })
+}
+
+const optionsEvent = (item) => {
+    item.addEventListener('click', () => {
+        if ( item.lastElementChild && containsClass(item.lastElementChild, 'options') ) return
+        const options = document.createElement('div')
+        addClass(options, 'options')
+        renderOptions(item, options)
+        item.append(options)
+    })
+}
+
+const renderOptions = (item, options) => {
+    if ( item.getAttribute('name') === 'bandage' ) createOption(options, 'use')
+    createOption(options, 'replace')
+    if ( getWeaponSpecs().get(item.getAttribute('name')) ) {
+        createOption(options, 'equip')
+        createOption(options, 'shortcut')
+    }
+    createOption(options, 'drop')
+}
+
+const replace = (item) => {
+    console.log('replace', item);
+}
+
+const use = (item) => {
+    console.log('use', item);
+}
+
+const equip = (item) => {
+    console.log('equip', item);
+}
+
+const shortcut = (item) => {
+    console.log('shortcut', item);
+}
+
+const drop = (item) => {
+    console.log('drop', item);
+}
+
+const OPTIONS_MAP = new Map([
+    ['replace', replace],
+    ['use', use],
+    ['equip', equip],
+    ['shortcut', shortcut],
+    ['drop', drop]
+])
+
+const createOption = (options, text) => {
+    const elem = document.createElement("div")
+    elem.textContent = `${text}`
+    elem.addEventListener('click', () => {
+        OPTIONS_MAP.get(text)(options.parentElement)
+    })
+    options.append(elem)
+}
+
+const closeOptionsEvent = (item) => {
+    item.addEventListener('mouseleave', () => {
+        const options = item.children[2]
+        options?.remove()
+    })
+}
+
+const renderWeaponWheel = () => {
+    const background = getPauseContainer().firstElementChild
     const weaponWheel = document.createElement("div")
     addClass(weaponWheel, 'weapon-wheel')
     let slots = 4
@@ -92,7 +184,7 @@ const renderWeaponWheel = (invUi) => {
         weaponWheel.append(slot)
         slots--
     }
-    invUi.append(weaponWheel)
+    background.append(weaponWheel)
 }
 
 export const removeInventory = () => {
