@@ -7,7 +7,7 @@ import { getCurrentRoomInteractables, getCurrentRoomLoaders,
      setCurrentRoomSolid
      } from "./elements.js"
 import { rooms } from "./rooms.js"
-import { addAttribute, addClass, addToArray } from "./util.js"
+import { addAttribute, addClass, addToArray, isNullOrUndefined, objectToElement } from "./util.js"
 import { getCurrentRoomId, getRoomLeft, getRoomTop } from "./variables.js"
 
 export const loadCurrentRoom = () => {
@@ -70,15 +70,10 @@ const renderInteractables = (room, roomToRender) => {
     })
 }
 
-const renderInteractable = (root, interactable, index) => {
-    const int = document.createElement("div")
-    int.id = index
+export const renderInteractable = (root, interactable, index) => {
+    const int = objectToElement(interactable)
     addClass(int, 'interactable')
-    addAttribute(int, "name", interactable.name)
-    addAttribute(int, "heading", interactable.heading)
-    if (interactable.amount) addAttribute(int, "amount", interactable.amount)
-    if (interactable.space) addAttribute(int, "space", interactable.space)
-    if (interactable.description) addAttribute(int, "desc", interactable.description)
+    int.id = `${getCurrentRoomId().replace('room-', '')}-${index}`
     int.style.left = `${interactable.left}px`
     int.style.top = `${interactable.top}px`
     int.style.width = `${interactable.width}px`

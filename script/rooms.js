@@ -66,10 +66,10 @@ export const rooms = new Map([
             new HardDrive(500, 500, 3),
             new PC(700, 700),
             new Stash(900, 900),
-            new WeaponDrop(700, 900, "remington1858", "remington 1858"),
-            new WeaponDrop(100, 900, "sniper", "sniper"),
-            new WeaponDrop(200, 950, "riotgun", "riotgun"),
-            new WeaponDrop(300, 1000, "mauser", "mauser"),
+            new WeaponDrop(700, 900, "remington1858", "remington 1858", 0, 1, 1, 1, 1, 1),
+            new WeaponDrop(100, 900, "sniper", "sniper", 0, 1, 1, 1, 1, 1),
+            new WeaponDrop(200, 950, "riotgun", "riotgun", 0, 1, 1, 1, 1, 1),
+            new WeaponDrop(300, 1000, "mauser", "mauser", 0, 1, 1, 1, 1, 1),
             new PistolAmmo(200, 700, 10),
             new ShotgunShells(300, 800, 11),
             new SmgAmmo(200, 400, 10),
@@ -86,7 +86,8 @@ export const rooms = new Map([
         ],[
             new LeftLoader_FromBottom("room-1", 100, 0),
             new TopLoader_FromRight("room-9", 100, 0)
-        ])
+        ],
+        [])
     ],
     ["room-3", 
         new Room(1000, 1000, [
@@ -96,7 +97,8 @@ export const rooms = new Map([
         ], [
             new LeftLoader_FromTop("room-1", 100, 0),
             new BottomLoader_FromRight("room-10", 100, 0)
-        ])
+        ], 
+        [])
     ],
     ["room-4", 
         new Room(100, 1000, [
@@ -105,7 +107,8 @@ export const rooms = new Map([
         ],[
             new TopLoader_FromRight("room-1", 100, 0),
             new BottomLoader_FromRight("room-11", 100, 0)
-        ])
+        ], 
+        [])
     ],
     ["room-5", 
         new Room(1000, 1000, [
@@ -115,7 +118,8 @@ export const rooms = new Map([
         ],[
             new TopLoader_FromRight("room-1", 100, 0),
             new LeftLoader_FromBottom("room-12", 100, 0)
-        ])
+        ], 
+        [])
     ],
     ["room-6", 
         new Room(2000, 100, [
@@ -124,7 +128,8 @@ export const rooms = new Map([
         ],[
             new RightLoader_FromBottom("room-1", 100, 0),
             new LeftLoader_FromBottom("room-13", 100, 0)
-        ])
+        ], 
+        [])
     ],
     ["room-7", 
         new Room(1000, 1000, [
@@ -134,7 +139,8 @@ export const rooms = new Map([
         ],[
             new RightLoader_FromBottom("room-1", 100, 0),
             new TopLoader_FromLeft("room-14", 100, 0)
-        ])
+        ], 
+        [])
     ],
     ["room-8", 
         new Room(1500, 1500, [
@@ -145,7 +151,8 @@ export const rooms = new Map([
             new Hor_BR_Wall(650, 0)
         ],[
             new BottomLoader_FromRight("room-1", 200, 650)
-        ])
+        ], 
+        [])
     ],
     ["room-9", 
         new Room(1000, 500, [
@@ -162,7 +169,8 @@ export const rooms = new Map([
             new LeftLoader_FromBottom("room-15", 100, 200),
             new TopLoader_FromLeft("room-16", 100, 450),
             new RightLoader_FromBottom("room-17", 100, 200),
-        ])
+        ], 
+        [])
     ],
     ["room-15", 
         new Room(500, 2000, [
@@ -178,7 +186,8 @@ export const rooms = new Map([
             new LeftLoader_FromBottom("room-18", 200, 1400/4),
             new LeftLoader_FromBottom("room-19", 200, (1400/2) + 200),
             new LeftLoader_FromTop("room-20", 200, 1400/4),
-        ])
+        ], 
+        [])
     ],
     ["room-16", 
         new Room(1200, 900, [
@@ -199,7 +208,8 @@ export const rooms = new Map([
             new LeftLoader_FromTop("room-37", 100, 400),
             new TopLoader_FromLeft("room-38", 250, 475),
             new RightLoader_FromTop("room-39", 300, 300)
-        ])
+        ], 
+        [])
     ],
     ["room-18", 
         new Room(1100, 400, [
@@ -216,7 +226,8 @@ export const rooms = new Map([
             new BottomLoader_FromRight("room-21", 100, 200),
             new BottomLoader_FromLeft("room-22", 100, 500),
             new BottomLoader_FromLeft("room-23", 100, 200),
-        ])
+        ], 
+        [])
     ],
     ["room-19", 
         new Room(1100, 400, [
@@ -229,7 +240,8 @@ export const rooms = new Map([
         ],[
             new RightLoader_FromBottom("room-15", 200, 100),
             new LeftLoader_FromTop("room-24", 100, 150)
-        ])
+        ], 
+        [])
     ],
     ["room-20", 
         new Room(1100, 400, [
@@ -246,7 +258,8 @@ export const rooms = new Map([
             new TopLoader_FromRight("room-25", 100, 200),
             new TopLoader_FromLeft("room-26", 100, 500),
             new TopLoader_FromLeft("room-27", 100, 200)     
-        ])
+        ], 
+        [])
     ],
     ["room-21", 
         new Room(500, 500, [
@@ -257,7 +270,8 @@ export const rooms = new Map([
             new Hor_TR_Wall(200, 0)
         ],[
             new TopLoader_FromLeft("room-18", 100, 200)
-        ])
+        ], 
+        [])
     ],
     ["room-22", 
         new Room(100, 1000, [
@@ -266,7 +280,8 @@ export const rooms = new Map([
         ],[
             new TopLoader_FromLeft("room-18", 100, 0),
             new BottomLoader_FromLeft("room-28", 100, 0),
-        ])
+        ], 
+        [])
     ],
     ["room-23", 
         new Room(500, 500, [
@@ -277,7 +292,8 @@ export const rooms = new Map([
             new Hor_TR_Wall(200, 0)
         ],[
             new TopLoader_FromLeft("room-18", 100, 200)
-        ])
+        ], 
+        [])
     ],
     ["room-24", 
         new Room(600, 1500, [
@@ -301,7 +317,8 @@ export const rooms = new Map([
             new LeftLoader_FromTop("room-31", 205, 445),
             new LeftLoader_FromBottom("room-32", 125, 375),
             new TopLoader_FromLeft("room-33", 150, 150)
-        ])
+        ], 
+        [])
     ],
     ["room-25", 
         new Room(1000, 1000, [
@@ -322,7 +339,8 @@ export const rooms = new Map([
             new LeftLoader_FromTop("room-34", 100, 450),
             new RightLoader_FromTop("room-35", 100, 450),
             new TopLoader_FromLeft("room-36", 100, 450),
-        ])
+        ], 
+        [])
     ],
     ["room-26", 
         new Room(300, 500, [
@@ -333,7 +351,8 @@ export const rooms = new Map([
             new Hor_BR_Wall(100, 0)
         ],[
             new BottomLoader_FromLeft("room-20", 100, 100)
-        ])
+        ], 
+        [])
     ],
     ["room-27", 
         new Room(2000, 500, [
@@ -347,7 +366,8 @@ export const rooms = new Map([
             new AbstractWall(300, 300, 0, undefined, undefined, 0)
         ],[
             new BottomLoader_FromRight("room-20", 100, 200)
-        ])
+        ], 
+        [])
     ],
     ["room-28", 
         new Room(1000, 1000, [
@@ -358,7 +378,8 @@ export const rooms = new Map([
             new Hor_TR_Wall(450, 0)
         ],[
             new TopLoader_FromLeft("room-22", 100, 450)
-        ])
+        ], 
+        [])
     ],
     ["room-29", 
         new Room(1000, 200, [
@@ -369,7 +390,8 @@ export const rooms = new Map([
             new Ver_TL_Wall(25, 0),
         ],[
             new LeftLoader_FromBottom("room-24", 150, 25)
-        ])
+        ], 
+        [])
     ],
     ["room-30", 
         new Room(1250, 400, [
@@ -382,7 +404,8 @@ export const rooms = new Map([
             new AbstractWall(700, 100, 0, undefined, 0, undefined)
         ],[
             new LeftLoader_FromBottom("room-24", 150, 125)
-        ])
+        ], 
+        [])
     ],
     ["room-31", 
         new Room(2500, 625, [
@@ -415,7 +438,8 @@ export const rooms = new Map([
             new AbstractWall(75, 75, 2200, undefined, undefined, 125),
         ],[
             new RightLoader_FromBottom("room-24", 205, 210)
-        ])
+        ], 
+        [])
     ],
     ["room-32", 
         new Room(750, 1500, [
@@ -429,7 +453,8 @@ export const rooms = new Map([
             new AbstractWall(200, 200, 100, undefined, 1100, undefined),
         ],[
             new RightLoader_FromBottom("room-24", 125, 0)
-        ])
+        ], 
+        [])
     ],
     ["room-33", 
         new Room(1200, 600, [
@@ -441,7 +466,8 @@ export const rooms = new Map([
             new AbstractWall(800, 50, 200, undefined, undefined, 150),
         ],[
             new BottomLoader_FromRight("room-24", 150, 0)
-        ])
+        ], 
+        [])
     ],
     ["room-34", 
         new Room(700, 700, [
@@ -455,7 +481,8 @@ export const rooms = new Map([
             new AbstractWall(75, 75, undefined, 200, undefined, 200)
         ],[
             new RightLoader_FromTop("room-25", 100, 100)
-        ])
+        ], 
+        [])
     ],
     ["room-35", 
         new Room(1500, 1500, [
@@ -474,7 +501,8 @@ export const rooms = new Map([
             new AbstractWall(1000, 20, undefined, 125, 1300, undefined),
         ],[
             new LeftLoader_FromTop("room-25", 100, 100)
-        ])
+        ], 
+        [])
     ],
     ["room-36", 
         new Room(2000, 700, [
@@ -490,7 +518,8 @@ export const rooms = new Map([
             new AbstractWall(125, 250, 1750, undefined, 200, undefined),
         ],[
             new BottomLoader_FromLeft("room-25", 100, 300)
-        ])
+        ], 
+        [])
     ],
     ["room-37", 
         new Room(1600, 800, [
@@ -514,7 +543,8 @@ export const rooms = new Map([
             new TopLoader_FromLeft("room-63", 100, 580),
             new TopLoader_FromRight("room-64", 100, 240),
             new TopLoader_FromRight("room-65", 100, 580)
-        ])
+        ], 
+        [])
     ],
     ["room-38", 
         new Room(1000, 5000, [
@@ -529,7 +559,8 @@ export const rooms = new Map([
         ],[
             new BottomLoader_FromLeft("room-16", 250, 375),
             new TopLoader_FromLeft("room-40", 200, 400)
-        ])
+        ], 
+        [])
     ],
     ["room-39", 
         new Room(1400, 400, [
@@ -552,7 +583,8 @@ export const rooms = new Map([
             new BottomLoader_FromLeft("room-68", 150, 1100/3),
             new BottomLoader_FromRight("room-69", 150, 1100/3),
             new RightLoader_FromTop("room-70", 100, 150)
-        ])
+        ], 
+        [])
     ],
     ["room-40", 
         new Room(1000, 2000, [
@@ -576,7 +608,8 @@ export const rooms = new Map([
             new RightLoader_FromBottom("room-43", 300, 300),
             new RightLoader_FromBottom("room-44", 300, 900),
             new TopLoader_FromLeft("room-45", 200, 400)
-        ])
+        ], 
+        [])
     ],
     ["room-41", 
         new Room(1000, 700, [
@@ -597,7 +630,8 @@ export const rooms = new Map([
             new TopLoader_FromLeft("room-46", 100, 175),
             new TopLoader_FromLeft("room-47", 100, 450),
             new TopLoader_FromRight("room-48", 100, 175),
-        ])
+        ], 
+        [])
     ],
     ["room-42", 
         new Room(1000, 700, [
@@ -610,7 +644,8 @@ export const rooms = new Map([
         ],[
             new RightLoader_FromTop("room-40", 300, 200),
             new LeftLoader_FromTop("room-58", 100, 300)
-        ])
+        ], 
+        [])
     ],
     ["room-43", 
         new Room(1000, 700, [
@@ -623,7 +658,8 @@ export const rooms = new Map([
         ],[
             new LeftLoader_FromTop("room-40", 300, 200),
             new RightLoader_FromTop("room-59", 100, 300)
-        ])
+        ], 
+        [])
     ],
     ["room-44", 
         new Room(1000, 700, [
@@ -644,7 +680,8 @@ export const rooms = new Map([
             new BottomLoader_FromLeft("room-52", 100, 175),
             new BottomLoader_FromLeft("room-53", 100, 450),
             new BottomLoader_FromRight("room-54", 100, 175),
-        ])
+        ], 
+        [])
     ],
     ["room-45", 
         new Room(1200, 1200, [
@@ -657,7 +694,8 @@ export const rooms = new Map([
             new AbstractWall(100, 800, undefined, 200, 200, undefined)
         ],[
             new BottomLoader_FromLeft("room-40", 200, 500)
-        ])
+        ], 
+        [])
     ],
     ["room-46", 
         new Room(150, 1000, [
@@ -670,7 +708,8 @@ export const rooms = new Map([
         ],[
             new BottomLoader_FromLeft("room-41", 100, 25),
             new TopLoader_FromLeft("room-49", 100, 25)
-        ])
+        ], 
+        [])
     ],
     ["room-47", 
         new Room(150, 1500, [
@@ -683,7 +722,8 @@ export const rooms = new Map([
         ],[
             new BottomLoader_FromLeft("room-41", 100, 25),
             new TopLoader_FromLeft("room-50", 100, 25)
-        ])
+        ], 
+        [])
     ],
     ["room-48", 
         new Room(150, 2000, [
@@ -696,7 +736,8 @@ export const rooms = new Map([
         ],[
             new BottomLoader_FromLeft("room-41", 100, 25),
             new TopLoader_FromLeft("room-51", 100, 25)
-        ])
+        ], 
+        [])
     ],
     ["room-49", 
         new Room(1000, 1000, [
@@ -710,7 +751,8 @@ export const rooms = new Map([
             new AbstractWall(100, 100, undefined, 200, undefined, 200)
         ],[
             new BottomLoader_FromRight("room-46", 100, 0)
-        ])
+        ], 
+        [])
     ],
     ["room-50", 
         new Room(1000, 1000, [
@@ -725,7 +767,8 @@ export const rooms = new Map([
             new AbstractWall(100, 100, undefined, 200, undefined, 200)
         ],[
             new BottomLoader_FromRight("room-47", 100, 450)
-        ])
+        ], 
+        [])
     ],
     ["room-51", 
         new Room(1000, 1000, [
@@ -739,7 +782,8 @@ export const rooms = new Map([
             new AbstractWall(100, 100, undefined, 200, undefined, 200)
         ],[
             new BottomLoader_FromLeft("room-48", 100, 0)
-        ])
+        ], 
+        [])
     ],
     ["room-52", 
         new Room(150, 1000, [
@@ -752,7 +796,8 @@ export const rooms = new Map([
         ],[
             new TopLoader_FromLeft("room-44", 100, 25),
             new BottomLoader_FromLeft("room-55", 100, 25)
-        ])
+        ], 
+        [])
     ],
     ["room-53", 
         new Room(150, 1500, [
@@ -765,7 +810,8 @@ export const rooms = new Map([
         ],[
             new TopLoader_FromLeft("room-44", 100, 25),
             new BottomLoader_FromLeft("room-56", 100, 25)
-        ])
+        ], 
+        [])
     ],
     ["room-54", 
         new Room(150, 2000, [
@@ -778,7 +824,8 @@ export const rooms = new Map([
         ],[
             new TopLoader_FromLeft("room-44", 100, 25),
             new BottomLoader_FromLeft("room-57", 100, 25)
-        ])
+        ], 
+        [])
     ],
     ["room-55", 
         new Room(1000, 1000, [
@@ -792,7 +839,8 @@ export const rooms = new Map([
             new AbstractWall(100, 100, undefined, 200, undefined, 200)
         ],[
             new TopLoader_FromLeft("room-52", 100, 0)
-        ])
+        ], 
+        [])
     ],
     ["room-56", 
         new Room(1000, 1000, [
@@ -807,7 +855,8 @@ export const rooms = new Map([
             new AbstractWall(100, 100, undefined, 200, undefined, 200)
         ],[
             new TopLoader_FromLeft("room-53", 100, 450)
-        ])
+        ], 
+        [])
     ],
     ["room-57", 
         new Room(1000, 1000, [
@@ -821,7 +870,8 @@ export const rooms = new Map([
             new AbstractWall(100, 100, undefined, 200, undefined, 200)
         ],[
             new TopLoader_FromRight("room-54", 100, 0)
-        ])
+        ], 
+        [])
     ],
     ["room-58", 
         new Room(800, 800, [
@@ -831,7 +881,8 @@ export const rooms = new Map([
         ],[
             new RightLoader_FromBottom("room-42", 100, 0),
             new TopLoader_FromLeft("room-60", 100, 0)
-        ])
+        ], 
+        [])
     ],
     ["room-59", 
         new Room(800, 800, [
@@ -841,7 +892,8 @@ export const rooms = new Map([
         ],[
             new LeftLoader_FromTop("room-43", 100, 0),
             new BottomLoader_FromRight("room-61", 100, 0)
-        ])
+        ], 
+        [])
     ],
     ["room-60", 
         new Room(700, 1400, [
@@ -854,7 +906,8 @@ export const rooms = new Map([
             new AbstractWall(220, 570, undefined, 0, undefined, 0)
         ],[
             new BottomLoader_FromLeft("room-58", 100, 300)
-        ])
+        ], 
+        [])
     ],
     ["room-61", 
         new Room(700, 1400, [
@@ -867,7 +920,8 @@ export const rooms = new Map([
             new AbstractWall(220, 570, undefined, 0, 0, undefined)
         ],[
             new TopLoader_FromLeft("room-59", 100, 300)
-        ])
+        ], 
+        [])
     ],
     ["room-62", 
         new Room(1500, 600, [
@@ -882,7 +936,8 @@ export const rooms = new Map([
             new AbstractWall(700, 50, 400, undefined, undefined, 150)
         ],[
             new BottomLoader_FromRight("room-37", 100, 200)
-        ])
+        ], 
+        [])
     ],
     ["room-63", 
         new Room(1000, 1000, [
@@ -892,7 +947,8 @@ export const rooms = new Map([
         ],[
             new BottomLoader_FromRight("room-37", 100, 0),
             new LeftLoader_FromTop("room-71", 100, 0)
-        ])
+        ], 
+        [])
     ],
     ["room-64", 
         new Room(1500, 600, [
@@ -907,7 +963,8 @@ export const rooms = new Map([
             new AbstractWall(700, 50, 400, undefined, undefined, 150)
         ],[
             new BottomLoader_FromLeft("room-37", 100, 200)
-        ])
+        ], 
+        [])
     ],
     ["room-65", 
         new Room(1000, 1000, [
@@ -917,7 +974,8 @@ export const rooms = new Map([
         ],[
             new BottomLoader_FromLeft("room-37", 100, 0),
             new RightLoader_FromTop("room-72", 100, 0)
-        ])
+        ], 
+        [])
     ],
     ["room-71", 
         new Room(1200, 1200, [
@@ -933,7 +991,8 @@ export const rooms = new Map([
             new AbstractWall(100, 300, undefined, 225, undefined, 100),
         ],[
             new RightLoader_FromBottom("room-63", 100, 0)
-        ])
+        ], 
+        [])
     ],
     ["room-72", 
         new Room(1200, 1200, [
@@ -949,6 +1008,7 @@ export const rooms = new Map([
             new AbstractWall(100, 300, undefined, 225, undefined, 200),
         ],[
             new LeftLoader_FromBottom("room-65", 100, 0)
-        ])
+        ], 
+        [])
     ],
 ])

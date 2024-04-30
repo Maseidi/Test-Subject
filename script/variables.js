@@ -201,14 +201,6 @@ export const getIntObj = () => {
     return intObj
 }
 
-let lootId = 0
-export const setLootId = (val) => {
-    lootId = val
-}
-export const getLootId = () => {
-    return lootId
-}
-
 let target
 export const setTarget = (val) => {
     target = val

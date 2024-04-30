@@ -59,3 +59,35 @@ export const putToMap = (getter, setter, key, value) => {
     copyMap.set(key, value)
     setter(copyMap)
 }
+
+export const isNullOrUndefined = (input) => input === null || input === undefined
+
+export const objectToElement = (obj) => {
+    if ( isNullOrUndefined(obj) ) return document.createElement('div')
+    const props = Object.getOwnPropertyNames(obj)
+    const elem = document.createElement('div')
+    for ( const prop of props )
+         if ( !isNullOrUndefined(obj[prop]) ) addAttribute(elem, prop, obj[prop])
+    return elem     
+}
+
+export const elementToObject = (elem) => {
+    const attrs = elem.attributes
+    let obj = {}
+    for (const attr of attrs) {
+        const name = attr.name
+        const attrValue = elem.getAttribute(name)
+        if ( name === 'style' || name === 'class' ) continue
+        obj = {
+            ...obj,
+            [name] : isNaN(Number(attrValue)) ? (
+                attrValue === "true" ? true : (
+                    attrValue === "false" ? false : (
+                        attrValue
+                    )
+                )
+            ) : Number(attrValue)
+        }
+    }
+    return obj
+}

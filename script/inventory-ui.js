@@ -1,8 +1,12 @@
-import { getPauseContainer } from "./elements.js"
-import { getInventory } from "./inventory.js"
+import { getCurrentRoom, getPauseContainer, getPlayer } from "./elements.js"
+import { getInventory, inventoryHasId, setInventory } from "./inventory.js"
 import { getOwnedWeapons } from "./owned-weapons.js"
-import { addAttribute, addClass, containsClass } from "./util.js"
-import { getWeaponWheel } from "./variables.js"
+import { renderInteractable } from "./room-loader.js"
+import { rooms } from "./rooms.js"
+import { getStash, stashHasId } from "./stash.js"
+import { addClass, containsClass, elementToObject, objectToElement, removeClass } from "./util.js"
+import { getCurrentRoomId, getEquippedWeapon, getPlayerX, getPlayerY, getRoomLeft, getRoomTop, getWeaponWheel, setAimMode, setEquippedWeapon, setWeaponWheel } from "./variables.js"
+import { removeWeapon } from "./weapon-loader.js"
 import { getWeaponSpecs } from "./weapon-specs.js"
 
 export const renderInventory = () => {
@@ -23,10 +27,9 @@ const renderBlocks = () => {
     const background = getPauseContainer().firstElementChild
     const inventory = document.createElement("div")
     addClass(inventory, 'inventory')
-    console.log(getInventory());
     getInventory().forEach((row) => {
         row.forEach((block) => {
-            const theBlock = document.createElement("div")
+            const theBlock = block === "taken" ? document.createElement('div') : objectToElement(block)
             addClass(theBlock, 'block')
             let skip = false
             if ( block === "taken" ) skip = true
@@ -39,10 +42,6 @@ const renderBlocks = () => {
                 if ( getWeaponSpecs().get(block.name) === undefined ) amountText.textContent = `${block.amount}`
                 else amountText.textContent = `${getOwnedWeapons().get(block.id).getCurrMag()}`
                 amount.append(amountText)
-                addAttribute(theBlock, 'id', block.id)
-                addAttribute(theBlock, 'name', block.name)
-                addAttribute(theBlock, 'heading', block.heading)
-                addAttribute(theBlock, 'description', block.description)
                 theBlock.append(amount)
             }
             if ( !skip ) {                
@@ -85,12 +84,11 @@ const inventoryEvents = () => {
 }
 
 const descriptionEvent = (item) => {
+    const itemObj = elementToObject(item)
     item.addEventListener('mousemove', () => {
         const desc = document.querySelector(".description")
-        const heading = item.getAttribute('heading')
-        const description = item.getAttribute('description')
-        if (heading) desc.children[0].textContent = `${heading}`
-        if (description) desc.children[1].textContent = `${description}`
+        if (itemObj.heading) desc.children[0].textContent = `${itemObj.heading}`
+        if (itemObj.description) desc.children[1].textContent = `${itemObj.description}`
     })
 }
 
@@ -139,7 +137,58 @@ const shortcut = (item) => {
 }
 
 const drop = (item) => {
-    console.log('drop', item);
+    const itemObj = elementToObject(item)
+    const left = getPlayerX() - getRoomLeft()
+    const top = getPlayerY() - getRoomTop()
+    const interactable = {...itemObj, left: left, top: top}
+    getPauseContainer().firstElementChild.remove()
+    updateInventory(itemObj)
+    let index = findSuitableId(interactable)
+    renderInteractable(getCurrentRoom(), interactable, index)
+    handleDroppingWeapon(itemObj)
+    renderInventory()
+}
+
+const updateInventory = (itemObj) => {
+    let inventoryCopy = getInventory()
+    for ( let i = 0; i < getInventory().length; i++ ) {
+        for ( let j = 0; j < getInventory()[i].length; j++ ) {
+            if ( getInventory()[i][j]?.layout === itemObj.layout ) {
+                inventoryCopy[i][j] = null
+                if ( getInventory()[i][j] === null && j + itemObj.space <= 4 )
+                    for ( let k = 1; k < itemObj.space; k++ ) inventoryCopy[i][j+k] = null
+            }
+        }
+    }
+    setInventory(inventoryCopy)
+}
+
+const handleDroppingWeapon = (itemObj) => {
+    if ( !getOwnedWeapons().get(itemObj.id) ) return
+    getOwnedWeapons().delete(itemObj.id)  
+    if ( getEquippedWeapon() === itemObj.id ) {
+        setEquippedWeapon(null)
+        removeClass(getPlayer(), 'aim')
+        setAimMode(false)
+        removeWeapon()
+    }
+    const weaponWheelCopy = getWeaponWheel()
+    for ( const slot in getWeaponWheel() ) {
+        if ( getWeaponWheel()[slot] === itemObj.id ) {
+            weaponWheelCopy[slot] = null
+        }
+    }
+    setWeaponWheel(weaponWheelCopy)
+}
+
+const findSuitableId = (interactable) => {
+    const roomInts = rooms.get(getCurrentRoomId()).interactables
+    for ( const idx in roomInts ) {
+        const targetId = `${getCurrentRoomId().replace('room-', '')}-${idx}`
+        if ( roomInts[idx] === null && !inventoryHasId(targetId) && !stashHasId(targetId) ) return idx
+    }
+    roomInts.push(interactable)
+    return roomInts.length
 }
 
 const OPTIONS_MAP = new Map([

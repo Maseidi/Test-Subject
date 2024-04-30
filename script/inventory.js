@@ -1,7 +1,8 @@
 import { OwnedWeapon, getOwnedWeapons, setOwnedWeapons } from "./owned-weapons.js"
 import { rooms } from "./rooms.js"
-import { putToMap } from "./util.js"
-import { getCurrentRoomId, getIntObj, getLootId, getWeaponWheel, setLootId, setWeaponWheel } from "./variables.js"
+import { elementToObject, putToMap } from "./util.js"
+import { getCurrentRoomId, getIntObj, getWeaponWheel, setWeaponWheel } from "./variables.js"
+import { getWeaponSpecs } from "./weapon-specs.js"
 
 const MAX_PACKSIZE = {
     bandage: 2,
@@ -14,17 +15,6 @@ const MAX_PACKSIZE = {
     magnumAmmo: 10
 }
 
-class Item {
-    constructor(id, name, amount, space, heading, description) {
-        this.id = id
-        this.name = name
-        this.amount = amount
-        this.space = space
-        this.heading = heading
-        this.description = description
-    }
-}
-
 let inventory = [
     [null, null, null, null],
     [null, null, null, null],
@@ -33,6 +23,10 @@ let inventory = [
     [undefined, undefined, undefined, undefined],
     [undefined, undefined, undefined, undefined],
 ]
+
+export const setInventory = (val) => {
+    inventory = val
+}
 
 export const getInventory = () => {
     return inventory
@@ -45,41 +39,33 @@ export const pickupDrop = () => {
 }
 
 const searchPack = () => {
-    const dropName = getIntObj().getAttribute("name")
-    const dropAmount = Number(getIntObj().getAttribute("amount"))
-    const pack = MAX_PACKSIZE[dropName] || 1
+    const drop = elementToObject(getIntObj())
+    const pack = MAX_PACKSIZE[drop.name] || 1
     for (let i = 0; i < inventory.length; i++) {
         for ( let j = 0; j < inventory[i].length; j++ ) {
             const item = inventory[i][j]
-            if ( item && item.name === dropName ) {
-                if ( item.amount !== pack ) {
-                    let diff = Math.min(pack, pack + dropAmount) - item.amount
-                    item.amount += diff
-                    updateAmount(dropAmount - diff)
-                }
+            if ( item && item.name === drop.name ) {
+                let diff = Math.min(pack, pack + drop.amount) - item.amount
+                item.amount += diff
+                updateAmount(drop.amount - diff)
             }
         }
     }
 }
 
 const searchEmpty = () => {
-    const dropAmount = Number(getIntObj().getAttribute("amount"))
-    if ( dropAmount === 0 ) return
-    const dropName = getIntObj().getAttribute("name")
-    const dropSpace = Number(getIntObj().getAttribute("space"))
-    const dropHeading = getIntObj().getAttribute("heading")
-    const dropDesc = getIntObj().getAttribute("desc")
-    const pack = MAX_PACKSIZE[dropName] || 1
+    const drop = elementToObject(getIntObj())
+    if ( drop.amount === 0 ) return
+    const pack = MAX_PACKSIZE[drop.name] || 1
     for (let i = 0; i < inventory.length; i++) {
         for ( let j = 0; j < inventory[i].length; j++ ) {
             const item = inventory[i][j]
-            if ( item === null && j + dropSpace <= 4 ) {
-                let diff = Math.min(pack, dropAmount)
-                setLootId(getLootId() + 1)
-                inventory[i][j] = new Item(getLootId(), dropName, diff, dropSpace, dropHeading, dropDesc)
-                for ( let k = 1; k < dropSpace; k++ ) inventory[i][j+k] = "taken"
-                updateAmount(dropAmount - diff)
-                if ( Number(getIntObj().getAttribute("amount")) > 0 && inventoryFull() ) return
+            if ( item === null && j + drop.space <= 4 ) {
+                let diff = Math.min(pack, drop.amount)
+                inventory[i][j] = {...drop, amount: diff, layout: `${i}-${j}`}
+                for ( let k = 1; k < drop.space; k++ ) inventory[i][j+k] = "taken"
+                updateAmount(drop.amount - diff)
+                if ( drop.amount > 0 && inventoryFull() ) return
                 searchEmpty()
                 return
             }
@@ -88,16 +74,14 @@ const searchEmpty = () => {
 }
 
 const inventoryFull = () => {
-    let isFull = true
     for (const row of inventory) {
         for ( const item of row ) {
             if ( item === null ) {
-                isFull = false
-                return
+                return false
             }
         }
     }  
-    return isFull 
+    return true 
 }
 
 const updateAmount = (newValue) => {
@@ -105,7 +89,8 @@ const updateAmount = (newValue) => {
     getIntObj().children[1].children[0].textContent = `x${newValue} ${getIntObj().getAttribute("heading")}`
     rooms.get(getCurrentRoomId()).interactables = 
     Array.from(rooms.get(getCurrentRoomId()).interactables).map((int, index) => {
-        return index === Number(getIntObj().getAttribute("id")) ? {
+        return `${getCurrentRoomId().replace('room-', '')}-${index}` === getIntObj().getAttribute("id") ? 
+        {
             ...int,
             amount: newValue
         } : int
@@ -113,17 +98,18 @@ const updateAmount = (newValue) => {
 }
 
 const removeDrop = () => {
-    if ( MAX_PACKSIZE[getIntObj().getAttribute("name")] === undefined ) handleNewWeaponPickup()
+    if ( getWeaponSpecs().get(getIntObj().getAttribute("name")) ) handleNewWeaponPickup()
     getIntObj().remove()
     rooms.get(getCurrentRoomId()).interactables = 
     Array.from(rooms.get(getCurrentRoomId()).interactables).map((elem, index) => {
-        return index === Number(getIntObj().getAttribute("id")) ? null : elem
+        return `${getCurrentRoomId().replace('room-', '')}-${index}` === getIntObj().getAttribute("id") ? null : elem
     })
 }
 
 const handleNewWeaponPickup = () => {
-    putToMap(getOwnedWeapons, setOwnedWeapons, getLootId(), new OwnedWeapon(
-        getIntObj().getAttribute("name"), 0, 1, 1, 1, 1, 1
+    const weapon = elementToObject(getIntObj())
+    putToMap(getOwnedWeapons, setOwnedWeapons, weapon.id, new OwnedWeapon(
+        weapon.name, weapon.currmag, weapon.damagelvl, weapon.rangelvl, weapon.reloadSpeedlvl, weapon.magazinelvl, weapon.fireRatelvl 
     ))
     updateWeaponWheel()
 }
@@ -132,9 +118,20 @@ const updateWeaponWheel = () => {
     let weaponWheelCopy = getWeaponWheel()
     for (const key in getWeaponWheel()) {
         if ( getWeaponWheel()[key] === null ) {
-            weaponWheelCopy[key] = getLootId()
+            weaponWheelCopy[key] = getIntObj().getAttribute('id')
             break
         }
     }
     setWeaponWheel(weaponWheelCopy)
+}
+
+export const inventoryHasId = (id) => {
+    for (const row of inventory) {
+        for ( const item of row ) {
+            if ( item?.id === id ) {
+                return true
+            }
+        }
+    }  
+    return false
 }
