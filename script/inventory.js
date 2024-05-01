@@ -113,7 +113,7 @@ const removeDrop = () => {
 const handleNewWeaponPickup = () => {
     const weapon = elementToObject(getIntObj())
     putToMap(getOwnedWeapons, setOwnedWeapons, weapon.id, new OwnedWeapon(
-        weapon.name, weapon.currmag, weapon.damagelvl, weapon.rangelvl, weapon.reloadSpeedlvl, weapon.magazinelvl, weapon.fireRatelvl 
+        weapon.name, weapon.currmag, weapon.damagelvl, weapon.rangelvl, weapon.reloadspeedlvl, weapon.magazinelvl, weapon.fireratelvl 
     ))
     updateWeaponWheel()
 }

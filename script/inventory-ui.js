@@ -3,7 +3,7 @@ import { getInventory, inventoryHasId, setInventory } from "./inventory.js"
 import { getOwnedWeapons } from "./owned-weapons.js"
 import { renderInteractable } from "./room-loader.js"
 import { rooms } from "./rooms.js"
-import { getStash, stashHasId } from "./stash.js"
+import { stashHasId } from "./stash.js"
 import { addClass, containsClass, elementToObject, objectToElement, removeClass } from "./util.js"
 import { getCurrentRoomId, getEquippedWeapon, getPlayerX, getPlayerY, getRoomLeft, getRoomTop, getWeaponWheel, setAimMode, setEquippedWeapon, setWeaponWheel } from "./variables.js"
 import { removeWeapon } from "./weapon-loader.js"
@@ -85,6 +85,7 @@ const inventoryEvents = () => {
 
 const descriptionEvent = (item) => {
     const itemObj = elementToObject(item)
+    console.log(itemObj);
     item.addEventListener('mousemove', () => {
         const desc = document.querySelector(".description")
         if (itemObj.heading) desc.children[0].textContent = `${itemObj.heading}`
@@ -142,8 +143,8 @@ const drop = (item) => {
     const top = getPlayerY() - getRoomTop()
     const interactable = {...itemObj, left: left, top: top}
     getPauseContainer().firstElementChild.remove()
-    updateInventory(itemObj)
     let index = findSuitableId(interactable)
+    updateInventory(itemObj)
     renderInteractable(getCurrentRoom(), interactable, index)
     handleDroppingWeapon(itemObj)
     renderInventory()
