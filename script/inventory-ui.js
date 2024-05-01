@@ -5,8 +5,8 @@ import { renderInteractable } from "./room-loader.js"
 import { rooms } from "./rooms.js"
 import { stashHasId } from "./stash.js"
 import { addClass, containsClass, elementToObject, objectToElement, removeClass } from "./util.js"
-import { getCurrentRoomId, getEquippedWeapon, getPlayerX, getPlayerY, getRoomLeft, getRoomTop, getWeaponWheel, setAimMode, setEquippedWeapon, setWeaponWheel } from "./variables.js"
-import { removeWeapon } from "./weapon-loader.js"
+import { getAimMode, getCurrentRoomId, getEquippedWeapon, getPlayerX, getPlayerY, getRoomLeft, getRoomTop, getWeaponWheel, setAimMode, setEquippedWeapon, setWeaponWheel } from "./variables.js"
+import { removeWeapon, renderWeapon } from "./weapon-loader.js"
 import { getWeaponSpecs } from "./weapon-specs.js"
 
 export const renderInventory = () => {
@@ -85,7 +85,6 @@ const inventoryEvents = () => {
 
 const descriptionEvent = (item) => {
     const itemObj = elementToObject(item)
-    console.log(itemObj);
     item.addEventListener('mousemove', () => {
         const desc = document.querySelector(".description")
         if (itemObj.heading) desc.children[0].textContent = `${itemObj.heading}`
@@ -126,11 +125,43 @@ const replace = (item) => {
 }
 
 const use = (item) => {
-    console.log('use', item);
+    getPauseContainer().firstElementChild.remove()
+    const itemObj = elementToObject(item)
+    let inventoryCopy = getInventory()
+    for ( let i = 0; i < getInventory().length; i++ ) {
+        for ( let j = 0; j < getInventory()[i].length; j++ ) {
+            if ( getInventory()[i][j]?.layout === itemObj.layout ) {
+                heal()
+                inventoryCopy[i][j].amount -= 1
+                if ( inventoryCopy[i][j].amount === 0 ) inventoryCopy[i][j] = null
+                break
+            }
+        }
+    }
+    setInventory(inventoryCopy)
+    renderInventory()
+}
+
+const heal = () => {
+    console.log('healing...');
 }
 
 const equip = (item) => {
-    console.log('equip', item);
+    getPauseContainer().firstElementChild.remove()
+    const itemObj = elementToObject(item)
+    for ( let i = 0; i < getInventory().length; i++ ) {
+        for ( let j = 0; j < getInventory()[i].length; j++ ) {
+            if ( getInventory()[i][j]?.layout === itemObj.layout ) {
+                setEquippedWeapon(getInventory()[i][j].id)
+                if ( getAimMode() ) {
+                    removeWeapon()
+                    renderWeapon()
+                }
+                break
+            }
+        }
+    }
+    renderInventory()
 }
 
 const shortcut = (item) => {
@@ -144,13 +175,13 @@ const drop = (item) => {
     const interactable = {...itemObj, left: left, top: top}
     getPauseContainer().firstElementChild.remove()
     let index = findSuitableId(interactable)
-    updateInventory(itemObj)
+    removeFromInventory(itemObj)
     renderInteractable(getCurrentRoom(), interactable, index)
     handleDroppingWeapon(itemObj)
     renderInventory()
 }
 
-const updateInventory = (itemObj) => {
+const removeFromInventory = (itemObj) => {
     let inventoryCopy = getInventory()
     for ( let i = 0; i < getInventory().length; i++ ) {
         for ( let j = 0; j < getInventory()[i].length; j++ ) {
