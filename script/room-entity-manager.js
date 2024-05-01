@@ -34,7 +34,7 @@ const manageLoaders = () => {
         if ( collide(getPlayer().firstElementChild, loader, 0) ) {
             const cpu = window.getComputedStyle(loader)
             setPrevRoomId(getCurrentRoomId())
-            setCurrentRoomId(loader.classList[0])
+            setCurrentRoomId(Number(loader.classList[0]))
             calculateNewRoomLeftAndTop(cpu.left, cpu.top)
             getCurrentRoom().remove()
             loadCurrentRoom() 

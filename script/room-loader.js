@@ -73,7 +73,7 @@ const renderInteractables = (room, roomToRender) => {
 export const renderInteractable = (root, interactable, index) => {
     const int = objectToElement(interactable)
     addClass(int, 'interactable')
-    int.id = `${getCurrentRoomId().replace('room-', '')}-${index}`
+    int.id = `${getCurrentRoomId()}-${index}`
     int.style.left = `${interactable.left}px`
     int.style.top = `${interactable.top}px`
     int.style.width = `${interactable.width}px`

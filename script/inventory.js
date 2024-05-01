@@ -61,6 +61,10 @@ const searchEmpty = () => {
         for ( let j = 0; j < inventory[i].length; j++ ) {
             const item = inventory[i][j]
             if ( item === null && j + drop.space <= 4 ) {
+                let skip = false
+                for ( let k = 1; k < drop.space; k++ )
+                    if ( inventory[i][j+k] !== null ) skip = true
+                if ( skip ) continue   
                 let diff = Math.min(pack, drop.amount)
                 inventory[i][j] = {...drop, amount: diff, layout: `${i}-${j}`}
                 for ( let k = 1; k < drop.space; k++ ) inventory[i][j+k] = "taken"
@@ -89,7 +93,7 @@ const updateAmount = (newValue) => {
     getIntObj().children[1].children[0].textContent = `x${newValue} ${getIntObj().getAttribute("heading")}`
     rooms.get(getCurrentRoomId()).interactables = 
     Array.from(rooms.get(getCurrentRoomId()).interactables).map((int, index) => {
-        return `${getCurrentRoomId().replace('room-', '')}-${index}` === getIntObj().getAttribute("id") ? 
+        return `${getCurrentRoomId()}-${index}` === getIntObj().getAttribute("id") ? 
         {
             ...int,
             amount: newValue
@@ -102,7 +106,7 @@ const removeDrop = () => {
     getIntObj().remove()
     rooms.get(getCurrentRoomId()).interactables = 
     Array.from(rooms.get(getCurrentRoomId()).interactables).map((elem, index) => {
-        return `${getCurrentRoomId().replace('room-', '')}-${index}` === getIntObj().getAttribute("id") ? null : elem
+        return `${getCurrentRoomId()}-${index}` === getIntObj().getAttribute("id") ? null : elem
     })
 }
 

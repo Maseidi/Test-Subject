@@ -184,7 +184,7 @@ const handleDroppingWeapon = (itemObj) => {
 const findSuitableId = (interactable) => {
     const roomInts = rooms.get(getCurrentRoomId()).interactables
     for ( const idx in roomInts ) {
-        const targetId = `${getCurrentRoomId().replace('room-', '')}-${idx}`
+        const targetId = `${getCurrentRoomId()}-${idx}`
         if ( roomInts[idx] === null && !inventoryHasId(targetId) && !stashHasId(targetId) ) return idx
     }
     roomInts.push(interactable)
