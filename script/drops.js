@@ -15,7 +15,7 @@ export class Bandage extends Drop {
 
 export class Coin extends Drop {
     constructor(left, top, amount) {
-        super(25, left, top, "coin", "coin", "Pick up", amount, 1, "A neccesity when interacting with the vending machine")
+        super(25, left, top, "coin", "coin", "Pick up", amount, 1, "A neccesity when trading with the vending machine")
     }
 }
 

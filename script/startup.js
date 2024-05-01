@@ -5,15 +5,15 @@ import { addClass } from "./util.js"
 import { getMapX, getMapY } from "./variables.js"
 
 export const startUp = () => {
-    const root = document.getElementById("root")
-    renderMap(root)
+    renderMap()
     renderRoomContainer()
     renderPauseContainer()
     renderCurrentRoom()
     renderPlayer()
 }
 
-const renderMap = (root) => {
+const renderMap = () => {
+    const root = document.getElementById("root")
     const map = document.createElement("div")
     addClass(map, 'map')
     map.style.left = `${getMapX()}px`

@@ -25,6 +25,8 @@ const renderBackground = () => {
 
 const renderBlocks = () => {
     const background = getPauseContainer().firstElementChild
+    const inventoryContainer = document.createElement("div")
+    addClass(inventoryContainer, 'inventory-container')
     const inventory = document.createElement("div")
     addClass(inventory, 'inventory')
     getInventory().forEach((row) => {
@@ -57,7 +59,8 @@ const renderBlocks = () => {
             }          
         })
     })
-    background.append(inventory)
+    inventoryContainer.append(inventory)
+    background.append(inventoryContainer)
 }
 
 const renderHeadingAndDescription = () => {
@@ -73,7 +76,7 @@ const renderHeadingAndDescription = () => {
 
 const inventoryEvents = () => {
     const background = getPauseContainer().firstElementChild
-    Array.from(background.firstElementChild.children)
+    Array.from(background.firstElementChild.firstElementChild.children)
         .filter((block) => block.getAttribute('heading') && block.getAttribute('description'))
         .forEach((item) => {
             descriptionEvent(item)
@@ -121,47 +124,35 @@ const renderOptions = (item, options) => {
 }
 
 const replace = (item) => {
-    console.log('replace', item);
+    
 }
 
 const use = (item) => {
-    getPauseContainer().firstElementChild.remove()
     const itemObj = elementToObject(item)
     let inventoryCopy = getInventory()
-    for ( let i = 0; i < getInventory().length; i++ ) {
-        for ( let j = 0; j < getInventory()[i].length; j++ ) {
-            if ( getInventory()[i][j]?.layout === itemObj.layout ) {
-                heal()
-                inventoryCopy[i][j].amount -= 1
-                if ( inventoryCopy[i][j].amount === 0 ) inventoryCopy[i][j] = null
-                break
-            }
-        }
+    const row = itemObj.row
+    const column = itemObj.column
+    inventoryCopy[row][column].amount -= 1
+    item.firstElementChild.firstElementChild.textContent = inventoryCopy[row][column].amount
+    if ( inventoryCopy[row][column].amount === 0 ) {
+        inventoryCopy[row][column] = null
+        const newBlock = document.createElement("div")
+        addClass(newBlock, 'block')
+        newBlock.style.width = `25%`
+        item.replaceWith(newBlock)
     }
     setInventory(inventoryCopy)
-    renderInventory()
-}
-
-const heal = () => {
-    console.log('healing...');
 }
 
 const equip = (item) => {
-    getPauseContainer().firstElementChild.remove()
     const itemObj = elementToObject(item)
-    for ( let i = 0; i < getInventory().length; i++ ) {
-        for ( let j = 0; j < getInventory()[i].length; j++ ) {
-            if ( getInventory()[i][j]?.layout === itemObj.layout ) {
-                setEquippedWeapon(getInventory()[i][j].id)
-                if ( getAimMode() ) {
-                    removeWeapon()
-                    renderWeapon()
-                }
-                break
-            }
-        }
+    const row = itemObj.row
+    const column = itemObj.column
+    setEquippedWeapon(getInventory()[row][column].id)
+    if ( getAimMode() ) {
+        removeWeapon()
+        renderWeapon()
     }
-    renderInventory()
 }
 
 const shortcut = (item) => {
@@ -182,16 +173,12 @@ const drop = (item) => {
 }
 
 const removeFromInventory = (itemObj) => {
-    let inventoryCopy = getInventory()
-    for ( let i = 0; i < getInventory().length; i++ ) {
-        for ( let j = 0; j < getInventory()[i].length; j++ ) {
-            if ( getInventory()[i][j]?.layout === itemObj.layout ) {
-                inventoryCopy[i][j] = null
-                if ( getInventory()[i][j] === null && j + itemObj.space <= 4 )
-                    for ( let k = 1; k < itemObj.space; k++ ) inventoryCopy[i][j+k] = null
-            }
-        }
-    }
+    const inventoryCopy = getInventory()
+    const row = itemObj.row
+    const column = itemObj.column
+    inventoryCopy[row][column] = null
+    if ( getInventory()[row][column] === null && column + itemObj.space <= 4 )
+        for ( let k = 1; k < itemObj.space; k++ ) inventoryCopy[row][column+k] = null
     setInventory(inventoryCopy)
 }
 
@@ -249,6 +236,8 @@ const closeOptionsEvent = (item) => {
 
 const renderWeaponWheel = () => {
     const background = getPauseContainer().firstElementChild
+    const weaponWheelContainer = document.createElement("div")
+    addClass(weaponWheelContainer, 'weapon-wheel-container')
     const weaponWheel = document.createElement("div")
     addClass(weaponWheel, 'weapon-wheel')
     let slots = 4
@@ -265,7 +254,8 @@ const renderWeaponWheel = () => {
         weaponWheel.append(slot)
         slots--
     }
-    background.append(weaponWheel)
+    weaponWheelContainer.append(weaponWheel)
+    background.append(weaponWheelContainer)
 }
 
 export const removeInventory = () => {

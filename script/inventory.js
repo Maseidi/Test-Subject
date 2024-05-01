@@ -66,7 +66,7 @@ const searchEmpty = () => {
                     if ( inventory[i][j+k] !== null ) skip = true
                 if ( skip ) continue   
                 let diff = Math.min(pack, drop.amount)
-                inventory[i][j] = {...drop, amount: diff, layout: `${i}-${j}`}
+                inventory[i][j] = {...drop, amount: diff, row: i, column: j}
                 for ( let k = 1; k < drop.space; k++ ) inventory[i][j+k] = "taken"
                 updateAmount(drop.amount - diff)
                 if ( drop.amount > 0 && inventoryFull() ) return
