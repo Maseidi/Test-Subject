@@ -176,6 +176,7 @@ const fDown = () => {
 
 const openInventory = () => {
     if ( getPause() && getPauseCause() !== "inventory" ) return
+    if ( getPause() && getPauseCause() === "inventory" && getDraggedItem() !== null ) return
     managePause()
     if ( getPause() ) {
         setPauseCause("inventory")

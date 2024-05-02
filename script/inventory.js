@@ -18,8 +18,8 @@ const MAX_PACKSIZE = {
 let inventory = [
     [null, null, null, null],
     [null, null, null, null],
-    [null, null, null, null],
-    [null, null, null, null],
+    [undefined, undefined, undefined, undefined],
+    [undefined, undefined, undefined, undefined],
     [undefined, undefined, undefined, undefined],
     [undefined, undefined, undefined, undefined],
 ]
