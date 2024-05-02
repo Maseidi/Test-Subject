@@ -147,34 +147,20 @@ const renderOptions = (item, options) => {
 
 const replace = (item) => {
     const itemObj = elementToObject(item)
+    const inventoryCopy = getInventory()
+    setInventory(inventoryCopy)
+    removeInventory() 
+    renderInventory()
+    const blocks = getPauseContainer().firstElementChild.firstElementChild.firstElementChild
+    blocks.append(item)
     item.style.position = `fixed`
     item.style.height = `70px`
     item.style.width = `${itemObj.space * 100}px`
     item.style.left = `${getMouseX() + 10}px`
     item.style.top = `${getMouseY() - 35}px`
     item.style.zIndex = `10`
-    replaceBlocks(item, itemObj.space)
     setDraggedItem(item)
-    removeDescEvent()
-    removeEvents(item)
     renderGrid()
-}
-
-const replaceBlocks = (item, space) => {
-    let prevBlock = item
-    for ( let i = 0; i < space; i++ ) {
-        const newBlock = document.createElement("div")
-        addClass(newBlock, 'block')
-        newBlock.style.width = `25%`
-        prevBlock.parentNode.insertBefore(newBlock, prevBlock)
-        prevBlock = newBlock
-    }
-}
-
-const removeEvents = (item) => {
-    item.removeEventListener('mousemove', addDescEvent, true)
-    item.removeEventListener('mouseleave', removeDescEvent, true)
-    item.removeEventListener('click', addOptionsEvent, true)
 }
 
 const renderGrid = () => {
@@ -208,8 +194,19 @@ const checkReplace = (e) => {
             }
         }
         if ( possible ) {
-            removeInventory()
-            renderInventory()
+            const inventoryCopy = getInventory()
+            inventoryCopy[destObj.row][destObj.column] = {...drag, row: destObj.row, column: destObj.column}
+            inventoryCopy[drag.row][drag.column] = null
+            for ( let k = 1; k < Math.max(drag.space, item.space); k++ ) {
+                if ( k < drag.space ) inventoryCopy[destObj.row][destObj.column + k] = 'taken'
+                else inventoryCopy[destObj.row][destObj.column + k] = null
+                inventoryCopy[drag.row][drag.column + k] = null
+            }
+            setInventory(inventoryCopy)
+            const blocks = getPauseContainer().firstElementChild.firstElementChild.firstElementChild
+            const newReplace = Array.from(blocks.children).find(x => 
+                x.getAttribute('row') === destObj.row+'' && x.getAttribute('column') === destObj.column+'')
+            replace(newReplace)
         }
     } else if ( item !== null && item === 'taken' ) {
         for ( let k = destObj.column + 1; k < destObj.column + drag.space; k++ ) {
