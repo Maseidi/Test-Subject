@@ -5,7 +5,3 @@ export const setStash = (val) => {
 export const getStash = () => {
     return stash
 }
-
-export const stashHasId = (id) => {
-    return stash.findIndex(item => item.id === id) !== -1
-}

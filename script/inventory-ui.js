@@ -1,9 +1,8 @@
 import { getCurrentRoom, getPauseContainer, getPlayer } from "./elements.js"
-import { getInventory, inventoryHasId, setInventory } from "./inventory.js"
+import { getInventory, setInventory } from "./inventory.js"
 import { getOwnedWeapons } from "./owned-weapons.js"
 import { renderInteractable } from "./room-loader.js"
 import { rooms } from "./rooms.js"
-import { stashHasId } from "./stash.js"
 import { addClass, containsClass, elementToObject, objectToElement, removeClass } from "./util.js"
 import { getAimMode,
     getCurrentRoomId,
@@ -147,19 +146,19 @@ const renderOptions = (item, options) => {
 
 const replace = (item) => {
     const itemObj = elementToObject(item)
-    const inventoryCopy = getInventory()
-    setInventory(inventoryCopy)
+    setDraggedItem(item)
+    if ( itemObj.remove !== 1 ) for ( let k = 0; k < itemObj.space; k++ ) getInventory()[itemObj.row][itemObj.column + k] = null
     removeInventory() 
     renderInventory()
     const blocks = getPauseContainer().firstElementChild.firstElementChild.firstElementChild
     blocks.append(item)
+    addClass(item, 'block')
     item.style.position = `fixed`
     item.style.height = `70px`
     item.style.width = `${itemObj.space * 100}px`
     item.style.left = `${getMouseX() + 10}px`
     item.style.top = `${getMouseY() - 35}px`
     item.style.zIndex = `10`
-    setDraggedItem(item)
     renderGrid()
 }
 
@@ -168,9 +167,7 @@ const renderGrid = () => {
     addClass(grid, 'grid')
     for ( let i = 0; i < getInventory().length; i++ ) {
         for ( let j = 0; j < getInventory()[i].length; j++ ) {
-            const block = document.createElement('div')
-            block.setAttribute('row', i)
-            block.setAttribute('column', j)
+            const block = objectToElement({row: i, column: j})
             block.addEventListener('click', checkReplace, true)
             grid.append(block)
         }
@@ -181,6 +178,7 @@ const renderGrid = () => {
 const checkReplace = (e) => {
     const destObj = elementToObject(e.target)
     const item = getInventory()[destObj.row][destObj.column]  
+    if ( item === undefined ) return
 
     const drag = elementToObject(getDraggedItem())
     if ( item?.row === drag.row && item?.column === drag.column ) return
@@ -190,23 +188,22 @@ const checkReplace = (e) => {
         for ( let k = destObj.column + 1; k < destObj.column + drag.space; k++ ) {
             if ( k >= 4 || (getInventory()[destObj.row][k] !== 'taken' && getInventory()[destObj.row][k] !== null)  ) {
                 possible = false
-                break
+                break   
             }
         }
         if ( possible ) {
+            const blocks = getPauseContainer().firstElementChild.firstElementChild.firstElementChild
+            const elemToReplace = Array.from(blocks.children).find(x => 
+                x.getAttribute('row') === destObj.row + '' && x.getAttribute('column') === destObj.column + '')
+                replace(elemToReplace)
             const inventoryCopy = getInventory()
             inventoryCopy[destObj.row][destObj.column] = {...drag, row: destObj.row, column: destObj.column}
-            inventoryCopy[drag.row][drag.column] = null
             for ( let k = 1; k < Math.max(drag.space, item.space); k++ ) {
                 if ( k < drag.space ) inventoryCopy[destObj.row][destObj.column + k] = 'taken'
                 else inventoryCopy[destObj.row][destObj.column + k] = null
-                inventoryCopy[drag.row][drag.column + k] = null
             }
-            setInventory(inventoryCopy)
-            const blocks = getPauseContainer().firstElementChild.firstElementChild.firstElementChild
-            const newReplace = Array.from(blocks.children).find(x => 
-                x.getAttribute('row') === destObj.row+'' && x.getAttribute('column') === destObj.column+'')
-            replace(newReplace)
+            elemToReplace.setAttribute('remove', 1)
+            replace(elemToReplace)
         }
     } else if ( item !== null && item === 'taken' ) {
         for ( let k = destObj.column + 1; k < destObj.column + drag.space; k++ ) {
@@ -249,6 +246,17 @@ const use = (item) => {
     }
     setInventory(inventoryCopy)
     renderInventory()
+}
+
+const replaceBlocks = (item, space) => {
+    let prevBlock = item
+    for ( let i = 0; i < space; i++ ) {
+        const newBlock = document.createElement("div")
+        addClass(newBlock, 'block')
+        newBlock.style.width = `25%`
+        prevBlock.parentNode.insertBefore(newBlock, prevBlock)
+        prevBlock = newBlock
+    }
 }
 
 const equip = (item) => {
@@ -311,10 +319,6 @@ const handleWeaponDrop = (itemObj) => {
 
 const findSuitableId = (interactable) => {
     const roomInts = rooms.get(getCurrentRoomId()).interactables
-    for ( const idx in roomInts ) {
-        const targetId = `${getCurrentRoomId()}-${idx}`
-        if ( roomInts[idx] === null && !inventoryHasId(targetId) && !stashHasId(targetId) ) return idx
-    }
     roomInts.push(interactable)
     return roomInts.length
 }

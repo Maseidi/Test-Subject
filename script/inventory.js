@@ -128,14 +128,3 @@ const updateWeaponWheel = () => {
     }
     setWeaponWheel(weaponWheelCopy)
 }
-
-export const inventoryHasId = (id) => {
-    for (const row of inventory) {
-        for ( const item of row ) {
-            if ( item?.id === id ) {
-                return true
-            }
-        }
-    }  
-    return false
-}
