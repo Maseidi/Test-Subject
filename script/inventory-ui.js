@@ -182,6 +182,8 @@ const checkReplace = (e) => {
 
     const drag = elementToObject(getDraggedItem())
     if ( item?.row === drag.row && item?.column === drag.column ) return
+
+    const blocks = getPauseContainer().firstElementChild.firstElementChild.firstElementChild
     
     let possible = true
     if ( item !== null && item !== 'taken' ) {
@@ -192,10 +194,10 @@ const checkReplace = (e) => {
             }
         }
         if ( possible ) {
-            const blocks = getPauseContainer().firstElementChild.firstElementChild.firstElementChild
             const elemToReplace = Array.from(blocks.children).find(x => 
                 x.getAttribute('row') === destObj.row + '' && x.getAttribute('column') === destObj.column + '')
-                replace(elemToReplace)
+            elemToReplace.setAttribute('remove', 0)
+            replace(elemToReplace)
             const inventoryCopy = getInventory()
             inventoryCopy[destObj.row][destObj.column] = {...drag, row: destObj.row, column: destObj.column}
             for ( let k = 1; k < Math.max(drag.space, item.space); k++ ) {
@@ -213,7 +215,20 @@ const checkReplace = (e) => {
             }
         }
         if ( possible ) {
-            console.log(possible);
+            let count = 0
+            for ( let k = destObj.column; ; k-- ) {
+                if ( getInventory()[destObj.row][k] !== null && getInventory()[destObj.row][k] !== 'taken' ) break
+                count++
+            }
+            const elemToReplace = Array.from(blocks.children).find(x => 
+                x.getAttribute('row') === destObj.row + '' && x.getAttribute('column') === (destObj.column - count) + '')
+            elemToReplace.setAttribute('remove', 0)
+            replace(elemToReplace)
+            const inventoryCopy = getInventory()
+            inventoryCopy[destObj.row][destObj.column] = {...drag, row: destObj.row, column: destObj.column}
+            for ( let k = 1; k < drag.space; k++ ) inventoryCopy[destObj.row][destObj.column + k] = 'taken'
+            elemToReplace.setAttribute('remove', 1)
+            replace(elemToReplace)
         }
 
     } else if ( item === null ) {
