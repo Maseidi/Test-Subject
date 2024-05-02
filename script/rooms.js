@@ -62,7 +62,7 @@ export const rooms = new Map([
             new TopLoader_FromLeft(8, 200, 450),
         ],[
             new Coin(100, 100, 2),
-            new Bandage(300, 300, 1),
+            new Bandage(300, 300, 4),
             new HardDrive(500, 500, 3),
             new PC(700, 700),
             new Stash(900, 900),

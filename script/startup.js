@@ -5,9 +5,9 @@ import { addClass } from "./util.js"
 import { getMapX, getMapY } from "./variables.js"
 
 export const startUp = () => {
+    renderPauseContainer()
     renderMap()
     renderRoomContainer()
-    renderPauseContainer()
     renderCurrentRoom()
     renderPlayer()
 }
@@ -30,10 +30,11 @@ const renderRoomContainer = () => {
 }
 
 const renderPauseContainer = () => {
+    const root = document.getElementById("root")
     const pauseContainer = document.createElement("div")
     addClass(pauseContainer, 'pause-container')
     setPauseContainer(pauseContainer)
-    getMapEl().append(pauseContainer)
+    root.append(pauseContainer)
 }
 
 const renderCurrentRoom = () => {

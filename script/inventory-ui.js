@@ -5,7 +5,21 @@ import { renderInteractable } from "./room-loader.js"
 import { rooms } from "./rooms.js"
 import { stashHasId } from "./stash.js"
 import { addClass, containsClass, elementToObject, objectToElement, removeClass } from "./util.js"
-import { getAimMode, getCurrentRoomId, getEquippedWeapon, getPlayerX, getPlayerY, getRoomLeft, getRoomTop, getWeaponWheel, setAimMode, setEquippedWeapon, setWeaponWheel } from "./variables.js"
+import { getAimMode,
+    getCurrentRoomId,
+    getDraggedItem,
+    getEquippedWeapon,
+    getMouseX,
+    getMouseY,
+    getPlayerX,
+    getPlayerY,
+    getRoomLeft,
+    getRoomTop,
+    getWeaponWheel,
+    setAimMode,
+    setDraggedItem,
+    setEquippedWeapon,
+    setWeaponWheel } from "./variables.js"
 import { removeWeapon, renderWeapon } from "./weapon-loader.js"
 import { getWeaponSpecs } from "./weapon-specs.js"
 
@@ -88,29 +102,37 @@ const inventoryEvents = () => {
 
 const descriptionEvent = (item) => {
     const itemObj = elementToObject(item)
-    item.addEventListener('mousemove', () => {
-        const desc = document.querySelector(".description")
-        if (itemObj.heading) desc.children[0].textContent = `${itemObj.heading}`
-        if (itemObj.description) desc.children[1].textContent = `${itemObj.description}`
-    })
+    item.addEventListener('mousemove', addDescEvent, true)
+    item.h = `${itemObj.heading}`
+    item.d = `${itemObj.description}`
+}
+
+const addDescEvent = (e) => {
+    const desc = document.querySelector(".description")
+    if (e.target.h) desc.children[0].textContent = `${e.target.h}`
+    if (e.target.d) desc.children[1].textContent = `${e.target.d}`
 }
 
 const removeDescriptionEvent = (item) => {
-    item.addEventListener('mouseleave', () => {
-        const desc = document.querySelector(".description")
-        desc.children[0].textContent = ``
-        desc.children[1].textContent = ``
-    })
+    item.addEventListener('mouseleave', removeDescEvent, true)
+}
+
+const removeDescEvent = () => {
+    const desc = document.querySelector(".description")
+    desc.children[0].textContent = ``
+    desc.children[1].textContent = ``
 }
 
 const optionsEvent = (item) => {
-    item.addEventListener('click', () => {
-        if ( item.lastElementChild && containsClass(item.lastElementChild, 'options') ) return
-        const options = document.createElement('div')
-        addClass(options, 'options')
-        renderOptions(item, options)
-        item.append(options)
-    })
+    item.addEventListener('click', addOptionsEvent, true)
+}
+
+const addOptionsEvent = (e) => {
+    if ( !containsClass(e.target, 'block') ) return
+    const options = document.createElement('div')
+    addClass(options, 'options')
+    renderOptions(e.target, options)
+    e.target.append(options)
 }
 
 const renderOptions = (item, options) => {
@@ -124,10 +146,99 @@ const renderOptions = (item, options) => {
 }
 
 const replace = (item) => {
+    const itemObj = elementToObject(item)
+    item.style.position = `fixed`
+    item.style.height = `70px`
+    item.style.width = `${itemObj.space * 100}px`
+    item.style.left = `${getMouseX() + 10}px`
+    item.style.top = `${getMouseY() - 35}px`
+    item.style.zIndex = `10`
+    replaceBlocks(item, itemObj.space)
+    setDraggedItem(item)
+    removeDescEvent()
+    removeEvents(item)
+    renderGrid()
+}
+
+const replaceBlocks = (item, space) => {
+    let prevBlock = item
+    for ( let i = 0; i < space; i++ ) {
+        const newBlock = document.createElement("div")
+        addClass(newBlock, 'block')
+        newBlock.style.width = `25%`
+        prevBlock.parentNode.insertBefore(newBlock, prevBlock)
+        prevBlock = newBlock
+    }
+}
+
+const removeEvents = (item) => {
+    item.removeEventListener('mousemove', addDescEvent, true)
+    item.removeEventListener('mouseleave', removeDescEvent, true)
+    item.removeEventListener('click', addOptionsEvent, true)
+}
+
+const renderGrid = () => {
+    const grid = document.createElement('div')
+    addClass(grid, 'grid')
+    for ( let i = 0; i < getInventory().length; i++ ) {
+        for ( let j = 0; j < getInventory()[i].length; j++ ) {
+            const block = document.createElement('div')
+            block.setAttribute('row', i)
+            block.setAttribute('column', j)
+            block.addEventListener('click', checkReplace, true)
+            grid.append(block)
+        }
+    }
+    getPauseContainer().firstElementChild.firstElementChild.firstElementChild.append(grid)
+}
+
+const checkReplace = (e) => {
+    const destObj = elementToObject(e.target)
+    const item = getInventory()[destObj.row][destObj.column]  
+
+    const drag = elementToObject(getDraggedItem())
+    if ( item?.row === drag.row && item?.column === drag.column ) return
     
+    let possible = true
+    if ( item !== null && item !== 'taken' ) {
+        for ( let k = destObj.column + 1; k < destObj.column + drag.space; k++ ) {
+            if ( k >= 4 || (getInventory()[destObj.row][k] !== 'taken' && getInventory()[destObj.row][k] !== null)  ) {
+                possible = false
+                break
+            }
+        }
+        if ( possible ) {
+            removeInventory()
+            renderInventory()
+        }
+    } else if ( item !== null && item === 'taken' ) {
+        for ( let k = destObj.column + 1; k < destObj.column + drag.space; k++ ) {
+            if ( k >= 4 || (getInventory()[destObj.row][k] !== 'taken' && getInventory()[destObj.row][k] !== null)  ) {
+                possible = false
+                break
+            }
+        }
+        if ( possible ) {
+            console.log(possible);
+        }
+
+    } else if ( item === null ) {
+        let itemCount = 0
+        for ( let k = destObj.column + 1; k < destObj.column + drag.space; k++ ) {
+            if ( !possible ) break
+            if ( k >= 4 ) possible = false
+            if ( possible && getInventory()[destObj.row][k] !== 'taken' && getInventory()[destObj.row][k] !== null ) itemCount++
+            if ( itemCount > 1 ) possible = false
+        }
+        if ( possible ) {
+            console.log(possible);
+        }
+
+    }
 }
 
 const use = (item) => {
+    getPauseContainer().firstElementChild.remove()
     const itemObj = elementToObject(item)
     let inventoryCopy = getInventory()
     const row = itemObj.row
@@ -136,15 +247,15 @@ const use = (item) => {
     item.firstElementChild.firstElementChild.textContent = inventoryCopy[row][column].amount
     if ( inventoryCopy[row][column].amount === 0 ) {
         inventoryCopy[row][column] = null
-        const newBlock = document.createElement("div")
-        addClass(newBlock, 'block')
-        newBlock.style.width = `25%`
-        item.replaceWith(newBlock)
+        replaceBlocks(item, itemObj.space)
+        item.remove()
     }
     setInventory(inventoryCopy)
+    renderInventory()
 }
 
 const equip = (item) => {
+    getPauseContainer().firstElementChild.remove()
     const itemObj = elementToObject(item)
     const row = itemObj.row
     const column = itemObj.column
@@ -153,6 +264,7 @@ const equip = (item) => {
         removeWeapon()
         renderWeapon()
     }
+    renderInventory()
 }
 
 const shortcut = (item) => {
@@ -166,13 +278,13 @@ const drop = (item) => {
     const interactable = {...itemObj, left: left, top: top}
     getPauseContainer().firstElementChild.remove()
     let index = findSuitableId(interactable)
-    removeFromInventory(itemObj)
+    dropFromInventory(itemObj)
     renderInteractable(getCurrentRoom(), interactable, index)
-    handleDroppingWeapon(itemObj)
+    handleWeaponDrop(itemObj)
     renderInventory()
 }
 
-const removeFromInventory = (itemObj) => {
+const dropFromInventory = (itemObj) => {
     const inventoryCopy = getInventory()
     const row = itemObj.row
     const column = itemObj.column
@@ -182,7 +294,7 @@ const removeFromInventory = (itemObj) => {
     setInventory(inventoryCopy)
 }
 
-const handleDroppingWeapon = (itemObj) => {
+const handleWeaponDrop = (itemObj) => {
     if ( !getOwnedWeapons().get(itemObj.id) ) return
     getOwnedWeapons().delete(itemObj.id)  
     if ( getEquippedWeapon() === itemObj.id ) {

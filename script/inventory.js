@@ -5,14 +5,14 @@ import { getCurrentRoomId, getIntObj, getWeaponWheel, setWeaponWheel } from "./v
 import { getWeaponSpecs } from "./weapon-specs.js"
 
 const MAX_PACKSIZE = {
-    bandage: 2,
+    bandage: 3,
     coin: 5,
-    hardDrive: 1,
-    smgAmmo: 100,
-    pistolAmmo: 40,
-    shotgunShells: 30,
-    rifleAmmo: 20,
-    magnumAmmo: 10
+    hardDrive: 2,
+    smgAmmo: 90,
+    pistolAmmo: 30,
+    shotgunShells: 20,
+    rifleAmmo: 10,
+    magnumAmmo: 5
 }
 
 let inventory = [

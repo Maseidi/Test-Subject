@@ -4,7 +4,7 @@
   background: rgba(0, 0, 0, 0.67);
   backdrop-filter: blur(3.3px);
   -webkit-backdrop-filter: blur(3.3px);
-  z-index: 100;
+  z-index: 20;
   position: fixed;
   left: 0;
   top: 0;
@@ -24,6 +24,7 @@
   width: 400px;
   display: flex;
   flex-flow: row wrap;
+  position: relative;
 }
 
 .inventory-ui > .inventory-container > .inventory > .block {
@@ -154,4 +155,24 @@
   top: 50%;
   right: -120px;
   transform: translateY(-50%) translateX(calc(100% - 70px));
+}
+
+.inventory-ui > .inventory-container > .inventory > .grid {
+  width: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 15;
+  display: flex;
+  flex-flow: row wrap;
+}
+
+.inventory-ui > .inventory-container > .inventory > .grid > div {
+  width: 25%;
+  height: 70px;
+  border: 1px solid white;
+}
+
+.inventory-ui > .inventory-container > .inventory > .grid > div:hover {
+  background-color: rgba(255, 255, 255, 0.1);
 }

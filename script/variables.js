@@ -224,3 +224,27 @@ export const setPauseCause = (val) => {
 export const getPauseCause = () => {
     return pauseCause
 }
+
+let draggedItem
+export const setDraggedItem = (val) => {
+    draggedItem = val
+}
+export const getDraggedItem = () => {
+    return draggedItem
+}
+
+let mouseX
+export const setMouseX = (val) => {
+    mouseX = val
+}
+export const getMouseX = () => {
+    return mouseX
+}
+
+let mouseY
+export const setMouseY = (val) => {
+    mouseY = val
+}
+export const getMouseY = () => {
+    return mouseY
+}

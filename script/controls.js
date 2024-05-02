@@ -4,8 +4,11 @@ import { pickupDrop } from "./inventory.js"
 import { addClass, angleOfTwoPoints, isMoving, removeClass } from "./util.js"
 import { 
     getAimMode,
+    getDraggedItem,
     getEquippedWeapon,
     getIntObj,
+    getMouseX,
+    getMouseY,
     getPause,
     getPauseCause,
     getSprintPressed,
@@ -15,6 +18,8 @@ import {
     setDownPressed,
     setEquippedWeapon,
     setLeftPressed,
+    setMouseX,
+    setMouseY,
     setPause,
     setPauseCause,
     setRightPressed,
@@ -231,6 +236,7 @@ const stopWalkingAnimation = () => {
 }
 
 const aimAngle = (e) => {
+    manageDragItem(e)
     if ( getPause() ) return
     const angle = angleOfTwoPoints(
             getPlayer().getBoundingClientRect().x + 17, 
@@ -239,4 +245,12 @@ const aimAngle = (e) => {
             e.clientY
         )
     if ( angle ) setAimingPlayerAngle(angle)
+}
+
+const manageDragItem = (e) => {
+    setMouseX(e.clientX)
+    setMouseY(e.clientY)
+    if ( !getDraggedItem() ) return
+    getDraggedItem().style.left = `${getMouseX() + 10}px`
+    getDraggedItem().style.top = `${getMouseY() - 35}px`
 }
