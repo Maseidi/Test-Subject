@@ -55,7 +55,7 @@ const searchPack = () => {
         for ( let j = 0; j < inventory[i].length; j++ ) {
             const item = inventory[i][j]
             if ( item && item.name === drop.name ) {
-                let diff = Math.min(pack, pack + drop.amount) - item.amount
+                let diff = Math.min(pack, item.amount + drop.amount) - item.amount
                 item.amount += diff
                 updateAmount(drop.amount - diff)
             }
@@ -364,9 +364,9 @@ const combine = (elemToReplace, destObj, srcObj, inventory) => {
     if ( objectToReplace.name === srcObj.name && objectToReplace.amount !== pack ) {
         let srcAmount = srcObj.amount
         let destAmount = objectToReplace.amount
-        const newDestAmount = Math.min(srcObj.amount + objectToReplace.amount, pack)
-        const taken = newDestAmount - destAmount
-        const newSrcAmount = srcAmount - taken
+        const newDestAmount = Math.min(srcAmount + destAmount, pack)
+        const diff = newDestAmount - destAmount
+        const newSrcAmount = srcAmount - diff
         inventory[destObj.row][destObj.column] = {...srcObj, row: destObj.row, column: destObj.column, amount: newDestAmount}
         elemToReplace.setAttribute('amount', newSrcAmount)
         elemToReplace.firstElementChild.textContent = `${newSrcAmount}`

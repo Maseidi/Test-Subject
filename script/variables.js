@@ -142,6 +142,15 @@ export const getSprint = () => {
     return sprint
 }
 
+let maxStamina = 600
+export const setMaxStamina = (val) => {
+    maxStamina = val
+}
+
+export const getMaxStamina = () => {
+    return maxStamina
+}
+
 let stamina = 600
 export const setStamina = (val) => {
     stamina = val
@@ -149,6 +158,24 @@ export const setStamina = (val) => {
 
 export const getStamina = () => {
     return stamina
+}
+
+let maxHealth = 100
+export const setMaxHealth = (val) => {
+    maxHealth = val
+}
+
+export const getMaxHealth = () => {
+    return maxHealth
+}
+
+let health = 100
+export const setHealth = (val) => {
+    health = val
+}
+
+export const getHealth = () => {
+    return health
 }
 
 let refillStamina = false

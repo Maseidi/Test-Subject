@@ -1,6 +1,5 @@
 .interactable {
     position: absolute;
-    user-select: none;
     object-fit: cover;
 }
 

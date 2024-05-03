@@ -22,6 +22,14 @@ export const getPauseContainer = () => {
     return pauseContainer
 }
 
+let uiEl
+export const setUiEl = (val) => {
+    uiEl = val
+}
+export const getUiEl = () => {
+    return uiEl
+}
+
 let currentRoom
 export const setCurrentRoom = (val) => {
     currentRoom = val

@@ -1,4 +1,5 @@
-import { getPlayer } from "./elements.js"
+import { getPlayer, getUiEl } from "./elements.js"
+import { staminaManager } from "./user-interface.js"
 import { addClass, isMoving, removeClass } from "./util.js"
 import { 
     getAimMode,
@@ -31,4 +32,5 @@ const handleSprintAndStamina = (sprint, animator, stamina, refill) => {
     if (animator) animator(getPlayer(), 'run')
     setStamina(getStamina() + stamina)
     setRefillStamina(refill)
+    staminaManager(getStamina(), getUiEl().children[1].firstElementChild)
 }

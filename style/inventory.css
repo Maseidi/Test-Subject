@@ -15,19 +15,19 @@
   gap: 10px;
 }
 
-.inventory-ui > .inventory-container {
+.inventory-container {
   display: flex;
   flex-direction: column;
 }
 
-.inventory-ui > .inventory-container > .inventory {
+.inventory {
   width: 400px;
   display: flex;
   flex-flow: row wrap;
   position: relative;
 }
 
-.inventory-ui > .inventory-container > .inventory > .block {
+.block {
   position: relative;
   height: 70px;
   border: 1px solid rgba(255, 255, 255, 0.2);
@@ -35,10 +35,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  user-select: none;
 }
 
-.inventory-ui > .inventory-container > .inventory > .block > .options {
+.options {
   width: 100px;
   position: absolute;
   left: 50%;
@@ -47,7 +46,7 @@
   text-transform: capitalize;
 }
 
-.inventory-ui > .inventory-container > .inventory > .block > .options > div {
+.options > div {
   width: 100%;
   padding: 2px 0 2px 5px;
   border: 1px solid rgba(255, 255, 255, 0.7);
@@ -56,19 +55,19 @@
   position: relative;
 }
 
-.inventory-ui > .inventory-container > .inventory > .block:hover::after,
-.inventory-ui > .weapon-wheel-container > .weapon-wheel > div:hover:after,
-.inventory-ui > .inventory-container > .inventory > .block > .options > div:hover::after {
+.block:hover::after,
+.weapon-wheel > div:hover:after,
+.options > div:hover::after {
   opacity: 1;
 }
 
-.inventory-ui > .inventory-container > .inventory > .block > .options > div::after {
+.options > div::after {
   background-color: rgba(255, 255, 255, 0.3) !important;
 }
 
-.inventory-ui > .inventory-container > .inventory > .block::after,
-.inventory-ui > .weapon-wheel-container > .weapon-wheel > div::after,
-.inventory-ui > .inventory-container > .inventory > .block > .options > div::after {
+.block::after,
+.weapon-wheel > div::after,
+.options > div::after {
   content: "";
   width: 100%;
   height: 100%;
@@ -79,12 +78,12 @@
   opacity: 0;
 }
 
-.inventory-ui > .inventory-container > .inventory > .block > img {
+.block > img {
   width: 80%;
   height: 80%;
 }
 
-.inventory-ui > .inventory-container > .inventory > .block > .amount {
+.block > .amount {
   padding: 5px;
   background-color: black;
   position: absolute;
@@ -94,24 +93,24 @@
   z-index: 1;
 }
 
-.inventory-ui > .inventory-container > .description {
+.description {
   width: 400px;
   height: 100px;
   padding: 20px 0;
 }
 
-.inventory-ui > .inventory-container > .description > h2 {
+.description > h2 {
   text-transform: capitalize;
   color: white;
 }
 
-.inventory-ui > .inventory-container > .description > p {
+.description > p {
   font-size: 16px;
   margin-top: 10px;
   color: rgba(255, 255, 255, 0.5);
 }
 
-.inventory-ui > .weapon-wheel-container {
+.weapon-wheel-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -119,25 +118,25 @@
   height: 240px;
 }
 
-.inventory-ui > .weapon-wheel-container > .weapon-wheel {
+.weapon-wheel {
   position: relative;
 }
 
-.inventory-ui > .weapon-wheel-container > .weapon-wheel > div {
+.weapon-wheel > div {
   position: absolute;
   height: 70px;
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.inventory-ui > .weapon-wheel-container > .weapon-wheel > div.selectable-slot {
+div.selectable-slot {
   background-color: rgb(34, 139, 34, 0.3);
 }
 
-.inventory-ui > .weapon-wheel-container > .weapon-wheel > div > img {
+.weapon-wheel > div > img {
   height: 100%;
 }
 
-.inventory-ui > .weapon-wheel-container > .weapon-wheel > div > p {
+.weapon-wheel > div > p {
   padding: 2px 5px;
   background-color: rgb(119, 136, 153, 0.9);
   color: white;
@@ -147,31 +146,31 @@
   font-size: 14px;
 }
 
-.inventory-ui > .weapon-wheel-container > .weapon-wheel > div:nth-of-type(1) {
+.weapon-wheel > div:nth-of-type(1) {
   top: -120px;
   left: 50%;
   transform: translateX(-50%);
 }
 
-.inventory-ui > .weapon-wheel-container > .weapon-wheel > div:nth-of-type(2) {
+.weapon-wheel > div:nth-of-type(2) {
   top: 50%;
   left: -120px;
   transform: translateY(-50%) translateX(calc(-100% + 70px));
 }
 
-.inventory-ui > .weapon-wheel-container > .weapon-wheel > div:nth-of-type(3) {
+.weapon-wheel > div:nth-of-type(3) {
   bottom: -120px;
   left: 50%;
   transform: translateX(-50%);
 }
 
-.inventory-ui > .weapon-wheel-container > .weapon-wheel > div:nth-of-type(4) {
+.weapon-wheel > div:nth-of-type(4) {
   top: 50%;
   right: -120px;
   transform: translateY(-50%) translateX(calc(100% - 70px));
 }
 
-.inventory-ui > .inventory-container > .inventory > .grid {
+.grid {
   width: 100%;
   position: absolute;
   left: 0;
@@ -181,22 +180,22 @@
   flex-flow: row wrap;
 }
 
-.inventory-ui > .inventory-container > .inventory > .grid > div {
+.grid > div {
   width: 25%;
   height: 70px;
   border: 1px solid white;
 }
 
-.inventory-ui > .inventory-container > .inventory > .grid > div:hover {
+.grid > div:hover {
   background-color: rgba(255, 255, 255, 0.1);
 }
 
-.inventory-ui > .inventory-container > .inventory > .grid > .item {
+.item {
   position: relative;
 }
 
-.inventory-ui > .inventory-container > .inventory > .grid > .item::after {
-  content: 'COMBINE';
+.item::after {
+  content: "COMBINE";
   width: 100%;
   height: 100%;
   opacity: 0;
@@ -208,6 +207,6 @@
   transition: 300ms;
 }
 
-.inventory-ui > .inventory-container > .inventory > .grid > .item:hover::after {
+.item:hover::after {
   opacity: 1;
 }

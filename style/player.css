@@ -12,7 +12,7 @@
   z-index: 10;
 }
 
-.player > .player-collider {
+.player-collider {
   width: 34px;
   height: 34px;
   display: flex;
@@ -21,7 +21,7 @@
   position: relative;
 }
 
-.player > .player-collider > .player-body {
+.player-body {
   width: 22px;
   height: 12px;
   background-color: green;
@@ -34,15 +34,15 @@
   transition: 300ms;
 }
 
-.player > .player-collider > .player-body > .player-head {
+.player-head {
   width: 7px;
   height: 7px;
   border-radius: 50%;
   background-color: black;
 }
 
-.player > .player-collider > .player-body::after,
-.player > .player-collider > .player-body::before {
+.player-body::after,
+.player-body::before {
   content: "";
   position: absolute;
   width: 4px;
@@ -53,11 +53,11 @@
   border-radius: 1px;
 }
 
-.player > .player-collider > .player-body::after {
+.player-body::after {
   left: 100%;
 }
 
-.player > .player-collider > .player-body::before {
+.player-body::before {
   right: 100%;
 }
 
@@ -71,11 +71,11 @@
   animation-fill-mode: both;
 }
 
-.player > .player-collider > .player-body::after {
+.player-body::after {
   animation-direction: alternate;
 }
 
-.player > .player-collider > .player-body::before {
+.player-body::before {
   animation-direction: alternate-reverse;
 }
 
@@ -89,7 +89,7 @@
   animation-duration: 400ms;
 }
 
-.player-collider > .forward-detector {
+.forward-detector {
   position: absolute;
   width: 4px;
   height: 4px;
@@ -107,7 +107,8 @@
   left: 2px;
 }
 
-.aim > .player-collider > .player-body::after, .aim > .player-collider > .player-body::before {
+.aim > .player-collider > .player-body::after,
+.aim > .player-collider > .player-body::before {
   top: 2px;
   height: 20px;
   border-radius: 2px;
@@ -117,7 +118,7 @@
   transition: 0ms !important;
 }
 
-.player > .player-collider > .player-body > .weapon {
+.weapon {
   position: absolute;
   width: 4px;
   left: 50%;
@@ -127,7 +128,7 @@
   border: 1px solid black;
 }
 
-.player > .player-collider > .player-body > .weapon > .laser {
+.laser {
   width: 0.25px;
   position: absolute;
   left: 50%;

@@ -1,5 +1,6 @@
-import { getPlayer } from "./elements.js"
+import { getPlayer, getUiEl } from "./elements.js"
 import { removeWeapon, renderWeapon } from "./weapon-loader.js"
+import { loadUi, uiEquipWeapon } from "./user-interface.js"
 import { pickupDrop, removeInventory, renderInventory } from "./inventory.js"
 import { addClass, angleOfTwoPoints, isMoving, removeClass } from "./util.js"
 import { 
@@ -148,6 +149,7 @@ const weaponSlotDown = (key) => {
         return
     }
     setEquippedWeapon(getWeaponWheel()[Number(key) - 1])
+    uiEquipWeapon()
     if ( getEquippedWeapon() && getAimMode() ) {
         renderWeapon()
         return
@@ -191,8 +193,10 @@ const managePause = () => {
     if ( getPause() ) {
         removeClass(getPlayer(), 'run')
         removeClass(getPlayer(), 'walk')
+        getUiEl().remove()
         return
     }
+    loadUi()
     if ( isMoving() ) {
         if ( !getAimMode() ) {
             addClass(getPlayer(), 'walk')
