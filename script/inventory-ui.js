@@ -188,109 +188,135 @@ const checkReplace = (e) => {
     const destObj = elementToObject(e.target)
     const item = getInventory()[destObj.row][destObj.column]  
     if ( item === undefined ) return
+    const srcObj = elementToObject(getDraggedItem())
+    let state = checkPossiblity(item, destObj, srcObj)
+    if (state !== -1) REPLACE_STATES.get(state)(destObj, srcObj)
+}
 
-    const drag = elementToObject(getDraggedItem())
-
-    const blocks = getPauseContainer().firstElementChild.firstElementChild.firstElementChild
-    
-    let possible = true
+const checkPossiblity = (item, destObj, srcObj) => {
     if ( item !== null && item !== 'taken' ) {
-        for ( let k = destObj.column + 1; k < destObj.column + drag.space; k++ ) {
-            if ( k >= 4 || (getInventory()[destObj.row][k] !== 'taken' && getInventory()[destObj.row][k] !== null)  ) {
-                possible = false
-                break   
-            }
-        }
-        if ( possible ) {
-            const inventoryCopy = getInventory()
-            const elemToReplace = Array.from(blocks.children).find(x => 
-                x.getAttribute('row') === destObj.row + '' && x.getAttribute('column') === destObj.column + '')
-            const objectToReplace = elementToObject(elemToReplace)    
-            const pack = MAX_PACKSIZE[objectToReplace.name]
-            if ( objectToReplace.name === drag.name && objectToReplace.amount !== pack ) {
-                let srcAmount = drag.amount
-                let destAmount = objectToReplace.amount
-                const newDestAmount = Math.min(srcAmount + destAmount, pack)
-                const taken = newDestAmount - destAmount
-                const newSrcAmount = srcAmount - taken
-                inventoryCopy[destObj.row][destObj.column] = {...drag, row: destObj.row, column: destObj.column, amount: newDestAmount}
-                elemToReplace.setAttribute('amount', newSrcAmount)
-                elemToReplace.firstElementChild.textContent = `${newSrcAmount}`
-                elemToReplace.setAttribute('remove', 1)
-                replace(elemToReplace)
-                return
-            }
-            elemToReplace.setAttribute('remove', 0)
-            replace(elemToReplace)
-            inventoryCopy[destObj.row][destObj.column] = {...drag, row: destObj.row, column: destObj.column}
-            for ( let k = 1; k < Math.max(drag.space, item.space); k++ ) {
-                if ( k < drag.space ) inventoryCopy[destObj.row][destObj.column + k] = 'taken'
-                else inventoryCopy[destObj.row][destObj.column + k] = null
-            }
-            elemToReplace.setAttribute('remove', 1)
-            replace(elemToReplace)
-        }
-    } else if ( item !== null && item === 'taken' ) {
-        for ( let k = destObj.column + 1; k < destObj.column + drag.space; k++ ) {
+        let possible = true
+        for ( let k = destObj.column + 1; k < destObj.column + srcObj.space; k++ )
             if ( k >= 4 || (getInventory()[destObj.row][k] !== 'taken' && getInventory()[destObj.row][k] !== null)  ) {
                 possible = false
                 break
             }
-        }
-        if ( possible ) {
-            let count = 0
-            for ( let k = destObj.column; ; k-- ) {
-                if ( getInventory()[destObj.row][k] !== null && getInventory()[destObj.row][k] !== 'taken' ) break
-                count++
+        if ( possible ) return 1    
+    } else if ( item !== null && item === 'taken' ) {
+        let possible = true
+        for ( let k = destObj.column + 1; k < destObj.column + srcObj.space; k++ )
+            if ( k >= 4 || (getInventory()[destObj.row][k] !== 'taken' && getInventory()[destObj.row][k] !== null)  ) {
+                possible = false 
+                break
             }
-            const elemToReplace = Array.from(blocks.children).find(x => 
-                x.getAttribute('row') === destObj.row + '' && x.getAttribute('column') === (destObj.column - count) + '')
-            elemToReplace.setAttribute('remove', 0)
-            replace(elemToReplace)
-            const inventoryCopy = getInventory()
-            inventoryCopy[destObj.row][destObj.column] = {...drag, row: destObj.row, column: destObj.column}
-            for ( let k = 1; k < drag.space; k++ ) inventoryCopy[destObj.row][destObj.column + k] = 'taken'
-            elemToReplace.setAttribute('remove', 1)
-            replace(elemToReplace)
-        }
-
+        if ( possible ) return 2    
     } else if ( item === null ) {
+        let possible = true
         let itemCount = 0
-        for ( let k = destObj.column + 1; k < destObj.column + drag.space; k++ ) {
+        for ( let k = destObj.column + 1; k < destObj.column + srcObj.space; k++ ) {
             if ( !possible ) break
             if ( k >= 4 ) possible = false
             if ( possible && getInventory()[destObj.row][k] !== 'taken' && getInventory()[destObj.row][k] !== null ) itemCount++
             if ( itemCount > 1 ) possible = false
         }
-        if ( possible ) {
-            let count = 0
-            for ( let k = destObj.column; ; k++ ) {
-                if ( getInventory()[destObj.row][k] !== null && getInventory()[destObj.row][k] !== 'taken' ) break
-                if ( k === destObj.column + drag.space ) break
-                count++
-            }
-            if ( count === drag.space ) {
-                const inventoryCopy = getInventory()
-                inventoryCopy[destObj.row][destObj.column] = {...drag, row: destObj.row, column: destObj.column}
-                for ( let k = 1; k < drag.space; k++ ) inventoryCopy[destObj.row][destObj.column + k] = 'taken'
-                removeInventory()
-                renderInventory()
-                setDraggedItem(null)
-            } else {
-                const elemToReplace = Array.from(blocks.children).find(x => 
-                    x.getAttribute('row') === destObj.row + '' && x.getAttribute('column') === (destObj.column + count) + '')
-                elemToReplace.setAttribute('remove', 0)
-                replace(elemToReplace)
-                const inventoryCopy = getInventory()
-                inventoryCopy[destObj.row][destObj.column] = {...drag, row: destObj.row, column: destObj.column}
-                for ( let k = 1; k < drag.space; k++ ) inventoryCopy[destObj.row][destObj.column + k] = 'taken'
-                elemToReplace.setAttribute('remove', 1)
-                replace(elemToReplace)
-            }
-        }
-
+        if ( possible ) return 3
     }
+    return -1        
 }
+
+const destOnItem = (destObj, srcObj) => {
+    const blocks = getPauseContainer().firstElementChild.firstElementChild.firstElementChild
+    const inventoryCopy = getInventory()
+    const elemToReplace = Array.from(blocks.children).find(x => 
+        x.getAttribute('row') === destObj.row + '' && x.getAttribute('column') === destObj.column + '')
+    if ( combine(elemToReplace, destObj, srcObj, inventoryCopy) === 1 ) return
+    elemToReplace.setAttribute('remove', 0)
+    replace(elemToReplace)
+    inventoryCopy[destObj.row][destObj.column] = {...srcObj, row: destObj.row, column: destObj.column}
+    for ( let k = 1; k < Math.max(srcObj.space, inventoryCopy[destObj.row][destObj.column]  .space); k++ ) {
+        if ( k < srcObj.space ) inventoryCopy[destObj.row][destObj.column + k] = 'taken'
+        else inventoryCopy[destObj.row][destObj.column + k] = null
+    }
+    elemToReplace.setAttribute('remove', 1)
+    replace(elemToReplace)
+}
+
+const combine = (elemToReplace, destObj, srcObj, inventoryCopy) => {
+    let result = -1
+    const pack = MAX_PACKSIZE[elementToObject(elemToReplace).name]
+    const objectToReplace = elementToObject(elemToReplace)    
+    if ( objectToReplace.name === srcObj.name && objectToReplace.amount !== pack ) {
+        let srcAmount = srcObj.amount
+        let destAmount = objectToReplace.amount
+        const newDestAmount = Math.min(srcObj.amount + objectToReplace.amount, pack)
+        const taken = newDestAmount - destAmount
+        const newSrcAmount = srcAmount - taken
+        inventoryCopy[destObj.row][destObj.column] = {...srcObj, row: destObj.row, column: destObj.column, amount: newDestAmount}
+        elemToReplace.setAttribute('amount', newSrcAmount)
+        elemToReplace.firstElementChild.textContent = `${newSrcAmount}`
+        elemToReplace.setAttribute('remove', 1)
+        replace(elemToReplace)
+        result = 1
+    }
+    return result
+}
+
+const destOnTaken = (destObj, srcObj) => {
+    let count = 0
+    for ( let k = destObj.column; ; k-- ) {
+        if ( getInventory()[destObj.row][k] !== null && getInventory()[destObj.row][k] !== 'taken' ) break
+        count++
+    }
+    const blocks = getPauseContainer().firstElementChild.firstElementChild.firstElementChild
+    const elemToReplace = Array.from(blocks.children).find(x => 
+        x.getAttribute('row') === destObj.row + '' && x.getAttribute('column') === (destObj.column - count) + '')
+    elemToReplace.setAttribute('remove', 0)
+    replace(elemToReplace)
+    const inventoryCopy = getInventory()
+    inventoryCopy[destObj.row][destObj.column] = {...srcObj, row: destObj.row, column: destObj.column}
+    for ( let k = 1; k < srcObj.space; k++ ) inventoryCopy[destObj.row][destObj.column + k] = 'taken'
+    elemToReplace.setAttribute('remove', 1)
+    replace(elemToReplace)
+}
+
+const destOnEmpty = (destObj, srcObj) => {
+    let count = 0
+    for ( let k = destObj.column; ; k++ ) {
+        if ( getInventory()[destObj.row][k] !== null && getInventory()[destObj.row][k] !== 'taken' ) break
+        if ( k === destObj.column + srcObj.space ) break
+        count++
+    }
+    if ( count === srcObj.space ) destCompleteEmpty(destObj, srcObj)
+    else destHalfEmpty(destObj, srcObj, count)
+}
+
+const destCompleteEmpty = (destObj, srcObj) => {
+    const inventoryCopy = getInventory()
+    inventoryCopy[destObj.row][destObj.column] = {...srcObj, row: destObj.row, column: destObj.column}
+    for ( let k = 1; k < srcObj.space; k++ ) inventoryCopy[destObj.row][destObj.column + k] = 'taken'
+    removeInventory()
+    renderInventory()
+    setDraggedItem(null)
+}
+
+const destHalfEmpty = (destObj, srcObj, count) => {
+    const inventoryCopy = getInventory()
+    const blocks = getPauseContainer().firstElementChild.firstElementChild.firstElementChild
+    const elemToReplace = Array.from(blocks.children).find(x => 
+        x.getAttribute('row') === destObj.row + '' && x.getAttribute('column') === (destObj.column + count) + '')
+    elemToReplace.setAttribute('remove', 0)
+    replace(elemToReplace)
+    inventoryCopy[destObj.row][destObj.column] = {...srcObj, row: destObj.row, column: destObj.column}
+    for ( let k = 1; k < srcObj.space; k++ ) inventoryCopy[destObj.row][destObj.column + k] = 'taken'
+    elemToReplace.setAttribute('remove', 1)
+    replace(elemToReplace)
+}
+
+const REPLACE_STATES = new Map([
+    [1, destOnItem],
+    [2, destOnTaken],
+    [3, destOnEmpty]
+])
 
 const use = (item) => {
     getPauseContainer().firstElementChild.remove()
@@ -403,7 +429,7 @@ const findSuitableId = (interactable) => {
     return roomInts.length
 }
 
-const OPTIONS_MAP = new Map([
+const OPTIONS = new Map([
     ['replace', replace],
     ['use', use],
     ['equip', equip],
@@ -415,7 +441,7 @@ const createOption = (options, text) => {
     const elem = document.createElement("div")
     elem.textContent = `${text}`
     elem.addEventListener('click', () => {
-        OPTIONS_MAP.get(text)(options.parentElement)
+        OPTIONS.get(text)(options.parentElement)
     })
     options.append(elem)
 }
