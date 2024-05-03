@@ -3,7 +3,7 @@ import { getInventory, setInventory } from "./inventory.js"
 import { getOwnedWeapons } from "./owned-weapons.js"
 import { renderInteractable } from "./room-loader.js"
 import { rooms } from "./rooms.js"
-import { addClass, containsClass, elementToObject, objectToElement, removeClass } from "./util.js"
+import { addAttribute, addClass, containsClass, elementToObject, objectToElement, removeClass } from "./util.js"
 import { getAimMode,
     getCurrentRoomId,
     getDraggedItem,
@@ -135,11 +135,11 @@ const addOptionsEvent = (e) => {
 
 const renderOptions = (item, options) => {
     if ( item.getAttribute('name') === 'bandage' ) createOption(options, 'use')
-    createOption(options, 'replace')
     if ( getWeaponSpecs().get(item.getAttribute('name')) ) {
         createOption(options, 'equip')
         createOption(options, 'shortcut')
     }
+    createOption(options, 'replace')
     createOption(options, 'drop')
 }
 
@@ -310,7 +310,26 @@ const equip = (item) => {
 }
 
 const shortcut = (item) => {
-    console.log('shortcut', item);
+    const weaponWheel = getPauseContainer().firstElementChild.children[1].firstElementChild
+    Array.from(weaponWheel.children).forEach((slot, index) => {
+        addClass(slot, 'selectable-slot')
+        addAttribute(slot, 'selected-weapon', item.id)
+        addAttribute(slot, 'slot-num', index)
+        slot.addEventListener('click', selectAsSlot)
+    })
+}
+
+const selectAsSlot = (e) => {
+    const targetSlotNum = Number(e.target.getAttribute('slot-num'))
+    const slotWeaponId = getWeaponWheel()[targetSlotNum]
+    const selectedId = e.target.getAttribute('selected-weapon')
+    const selectedSlotNum = getWeaponWheel().findIndex(x => x === selectedId)
+    const weaponWheelCopy = getWeaponWheel()
+    weaponWheelCopy[targetSlotNum] = selectedId
+    weaponWheelCopy[selectedSlotNum] = slotWeaponId
+    setWeaponWheel(weaponWheelCopy)
+    removeInventory()
+    renderInventory()
 }
 
 const drop = (item) => {
@@ -394,13 +413,17 @@ const renderWeaponWheel = () => {
     while (slots) {
         const slot = document.createElement("div")
         const image = document.createElement("img")
+        const slotNum = document.createElement("p")
         const name = getOwnedWeapons().get(getWeaponWheel()[4-slots])?.name
+        slotNum.textContent = 
+            getEquippedWeapon() && 4 - slots === getWeaponWheel().findIndex(x => x === getEquippedWeapon()) ? 'E' : `${5 - slots}`
         if ( name ) {
             image.src = `../assets/images/${name}.png`
             slot.append(image)
         } else {
             slot.style.width = `70px`
         }
+        slot.append(slotNum)
         weaponWheel.append(slot)
         slots--
     }

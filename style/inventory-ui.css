@@ -129,8 +129,22 @@
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
+.inventory-ui > .weapon-wheel-container > .weapon-wheel > div.selectable-slot {
+  background-color: rgb(34, 139, 34, 0.3);
+}
+
 .inventory-ui > .weapon-wheel-container > .weapon-wheel > div > img {
   height: 100%;
+}
+
+.inventory-ui > .weapon-wheel-container > .weapon-wheel > div > p {
+  padding: 2px 5px;
+  background-color: rgb(119, 136, 153, 0.9);
+  color: white;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  font-size: 14px;
 }
 
 .inventory-ui > .weapon-wheel-container > .weapon-wheel > div:nth-of-type(1) {
