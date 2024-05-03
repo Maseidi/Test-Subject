@@ -1,5 +1,5 @@
-import { getMapEl, setPlayer } from "./elements.js"
 import { addClass } from "./util.js"
+import { getMapEl, setPlayer } from "./elements.js"
 import { getPlayerAngle, getPlayerX, getPlayerY } from "./variables.js"
 
 export const loadPlayer = () => {

@@ -1,7 +1,7 @@
-import { getCurrentRoomSolid, getPlayer } from "./elements.js"
-import { getOwnedWeapons } from "./owned-weapons.js";
 import { collide, containsClass } from "./util.js"
-import { getEquippedWeapon, setTarget } from "./variables.js";
+import { getOwnedWeapons } from "./owned-weapons.js"
+import { getEquippedWeapon, setTarget } from "./variables.js"
+import { getCurrentRoomSolid, getPlayer } from "./elements.js"
 
 let counter = 0
 export const manageAim = () => {

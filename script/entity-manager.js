@@ -1,8 +1,9 @@
-import { getCurrentRoom, getCurrentRoomInteractables, getCurrentRoomLoaders, getCurrentRoomSolid, getPlayer } from "./elements.js"
-import { loadCurrentRoom } from "./room-loader.js"
-import { rooms } from "./rooms.js"
+import { getRoom } from "./rooms.js"
 import { collide } from "./util.js"
-import { getCurrentRoomId,
+import { loadCurrentRoom } from "./room-loader.js"
+import { getCurrentRoom, getCurrentRoomInteractables, getCurrentRoomLoaders, getCurrentRoomSolid, getPlayer } from "./elements.js"
+import { 
+    getCurrentRoomId,
     getPrevRoomId,
     getRoomLeft,
     getRoomTop,
@@ -44,7 +45,7 @@ const manageLoaders = () => {
 }
 
 const calculateNewRoomLeftAndTop = (cpuLeft, cpuTop) => {
-    const newRoom = rooms.get(getCurrentRoomId())
+    const newRoom = getRoom(getCurrentRoomId())
     Array.from(newRoom.loaders).filter((elem) => {
         return elem.className === getPrevRoomId()
     }).forEach((loader) => {

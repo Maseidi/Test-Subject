@@ -1,17 +1,19 @@
-import { getCurrentRoomInteractables, getCurrentRoomLoaders,
-     getCurrentRoomSolid,
-     getRoomContainer,
-     setCurrentRoom,
-     setCurrentRoomInteractables,
-     setCurrentRoomLoaders,
-     setCurrentRoomSolid
-     } from "./elements.js"
-import { rooms } from "./rooms.js"
-import { addAttribute, addClass, addToArray, isNullOrUndefined, objectToElement } from "./util.js"
+import { getRoom } from "./rooms.js"
+import { addClass, addToArray, objectToElement } from "./util.js"
 import { getCurrentRoomId, getRoomLeft, getRoomTop } from "./variables.js"
+import { 
+    getCurrentRoomInteractables, 
+    getCurrentRoomLoaders,
+    getCurrentRoomSolid,
+    getRoomContainer,
+    setCurrentRoom,
+    setCurrentRoomInteractables,
+    setCurrentRoomLoaders,
+    setCurrentRoomSolid
+    } from "./elements.js"
 
 export const loadCurrentRoom = () => {
-    const room = rooms.get(getCurrentRoomId())
+    const room = getRoom(getCurrentRoomId())
     setCurrentRoomSolid([])
     setCurrentRoomLoaders([])
     setCurrentRoomInteractables([])

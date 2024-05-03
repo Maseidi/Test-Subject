@@ -1,8 +1,8 @@
-import { getMapEl, setMapEl, setPauseContainer, setRoomContainer } from "./elements.js"
+import { addClass } from "./util.js"
 import { loadPlayer } from "./player-loader.js"
 import { loadCurrentRoom } from "./room-loader.js"
-import { addClass } from "./util.js"
 import { getMapX, getMapY } from "./variables.js"
+import { getMapEl, setMapEl, setPauseContainer, setRoomContainer } from "./elements.js"
 
 export const startUp = () => {
     renderPauseContainer()

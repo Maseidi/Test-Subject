@@ -1,5 +1,5 @@
-import { getMapEl, getPlayer } from "./elements.js"
 import { isMoving } from "./util.js"
+import { getMapEl, getPlayer } from "./elements.js"
 import { 
     getAimMode,
     getAllowMove,

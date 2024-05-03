@@ -1,6 +1,6 @@
 import { getPlayer } from "./elements.js"
-import { removeInventory, renderInventory } from "./inventory-ui.js"
-import { pickupDrop } from "./inventory.js"
+import { removeWeapon, renderWeapon } from "./weapon-loader.js"
+import { pickupDrop, removeInventory, renderInventory } from "./inventory.js"
 import { addClass, angleOfTwoPoints, isMoving, removeClass } from "./util.js"
 import { 
     getAimMode,
@@ -25,7 +25,6 @@ import {
     setRightPressed,
     setSprintPressed,
     setUpPressed } from "./variables.js"
-import { removeWeapon, renderWeapon } from "./weapon-loader.js"
 
 export const control = () => {
     onkeydown = (e) => {
