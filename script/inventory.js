@@ -4,7 +4,7 @@ import { elementToObject, putToMap } from "./util.js"
 import { getCurrentRoomId, getIntObj, getWeaponWheel, setWeaponWheel } from "./variables.js"
 import { getWeaponSpecs } from "./weapon-specs.js"
 
-const MAX_PACKSIZE = {
+export const MAX_PACKSIZE = {
     bandage: 3,
     coin: 5,
     hardDrive: 2,
