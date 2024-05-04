@@ -309,13 +309,21 @@ const addOptionsEvent = (e) => {
 }
 
 const renderOptions = (item, options) => {
-    if ( item.getAttribute('name') === 'bandage' ) createOption(options, 'use')
-    if ( getWeaponSpecs().get(item.getAttribute('name')) ) {
-        if ( !getReloading() ) createOption(options, 'equip')
+    let renderDropOption = true
+    const itemObj = elementToObject(item)
+    if ( itemObj.name === 'bandage' ) createOption(options, 'use')
+    if ( getWeaponSpecs().get(itemObj.name) ) {
+        if ( getEquippedWeapon() && itemObj.name === getOwnedWeapons().get(getEquippedWeapon()).name ) {
+             if ( getReloading() ) renderDropOption = false
+        } else {
+            if ( !getReloading() ) createOption(options, 'equip') 
+        }
         createOption(options, 'shortcut')
     }
+    if ( getReloading() ) 
+        if ( itemObj.name === getOwnedWeapons().get(getEquippedWeapon()).getAmmoType() ) renderDropOption = false
     createOption(options, 'replace')
-    createOption(options, 'drop')
+    if (renderDropOption) createOption(options, 'drop')
 }
 
 const replace = (item) => {
