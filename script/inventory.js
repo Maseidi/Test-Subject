@@ -21,6 +21,7 @@ import { getAimMode,
     setEquippedWeapon,
     setWeaponWheel, 
     getIntObj } from "./variables.js"
+import { removeUi, renderUi } from "./user-interface.js"
 
 export const MAX_PACKSIZE = {
     bandage: 3,
@@ -42,10 +43,14 @@ let inventory = [
     [undefined, undefined, undefined, undefined],
 ]
 
+export const getInventory = () => {
+    return inventory
+}
+
 export const pickupDrop = () => {
     searchPack()
     searchEmpty()
-    if ( Number(getIntObj().getAttribute("amount")) === 0 ) removeDrop()
+    checkSpecialScenarios()       
 }
 
 const searchPack = () => {
@@ -87,6 +92,15 @@ const searchEmpty = () => {
     }
 }
 
+const checkSpecialScenarios = () => {
+    if ( Number(getIntObj().getAttribute("amount")) === 0 ) removeDrop()
+    const currentWeapon = getOwnedWeapons().get(getEquippedWeapon())
+    if ( getEquippedWeapon() && getIntObj().getAttribute('name') === currentWeapon.getAmmoType() ) {
+        removeUi()
+        renderUi()
+    }
+}
+
 const inventoryFull = () => {
     for (const row of inventory) {
         for ( const item of row ) {
@@ -96,6 +110,43 @@ const inventoryFull = () => {
         }
     }  
     return true 
+}
+
+export const calculateTotalAmmo = () => {
+    const equippedWeapon = getOwnedWeapons().get(getEquippedWeapon())
+    let count = 0
+    inventory.forEach((row) => {
+        row.forEach((item) => {
+            if ( item && item.name === equippedWeapon.getAmmoType() ) count += item.amount
+        })
+    })
+    return count
+}
+
+export const useInventoryResource = (name, trade) => {
+    for ( let i = inventory.length - 1; i >= 0; i-- ) {
+        for ( let j = inventory[i].length - 1; j >= 0; j-- ) {
+            if ( trade === 0 ) return
+            if ( inventory[i][j] === null || inventory[i][j] === undefined || inventory[i][j] === 'taken' ) continue
+            if ( inventory[i][j].name === name ) {
+                const itemAmount = inventory[i][j].amount
+                const diff = itemAmount <= trade ? itemAmount : trade
+                trade -= diff
+                inventory[i][j].amount -= diff
+                if ( inventory[i][j].amount === 0 ) inventory[i][j] = null
+            }
+        }
+    }
+}
+
+export const updateInventoryWeaponMag = () => {
+    for ( let i = 0; i < inventory.length; i++ ) {
+        for ( let j = 0; j < inventory[i].length; j++ ) {
+            if ( inventory[i][j] === null || inventory[i][j] === undefined || inventory[i][j] === 'taken' ) continue
+            if ( getOwnedWeapons().has(inventory[i][j].id) ) 
+                inventory[i][j].currMag = getOwnedWeapons().get(inventory[i][j].id).currMag
+        }
+    }
 }
 
 const updateAmount = (newValue) => {
@@ -123,7 +174,13 @@ const removeDrop = () => {
 const handleNewWeaponPickup = () => {
     const weapon = elementToObject(getIntObj())
     putToMap(getOwnedWeapons, setOwnedWeapons, weapon.id, new OwnedWeapon(
-        weapon.name, weapon.currmag, weapon.damagelvl, weapon.rangelvl, weapon.reloadspeedlvl, weapon.magazinelvl, weapon.fireratelvl 
+        weapon.name,
+        weapon.currmag,
+        weapon.damagelvl,
+        weapon.rangelvl,
+        weapon.reloadspeedlvl,
+        weapon.magazinelvl,
+        weapon.fireratelvl 
     ))
     updateWeaponWheel()
 }
@@ -291,9 +348,8 @@ const renderGrid = () => {
             const item = inventory[i][j]
             const block = objectToElement({row: i, column: j})
             if ( item && item !== 'taken' && 
-                MAX_PACKSIZE[item.name] !== item.amount && 
-                item.name === getDraggedItem().getAttribute('name') ) 
-                addClass(block, 'item')
+                MAX_PACKSIZE[item.name] === item.amount + Number(getDraggedItem().getAttribute('amount'))) 
+                addClass(block, 'combine')
             block.addEventListener('click', checkReplace, true)
             grid.append(block)
         }
@@ -360,10 +416,10 @@ const destOnItem = (destObj, srcObj) => {
 const combine = (elemToReplace, destObj, srcObj, inventory) => {
     let result = -1
     const pack = MAX_PACKSIZE[elementToObject(elemToReplace).name]
-    const objectToReplace = elementToObject(elemToReplace)    
-    if ( objectToReplace.name === srcObj.name && objectToReplace.amount !== pack ) {
-        let srcAmount = srcObj.amount
-        let destAmount = objectToReplace.amount
+    const objectToReplace = elementToObject(elemToReplace)   
+    let srcAmount = srcObj.amount
+    let destAmount = objectToReplace.amount
+    if ( objectToReplace.name === srcObj.name && srcAmount + destAmount === pack ) {
         const newDestAmount = Math.min(srcAmount + destAmount, pack)
         const diff = newDestAmount - destAmount
         const newSrcAmount = srcAmount - diff

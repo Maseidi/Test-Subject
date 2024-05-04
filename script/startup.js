@@ -1,5 +1,5 @@
 import { addClass } from "./util.js"
-import { loadUi } from "./user-interface.js"
+import { renderUi } from "./user-interface.js"
 import { loadPlayer } from "./player-loader.js"
 import { loadCurrentRoom } from "./room-loader.js"
 import { getMapX, getMapY } from "./variables.js"
@@ -20,10 +20,6 @@ const renderPauseContainer = () => {
     addClass(pauseContainer, 'pause-container')
     setPauseContainer(pauseContainer)
     root.append(pauseContainer)
-}
-
-const renderUi = () => {
-    loadUi()
 }
 
 const renderMap = () => {

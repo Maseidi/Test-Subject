@@ -1,6 +1,6 @@
 import { getPlayer, getUiEl } from "./elements.js"
 import { removeWeapon, renderWeapon } from "./weapon-loader.js"
-import { loadUi, uiEquipWeapon } from "./user-interface.js"
+import { renderUi, renderEquippedWeapon } from "./user-interface.js"
 import { pickupDrop, removeInventory, renderInventory } from "./inventory.js"
 import { addClass, angleOfTwoPoints, isMoving, removeClass } from "./util.js"
 import { 
@@ -12,6 +12,7 @@ import {
     getMouseY,
     getPause,
     getPauseCause,
+    getReloading,
     getSprintPressed,
     getWeaponWheel,
     setAimMode,
@@ -23,6 +24,7 @@ import {
     setMouseY,
     setPause,
     setPauseCause,
+    setReloading,
     setRightPressed,
     setSprintPressed,
     setUpPressed } from "./variables.js"
@@ -68,6 +70,10 @@ export const control = () => {
                 case "Tab":
                     openInventory()
                     break
+                case "R":
+                case "r":
+                    rDown()
+                    break        
             }
         }
     }
@@ -140,16 +146,18 @@ const eDown = () => {
 
 const weaponSlotDown = (key) => {
     if ( getPause() ) return
+    if ( getReloading() ) return
     removeWeapon()
     if ( getWeaponWheel()[Number(key) - 1] === getEquippedWeapon() ) {
         setEquippedWeapon(null)
         setAimMode(false)
         removeClass(getPlayer(), 'aim')
+        renderEquippedWeapon()
         if (isMoving()) addClass(getPlayer(), 'walk')
         return
     }
     setEquippedWeapon(getWeaponWheel()[Number(key) - 1])
-    uiEquipWeapon()
+    renderEquippedWeapon()
     if ( getEquippedWeapon() && getAimMode() ) {
         renderWeapon()
         return
@@ -196,7 +204,7 @@ const managePause = () => {
         getUiEl().remove()
         return
     }
-    loadUi()
+    renderUi()
     if ( isMoving() ) {
         if ( !getAimMode() ) {
             addClass(getPlayer(), 'walk')
@@ -204,6 +212,12 @@ const managePause = () => {
         }
         if ( getSprintPressed() ) startSprint()
     } 
+}
+
+const rDown = () => {
+    if ( getPause() ) return
+    if ( !getEquippedWeapon() ) return
+    setReloading(true)
 }
 
 const wUp = () => {

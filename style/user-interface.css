@@ -41,10 +41,21 @@
 
 .weapon-container {
     width: 100%;
-    opacity: 0.5;
-    text-align: right;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
 }
 
 .weapon-icon {
-    height: 60px;
+    opacity: 0.5;
+    height: 50px;
+}
+
+.ammo-count {
+    color: wheat;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 20px;
 }

@@ -275,3 +275,11 @@ export const setMouseY = (val) => {
 export const getMouseY = () => {
     return mouseY
 }
+
+let reloading = false
+export const setReloading = (val) => {
+    reloading = val
+}
+export const getReloading = () => {
+    return reloading
+}
