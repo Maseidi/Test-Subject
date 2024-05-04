@@ -1,6 +1,7 @@
 import { interactables } from "./interactables.js"
 import { getWeaponSpecs } from "./weapon-specs.js"
 import { renderInteractable } from "./room-loader.js"
+import { removeUi, renderUi } from "./user-interface.js"
 import { removeWeapon, renderWeapon } from "./weapon-loader.js"
 import { getCurrentRoom, getPauseContainer, getPlayer } from "./elements.js"
 import { OwnedWeapon, getOwnedWeapons, setOwnedWeapons } from "./owned-weapons.js"
@@ -21,8 +22,8 @@ import { getAimMode,
     setEquippedWeapon,
     setWeaponWheel, 
     getIntObj, 
-    getReloading} from "./variables.js"
-import { removeUi, renderUi } from "./user-interface.js"
+    getReloading,
+    setShootCounter} from "./variables.js"
 
 export const MAX_PACKSIZE = {
     bandage: 3,
@@ -528,6 +529,7 @@ const equip = (item) => {
     const row = itemObj.row
     const column = itemObj.column
     setEquippedWeapon(inventory[row][column].id)
+    setShootCounter(getOwnedWeapons().get(getEquippedWeapon()).getFireRate() * 60)
     if ( getAimMode() ) {
         removeWeapon()
         renderWeapon()

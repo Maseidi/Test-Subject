@@ -1,9 +1,16 @@
 import { collide, containsClass } from "./util.js"
 import { removeUi, renderUi } from "./user-interface.js"
-import { OwnedWeapon, getOwnedWeapons } from "./owned-weapons.js"
-import { getEquippedWeapon, getReloading, getShootCounter, getShootPressed, getShooting, setReloading, setShootCounter, setTarget } from "./variables.js"
 import { getCurrentRoomSolid, getPlayer } from "./elements.js"
+import { OwnedWeapon, getOwnedWeapons } from "./owned-weapons.js"
 import { calculateTotalAmmo, updateInventoryWeaponMag, useInventoryResource } from "./inventory.js"
+import { 
+    getEquippedWeapon,
+    getReloading,
+    getShootCounter,
+    getShootPressed,
+    setReloading,
+    setShootCounter,
+    setTarget } from "./variables.js"
 
 const EMPTY_WEAPON = new Audio('../assets/audio/empty-weapon.mp3')
 
@@ -84,8 +91,8 @@ const manageShoot = () => {
     if ( !getEquippedWeapon() ) return
     const equippedWeapon = getOwnedWeapons().get(getEquippedWeapon())
     setShootCounter(getShootCounter() + 1)
-    if ( getShootCounter() / 60 > equippedWeapon.getFireRate() ) setShootCounter(getShootCounter() - 1)
-    if ( getShootCounter() / 60 === equippedWeapon.getFireRate() ) {
+    if ( getShootCounter() / 60 >= equippedWeapon.getFireRate() ) setShootCounter(getShootCounter() - 1)
+    if ( (getShootCounter() + 1) / 60 >= equippedWeapon.getFireRate() ) {
         if ( getShootPressed() ) {
             shoot()
             setShootCounter(0)
