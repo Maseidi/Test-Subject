@@ -347,7 +347,7 @@ const renderGrid = () => {
         for ( let j = 0; j < inventory[i].length; j++ ) {
             const item = inventory[i][j]
             const block = objectToElement({row: i, column: j})
-            if ( item && item !== 'taken' && 
+            if ( item && item !== 'taken' && item.name == getDraggedItem().getAttribute('name') &&
                 MAX_PACKSIZE[item.name] === item.amount + Number(getDraggedItem().getAttribute('amount'))) 
                 addClass(block, 'combine')
             block.addEventListener('click', checkReplace, true)

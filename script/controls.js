@@ -2,7 +2,7 @@ import { getPlayer, getUiEl } from "./elements.js"
 import { removeWeapon, renderWeapon } from "./weapon-loader.js"
 import { renderUi, renderEquippedWeapon } from "./user-interface.js"
 import { pickupDrop, removeInventory, renderInventory } from "./inventory.js"
-import { addClass, angleOfTwoPoints, isMoving, removeClass } from "./util.js"
+import { addClass, angleOfTwoPoints, containsClass, isMoving, removeClass } from "./util.js"
 import { 
     getAimMode,
     getDraggedItem,
@@ -26,6 +26,7 @@ import {
     setPauseCause,
     setReloading,
     setRightPressed,
+    setShootPressed,
     setSprintPressed,
     setUpPressed } from "./variables.js"
 
@@ -104,6 +105,10 @@ export const control = () => {
 
     onmousemove = (e) => aimAngle(e)
 
+    onmousedown = (e) => clickDown(e)
+
+    onmouseup = (e) => clickUp(e)
+
 }
 
 const wDown = () => {
@@ -174,6 +179,7 @@ const shiftDown = () => {
 }
 
 const startSprint = () => {
+    if ( !isMoving() ) return
     setAimMode(false)
     removeClass(getPlayer(), 'aim')
     removeWeapon()
@@ -253,22 +259,30 @@ const stopWalkingAnimation = () => {
     }
 }
 
-const aimAngle = (e) => {
-    manageDragItem(e)
+const aimAngle = (event) => {
+    manageDragItem(event)
     if ( getPause() ) return
     const angle = angleOfTwoPoints(
             getPlayer().getBoundingClientRect().x + 17, 
             getPlayer().getBoundingClientRect().y + 17,
-            e.clientX,
-            e.clientY
+            event.clientX,
+            event.clientY
         )
     if ( angle ) setAimingPlayerAngle(angle)
 }
 
-const manageDragItem = (e) => {
-    setMouseX(e.clientX)
-    setMouseY(e.clientY)
+const manageDragItem = (event) => {
+    setMouseX(event.clientX)
+    setMouseY(event.clientY)
     if ( !getDraggedItem() ) return
     getDraggedItem().style.left = `${getMouseX() + 10}px`
     getDraggedItem().style.top = `${getMouseY() - 35}px`
+}
+
+const clickDown = (event) => {
+    if ( event.buttons === 1 ) setShootPressed(true)
+}
+
+const clickUp = (event) => {
+    if ( event.buttons === 0 ) setShootPressed(false)
 }

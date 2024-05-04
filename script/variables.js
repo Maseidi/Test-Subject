@@ -283,3 +283,19 @@ export const setReloading = (val) => {
 export const getReloading = () => {
     return reloading
 }
+
+let shootPressed = false
+export const setShootPressed = (val) => {
+    shootPressed = val
+}
+export const getShootPressed = () => {
+    return shootPressed
+}
+
+let shooting = false
+export const setShooting = (val) => {
+    shooting = val
+}
+export const getShooting = () => {
+    return shooting
+}
