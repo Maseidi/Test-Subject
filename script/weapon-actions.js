@@ -1,7 +1,7 @@
 import { collide, containsClass } from "./util.js"
 import { removeUi, renderUi } from "./user-interface.js"
 import { OwnedWeapon, getOwnedWeapons } from "./owned-weapons.js"
-import { getEquippedWeapon, getReloading, getShooting, setReloading, setTarget } from "./variables.js"
+import { getEquippedWeapon, getReloading, getShootCounter, getShootPressed, getShooting, setReloading, setShootCounter, setTarget } from "./variables.js"
 import { getCurrentRoomSolid, getPlayer } from "./elements.js"
 import { calculateTotalAmmo, updateInventoryWeaponMag, useInventoryResource } from "./inventory.js"
 
@@ -39,6 +39,13 @@ const manageAim = () => {
     }
 }
 
+export const setupReload = () => {
+    const equippedWeapon = getOwnedWeapons().get(getEquippedWeapon())
+    if ( equippedWeapon.getCurrMag() === equippedWeapon.getMagazine() ) return
+    if ( calculateTotalAmmo() === 0 ) return
+    setReloading(true)
+}
+
 let reloadCounter = 0
 const manageReload = () => {
     if ( !getEquippedWeapon() ) return
@@ -51,7 +58,7 @@ const manageReload = () => {
     }
 }
 
-export const reload = () => {
+const reload = () => {
     const equippedWeapon = getOwnedWeapons().get(getEquippedWeapon())
     const mag = equippedWeapon.getMagazine()
     const currentMag = equippedWeapon.getCurrMag()
@@ -73,15 +80,41 @@ export const reload = () => {
     renderUi()
 }
 
-let shootCounter = 0
 const manageShoot = () => {
     if ( !getEquippedWeapon() ) return
     const equippedWeapon = getOwnedWeapons().get(getEquippedWeapon())
-    shootCounter++
-    if ( shootCounter / 60 >= equippedWeapon.getFireRate() ) shootCounter = 0
-    if ( getShooting() && shootCounter === 0 ) shoot()
+    setShootCounter(getShootCounter() + 1)
+    if ( getShootCounter() / 60 > equippedWeapon.getFireRate() ) setShootCounter(getShootCounter() - 1)
+    if ( getShootCounter() / 60 === equippedWeapon.getFireRate() ) {
+        if ( getShootPressed() ) {
+            shoot()
+            setShootCounter(0)
+        }
+    }
 }
 
 const shoot = () => {
-    console.log(1);
+    const equippedWeapon = getOwnedWeapons().get(getEquippedWeapon())
+    const totalAmmo = calculateTotalAmmo()
+    let currMag = equippedWeapon.getCurrMag()
+    if ( totalAmmo === 0 && currMag === 0 ) {
+        EMPTY_WEAPON.play()
+        return
+    }
+    if ( currMag === 0 ) {
+        setupReload()
+        return
+    }
+    currMag--
+    const updateWeapon = new OwnedWeapon(
+        equippedWeapon.name,
+        currMag,
+        equippedWeapon.damageLvl,
+        equippedWeapon.rangeLvl,
+        equippedWeapon.reloadSpeedLvl,
+        equippedWeapon.magazineLvl,
+        equippedWeapon.fireRateLvl)
+    getOwnedWeapons().set(getEquippedWeapon(), updateWeapon)
+    removeUi()
+    renderUi()
 }

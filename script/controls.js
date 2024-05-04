@@ -1,8 +1,9 @@
 import { getPlayer, getUiEl } from "./elements.js"
+import { getOwnedWeapons } from "./owned-weapons.js"
 import { removeWeapon, renderWeapon } from "./weapon-loader.js"
 import { renderUi, renderEquippedWeapon } from "./user-interface.js"
+import { addClass, angleOfTwoPoints, isMoving, removeClass } from "./util.js"
 import { calculateTotalAmmo, pickupDrop, removeInventory, renderInventory } from "./inventory.js"
-import { addClass, angleOfTwoPoints, containsClass, isMoving, removeClass } from "./util.js"
 import { 
     getAimMode,
     getDraggedItem,
@@ -26,10 +27,11 @@ import {
     setPauseCause,
     setReloading,
     setRightPressed,
+    setShootCounter,
     setShootPressed,
     setSprintPressed,
     setUpPressed } from "./variables.js"
-import { getOwnedWeapons } from "./owned-weapons.js"
+import { setupReload } from "./weapon-actions.js"
 
 export const control = () => {
     onkeydown = (e) => {
@@ -107,26 +109,18 @@ export const control = () => {
     onmousemove = (e) => aimAngle(e)
 
     onmousedown = (e) => clickDown(e)
-
+    
     onmouseup = (e) => clickUp(e)
 
 }
 
-const wDown = () => {
-    enableDirection(setUpPressed)
-}
+const wDown = () => enableDirection(setUpPressed)
 
-const aDown = () => {
-    enableDirection(setLeftPressed)
-}
+const aDown = () => enableDirection(setLeftPressed)
 
-const sDown = () => {
-    enableDirection(setDownPressed)
-}
+const sDown = () => enableDirection(setDownPressed)
 
-const dDown = () => {
-    enableDirection(setRightPressed)
-}
+const dDown = () => enableDirection(setRightPressed)
 
 const enableDirection = (setPressed) => {
     setPressed(true)
@@ -164,6 +158,7 @@ const weaponSlotDown = (key) => {
     }
     setEquippedWeapon(getWeaponWheel()[Number(key) - 1])
     renderEquippedWeapon()
+    setShootCounter(getOwnedWeapons().get(getEquippedWeapon()).getFireRate() * 60)
     if ( getEquippedWeapon() && getAimMode() ) {
         renderWeapon()
         return
@@ -224,27 +219,16 @@ const managePause = () => {
 const rDown = () => {
     if ( getPause() ) return
     if ( !getEquippedWeapon() ) return
-    const equippedWeapon = getOwnedWeapons().get(getEquippedWeapon())
-    if ( equippedWeapon.getCurrMag() === equippedWeapon.getMagazine() ) return
-    if ( calculateTotalAmmo() === 0 ) return
-    setReloading(true)
+    setupReload()
 }
 
-const wUp = () => {
-    disableDirection(setUpPressed)
-}
+const wUp = () => disableDirection(setUpPressed)
 
-const aUp = () => {
-    disableDirection(setLeftPressed)
-}
+const aUp = () => disableDirection(setLeftPressed)
 
-const sUp = () => {
-    disableDirection(setDownPressed)
-}
+const sUp = () => disableDirection(setDownPressed)
 
-const dUp = () => {
-    disableDirection(setRightPressed)
-}
+const dUp = () => disableDirection(setRightPressed)
 
 const disableDirection = (setPressed) => {
     setPressed(false)

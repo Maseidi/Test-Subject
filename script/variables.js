@@ -299,3 +299,11 @@ export const setShooting = (val) => {
 export const getShooting = () => {
     return shooting
 }
+
+let shootCounter
+export const setShootCounter = (val) => {
+    shootCounter = val
+}
+export const getShootCounter = () => {
+    return shootCounter
+}
