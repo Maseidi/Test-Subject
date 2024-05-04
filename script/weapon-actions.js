@@ -43,24 +43,12 @@ let reloadCounter = 0
 const manageReload = () => {
     if ( !getEquippedWeapon() ) return
     const equippedWeapon = getOwnedWeapons().get(getEquippedWeapon())
-    if ( getReloading() ) {
-        const totalAmmo = calculateTotalAmmo()
-        if ( equippedWeapon.getCurrMag() === 0 && totalAmmo === 0 ) {
-            EMPTY_WEAPON.play()
-            resetReload()
-        }
-        else if ( totalAmmo === 0 ) resetReload()
-        else reloadCounter++
-    }
+    if ( getReloading() ) reloadCounter++
     if ( reloadCounter / 60 >= equippedWeapon.getReloadSpeed() ) {
         reload()
-        resetReload()
+        setReloading(false)
+        reloadCounter = 0
     }
-}
-
-const resetReload = () => {
-    setReloading(false)
-    reloadCounter = 0
 }
 
 export const reload = () => {

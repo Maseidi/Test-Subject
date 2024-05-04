@@ -1,7 +1,7 @@
 import { getPlayer, getUiEl } from "./elements.js"
 import { removeWeapon, renderWeapon } from "./weapon-loader.js"
 import { renderUi, renderEquippedWeapon } from "./user-interface.js"
-import { pickupDrop, removeInventory, renderInventory } from "./inventory.js"
+import { calculateTotalAmmo, pickupDrop, removeInventory, renderInventory } from "./inventory.js"
 import { addClass, angleOfTwoPoints, containsClass, isMoving, removeClass } from "./util.js"
 import { 
     getAimMode,
@@ -29,6 +29,7 @@ import {
     setShootPressed,
     setSprintPressed,
     setUpPressed } from "./variables.js"
+import { getOwnedWeapons } from "./owned-weapons.js"
 
 export const control = () => {
     onkeydown = (e) => {
@@ -223,6 +224,9 @@ const managePause = () => {
 const rDown = () => {
     if ( getPause() ) return
     if ( !getEquippedWeapon() ) return
+    const equippedWeapon = getOwnedWeapons().get(getEquippedWeapon())
+    if ( equippedWeapon.getCurrMag() === equippedWeapon.getMagazine() ) return
+    if ( calculateTotalAmmo() === 0 ) return
     setReloading(true)
 }
 

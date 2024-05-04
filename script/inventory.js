@@ -20,7 +20,8 @@ import { getAimMode,
     setDraggedItem,
     setEquippedWeapon,
     setWeaponWheel, 
-    getIntObj } from "./variables.js"
+    getIntObj, 
+    getReloading} from "./variables.js"
 import { removeUi, renderUi } from "./user-interface.js"
 
 export const MAX_PACKSIZE = {
@@ -310,7 +311,7 @@ const addOptionsEvent = (e) => {
 const renderOptions = (item, options) => {
     if ( item.getAttribute('name') === 'bandage' ) createOption(options, 'use')
     if ( getWeaponSpecs().get(item.getAttribute('name')) ) {
-        createOption(options, 'equip')
+        if ( !getReloading() ) createOption(options, 'equip')
         createOption(options, 'shortcut')
     }
     createOption(options, 'replace')
