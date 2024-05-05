@@ -1,5 +1,5 @@
 import { getRoom } from "./rooms.js"
-import { addClass, addToArray, objectToElement } from "./util.js"
+import { addClass, addToArray, appendAll, objectToElement } from "./util.js"
 import { getCurrentRoomId, getRoomLeft, getRoomTop } from "./variables.js"
 import { 
     getCurrentRoomInteractables, 
@@ -120,8 +120,6 @@ const renderDescription = (popup, interactable) => {
     fButton.textContent = "F"
     const descText = document.createElement("p")
     descText.textContent = `${interactable.popup}`
-    descContainer.append(fButton)
-    descContainer.append(descText)
+    appendAll(descContainer, [fButton, descText])
     popup.append(descContainer)
-
 }

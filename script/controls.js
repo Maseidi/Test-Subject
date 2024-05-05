@@ -1,9 +1,10 @@
+import { setupReload } from "./weapon-actions.js"
 import { getPlayer, getUiEl } from "./elements.js"
 import { getOwnedWeapons } from "./owned-weapons.js"
 import { removeWeapon, renderWeapon } from "./weapon-loader.js"
 import { renderUi, renderEquippedWeapon } from "./user-interface.js"
+import { pickupDrop, removeInventory, renderInventory } from "./inventory.js"
 import { addClass, angleOfTwoPoints, isMoving, removeClass } from "./util.js"
-import { calculateTotalAmmo, pickupDrop, removeInventory, renderInventory } from "./inventory.js"
 import { 
     getAimMode,
     getDraggedItem,
@@ -14,6 +15,7 @@ import {
     getPause,
     getPauseCause,
     getReloading,
+    getShooting,
     getSprintPressed,
     getWeaponWheel,
     setAimMode,
@@ -25,13 +27,12 @@ import {
     setMouseY,
     setPause,
     setPauseCause,
-    setReloading,
     setRightPressed,
     setShootCounter,
     setShootPressed,
     setSprintPressed,
     setUpPressed } from "./variables.js"
-import { setupReload } from "./weapon-actions.js"
+import { removeStash, renderStash } from "./stash.js"
 
 export const control = () => {
     onkeydown = (e) => {
@@ -77,7 +78,10 @@ export const control = () => {
                 case "R":
                 case "r":
                     rDown()
-                    break        
+                    break
+                case "Escape":
+                    escapeDown()
+                    break            
             }
         }
     }
@@ -147,6 +151,7 @@ const eDown = () => {
 const weaponSlotDown = (key) => {
     if ( getPause() ) return
     if ( getReloading() ) return
+    if ( getShooting() ) return
     removeWeapon()
     if ( getWeaponWheel()[Number(key) - 1] === getEquippedWeapon() ) {
         setEquippedWeapon(null)
@@ -158,7 +163,7 @@ const weaponSlotDown = (key) => {
     }
     setEquippedWeapon(getWeaponWheel()[Number(key) - 1])
     renderEquippedWeapon()
-    setShootCounter(getOwnedWeapons().get(getEquippedWeapon()).getFireRate() * 60)
+    if ( getEquippedWeapon() ) setShootCounter(getOwnedWeapons().get(getEquippedWeapon()).getFireRate() * 60)
     if ( getEquippedWeapon() && getAimMode() ) {
         renderWeapon()
         return
@@ -182,23 +187,31 @@ const startSprint = () => {
 }
 
 const fDown = () => {
-    if ( !getPause() && getIntObj() && getIntObj().getAttribute("amount") ) pickupDrop()
+    if ( getPause() ) return
+    if ( !getIntObj() ) return
+    if ( getIntObj().getAttribute('amount') ) pickupDrop()
+    if ( getIntObj().getAttribute('name') === 'stash' && !getShooting() && !getReloading() ) openStash()    
+}
+
+const openStash = () => {
+    setPauseCause('stash')
+    managePause()
+    renderStash()
 }
 
 const openInventory = () => {
-    if ( getPause() && getPauseCause() !== "inventory" ) return
-    if ( getPause() && getPauseCause() === "inventory" && getDraggedItem() ) return
+    if ( getPause() && getPauseCause() !== 'inventory' ) return
+    if ( getPause() && getPauseCause() === 'inventory' && getDraggedItem() ) return
     managePause()
     if ( getPause() ) {
-        setPauseCause("inventory")
+        setPauseCause('inventory')
         renderInventory()
         return
     }
-    setPauseCause(null)
     removeInventory()
 }
 
-const managePause = () => {
+export const managePause = () => {
     setPause(!getPause())
     if ( getPause() ) {
         removeClass(getPlayer(), 'run')
@@ -206,6 +219,7 @@ const managePause = () => {
         getUiEl().remove()
         return
     }
+    setPauseCause(null)
     renderUi()
     if ( isMoving() ) {
         if ( !getAimMode() ) {
@@ -220,6 +234,13 @@ const rDown = () => {
     if ( getPause() ) return
     if ( !getEquippedWeapon() ) return
     setupReload()
+}
+
+const escapeDown = () => {
+    if ( getPause() && getPauseCause() === 'stash' ) {
+        managePause()
+        removeStash()
+    }
 }
 
 const wUp = () => disableDirection(setUpPressed)

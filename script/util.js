@@ -38,6 +38,10 @@ export const containsClass = (elem, className) => {
     return elem.classList.contains(className)
 }
 
+export const appendAll = (root, elems) => {
+    elems.forEach(elem => root.append(elem))
+}
+
 export const isMoving = () => {
     return getUpPressed() || getDownPressed() || getLeftPressed() || getRightPressed()
 }

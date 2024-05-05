@@ -1,4 +1,4 @@
-import { addClass } from "./util.js"
+import { addClass, appendAll } from "./util.js"
 import { getMapEl, setPlayer } from "./elements.js"
 import { getPlayerAngle, getPlayerX, getPlayerY } from "./variables.js"
 
@@ -15,11 +15,10 @@ export const loadPlayer = () => {
     const playerBody = document.createElement("div")
     addClass(playerBody, 'player-body')
     playerBody.style.transform = `rotateZ(${getPlayerAngle()}deg)`
-    playerCollider.append(playerBody)
 
     const forwardDetector = document.createElement("div")
     addClass(forwardDetector, 'forward-detector')
-    playerCollider.append(forwardDetector)
+    appendAll(playerCollider, [playerBody, forwardDetector])
 
     const playerHead = document.createElement("div")
     addClass(playerHead, 'player-head')

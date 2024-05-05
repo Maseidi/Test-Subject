@@ -1,8 +1,8 @@
-import { addClass } from "./util.js"
+import { addClass, appendAll } from "./util.js"
 import { getUiEl, setUiEl } from "./elements.js"
 import { getEquippedWeapon, getHealth, getMaxHealth, getMaxStamina, getStamina } from "./variables.js"
 import { getOwnedWeapons } from "./owned-weapons.js"
-import { calculateTotalAmmo, getInventory } from "./inventory.js"
+import { calculateTotalAmmo } from "./inventory.js"
 
 export const renderUi = () => {
     renderBackground()
@@ -59,7 +59,6 @@ export const renderEquippedWeapon = () => {
     addClass(weaponContainer, 'weapon-container')
     const weaponIcon = document.createElement('img')
     addClass(weaponIcon, 'weapon-icon')
-    weaponContainer.append(weaponIcon)
     weaponIcon.src = `../assets/images/${getOwnedWeapons().get(getEquippedWeapon()).name}.png`
     addClass(weaponIcon, 'weapon-icon')
     const ammoCount = document.createElement('div')
@@ -68,9 +67,8 @@ export const renderEquippedWeapon = () => {
     mag.textContent = `${getOwnedWeapons().get(getEquippedWeapon()).getCurrMag()}`
     const total = document.createElement('p')
     total.textContent = calculateTotalAmmo()
-    ammoCount.append(mag)
-    ammoCount.append(total)
-    weaponContainer.append(ammoCount)
+    appendAll(ammoCount, [mag, total])
+    appendAll(weaponContainer, [weaponIcon, ammoCount])
     getUiEl().append(weaponContainer)   
 }
 

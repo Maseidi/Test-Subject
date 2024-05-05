@@ -5,7 +5,7 @@ import { removeUi, renderUi } from "./user-interface.js"
 import { removeWeapon, renderWeapon } from "./weapon-loader.js"
 import { getCurrentRoom, getPauseContainer, getPlayer } from "./elements.js"
 import { OwnedWeapon, getOwnedWeapons, setOwnedWeapons } from "./owned-weapons.js"
-import { addAttribute, addClass, containsClass, elementToObject, objectToElement, removeClass, putToMap } from "./util.js"
+import { addAttribute, addClass, containsClass, elementToObject, objectToElement, removeClass, putToMap, appendAll } from "./util.js"
 import { getAimMode,
     getCurrentRoomId,
     getDraggedItem,
@@ -23,7 +23,8 @@ import { getAimMode,
     setWeaponWheel, 
     getIntObj, 
     getReloading,
-    setShootCounter} from "./variables.js"
+    setShootCounter,
+    getShooting} from "./variables.js"
 
 export const MAX_PACKSIZE = {
     bandage: 3,
@@ -125,19 +126,27 @@ export const calculateTotalAmmo = () => {
     return count
 }
 
-export const useInventoryResource = (name, trade) => {
+export const useInventoryResource = (name, reduce) => {
     for ( let i = inventory.length - 1; i >= 0; i-- ) {
         for ( let j = inventory[i].length - 1; j >= 0; j-- ) {
-            if ( trade === 0 ) return
+            if ( reduce === 0 ) return
             if ( inventory[i][j] === null || inventory[i][j] === undefined || inventory[i][j] === 'taken' ) continue
-            if ( inventory[i][j].name === name ) {
-                const itemAmount = inventory[i][j].amount
-                const diff = itemAmount <= trade ? itemAmount : trade
-                trade -= diff
-                inventory[i][j].amount -= diff
-                if ( inventory[i][j].amount === 0 ) inventory[i][j] = null
-            }
+            if ( inventory[i][j].name === name ) useItemAtPosition(i, j, reduce)
         }
+    }
+}
+
+export const useItemAtPosition = (row, column, reduce) => {
+    const itemAmount = inventory[row][column].amount
+    const diff = itemAmount <= reduce ? itemAmount : reduce
+    reduce -= diff
+    inventory[row][column].amount -= diff
+    const space = inventory[row][column].space
+    if ( inventory[row][column].amount === 0 ) {
+        inventory[row][column] = null
+        for ( let i = 1; i < space; i++ ) 
+            if ( inventory[row][column + i] === 'taken' )
+                inventory[row][column + i] = null
     }
 }
 
@@ -153,6 +162,7 @@ export const updateInventoryWeaponMag = () => {
 
 const updateAmount = (newValue) => {
     getIntObj().setAttribute("amount", newValue)
+    if ( getIntObj().children.length === 0 ) return
     getIntObj().children[1].children[0].textContent = `x${newValue} ${getIntObj().getAttribute("heading")}`
     interactables.set(getCurrentRoomId(), 
     Array.from(interactables.get(getCurrentRoomId())).map((int, index) => {
@@ -212,7 +222,7 @@ const renderBackground = () => {
     getPauseContainer().append(background)
 }
 
-const renderBlocks = () => {
+export const renderBlocks = () => {
     const background = getPauseContainer().firstElementChild
     const inventoryContainer = document.createElement("div")
     addClass(inventoryContainer, 'inventory-container')
@@ -251,14 +261,13 @@ const renderBlocks = () => {
     background.append(inventoryContainer)
 }
 
-const renderHeadingAndDescription = () => {
+export const renderHeadingAndDescription = () => {
     const background = getPauseContainer().firstElementChild
     const desc = document.createElement("div")
     addClass(desc, 'description')
     const heading = document.createElement("h2")
-    desc.append(heading)
     const paragraph = document.createElement("p")
-    desc.append(paragraph)
+    appendAll(desc, [heading, paragraph])
     background.firstElementChild.append(desc)
 }
 
@@ -274,7 +283,7 @@ const inventoryEvents = () => {
         })
 }
 
-const descriptionEvent = (item) => {
+export const descriptionEvent = (item) => {
     const itemObj = elementToObject(item)
     item.addEventListener('mousemove', addDescEvent, true)
     item.h = `${itemObj.heading}`
@@ -287,7 +296,7 @@ const addDescEvent = (e) => {
     if (e.target.d) desc.children[1].textContent = `${e.target.d}`
 }
 
-const removeDescriptionEvent = (item) => {
+export const removeDescriptionEvent = (item) => {
     item.addEventListener('mouseleave', removeDescEvent, true)
 }
 
@@ -315,9 +324,9 @@ const renderOptions = (item, options) => {
     if ( itemObj.name === 'bandage' ) createOption(options, 'use')
     if ( getWeaponSpecs().get(itemObj.name) ) {
         if ( getEquippedWeapon() && itemObj.name === getOwnedWeapons().get(getEquippedWeapon()).name ) {
-             if ( getReloading() ) renderDropOption = false
+             if ( getReloading() || getShooting() ) renderDropOption = false
         } else {
-            if ( !getReloading() ) createOption(options, 'equip') 
+            if ( !getReloading() && !getShooting() ) createOption(options, 'equip') 
         }
         createOption(options, 'shortcut')
     }
@@ -581,19 +590,16 @@ const dropFromInventory = (itemObj) => {
         for ( let k = 1; k < itemObj.space; k++ ) inventory[row][column+k] = null
 }
 
-const handleWeaponDrop = (itemObj) => {
+export const handleWeaponDrop = (itemObj) => {
     if ( !getOwnedWeapons().get(itemObj.id) ) return
-    getOwnedWeapons().delete(itemObj.id)  
+    getOwnedWeapons().delete(itemObj.id)
     if ( getEquippedWeapon() === itemObj.id ) {
         setEquippedWeapon(null)
         removeClass(getPlayer(), 'aim')
         setAimMode(false)
         removeWeapon()
     }
-    const weaponWheelCopy = getWeaponWheel()
-    for ( const slot in getWeaponWheel() )
-        if ( getWeaponWheel()[slot] === itemObj.id ) weaponWheelCopy[slot] = null
-    setWeaponWheel(weaponWheelCopy)
+    setWeaponWheel(getWeaponWheel().filter(weapon => weapon !== itemObj.id))
 }
 
 const findSuitableId = (interactable) => {
