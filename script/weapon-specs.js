@@ -63,7 +63,7 @@ const weapons = new Map([
         "red",
         false,
         1,
-        [25, 28, 31, 34, 37],
+        [30, 33, 36, 39, 42],
         [600, 650, 700, 750, 800],
         [3.2, 2.7, 2.2, 1.7, 1.2],
         [7, 9, 11, 13, 15],
@@ -138,7 +138,7 @@ const weapons = new Map([
         [3, 2.6, 2.2, 1.8, 1.4],
         [30, 35, 40, 45, 50],
         [0.2, 0.19, 0.18, 0.17, 0.16],
-        "Sub-machine gun purely focused on dealing the most damage possible"
+        "Sub-machine gun purely focused on dealing the most possible damage"
     )],
     ["mp5k", new Weapon(
         "smgAmmo",
@@ -166,7 +166,7 @@ const weapons = new Map([
         [1.8, 1.7, 1.6, 1.5, 1.4],
         [40, 50, 60, 70, 80],
         [0.15, 0.14, 0.13, 0.12, 0.11],
-        "Decent damage and magazine capacity is this weapon's main achievements"
+        "Decent damage and magazine capacity are this weapon's points of shine"
     )],
     ["ppsh", new Weapon(
         "smgAmmo",

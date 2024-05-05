@@ -24,7 +24,9 @@ import { getAimMode,
     getIntObj, 
     getReloading,
     setShootCounter,
-    getShooting} from "./variables.js"
+    getShooting,
+    setPauseCause} from "./variables.js"
+import { managePause } from "./controls.js"
 
 export const MAX_PACKSIZE = {
     bandage: 3,
@@ -332,6 +334,7 @@ const renderOptions = (item, options) => {
             if ( !getReloading() && !getShooting() ) createOption(options, 'equip') 
         }
         createOption(options, 'shortcut')
+        createOption(options, 'examine')
     }
     if ( getReloading() ) 
         if ( itemObj.name === getOwnedWeapons().get(getEquippedWeapon()).getAmmoType() ) renderDropOption = false
@@ -593,6 +596,12 @@ const dropFromInventory = (itemObj) => {
         for ( let k = 1; k < itemObj.space; k++ ) inventory[row][column+k] = null
 }
 
+const findSuitableId = (interactable) => {
+    const roomInts = interactables.get(getCurrentRoomId())
+    roomInts.push(interactable)
+    return roomInts.length
+}
+
 export const handleWeaponDrop = (itemObj) => {
     if ( !getOwnedWeapons().get(itemObj.id) ) return
     getOwnedWeapons().delete(itemObj.id)
@@ -605,10 +614,91 @@ export const handleWeaponDrop = (itemObj) => {
     setWeaponWheel(getWeaponWheel().map(weapon => weapon === itemObj.id ? null : weapon))
 }
 
-const findSuitableId = (interactable) => {
-    const roomInts = interactables.get(getCurrentRoomId())
-    roomInts.push(interactable)
-    return roomInts.length
+const examine = (item) => {
+    setPauseCause('stats')
+    const itemObj = elementToObject(item)
+    const weaponStatsContainer = document.createElement('div')
+    addClass(weaponStatsContainer, 'weapon-stats-container')
+    const weaponStats = document.createElement('div')
+    addClass(weaponStats, 'weapon-stats')
+    const imgContainer = document.createElement('div')
+    addClass(imgContainer, 'weapon-stats-img-container')
+    const img = document.createElement('img')
+    img.src = `../assets/images/${itemObj.name}.png`
+    imgContainer.append(img)
+    const weaponStatsName = document.createElement('div')
+    addClass(weaponStatsName, 'weapon-stats-name')
+    weaponStatsName.textContent = itemObj.heading
+    const weaponStatsDesc = document.createElement('div')
+    addClass(weaponStatsDesc, 'weapon-stats-desc')
+    weaponStatsDesc.textContent = itemObj.description
+    const damage = createStat(itemObj, 'damage', 'damage')
+    const range = createStat(itemObj, 'range', 'range')
+    const reload = createStat(itemObj, 'reload speed', 'reloadspeed')
+    const magazine = createStat(itemObj, 'magazine', 'magazine')
+    const firerate = createStat(itemObj, 'fire rate', 'firerate')
+    appendAll(weaponStats, [imgContainer, weaponStatsName, weaponStatsDesc, damage, range, reload, magazine, firerate])
+    weaponStatsContainer.append(weaponStats)
+    removeInventory()
+    getPauseContainer().append(weaponStatsContainer)
+    renderQuit()
+}
+
+const renderQuit = () => {
+    const quitContainer = document.createElement("div")
+    addClass(quitContainer, 'quit')
+    const quitBtn = document.createElement("p")
+    quitBtn.textContent = 'esc'
+    const quitText = document.createElement("p")
+    quitText.textContent = 'quit'
+    appendAll(quitContainer, [quitBtn, quitText])
+    quitContainer.addEventListener('click', () => {
+        getPauseContainer().firstElementChild.remove()
+        renderInventory()
+        setPauseCause('inventory')
+    })
+    getPauseContainer().firstElementChild.append(quitContainer)
+}
+
+const createStat = (itemObj, title, name) => {
+    const statContainer = document.createElement('div')
+    addClass(statContainer, 'stat-container')
+    const upper = document.createElement('div')
+    addClass(upper, 'upper')
+    const upperRight = document.createElement('div')
+    addClass(upperRight, 'upper-right')
+    const statName = document.createElement('p') 
+    addClass(statName, 'stat-name')
+    statName.textContent = title
+    const statLvl = document.createElement('p')
+    addClass(statLvl, 'stat-lvl')
+    statLvl.textContent = `Lvl. ${itemObj[name+'lvl']}`
+    const value = document.createElement('div')
+    addClass(value, 'value')
+    value.textContent = `${getValue(itemObj, name)}`
+    const lower = document.createElement('div')
+    addClass(lower, 'lower')
+    for ( let i = 1; i <= 5; i++ ) {
+        const level = document.createElement('div')
+        if ( i <= itemObj[name+'lvl'] ) addClass(level, 'active')
+        else addClass(level, 'inactive')   
+        lower.append(level) 
+    }
+    appendAll(upperRight, [statLvl, value])
+    appendAll(upper, [statName, upperRight])
+    appendAll(statContainer, [upper, lower])
+    return statContainer
+}
+
+const getValue = (itemObj, name) => {
+    const equippedWeapon = getOwnedWeapons().get(itemObj.id)
+    let result
+    if ( name === 'damage' ) result = equippedWeapon.getDamage()
+    else if ( name === 'range' ) result = equippedWeapon.getRange()
+    else if ( name === 'reloadspeed' ) result = equippedWeapon.getReloadSpeed()
+    else if ( name === 'magazine' ) result = equippedWeapon.getMagazine()
+    else if ( name === 'firerate' ) result = equippedWeapon.getFireRate()
+    return result    
 }
 
 const OPTIONS = new Map([
@@ -616,7 +706,8 @@ const OPTIONS = new Map([
     ['use', use],
     ['equip', equip],
     ['shortcut', shortcut],
-    ['drop', drop]
+    ['drop', drop],
+    ['examine', examine],
 ])
 
 const createOption = (options, text) => {

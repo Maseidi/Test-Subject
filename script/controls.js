@@ -1,11 +1,11 @@
 import { setupReload } from "./weapon-actions.js"
-import { getPlayer, getUiEl } from "./elements.js"
+import { getPauseContainer, getPlayer, getUiEl } from "./elements.js"
 import { getOwnedWeapons } from "./owned-weapons.js"
 import { removeStash, renderStash } from "./stash.js"
 import { removeWeapon, renderWeapon } from "./weapon-loader.js"
 import { renderUi, renderEquippedWeapon } from "./user-interface.js"
 import { pickupDrop, removeInventory, renderInventory } from "./inventory.js"
-import { addClass, angleOfTwoPoints, isMoving, removeClass } from "./util.js"
+import { addClass, angleOfTwoPoints, containsClass, isMoving, removeClass } from "./util.js"
 import { 
     getAimMode,
     getDraggedItem,
@@ -237,9 +237,14 @@ const rDown = () => {
 }
 
 const escapeDown = () => {
-    if ( getPause() && getPauseCause() === 'stash' ) {
+    if ( !getPause() ) return
+    if ( getPauseCause() === 'stash' ) {
         managePause()
         removeStash()
+    } else if ( getPauseCause() === 'stats' ) {
+        getPauseContainer().firstElementChild.remove()
+        renderInventory()
+        setPauseCause('inventory')
     }
 }
 
