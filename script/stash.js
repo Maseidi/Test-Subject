@@ -179,7 +179,8 @@ const renderStashItems = () => {
         const title = document.createElement('p')
         title.textContent = `${item.heading}`
         const amount = document.createElement('p')
-        amount.textContent = `${item.amount}`
+        if ( !isNaN(item.currmag) ) amount.textContent = `${item.currmag}`
+        else amount.textContent = `${item.amount}`
         appendAll(specs, [title, amount])
         appendAll(stashItem, [img, specs])
         moveEvent(selector, 'to-inventory')
