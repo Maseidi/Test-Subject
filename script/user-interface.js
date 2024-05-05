@@ -1,8 +1,8 @@
 import { addClass, appendAll } from "./util.js"
 import { getUiEl, setUiEl } from "./elements.js"
-import { getEquippedWeapon, getHealth, getMaxHealth, getMaxStamina, getStamina } from "./variables.js"
-import { getOwnedWeapons } from "./owned-weapons.js"
 import { calculateTotalAmmo } from "./inventory.js"
+import { getOwnedWeapons } from "./owned-weapons.js"
+import { getEquippedWeapon, getHealth, getMaxHealth, getMaxStamina, getStamina } from "./variables.js"
 
 export const renderUi = () => {
     renderBackground()

@@ -1,7 +1,7 @@
-import { getPlayer } from "./elements.js"
-import { getOwnedWeapons } from "./owned-weapons.js"
 import { addClass } from "./util.js"
+import { getPlayer } from "./elements.js"
 import { getEquippedWeapon } from "./variables.js"
+import { getOwnedWeapons } from "./owned-weapons.js"
 
 export const renderWeapon = () => {
     const ownedWeapon = getOwnedWeapons().get(getEquippedWeapon())

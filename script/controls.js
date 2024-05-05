@@ -1,6 +1,7 @@
 import { setupReload } from "./weapon-actions.js"
 import { getPlayer, getUiEl } from "./elements.js"
 import { getOwnedWeapons } from "./owned-weapons.js"
+import { removeStash, renderStash } from "./stash.js"
 import { removeWeapon, renderWeapon } from "./weapon-loader.js"
 import { renderUi, renderEquippedWeapon } from "./user-interface.js"
 import { pickupDrop, removeInventory, renderInventory } from "./inventory.js"
@@ -32,7 +33,6 @@ import {
     setShootPressed,
     setSprintPressed,
     setUpPressed } from "./variables.js"
-import { removeStash, renderStash } from "./stash.js"
 
 export const control = () => {
     onkeydown = (e) => {

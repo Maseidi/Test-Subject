@@ -1,6 +1,6 @@
-import { getIntObj, setIntObj } from "./variables.js"
 import { managePause } from "./controls.js"
 import { getPauseContainer } from "./elements.js"
+import { getIntObj, setIntObj } from "./variables.js"
 import { addAttribute, addClass, appendAll, containsClass, elementToObject, objectToElement } from "./util.js"
 import { 
     descriptionEvent,
