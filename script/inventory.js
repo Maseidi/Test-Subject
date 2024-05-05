@@ -59,16 +59,19 @@ export const pickupDrop = () => {
 const searchPack = () => {
     const drop = elementToObject(getIntObj())
     const pack = MAX_PACKSIZE[drop.name] || 1
+    let found = false
     for (let i = 0; i < inventory.length; i++) {
         for ( let j = 0; j < inventory[i].length; j++ ) {
             const item = inventory[i][j]
-            if ( item && item.name === drop.name ) {
+            if ( item && item.name === drop.name && item.amount !== pack && !found ) {
                 let diff = Math.min(pack, item.amount + drop.amount) - item.amount
                 item.amount += diff
                 updateAmount(drop.amount - diff)
+                found = true
             }
         }
     }
+    if ( found && drop.amount !== 0 ) searchPack()
 }
 
 const searchEmpty = () => {
@@ -367,7 +370,7 @@ const renderGrid = () => {
             const item = inventory[i][j]
             const block = objectToElement({row: i, column: j})
             if ( item && item !== 'taken' && item.name == getDraggedItem().getAttribute('name') &&
-                MAX_PACKSIZE[item.name] === item.amount + Number(getDraggedItem().getAttribute('amount'))) 
+                MAX_PACKSIZE[item.name] >= item.amount + Number(getDraggedItem().getAttribute('amount'))) 
                 addClass(block, 'combine')
             block.addEventListener('click', checkReplace, true)
             grid.append(block)
@@ -438,7 +441,7 @@ const combine = (elemToReplace, destObj, srcObj, inventory) => {
     const objectToReplace = elementToObject(elemToReplace)   
     let srcAmount = srcObj.amount
     let destAmount = objectToReplace.amount
-    if ( objectToReplace.name === srcObj.name && srcAmount + destAmount === pack ) {
+    if ( objectToReplace.name === srcObj.name && srcAmount + destAmount <= pack ) {
         const newDestAmount = Math.min(srcAmount + destAmount, pack)
         const diff = newDestAmount - destAmount
         const newSrcAmount = srcAmount - diff
