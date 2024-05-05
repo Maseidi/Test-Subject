@@ -132,7 +132,7 @@ const moveToInventory = (objectToMove, reduce) => {
     const index = stash.findIndex(x => x.id === objectToMove.id)
     const amount = stash[index].amount
     const newAmount = amount - reduce
-    if ( newAmount === 0 ) stash.pop(stash[index])
+    if ( newAmount === 0 ) stash = stash.filter((item, idx) => idx !== index)
     else stash[index] = {...objectToMove, amount: newAmount}
     setIntObj(objectToElement({...objectToMove, amount: reduce}))
     pickupDrop()

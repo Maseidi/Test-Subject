@@ -31,6 +31,10 @@
   scrollbar-width: none;
 }
 
+.stash-items > div:nth-last-of-type(1) {
+    margin-bottom: 50px;
+}
+
 .stash-items::-webkit-scrollbar {
   display: none;
 }
