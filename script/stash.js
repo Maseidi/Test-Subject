@@ -1,8 +1,15 @@
-import { addAttribute, addClass, appendAll, containsClass, elementToObject, objectToElement } from "./util.js"
+import { getIntObj, setIntObj } from "./variables.js"
 import { managePause } from "./controls.js"
 import { getPauseContainer } from "./elements.js"
-import { descriptionEvent, handleWeaponDrop, pickupDrop, removeDescriptionEvent, renderBlocks, renderHeadingAndDescription, useItemAtPosition } from "./inventory.js"
-import { setIntObj } from "./variables.js"
+import { addAttribute, addClass, appendAll, containsClass, elementToObject, objectToElement } from "./util.js"
+import { 
+    descriptionEvent,
+    handleWeaponDrop,
+    pickupDrop,
+    removeDescriptionEvent,
+    renderBlocks,
+    renderHeadingAndDescription,
+    useItemAtPosition } from "./inventory.js"
 
 let stash = []
 export const setStash = (val) => {
@@ -131,11 +138,11 @@ const moveToStash = (objectToMove, reduce) => {
 const moveToInventory = (objectToMove, reduce) => {
     const index = stash.findIndex(x => x.id === objectToMove.id)
     const amount = stash[index].amount
-    const newAmount = amount - reduce
-    if ( newAmount === 0 ) stash = stash.filter((item, idx) => idx !== index)
-    else stash[index] = {...objectToMove, amount: newAmount}
     setIntObj(objectToElement({...objectToMove, amount: reduce}))
     pickupDrop()
+    const left = Number(getIntObj().getAttribute('amount'))
+    if ( amount - reduce + left === 0 ) stash = stash.filter((item, idx) => idx !== index)
+    else stash[index] = {...objectToMove, amount: amount - reduce + left}   
     removeStash()
     renderStash()
 }

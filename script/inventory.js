@@ -599,7 +599,7 @@ export const handleWeaponDrop = (itemObj) => {
         setAimMode(false)
         removeWeapon()
     }
-    setWeaponWheel(getWeaponWheel().filter(weapon => weapon !== itemObj.id))
+    setWeaponWheel(getWeaponWheel().map(weapon => weapon === itemObj.id ? null : weapon))
 }
 
 const findSuitableId = (interactable) => {
