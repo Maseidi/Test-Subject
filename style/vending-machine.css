@@ -1,0 +1,10 @@
+.store-ui {
+  width: 100%;
+  height: 100%;
+  top: 0;
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 100px;
+}

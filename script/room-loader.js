@@ -94,6 +94,7 @@ const renderImage = (int, interactable) => {
 
 const renderPopUp = (int, interactable) => {
     const popup = document.createElement("div")
+    addClass(popup, 'ui-theme')
     popup.style.bottom = `calc(100% - 20px)`
     popup.style.opacity = `0`
     renderHeading(popup, interactable)

@@ -86,7 +86,7 @@
 
 .run > .player-collider > .player-body::after,
 .run > .player-collider > .player-body::before {
-  animation-duration: 400ms;
+  animation-duration: 300ms;
 }
 
 .forward-detector {

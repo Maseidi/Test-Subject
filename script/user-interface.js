@@ -1,5 +1,5 @@
 import { addClass, appendAll } from "./util.js"
-import { getUiEl, setUiEl } from "./elements.js"
+import { getPauseContainer, getUiEl, setUiEl } from "./elements.js"
 import { calculateTotalAmmo } from "./inventory.js"
 import { getOwnedWeapons } from "./owned-weapons.js"
 import { getEquippedWeapon, getHealth, getMaxHealth, getMaxStamina, getStamina } from "./variables.js"
@@ -15,6 +15,7 @@ const renderBackground = () => {
     const root = document.getElementById("root")
     const ui = document.createElement("div")
     addClass(ui, 'ui')
+    addClass(ui, 'ui-theme')
     setUiEl(ui)
     root.append(ui)
 }
@@ -74,4 +75,16 @@ export const renderEquippedWeapon = () => {
 
 export const removeUi = () => {
     getUiEl().remove()
+}
+
+export const renderQuit = (func) => {
+    const quitContainer = document.createElement("div")
+    addClass(quitContainer, 'quit')
+    const quitBtn = document.createElement("p")
+    quitBtn.textContent = 'esc'
+    const quitText = document.createElement("p")
+    quitText.textContent = 'quit'
+    appendAll(quitContainer, [quitBtn, quitText])
+    quitContainer.addEventListener('click', func)
+    getPauseContainer().firstElementChild.append(quitContainer)
 }

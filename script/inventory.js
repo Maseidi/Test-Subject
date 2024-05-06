@@ -1,8 +1,8 @@
 import { interactables } from "./interactables.js"
 import { getWeaponSpecs } from "./weapon-specs.js"
 import { renderInteractable } from "./room-loader.js"
-import { removeUi, renderUi } from "./user-interface.js"
 import { removeWeapon, renderWeapon } from "./weapon-loader.js"
+import { removeUi, renderQuit, renderUi } from "./user-interface.js"
 import { getCurrentRoom, getPauseContainer, getPlayer } from "./elements.js"
 import { OwnedWeapon, getOwnedWeapons, setOwnedWeapons } from "./owned-weapons.js"
 import { addAttribute, addClass, containsClass, elementToObject, objectToElement, removeClass, putToMap, appendAll } from "./util.js"
@@ -26,7 +26,7 @@ import { getAimMode,
     setShootCounter,
     getShooting,
     setPauseCause} from "./variables.js"
-import { managePause } from "./controls.js"
+import { renderStats } from "./weapon-examine.js"
 
 export const MAX_PACKSIZE = {
     bandage: 3,
@@ -224,6 +224,7 @@ export const renderInventory = () => {
 const renderBackground = () => {
     const background = document.createElement("div")
     addClass(background, 'inventory-ui')
+    addClass(background, 'ui-theme')
     getPauseContainer().append(background)
 }
 
@@ -284,7 +285,6 @@ const inventoryEvents = () => {
             descriptionEvent(item)
             removeDescriptionEvent(item)
             optionsEvent(item)
-            closeOptionsEvent(item)
         })
 }
 
@@ -317,9 +317,11 @@ const optionsEvent = (item) => {
 
 const addOptionsEvent = (e) => {
     if ( !containsClass(e.target, 'block') ) return
+    document.querySelectorAll('.options').forEach((elem) => elem.remove())
     const options = document.createElement('div')
     addClass(options, 'options')
     renderOptions(e.target, options)
+    options.addEventListener('mouseleave', () => options.remove())
     e.target.append(options)
 }
 
@@ -614,92 +616,7 @@ export const handleWeaponDrop = (itemObj) => {
     setWeaponWheel(getWeaponWheel().map(weapon => weapon === itemObj.id ? null : weapon))
 }
 
-const examine = (item) => {
-    setPauseCause('stats')
-    const itemObj = elementToObject(item)
-    const weaponStatsContainer = document.createElement('div')
-    addClass(weaponStatsContainer, 'weapon-stats-container')
-    const weaponStats = document.createElement('div')
-    addClass(weaponStats, 'weapon-stats')
-    const imgContainer = document.createElement('div')
-    addClass(imgContainer, 'weapon-stats-img-container')
-    const img = document.createElement('img')
-    img.src = `../assets/images/${itemObj.name}.png`
-    imgContainer.append(img)
-    const weaponStatsName = document.createElement('div')
-    addClass(weaponStatsName, 'weapon-stats-name')
-    weaponStatsName.textContent = itemObj.heading
-    const weaponStatsDesc = document.createElement('div')
-    addClass(weaponStatsDesc, 'weapon-stats-desc')
-    weaponStatsDesc.textContent = itemObj.description
-    const damage = createStat(itemObj, 'damage', 'damage')
-    const range = createStat(itemObj, 'range', 'range')
-    const reload = createStat(itemObj, 'reload speed', 'reloadspeed')
-    const magazine = createStat(itemObj, 'magazine', 'magazine')
-    const firerate = createStat(itemObj, 'fire rate', 'firerate')
-    appendAll(weaponStats, [imgContainer, weaponStatsName, weaponStatsDesc, damage, range, reload, magazine, firerate])
-    weaponStatsContainer.append(weaponStats)
-    removeInventory()
-    getPauseContainer().append(weaponStatsContainer)
-    renderQuit()
-}
-
-const renderQuit = () => {
-    const quitContainer = document.createElement("div")
-    addClass(quitContainer, 'quit')
-    const quitBtn = document.createElement("p")
-    quitBtn.textContent = 'esc'
-    const quitText = document.createElement("p")
-    quitText.textContent = 'quit'
-    appendAll(quitContainer, [quitBtn, quitText])
-    quitContainer.addEventListener('click', () => {
-        getPauseContainer().firstElementChild.remove()
-        renderInventory()
-        setPauseCause('inventory')
-    })
-    getPauseContainer().firstElementChild.append(quitContainer)
-}
-
-const createStat = (itemObj, title, name) => {
-    const statContainer = document.createElement('div')
-    addClass(statContainer, 'stat-container')
-    const upper = document.createElement('div')
-    addClass(upper, 'upper')
-    const upperRight = document.createElement('div')
-    addClass(upperRight, 'upper-right')
-    const statName = document.createElement('p') 
-    addClass(statName, 'stat-name')
-    statName.textContent = title
-    const statLvl = document.createElement('p')
-    addClass(statLvl, 'stat-lvl')
-    statLvl.textContent = `Lvl. ${itemObj[name+'lvl']}`
-    const value = document.createElement('div')
-    addClass(value, 'value')
-    value.textContent = `${getValue(itemObj, name)}`
-    const lower = document.createElement('div')
-    addClass(lower, 'lower')
-    for ( let i = 1; i <= 5; i++ ) {
-        const level = document.createElement('div')
-        if ( i <= itemObj[name+'lvl'] ) addClass(level, 'active')
-        else addClass(level, 'inactive')   
-        lower.append(level) 
-    }
-    appendAll(upperRight, [statLvl, value])
-    appendAll(upper, [statName, upperRight])
-    appendAll(statContainer, [upper, lower])
-    return statContainer
-}
-
-const getValue = (itemObj, name) => {
-    const equippedWeapon = getOwnedWeapons().get(itemObj.id)
-    let result
-    if ( name === 'damage' ) result = equippedWeapon.getDamage()
-    else if ( name === 'range' ) result = equippedWeapon.getRange()
-    else if ( name === 'reloadspeed' ) result = equippedWeapon.getReloadSpeed()
-    else if ( name === 'magazine' ) result = equippedWeapon.getMagazine()
-    else if ( name === 'firerate' ) result = equippedWeapon.getFireRate()
-    return result    
-}
+const examine = (item) => renderStats(item, 'inventory')
 
 const OPTIONS = new Map([
     ['replace', replace],
@@ -717,13 +634,6 @@ const createOption = (options, text) => {
         OPTIONS.get(text)(options.parentElement)
     })
     options.append(elem)
-}
-
-const closeOptionsEvent = (item) => {
-    item.addEventListener('mouseleave', () => {
-        const options = item.children[2]
-        options?.remove()
-    })
 }
 
 const renderWeaponWheel = () => {

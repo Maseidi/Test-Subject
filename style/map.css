@@ -1,9 +1,12 @@
 .map {
-    width: 100000px;
-    height: 100000px;
-    background-color: #2b2b2b;
+  width: 100000px;
+  height: 100000px;
+  background-color: #2b2b2b;
 }
 
-.loader, .solid, .map, .room-container > div {
-    position: absolute;
+.loader,
+.solid,
+.map,
+.room-container > div {
+  position: absolute;
 }

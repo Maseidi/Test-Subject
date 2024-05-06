@@ -10,6 +10,7 @@ import {
     renderBlocks,
     renderHeadingAndDescription,
     useItemAtPosition } from "./inventory.js"
+import { renderQuit } from "./user-interface.js"
 
 let stash = []
 export const setStash = (val) => {
@@ -25,12 +26,13 @@ export const renderStash = () => {
     renderHeadingAndDescription()
     inventoryEvents()
     renderStashItems()
-    renderQuit()
+    renderStashQuit()
 }
 
 const renderBackground = () => {
     const background = document.createElement("div")
     addClass(background, 'stash-ui')
+    addClass(background, 'ui-theme')
     getPauseContainer().append(background)
 }
 
@@ -66,9 +68,9 @@ const addMoveEvent = (e) => {
     const chevRight = createChevRight()
     appendAll(number, [chevLeft, amount, chevRight])
     const concan = document.createElement('div')
-    addClass(concan, 'concan')
+    addClass(concan, 'confirm-bigger')
     const confirm = createConfirm()
-    const cancel = createCancel()
+    const cancel = biggerSteps()
     appendAll(concan, [confirm, cancel])
     appendAll(move, [number, concan])
     elem.append(move)
@@ -90,11 +92,31 @@ const createChevLeft = () => {
     return chevLeft
 }
 
+const addNumber = (e) => {
+    setParams(e.target, 1)
+}
+
 const reduceNumber = (e) => {
-    const numberElem = e.target.parentElement.children[1]
-    const newValue = Number(numberElem.textContent) - 1
-    if ( newValue === 0 ) return
-    numberElem.textContent = newValue
+    setParams(e.target, -1)
+}
+
+const setParams = (elem, multiply) => {
+    let numberElem = elem.parentElement.children[1]
+    let value = 1 * multiply
+    let max = Number(elem.parentElement.parentElement.getAttribute('amount'))
+    if ( containsClass(elem.parentElement, 'bigger') ) {
+        numberElem = elem.parentElement.parentElement.parentElement.firstElementChild.children[1]
+        value = 5 * multiply
+        max = Number(elem.parentElement.parentElement.parentElement.parentElement.getAttribute('amount'))
+    }
+    applyNewValue(numberElem, value, max)
+}
+
+const applyNewValue = (elem, diff, max) => {
+    const newValue = Number(elem.textContent) + diff
+    if ( newValue <= 1 ) elem.textContent = 1
+    else if ( newValue >= max ) elem.textContent = max
+    else elem.textContent = newValue
 }
 
 const createChevRight = () => {
@@ -102,13 +124,6 @@ const createChevRight = () => {
     chevRight.src = '../assets/images/chev-right.png'
     chevRight.addEventListener('click', addNumber)
     return chevRight
-}
-
-const addNumber = (e) => {
-    const numberElem = e.target.parentElement.children[1]
-    const newValue = Number(numberElem.textContent) + 1
-    if ( newValue === Number(e.target.parentElement.parentElement.getAttribute('amount')) + 1 ) return
-    numberElem.textContent = newValue
 }
 
 const createConfirm = () => {
@@ -153,12 +168,17 @@ const searchPack = (objectToMove, reduce) => {
     else stash[index] = {...objectToMove, amount: stash[index].amount + reduce}    
 }
 
-const createCancel = () => {
-    const cancel = document.createElement('p')
-    addClass(cancel, 'cancel')
-    cancel.textContent = 'cancel'
-    cancel.addEventListener('click', (e) => e.target.parentElement.parentElement.remove())
-    return cancel
+const biggerSteps = () => {
+    const bigger = document.createElement('div')
+    addClass(bigger, 'bigger')
+    const reduce = document.createElement('div')
+    reduce.addEventListener('click', reduceNumber)
+    reduce.textContent = '-5'
+    const add = document.createElement('div')
+    add.addEventListener('click', addNumber)
+    add.textContent = '+5'
+    appendAll(bigger, [reduce, add])
+    return bigger
 }
 
 const renderStashItems = () => {
@@ -190,20 +210,10 @@ const renderStashItems = () => {
     getPauseContainer().firstElementChild.append(stashItemsContainer)
 }
 
-const renderQuit = () => {
-    const quitContainer = document.createElement("div")
-    addClass(quitContainer, 'quit')
-    const quitBtn = document.createElement("p")
-    quitBtn.textContent = 'esc'
-    const quitText = document.createElement("p")
-    quitText.textContent = 'quit'
-    appendAll(quitContainer, [quitBtn, quitText])
-    quitContainer.addEventListener('click', () => {
-        managePause()
-        removeStash()
-    })
-    getPauseContainer().firstElementChild.append(quitContainer)
-}
+const renderStashQuit = () => renderQuit(() => {
+    managePause()
+    removeStash()
+})
 
 export const removeStash = () => {
     getPauseContainer().firstElementChild.remove()

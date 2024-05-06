@@ -5,7 +5,7 @@ import { removeStash, renderStash } from "./stash.js"
 import { removeWeapon, renderWeapon } from "./weapon-loader.js"
 import { renderUi, renderEquippedWeapon } from "./user-interface.js"
 import { pickupDrop, removeInventory, renderInventory } from "./inventory.js"
-import { addClass, angleOfTwoPoints, containsClass, isMoving, removeClass } from "./util.js"
+import { addClass, angleOfTwoPoints, isMoving, removeClass } from "./util.js"
 import { 
     getAimMode,
     getDraggedItem,
@@ -33,6 +33,7 @@ import {
     setShootPressed,
     setSprintPressed,
     setUpPressed } from "./variables.js"
+import { renderStore } from "./vending-machine.js"
 
 export const control = () => {
     onkeydown = (e) => {
@@ -190,13 +191,19 @@ const fDown = () => {
     if ( getPause() ) return
     if ( !getIntObj() ) return
     if ( getIntObj().getAttribute('amount') ) pickupDrop()
-    if ( getIntObj().getAttribute('name') === 'stash' && !getShooting() && !getReloading() ) openStash()    
+    if ( getShooting() || getReloading() ) return    
+    if ( getIntObj().getAttribute('name') === 'stash' ) openStash()    
+    if ( getIntObj().getAttribute('name') === 'vendingMachine' ) openVendingMachine()    
 }
 
-const openStash = () => {
-    setPauseCause('stash')
+const openStash = () => openPause('stash', renderStash)
+
+const openVendingMachine = () => openPause('store', renderStore)
+
+const openPause = (cause, func) => {
+    setPauseCause(cause)
     managePause()
-    renderStash()
+    func()
 }
 
 const openInventory = () => {
@@ -238,9 +245,9 @@ const rDown = () => {
 
 const escapeDown = () => {
     if ( !getPause() ) return
-    if ( getPauseCause() === 'stash' ) {
+    if ( getPauseCause() === 'stash' || getPauseCause() === 'store' ) {
         managePause()
-        removeStash()
+        getPauseContainer().firstElementChild.remove()
     } else if ( getPauseCause() === 'stats' ) {
         getPauseContainer().firstElementChild.remove()
         renderInventory()

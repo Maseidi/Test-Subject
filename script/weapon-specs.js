@@ -1,5 +1,6 @@
 class Weapon {
     constructor(
+        heading,
         ammoType,
         height,
         color,
@@ -11,7 +12,9 @@ class Weapon {
         reloadSpeed, 
         magazine, 
         fireRate,
-        description) {
+        description,
+        price) {
+        this.heading = heading    
         this.ammoType = ammoType
         this.height = height
         this.color = color
@@ -24,11 +27,13 @@ class Weapon {
         this.magazine = magazine
         this.fireRate = fireRate
         this.description = description
+        this.price = price
     }
 }
 
 const weapons = new Map([
     ["remington1858", new Weapon(
+        "remington 1858",
         "magnumAmmo",
         16,
         "lightgray",
@@ -40,9 +45,11 @@ const weapons = new Map([
         [5, 4.5, 4, 3.5, 3],
         [5, 6, 7, 8, 9],
         [2, 1.9, 1.8, 1.7, 1.6],
-        "A powerful magnum handy in very special scenarios"
+        "A powerful magnum handy in very special scenarios",
+        100
     )],
     ["revolver", new Weapon(
+        "revolver",
         "magnumAmmo",
         14,
         "gray",
@@ -54,9 +61,11 @@ const weapons = new Map([
         [4.5, 4.1, 3.7, 3.3, 2.9],
         [6, 7, 8, 9, 10],
         [2.2, 2.1, 2, 1.9, 1.8],
-        "A magnum capable of tearing through every living creature"
+        "A magnum capable of tearing through every living creature",
+        90
     )],
     ["mauser", new Weapon(
+        "mauser",
         "pistolAmmo",
         12,
         "darkgray",
@@ -68,9 +77,11 @@ const weapons = new Map([
         [3.2, 2.7, 2.2, 1.7, 1.2],
         [7, 9, 11, 13, 15],
         [2, 1.75, 1.5, 1.25, 1],
-        "A high damage handgun making it a nice choice for every avid gun collector"
+        "A high damage handgun making it a nice choice for every avid gun collector",
+        15
     )],
     ["pistol", new Weapon(
+        "pistol",
         "pistolAmmo",
         10,
         "black",
@@ -82,9 +93,11 @@ const weapons = new Map([
         [1.6, 1.5, 1.4, 1.3, 1.2],
         [10, 11, 12, 13, 14],
         [1.3, 1.2, 1.1, 1, 0.9],
-        "Small and fast paced pistol with a pretty decent range"
+        "Small and fast paced pistol with a pretty decent range",
+        14
     )],
     ["pistol2", new Weapon(
+        "pistol 2",
         "pistolAmmo",
         12,
         "lightgray",
@@ -96,9 +109,11 @@ const weapons = new Map([
         [1.6, 1.5, 1.4, 1.3, 1.2],
         [12, 14, 16, 18, 20],
         [1.2, 1.1, 1, 0.9, 0.8],
-        "A handgun with a clip capacity that barely makes you think of reloading"
+        "A handgun with a clip capacity that barely makes you think of reloading",
+        13
     )],
     ["pistol3", new Weapon(
+        "pistol 3",
         "pistolAmmo",
         10,
         "gray",
@@ -110,9 +125,11 @@ const weapons = new Map([
         [1.8, 1.5, 1.2, 0.9, 0.6],
         [11, 12, 13, 14, 15],
         [1.4, 1.2, 1, 0.8, 0.6],
-        "A pistol that every single upgrade is definately a profitable move"
+        "A pistol that every single upgrade is definately a profitable move",
+        12
     )],
     ["pistol4", new Weapon(
+        "pistol 4",
         "pistolAmmo",
         12,
         "darkgray",
@@ -124,9 +141,11 @@ const weapons = new Map([
         [2.2, 2, 1.8, 1.6, 1.4],
         [14, 15, 16, 17, 18],
         [1.6, 1.5, 1.4, 1.3, 1.2],
-        "The handgun every single person never thinks of upgrading its damage"
+        "The handgun every single person never thinks of upgrading its damage",
+        11
     )],
     ["famas", new Weapon(
+        "famas",
         "smgAmmo",
         14,
         "lightgray",
@@ -138,9 +157,11 @@ const weapons = new Map([
         [3, 2.6, 2.2, 1.8, 1.4],
         [30, 35, 40, 45, 50],
         [0.2, 0.19, 0.18, 0.17, 0.16],
-        "Sub-machine gun purely focused on dealing the most possible damage"
+        "Sub-machine gun purely focused on dealing the most possible damage",
+        25
     )],
     ["mp5k", new Weapon(
+        "mp5k",
         "smgAmmo",
         12,
         "black",
@@ -152,9 +173,11 @@ const weapons = new Map([
         [2.4, 2.2, 2, 1.8, 1.6],
         [20, 25, 30, 35, 40],
         [0.14, 0.13, 0.12, 0.11, 0.1],
-        "Pretty balanced SMG useful for most cases"
+        "Pretty balanced SMG useful for most cases",
+        24
     )],
     ["p90", new Weapon(
+        "p90",
         "smgAmmo",
         14,
         "gray",
@@ -166,9 +189,11 @@ const weapons = new Map([
         [1.8, 1.7, 1.6, 1.5, 1.4],
         [40, 50, 60, 70, 80],
         [0.15, 0.14, 0.13, 0.12, 0.11],
-        "Decent damage and magazine capacity are this weapon's points of shine"
+        "Decent damage and magazine capacity are this weapon's points of shine",
+        23
     )],
     ["ppsh", new Weapon(
+        "ppsh",
         "smgAmmo",
         12,
         "darkgray",
@@ -180,9 +205,11 @@ const weapons = new Map([
         [2.1, 1.8, 1.5, 1.2, 0.9],
         [30, 40, 50, 60, 70],
         [0.13, 0.12, 0.11, 0.1, 0.09],
-        "Decent range, fast reload and fire rate are the greatest highlights of this weapon"
+        "Decent range, fast reload and fire rate are the greatest highlights of this weapon",
+        22
     )],
     ["uzi", new Weapon(
+        "uzi",
         "smgAmmo",
         10,
         "lightgray",
@@ -194,9 +221,11 @@ const weapons = new Map([
         [1.4, 1.2, 1, 0.8, 0.6],
         [50, 60, 70, 80, 90],
         [0.13, 0.11, 0.09, 0.07, 0.05],
-        "The insane fire rate and reload speed make up for its low damage"
+        "The insane fire rate and reload speed make up for its low damage",
+        21
     )],
     ["shotgun", new Weapon(
+        "shotgon",
         "shotgunShells",
         16,
         "gray",
@@ -208,9 +237,11 @@ const weapons = new Map([
         [3, 2.7, 2.4, 2.1, 1.8],
         [5, 7, 9, 11, 12],
         [2.5, 2.3, 2.1, 1.9, 1.7],
-        "Long range shotgun suitable for dealing high damage from afar"
+        "Long range shotgun suitable for dealing high damage from afar",
+        35
     )],
     ["shotgun2", new Weapon(
+        "shotgun 2",
         "shotgunShells",
         18,
         "darkgray",
@@ -222,9 +253,11 @@ const weapons = new Map([
         [3.5, 3.1, 2.7, 2.3, 1.9],
         [7, 8, 9, 10, 11],
         [2.3, 2.1, 1.9, 1.7, 1.5],
-        "Balanced shotgun for everyday use"
+        "Balanced shotgun for everyday use",
+        40
     )],
     ["shotgun3", new Weapon(
+        "shotgun 3",
         "shotgunShells",
         14,
         "black",
@@ -236,9 +269,11 @@ const weapons = new Map([
         [2.5, 2.3, 2.1, 1.9, 1.7],
         [6, 8, 10, 12, 14],
         [1.7, 1.6, 1.5, 1.4, 1.3],
-        "This shotgun's decent damage and range is enough to make your lucky day"
+        "This shotgun's decent damage and range is enough to make your lucky day",
+        45
     )],
     ["riotgun", new Weapon(
+        "riotgun",
         "shotgunShells",
         16,
         "lightgray",
@@ -250,9 +285,11 @@ const weapons = new Map([
         [2.7, 2.5, 2.3, 2.1, 1.9],
         [5, 6, 7, 8, 9],
         [1.2, 1.1, 1, 0.9, 0.8],
-        "A real boomstick ideal for shredding everything on its way"
+        "A real boomstick ideal for shredding everything on its way",
+        70
     )],
     ["spas", new Weapon(
+        "spas",
         "shotgunShells",
         12,
         "gray",
@@ -264,9 +301,11 @@ const weapons = new Map([
         [4, 3.5, 3, 2.5, 2],
         [14, 16, 18, 20, 22],
         [0.9, 0.8, 0.7, 0.6, 0.5],
-        "An automatic shotgun with an insane fire rate and magazine capacity"
+        "An automatic shotgun with an insane fire rate and magazine capacity",
+        50
     )],
     ["sniper", new Weapon(
+        "sniper",
         "rifleAmmo",
         16,
         "darkgray",
@@ -278,9 +317,11 @@ const weapons = new Map([
         [5, 4.4, 3.8, 3.2, 2.6],
         [4, 6, 8, 10, 12],
         [2.4, 2.2, 2, 1.8, 1.6],
-        "Slow paced sniper rifle focused primarily on dealing damage"
+        "Slow paced sniper rifle focused primarily on dealing damage",
+        65
     )],
     ["sniper2", new Weapon(
+        "sniper 2",
         "rifleAmmo",
         18,
         "black",
@@ -292,9 +333,11 @@ const weapons = new Map([
         [2.5, 2.1, 1.7, 1.3, 0.9],
         [12, 14, 16, 18, 20],
         [1.2, 1, 0.8, 0.6, 0.4],
-        "A sniper rifle with incredibly fast fire rate making it one of a kind"
+        "A sniper rifle with incredibly fast fire rate making it one of a kind",
+        75
     )],
     ["sniper3", new Weapon(
+        "sniper 3",
         "rifleAmmo",
         14,
         "lightgray",
@@ -306,7 +349,8 @@ const weapons = new Map([
         [3.25, 2.75, 2.25, 1.75, 1.25],
         [8, 9, 10, 11, 12],
         [1.8, 1.6, 1.5, 1.4, 1.2],
-        "Sniper rifle with the most balanced stats possible"
+        "Sniper rifle with the most balanced stats possible",
+        70
     )]
 ])
 
