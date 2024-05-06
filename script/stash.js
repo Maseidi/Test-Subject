@@ -163,7 +163,7 @@ const moveToInventory = (objectToMove, reduce) => {
 }
 
 const searchPack = (objectToMove, reduce) => {
-    let index = stash.findIndex(x => x.id === objectToMove.id)
+    let index = stash.findIndex(x => x.name === objectToMove.name)
     if ( index === -1 ) stash.push({...objectToMove, amount: reduce})
     else stash[index] = {...objectToMove, amount: stash[index].amount + reduce}    
 }

@@ -315,3 +315,11 @@ export const setProgressCounter = (val) => {
 export const getProgressCounter = () => {
     return progressCounter
 }
+
+let coins = 0
+export const setCoins = (val) => {
+    coins = val
+}
+export const getCoins = () => {
+    return coins
+}

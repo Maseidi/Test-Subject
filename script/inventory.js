@@ -122,10 +122,18 @@ const inventoryFull = () => {
 
 export const calculateTotalAmmo = () => {
     const equippedWeapon = getOwnedWeapons().get(getEquippedWeapon())
+    return countItem(equippedWeapon.getAmmoType())
+}
+
+export const calculateTotalCoins = () => {
+    return countItem('coin')
+}
+
+const countItem = (name) => {
     let count = 0
     inventory.forEach((row) => {
         row.forEach((item) => {
-            if ( item && item.name === equippedWeapon.getAmmoType() ) count += item.amount
+            if ( item && item.name === name ) count += item.amount
         })
     })
     return count

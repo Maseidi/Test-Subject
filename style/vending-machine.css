@@ -2,9 +2,74 @@
   width: 100%;
   height: 100%;
   top: 0;
+  padding: 100px 100px 150px 100px;
+}
+
+.pagination-container {
+  width: 100%;
+  height: 50px;
+  margin: 0 auto;
   display: flex;
-  flex-direction: row-reverse;
+  flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding: 0 100px;
+  gap: 10px;
+}
+
+.pagination-container > div {
+  width: calc(100% / 3);
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid rgb(245, 222, 179, 0.7);
+  color: rgb(245, 222, 179, 0.7);
+  text-transform: capitalize;
+}
+
+.pagination-container > div:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+}
+
+.page-container {
+  width: 100%;
+  height: 100%;
+  border: 1px solid rgb(245, 222, 179, 0.7);
+  margin-top: 10px;
+}
+
+.coin-container {
+  position: fixed;
+  left: 40px;
+  top: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: wheat;
+  gap: 30px;
+}
+
+.coin-img {
+  width: 40px;
+}
+
+.buy, .sell, .upgrade {
+  width: 100%;
+  height: 100%;
+}
+
+.buy {
+  background-color: red;
+}
+
+.upgrade {
+  background-color: green;
+}
+
+.sell {
+  background-color: blue;
+}
+
+.active-page {
+  background-color: rgba(255, 255, 255, 0.15);
 }

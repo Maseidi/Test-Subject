@@ -125,7 +125,7 @@ const weapons = new Map([
         [1.8, 1.5, 1.2, 0.9, 0.6],
         [11, 12, 13, 14, 15],
         [1.4, 1.2, 1, 0.8, 0.6],
-        "A pistol that every single upgrade is definately a profitable move",
+        "A pistol that every tiny bit of upgrade is definately a profitable move",
         12
     )],
     ["pistol4", new Weapon(
