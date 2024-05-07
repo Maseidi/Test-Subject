@@ -1,15 +1,16 @@
+import { renderStash } from "./stash.js"
 import { setupReload } from "./weapon-actions.js"
-import { getPauseContainer, getPlayer, getUiEl } from "./elements.js"
 import { getOwnedWeapons } from "./owned-weapons.js"
-import { removeStash, renderStash } from "./stash.js"
 import { removeWeapon, renderWeapon } from "./weapon-loader.js"
 import { renderUi, renderEquippedWeapon } from "./user-interface.js"
+import { getPauseContainer, getPlayer, getUiEl } from "./elements.js"
 import { pickupDrop, removeInventory, renderInventory } from "./inventory.js"
 import { addClass, angleOfTwoPoints, isMoving, removeClass } from "./util.js"
 import { 
     getAimMode,
     getDraggedItem,
     getEquippedWeapon,
+    getExamining,
     getIntObj,
     getMouseX,
     getMouseY,
@@ -23,6 +24,7 @@ import {
     setAimingPlayerAngle,
     setDownPressed,
     setEquippedWeapon,
+    setExamining,
     setLeftPressed,
     setMouseX,
     setMouseY,
@@ -207,6 +209,7 @@ const openPause = (cause, func) => {
 }
 
 const openInventory = () => {
+    if ( getExamining() ) return
     if ( getPause() && getPauseCause() !== 'inventory' ) return
     if ( getPause() && getPauseCause() === 'inventory' && getDraggedItem() ) return
     managePause()
@@ -245,14 +248,13 @@ const rDown = () => {
 
 const escapeDown = () => {
     if ( !getPause() ) return
-    if ( getPauseCause() === 'stash' || getPauseCause() === 'store' ) {
+    if ( getExamining() ) {
+        getPauseContainer().lastElementChild.remove()
+        setExamining(false)
+    } else if ( getPauseCause() === 'stash' || getPauseCause() === 'store' ) {
         managePause()
         getPauseContainer().firstElementChild.remove()
-    } else if ( getPauseCause() === 'stats' ) {
-        getPauseContainer().firstElementChild.remove()
-        renderInventory()
-        setPauseCause('inventory')
-    }
+    } 
 }
 
 const wUp = () => disableDirection(setUpPressed)

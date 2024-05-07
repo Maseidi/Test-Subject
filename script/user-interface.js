@@ -1,7 +1,7 @@
 import { addClass, appendAll } from "./util.js"
-import { getPauseContainer, getUiEl, setUiEl } from "./elements.js"
 import { calculateTotalAmmo } from "./inventory.js"
 import { getOwnedWeapons } from "./owned-weapons.js"
+import { getPauseContainer, getUiEl, setUiEl } from "./elements.js"
 import { getEquippedWeapon, getHealth, getMaxHealth, getMaxStamina, getStamina } from "./variables.js"
 
 export const renderUi = () => {
@@ -68,8 +68,8 @@ export const renderEquippedWeapon = () => {
     mag.textContent = `${getOwnedWeapons().get(getEquippedWeapon()).getCurrMag()}`
     const total = document.createElement('p')
     total.textContent = calculateTotalAmmo()
-    appendAll(ammoCount, [mag, total])
-    appendAll(weaponContainer, [weaponIcon, ammoCount])
+    appendAll(ammoCount, mag, total)
+    appendAll(weaponContainer, weaponIcon, ammoCount)
     getUiEl().append(weaponContainer)   
 }
 
@@ -84,7 +84,7 @@ export const renderQuit = (func) => {
     quitBtn.textContent = 'esc'
     const quitText = document.createElement("p")
     quitText.textContent = 'quit'
-    appendAll(quitContainer, [quitBtn, quitText])
+    appendAll(quitContainer, quitBtn, quitText)
     quitContainer.addEventListener('click', func)
-    getPauseContainer().firstElementChild.append(quitContainer)
+    getPauseContainer().lastElementChild.append(quitContainer)
 }

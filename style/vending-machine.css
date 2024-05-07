@@ -36,6 +36,13 @@
   height: 100%;
   border: 1px solid rgb(245, 222, 179, 0.7);
   margin-top: 10px;
+  overflow: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.page-container::-webkit-scrollbar {
+  display: none;
 }
 
 .coin-container {
@@ -53,13 +60,135 @@
   width: 40px;
 }
 
-.buy, .sell, .upgrade {
+.buy,
+.sell,
+.upgrade {
   width: 100%;
-  height: 100%;
+  display: flex;
+  flex-flow: column wrap;
 }
 
-.buy {
-  background-color: red;
+.buy-item {
+  padding: 15px;
+  width: 100%;
+  color: wheat;
+  text-transform: capitalize;
+}
+
+.buy-item:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.buy-wrapper {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.buy-item-img {
+  height: 60px;
+}
+
+.buy-item-coin {
+  height: 40px;
+}
+
+.info {
+  width: fit-content;
+  gap: 400px;
+}
+
+.info,
+.left,
+.right {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.left {
+  width: 300px;
+  justify-content: space-between;
+}
+
+.right {
+  width: 70px;
+  justify-content: space-between;
+}
+
+.popup-container {
+  width: 100%;
+  height: 100%;
+  top: 0;
+}
+
+.buy-popup {
+  position: fixed;
+  left: 50%;
+  top: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  background-color: black;
+  color: wheat;
+  border: 1px solid wheat;
+  border-radius: 5px;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.buy-popup-title {
+  text-align: center;
+  text-transform: capitalize;
+}
+
+.buy-heading-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 30px;
+  text-transform: capitalize;
+}
+
+.buy-popup-btn-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.buy-popup-btn-container > button:hover {
+  filter: brightness(150%);
+}
+
+.buy-popup-img {
+  height: 60px;
+}
+
+.buy-popup-cancel,
+.buy-popup-confirm,
+.buy-popup-examine {
+  border: none;
+  padding: 10px;
+  border-radius: 3px;
+  text-transform: capitalize;
+  color: white;
+  letter-spacing: 2px;
+}
+
+.buy-popup-cancel {
+  background-color: crimson;
+}
+
+.buy-popup-examine {
+  background-color: black;
+  color: white;
+  border: 1px solid white;
+}
+
+.buy-popup-confirm {
+  background-color: forestgreen;
 }
 
 .upgrade {

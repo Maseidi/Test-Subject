@@ -1,12 +1,22 @@
+import { renderStats } from "./weapon-examine.js"
 import { interactables } from "./interactables.js"
 import { getWeaponSpecs } from "./weapon-specs.js"
 import { renderInteractable } from "./room-loader.js"
 import { removeWeapon, renderWeapon } from "./weapon-loader.js"
-import { removeUi, renderQuit, renderUi } from "./user-interface.js"
+import { removeUi, renderUi } from "./user-interface.js"
 import { getCurrentRoom, getPauseContainer, getPlayer } from "./elements.js"
 import { OwnedWeapon, getOwnedWeapons, setOwnedWeapons } from "./owned-weapons.js"
-import { addAttribute, addClass, containsClass, elementToObject, objectToElement, removeClass, putToMap, appendAll } from "./util.js"
-import { getAimMode,
+import { 
+    addAttribute,
+    addClass,
+    containsClass,
+    elementToObject,
+    objectToElement,
+    removeClass,
+    putToMap,
+    appendAll } from "./util.js"
+import { 
+    getAimMode,
     getCurrentRoomId,
     getDraggedItem,
     getEquippedWeapon,
@@ -24,9 +34,7 @@ import { getAimMode,
     getIntObj, 
     getReloading,
     setShootCounter,
-    getShooting,
-    setPauseCause} from "./variables.js"
-import { renderStats } from "./weapon-examine.js"
+    getShooting } from "./variables.js"
 
 export const MAX_PACKSIZE = {
     bandage: 3,
@@ -281,7 +289,7 @@ export const renderHeadingAndDescription = () => {
     addClass(desc, 'description')
     const heading = document.createElement("h2")
     const paragraph = document.createElement("p")
-    appendAll(desc, [heading, paragraph])
+    appendAll(desc, heading, paragraph)
     background.firstElementChild.append(desc)
 }
 
@@ -624,7 +632,7 @@ export const handleWeaponDrop = (itemObj) => {
     setWeaponWheel(getWeaponWheel().map(weapon => weapon === itemObj.id ? null : weapon))
 }
 
-const examine = (item) => renderStats(item, 'inventory')
+const examine = (item) => renderStats(elementToObject(item), 'inventory')
 
 const OPTIONS = new Map([
     ['replace', replace],

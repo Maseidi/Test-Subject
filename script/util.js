@@ -38,7 +38,7 @@ export const containsClass = (elem, className) => {
     return elem.classList.contains(className)
 }
 
-export const appendAll = (root, elems) => {
+export const appendAll = (root, ...elems) => {
     elems.forEach(elem => root.append(elem))
 }
 
@@ -94,4 +94,10 @@ export const elementToObject = (elem) => {
         }
     }
     return obj
+}
+
+export const createAndAddClass = (type, ...classNames) => {
+    const elem = document.createElement(type)
+    classNames.forEach((className) => addClass(elem, className))
+    return elem
 }

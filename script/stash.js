@@ -1,4 +1,5 @@
 import { managePause } from "./controls.js"
+import { renderQuit } from "./user-interface.js"
 import { getPauseContainer } from "./elements.js"
 import { getIntObj, setIntObj } from "./variables.js"
 import { addAttribute, addClass, appendAll, containsClass, elementToObject, objectToElement } from "./util.js"
@@ -10,7 +11,6 @@ import {
     renderBlocks,
     renderHeadingAndDescription,
     useItemAtPosition } from "./inventory.js"
-import { renderQuit } from "./user-interface.js"
 
 let stash = []
 export const setStash = (val) => {
@@ -66,13 +66,13 @@ const addMoveEvent = (e) => {
     const amount = document.createElement('p')
     amount.textContent = `${Math.ceil(itemObj.amount / 2)}`
     const chevRight = createChevRight()
-    appendAll(number, [chevLeft, amount, chevRight])
+    appendAll(number, chevLeft, amount, chevRight)
     const concan = document.createElement('div')
     addClass(concan, 'confirm-bigger')
     const confirm = createConfirm()
     const cancel = biggerSteps()
-    appendAll(concan, [confirm, cancel])
-    appendAll(move, [number, concan])
+    appendAll(concan, confirm, cancel)
+    appendAll(move, number, concan)
     elem.append(move)
 }
 
@@ -177,7 +177,7 @@ const biggerSteps = () => {
     const add = document.createElement('div')
     add.addEventListener('click', addNumber)
     add.textContent = '+5'
-    appendAll(bigger, [reduce, add])
+    appendAll(bigger, reduce, add)
     return bigger
 }
 
@@ -201,8 +201,8 @@ const renderStashItems = () => {
         const amount = document.createElement('p')
         if ( !isNaN(item.currmag) ) amount.textContent = `${item.currmag}`
         else amount.textContent = `${item.amount}`
-        appendAll(specs, [title, amount])
-        appendAll(stashItem, [img, specs])
+        appendAll(specs, title, amount)
+        appendAll(stashItem, img, specs)
         moveEvent(selector, 'to-inventory')
         stashItems.append(stashItem)
     })

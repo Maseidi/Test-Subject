@@ -1,11 +1,19 @@
 import { getWeaponSpecs } from "./weapon-specs.js";
-import { Bandage, Drop, HardDrive, MagnumAmmo, PistolAmmo, RifleAmmo, ShotgunShells, SmgAmmo, WeaponDrop } from "./interactables.js";
+import { 
+    Bandage,
+    Drop,
+    HardDrive,
+    MagnumAmmo,
+    PistolAmmo,
+    RifleAmmo,
+    ShotgunShells,
+    SmgAmmo,
+    WeaponDrop } from "./interactables.js";
 
 class ShopItem extends Drop {
-    constructor(drop, amount, price, off, progress, sold) {
+    constructor(drop, amount, price, progress, sold) {
         super(drop.width, drop.left, drop.top, drop.name, drop.heading, drop.popup, amount, drop.space, drop.description)
         this.price = price
-        this.off = off
         this.progress = progress
         this.sold = sold
     }
@@ -60,14 +68,16 @@ class WeaponShopItem extends ShopItem {
 }
 
 let shopItems = [
-    new BandageShopItem(3, 1, 0, false),
-    new HardDriveShopItem(2, 1, 0, false),
+    new BandageShopItem(3, 1, 3, false),
+    new HardDriveShopItem(2, 1, 0, true),
     new PistolAmmoShopItem(30, 1, 0, false),
     new ShotgunShellsShopItem(20, 1, 0, false),
     new MagnumAmmoShopItem(5, 1, 0, false),
     new SmgAmmoShopItem(90, 1, 0, false),
     new RifleAmmoShopItem(10, 1, 0, false),
     new WeaponShopItem('uzi', 0, false),
+    new WeaponShopItem('mp5k', 0, false),
+    new WeaponShopItem('riotgun', 0, false),
 ]
 
 export const setShopItems = (val) => {

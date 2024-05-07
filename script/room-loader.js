@@ -1,6 +1,7 @@
 import { getRoom } from "./rooms.js"
-import { addClass, addToArray, appendAll, objectToElement } from "./util.js"
+import { getWeaponSpecs } from "./weapon-specs.js"
 import { getCurrentRoomId, getRoomLeft, getRoomTop } from "./variables.js"
+import { addClass, addToArray, appendAll, objectToElement } from "./util.js"
 import { 
     getCurrentRoomInteractables, 
     getCurrentRoomLoaders,
@@ -105,7 +106,8 @@ const renderPopUp = (int, interactable) => {
 
 const renderHeading = (popup, interactable) => {
     const heading = document.createElement("p")
-    let content = interactable.amount ? `x${interactable.amount} ${interactable.heading}` : `${interactable.heading}`
+    let content = interactable.amount && !getWeaponSpecs().get(interactable.name) ? 
+    `${interactable.amount} ${interactable.heading}` : `${interactable.heading}`
     heading.textContent = content
     popup.append(heading)
 }
@@ -121,6 +123,6 @@ const renderDescription = (popup, interactable) => {
     fButton.textContent = "F"
     const descText = document.createElement("p")
     descText.textContent = `${interactable.popup}`
-    appendAll(descContainer, [fButton, descText])
+    appendAll(descContainer, fButton, descText)
     popup.append(descContainer)
 }

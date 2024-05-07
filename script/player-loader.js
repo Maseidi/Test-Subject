@@ -18,7 +18,7 @@ export const loadPlayer = () => {
 
     const forwardDetector = document.createElement("div")
     addClass(forwardDetector, 'forward-detector')
-    appendAll(playerCollider, [playerBody, forwardDetector])
+    appendAll(playerCollider, playerBody, forwardDetector)
 
     const playerHead = document.createElement("div")
     addClass(playerHead, 'player-head')

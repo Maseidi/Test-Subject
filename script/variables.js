@@ -323,3 +323,11 @@ export const setCoins = (val) => {
 export const getCoins = () => {
     return coins
 }
+
+let examining = false
+export const setExamining = (val) => {
+    examining = val
+}
+export const getExamining = () => {
+    return examining
+}
