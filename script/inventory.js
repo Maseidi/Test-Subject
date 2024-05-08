@@ -2,8 +2,8 @@ import { renderStats } from "./weapon-examine.js"
 import { interactables } from "./interactables.js"
 import { getWeaponSpecs } from "./weapon-specs.js"
 import { renderInteractable } from "./room-loader.js"
-import { removeWeapon, renderWeapon } from "./weapon-loader.js"
 import { removeUi, renderUi } from "./user-interface.js"
+import { removeWeapon, renderWeapon } from "./weapon-loader.js"
 import { getCurrentRoom, getPauseContainer, getPlayer } from "./elements.js"
 import { OwnedWeapon, getOwnedWeapons, setOwnedWeapons } from "./owned-weapons.js"
 import { 
@@ -14,7 +14,8 @@ import {
     objectToElement,
     removeClass,
     putToMap,
-    appendAll } from "./util.js"
+    appendAll, 
+    createAndAddClass} from "./util.js"
 import { 
     getAimMode,
     getCurrentRoomId,
@@ -238,18 +239,14 @@ export const renderInventory = () => {
 }
 
 const renderBackground = () => {
-    const background = document.createElement("div")
-    addClass(background, 'inventory-ui')
-    addClass(background, 'ui-theme')
+    const background = createAndAddClass('div', 'inventory-ui', 'ui-theme')
     getPauseContainer().append(background)
 }
 
 export const renderBlocks = () => {
     const background = getPauseContainer().firstElementChild
-    const inventoryContainer = document.createElement("div")
-    addClass(inventoryContainer, 'inventory-container')
-    const inventoryEl = document.createElement("div")
-    addClass(inventoryEl, 'inventory')
+    const inventoryContainer = createAndAddClass('div', 'inventory-container')
+    const inventoryEl = createAndAddClass('div', 'inventory')
     inventory.forEach((row) => {
         row.forEach((block) => {
             const theBlock = block === "taken" ? document.createElement('div') : objectToElement(block)
@@ -259,8 +256,7 @@ export const renderBlocks = () => {
             else if (block === null || block === undefined) theBlock.style.width = `25%`
             else {
                 theBlock.style.width = `${block.space * 25}%`
-                const amount = document.createElement("div")
-                addClass(amount, 'amount')
+                const amount = createAndAddClass('div', 'amount')
                 const amountText = document.createElement("p")
                 if ( getWeaponSpecs().get(block.name) === undefined ) amountText.textContent = `${block.amount}`
                 else amountText.textContent = `${getOwnedWeapons().get(block.id).getCurrMag()}`
@@ -285,8 +281,7 @@ export const renderBlocks = () => {
 
 export const renderHeadingAndDescription = () => {
     const background = getPauseContainer().firstElementChild
-    const desc = document.createElement("div")
-    addClass(desc, 'description')
+    const desc = createAndAddClass('div', 'description')
     const heading = document.createElement("h2")
     const paragraph = document.createElement("p")
     appendAll(desc, heading, paragraph)
@@ -334,8 +329,7 @@ const optionsEvent = (item) => {
 const addOptionsEvent = (e) => {
     if ( !containsClass(e.target, 'block') ) return
     document.querySelectorAll('.options').forEach((elem) => elem.remove())
-    const options = document.createElement('div')
-    addClass(options, 'options')
+    const options = createAndAddClass('div', 'options')
     renderOptions(e.target, options)
     options.addEventListener('mouseleave', () => options.remove())
     e.target.append(options)
@@ -384,8 +378,7 @@ const replace = (item) => {
 }
 
 const renderGrid = () => {
-    const grid = document.createElement('div')
-    addClass(grid, 'grid')
+    const grid = createAndAddClass('div', 'grid')
     for ( let i = 0; i < inventory.length; i++ ) {
         for ( let j = 0; j < inventory[i].length; j++ ) {
             const item = inventory[i][j]
@@ -548,8 +541,7 @@ const use = (item) => {
 const replaceBlocks = (item, space) => {
     let prevBlock = item
     for ( let i = 0; i < space; i++ ) {
-        const newBlock = document.createElement("div")
-        addClass(newBlock, 'block')
+        const newBlock = createAndAddClass('div', 'block')
         newBlock.style.width = `25%`
         prevBlock.parentNode.insertBefore(newBlock, prevBlock)
         prevBlock = newBlock
@@ -654,10 +646,8 @@ const createOption = (options, text) => {
 
 const renderWeaponWheel = () => {
     const background = getPauseContainer().firstElementChild
-    const weaponWheelContainer = document.createElement("div")
-    addClass(weaponWheelContainer, 'weapon-wheel-container')
-    const weaponWheel = document.createElement("div")
-    addClass(weaponWheel, 'weapon-wheel')
+    const weaponWheelContainer = createAndAddClass('div', 'weapon-wheel-container')
+    const weaponWheel = createAndAddClass('div', 'weapon-wheel')
     let slots = 4
     while (slots) {
         const slot = document.createElement("div")

@@ -1,6 +1,6 @@
-import { addClass, appendAll } from "./util.js"
 import { calculateTotalAmmo } from "./inventory.js"
 import { getOwnedWeapons } from "./owned-weapons.js"
+import { addClass, appendAll, createAndAddClass } from "./util.js"
 import { getPauseContainer, getUiEl, setUiEl } from "./elements.js"
 import { getEquippedWeapon, getHealth, getMaxHealth, getMaxStamina, getStamina } from "./variables.js"
 
@@ -13,18 +13,14 @@ export const renderUi = () => {
 
 const renderBackground = () => {
     const root = document.getElementById("root")
-    const ui = document.createElement("div")
-    addClass(ui, 'ui')
-    addClass(ui, 'ui-theme')
+    const ui = createAndAddClass('div', 'ui', 'ui-theme')
     setUiEl(ui)
     root.append(ui)
 }
 
 const renderHealthBar = () => {
-    const healthBarEl = document.createElement('div')
-    addClass(healthBarEl, 'health-bar')
-    const healthEl = document.createElement('div')
-    addClass(healthEl, 'health')
+    const healthBarEl = createAndAddClass('div', 'health-bar')
+    const healthEl = createAndAddClass('div', 'health')
     healthBarEl.append(healthEl)
     getUiEl().append(healthBarEl)
     healthManager(getHealth())
@@ -35,10 +31,8 @@ export const healthManager = (inputHealth) => {
 }
 
 const renderStaminaBar = () => {
-    const staminaBarEl = document.createElement('div')
-    addClass(staminaBarEl, 'stamina-bar')
-    const staminaEl = document.createElement('div')
-    addClass(staminaEl, 'stamina')
+    const staminaBarEl = createAndAddClass('div', 'stamina-bar')
+    const staminaEl = createAndAddClass('div', 'stamina')
     staminaBarEl.append(staminaEl)
     getUiEl().append(staminaBarEl)
     staminaManager(getStamina())
@@ -56,14 +50,11 @@ const abstractManager = (input, elem, max) => {
 export const renderEquippedWeapon = () => {
     if ( getUiEl().children[2] ) getUiEl().children[2].remove() 
     if ( !getEquippedWeapon() ) return    
-    const weaponContainer = document.createElement('div')
-    addClass(weaponContainer, 'weapon-container')
-    const weaponIcon = document.createElement('img')
-    addClass(weaponIcon, 'weapon-icon')
+    const weaponContainer = createAndAddClass('div', 'weapon-container')
+    const weaponIcon = createAndAddClass('img', 'weapon-icon')
     weaponIcon.src = `../assets/images/${getOwnedWeapons().get(getEquippedWeapon()).name}.png`
     addClass(weaponIcon, 'weapon-icon')
-    const ammoCount = document.createElement('div')
-    addClass(ammoCount, 'ammo-count')
+    const ammoCount = createAndAddClass('div', 'ammo-count')
     const mag = document.createElement('p')
     mag.textContent = `${getOwnedWeapons().get(getEquippedWeapon()).getCurrMag()}`
     const total = document.createElement('p')
@@ -78,8 +69,7 @@ export const removeUi = () => {
 }
 
 export const renderQuit = (func) => {
-    const quitContainer = document.createElement("div")
-    addClass(quitContainer, 'quit')
+    const quitContainer = createAndAddClass('div', 'quit')
     const quitBtn = document.createElement("p")
     quitBtn.textContent = 'esc'
     const quitText = document.createElement("p")

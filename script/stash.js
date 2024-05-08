@@ -2,7 +2,14 @@ import { managePause } from "./controls.js"
 import { renderQuit } from "./user-interface.js"
 import { getPauseContainer } from "./elements.js"
 import { getIntObj, setIntObj } from "./variables.js"
-import { addAttribute, addClass, appendAll, containsClass, elementToObject, objectToElement } from "./util.js"
+import { 
+    addAttribute,
+    addClass,
+    appendAll,
+    containsClass,
+    createAndAddClass,
+    elementToObject,
+    objectToElement } from "./util.js"
 import { 
     descriptionEvent,
     handleWeaponDrop,
@@ -30,9 +37,7 @@ export const renderStash = () => {
 }
 
 const renderBackground = () => {
-    const background = document.createElement("div")
-    addClass(background, 'stash-ui')
-    addClass(background, 'ui-theme')
+    const background = createAndAddClass('div', 'stash-ui', 'ui-theme')
     getPauseContainer().append(background)
 }
 
@@ -60,15 +65,13 @@ const addMoveEvent = (e) => {
     if ( containsClass(e.target, 'stash-item-selector') ) addAttribute(e.target.parentElement, 'type', 'to-inventory')
     const itemObj = elementToObject(elem)
     const move = createMoveComponent(itemObj)
-    const number = document.createElement('div')
-    addClass(number, 'number')
+    const number = createAndAddClass('div', 'number')
     const chevLeft = createChevLeft()
     const amount = document.createElement('p')
     amount.textContent = `${Math.ceil(itemObj.amount / 2)}`
     const chevRight = createChevRight()
     appendAll(number, chevLeft, amount, chevRight)
-    const concan = document.createElement('div')
-    addClass(concan, 'confirm-bigger')
+    const concan = createAndAddClass('div', 'confirm-bigger')
     const confirm = createConfirm()
     const cancel = biggerSteps()
     appendAll(concan, confirm, cancel)
@@ -77,8 +80,7 @@ const addMoveEvent = (e) => {
 }
 
 const createMoveComponent = (itemObj) => {
-    const move = document.createElement('div')
-    addClass(move, `move-${itemObj.type}`)
+    const move = createAndAddClass('div', `move-${itemObj.type}`)
     addAttribute(move, 'row', itemObj.row)
     addAttribute(move, 'column', itemObj.column)
     addAttribute(move, 'amount', itemObj.amount)
@@ -127,8 +129,7 @@ const createChevRight = () => {
 }
 
 const createConfirm = () => {
-    const confirm = document.createElement('p')
-    addClass(confirm, 'confirm')
+    const confirm = createAndAddClass('p', 'confirm')
     confirm.textContent = 'confirm'
     confirm.addEventListener('click', moveItem)
     return confirm
@@ -169,8 +170,7 @@ const searchPack = (objectToMove, reduce) => {
 }
 
 const biggerSteps = () => {
-    const bigger = document.createElement('div')
-    addClass(bigger, 'bigger')
+    const bigger = createAndAddClass('div', 'bigger')
     const reduce = document.createElement('div')
     reduce.addEventListener('click', reduceNumber)
     reduce.textContent = '-5'
@@ -182,20 +182,16 @@ const biggerSteps = () => {
 }
 
 const renderStashItems = () => {
-    const stashItemsContainer = document.createElement('div')
-    addClass(stashItemsContainer, 'stash-items-container')
-    const stashItems = document.createElement('div')
-    addClass(stashItems, 'stash-items')
+    const stashItemsContainer = createAndAddClass('div', 'stash-items-container')
+    const stashItems = createAndAddClass('div', 'stash-items')
     stash.forEach((item) => {
         const stashItem = objectToElement(item)
         addClass(stashItem, 'stash-item')
-        const selector = document.createElement('div')
-        addClass(selector, 'stash-item-selector')
+        const selector = createAndAddClass('div', 'stash-item-selector')
         stashItem.append(selector)
         const img = document.createElement('img')
         img.src = `../assets/images/${item.name}.png`
-        const specs = document.createElement('div')
-        addClass(specs, 'specs')
+        const specs = createAndAddClass('div', 'specs')
         const title = document.createElement('p')
         title.textContent = `${item.heading}`
         const amount = document.createElement('p')

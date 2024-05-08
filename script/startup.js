@@ -1,8 +1,8 @@
-import { addClass } from "./util.js"
+import { createAndAddClass } from "./util.js"
 import { renderUi } from "./user-interface.js"
 import { loadPlayer } from "./player-loader.js"
-import { loadCurrentRoom } from "./room-loader.js"
 import { getMapX, getMapY } from "./variables.js"
+import { loadCurrentRoom } from "./room-loader.js"
 import { getMapEl, setMapEl, setPauseContainer, setRoomContainer } from "./elements.js"
 
 export const startUp = () => {
@@ -16,16 +16,14 @@ export const startUp = () => {
 
 const renderPauseContainer = () => {
     const root = document.getElementById("root")
-    const pauseContainer = document.createElement("div")
-    addClass(pauseContainer, 'pause-container')
+    const pauseContainer = createAndAddClass('div', 'pause-container')
     setPauseContainer(pauseContainer)
     root.append(pauseContainer)
 }
 
 const renderMap = () => {
     const root = document.getElementById("root")
-    const map = document.createElement("div")
-    addClass(map, 'map')
+    const map = createAndAddClass('div', 'map')
     map.style.left = `${getMapX()}px`
     map.style.top = `${getMapY()}px`
     setMapEl(map)
@@ -33,8 +31,7 @@ const renderMap = () => {
 }
 
 const renderRoomContainer = () => {
-    const roomContainer = document.createElement("div")
-    addClass(roomContainer, 'room-container')
+    const roomContainer = createAndAddClass('div', 'room-container')
     setRoomContainer(roomContainer)
     getMapEl().append(roomContainer)
 }

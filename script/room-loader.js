@@ -1,7 +1,7 @@
 import { getRoom } from "./rooms.js"
 import { getWeaponSpecs } from "./weapon-specs.js"
 import { getCurrentRoomId, getRoomLeft, getRoomTop } from "./variables.js"
-import { addClass, addToArray, appendAll, objectToElement } from "./util.js"
+import { addClass, addToArray, appendAll, createAndAddClass, objectToElement } from "./util.js"
 import { 
     getCurrentRoomInteractables, 
     getCurrentRoomLoaders,
@@ -18,8 +18,7 @@ export const loadCurrentRoom = () => {
     setCurrentRoomSolid([])
     setCurrentRoomLoaders([])
     setCurrentRoomInteractables([])
-    const roomToRender = document.createElement("div")
-    addClass(roomToRender, `${getCurrentRoomId()}`)
+    const roomToRender = createAndAddClass('div', `${getCurrentRoomId()}`)
     roomToRender.style.width = `${room.width}px`
     roomToRender.style.height = `${room.height}px`
     roomToRender.style.left = `${getRoomLeft()}px`
@@ -34,9 +33,7 @@ export const loadCurrentRoom = () => {
 
 const renderWalls = (room, roomToRender) => {
     Array.from(room.walls).forEach((elem, index) => {
-        const wall = document.createElement("div")
-        addClass(wall, `wall-${index+1}`)
-        addClass(wall, 'solid')
+        const wall = createAndAddClass('div', `wall-${index+1}`, 'solid')
         wall.style.backgroundColor = `darkgray`
         wall.style.width = `${elem.width}px`
         wall.style.height = `${elem.height}px`
@@ -51,9 +48,7 @@ const renderWalls = (room, roomToRender) => {
 
 const renderLoaders = (room, roomToRender) => {
     Array.from(room.loaders).forEach((elem) => {
-        const loader = document.createElement("div")
-        addClass(loader, elem.className)
-        addClass(loader, 'loader')
+        const loader = createAndAddClass('div', elem.className, 'loader')
         loader.style.width = `${elem.width}px`
         loader.style.height = `${elem.height}px`
         loader.style.backgroundColor = `blue`
@@ -94,8 +89,7 @@ const renderImage = (int, interactable) => {
 }
 
 const renderPopUp = (int, interactable) => {
-    const popup = document.createElement("div")
-    addClass(popup, 'ui-theme')
+    const popup = createAndAddClass('div', 'ui-theme')
     popup.style.bottom = `calc(100% - 20px)`
     popup.style.opacity = `0`
     renderHeading(popup, interactable)

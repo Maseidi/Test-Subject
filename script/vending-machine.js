@@ -6,7 +6,13 @@ import { getPauseContainer } from "./elements.js"
 import { getWeaponSpecs } from "./weapon-specs.js"
 import { getProgressCounter } from "./variables.js"
 import { calculateTotalCoins } from "./inventory.js"
-import { addAttribute, addClass, appendAll, createAndAddClass, elementToObject, objectToElement } from "./util.js"
+import { 
+    addAttribute,
+    addClass,
+    appendAll,
+    createAndAddClass,
+    elementToObject,
+    objectToElement } from "./util.js"
 
 let page = 1
 export const renderStore = () => {
@@ -36,8 +42,7 @@ const renderCoins = () => {
 }
 
 const renderPagination = () => {
-    const paginationContainer = document.createElement('div')
-    addClass(paginationContainer, 'pagination-container')
+    const paginationContainer = createAndAddClass('div', 'pagination-container')
     const buy = createAndAddClass('div', 'buy-page')
     if ( page === 1 ) addClass(buy, 'active-page')
     buy.textContent = `buy`
