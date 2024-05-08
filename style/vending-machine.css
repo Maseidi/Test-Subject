@@ -159,7 +159,7 @@
 }
 
 .buy-popup-btn-container > button:hover {
-  filter: brightness(150%);
+  filter: brightness(120%);
 }
 
 .buy-popup-img {
@@ -189,6 +189,15 @@
 
 .buy-popup-confirm {
   background-color: forestgreen;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.buy-popup-confirm > img {
+  width: 25px;
 }
 
 .upgrade {

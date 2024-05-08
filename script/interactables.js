@@ -113,7 +113,7 @@ export class WeaponDrop extends Drop {
 export const interactables = new Map([
     [1 ,
         [
-        new Coin(100, 100, 2),
+        new Coin(100, 100, 3),
         new Bandage(300, 300, 4),
         new HardDrive(500, 500, 3),
         new PC(700, 700),

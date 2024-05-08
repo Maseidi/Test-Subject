@@ -34,7 +34,8 @@ import {
     getIntObj, 
     getReloading,
     setShootCounter,
-    getShooting } from "./variables.js"
+    getShooting, 
+    getPause} from "./variables.js"
 
 export const MAX_PACKSIZE = {
     bandage: 3,
@@ -111,7 +112,7 @@ const searchEmpty = () => {
 const checkSpecialScenarios = () => {
     if ( Number(getIntObj().getAttribute("amount")) === 0 ) removeDrop()
     const currentWeapon = getOwnedWeapons().get(getEquippedWeapon())
-    if ( getEquippedWeapon() && getIntObj().getAttribute('name') === currentWeapon.getAmmoType() ) {
+    if ( getEquippedWeapon() && getIntObj().getAttribute('name') === currentWeapon.getAmmoType() && !getPause() ) {
         removeUi()
         renderUi()
     }
@@ -152,7 +153,7 @@ export const useInventoryResource = (name, reduce) => {
         for ( let j = inventory[i].length - 1; j >= 0; j-- ) {
             if ( reduce === 0 ) return
             if ( inventory[i][j] === null || inventory[i][j] === undefined || inventory[i][j] === 'taken' ) continue
-            if ( inventory[i][j].name === name ) useItemAtPosition(i, j, reduce)
+            if ( inventory[i][j].name === name ) reduce -= useItemAtPosition(i, j, reduce)
         }
     }
 }
@@ -160,7 +161,6 @@ export const useInventoryResource = (name, reduce) => {
 export const useItemAtPosition = (row, column, reduce) => {
     const itemAmount = inventory[row][column].amount
     const diff = itemAmount <= reduce ? itemAmount : reduce
-    reduce -= diff
     inventory[row][column].amount -= diff
     const space = inventory[row][column].space
     if ( inventory[row][column].amount === 0 ) {
@@ -169,6 +169,7 @@ export const useItemAtPosition = (row, column, reduce) => {
             if ( inventory[row][column + i] === 'taken' )
                 inventory[row][column + i] = null
     }
+    return diff
 }
 
 export const updateInventoryWeaponMag = () => {
@@ -227,6 +228,33 @@ const updateWeaponWheel = () => {
         }
     }
     setWeaponWheel(weaponWheelCopy)
+}
+
+export const inventoryHasSpace = (itemObj) => {
+    if ( itemObj.name === 'pouch' ) return
+    let count = 0
+    getInventory().forEach(row => {
+        row.forEach(item => {
+            if ( item !== undefined && item !== 'taken' ) {
+                if ( item && item.name === itemObj.name ) count += MAX_PACKSIZE[item.name] - item.amount
+                else if ( item === null ) count += MAX_PACKSIZE[itemObj.name]
+            }
+        })
+    })
+    return count >= itemObj.amount
+}
+
+export const upgradeInventory = () => {
+    let found = false
+    inventory.forEach((row, rowIdx) => {
+        row.forEach((item, columnIdx) => {
+            if ( item === undefined && !found ) {
+                inventory[rowIdx][columnIdx] = null
+                inventory[rowIdx][columnIdx + 1] = null
+                found = true
+            }
+        })
+    })
 }
 
 export const renderInventory = () => {
