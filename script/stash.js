@@ -33,7 +33,7 @@ export const renderStash = () => {
     renderHeadingAndDescription()
     inventoryEvents()
     renderStashItems()
-    renderStashQuit()
+    renderQuit()
 }
 
 const renderBackground = () => {
@@ -205,11 +205,6 @@ const renderStashItems = () => {
     stashItemsContainer.append(stashItems)
     getPauseContainer().firstElementChild.append(stashItemsContainer)
 }
-
-const renderStashQuit = () => renderQuit(() => {
-    managePause()
-    removeStash()
-})
 
 export const removeStash = () => {
     getPauseContainer().firstElementChild.remove()

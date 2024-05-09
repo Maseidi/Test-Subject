@@ -41,7 +41,7 @@
   position: absolute;
   left: 50%;
   top: 50%;
-  z-index: 2;
+  z-index: 20;
   text-transform: capitalize;
 }
 
@@ -89,7 +89,7 @@
   right: 0;
   bottom: 0;
   color: white;
-  z-index: 1;
+  z-index: 10;
 }
 
 .description {
@@ -174,7 +174,7 @@ div.selectable-slot {
   position: absolute;
   left: 0;
   top: 0;
-  z-index: 15;
+  z-index: 50;
   display: flex;
   flex-flow: row wrap;
 }
@@ -224,7 +224,7 @@ div.selectable-slot {
   padding: 50px;
   background-color: rgb(0, 0, 0, 0.5);
   border-radius: 5px;
-  border: 1px solid wheat;
+  border: 1px solid #f5deb3;
 }
 
 .weapon-stats-img-container {

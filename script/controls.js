@@ -10,7 +10,6 @@ import {
     getAimMode,
     getDraggedItem,
     getEquippedWeapon,
-    getExamining,
     getIntObj,
     getMouseX,
     getMouseY,
@@ -24,7 +23,6 @@ import {
     setAimingPlayerAngle,
     setDownPressed,
     setEquippedWeapon,
-    setExamining,
     setLeftPressed,
     setMouseX,
     setMouseY,
@@ -209,9 +207,9 @@ const openPause = (cause, func) => {
 }
 
 const openInventory = () => {
-    if ( getExamining() ) return
     if ( getPause() && getPauseCause() !== 'inventory' ) return
     if ( getPause() && getPauseCause() === 'inventory' && getDraggedItem() ) return
+    if ( getPauseContainer().children.length > 1 ) return
     managePause()
     if ( getPause() ) {
         setPauseCause('inventory')
@@ -248,13 +246,8 @@ const rDown = () => {
 
 const escapeDown = () => {
     if ( !getPause() ) return
-    if ( getExamining() ) {
-        getPauseContainer().lastElementChild.remove()
-        setExamining(false)
-    } else if ( getPauseCause() === 'stash' || getPauseCause() === 'store' ) {
-        managePause()
-        getPauseContainer().firstElementChild.remove()
-    } 
+    getPauseContainer().lastElementChild.remove()
+    if ( getPauseContainer().children.length === 0 ) managePause()
 }
 
 const wUp = () => disableDirection(setUpPressed)

@@ -3,6 +3,7 @@ import { getOwnedWeapons } from "./owned-weapons.js"
 import { addClass, appendAll, createAndAddClass } from "./util.js"
 import { getPauseContainer, getUiEl, setUiEl } from "./elements.js"
 import { getEquippedWeapon, getHealth, getMaxHealth, getMaxStamina, getStamina } from "./variables.js"
+import { managePause } from "./controls.js"
 
 export const renderUi = () => {
     renderBackground()
@@ -68,13 +69,16 @@ export const removeUi = () => {
     getUiEl().remove()
 }
 
-export const renderQuit = (func) => {
+export const renderQuit = () => {
     const quitContainer = createAndAddClass('div', 'quit')
     const quitBtn = document.createElement("p")
     quitBtn.textContent = 'esc'
     const quitText = document.createElement("p")
     quitText.textContent = 'quit'
     appendAll(quitContainer, quitBtn, quitText)
-    quitContainer.addEventListener('click', func)
+    quitContainer.addEventListener('click', () => {
+        getPauseContainer().lastElementChild.remove()
+        if ( getPauseContainer().children.length === 0 ) managePause()
+    })
     getPauseContainer().lastElementChild.append(quitContainer)
 }

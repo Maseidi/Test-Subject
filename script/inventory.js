@@ -2,7 +2,7 @@ import { renderStats } from "./weapon-examine.js"
 import { interactables } from "./interactables.js"
 import { getWeaponSpecs } from "./weapon-specs.js"
 import { renderInteractable } from "./room-loader.js"
-import { removeUi, renderUi } from "./user-interface.js"
+import { removeUi, renderQuit, renderUi } from "./user-interface.js"
 import { removeWeapon, renderWeapon } from "./weapon-loader.js"
 import { getCurrentRoom, getPauseContainer, getPlayer } from "./elements.js"
 import { OwnedWeapon, getOwnedWeapons, setOwnedWeapons } from "./owned-weapons.js"
@@ -264,6 +264,7 @@ export const renderInventory = () => {
     renderHeadingAndDescription()
     inventoryEvents()
     renderWeaponWheel()
+    renderQuit()
 }
 
 const renderBackground = () => {
@@ -652,7 +653,7 @@ export const handleWeaponDrop = (itemObj) => {
     setWeaponWheel(getWeaponWheel().map(weapon => weapon === itemObj.id ? null : weapon))
 }
 
-const examine = (item) => renderStats(elementToObject(item), 'inventory')
+const examine = (item) => renderStats(elementToObject(item))
 
 const OPTIONS = new Map([
     ['replace', replace],

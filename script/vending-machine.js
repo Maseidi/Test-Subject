@@ -1,12 +1,10 @@
 import { Drop } from "./interactables.js"
-import { managePause } from "./controls.js"
 import { renderQuit } from "./user-interface.js"
-import { renderStats } from "./weapon-examine.js"
 import { getPauseContainer } from "./elements.js"
 import { getWeaponSpecs } from "./weapon-specs.js"
 import { getProgressCounter, setIntObj } from "./variables.js"
 import { getShopItems, getShopItemsWithId } from "./shop-item.js"
-import { calculateTotalCoins, inventoryHasSpace, pickupDrop, upgradeInventory, useInventoryResource } from "./inventory.js"
+import { calculateTotalCoins, getInventory, inventoryHasSpace, pickupDrop, upgradeInventory, useInventoryResource } from "./inventory.js"
 import { 
     addAttribute,
     addClass,
@@ -24,7 +22,7 @@ export const renderStore = () => {
     renderBuy()
     renderUpgrade()
     renderSell()
-    renderStoreQuit()
+    renderQuit()
 }
 
 const renderBackground = () => {
@@ -225,7 +223,37 @@ const submitPurchase = (id) => {
 const renderUpgrade = () => {
     if ( page !== 2 ) return
     const upgrade = createAndAddClass('div', 'upgrade')
+    const left = createAndAddClass('div', 'upgrade-left')
+    const items = renderUpgradeItems()
+    const right = createAndAddClass('div', 'upgrade-right')
+    const stats = createAndAddClass('div', 'weapon-to-upgrade-stats')
+    appendAll(left, ...items)
+    appendAll(right, stats)
+    appendAll(upgrade, left, right)
     getPauseContainer().firstElementChild.children[2].append(upgrade)
+}
+
+const renderUpgradeItems = () => {
+    return getInventory()
+    .flat()
+    .filter((block => getWeaponSpecs().has(block?.name)))
+    .map((weapon) => {
+        const weaponToUpgrade = objectToElement(weapon)
+        addClass(weaponToUpgrade, 'upgrade-item')
+        const wrapper = createAndAddClass('div', 'upgrade-wrapper')
+        const img = createAndAddClass('img', 'upgrade-item-img')
+        img.src = `../assets/images/${weapon.name}.png` 
+        const name = createAndAddClass('p', 'upgrade-item-name')
+        name.textContent = `${weapon.heading}`
+        appendAll(wrapper, img, name)
+        appendAll(weaponToUpgrade, wrapper)
+        weaponToUpgrade.addEventListener('click', renderWeaponStats)
+        return weaponToUpgrade
+    })
+}
+
+const renderWeaponStats = (e) => {
+    const weaponObj = elementToObject(e.currentTarget)
 }
 
 const renderSell = () => {
@@ -233,11 +261,6 @@ const renderSell = () => {
     const sell = createAndAddClass('div', 'sell')
     getPauseContainer().firstElementChild.children[2].append(sell)
 }
-
-const renderStoreQuit = () => renderQuit(() => {
-    managePause()
-    removeStore()
-})
 
 const removeStore = () => {
     getPauseContainer().firstElementChild.remove()

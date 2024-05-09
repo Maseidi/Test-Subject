@@ -1,11 +1,9 @@
-import { setExamining } from "./variables.js"
 import { renderQuit } from "./user-interface.js"
 import { getPauseContainer } from "./elements.js"
 import { OwnedWeapon, getOwnedWeapons } from "./owned-weapons.js"
 import { addClass, appendAll, createAndAddClass } from "./util.js"
 
 export const renderStats = (itemObj) => {
-    setExamining(true)
     const weaponStatsContainer = createAndAddClass('div', 'weapon-stats-container', 'ui-theme')
     const weaponStats = createAndAddClass('div', 'weapon-stats')
     const imgContainer = createAndAddClass('div', 'weapon-stats-img-container')
@@ -24,13 +22,8 @@ export const renderStats = (itemObj) => {
     appendAll(weaponStats, imgContainer, weaponStatsName, weaponStatsDesc, damage, range, reload, magazine, firerate)
     weaponStatsContainer.append(weaponStats)
     getPauseContainer().append(weaponStatsContainer)
-    renderStastQuit()
+    renderQuit()
 }
-
-const renderStastQuit = () => renderQuit(() => {
-    getPauseContainer().lastElementChild.remove()
-    setExamining(false)
-})
 
 const createStat = (itemObj, title, name) => {
     const statContainer = createAndAddClass('div', 'stat-container')
