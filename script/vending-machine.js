@@ -1,11 +1,12 @@
+import { Drop } from "./interactables.js"
 import { managePause } from "./controls.js"
-import { getShopItems } from "./shop-item.js"
 import { renderQuit } from "./user-interface.js"
 import { renderStats } from "./weapon-examine.js"
 import { getPauseContainer } from "./elements.js"
 import { getWeaponSpecs } from "./weapon-specs.js"
-import { getProgressCounter } from "./variables.js"
-import { calculateTotalCoins } from "./inventory.js"
+import { getProgressCounter, setIntObj } from "./variables.js"
+import { getShopItems, getShopItemsWithId } from "./shop-item.js"
+import { calculateTotalCoins, inventoryHasSpace, pickupDrop, upgradeInventory, useInventoryResource } from "./inventory.js"
 import { 
     addAttribute,
     addClass,
@@ -83,7 +84,7 @@ const renderBuy = () => {
 }
 
 const renderBuyItems = () => {
-    return getShopItems()
+    return getShopItemsWithId()
     .filter(item => !item.sold)
     .filter(item => getProgressCounter() >= item.progress)
     .map((item) => {
@@ -124,15 +125,31 @@ const buyPopup = (e) => {
     const heading = createAndAddClass('h2', 'buy-popup-heading')
     const imageHeading = createAndAddClass('div', 'buy-heading-container')
     appendAll(imageHeading, image, heading)
-    if (getWeaponSpecs().get(itemObj.name)) heading.textContent = heading.textContent = `${itemObj.heading}`
+    if (getWeaponSpecs().get(itemObj.name) || itemObj.name === 'pouch') heading.textContent = `${itemObj.heading}`
     else heading.textContent = `${itemObj.amount} ${itemObj.heading}`
     const description = createAndAddClass('p', 'buy-popup-description')
     description.textContent = `${itemObj.description}`
     const btnContainer = createAndAddClass('div', 'buy-popup-btn-container')
+    const cancel = createCancelBtn(itemObj)
+    btnContainer.append(cancel)
+    createExamineBtn(itemObj, btnContainer)
+    const confirm = createConfirmBtn(itemObj)
+    btnContainer.append(confirm)
+    const message = createAndAddClass('p', 'buy-message')
+    appendAll(popup, title, imageHeading, description, btnContainer, message)
+    popupContainer.append(popup)
+    getPauseContainer().firstElementChild.append(popupContainer)
+}
+
+
+const createCancelBtn = () => {
     const cancel = createAndAddClass('button', 'buy-popup-cancel')
     cancel.textContent = `cancel`
     cancel.addEventListener('click', (e) => e.target.parentElement.parentElement.parentElement.remove())
-    btnContainer.append(cancel)
+    return cancel
+}
+
+const createExamineBtn = (itemObj, btnContainer) => {
     if ( getWeaponSpecs().get(itemObj.name) ) {
         const examine = createAndAddClass('button', 'buy-popup-examine')
         examine.textContent = `examine`
@@ -142,12 +159,67 @@ const buyPopup = (e) => {
         }))
         btnContainer.append(examine)
     }
+}
+
+const createConfirmBtn = (itemObj) => {
     const confirm = createAndAddClass('button', 'buy-popup-confirm')
-    confirm.textContent = `confirm`
-    btnContainer.append(confirm)
-    appendAll(popup, title, imageHeading, description, btnContainer)
-    popupContainer.append(popup)
-    getPauseContainer().firstElementChild.append(popupContainer)
+    const img = document.createElement('img')
+    img.src = `../assets/images/coin.png`
+    const p = document.createElement('p')
+    p.textContent = `${itemObj.price}` 
+    appendAll(confirm, img, p)
+    confirm.addEventListener('click', () => {
+        if ( !checkEnoughCoins(itemObj) ) return
+        if ( itemObj.name !== 'pouch' && !inventoryHasSpace(itemObj) ) {
+            addMessage('no enough space')
+            return
+        }
+        managePurchase(itemObj)
+    })
+    return confirm
+}
+
+const checkEnoughCoins = (itemObj) => {
+    const result = calculateTotalCoins() >= itemObj.price
+    if ( !result ) addMessage('no enough cash')
+    return result
+}
+
+const addMessage = (input) => {
+    const message = getPauseContainer().firstElementChild.children[4].firstElementChild.lastElementChild
+    message.textContent = input
+    addClass(message, 'buy-message-animation')
+}
+
+const managePurchase = (itemObj) => {
+    useInventoryResource('coin', itemObj.price)
+    if ( itemObj.name === 'pouch' ) {
+        upgradeInventory()
+        submitPurchase(itemObj.id)
+        return
+    }
+    const chosenItem = getShopItems()[itemObj.id]
+    const purchasedItem = new Drop(
+        chosenItem.width,
+        chosenItem.left,
+        chosenItem.top,
+        chosenItem.name,
+        chosenItem.heading,
+        chosenItem.popup,
+        chosenItem.amount,
+        chosenItem.space,
+        chosenItem.description,
+        chosenItem.price
+    )
+    setIntObj(objectToElement(purchasedItem))
+    pickupDrop()
+    submitPurchase(itemObj.id)
+}
+
+const submitPurchase = (id) => {
+    getShopItems()[id].sold = true
+    removeStore()
+    renderStore()
 }
 
 const renderUpgrade = () => {

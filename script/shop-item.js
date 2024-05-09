@@ -67,6 +67,12 @@ class WeaponShopItem extends ShopItem {
     }
 }
 
+class Pouch extends ShopItem {
+    constructor(amount, price, progress, sold) {
+        super({name: 'pouch', heading: 'pouch', description: 'Increases your carry capacity by 2 slots'}, amount, price, progress, sold)
+    }
+}
+
 let shopItems = [
     new BandageShopItem(3, 1, 3, false),
     new HardDriveShopItem(2, 1, 0, true),
@@ -78,6 +84,7 @@ let shopItems = [
     new WeaponShopItem('uzi', 0, false),
     new WeaponShopItem('mp5k', 0, false),
     new WeaponShopItem('riotgun', 0, false),
+    new Pouch(1, 3, 0, false)
 ]
 
 export const setShopItems = (val) => {
@@ -85,4 +92,9 @@ export const setShopItems = (val) => {
 }
 export const getShopItems = () => {
     return shopItems
+}
+export const getShopItemsWithId = () => {
+    return shopItems.map((item, index) => { 
+        return {...item, id:index}
+    })
 }

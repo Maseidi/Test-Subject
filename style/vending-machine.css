@@ -159,7 +159,7 @@
 }
 
 .buy-popup-btn-container > button:hover {
-  filter: brightness(150%);
+  filter: brightness(120%);
 }
 
 .buy-popup-img {
@@ -189,6 +189,44 @@
 
 .buy-popup-confirm {
   background-color: forestgreen;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+}
+
+.buy-popup-confirm > img {
+  width: 25px;
+}
+
+@keyframes message {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.buy-message {
+  color: red;
+  width: max-content;
+  font-weight: bold;
+  font-size: 20px;
+  text-transform: uppercase;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 100%;
+  margin-top: 10px;
+}
+
+.buy-message-animation {
+  animation-name: message;
+  animation-duration: 500ms;
+  animation-iteration-count: 8;
+  animation-direction: alternate;
 }
 
 .upgrade {
