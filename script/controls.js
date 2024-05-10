@@ -166,7 +166,7 @@ const weaponSlotDown = (key) => {
     renderEquippedWeapon()
     if ( getEquippedWeapon() ) {
         const equippedWeapon = equippedWeaponFromInventory()
-        setShootCounter(getStat(equippedWeapon.name, 'fireRate', equippedWeapon.fireratelvl) * 60)
+        setShootCounter(getStat(equippedWeapon.name, 'firerate', equippedWeapon.fireratelvl) * 60)
     }
     if ( getEquippedWeapon() && getAimMode() ) {
         renderWeapon()
@@ -232,13 +232,9 @@ export const managePause = () => {
     }
     setPauseCause(null)
     renderUi()
-    if ( isMoving() ) {
-        if ( !getAimMode() ) {
-            addClass(getPlayer(), 'walk')
-            return
-        }
-        if ( getSprintPressed() ) startSprint()
-    } 
+    if ( !isMoving() ) return
+    if ( !getAimMode() ) addClass(getPlayer(), 'walk')
+    else if ( getSprintPressed() ) startSprint()
 }
 
 const rDown = () => {
@@ -272,10 +268,9 @@ const ShiftUp = () => {
 }
 
 const stopWalkingAnimation = () => {
-    if ( !isMoving() ) {
-        removeClass(getPlayer(), 'walk')
-        removeClass(getPlayer(), 'run')
-    }
+    if ( isMoving() ) return
+    removeClass(getPlayer(), 'walk')
+    removeClass(getPlayer(), 'run')
 }
 
 const aimAngle = (event) => {

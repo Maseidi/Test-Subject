@@ -1,7 +1,7 @@
-import { getStat } from "./weapon-specs.js"
+import { getStat, getWeaponSpecs } from "./weapon-specs.js"
 import { renderQuit } from "./user-interface.js"
 import { getPauseContainer } from "./elements.js"
-import { equippedWeaponFromInventory } from "./inventory.js"
+import {getInventory } from "./inventory.js"
 import { addClass, appendAll, createAndAddClass } from "./util.js"
 
 export const renderStats = (itemObj) => {
@@ -13,33 +13,34 @@ export const renderStats = (itemObj) => {
     imgContainer.append(img)
     const weaponStatsName = createAndAddClass('div', 'weapon-stats-name')
     weaponStatsName.textContent = itemObj.heading
+    weaponStatsName.style.color = `${getWeaponSpecs().get(itemObj.name).antivirus}`
     const weaponStatsDesc = createAndAddClass('div', 'weapon-stats-desc')
     weaponStatsDesc.textContent = itemObj.description
-    const damage = createStat(itemObj, 'damage', 'damage')
-    const range = createStat(itemObj, 'range', 'range')
-    const reload = createStat(itemObj, 'reload speed', 'reloadSpeed')
-    const magazine = createStat(itemObj, 'magazine', 'magazine')
-    const firerate = createStat(itemObj, 'fire rate', 'fireRate')
+    const damage = createStat(itemObj, 'damage')
+    const range = createStat(itemObj, 'range')
+    const reload = createStat(itemObj, 'reload speed')
+    const magazine = createStat(itemObj, 'magazine')
+    const firerate = createStat(itemObj, 'fire rate')
     appendAll(weaponStats, imgContainer, weaponStatsName, weaponStatsDesc, damage, range, reload, magazine, firerate)
     weaponStatsContainer.append(weaponStats)
     getPauseContainer().append(weaponStatsContainer)
     renderQuit()
 }
 
-const createStat = (itemObj, title, name) => {
+const createStat = (itemObj, name) => {
     const statContainer = createAndAddClass('div', 'stat-container')
     const upper = createAndAddClass('div', 'upper')
     const upperRight = createAndAddClass('div', 'upper-right')
     const statName = createAndAddClass('p', 'stat-name')
-    statName.textContent = title
+    statName.textContent = name
     const statLvl = createAndAddClass('p', 'stat-lvl')
-    statLvl.textContent = `Lvl. ${itemObj[name.toLowerCase()+'lvl']}`
+    statLvl.textContent = `Lvl. ${itemObj[name.replace(' ', '').concat('lvl')]}`
     const value = createAndAddClass('div', 'value')
     value.textContent = `${getValue(itemObj, name)}`
     const lower = createAndAddClass('div', 'lower')
     for ( let i = 1; i <= 5; i++ ) {
         const level = document.createElement('div')
-        if ( i <= itemObj[name.toLowerCase()+'lvl'] ) addClass(level, 'active')
+        if ( i <= itemObj[name.replace(' ', '').concat('lvl')] ) addClass(level, 'active')
         else addClass(level, 'inactive')   
         lower.append(level) 
     }
@@ -50,8 +51,8 @@ const createStat = (itemObj, title, name) => {
 }
 
 const getValue = (itemObj, name) => {
-    let equippedWeapon = equippedWeaponFromInventory()
-    if ( !equippedWeapon || equippedWeapon.name !== itemObj.name ) 
-        equippedWeapon = {name: itemObj.name, currmag: 0, damagelvl: 1, rangelvl: 1, reloadspeedlvl: 1, magazinelvl: 1, fireratelvl: 1}
-    return getStat(equippedWeapon.name, name, equippedWeapon[name.toLowerCase().concat('lvl')])
+    let weapon = getInventory().flat().filter(item => item && item !== 'taken' && item.name === itemObj.name)[0]
+    if ( !weapon ) 
+        weapon = {name: itemObj.name, currmag: 0, damagelvl: 1, rangelvl: 1, reloadspeedlvl: 1, magazinelvl: 1, fireratelvl: 1}  
+    return getStat(weapon.name, name.replace(' ', ''), weapon[name.replace(' ', '').concat('lvl')])
 }

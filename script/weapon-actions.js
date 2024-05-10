@@ -61,7 +61,7 @@ let reloadCounter = 0
 const manageReload = () => {
     if ( !getEquippedWeapon() ) return
     if ( getReloading() ) reloadCounter++
-    if ( reloadCounter / 60 >= getStat(equippedWeapon.name, 'reloadSpeed', equippedWeapon.reloadspeedlvl) ) {
+    if ( reloadCounter / 60 >= getStat(equippedWeapon.name, 'reloadspeed', equippedWeapon.reloadspeedlvl) ) {
         reload()
         setReloading(false)
         reloadCounter = 0
@@ -79,7 +79,7 @@ const reload = () => {
 
 const manageShoot = () => {
     if ( !getEquippedWeapon() ) return
-    const fireRate = getStat(equippedWeapon.name, 'fireRate', equippedWeapon.fireratelvl)
+    const fireRate = getStat(equippedWeapon.name, 'firerate', equippedWeapon.fireratelvl)
     setShootCounter(getShootCounter() + 1)
     if ( getShootCounter() / 60 >= fireRate ) setShootCounter(getShootCounter() - 1)
     if ( (getShootCounter() + 1) / 60 >= fireRate ) {

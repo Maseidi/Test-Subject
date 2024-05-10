@@ -9,9 +9,9 @@ class Weapon {
         space,
         damage, 
         range, 
-        reloadSpeed, 
+        reloadspeed, 
         magazine, 
-        fireRate,
+        firerate,
         description,
         price) {
         this.heading = heading    
@@ -23,9 +23,9 @@ class Weapon {
         this.space = space
         this.damage = damage
         this.range = range
-        this.reloadSpeed = reloadSpeed
+        this.reloadspeed = reloadspeed
         this.magazine = magazine
-        this.fireRate = fireRate
+        this.firerate = firerate
         this.description = description
         this.price = price
     }

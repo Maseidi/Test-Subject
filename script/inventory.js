@@ -1,6 +1,6 @@
 import { renderStats } from "./weapon-examine.js"
 import { interactables } from "./interactables.js"
-import { getWeaponSpecs } from "./weapon-specs.js"
+import { getStat, getWeaponSpecs } from "./weapon-specs.js"
 import { renderInteractable } from "./room-loader.js"
 import { removeWeapon, renderWeapon } from "./weapon-loader.js"
 import { removeUi, renderQuit, renderUi } from "./user-interface.js"
@@ -184,7 +184,7 @@ export const updateInventoryWeaponMag = (newMag) => {
 const updateAmount = (newValue) => {
     getIntObj().setAttribute("amount", newValue)
     if ( getIntObj().children.length === 0 ) return
-    getIntObj().children[1].children[0].textContent = `x${newValue} ${getIntObj().getAttribute("heading")}`
+    getIntObj().children[1].children[0].textContent = `${newValue} ${getIntObj().getAttribute("heading")}`
     interactables.set(getCurrentRoomId(), 
     Array.from(interactables.get(getCurrentRoomId())).map((int, index) => {
         return `${getCurrentRoomId()}-${index}` === getIntObj().getAttribute("id") ? 
@@ -216,6 +216,25 @@ const updateWeaponWheel = () => {
 }
 
 export const inventoryHasSpace = (itemObj) => {
+    if ( getWeaponSpecs().has(itemObj.name) ) return lookForWeaponSpace(itemObj)
+    return lookForItems(itemObj)    
+    
+}
+
+const lookForWeaponSpace = (itemObj) => {
+    let found = false
+    for ( let i = 0; i < inventory.length; i++ ) {
+        for ( let j = 0; j < inventory[i].length; j++ ) {
+            for ( let k = 0; k < itemObj.space; k++ ) {
+                if ( inventory[i][j + k] !== null ) continue
+                else if ( inventory[i][j + k] === null && k === itemObj.space - 1 ) found = true
+            }
+        }
+    }
+    return found
+}
+
+const lookForItems = (itemObj) => {
     let count = 0
     inventory.forEach(row => {
         row.forEach(item => {
@@ -237,6 +256,14 @@ export const upgradeInventory = () => {
                 inventory[rowIdx][columnIdx + 1] = null
                 found = true
             }
+        })
+    })
+}
+
+export const upgradeWeaponStat = (name, stat) => {
+    inventory.forEach((row, rowIdx) => {
+        row.forEach((elem, columnIdx) => {
+            if ( elem && elem !== 'taken' && elem.name === name ) inventory[rowIdx][columnIdx][stat+'lvl'] += 1 
         })
     })
 }
@@ -566,7 +593,8 @@ const equip = (item) => {
     const row = itemObj.row
     const column = itemObj.column
     setEquippedWeapon(inventory[row][column].id)
-    setShootCounter(equippedWeaponFromInventory().firerate * 60)
+    const equippedWeapon = equippedWeaponFromInventory()
+    setShootCounter(getStat(equippedWeapon.name, 'firerate', equippedWeapon.fireratelvl) * 60)
     if ( getAimMode() ) {
         removeWeapon()
         renderWeapon()

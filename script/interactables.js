@@ -89,7 +89,7 @@ export class RifleAmmo extends Drop {
 }
 
 export class WeaponDrop extends Drop {
-    constructor(left, top, name, currMag, damageLvl, rangeLvl, reloadSpeedLvl, magazineLvl, fireRateLvl) {
+    constructor(left, top, name, currmag, damageLvl, rangeLvl, reloadspeedLvl, magazineLvl, fireratelvl) {
         super(
             70,
             left,
@@ -101,12 +101,12 @@ export class WeaponDrop extends Drop {
             getWeaponSpecs().get(name).space,
             getWeaponSpecs().get(name).description,
             getWeaponSpecs().get(name).price)
-        this.currMag = currMag
+        this.currmag = currmag
         this.damageLvl = damageLvl
         this.rangeLvl = rangeLvl
-        this.reloadSpeedLvl = reloadSpeedLvl
+        this.reloadspeedLvl = reloadspeedLvl
         this.magazineLvl = magazineLvl
-        this.fireRateLvl = fireRateLvl
+        this.fireratelvl = fireratelvl
         this.ammoType = getWeaponSpecs().get(name).ammoType
     }
 }
@@ -114,12 +114,12 @@ export class WeaponDrop extends Drop {
 export const interactables = new Map([
     [1 ,
         [
-        new Coin(100, 100, 3),
+        new Coin(100, 100, 100),
         new Bandage(300, 300, 4),
         new HardDrive(500, 500, 3),
         new PC(700, 700),
         new Stash(900, 900),
-        new WeaponDrop(700, 900, "remington1858", 0, 1, 1, 1, 1, 1),
+        new WeaponDrop(800, 200, "remington1858", 0, 1, 1, 1, 1, 1),
         new WeaponDrop(100, 900, "sniper", 0, 1, 1, 1, 1, 1),
         new WeaponDrop(200, 950, "riotgun", 0, 1, 1, 1, 1, 1),
         new WeaponDrop(300, 1000, "mauser", 0, 1, 1, 1, 1, 1),

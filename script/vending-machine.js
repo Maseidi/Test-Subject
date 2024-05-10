@@ -1,11 +1,11 @@
-import { Drop } from "./interactables.js"
+import { Drop, interactables } from "./interactables.js"
 import { renderQuit } from "./user-interface.js"
 import { getPauseContainer } from "./elements.js"
 import { renderStats } from "./weapon-examine.js"
-import { getWeaponSpecs } from "./weapon-specs.js"
-import { getProgressCounter, setIntObj } from "./variables.js"
+import { getStat, getWeaponSpecs } from "./weapon-specs.js"
+import { getCurrentRoomId, getProgressCounter, setIntObj } from "./variables.js"
 import { getShopItems, getShopItemsWithId } from "./shop-item.js"
-import { calculateTotalCoins, getInventory, inventoryHasSpace, pickupDrop, upgradeInventory, useInventoryResource } from "./inventory.js"
+import { calculateTotalCoins, getInventory, inventoryHasSpace, pickupDrop, upgradeInventory, upgradeWeaponStat, useInventoryResource } from "./inventory.js"
 import { 
     addAttribute,
     addClass,
@@ -197,22 +197,27 @@ const managePurchase = (itemObj) => {
         submitPurchase(itemObj.id)
         return
     }
-    const chosenItem = getShopItems()[itemObj.id]
-    const purchasedItem = new Drop(
-        chosenItem.width,
-        chosenItem.left,
-        chosenItem.top,
-        chosenItem.name,
-        chosenItem.heading,
-        chosenItem.popup,
-        chosenItem.amount,
-        chosenItem.space,
-        chosenItem.description,
-        chosenItem.price
-    )
-    setIntObj(objectToElement(purchasedItem))
+    let chosenItem = getShopItems()[itemObj.id]
+    chosenItem = handleNewWeapnPurchase(chosenItem, itemObj)
+    setIntObj(objectToElement(chosenItem))
     pickupDrop()
     submitPurchase(itemObj.id)
+}
+
+const handleNewWeapnPurchase = (chosenItem, itemObj) => {
+    if ( !getWeaponSpecs().has(itemObj.name) ) return chosenItem 
+    interactables.get(getCurrentRoomId()).push(null)
+    return {
+        ...chosenItem,
+        id: `${getCurrentRoomId()}-${interactables.get(getCurrentRoomId()).length}}`,
+        currmag: 0, 
+        damagelvl: 1, 
+        rangelvl: 1, 
+        reloadspeedlvl: 1, 
+        magazinelvl: 1, 
+        fireratelvl: 1, 
+        ammotype: getWeaponSpecs().get(itemObj.name).ammoType
+    }
 }
 
 const submitPurchase = (id) => {
@@ -255,6 +260,130 @@ const renderUpgradeItems = () => {
 
 const renderWeaponStats = (e) => {
     const weaponObj = elementToObject(e.currentTarget)
+    const upgradeRight = document.querySelector('.upgrade-right')
+    upgradeRight.innerHTML = ``
+    const damage = createStatComponent(weaponObj, 'damage')
+    const range = createStatComponent(weaponObj, 'range')
+    const reload = createStatComponent(weaponObj, 'reload speed')
+    const magazine = createStatComponent(weaponObj, 'magazine')
+    const firerate = createStatComponent(weaponObj, 'fire rate')
+    appendAll(upgradeRight, damage, range, reload, magazine, firerate)
+}
+
+const createStatComponent = (weaponObj, name) => {
+    const upgradeStatComponent = objectToElement(weaponObj)
+    addClass(upgradeStatComponent, 'upgrade-stat-component')
+    const title = createAndAddClass('p', 'upgrade-stat-title')
+    title.textContent = `${name}`
+    const lower = createAndAddClass('div', 'upgrade-stat-lower')
+    const levels = createLevelComponent(weaponObj, name)
+    const values = createValueComponent(weaponObj, name)
+    const price = createPriceComponent(weaponObj, name)
+    appendAll(lower, levels, values, price)
+    appendAll(upgradeStatComponent, title, lower)
+    if ( weaponObj[`${name.replace(' ', '')}lvl`] !== 5 ) upgradeStatComponent.addEventListener('click', upgradePopup)
+    return upgradeStatComponent
+}
+
+const createLevelComponent = (weaponObj, name) => {
+    const levels = createAndAddClass('div', 'upgrade-stat-level')
+    const currLvl = weaponObj[`${name.replace(' ', '')}lvl`]
+    if ( currLvl === 5 ) levels.textContent = `Max Lvl.`
+    else {
+        const current = document.createElement('p')
+        current.textContent = `Lvl.${currLvl}`
+        const img = document.createElement('img')
+        img.src = `../assets/images/upgrade.png`
+        const next = document.createElement('p')
+        next.textContent = `Lvl.${currLvl + 1}`
+        appendAll(levels, current, img, next)
+    }
+    return levels
+}
+
+const createValueComponent = (weaponObj, name) => {
+    const values = createAndAddClass('div', 'upgrade-stat-value')
+    const currLvl = weaponObj[`${name.replace(' ', '')}lvl`]
+    if ( currLvl === 5 ) 
+        values.textContent = `${getStat(weaponObj.name, name.replace(' ', ''), currLvl)}`
+    else {
+        const current = document.createElement('p')
+        current.textContent = `${getStat(weaponObj.name, name.replace(' ', ''), currLvl)}`
+        const img = document.createElement('img')
+        img.src = `../assets/images/upgrade.png`
+        const next = document.createElement('p')
+        next.textContent = `${getStat(weaponObj.name, name.replace(' ', ''), currLvl + 1)}`
+        appendAll(values, current, img, next)
+    }
+    return values
+}
+
+const createPriceComponent = (weaponObj, name) => {
+    const price = createAndAddClass('div', 'upgrade-stat-price')
+    const currLvl = weaponObj[`${name.replace(' ', '')}lvl`]        
+    if ( currLvl !== 5 ) {
+        const img = document.createElement('img')
+        img.src = `../assets/images/coin.png`
+        const value = createAndAddClass('p', 'upgrade-stat-price-value')
+        value.textContent = `${Math.pow(currLvl, 2) + 2}`
+        appendAll(price, img, value)  
+    }
+    return price
+}
+
+const upgradePopup = (e) => {
+    const itemObj = elementToObject(e.currentTarget)
+    const popupContainer = createAndAddClass('div', 'popup-container', 'ui-theme')
+    const popup = createAndAddClass('div', 'upgrade-popup')
+    const title = createAndAddClass('h2', 'buy-popup-title')
+    title.textContent = `Purchase upgrade?`
+    const btnContainer = createAndAddClass('div', 'upgrade-popup-btn-container')
+    const cancel = createCancelBtn(itemObj)
+    btnContainer.append(cancel)
+    const confirm = createUpgradeConfirmBtn({
+        ...itemObj, 
+        cost: e.currentTarget.children[1].children[2].children[1].textContent,
+        stat: e.currentTarget.children[0].textContent
+    })
+    btnContainer.append(confirm)
+    const message = createAndAddClass('p', 'buy-message')
+    appendAll(
+        popup, 
+        title, 
+        e.currentTarget.children[0].cloneNode(true),
+        e.currentTarget.children[1].children[0].cloneNode(true), 
+        e.currentTarget.children[1].children[1].cloneNode(true), 
+        btnContainer,
+        message
+    )
+    popupContainer.append(popup)
+    getPauseContainer().firstElementChild.append(popupContainer)
+}
+
+const createUpgradeConfirmBtn = (itemObj) => {
+    const confirm = createAndAddClass('button', 'buy-popup-confirm')
+    const img = document.createElement('img')
+    img.src = `../assets/images/coin.png`
+    const p = document.createElement('p')
+    p.textContent = `${itemObj.cost}` 
+    confirm.addEventListener('click', () => {
+        if ( !checkEnoughCoins({price: itemObj.cost}) ) return
+        manageUpgrade(itemObj)
+    })
+    appendAll(confirm, img, p)
+    return confirm
+}
+
+const manageUpgrade = (itemObj) => {
+    useInventoryResource('coin', itemObj.cost)
+    const stat = itemObj.stat.replace(' ', '')
+    upgradeWeaponStat(itemObj.name, stat)
+    removeStore()
+    renderStore()
+    const newElem = objectToElement(itemObj)
+    addAttribute(newElem, stat.concat('lvl'), itemObj[stat.concat('lvl')] + 1)
+    const e = {currentTarget: newElem}
+    renderWeaponStats(e)
 }
 
 const renderSell = () => {
