@@ -1,9 +1,8 @@
-import { calculateTotalAmmo } from "./inventory.js"
-import { getOwnedWeapons } from "./owned-weapons.js"
+import { managePause } from "./controls.js"
 import { addClass, appendAll, createAndAddClass } from "./util.js"
 import { getPauseContainer, getUiEl, setUiEl } from "./elements.js"
+import { calculateTotalAmmo, equippedWeaponFromInventory } from "./inventory.js"
 import { getEquippedWeapon, getHealth, getMaxHealth, getMaxStamina, getStamina } from "./variables.js"
-import { managePause } from "./controls.js"
 
 export const renderUi = () => {
     renderBackground()
@@ -53,11 +52,12 @@ export const renderEquippedWeapon = () => {
     if ( !getEquippedWeapon() ) return    
     const weaponContainer = createAndAddClass('div', 'weapon-container')
     const weaponIcon = createAndAddClass('img', 'weapon-icon')
-    weaponIcon.src = `../assets/images/${getOwnedWeapons().get(getEquippedWeapon()).name}.png`
+    const equippedWeapon = equippedWeaponFromInventory()
+    weaponIcon.src = `../assets/images/${equippedWeapon.name}.png`
     addClass(weaponIcon, 'weapon-icon')
     const ammoCount = createAndAddClass('div', 'ammo-count')
     const mag = document.createElement('p')
-    mag.textContent = `${getOwnedWeapons().get(getEquippedWeapon()).getCurrMag()}`
+    mag.textContent = `${equippedWeapon.currmag}`
     const total = document.createElement('p')
     total.textContent = calculateTotalAmmo()
     appendAll(ammoCount, mag, total)

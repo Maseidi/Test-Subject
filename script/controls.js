@@ -1,11 +1,12 @@
 import { renderStash } from "./stash.js"
+import { getStat } from "./weapon-specs.js"
 import { setupReload } from "./weapon-actions.js"
-import { getOwnedWeapons } from "./owned-weapons.js"
+import { renderStore } from "./vending-machine.js"
 import { removeWeapon, renderWeapon } from "./weapon-loader.js"
 import { renderUi, renderEquippedWeapon } from "./user-interface.js"
 import { getPauseContainer, getPlayer, getUiEl } from "./elements.js"
-import { pickupDrop, removeInventory, renderInventory } from "./inventory.js"
 import { addClass, angleOfTwoPoints, isMoving, removeClass } from "./util.js"
+import { equippedWeaponFromInventory, pickupDrop, removeInventory, renderInventory } from "./inventory.js"
 import { 
     getAimMode,
     getDraggedItem,
@@ -33,7 +34,6 @@ import {
     setShootPressed,
     setSprintPressed,
     setUpPressed } from "./variables.js"
-import { renderStore } from "./vending-machine.js"
 
 export const control = () => {
     onkeydown = (e) => {
@@ -164,7 +164,10 @@ const weaponSlotDown = (key) => {
     }
     setEquippedWeapon(getWeaponWheel()[Number(key) - 1])
     renderEquippedWeapon()
-    if ( getEquippedWeapon() ) setShootCounter(getOwnedWeapons().get(getEquippedWeapon()).getFireRate() * 60)
+    if ( getEquippedWeapon() ) {
+        const equippedWeapon = equippedWeaponFromInventory()
+        setShootCounter(getStat(equippedWeapon.name, 'fireRate', equippedWeapon.fireratelvl) * 60)
+    }
     if ( getEquippedWeapon() && getAimMode() ) {
         renderWeapon()
         return

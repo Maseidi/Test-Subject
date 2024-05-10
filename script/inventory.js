@@ -2,10 +2,9 @@ import { renderStats } from "./weapon-examine.js"
 import { interactables } from "./interactables.js"
 import { getWeaponSpecs } from "./weapon-specs.js"
 import { renderInteractable } from "./room-loader.js"
-import { removeUi, renderQuit, renderUi } from "./user-interface.js"
 import { removeWeapon, renderWeapon } from "./weapon-loader.js"
+import { removeUi, renderQuit, renderUi } from "./user-interface.js"
 import { getCurrentRoom, getPauseContainer, getPlayer } from "./elements.js"
-import { OwnedWeapon, getOwnedWeapons, setOwnedWeapons } from "./owned-weapons.js"
 import { 
     addAttribute,
     addClass,
@@ -13,7 +12,6 @@ import {
     elementToObject,
     objectToElement,
     removeClass,
-    putToMap,
     appendAll, 
     createAndAddClass} from "./util.js"
 import { 
@@ -112,8 +110,8 @@ const searchEmpty = () => {
 
 const checkSpecialScenarios = () => {
     if ( Number(getIntObj().getAttribute("amount")) === 0 ) removeDrop()
-    const currentWeapon = getOwnedWeapons().get(getEquippedWeapon())
-    if ( getEquippedWeapon() && getIntObj().getAttribute('name') === currentWeapon.getAmmoType() && !getPause() ) {
+    const equippedWeapon = equippedWeaponFromInventory()
+    if ( getEquippedWeapon() && getIntObj().getAttribute('name') === equippedWeapon.ammotype && !getPause() ) {
         removeUi()
         renderUi()
     }
@@ -130,13 +128,14 @@ const inventoryFull = () => {
     return true 
 }
 
-export const calculateTotalAmmo = () => {
-    const equippedWeapon = getOwnedWeapons().get(getEquippedWeapon())
-    return countItem(equippedWeapon.getAmmoType())
-}
+export const calculateTotalAmmo = () => countItem(equippedWeaponFromInventory().ammotype)
 
 export const calculateTotalCoins = () => {
     return countItem('coin')
+}
+
+export const equippedWeaponFromInventory = () => {
+    return inventory.flat().filter(item => item && item !== 'taken' && item.id === getEquippedWeapon())[0]
 }
 
 const countItem = (name) => {
@@ -173,12 +172,11 @@ export const useItemAtPosition = (row, column, reduce) => {
     return diff
 }
 
-export const updateInventoryWeaponMag = () => {
+export const updateInventoryWeaponMag = (newMag) => {
     for ( let i = 0; i < inventory.length; i++ ) {
         for ( let j = 0; j < inventory[i].length; j++ ) {
             if ( inventory[i][j] === null || inventory[i][j] === undefined || inventory[i][j] === 'taken' ) continue
-            if ( getOwnedWeapons().has(inventory[i][j].id) ) 
-                inventory[i][j].currMag = getOwnedWeapons().get(inventory[i][j].id).currMag
+            if ( inventory[i][j].id === getEquippedWeapon() ) inventory[i][j].currmag = newMag
         }
     }
 }
@@ -198,26 +196,12 @@ const updateAmount = (newValue) => {
 }
 
 const removeDrop = () => {
-    if ( getWeaponSpecs().get(getIntObj().getAttribute("name")) ) handleNewWeaponPickup()
+    if ( getWeaponSpecs().get(getIntObj().getAttribute("name")) ) updateWeaponWheel()
     getIntObj().remove()
     interactables.set(getCurrentRoomId(), 
     Array.from(interactables.get(getCurrentRoomId())).map((elem, index) => {
         return `${getCurrentRoomId()}-${index}` === getIntObj().getAttribute("id") ? null : elem
     }))
-}
-
-const handleNewWeaponPickup = () => {
-    const weapon = elementToObject(getIntObj())
-    putToMap(getOwnedWeapons, setOwnedWeapons, weapon.id, new OwnedWeapon(
-        weapon.name,
-        weapon.currmag,
-        weapon.damagelvl,
-        weapon.rangelvl,
-        weapon.reloadspeedlvl,
-        weapon.magazinelvl,
-        weapon.fireratelvl 
-    ))
-    updateWeaponWheel()
 }
 
 const updateWeaponWheel = () => {
@@ -232,7 +216,6 @@ const updateWeaponWheel = () => {
 }
 
 export const inventoryHasSpace = (itemObj) => {
-    if ( itemObj.name === 'pouch' ) return
     let count = 0
     inventory.forEach(row => {
         row.forEach(item => {
@@ -288,7 +271,7 @@ export const renderBlocks = () => {
                 const amount = createAndAddClass('div', 'amount')
                 const amountText = document.createElement("p")
                 if ( getWeaponSpecs().get(block.name) === undefined ) amountText.textContent = `${block.amount}`
-                else amountText.textContent = `${getOwnedWeapons().get(block.id).getCurrMag()}`
+                else amountText.textContent = `${block.currmag}`
                 amount.append(amountText)
                 theBlock.append(amount)
             }
@@ -369,7 +352,7 @@ const renderOptions = (item, options) => {
     const itemObj = elementToObject(item)
     if ( itemObj.name === 'bandage' ) createOption(options, 'use')
     if ( getWeaponSpecs().get(itemObj.name) ) {
-        if ( getEquippedWeapon() && itemObj.name === getOwnedWeapons().get(getEquippedWeapon()).name ) {
+        if ( getEquippedWeapon() && itemObj.name === equippedWeaponFromInventory().name ) {
              if ( getReloading() || getShooting() ) renderDropOption = false
         } else {
             if ( !getReloading() && !getShooting() ) createOption(options, 'equip') 
@@ -378,7 +361,7 @@ const renderOptions = (item, options) => {
         createOption(options, 'examine')
     }
     if ( getReloading() ) 
-        if ( itemObj.name === getOwnedWeapons().get(getEquippedWeapon()).getAmmoType() ) renderDropOption = false
+        if ( itemObj.name === equippedWeaponFromInventory().ammotype ) renderDropOption = false
     createOption(options, 'replace')
     if (renderDropOption) createOption(options, 'drop')
 }
@@ -583,7 +566,7 @@ const equip = (item) => {
     const row = itemObj.row
     const column = itemObj.column
     setEquippedWeapon(inventory[row][column].id)
-    setShootCounter(getOwnedWeapons().get(getEquippedWeapon()).getFireRate() * 60)
+    setShootCounter(equippedWeaponFromInventory().firerate * 60)
     if ( getAimMode() ) {
         removeWeapon()
         renderWeapon()
@@ -642,8 +625,7 @@ const findSuitableId = (interactable) => {
 }
 
 export const handleWeaponDrop = (itemObj) => {
-    if ( !getOwnedWeapons().get(itemObj.id) ) return
-    getOwnedWeapons().delete(itemObj.id)
+    if ( !getWeaponSpecs().has(itemObj.name) ) return
     if ( getEquippedWeapon() === itemObj.id ) {
         setEquippedWeapon(null)
         removeClass(getPlayer(), 'aim')
@@ -682,7 +664,10 @@ const renderWeaponWheel = () => {
         const slot = document.createElement("div")
         const image = document.createElement("img")
         const slotNum = document.createElement("p")
-        const name = getOwnedWeapons().get(getWeaponWheel()[4-slots])?.name
+        let name = inventory.flat().filter(item => item && item !== 'taken' && item.id === getWeaponWheel()[4-slots])[0]?.name
+        if ( !name )
+            name = getDraggedItem()?.getAttribute('id') === getWeaponWheel()[4 - slots] + '' 
+        ? getDraggedItem()?.getAttribute('name') : null
         slotNum.textContent = 
             getEquippedWeapon() && 4 - slots === getWeaponWheel().findIndex(x => x === getEquippedWeapon()) ? 'E' : `${5 - slots}`
         if ( name ) {

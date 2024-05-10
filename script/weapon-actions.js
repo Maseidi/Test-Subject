@@ -1,8 +1,8 @@
 import { collide } from "./util.js"
+import { getStat } from "./weapon-specs.js"
 import { removeUi, renderUi } from "./user-interface.js"
 import { getCurrentRoomSolid, getPlayer } from "./elements.js"
-import { OwnedWeapon, getOwnedWeapons } from "./owned-weapons.js"
-import { calculateTotalAmmo, updateInventoryWeaponMag, useInventoryResource } from "./inventory.js"
+import { calculateTotalAmmo, equippedWeaponFromInventory, updateInventoryWeaponMag, useInventoryResource } from "./inventory.js"
 import { 
     getAimMode,
     getEquippedWeapon,
@@ -17,7 +17,9 @@ import {
 
 const EMPTY_WEAPON = new Audio('../assets/audio/empty-weapon.mp3')
 
+let equippedWeapon
 export const manageWeaponActions = () => {
+    equippedWeapon = equippedWeaponFromInventory()
     manageAim()
     manageReload()
     manageShoot()
@@ -27,13 +29,12 @@ let counter = 0
 const manageAim = () => {
     if ( getAimMode() ) {
         counter++
-        if ( counter === 12 ) {
+        if ( counter === 20 ) {
             counter = 0
             setTarget(null)
         } 
-        if ( counter === 0 ) {
-            const equippedWeapon = getOwnedWeapons().get(getEquippedWeapon())
-            const range = equippedWeapon.getRange()
+        if ( counter === 0 ) {       
+            const range = getStat(equippedWeapon.name, 'range', equippedWeapon.rangelvl)
             const laser = getPlayer().children[0].children[0].children[1].children[0]
             laser.style.height = `${range}px`
             Array.from(laser.children).forEach((elem, index) => {
@@ -50,8 +51,7 @@ const manageAim = () => {
 }
 
 export const setupReload = () => {
-    const equippedWeapon = getOwnedWeapons().get(getEquippedWeapon())
-    if ( equippedWeapon.getCurrMag() === equippedWeapon.getMagazine() ) return
+    if ( equippedWeapon.currmag === getStat(equippedWeapon.name, 'magazine', equippedWeapon.magazinelvl) ) return
     if ( calculateTotalAmmo() === 0 ) return
     if ( getShooting() ) return
     setReloading(true)
@@ -60,9 +60,8 @@ export const setupReload = () => {
 let reloadCounter = 0
 const manageReload = () => {
     if ( !getEquippedWeapon() ) return
-    const equippedWeapon = getOwnedWeapons().get(getEquippedWeapon())
     if ( getReloading() ) reloadCounter++
-    if ( reloadCounter / 60 >= equippedWeapon.getReloadSpeed() ) {
+    if ( reloadCounter / 60 >= getStat(equippedWeapon.name, 'reloadSpeed', equippedWeapon.reloadspeedlvl) ) {
         reload()
         setReloading(false)
         reloadCounter = 0
@@ -70,9 +69,8 @@ const manageReload = () => {
 }
 
 const reload = () => {
-    const equippedWeapon = getOwnedWeapons().get(getEquippedWeapon())
-    const mag = equippedWeapon.getMagazine()
-    const currentMag = equippedWeapon.getCurrMag()
+    const mag = getStat(equippedWeapon.name, 'magazine', equippedWeapon.magazinelvl)
+    const currentMag = equippedWeapon.currmag
     const totalAmmo = calculateTotalAmmo()
     const need = mag - currentMag
     const trade = need <= totalAmmo ? need : totalAmmo
@@ -81,10 +79,10 @@ const reload = () => {
 
 const manageShoot = () => {
     if ( !getEquippedWeapon() ) return
-    const equippedWeapon = getOwnedWeapons().get(getEquippedWeapon())
+    const fireRate = getStat(equippedWeapon.name, 'fireRate', equippedWeapon.fireratelvl)
     setShootCounter(getShootCounter() + 1)
-    if ( getShootCounter() / 60 >= equippedWeapon.getFireRate() ) setShootCounter(getShootCounter() - 1)
-    if ( (getShootCounter() + 1) / 60 >= equippedWeapon.getFireRate() ) {
+    if ( getShootCounter() / 60 >= fireRate ) setShootCounter(getShootCounter() - 1)
+    if ( (getShootCounter() + 1) / 60 >= fireRate ) {
         setShooting(false)
         if ( getAimMode() && getShootPressed() && !getReloading() ) {
             setShooting(true)
@@ -95,9 +93,8 @@ const manageShoot = () => {
 }
 
 const shoot = () => {
-    const equippedWeapon = getOwnedWeapons().get(getEquippedWeapon())
     const totalAmmo = calculateTotalAmmo()
-    let currMag = equippedWeapon.getCurrMag()
+    let currMag = equippedWeapon.currmag
     if ( currMag === 0 ) {
         EMPTY_WEAPON.play()
         setShooting(false)
@@ -110,17 +107,8 @@ const shoot = () => {
 }
 
 const updateInventory = (equippedWeapon, newMag, trade) => {
-    const updateWeapon = new OwnedWeapon(
-        equippedWeapon.name,
-        newMag,
-        equippedWeapon.damageLvl,
-        equippedWeapon.rangeLvl,
-        equippedWeapon.reloadSpeedLvl,
-        equippedWeapon.magazineLvl,
-        equippedWeapon.fireRateLvl)
-    useInventoryResource(equippedWeapon.getAmmoType(), trade)    
-    getOwnedWeapons().set(getEquippedWeapon(), updateWeapon)
-    updateInventoryWeaponMag()
+    useInventoryResource(equippedWeapon.ammotype, trade)    
+    updateInventoryWeaponMag(newMag)
     removeUi()
     renderUi()
 }

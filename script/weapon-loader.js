@@ -1,16 +1,16 @@
 import { getPlayer } from "./elements.js"
 import { createAndAddClass } from "./util.js"
-import { getEquippedWeapon } from "./variables.js"
-import { getOwnedWeapons } from "./owned-weapons.js"
+import { getStat, getWeaponSpecs } from "./weapon-specs.js"
+import { equippedWeaponFromInventory } from "./inventory.js"
 
 export const renderWeapon = () => {
-    const ownedWeapon = getOwnedWeapons().get(getEquippedWeapon())
+    const equippedWeapon = equippedWeaponFromInventory()
     const weapon = createAndAddClass('div', 'weapon')
-    weapon.style.height = `${ownedWeapon.getHeight()}px`
-    weapon.style.backgroundColor = `${ownedWeapon.getColor()}`
+    weapon.style.height = `${getWeaponSpecs().get(equippedWeapon.name).height}px`
+    weapon.style.backgroundColor = `${getWeaponSpecs().get(equippedWeapon.name).color}`
     const laser = createAndAddClass('div', 'laser')
-    laser.style.height = `${ownedWeapon.getRange()}px`
-    laser.style.backgroundColor = `${ownedWeapon.getAntivirus()}`
+    laser.style.height = `${getStat(equippedWeapon.name, 'range', equippedWeapon.rangelvl)}px`
+    laser.style.backgroundColor = `${getWeaponSpecs().get(equippedWeapon.name).antivirus}`
     for ( let i = 0; i < 100; i++ ) laser.append(document.createElement("div"))
     weapon.append(laser)
     getPlayer().children[0].children[0].append(weapon)

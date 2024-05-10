@@ -1,5 +1,5 @@
-import { getPlayer } from "./elements.js"
 import { isMoving } from "./util.js"
+import { getPlayer } from "./elements.js"
 import {
     getAimMode,
     getAimingPlayerAngle,

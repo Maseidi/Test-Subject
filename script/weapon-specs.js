@@ -31,6 +31,8 @@ class Weapon {
     }
 }
 
+export const getStat = (weaponName, statName, statLvl) => weapons.get(weaponName)[statName][statLvl - 1]
+
 const weapons = new Map([
     ["remington1858", new Weapon(
         "remington 1858",

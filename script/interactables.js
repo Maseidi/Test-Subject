@@ -107,6 +107,7 @@ export class WeaponDrop extends Drop {
         this.reloadSpeedLvl = reloadSpeedLvl
         this.magazineLvl = magazineLvl
         this.fireRateLvl = fireRateLvl
+        this.ammoType = getWeaponSpecs().get(name).ammoType
     }
 }
 

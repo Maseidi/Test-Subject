@@ -1,6 +1,7 @@
+import { getStat } from "./weapon-specs.js"
 import { renderQuit } from "./user-interface.js"
 import { getPauseContainer } from "./elements.js"
-import { OwnedWeapon, getOwnedWeapons } from "./owned-weapons.js"
+import { equippedWeaponFromInventory } from "./inventory.js"
 import { addClass, appendAll, createAndAddClass } from "./util.js"
 
 export const renderStats = (itemObj) => {
@@ -16,9 +17,9 @@ export const renderStats = (itemObj) => {
     weaponStatsDesc.textContent = itemObj.description
     const damage = createStat(itemObj, 'damage', 'damage')
     const range = createStat(itemObj, 'range', 'range')
-    const reload = createStat(itemObj, 'reload speed', 'reloadspeed')
+    const reload = createStat(itemObj, 'reload speed', 'reloadSpeed')
     const magazine = createStat(itemObj, 'magazine', 'magazine')
-    const firerate = createStat(itemObj, 'fire rate', 'firerate')
+    const firerate = createStat(itemObj, 'fire rate', 'fireRate')
     appendAll(weaponStats, imgContainer, weaponStatsName, weaponStatsDesc, damage, range, reload, magazine, firerate)
     weaponStatsContainer.append(weaponStats)
     getPauseContainer().append(weaponStatsContainer)
@@ -32,13 +33,13 @@ const createStat = (itemObj, title, name) => {
     const statName = createAndAddClass('p', 'stat-name')
     statName.textContent = title
     const statLvl = createAndAddClass('p', 'stat-lvl')
-    statLvl.textContent = `Lvl. ${itemObj[name+'lvl']}`
+    statLvl.textContent = `Lvl. ${itemObj[name.toLowerCase()+'lvl']}`
     const value = createAndAddClass('div', 'value')
     value.textContent = `${getValue(itemObj, name)}`
     const lower = createAndAddClass('div', 'lower')
     for ( let i = 1; i <= 5; i++ ) {
         const level = document.createElement('div')
-        if ( i <= itemObj[name+'lvl'] ) addClass(level, 'active')
+        if ( i <= itemObj[name.toLowerCase()+'lvl'] ) addClass(level, 'active')
         else addClass(level, 'inactive')   
         lower.append(level) 
     }
@@ -49,13 +50,8 @@ const createStat = (itemObj, title, name) => {
 }
 
 const getValue = (itemObj, name) => {
-    let equippedWeapon = getOwnedWeapons().get(itemObj.id)
-    if ( !equippedWeapon ) equippedWeapon = new OwnedWeapon(itemObj.name, 0, 1, 1, 1, 1, 1)
-    let result
-    if ( name === 'damage' ) result = equippedWeapon.getDamage()
-    else if ( name === 'range' ) result = equippedWeapon.getRange()
-    else if ( name === 'reloadspeed' ) result = equippedWeapon.getReloadSpeed()
-    else if ( name === 'magazine' ) result = equippedWeapon.getMagazine()
-    else if ( name === 'firerate' ) result = equippedWeapon.getFireRate()
-    return result    
+    let equippedWeapon = equippedWeaponFromInventory()
+    if ( !equippedWeapon ) 
+        equippedWeapon = {name: itemObj.name, currmag: 0, damagelvl: 1, rangelvl: 1, reloadspeedlvl: 1, magazinelvl: 1, fireratelvl: 1}
+    return getStat(equippedWeapon.name, name, equippedWeapon[name.toLowerCase().concat('lvl')])
 }

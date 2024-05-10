@@ -1,5 +1,5 @@
-import { getRoom } from "./rooms.js"
 import { collide } from "./util.js"
+import { getRoom } from "./rooms.js"
 import { loadCurrentRoom } from "./room-loader.js"
 import { getCurrentRoom, getCurrentRoomInteractables, getCurrentRoomLoaders, getCurrentRoomSolid, getPlayer } from "./elements.js"
 import { 

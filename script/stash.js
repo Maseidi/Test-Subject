@@ -1,4 +1,3 @@
-import { managePause } from "./controls.js"
 import { renderQuit } from "./user-interface.js"
 import { getPauseContainer } from "./elements.js"
 import { getIntObj, setIntObj } from "./variables.js"

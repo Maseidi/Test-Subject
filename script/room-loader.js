@@ -1,7 +1,7 @@
 import { getRoom } from "./rooms.js"
 import { getWeaponSpecs } from "./weapon-specs.js"
 import { getCurrentRoomId, getRoomLeft, getRoomTop } from "./variables.js"
-import { addClass, addToArray, appendAll, createAndAddClass, objectToElement } from "./util.js"
+import { addClass, appendAll, createAndAddClass, objectToElement } from "./util.js"
 import { 
     getCurrentRoomInteractables, 
     getCurrentRoomLoaders,
@@ -42,7 +42,7 @@ const renderWalls = (room, roomToRender) => {
         if ( elem.top !== undefined ) wall.style.top = `${elem.top}px`
         else if ( elem.bottom !== undefined ) wall.style.bottom = `${elem.bottom}px`
         roomToRender.append(wall)
-        addToArray(getCurrentRoomSolid, setCurrentRoom, wall)
+        getCurrentRoomSolid().push(wall)
     })
 }
 
@@ -57,7 +57,7 @@ const renderLoaders = (room, roomToRender) => {
         if ( elem.top !== undefined ) loader.style.top = `${elem.top}px`
         else if ( elem.bottom !== undefined ) loader.style.bottom = `${elem.bottom}px`
         roomToRender.append(loader)
-        addToArray(getCurrentRoomLoaders, setCurrentRoomLoaders, loader)
+        getCurrentRoomLoaders().push(loader)
     })
 }
 
@@ -78,8 +78,8 @@ export const renderInteractable = (root, interactable, index) => {
     renderImage(int, interactable)
     renderPopUp(int, interactable)
     root.append(int)
-    if ( interactable.solid ) addToArray(getCurrentRoomSolid, setCurrentRoomSolid, int)
-    addToArray(getCurrentRoomInteractables, setCurrentRoomInteractables, int)
+    if ( interactable.solid ) getCurrentRoomSolid().push(int)
+    getCurrentRoomInteractables().push(int)
 }
 
 const renderImage = (int, interactable) => {

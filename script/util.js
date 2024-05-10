@@ -52,18 +52,6 @@ export const addAttribute = (elem, name, value) => {
     elem.setAttributeNode(attr)
 }
 
-export const addToArray = (getter, setter, value) => {
-    let copyArr = getter()
-    copyArr.push(value)
-    setter(copyArr)
-}
-
-export const putToMap = (getter, setter, key, value) => {
-    let copyMap = getter()
-    copyMap.set(key, value)
-    setter(copyMap)
-}
-
 export const isNullOrUndefined = (input) => input === null || input === undefined
 
 export const objectToElement = (obj) => {

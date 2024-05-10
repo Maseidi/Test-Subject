@@ -1,6 +1,7 @@
 import { Drop } from "./interactables.js"
 import { renderQuit } from "./user-interface.js"
 import { getPauseContainer } from "./elements.js"
+import { renderStats } from "./weapon-examine.js"
 import { getWeaponSpecs } from "./weapon-specs.js"
 import { getProgressCounter, setIntObj } from "./variables.js"
 import { getShopItems, getShopItemsWithId } from "./shop-item.js"
