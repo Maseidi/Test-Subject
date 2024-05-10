@@ -34,17 +34,13 @@ export const removeClass = (elem, className) => {
     if ( containsClass(elem, className) ) elem.classList.remove(className)
 }
 
-export const containsClass = (elem, className) => {
-    return elem.classList.contains(className)
-}
+export const containsClass = (elem, className) => elem.classList.contains(className)
 
 export const appendAll = (root, ...elems) => {
     elems.forEach(elem => root.append(elem))
 }
 
-export const isMoving = () => {
-    return getUpPressed() || getDownPressed() || getLeftPressed() || getRightPressed()
-}
+export const isMoving = () => getUpPressed() || getDownPressed() || getLeftPressed() || getRightPressed()
 
 export const addAttribute = (elem, name, value) => {
     const attr = document.createAttribute(name)

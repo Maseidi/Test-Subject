@@ -51,7 +51,7 @@ const createStat = (itemObj, title, name) => {
 
 const getValue = (itemObj, name) => {
     let equippedWeapon = equippedWeaponFromInventory()
-    if ( !equippedWeapon ) 
+    if ( !equippedWeapon || equippedWeapon.name !== itemObj.name ) 
         equippedWeapon = {name: itemObj.name, currmag: 0, damagelvl: 1, rangelvl: 1, reloadspeedlvl: 1, magazinelvl: 1, fireratelvl: 1}
     return getStat(equippedWeapon.name, name, equippedWeapon[name.toLowerCase().concat('lvl')])
 }
