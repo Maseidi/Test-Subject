@@ -46,7 +46,7 @@ export class Bandage extends Drop {
     }
 }
 
-class Coin extends Drop {
+export class Coin extends Drop {
     constructor(left, top, amount) {
         super(25, left, top, "coin", "coin", "Pick up", amount, 1, "A neccesity when trading with the vending machine", undefined)
     }

@@ -1,11 +1,11 @@
-import { Drop, interactables } from "./interactables.js"
+import { Coin, Drop, WeaponDrop, interactables } from "./interactables.js"
 import { renderQuit } from "./user-interface.js"
 import { getPauseContainer } from "./elements.js"
 import { renderStats } from "./weapon-examine.js"
 import { getStat, getWeaponSpecs } from "./weapon-specs.js"
-import { getCurrentRoomId, getProgressCounter, setIntObj } from "./variables.js"
+import { getCurrentRoomId, getIntObj, getProgressCounter, setIntObj } from "./variables.js"
 import { getShopItems, getShopItemsWithId } from "./shop-item.js"
-import { calculateTotalCoins, getInventory, inventoryHasSpace, pickupDrop, upgradeInventory, upgradeWeaponStat, useInventoryResource } from "./inventory.js"
+import { MAX_PACKSIZE, calculateTotalCoins, getInventory, handleWeaponDrop, inventoryHasSpace, pickupDrop, upgradeInventory, upgradeWeaponStat, useInventoryResource } from "./inventory.js"
 import { 
     addAttribute,
     addClass,
@@ -134,7 +134,7 @@ const buyPopup = (e) => {
     createExamineBtn(itemObj, btnContainer)
     const confirm = createConfirmBtn(itemObj)
     btnContainer.append(confirm)
-    const message = createAndAddClass('p', 'buy-message')
+    const message = createAndAddClass('p', 'message')
     appendAll(popup, title, imageHeading, description, btnContainer, message)
     popupContainer.append(popup)
     getPauseContainer().firstElementChild.append(popupContainer)
@@ -142,7 +142,7 @@ const buyPopup = (e) => {
 
 
 const createCancelBtn = () => {
-    const cancel = createAndAddClass('button', 'buy-popup-cancel')
+    const cancel = createAndAddClass('button', 'popup-cancel')
     cancel.textContent = `cancel`
     cancel.addEventListener('click', (e) => e.target.parentElement.parentElement.parentElement.remove())
     return cancel
@@ -150,9 +150,10 @@ const createCancelBtn = () => {
 
 const createExamineBtn = (itemObj, btnContainer) => {
     if ( getWeaponSpecs().get(itemObj.name) ) {
-        const examine = createAndAddClass('button', 'buy-popup-examine')
+        const examine = createAndAddClass('button', 'popup-examine')
         examine.textContent = `examine`
-        examine.addEventListener('click', () => renderStats({
+        const weapon = getInventory().flat().filter(item => item && item !== 'taken' && item.name === itemObj.name)[0]
+        examine.addEventListener('click', () => renderStats( weapon || {
             ...getWeaponSpecs().get(itemObj.name), 
             name: itemObj.name, damagelvl: 1, fireratelvl: 1, reloadspeedlvl: 1, magazinelvl:1, rangelvl: 1
         }))
@@ -161,7 +162,7 @@ const createExamineBtn = (itemObj, btnContainer) => {
 }
 
 const createConfirmBtn = (itemObj) => {
-    const confirm = createAndAddClass('button', 'buy-popup-confirm')
+    const confirm = createAndAddClass('button', 'popup-confirm')
     const img = document.createElement('img')
     img.src = `../assets/images/coin.png`
     const p = document.createElement('p')
@@ -187,7 +188,7 @@ const checkEnoughCoins = (itemObj) => {
 const addMessage = (input) => {
     const message = getPauseContainer().firstElementChild.children[4].firstElementChild.lastElementChild
     message.textContent = input
-    addClass(message, 'buy-message-animation')
+    addClass(message, 'message-animation')
 }
 
 const managePurchase = (itemObj) => {
@@ -198,17 +199,20 @@ const managePurchase = (itemObj) => {
         return
     }
     let chosenItem = getShopItems()[itemObj.id]
-    chosenItem = handleNewWeapnPurchase(chosenItem, itemObj)
-    setIntObj(objectToElement(chosenItem))
+    let purchasedItem = new Drop(
+        chosenItem.width, chosenItem.left, chosenItem.top, chosenItem.name, chosenItem.heading, 
+        chosenItem.popup, chosenItem.amount, chosenItem.space, chosenItem.description, chosenItem.price)
+    purchasedItem = handleNewWeapnPurchase(purchasedItem, itemObj)
+    setIntObj(objectToElement(purchasedItem))
     pickupDrop()
     submitPurchase(itemObj.id)
 }
 
-const handleNewWeapnPurchase = (chosenItem, itemObj) => {
-    if ( !getWeaponSpecs().has(itemObj.name) ) return chosenItem 
+const handleNewWeapnPurchase = (purchasedItem, itemObj) => {
+    if ( !getWeaponSpecs().has(itemObj.name) ) return purchasedItem 
     interactables.get(getCurrentRoomId()).push(null)
     return {
-        ...chosenItem,
+        ...purchasedItem,
         id: `${getCurrentRoomId()}-${interactables.get(getCurrentRoomId()).length}}`,
         currmag: 0, 
         damagelvl: 1, 
@@ -346,7 +350,7 @@ const upgradePopup = (e) => {
         stat: e.currentTarget.children[0].textContent
     })
     btnContainer.append(confirm)
-    const message = createAndAddClass('p', 'buy-message')
+    const message = createAndAddClass('p', 'message')
     appendAll(
         popup, 
         title, 
@@ -361,7 +365,7 @@ const upgradePopup = (e) => {
 }
 
 const createUpgradeConfirmBtn = (itemObj) => {
-    const confirm = createAndAddClass('button', 'buy-popup-confirm')
+    const confirm = createAndAddClass('button', 'popup-confirm')
     const img = document.createElement('img')
     img.src = `../assets/images/coin.png`
     const p = document.createElement('p')
@@ -389,7 +393,96 @@ const manageUpgrade = (itemObj) => {
 const renderSell = () => {
     if ( page !== 3 ) return
     const sell = createAndAddClass('div', 'sell')
+    getInventory()
+        .flat()
+        .filter(item => item && item !== 'taken' && item.name !== 'coin'
+        && item.amount === (MAX_PACKSIZE[item.name] ? MAX_PACKSIZE[item.name] : 1) )
+        .forEach(item => {
+            const sellItem = objectToElement(item)
+            addClass(sellItem, 'sell-item')
+            const wrapper = createAndAddClass('div', 'sell-wrapper')
+            const img = createAndAddClass('img', 'sell-item-img')
+            img.src = `../assets/images/${item.name}.png` 
+            const name = createAndAddClass('p', 'sell-item-name')
+            name.textContent = `${item.heading}`
+            const amount = createAndAddClass('p', 'sell-item-amount')
+            amount.textContent = `${item.amount}`
+            const price = createAndAddClass('p', 'sell-item-price')
+            price.textContent = `${item.price * item.amount}`
+            const sellItemCoin = createAndAddClass('img', 'sell-item-coin')
+            sellItemCoin.src = `../assets/images/coin.png` 
+            const info = createAndAddClass('div', 'info')
+            const left = createAndAddClass('div', 'left')
+            const right = createAndAddClass('div', 'right')
+            sellItem.addEventListener('click', sellPopup)
+            appendAll(left, name, amount)
+            appendAll(right, price, sellItemCoin)
+            appendAll(info, left, right)
+            appendAll(wrapper, img, info)
+            appendAll(sellItem, wrapper)
+            sell.append(sellItem)
+        })
     getPauseContainer().firstElementChild.children[2].append(sell)
+}
+
+const sellPopup = (e) => {
+    const itemObj = elementToObject(e.currentTarget)
+    const popupContainer = createAndAddClass('div', 'popup-container', 'ui-theme')
+    const popup = createAndAddClass('div', 'sell-popup')
+    const title = createAndAddClass('h2', 'sell-popup-title')
+    title.textContent = `Sell item?`
+    const image = createAndAddClass('img', 'sell-popup-img')
+    image.src = `../assets/images/${itemObj.name}.png`
+    const heading = createAndAddClass('h2', 'sell-popup-heading')
+    const imageHeading = createAndAddClass('div', 'sell-heading-container')
+    appendAll(imageHeading, image, heading)
+    if (getWeaponSpecs().get(itemObj.name)) heading.textContent = `${itemObj.heading}`
+    else heading.textContent = `${itemObj.amount} ${itemObj.heading}`
+    const description = createAndAddClass('p', 'sell-popup-description')
+    description.textContent = `${itemObj.description}`
+    const btnContainer = createAndAddClass('div', 'sell-popup-btn-container')
+    const cancel = createCancelBtn(itemObj)
+    btnContainer.append(cancel)
+    createExamineBtn(itemObj, btnContainer)
+    const confirm = confirmSellBtn(itemObj)
+    btnContainer.append(confirm)
+    const message = createAndAddClass('p', 'message')
+    appendAll(popup, title, imageHeading, description, btnContainer, message)
+    popupContainer.append(popup)
+    getPauseContainer().firstElementChild.append(popupContainer)
+}
+
+const confirmSellBtn = (itemObj) => {
+    const confirm = createAndAddClass('button', 'popup-confirm')
+    const img = document.createElement('img')
+    img.src = `../assets/images/coin.png`
+    const p = document.createElement('p')
+    p.textContent = `${itemObj.price * itemObj.amount}` 
+    appendAll(confirm, img, p)
+    confirm.addEventListener('click', () => {
+        manageSell(itemObj)
+    })
+    return confirm
+}
+
+const manageSell = (itemObj) => {
+    const gain = itemObj.price * itemObj.amount
+    const gainSpace = itemObj.space
+    setIntObj(objectToElement(new Coin(null, null, gain)))
+    pickupDrop()
+    let left = getIntObj().getAttribute('amount')
+    useInventoryResource('coin', gain-left)
+    left -= gainSpace * 10
+    if ( left <= 0 ) {
+        useInventoryResource(itemObj.name, itemObj.amount)
+        setIntObj(objectToElement(new Coin(null, null, gain)))
+        pickupDrop()
+        handleWeaponDrop(itemObj)
+        removeStore()
+        renderStore()
+        return
+    }
+    addMessage('No enough space') 
 }
 
 const removeStore = () => {

@@ -38,7 +38,7 @@ import {
 
 export const MAX_PACKSIZE = {
     bandage: 3,
-    coin: 5,
+    coin: 10,
     hardDrive: 2,
     smgAmmo: 90,
     pistolAmmo: 30,
@@ -648,8 +648,7 @@ const dropFromInventory = (itemObj) => {
 
 const findSuitableId = (interactable) => {
     const roomInts = interactables.get(getCurrentRoomId())
-    roomInts.push(interactable)
-    return roomInts.length
+    return roomInts.push(interactable)
 }
 
 export const handleWeaponDrop = (itemObj) => {

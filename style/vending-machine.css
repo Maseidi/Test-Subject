@@ -83,6 +83,7 @@
 }
 
 .buy-item,
+.sell-item,
 .upgrade-item,
 .upgrade-stat-component {
   padding: 15px;
@@ -99,6 +100,7 @@
 }
 
 .buy-item:hover,
+.sell-item:hover,
 .upgrade-item:hover,
 .upgrade-stat-component:hover {
   background-color: rgba(255, 255, 255, 0.1);
@@ -125,6 +127,7 @@
 }
 
 .buy-wrapper,
+.sell-wrapper,
 .upgrade-wrapper {
   width: 100%;
   display: flex;
@@ -133,12 +136,20 @@
   align-items: center;
 }
 
+.buy-item-name,
+.sell-item-name,
+.upgrade-item-name {
+  text-transform: capitalize;
+}
+
 .buy-item-img,
+.sell-item-img,
 .upgrade-item-img {
   height: 60px;
 }
 
-.buy-item-coin {
+.buy-item-coin,
+.sell-item-coin {
   height: 40px;
 }
 
@@ -171,7 +182,9 @@
   top: 0;
 }
 
-.buy-popup, .upgrade-popup {
+.buy-popup,
+.upgrade-popup,
+.sell-popup {
   position: fixed;
   left: 50%;
   top: 50%;
@@ -185,7 +198,8 @@
   flex-direction: column;
 }
 
-.buy-popup {
+.buy-popup,
+.sell-popup {
   gap: 40px;
 }
 
@@ -194,12 +208,14 @@
   align-items: center;
 }
 
-.buy-popup-title {
+.buy-popup-title,
+.sell-popup-title {
   text-align: center;
   text-transform: capitalize;
 }
 
-.buy-heading-container {
+.buy-heading-container,
+.sell-heading-container {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -207,7 +223,9 @@
   text-transform: capitalize;
 }
 
-.buy-popup-btn-container, .upgrade-popup-btn-container {
+.buy-popup-btn-container,
+.upgrade-popup-btn-container,
+.sell-popup-btn-container {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -217,17 +235,19 @@
   gap: 100px;
 }
 
-.buy-popup-btn-container > button:hover {
+.buy-popup-btn-container > button:hover,
+.sell-popup-btn-container > button:hover {
   filter: brightness(120%);
 }
 
-.buy-popup-img {
+.buy-popup-img,
+.sell-popup-img {
   height: 60px;
 }
 
-.buy-popup-cancel,
-.buy-popup-confirm,
-.buy-popup-examine {
+.popup-cancel,
+.popup-confirm,
+.popup-examine {
   border: none;
   padding: 10px;
   border-radius: 3px;
@@ -236,17 +256,17 @@
   letter-spacing: 2px;
 }
 
-.buy-popup-cancel {
+.popup-cancel {
   background-color: crimson;
 }
 
-.buy-popup-examine {
+.popup-examine {
   background-color: black;
   color: white;
   border: 1px solid white;
 }
 
-.buy-popup-confirm {
+.popup-confirm {
   background-color: forestgreen;
   display: flex;
   flex-direction: row;
@@ -255,7 +275,7 @@
   gap: 10px;
 }
 
-.buy-popup-confirm > img {
+.popup-confirm > img {
   width: 25px;
 }
 
@@ -268,7 +288,7 @@
   }
 }
 
-.buy-message {
+.message {
   color: red;
   width: max-content;
   font-weight: bold;
@@ -281,7 +301,7 @@
   margin-top: 10px;
 }
 
-.buy-message-animation {
+.message-animation {
   animation-name: message;
   animation-duration: 500ms;
   animation-iteration-count: 8;
@@ -297,10 +317,6 @@
   height: inherit;
   border-left: 1px solid wheat;
   overflow: auto;
-}
-
-.sell {
-  background-color: blue;
 }
 
 .active-page {
