@@ -118,36 +118,15 @@ const checkSpecialScenarios = () => {
     }
 }
 
-const inventoryFull = () => {
-    for (const row of inventory) {
-        for ( const item of row ) {
-            if ( item === null ) {
-                return false
-            }
-        }
-    }  
-    return true 
-}
+const inventoryFull = () => inventory.flat().reduce((a, b) => a && (b !== null), true)
+
+export const equippedWeaponFromInventory = () => inventory.flat().filter(item => item && item.id === getEquippedWeapon())[0]
 
 export const calculateTotalAmmo = () => countItem(equippedWeaponFromInventory().ammotype)
 
-export const calculateTotalCoins = () => {
-    return countItem('coin')
-}
+export const calculateTotalCoins = () => countItem('coin')
 
-export const equippedWeaponFromInventory = () => {
-    return inventory.flat().filter(item => item && item !== 'taken' && item.id === getEquippedWeapon())[0]
-}
-
-const countItem = (name) => {
-    let count = 0
-    inventory.forEach((row) => {
-        row.forEach((item) => {
-            if ( item && item.name === name ) count += item.amount
-        })
-    })
-    return count
-}
+const countItem = (name) => inventory.flat().filter(item => item && item.name === name).reduce((a, b) => a + b.amount, 0)
 
 export const useInventoryResource = (name, reduce) => {
     for ( let i = inventory.length - 1; i >= 0; i-- ) {
@@ -167,19 +146,14 @@ export const useItemAtPosition = (row, column, reduce) => {
     if ( inventory[row][column].amount === 0 ) {
         inventory[row][column] = null
         for ( let i = 1; i < space; i++ ) 
-            if ( inventory[row][column + i] === 'taken' )
-                inventory[row][column + i] = null
+            if ( inventory[row][column + i] === 'taken' ) inventory[row][column + i] = null
     }
     return diff
 }
 
 export const updateInventoryWeaponMag = (newMag) => {
-    for ( let i = 0; i < inventory.length; i++ ) {
-        for ( let j = 0; j < inventory[i].length; j++ ) {
-            if ( inventory[i][j] === null || inventory[i][j] === undefined || inventory[i][j] === 'taken' ) continue
-            if ( inventory[i][j].id === getEquippedWeapon() ) inventory[i][j].currmag = newMag
-        }
-    }
+    const weapon = equippedWeaponFromInventory()
+    inventory[weapon.row][weapon.column].currmag = newMag
 }
 
 const updateAmount = (newValue) => {
@@ -239,10 +213,8 @@ const lookForItems = (itemObj) => {
     let count = 0
     inventory.forEach(row => {
         row.forEach(item => {
-            if ( item !== undefined && item !== 'taken' ) {
-                if ( item && item.name === itemObj.name ) count += MAX_PACKSIZE[item.name] - item.amount
-                else if ( item === null ) count += MAX_PACKSIZE[itemObj.name]
-            }
+            if ( item && item.name === itemObj.name ) count += MAX_PACKSIZE[item.name] - item.amount
+            else if ( item === null ) count += MAX_PACKSIZE[itemObj.name]
         })
     })
     return count >= itemObj.amount
@@ -262,11 +234,8 @@ export const upgradeInventory = () => {
 }
 
 export const upgradeWeaponStat = (name, stat) => {
-    inventory.forEach((row, rowIdx) => {
-        row.forEach((elem, columnIdx) => {
-            if ( elem && elem !== 'taken' && elem.name === name ) inventory[rowIdx][columnIdx][stat+'lvl'] += 1 
-        })
-    })
+    const weapon = inventory.flat().filter(item => item && item.name === name)[0]
+    inventory[weapon.row][weapon.column][stat+'lvl'] += 1
 }
 
 export const renderInventory = () => {
