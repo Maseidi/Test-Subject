@@ -112,7 +112,7 @@ const checkSpecialScenarios = () => {
     if ( getPause() ) return
     if ( Number(getIntObj().getAttribute("amount")) === 0 ) removeDrop()
     const equippedWeapon = equippedWeaponFromInventory()
-    if ( getEquippedWeapon() && getIntObj().getAttribute('name') === getWeaponSpecs().get(equippedWeapon.name).ammoType ) {
+    if ( getEquippedWeapon() && getIntObj().getAttribute('name') === getWeaponSpecs().get(equippedWeapon.name).ammotype ) {
         removeUi()
         renderUi()
     }
@@ -649,11 +649,10 @@ const dropFromInventory = (itemObj) => {
 
 const findSuitableId = (interactable) => {
     const roomInts = interactables.get(getCurrentRoomId())
-    return roomInts.push(interactable)
+    return roomInts.push(interactable) - 1
 }
 
 export const handleWeaponDrop = (itemObj) => {
-    console.log(1);
     if ( !getWeaponSpecs().has(itemObj.name) ) return
     if ( getEquippedWeapon() === itemObj.id ) {
         setEquippedWeapon(null)

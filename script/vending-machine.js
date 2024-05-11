@@ -220,7 +220,7 @@ const handleNewWeapnPurchase = (purchasedItem, itemObj) => {
         reloadspeedlvl: 1, 
         magazinelvl: 1, 
         fireratelvl: 1, 
-        ammotype: getWeaponSpecs().get(itemObj.name).ammoType
+        ammotype: getWeaponSpecs().get(itemObj.name).ammotype
     }
 }
 

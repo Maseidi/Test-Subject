@@ -1,7 +1,7 @@
 class Weapon {
     constructor(
         heading,
-        ammoType,
+        ammotype,
         height,
         color,
         antivirus,
@@ -15,7 +15,7 @@ class Weapon {
         description,
         price) {
         this.heading = heading    
-        this.ammoType = ammoType
+        this.ammotype = ammotype
         this.height = height
         this.color = color
         this.antivirus = antivirus
