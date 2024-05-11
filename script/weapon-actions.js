@@ -29,7 +29,7 @@ let counter = 0
 const manageAim = () => {
     if ( getAimMode() ) {
         counter++
-        if ( counter === 20 ) {
+        if ( counter === 10 ) {
             counter = 0
             setTarget(null)
         } 

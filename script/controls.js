@@ -266,6 +266,7 @@ const disableDirection = (setPressed) => {
 const ShiftUp = () => {
     setSprintPressed(false)
     stopWalkingAnimation()
+    if ( isMoving() ) addClass(getPlayer(), 'walk')
 }
 
 const stopWalkingAnimation = () => {
