@@ -245,6 +245,7 @@ const rDown = () => {
 
 const escapeDown = () => {
     if ( !getPause() ) return
+    if ( getDraggedItem() ) return
     getPauseContainer().lastElementChild.remove()
     if ( getPauseContainer().children.length === 0 ) managePause()
 }

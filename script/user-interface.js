@@ -2,7 +2,7 @@ import { managePause } from "./controls.js"
 import { addClass, appendAll, createAndAddClass } from "./util.js"
 import { getPauseContainer, getUiEl, setUiEl } from "./elements.js"
 import { calculateTotalAmmo, equippedWeaponFromInventory } from "./inventory.js"
-import { getEquippedWeapon, getHealth, getMaxHealth, getMaxStamina, getStamina } from "./variables.js"
+import { getDraggedItem, getEquippedWeapon, getHealth, getMaxHealth, getMaxStamina, getStamina } from "./variables.js"
 
 export const renderUi = () => {
     renderBackground()
@@ -77,6 +77,7 @@ export const renderQuit = () => {
     quitText.textContent = 'quit'
     appendAll(quitContainer, quitBtn, quitText)
     quitContainer.addEventListener('click', () => {
+        if ( getDraggedItem() ) return
         getPauseContainer().lastElementChild.remove()
         if ( getPauseContainer().children.length === 0 ) managePause()
     })
