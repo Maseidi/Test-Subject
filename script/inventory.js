@@ -107,6 +107,7 @@ const searchEmpty = () => {
 }
 
 const checkSpecialScenarios = () => {
+    if ( getWeaponSpecs().get(getIntObj().getAttribute("name")) ) updateWeaponWheel()
     if ( getPause() ) return
     if ( Number(getIntObj().getAttribute("amount")) === 0 ) removeDrop()
     const equippedWeapon = equippedWeaponFromInventory()
@@ -165,7 +166,6 @@ const updateAmount = (newValue) => {
 }
 
 const removeDrop = () => {
-    if ( getWeaponSpecs().get(getIntObj().getAttribute("name")) ) updateWeaponWheel()
     getIntObj().remove()
     interactables.set(getCurrentRoomId(), 
     interactables.get(getCurrentRoomId()).map((elem, index) =>

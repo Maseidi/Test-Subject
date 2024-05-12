@@ -227,7 +227,7 @@ const handleNewWeapnPurchase = (purchasedItem, itemObj) => {
     interactables.get(getCurrentRoomId()).push(null)
     return {
         ...purchasedItem,
-        id: `${getCurrentRoomId()}-${interactables.get(getCurrentRoomId()).length}}`,
+        id: `${getCurrentRoomId()}-${interactables.get(getCurrentRoomId()).length}`,
         currmag: 0, 
         damagelvl: 1, 
         rangelvl: 1, 
