@@ -190,35 +190,6 @@ const updateWeaponWheel = () => {
     setWeaponWheel(weaponWheelCopy)
 }
 
-export const inventoryHasSpace = (itemObj) => {
-    if ( getWeaponSpecs().has(itemObj.name) ) return lookForWeaponSpace(itemObj)
-    return lookForItems(itemObj)    
-}
-
-const lookForWeaponSpace = (itemObj) => {
-    let found = false
-    for ( let i = 0; i < inventory.length; i++ ) {
-        for ( let j = 0; j < inventory[i].length; j++ ) {
-            for ( let k = 0; k < itemObj.space; k++ ) {
-                if ( inventory[i][j + k] !== null ) continue
-                else if ( inventory[i][j + k] === null && k === itemObj.space - 1 ) found = true
-            }
-        }
-    }
-    return found
-}
-
-const lookForItems = (itemObj) => {
-    let count = 0
-    inventory.forEach(row => {
-        row.forEach(item => {
-            if ( item && item.name === itemObj.name ) count += MAX_PACKSIZE[item.name] - item.amount
-            else if ( item === null ) count += MAX_PACKSIZE[itemObj.name]
-        })
-    })
-    return count >= itemObj.amount
-}
-
 export const upgradeInventory = () => {
     let found = false
     inventory.forEach((row, rowIdx) => {

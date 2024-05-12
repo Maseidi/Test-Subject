@@ -1,11 +1,19 @@
-import { Coin, Drop, WeaponDrop, interactables } from "./interactables.js"
 import { renderQuit } from "./user-interface.js"
 import { getPauseContainer } from "./elements.js"
 import { renderStats } from "./weapon-examine.js"
 import { getStat, getWeaponSpecs } from "./weapon-specs.js"
-import { getCurrentRoomId, getIntObj, getProgressCounter, setIntObj } from "./variables.js"
+import { Coin, Drop, interactables } from "./interactables.js"
 import { getShopItems, getShopItemsWithId } from "./shop-item.js"
-import { MAX_PACKSIZE, calculateTotalCoins, getInventory, handleWeaponDrop, inventoryHasSpace, pickupDrop, upgradeInventory, upgradeWeaponStat, useInventoryResource } from "./inventory.js"
+import { getCurrentRoomId, getIntObj, getProgressCounter, setIntObj } from "./variables.js"
+import { 
+    MAX_PACKSIZE,
+    calculateTotalCoins,
+    getInventory,
+    handleWeaponDrop,
+    pickupDrop,
+    upgradeInventory,
+    upgradeWeaponStat,
+    useInventoryResource } from "./inventory.js"
 import { 
     addAttribute,
     addClass,
