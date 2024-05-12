@@ -22,9 +22,7 @@ let stash = []
 export const setStash = (val) => {
     stash = val
 }
-export const getStash = () => {
-    return stash
-}
+export const getStash = () => stash
 
 export const renderStash = () => {
     renderBackground()

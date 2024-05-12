@@ -24,26 +24,19 @@ export const managePlayerMovement = () => {
 
 const move = () => {
     let speed = normalizeSpeed()
-    if ( getUpPressed() ) {
-        setMapY(getMapY() + speed)
-        setPlayerY(getPlayerY() - speed)
-    }
-    if ( getDownPressed() ) {
-        setMapY(getMapY() - speed)
-        setPlayerY(getPlayerY() + speed)
-    }
-    if ( getLeftPressed() ) {
-        setMapX(getMapX() + speed)
-        setPlayerX(getPlayerX() - speed)
-    }
-    if ( getRightPressed() ) {
-        setMapX(getMapX() - speed)
-        setPlayerX(getPlayerX() + speed)
-    }
+    if ( getUpPressed() ) changePosition(setMapY, getMapY, setPlayerY, getPlayerY, speed)
+    if ( getDownPressed() ) changePosition(setMapY, getMapY, setPlayerY, getPlayerY, -speed)
+    if ( getLeftPressed() ) changePosition(setMapX, getMapX, setPlayerX, getPlayerX, speed)
+    if ( getRightPressed() ) changePosition(setMapX, getMapX, setPlayerX, getPlayerX, -speed)
     getMapEl().style.left = `${getMapX()}px`
     getMapEl().style.top = `${getMapY()}px`
     getPlayer().style.left = `${getPlayerX()}px`
     getPlayer().style.top = `${getPlayerY()}px`        
+}
+
+const changePosition = (setMap, getMap, setPlayer, getPlayer, speed) => {
+    setMap(getMap() + speed)
+    setPlayer(getPlayer() - speed)
 }
 
 const normalizeSpeed = () => {

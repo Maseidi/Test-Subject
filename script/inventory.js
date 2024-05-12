@@ -56,9 +56,7 @@ let inventory = [
     [undefined, undefined, undefined, undefined],
 ]
 
-export const getInventory = () => {
-    return inventory
-}
+export const getInventory = () => inventory
 
 export const pickupDrop = () => {
     searchPack()

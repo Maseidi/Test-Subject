@@ -90,11 +90,6 @@ let shopItems = [
 export const setShopItems = (val) => {
     shopItems = val
 }
-export const getShopItems = () => {
-    return shopItems
-}
-export const getShopItemsWithId = () => {
-    return shopItems.map((item, index) => { 
-        return {...item, id:index}
-    })
-}
+export const getShopItems = () => shopItems
+
+export const getShopItemsWithId = () => shopItems.map((item, index) => { return {...item, id:index}})

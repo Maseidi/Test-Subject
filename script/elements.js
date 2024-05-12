@@ -2,70 +2,52 @@ let mapEl
 export const setMapEl = (val) => {
     mapEl = val
 }
-export const getMapEl = () => {
-    return mapEl
-}
+export const getMapEl = () => mapEl
 
 let roomContainer
 export const setRoomContainer = (val) => {
     roomContainer = val
 }
-export const getRoomContainer = () => {
-    return roomContainer
-}
+export const getRoomContainer = () => roomContainer
 
 let pauseContainer
 export const setPauseContainer = (val) => {
     pauseContainer = val
 }
-export const getPauseContainer = () => {
-    return pauseContainer
-}
+export const getPauseContainer = () => pauseContainer
 
 let uiEl
 export const setUiEl = (val) => {
     uiEl = val
 }
-export const getUiEl = () => {
-    return uiEl
-}
+export const getUiEl = () => uiEl
 
 let currentRoom
 export const setCurrentRoom = (val) => {
     currentRoom = val
 }
-export const getCurrentRoom = () => {
-    return currentRoom
-}
+export const getCurrentRoom = () => currentRoom
 
 let currentRoomSolid
 export const setCurrentRoomSolid = (val) => {
     currentRoomSolid = val
 }
-export const getCurrentRoomSolid = () => {
-    return currentRoomSolid
-}
+export const getCurrentRoomSolid = () => currentRoomSolid
 
 let currentRoomLoaders
 export const setCurrentRoomLoaders = (val) => {
     currentRoomLoaders = val
 }
-export const getCurrentRoomLoaders = () => {
-    return currentRoomLoaders
-}
+export const getCurrentRoomLoaders = () => currentRoomLoaders
 
 let currentRoomInteractables
 export const setCurrentRoomInteractables = (val) => {
     currentRoomInteractables = val
 }
-export const getCurrentRoomInteractables = () => {
-    return currentRoomInteractables
-}
+export const getCurrentRoomInteractables = () => currentRoomInteractables
 
 let player
 export const setPlayer = (val) => {
     player = val
 }
-export const getPlayer = () => {
-    return player
-}
+export const getPlayer = () => player
