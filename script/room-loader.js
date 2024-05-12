@@ -29,7 +29,6 @@ export const loadCurrentRoom = () => {
     roomToRender.style.backgroundColor = `lightgray`
     renderWalls(roomToRender)
     renderLoaders(roomToRender)
-    refactorInteractables(getCurrentRoomId())
     renderInteractables(roomToRender)
     setCurrentRoom(roomToRender)
     getRoomContainer().append(roomToRender)
@@ -67,8 +66,6 @@ const renderLoaders = (roomToRender) => {
 
 const renderInteractables = (roomToRender) => 
     interactables.get(getCurrentRoomId()).forEach((interactable, index) => renderInteractable(roomToRender, interactable, index))
-
-const refactorInteractables = (id) => interactables.set(id, interactables.get(id).filter(int => int !== null))
 
 export const renderInteractable = (root, interactable, index) => {
     const int = objectToElement(interactable)

@@ -2,6 +2,7 @@ import { rooms } from "./rooms.js"
 import { collide } from "./util.js"
 import { loaders } from "./loaders.js"
 import { loadCurrentRoom } from "./room-loader.js"
+import { interactables } from "./interactables.js"
 import { getCurrentRoom, getCurrentRoomInteractables, getCurrentRoomLoaders, getCurrentRoomSolid, getPlayer } from "./elements.js"
 import { 
     getCurrentRoomId,
@@ -36,13 +37,15 @@ const manageLoaders = () => {
     calculateNewRoomLeftAndTop(cpu.left, cpu.top)
     getCurrentRoom().remove()
     loadCurrentRoom()
+    refactorInteractables(getPrevRoomId())
 }
+
+const refactorInteractables = (id) => interactables.set(id, interactables.get(id).filter(int => int !== null))
 
 const calculateNewRoomLeftAndTop = (cpuLeft, cpuTop) => {
     const newRoom = rooms.get(getCurrentRoomId())
     const loader = loaders.get(getCurrentRoomId()).find(loader => loader.className === getPrevRoomId())
-    let left
-    let top
+    let left, top
     if ( loader.bottom !== undefined )
         top = loader.bottom === -26 ? newRoom.height - loader.height - loader.bottom - 52 : 
         newRoom.height - loader.height - loader.bottom

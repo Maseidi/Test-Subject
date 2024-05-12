@@ -187,7 +187,7 @@ export const upgradeInventory = () => {
 }
 
 export const upgradeWeaponStat = (name, stat) => {
-    const weapon = inventory.flat().filter(item => item && item.name === name)[0]
+    const weapon = inventory.flat().find(item => item && item.name === name)
     inventory[weapon.row][weapon.column][stat+'lvl'] += 1
 }
 
@@ -345,7 +345,7 @@ const renderGrid = () => {
         for ( let j = 0; j < inventory[i].length; j++ ) {
             const item = inventory[i][j]
             const block = objectToElement({row: i, column: j})
-            if ( item && item !== 'taken' && item.name == getDraggedItem().getAttribute('name') &&
+            if ( item && item.name == getDraggedItem().getAttribute('name') &&
                 MAX_PACKSIZE[item.name] >= item.amount + Number(getDraggedItem().getAttribute('amount'))) 
                 addClass(block, 'combine')
             block.addEventListener('click', checkReplace, true)
@@ -540,10 +540,8 @@ const selectAsSlot = (e) => {
     const slotWeaponId = getWeaponWheel()[targetSlotNum]
     const selectedId = e.target.getAttribute('selected-weapon')
     const selectedSlotNum = getWeaponWheel().findIndex(x => x === selectedId)
-    const weaponWheelCopy = getWeaponWheel()
-    weaponWheelCopy[targetSlotNum] = selectedId
-    weaponWheelCopy[selectedSlotNum] = slotWeaponId
-    setWeaponWheel(weaponWheelCopy)
+    setWeaponWheel(getWeaponWheel()
+        .map((slot, idx) => idx === targetSlotNum ? selectedId : ( idx === selectedSlotNum ? slotWeaponId : slot )))
     removeInventory()
     renderInventory()
 }
@@ -614,7 +612,7 @@ const renderWeaponWheel = () => {
         const slot = document.createElement("div")
         const image = document.createElement("img")
         const slotNum = document.createElement("p")
-        let name = inventory.flat().filter(item => item && item !== 'taken' && item.id === getWeaponWheel()[4-slots])[0]?.name
+        let name = inventory.flat().find(item => item && item.id === getWeaponWheel()[4-slots])?.name
         if ( !name )
             name = getDraggedItem()?.getAttribute('id') === getWeaponWheel()[4 - slots] + '' 
         ? getDraggedItem()?.getAttribute('name') : null

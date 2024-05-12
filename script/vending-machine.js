@@ -160,7 +160,7 @@ const createExamineBtn = (itemObj, btnContainer) => {
     if ( getWeaponSpecs().get(itemObj.name) ) {
         const examine = createAndAddClass('button', 'popup-examine')
         examine.textContent = `examine`
-        const weapon = getInventory().flat().filter(item => item && item !== 'taken' && item.name === itemObj.name)[0]
+        const weapon = getInventory().flat().find(item => item && item.name === itemObj.name)
         examine.addEventListener('click', () => renderStats( weapon || {
             ...getWeaponSpecs().get(itemObj.name), 
             name: itemObj.name, damagelvl: 1, fireratelvl: 1, reloadspeedlvl: 1, magazinelvl:1, rangelvl: 1
@@ -409,7 +409,7 @@ const renderSell = () => {
     const sell = createAndAddClass('div', 'sell')
     getInventory()
         .flat()
-        .filter(item => item && item !== 'taken' && item.name !== 'coin'
+        .filter(item => item && item.name !== 'coin'
         && item.amount === (MAX_PACKSIZE[item.name] ? MAX_PACKSIZE[item.name] : 1) )
         .forEach(item => {
             const sellItem = objectToElement(item)

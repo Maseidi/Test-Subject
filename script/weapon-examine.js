@@ -51,7 +51,7 @@ const createStat = (itemObj, name) => {
 }
 
 const getValue = (itemObj, name) => {
-    let weapon = getInventory().flat().filter(item => item && item !== 'taken' && item.name === itemObj.name)[0]
+    let weapon = getInventory().flat().find(item => item && item.name === itemObj.name)
     if ( !weapon ) 
         weapon = {name: itemObj.name, currmag: 0, damagelvl: 1, rangelvl: 1, reloadspeedlvl: 1, magazinelvl: 1, fireratelvl: 1}  
     return getStat(weapon.name, name.replace(' ', ''), weapon[name.replace(' ', '').concat('lvl')])
