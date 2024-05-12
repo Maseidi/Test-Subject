@@ -170,11 +170,7 @@ const createConfirmBtn = (itemObj) => {
     appendAll(confirm, img, p)
     confirm.addEventListener('click', () => {
         if ( !checkEnoughCoins(itemObj) ) return
-        if ( itemObj.name !== 'pouch' && !inventoryHasSpace(itemObj) ) {
-            addMessage('no enough space')
-            return
-        }
-        managePurchase(itemObj)
+        manageBuy(itemObj)
     })
     return confirm
 }
@@ -191,21 +187,31 @@ const addMessage = (input) => {
     addClass(message, 'message-animation')
 }
 
-const managePurchase = (itemObj) => {
-    useInventoryResource('coin', itemObj.price)
+const manageBuy = (itemObj) => {
+    const loss = itemObj.price
+    const needSpace = itemObj.space
+    useInventoryResource('coin', loss)
     if ( itemObj.name === 'pouch' ) {
         upgradeInventory()
         submitPurchase(itemObj.id)
         return
     }
-    let chosenItem = getShopItems()[itemObj.id]
-    let purchasedItem = new Drop(
-        chosenItem.width, chosenItem.left, chosenItem.top, chosenItem.name, chosenItem.heading, 
-        chosenItem.popup, chosenItem.amount, chosenItem.space, chosenItem.description, chosenItem.price)
-    purchasedItem = handleNewWeapnPurchase(purchasedItem, itemObj)
-    setIntObj(objectToElement(purchasedItem))
+    const freeSpace = getInventory().flat().filter(item => item === null).length
+    setIntObj(objectToElement(new Coin(null, null, loss)))
     pickupDrop()
-    submitPurchase(itemObj.id)
+    if ( freeSpace >= needSpace ) {
+        useInventoryResource('coin', loss)
+        let chosenItem = getShopItems()[itemObj.id]
+        let purchasedItem = new Drop(
+            chosenItem.width, chosenItem.left, chosenItem.top, chosenItem.name, chosenItem.heading, 
+            chosenItem.popup, chosenItem.amount, chosenItem.space, chosenItem.description, chosenItem.price)
+        purchasedItem = handleNewWeapnPurchase(purchasedItem, itemObj)
+        setIntObj(objectToElement(purchasedItem))
+        pickupDrop()
+        submitPurchase(itemObj.id)
+        return
+    }
+    addMessage('No enough space')
 }
 
 const handleNewWeapnPurchase = (purchasedItem, itemObj) => {

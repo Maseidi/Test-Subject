@@ -1,7 +1,7 @@
 import { renderStats } from "./weapon-examine.js"
 import { interactables } from "./interactables.js"
-import { getStat, getWeaponSpecs } from "./weapon-specs.js"
 import { renderInteractable } from "./room-loader.js"
+import { getStat, getWeaponSpecs } from "./weapon-specs.js"
 import { removeWeapon, renderWeapon } from "./weapon-loader.js"
 import { removeUi, renderQuit, renderUi } from "./user-interface.js"
 import { getCurrentRoom, getPauseContainer, getPlayer } from "./elements.js"
@@ -193,7 +193,6 @@ const updateWeaponWheel = () => {
 export const inventoryHasSpace = (itemObj) => {
     if ( getWeaponSpecs().has(itemObj.name) ) return lookForWeaponSpace(itemObj)
     return lookForItems(itemObj)    
-    
 }
 
 const lookForWeaponSpace = (itemObj) => {
