@@ -36,9 +36,7 @@ export const removeClass = (elem, className) => {
 
 export const containsClass = (elem, className) => elem.classList.contains(className)
 
-export const appendAll = (root, ...elems) => {
-    elems.forEach(elem => root.append(elem))
-}
+export const appendAll = (root, ...elems) => elems.forEach(elem => root.append(elem))
 
 export const isMoving = () => getUpPressed() || getDownPressed() || getLeftPressed() || getRightPressed()
 
@@ -54,8 +52,7 @@ export const objectToElement = (obj) => {
     if ( isNullOrUndefined(obj) ) return document.createElement('div')
     const props = Object.getOwnPropertyNames(obj)
     const elem = document.createElement('div')
-    for ( const prop of props )
-         if ( !isNullOrUndefined(obj[prop]) ) addAttribute(elem, prop, obj[prop])
+    props.filter(prop => !isNullOrUndefined(obj[prop])).forEach(prop => addAttribute(elem, prop, obj[prop]))
     return elem     
 }
 

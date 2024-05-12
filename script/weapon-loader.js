@@ -16,6 +16,4 @@ export const renderWeapon = () => {
     getPlayer().children[0].children[0].append(weapon)
 }
 
-export const removeWeapon = () => {
-    getPlayer().children[0].children[0].children[1]?.remove()
-}
+export const removeWeapon = () => getPlayer().children[0].children[0].children[1]?.remove()

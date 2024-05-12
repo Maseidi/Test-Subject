@@ -116,9 +116,9 @@ const checkSpecialScenarios = () => {
     }
 }
 
-const inventoryFull = () => inventory.flat().reduce((a, b) => a && (b !== null), true)
+const inventoryFull = () => inventory.flat().every(item => item !== null)
 
-export const equippedWeaponFromInventory = () => inventory.flat().filter(item => item && item.id === getEquippedWeapon())[0]
+export const equippedWeaponFromInventory = () => inventory.flat().find(item => item && item.id === getEquippedWeapon())
 
 export const calculateTotalAmmo = () => countItem(equippedWeaponFromInventory().ammotype)
 
@@ -127,13 +127,9 @@ export const calculateTotalCoins = () => countItem('coin')
 const countItem = (name) => inventory.flat().filter(item => item && item.name === name).reduce((a, b) => a + b.amount, 0)
 
 export const useInventoryResource = (name, reduce) => {
-    for ( let i = inventory.length - 1; i >= 0; i-- ) {
-        for ( let j = inventory[i].length - 1; j >= 0; j-- ) {
-            if ( reduce === 0 ) return
-            if ( inventory[i][j] === null || inventory[i][j] === undefined || inventory[i][j] === 'taken' ) continue
-            if ( inventory[i][j].name === name ) reduce -= useItemAtPosition(i, j, reduce)
-        }
-    }
+    for ( let i = inventory.length - 1; i >= 0; i-- )
+        for ( let j = inventory[i].length - 1; j >= 0; j-- )
+            if ( reduce !== 0 && inventory[i][j] && inventory[i][j].name === name ) reduce -= useItemAtPosition(i, j, reduce)
 }
 
 export const useItemAtPosition = (row, column, reduce) => {
@@ -159,7 +155,7 @@ const updateAmount = (newValue) => {
     if ( getIntObj().children.length === 0 ) return
     getIntObj().children[1].children[0].textContent = `${newValue} ${getIntObj().getAttribute("heading")}`
     interactables.set(getCurrentRoomId(), 
-    Array.from(interactables.get(getCurrentRoomId())).map((int, index) => {
+    interactables.get(getCurrentRoomId()).map((int, index) => {
         return `${getCurrentRoomId()}-${index}` === getIntObj().getAttribute("id") ? 
         {
             ...int,
@@ -172,33 +168,22 @@ const removeDrop = () => {
     if ( getWeaponSpecs().get(getIntObj().getAttribute("name")) ) updateWeaponWheel()
     getIntObj().remove()
     interactables.set(getCurrentRoomId(), 
-    Array.from(interactables.get(getCurrentRoomId())).map((elem, index) => {
-        return `${getCurrentRoomId()}-${index}` === getIntObj().getAttribute("id") ? null : elem
-    }))
+    interactables.get(getCurrentRoomId()).map((elem, index) =>
+        `${getCurrentRoomId()}-${index}` === getIntObj().getAttribute("id") ? null : elem
+    ))
 }
 
 const updateWeaponWheel = () => {
-    let weaponWheelCopy = getWeaponWheel()
-    for (const key in getWeaponWheel()) {
-        if ( getWeaponWheel()[key] === null ) {
-            weaponWheelCopy[key] = getIntObj().getAttribute('id')
-            break
-        }
-    }
-    setWeaponWheel(weaponWheelCopy)
+    const index = getWeaponWheel().findIndex(item => item === null)
+    setWeaponWheel(getWeaponWheel().map((weapon, idx) => idx === index ? getIntObj().getAttribute('id') : weapon ))
 }
 
 export const upgradeInventory = () => {
-    let found = false
-    inventory.forEach((row, rowIdx) => {
-        row.forEach((item, columnIdx) => {
-            if ( item === undefined && !found ) {
-                inventory[rowIdx][columnIdx] = null
-                inventory[rowIdx][columnIdx + 1] = null
-                found = true
-            }
-        })
-    })
+    const index = inventory.flat().findIndex(block => block === undefined)
+    const row = Math.floor(index / 4)
+    const column = index % 4
+    inventory[row][column] = null
+    inventory[row][column + 1] = null
 }
 
 export const upgradeWeaponStat = (name, stat) => {

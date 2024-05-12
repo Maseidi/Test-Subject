@@ -45,7 +45,7 @@ const renderPlayer = () => {
     loadPlayer()
 }
 
-const centralizePlayer = () => {
+export const centralizePlayer = () => {
     const xDiff = getMapX() + getPlayerX() - window.innerWidth / 2
     const yDiff = getMapY() + getPlayerY() - window.innerHeight / 2
     getMapEl().style.transform = `translateX(${-xDiff}px) translateY(${-yDiff}px)`

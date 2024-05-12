@@ -1,11 +1,12 @@
 import { renderStash } from "./stash.js"
 import { getStat } from "./weapon-specs.js"
+import { centralizePlayer } from "./startup.js"
 import { setupReload } from "./weapon-actions.js"
 import { renderStore } from "./vending-machine.js"
 import { removeWeapon, renderWeapon } from "./weapon-loader.js"
-import { renderUi, renderEquippedWeapon } from "./user-interface.js"
 import { getPauseContainer, getPlayer, getUiEl } from "./elements.js"
 import { addClass, angleOfTwoPoints, isMoving, removeClass } from "./util.js"
+import { renderUi, renderEquippedWeapon, quitPage } from "./user-interface.js"
 import { equippedWeaponFromInventory, pickupDrop, removeInventory, renderInventory } from "./inventory.js"
 import { 
     getAimMode,
@@ -116,6 +117,8 @@ export const control = () => {
     onmousedown = (e) => clickDown(e)
     
     onmouseup = (e) => clickUp(e)
+
+    onresize = (e) => centralizePlayer()
 
 }
 
@@ -245,9 +248,7 @@ const rDown = () => {
 
 const escapeDown = () => {
     if ( !getPause() ) return
-    if ( getDraggedItem() ) return
-    getPauseContainer().lastElementChild.remove()
-    if ( getPauseContainer().children.length === 0 ) managePause()
+    quitPage()
 }
 
 const wUp = () => disableDirection(setUpPressed)

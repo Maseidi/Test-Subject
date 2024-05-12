@@ -76,10 +76,12 @@ export const renderQuit = () => {
     const quitText = document.createElement("p")
     quitText.textContent = 'quit'
     appendAll(quitContainer, quitBtn, quitText)
-    quitContainer.addEventListener('click', () => {
-        if ( getDraggedItem() ) return
-        getPauseContainer().lastElementChild.remove()
-        if ( getPauseContainer().children.length === 0 ) managePause()
-    })
+    quitContainer.addEventListener('click', quitPage)
     getPauseContainer().lastElementChild.append(quitContainer)
+}
+
+export const quitPage = () => {
+    if ( getDraggedItem() ) return
+    getPauseContainer().lastElementChild.remove()
+    if ( getPauseContainer().children.length === 0 ) managePause()
 }

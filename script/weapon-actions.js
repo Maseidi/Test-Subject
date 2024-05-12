@@ -27,26 +27,24 @@ export const manageWeaponActions = () => {
 
 let counter = 0
 const manageAim = () => {
-    if ( getAimMode() ) {
-        counter++
-        if ( counter === 15 ) {
-            counter = 0
-            setTarget(null)
-        } 
-        if ( counter === 0 ) {       
-            const range = getStat(equippedWeapon.name, 'range', equippedWeapon.rangelvl)
-            const laser = getPlayer().children[0].children[0].children[1].children[0]
-            laser.style.height = `${range}px`
-            Array.from(laser.children).forEach((elem, index) => {
-                for ( const solid of getCurrentRoomSolid() ) {
-                    if ( collide(elem, solid, 0) ) {
-                        setTarget(solid)
-                        laser.style.height = `${index/100 * range}px`
-                        return
-                    }
+    if ( !getAimMode() ) return
+    counter++
+    if ( counter === 15 ) {
+        counter = 0
+        setTarget(null)
+    } 
+    if ( counter === 0 ) {       
+        const range = getStat(equippedWeapon.name, 'range', equippedWeapon.rangelvl)
+        const laser = getPlayer().children[0].children[0].children[1].children[0]
+        laser.style.height = `${range}px`
+        Array.from(laser.children).forEach((elem, index) => {
+            for ( const solid of getCurrentRoomSolid() ) {
+                if ( collide(elem, solid, 0) ) {
+                    setTarget(solid)
+                    laser.style.height = `${index/100 * range}px`
                 }
-            })
-        }
+            }
+        })
     }
 }
 

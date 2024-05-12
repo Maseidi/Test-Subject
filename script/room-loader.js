@@ -1,4 +1,7 @@
-import { getRoom } from "./rooms.js"
+import { walls } from "./walls.js"
+import { rooms } from "./rooms.js"
+import { loaders } from "./loaders.js"
+import { interactables } from "./interactables.js"
 import { getWeaponSpecs } from "./weapon-specs.js"
 import { getCurrentRoomId, getRoomLeft, getRoomTop } from "./variables.js"
 import { addClass, appendAll, createAndAddClass, objectToElement } from "./util.js"
@@ -14,7 +17,7 @@ import {
     } from "./elements.js"
 
 export const loadCurrentRoom = () => {
-    const room = getRoom(getCurrentRoomId())
+    const room = rooms.get(getCurrentRoomId())
     setCurrentRoomSolid([])
     setCurrentRoomLoaders([])
     setCurrentRoomInteractables([])
@@ -24,15 +27,16 @@ export const loadCurrentRoom = () => {
     roomToRender.style.left = `${getRoomLeft()}px`
     roomToRender.style.top = `${getRoomTop()}px`
     roomToRender.style.backgroundColor = `lightgray`
-    renderWalls(room, roomToRender)
-    renderLoaders(room, roomToRender)
-    renderInteractables(room, roomToRender)
+    renderWalls(roomToRender)
+    renderLoaders(roomToRender)
+    refactorInteractables(getCurrentRoomId())
+    renderInteractables(roomToRender)
     setCurrentRoom(roomToRender)
     getRoomContainer().append(roomToRender)
 }
 
-const renderWalls = (room, roomToRender) => {
-    Array.from(room.walls).forEach((elem, index) => {
+const renderWalls = (roomToRender) => {
+    walls.get(getCurrentRoomId()).forEach((elem, index) => {
         const wall = createAndAddClass('div', `wall-${index+1}`, 'solid')
         wall.style.backgroundColor = `darkgray`
         wall.style.width = `${elem.width}px`
@@ -46,8 +50,8 @@ const renderWalls = (room, roomToRender) => {
     })
 }
 
-const renderLoaders = (room, roomToRender) => {
-    Array.from(room.loaders).forEach((elem) => {
+const renderLoaders = (roomToRender) => {
+    loaders.get(getCurrentRoomId()).forEach((elem) => {
         const loader = createAndAddClass('div', elem.className, 'loader')
         loader.style.width = `${elem.width}px`
         loader.style.height = `${elem.height}px`
@@ -61,12 +65,10 @@ const renderLoaders = (room, roomToRender) => {
     })
 }
 
-const renderInteractables = (room, roomToRender) => {
-    if ( !room.interactables ) return
-    Array.from(room.interactables).forEach((interactable, index) => {
-        if (interactable) renderInteractable(roomToRender, interactable, index)
-    })
-}
+const renderInteractables = (roomToRender) => 
+    interactables.get(getCurrentRoomId()).forEach((interactable, index) => renderInteractable(roomToRender, interactable, index))
+
+const refactorInteractables = (id) => interactables.set(id, interactables.get(id).filter(int => int !== null))
 
 export const renderInteractable = (root, interactable, index) => {
     const int = objectToElement(interactable)

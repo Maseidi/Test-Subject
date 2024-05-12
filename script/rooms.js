@@ -1,29 +1,11 @@
-import { walls } from "./walls.js"
-import { loaders } from "./loaders.js"
-import { interactables } from "./interactables.js"
-
 class Room {
     constructor(width, height) {
         this.width = width
         this.height = height
     }
-
-    setId(id) {
-        this.id = id
-        this.walls = walls.get(id)
-        this.loaders = loaders.get(id)
-        this.interactables = interactables.get(id)
-    }
-
 }
 
-export const getRoom = (id) => {
-    const room = rooms.get(id)
-    room.setId(id)
-    return room
-}
-
-const rooms = new Map([
+export const rooms = new Map([
     [1, new Room(1100, 1100)],
     [2, new Room(1000, 1000)],
     [3, new Room(1000, 1000)],
