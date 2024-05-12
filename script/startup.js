@@ -1,8 +1,8 @@
 import { createAndAddClass } from "./util.js"
 import { renderUi } from "./user-interface.js"
 import { loadPlayer } from "./player-loader.js"
-import { getMapX, getMapY } from "./variables.js"
 import { loadCurrentRoom } from "./room-loader.js"
+import { getMapX, getMapY, getPlayerX, getPlayerY } from "./variables.js"
 import { getMapEl, setMapEl, setPauseContainer, setRoomContainer } from "./elements.js"
 
 export const startUp = () => {
@@ -12,6 +12,7 @@ export const startUp = () => {
     renderRoomContainer()
     renderCurrentRoom()
     renderPlayer()
+    centralizePlayer()
 }
 
 const renderPauseContainer = () => {
@@ -42,4 +43,10 @@ const renderCurrentRoom = () => {
 
 const renderPlayer = () => {
     loadPlayer()
+}
+
+const centralizePlayer = () => {
+    const xDiff = getMapX() + getPlayerX() - window.innerWidth / 2
+    const yDiff = getMapY() + getPlayerY() - window.innerHeight / 2
+    getMapEl().style.transform = `translateX(${-xDiff}px) translateY(${-yDiff}px)`
 }
