@@ -1,5 +1,6 @@
 import { renderStash } from "./stash.js"
 import { getStat } from "./weapon-specs.js"
+import { dropLoot } from "./loot-manager.js"
 import { centralizePlayer } from "./startup.js"
 import { setupReload } from "./weapon-actions.js"
 import { renderStore } from "./vending-machine.js"
@@ -200,11 +201,14 @@ const fDown = () => {
     if ( getShooting() || getReloading() ) return    
     if ( getIntObj().getAttribute('name') === 'stash' ) openStash()    
     if ( getIntObj().getAttribute('name') === 'vendingMachine' ) openVendingMachine()    
+    if ( getIntObj().getAttribute('name') === 'crate' ) breakCrate()    
 }
 
 const openStash = () => openPause('stash', renderStash)
 
 const openVendingMachine = () => openPause('store', renderStore)
+
+const breakCrate = () => dropLoot(getIntObj())
 
 const openPause = (cause, func) => {
     setPauseCause(cause)
@@ -267,7 +271,7 @@ const disableDirection = (setPressed) => {
 const ShiftUp = () => {
     setSprintPressed(false)
     stopWalkingAnimation()
-    if ( isMoving() ) addClass(getPlayer(), 'walk')
+    if ( isMoving() && !getAimMode() ) addClass(getPlayer(), 'walk')
 }
 
 const stopWalkingAnimation = () => {

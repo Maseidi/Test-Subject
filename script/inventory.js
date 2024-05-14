@@ -109,7 +109,7 @@ const searchEmpty = () => {
 const checkSpecialScenarios = () => {
     if ( getWeaponSpecs().get(getIntObj().getAttribute("name")) ) updateWeaponWheel()
     if ( getPause() ) return
-    if ( Number(getIntObj().getAttribute("amount")) === 0 ) removeDrop()
+    if ( Number(getIntObj().getAttribute("amount")) === 0 ) removeDrop(getIntObj())
     const equippedWeapon = equippedWeaponFromInventory()
     if ( getEquippedWeapon() && getIntObj().getAttribute('name') === getWeaponSpecs().get(equippedWeapon.name).ammotype ) {
         removeUi()
@@ -165,11 +165,11 @@ const updateAmount = (newValue) => {
     })) 
 }
 
-const removeDrop = () => {
-    getIntObj().remove()
+export const removeDrop = (element) => {
+    element.remove()
     interactables.set(getCurrentRoomId(), 
     interactables.get(getCurrentRoomId()).map((elem, index) =>
-        `${getCurrentRoomId()}-${index}` === getIntObj().getAttribute("id") ? null : elem
+        `${getCurrentRoomId()}-${index}` === element.getAttribute("id") ? null : elem
     ))
 }
 
@@ -567,7 +567,7 @@ const dropFromInventory = (itemObj) => {
         for ( let k = 1; k < itemObj.space; k++ ) inventory[row][column+k] = null
 }
 
-const findSuitableId = (interactable) => {
+export const findSuitableId = (interactable) => {
     const roomInts = interactables.get(getCurrentRoomId())
     return roomInts.push(interactable) - 1
 }

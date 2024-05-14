@@ -54,15 +54,13 @@ const manageNonAimModeAngle = () => {
     else if (getLeftPressed())                      newState = changeState(2, '-4px', 'calc(50% - 2px)')
     else if (getUpPressed())                        newState = changeState(4, 'calc(50% - 2px)', '-4px')
     else if (getRightPressed())                     newState = changeState(6, '100%', 'calc(50% - 2px)')
-          
-    if ( !getAimMode() ) {
-        let diff = newState - getPlayerAngleState()   
-        if (Math.abs(diff) > 4 && diff >= 0) diff = -(8 - diff)
-        else if (Math.abs(diff) > 4 && diff < 0) diff = 8 - Math.abs(diff)   
-        setPlayerAngle(getPlayerAngle() + diff * 45)
-        getPlayer().firstElementChild.firstElementChild.style.transform = `rotateZ(${getPlayerAngle()}deg)`
-        setPlayerAngleState(newState)
-    }
+    if ( getAimMode() ) return
+    let diff = newState - getPlayerAngleState()   
+    if (Math.abs(diff) > 4 && diff >= 0) diff = -(8 - diff)
+    else if (Math.abs(diff) > 4 && diff < 0) diff = 8 - Math.abs(diff)   
+    setPlayerAngle(getPlayerAngle() + diff * 45)
+    getPlayer().firstElementChild.firstElementChild.style.transform = `rotateZ(${getPlayerAngle()}deg)`
+    setPlayerAngleState(newState)          
 }
 
 const changeState = (state, left, top) => {

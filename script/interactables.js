@@ -34,6 +34,12 @@ class VendingMachine extends Interactable {
     }
 }
 
+class Crate extends Interactable {
+    constructor(left, top) {
+        super(35, left, top, "crate", "crate", "Break", true, undefined, undefined, undefined, undefined)
+    }
+}
+
 export class Drop extends Interactable {
     constructor(width, left, top, name, heading, popup, amount, space, description, price) {
         super(width, left, top, name, heading, popup, false, amount, space, description, price)
@@ -128,7 +134,13 @@ export const interactables = new Map([
         new SmgAmmo(200, 400, 100),
         new MagnumAmmo(500, 100, 1),
         new RifleAmmo(400, 100, 2),
-        new VendingMachine(900, 100)
+        new VendingMachine(900, 100),
+        new Crate(900, 300),
+        new Crate(900, 400),
+        new Crate(900, 500),
+        new Crate(900, 600),
+        new Crate(900, 700),
+        new Crate(900, 800),
         ]
     ], [2, 
         []
