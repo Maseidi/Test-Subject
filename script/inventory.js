@@ -175,7 +175,7 @@ export const removeDrop = (element) => {
 
 const updateWeaponWheel = () => {
     const index = getWeaponWheel().findIndex(item => item === null)
-    setWeaponWheel(getWeaponWheel().map((weapon, idx) => idx === index ? getIntObj().getAttribute('id') : weapon ))
+    getWeaponWheel()[index] = getIntObj().getAttribute('id')
 }
 
 export const upgradeInventory = () => {
@@ -540,8 +540,8 @@ const selectAsSlot = (e) => {
     const slotWeaponId = getWeaponWheel()[targetSlotNum]
     const selectedId = e.target.getAttribute('selected-weapon')
     const selectedSlotNum = getWeaponWheel().findIndex(x => x === selectedId)
-    setWeaponWheel(getWeaponWheel()
-        .map((slot, idx) => idx === targetSlotNum ? selectedId : ( idx === selectedSlotNum ? slotWeaponId : slot )))
+    getWeaponWheel()[targetSlotNum] = selectedId
+    getWeaponWheel()[selectedSlotNum] = slotWeaponId
     removeInventory()
     renderInventory()
 }
@@ -613,17 +613,14 @@ const renderWeaponWheel = () => {
         const image = document.createElement("img")
         const slotNum = document.createElement("p")
         let name = inventory.flat().find(item => item && item.id === getWeaponWheel()[4-slots])?.name
-        if ( !name )
-            name = getDraggedItem()?.getAttribute('id') === getWeaponWheel()[4 - slots] + '' 
-        ? getDraggedItem()?.getAttribute('name') : null
+        if ( !name ) name = getDraggedItem()?.getAttribute('id') === getWeaponWheel()[4 - slots] + '' ? 
+            getDraggedItem()?.getAttribute('name') : null
         slotNum.textContent = 
             getEquippedWeapon() && 4 - slots === getWeaponWheel().findIndex(x => x === getEquippedWeapon()) ? 'E' : `${5 - slots}`
         if ( name ) {
             image.src = `../assets/images/${name}.png`
             slot.append(image)
-        } else {
-            slot.style.width = `70px`
-        }
+        } else slot.style.width = `70px`
         slot.append(slotNum)
         weaponWheel.append(slot)
         slots--
