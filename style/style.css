@@ -1,6 +1,7 @@
 @import './map.css';
 @import './stash.css';
 @import './player.css';
+@import './enemies.css';
 @import './settings.css';
 @import './inventory.css';
 @import './interactables.css';

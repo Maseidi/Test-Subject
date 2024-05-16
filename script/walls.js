@@ -1,11 +1,12 @@
 class AbstractWall {
-    constructor(width, height, left, right, top, bottom) {
+    constructor(width, height, left, right, top, bottom, side) {
         this.width = width
         this.height = height
         this.left = left
         this.right = right
         this.top = top
         this.bottom = bottom
+        this.side = side
     }
 }
 
@@ -50,7 +51,7 @@ class SideWall extends AbstractWall {
                 left = offset
             }
         }
-        super(width, height, left, right, top, bottom)
+        super(width, height, left, right, top, bottom, true)
     }
 }
 

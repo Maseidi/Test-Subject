@@ -61,7 +61,7 @@ export const getInventory = () => inventory
 export const pickupDrop = () => {
     searchPack()
     searchEmpty()
-    checkSpecialScenarios()       
+    checkSpecialScenarios()
 }
 
 const searchPack = () => {
@@ -107,11 +107,12 @@ const searchEmpty = () => {
 }
 
 const checkSpecialScenarios = () => {
-    if ( getWeaponSpecs().get(getIntObj().getAttribute("name")) ) updateWeaponWheel()
+    const obj = elementToObject(getIntObj())
+    if ( getWeaponSpecs().get(obj.name) && obj.amount === 0 ) updateWeaponWheel()
     if ( getPause() ) return
-    if ( Number(getIntObj().getAttribute("amount")) === 0 ) removeDrop(getIntObj())
+    if ( obj.amount === 0 ) removeDrop(getIntObj())
     const equippedWeapon = equippedWeaponFromInventory()
-    if ( getEquippedWeapon() && getIntObj().getAttribute('name') === getWeaponSpecs().get(equippedWeapon.name).ammotype ) {
+    if ( getEquippedWeapon() && obj.name === getWeaponSpecs().get(equippedWeapon.name).ammotype ) {
         removeUi()
         renderUi()
     }

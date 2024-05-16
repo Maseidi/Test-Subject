@@ -28,7 +28,7 @@ export const setPrevRoomId = (val) => {
 }
 export const getPrevRoomId = () => prevRoomId
 
-let currentRoomId = 1
+let currentRoomId = 37
 export const setCurrentRoomId = (val) => {
     currentRoomId = val
 }

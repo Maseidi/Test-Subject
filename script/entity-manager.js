@@ -1,9 +1,16 @@
 import { rooms } from "./rooms.js"
-import { collide } from "./util.js"
 import { loaders } from "./loaders.js"
+import { collide, containsClass } from "./util.js"
 import { loadCurrentRoom } from "./room-loader.js"
 import { interactables } from "./interactables.js"
-import { getCurrentRoom, getCurrentRoomInteractables, getCurrentRoomLoaders, getCurrentRoomSolid, getPlayer } from "./elements.js"
+import { normalEnemyBehavior } from "./normal-enemy.js"
+import { 
+    getCurrentRoom,
+    getCurrentRoomEnemies,
+    getCurrentRoomInteractables,
+    getCurrentRoomLoaders,
+    getCurrentRoomSolid,
+    getPlayer } from "./elements.js"
 import { 
     getCurrentRoomId,
     getPrevRoomId,
@@ -20,6 +27,7 @@ export const manageEntities = () => {
     manageSolidObjects()
     manageLoaders()
     manageInteractables()
+    manageEnemies()
 }
 
 const manageSolidObjects = () => {
@@ -72,5 +80,11 @@ const manageInteractables = () => {
         }
         popup.style.bottom = `calc(100% - 20px)`
         popup.style.opacity = `0`
+    })
+}
+
+const manageEnemies = () => {
+    getCurrentRoomEnemies().forEach((enemy) => {
+        if ( containsClass(enemy, 'normal-enemy') ) normalEnemyBehavior(enemy)
     })
 }

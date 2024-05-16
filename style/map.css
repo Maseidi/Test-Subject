@@ -10,3 +10,30 @@
 .room-container > div {
   position: absolute;
 }
+
+.top-left, .bottom-left, .top-right, .bottom-right {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background-color: red;
+}
+
+.top-left {
+  top: -40px;
+  left: -40px;
+}
+
+.top-right {
+  top: -40px;
+  right: -40px;
+}
+
+.bottom-left {
+  bottom: -40px;
+  left: -40px;
+}
+
+.bottom-right {
+  bottom: -40px;
+  right: -40px;
+}
