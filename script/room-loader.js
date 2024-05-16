@@ -169,7 +169,7 @@ const renderEnemies = (roomToRender) => {
             enemy.style.left = `${elem.left}px`
             enemy.style.top = `${elem.top}px`
             const enemyCollider = createAndAddClass('div', `${elem.type}-collider`)
-            const enemyBody = createAndAddClass('div', `${elem.type}-body`)
+            const enemyBody = createAndAddClass('div', `${elem.type}-body`, 'body-transition')
             enemyBody.style.backgroundColor = `${elem.virus}`
             for ( let i = 1; i < elem.components; i++ ) {
                 const component = createAndAddClass('div', `${elem.type}-component`)
