@@ -53,6 +53,7 @@ const renderWalls = (roomToRender) => {
         if ( elem.top !== undefined ) wall.style.top = `${elem.top}px`
         else if ( elem.bottom !== undefined ) wall.style.bottom = `${elem.bottom}px`
         if ( !elem.side ) createTrackers(wall, elem)
+        else addAttribute(wall, 'side', true)
         roomToRender.append(wall)
         getCurrentRoomSolid().push(wall)
     })
@@ -89,7 +90,8 @@ const createTrackers = (solid, elem) => {
     if ( left && top ) appendAndPushTracker(solid, topLeft)
     if ( left && bottom ) appendAndPushTracker(solid, bottomLeft)
     if ( right && top ) appendAndPushTracker(solid, topRight)
-    if ( right && bottom ) appendAndPushTracker(solid, bottomRight)              
+    if ( right && bottom ) appendAndPushTracker(solid, bottomRight)   
+    addAttribute(solid, 'side', false)               
 }
 
 const appendAndPushTracker = (root, tracker) => {
@@ -167,6 +169,7 @@ const renderEnemies = (roomToRender) => {
             addAttribute(enemy, 'damage', elem.damage)
             addAttribute(enemy, 'speed', elem.speed)
             addAttribute(enemy, 'virus', elem.virus)
+            addAttribute(enemy, 'source', 'spawn')
             enemy.style.left = `${elem.left}px`
             enemy.style.top = `${elem.top}px`
             const enemyCollider = createAndAddClass('div', `${elem.type}-collider`)

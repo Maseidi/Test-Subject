@@ -23,6 +23,6 @@ class NormalEnemy extends Enemy {
 
 export const enemies = new Map([
     [37, [
-        new NormalEnemy(100, 100, 0)
+        new NormalEnemy(1000, 400, 0)
     ]]
 ])

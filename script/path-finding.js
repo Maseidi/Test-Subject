@@ -1,9 +1,68 @@
-import { addAttribute } from "./util.js"
+import { getCurrentRoomSolid, getCurrentRoomTrackers } from "./elements.js"
+import { addAttribute, distance } from "./util.js"
 
-export const findPath = (enemy, player) => aStar(enemy, player, [])
+export const findNextBestMove = (enemy, player) => {
+    const validTrackers = findValidTrackers(enemy, player)
+    const nextMove = findBestHeuristic(validTrackers, enemy, player)
+    return nextMove.getAttribute('id')
+}
 
-const aStar = (enemy, player, path) => {
-    return ['tracker-7']
+const findValidTrackers = (enemy, player) => {
+    const enemyBound = enemy.getBoundingClientRect()
+    const solidArray = getCurrentRoomSolid().filter(solid => solid.getAttribute('side') === 'false')
+    const trackersCopy = getCurrentRoomTrackers().map(elem => elem)
+    trackersCopy.push(player)
+    return trackersCopy.filter(tracker => {
+        const trackerBound = tracker.getBoundingClientRect()
+        if ( trackerBound.bottom <= enemyBound.top && trackerBound.left >= enemyBound.right ) {
+            for ( let i = 0; i < solidArray.length; i++ ) {
+                const solidBound = solidArray[i].getBoundingClientRect()
+                if (solidBound.top < enemyBound.top && 
+                    solidBound.left > enemyBound.right && 
+                    solidBound.right < trackerBound.left && 
+                    solidBound.bottom > trackerBound.bottom ) return false
+            }
+            return true
+        } else if ( trackerBound.bottom <= enemyBound.top && trackerBound.right < enemyBound.left ) {
+            for ( let i = 0; i < solidArray.length; i++ ) {
+                const solidBound = solidArray[i].getBoundingClientRect()
+                if (solidBound.top < enemyBound.top && 
+                    solidBound.right < enemyBound.left && 
+                    solidBound.left > trackerBound.right && 
+                    solidBound.bottom > trackerBound.bottom ) return false
+            }
+            return true
+        } else if ( trackerBound.top > enemyBound.bottom && trackerBound.left >= enemyBound.right ) {
+            for ( let i = 0; i < solidArray.length; i++ ) {
+                const solidBound = solidArray[i].getBoundingClientRect()
+                if (solidBound.bottom > enemyBound.bottom && 
+                    solidBound.left > enemyBound.right && 
+                    solidBound.right < trackerBound.left && 
+                    solidBound.top < trackerBound.top ) return false
+            }
+            return true
+        } else if ( trackerBound.top > enemyBound.bottom && trackerBound.right < enemyBound.left ) {
+            for ( let i = 0; i < solidArray.length; i++ ) {
+                const solidBound = solidArray[i].getBoundingClientRect()
+                if (solidBound.bottom > enemyBound.bottom && 
+                    solidBound.right < enemyBound.left && 
+                    solidBound.left > trackerBound.right &&
+                    solidBound.top < trackerBound.top ) return false
+            }
+            return true
+        }
+    })
+}
+
+const findBestHeuristic = (validTrackers, enemy, player) => {
+    const next = validTrackers.sort((a, b) => heuristic(a, enemy, player) - heuristic(b, enemy, player))
+    return next.includes(player) ? player : next[0]
+}
+
+const heuristic = (input, enemy, player) => {
+    const enemyDistance = distance(input, enemy)
+    const playerDistance = distance(input, player)
+    return enemyDistance + playerDistance
 }
 
 export const moveToDestination = (src, dest) => {
