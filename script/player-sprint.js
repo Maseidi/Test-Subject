@@ -32,5 +32,5 @@ const handleSprintAndStamina = (sprint, animator, stamina, refill) => {
     if (animator) animator(getPlayer(), 'run')
     setStamina(getStamina() + stamina)
     setRefillStamina(refill)
-    staminaManager(getStamina(), getUiEl().children[1].firstElementChild)
+    staminaManager(getStamina())
 }

@@ -4,6 +4,7 @@ import { getPlayerAngle, getPlayerX, getPlayerY } from "./variables.js"
 
 export const loadPlayer = () => {
     const player = createAndAddClass('div', 'player')
+    player.id = 'player'
     player.style.left = `${getPlayerX()}px`
     player.style.top = `${getPlayerY()}px`
     const playerCollider = createAndAddClass('div', 'player-collider')

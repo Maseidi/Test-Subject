@@ -93,6 +93,7 @@ const createTrackers = (solid, elem) => {
 }
 
 const appendAndPushTracker = (root, tracker) => {
+    tracker.id = `tracker-${getCurrentRoomTrackers().length}`
     root.append(tracker)
     getCurrentRoomTrackers().push(tracker)
 }

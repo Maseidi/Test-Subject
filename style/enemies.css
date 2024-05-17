@@ -3,11 +3,11 @@
 }
 
 .normal-enemy > .normal-enemy-collider {
-    height: 20px;
+    height: 37px;
     width: 37px;
     display: flex;
     justify-content: center;
-    align-items: top;
+    align-items: center;
 }
 
 .normal-enemy > .normal-enemy-collider > div:nth-of-type(1) {

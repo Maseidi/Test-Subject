@@ -26,9 +26,8 @@ const renderHealthBar = () => {
     healthManager(getHealth())
 }
 
-export const healthManager = (inputHealth) => {
+export const healthManager = (inputHealth) => 
     abstractManager(inputHealth, getUiEl().children[0].firstElementChild, getMaxHealth())
-}
 
 const renderStaminaBar = () => {
     const staminaBarEl = createAndAddClass('div', 'stamina-bar')
@@ -38,14 +37,10 @@ const renderStaminaBar = () => {
     staminaManager(getStamina())
 }
 
-export const staminaManager = (inputStamina) => {
+export const staminaManager = (inputStamina) => 
     abstractManager(inputStamina, getUiEl().children[1].firstElementChild, getMaxStamina())
-}
 
-const abstractManager = (input, elem, max) => {
-    const decile = input / max * 10
-    elem.style.width = `${decile * 10}%`
-}
+const abstractManager = (input, elem, max) => elem.style.width = `${input / max * 100}%`
 
 export const renderEquippedWeapon = () => {
     if ( getUiEl().children[2] ) getUiEl().children[2].remove() 
@@ -65,9 +60,7 @@ export const renderEquippedWeapon = () => {
     getUiEl().append(weaponContainer)   
 }
 
-export const removeUi = () => {
-    getUiEl().remove()
-}
+export const removeUi = () => getUiEl().remove()
 
 export const renderQuit = () => {
     const quitContainer = createAndAddClass('div', 'quit')
