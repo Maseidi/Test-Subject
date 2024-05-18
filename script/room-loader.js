@@ -11,14 +11,12 @@ import {
     getCurrentRoomInteractables, 
     getCurrentRoomLoaders,
     getCurrentRoomSolid,
-    getCurrentRoomTrackers,
     getRoomContainer,
     setCurrentRoom,
     setCurrentRoomEnemies,
     setCurrentRoomInteractables,
     setCurrentRoomLoaders,
     setCurrentRoomSolid,
-    setCurrentRoomTrackers
     } from "./elements.js"
 
 export const loadCurrentRoom = () => {
@@ -26,7 +24,6 @@ export const loadCurrentRoom = () => {
     setCurrentRoomSolid([])
     setCurrentRoomLoaders([])
     setCurrentRoomInteractables([])
-    setCurrentRoomTrackers([])
     setCurrentRoomEnemies([])
     const roomToRender = createAndAddClass('div', `${getCurrentRoomId()}`)
     roomToRender.style.width = `${room.width}px`
@@ -53,7 +50,6 @@ const renderWalls = (roomToRender) => {
         if ( elem.top !== undefined ) wall.style.top = `${elem.top}px`
         else if ( elem.bottom !== undefined ) wall.style.bottom = `${elem.bottom}px`
         if ( !elem.side ) createTrackers(wall, elem)
-        else addAttribute(wall, 'side', true)
         roomToRender.append(wall)
         getCurrentRoomSolid().push(wall)
     })
@@ -87,17 +83,10 @@ const createTrackers = (solid, elem) => {
     const topRight = createAndAddClass('div', 'top-right')
     const bottomLeft = createAndAddClass('div', 'bottom-left')
     const bottomRight = createAndAddClass('div', 'bottom-right')
-    if ( left && top ) appendAndPushTracker(solid, topLeft)
-    if ( left && bottom ) appendAndPushTracker(solid, bottomLeft)
-    if ( right && top ) appendAndPushTracker(solid, topRight)
-    if ( right && bottom ) appendAndPushTracker(solid, bottomRight)   
-    addAttribute(solid, 'side', false)               
-}
-
-const appendAndPushTracker = (root, tracker) => {
-    tracker.id = `tracker-${getCurrentRoomTrackers().length}`
-    root.append(tracker)
-    getCurrentRoomTrackers().push(tracker)
+    if ( left && top ) solid.append(topLeft)
+    if ( left && bottom ) solid.append(bottomLeft)
+    if ( right && top ) solid.append(topRight)
+    if ( right && bottom ) solid.append(bottomRight)  
 }
 
 const renderInteractables = (roomToRender) => 
@@ -169,7 +158,6 @@ const renderEnemies = (roomToRender) => {
             addAttribute(enemy, 'damage', elem.damage)
             addAttribute(enemy, 'speed', elem.speed)
             addAttribute(enemy, 'virus', elem.virus)
-            addAttribute(enemy, 'source', 'spawn')
             enemy.style.left = `${elem.left}px`
             enemy.style.top = `${elem.top}px`
             const enemyCollider = createAndAddClass('div', `${elem.type}-collider`)
@@ -180,7 +168,11 @@ const renderEnemies = (roomToRender) => {
                 component.style.backgroundColor = `${elem.virus}`
                 enemyBody.append(component)
             }
-            enemyCollider.append(enemyBody)
+            const vision = createAndAddClass('div', 'vision')
+            vision.style.width = `${elem.vision}px`
+            vision.style.height = `${elem.vision}px`
+            const forwardDetector = createAndAddClass('div', 'forward-detector')
+            appendAll(enemyCollider, enemyBody, vision, forwardDetector)
             enemy.append(enemyCollider)
             roomToRender.append(enemy)
             getCurrentRoomEnemies().push(enemy)

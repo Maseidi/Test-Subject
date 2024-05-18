@@ -26,12 +26,6 @@ const angleFormula = (s1, s2, x1, y1, x2, y2) => {
     return (s1 * Math.acos((AB ** 2 + CB ** 2 - AC ** 2) / (2 * AB * CB)) * 180) / Math.PI + s2 * 90 
 }
 
-export const distance = ( first, second ) => {
-    const firstBound = first.getBoundingClientRect()
-    const secondBound = second.getBoundingClientRect()
-    return Math.sqrt(Math.pow(( firstBound.x - secondBound.x ), 2) + Math.pow(( firstBound.y - secondBound.y ), 2))
-}
-
 export const addClass = (elem, className) => {
     if ( !containsClass(elem, className) ) elem.classList.add(className)
 }

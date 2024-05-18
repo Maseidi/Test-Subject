@@ -8,6 +8,20 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    border: 1px solid orange;
+}
+
+.normal-enemy > .normal-enemy-collider > .vision {
+  position: absolute;
+  top: 50%;
+  border: 1px solid red;
+}
+
+.normal-enemy > .normal-enemy-collider > .forward-detector {
+  width: 4px;
+  height: 4px;
+  background-color: red;
+  position: absolute;
 }
 
 .normal-enemy > .normal-enemy-collider > div:nth-of-type(1) {

@@ -69,7 +69,7 @@ const changeState = (state, left, top) => {
 }
 
 const replaceForwardDetector = (left, top) => {
-    const forwardDetector = getPlayer().firstElementChild.children[1]
+    const forwardDetector = getPlayer().firstElementChild.lastElementChild
     forwardDetector.style.left = left
     forwardDetector.style.top = top
 }

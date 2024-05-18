@@ -46,12 +46,6 @@ export const setCurrentRoomInteractables = (val) => {
 }
 export const getCurrentRoomInteractables = () => currentRoomInteractables
 
-let currentRoomTrackers
-export const setCurrentRoomTrackers = (val) => {
-    currentRoomTrackers = val
-}
-export const getCurrentRoomTrackers = () => currentRoomTrackers
-
 let currentRoomEnemies
 export const setCurrentRoomEnemies = (val) => {
     currentRoomEnemies = val
