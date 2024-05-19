@@ -232,9 +232,14 @@ export const setShootCounter = (val) => {
 }
 export const getShootCounter = () => shootCounter
 
-
 let progressCounter = 0
 export const setProgressCounter = (val) => {
     progressCounter = val
 }
 export const getProgressCounter = () => progressCounter
+
+let noOffenseCounter = 0
+export const setNoOffenseCounter = (val) => {
+    noOffenseCounter = val
+}
+export const getNoOffenseCounter = () => noOffenseCounter

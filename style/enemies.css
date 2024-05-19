@@ -75,3 +75,17 @@
   position: absolute;
   background-color: gold;
 }
+
+@keyframes torturerAttack {
+  100% {
+    transform: rotateZ(40deg);
+    top: 10px;
+    left: 60%;
+  }
+}
+
+.torturer > .torturer-collider > div:nth-of-type(1) > .attack {
+  animation-name: torturerAttack;
+  animation-duration: 300ms;
+  animation-direction: alternate-reverse;
+}

@@ -1,6 +1,6 @@
 import { rooms } from "./rooms.js"
 import { loaders } from "./loaders.js"
-import { collide, containsClass } from "./util.js"
+import { collide, containsClass, removeClass } from "./util.js"
 import { loadCurrentRoom } from "./room-loader.js"
 import { interactables } from "./interactables.js"
 import { torturerBehavior } from "./torturer.js"
@@ -10,15 +10,18 @@ import {
     getCurrentRoomInteractables,
     getCurrentRoomLoaders,
     getCurrentRoomSolid,
-    getPlayer } from "./elements.js"
+    getPlayer, 
+    setCurrentRoomEnemies} from "./elements.js"
 import { 
     getCurrentRoomId,
+    getNoOffenseCounter,
     getPrevRoomId,
     getRoomLeft,
     getRoomTop,
     setAllowMove,
     setCurrentRoomId,
     setIntObj,
+    setNoOffenseCounter,
     setPrevRoomId,
     setRoomLeft,
     setRoomTop} from "./variables.js"
@@ -84,6 +87,12 @@ const manageInteractables = () => {
 }
 
 const manageEnemies = () => {
+    if ( getNoOffenseCounter() > 0 ) setNoOffenseCounter(getNoOffenseCounter() + 1)
+    if ( getNoOffenseCounter() >= 180 ) {
+        // setCurrentRoomEnemies()
+        setNoOffenseCounter(0)    
+    }
+    if ( getNoOffenseCounter() !== 0 ) return  
     getCurrentRoomEnemies().forEach((enemy) => {
         if ( containsClass(enemy, 'torturer') ) torturerBehavior(enemy)
     })
