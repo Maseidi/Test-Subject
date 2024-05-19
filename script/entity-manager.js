@@ -3,7 +3,7 @@ import { loaders } from "./loaders.js"
 import { collide, containsClass } from "./util.js"
 import { loadCurrentRoom } from "./room-loader.js"
 import { interactables } from "./interactables.js"
-import { normalEnemyBehavior } from "./normal-enemy.js"
+import { torturerBehavior } from "./torturer.js"
 import { 
     getCurrentRoom,
     getCurrentRoomEnemies,
@@ -85,6 +85,6 @@ const manageInteractables = () => {
 
 const manageEnemies = () => {
     getCurrentRoomEnemies().forEach((enemy) => {
-        if ( containsClass(enemy, 'normal-enemy') ) normalEnemyBehavior(enemy)
+        if ( containsClass(enemy, 'torturer') ) torturerBehavior(enemy)
     })
 }

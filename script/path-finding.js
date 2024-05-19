@@ -1,13 +1,24 @@
-import { addAttribute } from "./util.js"
+import { getCurrentRoom } from "./elements.js"
+import { addAttribute, createAndAddClass } from "./util.js"
 
-export const moveToDestination = (src, dest) => {
+export const moveToPlayer = (enemy) => {
+    const next = createAndAddClass('div', 'dest')
+    next.style.left = `${enemy.getAttribute('player-x')}px`
+    next.style.top = `${enemy.getAttribute('player-y')}px`
+    getCurrentRoom().append(next)
+    moveToDestination(enemy, next)
+    next.remove()
+}
+
+const moveToDestination = (src, dest) => {
     const srcBound = src.getBoundingClientRect()
     const destBound = dest.getBoundingClientRect()
     let xMultiplier, yMultiplier
-    if ( srcBound.left > destBound.right ) xMultiplier = -1
-    else if ( srcBound.right < destBound.left ) xMultiplier = 1
-    if ( srcBound.top > destBound.bottom ) yMultiplier = -1
-    else if ( srcBound.bottom < destBound.top ) yMultiplier = 1
+    if ( srcBound.left > destBound.left + destBound.width / 2 ) xMultiplier = -1
+    else if ( srcBound.right <= destBound.left + destBound.width / 2 ) xMultiplier = 1
+    if ( srcBound.top > destBound.top + destBound.height / 2 ) yMultiplier = -1
+    else if ( srcBound.bottom <= destBound.top + destBound.height / 2 ) yMultiplier = 1
+    if ( !xMultiplier && !yMultiplier ) addAttribute(src, 'state', 'reached')
     calculateAngle(src, xMultiplier, yMultiplier)
     let speed = Number(src.getAttribute("speed"))
     if ( xMultiplier && yMultiplier ) speed /= 1.41

@@ -1,8 +1,8 @@
-.normal-enemy {
+.torturer {
     position: absolute;
 }
 
-.normal-enemy > .normal-enemy-collider {
+.torturer > .torturer-collider {
     height: 37px;
     width: 37px;
     display: flex;
@@ -11,27 +11,27 @@
     border: 1px solid orange;
 }
 
-.normal-enemy > .normal-enemy-collider > .vision {
+.torturer > .torturer-collider > .vision {
   position: absolute;
   border: 1px solid red;
 }
 
-.normal-enemy > .normal-enemy-collider > .forward-detector {
+.torturer > .torturer-collider > .forward-detector {
   width: 4px;
   height: 4px;
   background-color: red;
   position: absolute;
 }
 
-.normal-enemy > .normal-enemy-collider > div:nth-of-type(1) {
+.torturer > .torturer-collider > div:nth-of-type(1) {
   width: 25px;
   height: 14px;
   border: 1px solid black;
   position: absolute;
 }
 
-.normal-enemy > .normal-enemy-collider > div:nth-of-type(1) > div:nth-of-type(1),
-.normal-enemy > .normal-enemy-collider > div:nth-of-type(1) > div:nth-of-type(2) {
+.torturer > .torturer-collider > div:nth-of-type(1) > div:nth-of-type(1),
+.torturer > .torturer-collider > div:nth-of-type(1) > div:nth-of-type(2) {
   position: absolute;
   width: 6px;
   height: 16px;
@@ -41,15 +41,15 @@
   border-radius: 1px;
 }
 
-.normal-enemy > .normal-enemy-collider > div:nth-of-type(1) > div:nth-of-type(1) {
+.torturer > .torturer-collider > div:nth-of-type(1) > div:nth-of-type(1) {
   left: 100%;
 }
 
-.normal-enemy > .normal-enemy-collider > div:nth-of-type(1) > div:nth-of-type(2) {
+.torturer > .torturer-collider > div:nth-of-type(1) > div:nth-of-type(2) {
   right: 100%;
 }
 
-.normal-enemy > .normal-enemy-collider > div:nth-of-type(1) > div:nth-of-type(3) {
+.torturer > .torturer-collider > div:nth-of-type(1) > div:nth-of-type(3) {
   position: absolute;
   width: 8px;
   height: 8px;
@@ -67,4 +67,11 @@
 
 .reset-body-transition {
   transition: 0;
+}
+
+.dest {
+  width: 34px;
+  height: 34px;
+  position: absolute;
+  background-color: gold;
 }
