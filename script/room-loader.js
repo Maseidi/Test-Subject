@@ -169,6 +169,7 @@ const renderEnemies = (roomToRender) => {
                 enemyBody.append(component)
             }
             const vision = createAndAddClass('div', 'vision')
+            vision.style.top = '50%'
             vision.style.width = `${elem.vision}px`
             vision.style.height = `${elem.vision}px`
             const forwardDetector = createAndAddClass('div', 'forward-detector')

@@ -93,7 +93,6 @@
   position: absolute;
   width: 4px;
   height: 4px;
-  background-color: green;
 }
 
 .aim > .player-collider > .player-body::after {

@@ -18,31 +18,40 @@ export const moveToDestination = (src, dest) => {
 }
 
 const calculateAngle = (src, x, y) => {
-    let newState = Number(src.getAttribute('state'))
-    if ( x === 1 && y === 1 )        newState = changeEnemyState(7, src, '100%', 'calc(100% + 4px)')
-    else if ( x === 1 && y === -1 )  newState = changeEnemyState(5, src, '100%', '-4px')
-    else if ( x === -1 && y === 1 )  newState = changeEnemyState(1, src, '-4px', 'calc(100% + 4px)')
-    else if ( x === -1 && y === -1 ) newState = changeEnemyState(3, src, '-4px', '-4px')
-    else if ( x === 1 && !y )        newState = changeEnemyState(6, src, '100%', 'calc(50% - 2px)')
-    else if ( x === -1 && !y )       newState = changeEnemyState(2, src, '-4px', 'calc(50% - 2px)')
-    else if ( !x && y === 1 )        newState = changeEnemyState(0, src, 'calc(50% - 2px)', '100%')
-    else if ( !x && y === -1 )       newState = changeEnemyState(4, src, 'calc(50% - 2px)', '-4px')
-    let diff = newState - Number(src.getAttribute('state'))
+    let newState = Number(src.getAttribute('angle-state'))
+    if ( x === 1 && y === 1 )        newState = changeEnemyState(7, src, '100%', '0', '100%', '0')
+    else if ( x === 1 && y === -1 )  newState = changeEnemyState(5, src, '100%', '0', '0', '-100%')
+    else if ( x === -1 && y === 1 )  newState = changeEnemyState(1, src, '0', '-100%', '100%', '0')    
+    else if ( x === -1 && y === -1 ) newState = changeEnemyState(3, src, '0', '-100%', '0', '-100%')
+    else if ( x === 1 && !y )        newState = changeEnemyState(6, src, '100%', '0', '50%', '-50%')
+    else if ( x === -1 && !y )       newState = changeEnemyState(2, src, '0', '-100%', '50%', '-50%')
+    else if ( !x && y === 1 )        newState = changeEnemyState(0, src, '50%', '-50%', '100%', '0')
+    else if ( !x && y === -1 )       newState = changeEnemyState(4, src, '50%', '-50%', '0', '-100%')
+    let diff = newState - Number(src.getAttribute('angle-state'))
     if (Math.abs(diff) > 4 && diff >= 0) diff = -(8 - diff)
     else if (Math.abs(diff) > 4 && diff < 0) diff = 8 - Math.abs(diff) 
     const newAngle = Number(src.getAttribute('angle')) + diff * 45    
     addAttribute(src, 'angle', newAngle)
-    addAttribute(src, 'state', newState)
+    addAttribute(src, 'angle-state', newState)
     src.firstElementChild.firstElementChild.style.transform = `rotateZ(${newAngle}deg)`
 }
 
-const changeEnemyState = (state, src, left, top) => {
-    replaceEnemyForwardDetector(src, left, top)
+const changeEnemyState = (state, src, left, translateX, top, translateY) => {
+    replaceEnemyForwardDetector(src, left, top, translateX, translateY)
+    replaceEnemyVision(src, left, top, translateX, translateY)
     return state
 }
 
-const replaceEnemyForwardDetector = (src, left, top) => {
+const replaceEnemyForwardDetector = (src, left, top, translateX, translateY) => {
     const forwardDetector = src.firstElementChild.lastElementChild
     forwardDetector.style.left = left
     forwardDetector.style.top = top
+    forwardDetector.style.transform = `translateX(${translateX}) translateY(${translateY})`
+}
+
+const replaceEnemyVision = (src, left, top, translateX, translateY) => {
+    const vision = src.firstElementChild.children[1]
+    vision.style.left = left
+    vision.style.top = top
+    vision.style.transform = `translateX(${translateX}) translateY(${translateY})`
 }

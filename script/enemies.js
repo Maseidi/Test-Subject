@@ -18,7 +18,7 @@ class NormalEnemy extends Enemy {
         const health = Math.floor(90 + Math.random() * 20)
         const damage = Math.floor(17 + Math.random() * 6)
         const virus = ['red', 'green', 'yellow', 'blue', 'purple'][Math.floor(Math.random() * 5)]
-        super('normal-enemy', 4, left, top, health, damage, 4, progress, virus, 400)
+        super('normal-enemy', 4, left, top, health, damage, 4, progress, virus, 309)
     }
 }
 

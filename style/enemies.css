@@ -13,7 +13,6 @@
 
 .normal-enemy > .normal-enemy-collider > .vision {
   position: absolute;
-  top: 50%;
   border: 1px solid red;
 }
 
