@@ -13,6 +13,13 @@ export const torturerBehavior = (enemy) => {
 }
 
 const handleInvestigationMode = (enemy) => {
+    lookForPlayer(enemy)
+    const counter = Number(enemy.getAttribute('investigation-counter'))
+    if ( counter > 0 ) 
+        addAttribute(enemy, 'investigation-counter', counter + 1)
+    if ( counter >= 600 ) 
+        addAttribute(enemy, 'investigation-counter', 0)
+    if ( counter !== 0 ) return
     moveToDestination(enemy, document.getElementById(enemy.getAttribute('path')).children[Number(enemy.getAttribute('path-point'))])
 }
 
@@ -36,6 +43,7 @@ const moveToDestination = (src, dest) => {
             let nextPathPoint = currentPathPoint + 1
             if ( nextPathPoint > numOfPoints - 1 ) nextPathPoint = 0
             addAttribute(src, 'path-point', nextPathPoint)
+            addAttribute(src, 'investigation-counter', 1)
         }
     }
     const currentX = Number(window.getComputedStyle(src).left.replace('px', ''))
@@ -73,6 +81,12 @@ const replaceEnemyVision = (src, left, top, translateX, translateY) => {
     vision.style.left = left
     vision.style.top = top
     vision.style.transform = `translateX(${translateX}) translateY(${translateY})`
+}
+
+const lookForPlayer = (enemy) => {
+    const vision = enemy.firstElementChild.children[1]
+    if ( !collide(vision, getPlayer(), 0) ) return
+    
 }
 
 const moveToPlayer = (enemy) => {

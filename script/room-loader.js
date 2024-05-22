@@ -155,6 +155,7 @@ const renderEnemies = (roomToRender) => {
         .forEach((elem, index) => {
             const enemy = createAndAddClass('div', `${elem.type}`, 'enemy')
             addAttribute(enemy, 'state', 'investigate')
+            addAttribute(enemy, 'investigation-counter', 0)
             addAttribute(enemy, 'health', elem.health)
             addAttribute(enemy, 'damage', elem.damage)
             addAttribute(enemy, 'knock', elem.knock)
