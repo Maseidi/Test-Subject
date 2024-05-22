@@ -82,3 +82,10 @@
   animation-duration: 300ms;
   animation-direction: alternate-reverse;
 }
+
+.path-point {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  background-color: green;
+}

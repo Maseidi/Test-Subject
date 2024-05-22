@@ -152,7 +152,7 @@ const renderEnemies = (roomToRender) => {
     if ( !enemies.get(getCurrentRoomId()) ) return
     enemies.get(getCurrentRoomId())
         .filter((elem => elem.progress >= getProgressCounter()))
-        .forEach((elem) => {
+        .forEach((elem, index) => {
             const enemy = createAndAddClass('div', `${elem.type}`, 'enemy')
             addAttribute(enemy, 'state', 'investigate')
             addAttribute(enemy, 'health', elem.health)
@@ -160,8 +160,11 @@ const renderEnemies = (roomToRender) => {
             addAttribute(enemy, 'knock', elem.knock)
             addAttribute(enemy, 'speed', elem.speed)
             addAttribute(enemy, 'virus', elem.virus)
-            enemy.style.left = `${elem.left}px`
-            enemy.style.top = `${elem.top}px`
+            addAttribute(enemy, 'path', `path-${index}`)
+            addAttribute(enemy, 'path-point', `0`)
+            createPath(elem, index, roomToRender)
+            enemy.style.left = `${elem.path.points[0].x}px`
+            enemy.style.top = `${elem.path.points[0].y}px`
             const enemyCollider = createAndAddClass('div', `${elem.type}-collider`)
             const enemyBody = createAndAddClass('div', `${elem.type}-body`, 'body-transition')
             enemyBody.style.backgroundColor = `${elem.virus}`
@@ -180,4 +183,16 @@ const renderEnemies = (roomToRender) => {
             getCurrentRoomEnemies().push(enemy)
             getCurrentRoomSolid().push(enemyCollider)
         })
+}
+
+const createPath = (elem, index, roomToRender) => {
+    const path = document.createElement('div')
+    path.id = `path-${index}`
+    for ( let p of elem.path.points ) {
+        const point = createAndAddClass('div', 'path-point')
+        point.style.left = `${p.x}px`
+        point.style.top = `${p.y}px`
+        path.append(point)
+    }
+    roomToRender.append(path)
 }
