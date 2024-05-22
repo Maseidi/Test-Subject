@@ -16,13 +16,6 @@
   border: 1px solid red;
 }
 
-.torturer > .torturer-collider > .forward-detector {
-  width: 4px;
-  height: 4px;
-  background-color: red;
-  position: absolute;
-}
-
 .torturer > .torturer-collider > div:nth-of-type(1) {
   width: 25px;
   height: 14px;

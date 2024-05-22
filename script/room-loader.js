@@ -153,14 +153,16 @@ const renderEnemies = (roomToRender) => {
     enemies.get(getCurrentRoomId())
         .filter((elem => elem.progress >= getProgressCounter()))
         .forEach((elem) => {
-            const enemy = createAndAddClass('div', `${elem.type}`)
+            const enemy = createAndAddClass('div', `${elem.type}`, 'enemy')
+            addAttribute(enemy, 'state', 'investigate')
             addAttribute(enemy, 'health', elem.health)
             addAttribute(enemy, 'damage', elem.damage)
+            addAttribute(enemy, 'knock', elem.knock)
             addAttribute(enemy, 'speed', elem.speed)
             addAttribute(enemy, 'virus', elem.virus)
             enemy.style.left = `${elem.left}px`
             enemy.style.top = `${elem.top}px`
-            const enemyCollider = createAndAddClass('div', `${elem.type}-collider`, 'enemy')
+            const enemyCollider = createAndAddClass('div', `${elem.type}-collider`)
             const enemyBody = createAndAddClass('div', `${elem.type}-body`, 'body-transition')
             enemyBody.style.backgroundColor = `${elem.virus}`
             for ( let i = 1; i < elem.components; i++ ) {
@@ -172,8 +174,7 @@ const renderEnemies = (roomToRender) => {
             vision.style.top = '50%'
             vision.style.width = `${elem.vision}px`
             vision.style.height = `${elem.vision}px`
-            const forwardDetector = createAndAddClass('div', 'forward-detector')
-            appendAll(enemyCollider, enemyBody, vision, forwardDetector)
+            appendAll(enemyCollider, enemyBody, vision)
             enemy.append(enemyCollider)
             roomToRender.append(enemy)
             getCurrentRoomEnemies().push(enemy)

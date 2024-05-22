@@ -68,7 +68,7 @@ const changeState = (state, left, top) => {
     return getAimMode() ? getPlayerAngleState() : state
 }
 
-const replaceForwardDetector = (left, top) => {
+export const replaceForwardDetector = (left, top) => {
     const forwardDetector = getPlayer().firstElementChild.lastElementChild
     forwardDetector.style.left = left
     forwardDetector.style.top = top

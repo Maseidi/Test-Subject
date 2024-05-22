@@ -10,10 +10,12 @@ import {
     getShootCounter,
     getShootPressed,
     getShooting,
+    getTarget,
     setReloading,
     setShootCounter,
     setShooting,
     setTarget } from "./variables.js"
+import { dropLoot } from "./loot-manager.js"
 
 const EMPTY_WEAPON = new Audio('../assets/audio/empty-weapon.mp3')
 
@@ -102,6 +104,7 @@ const shoot = () => {
     }
     currMag--
     updateInventory(equippedWeapon, currMag, 0)
+    if ( getTarget()?.getAttribute('name') === 'crate' ) dropLoot(getTarget())
 }
 
 const updateInventory = (equippedWeapon, newMag, trade) => {

@@ -89,10 +89,9 @@ const manageInteractables = () => {
 const manageEnemies = () => {
     if ( getNoOffenseCounter() > 0 ) setNoOffenseCounter(getNoOffenseCounter() + 1)
     if ( getNoOffenseCounter() >= 180 ) {
-        // setCurrentRoomEnemies()
+        // TODO
         setNoOffenseCounter(0)    
     }
-    if ( getNoOffenseCounter() !== 0 ) return  
     getCurrentRoomEnemies().forEach((enemy) => {
         if ( containsClass(enemy, 'torturer') ) torturerBehavior(enemy)
     })

@@ -45,7 +45,7 @@
 .player-body::before {
   content: "";
   position: absolute;
-  width: 4px;
+  width: 3.5px;
   height: 12px;
   top: 1px;
   background-color: wheat;
