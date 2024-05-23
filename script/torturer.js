@@ -3,6 +3,7 @@ import { getCurrentRoomSolid, getMapEl, getPlayer } from "./elements.js"
 import { getHealth, getMapX, getMapY, getPlayerX, getPlayerY, getRoomLeft, getRoomTop, setHealth, setMapX, setMapY, setNoOffenseCounter, setPlayerX, setPlayerY } from "./variables.js"
 import { healthManager } from "./user-interface.js"
 import { replaceForwardDetector } from "./player-angle.js"
+import { isPlayerVisible } from "./enemy-vision.js"
 
 export const torturerBehavior = (enemy) => {
     switch ( enemy.getAttribute('state') ) {
@@ -13,11 +14,11 @@ export const torturerBehavior = (enemy) => {
 }
 
 const handleInvestigationMode = (enemy) => {
-    lookForPlayer(enemy)
+    isPlayerVisible(enemy)
     const counter = Number(enemy.getAttribute('investigation-counter'))
     if ( counter > 0 ) 
         addAttribute(enemy, 'investigation-counter', counter + 1)
-    if ( counter >= 600 ) 
+    if ( counter >= 300 ) 
         addAttribute(enemy, 'investigation-counter', 0)
     if ( counter !== 0 ) return
     moveToDestination(enemy, document.getElementById(enemy.getAttribute('path')).children[Number(enemy.getAttribute('path-point'))])
@@ -81,12 +82,6 @@ const replaceEnemyVision = (src, left, top, translateX, translateY) => {
     vision.style.left = left
     vision.style.top = top
     vision.style.transform = `translateX(${translateX}) translateY(${translateY})`
-}
-
-const lookForPlayer = (enemy) => {
-    const vision = enemy.firstElementChild.children[1]
-    if ( !collide(vision, getPlayer(), 0) ) return
-    
 }
 
 const moveToPlayer = (enemy) => {

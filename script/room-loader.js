@@ -49,7 +49,10 @@ const renderWalls = (roomToRender) => {
         else if ( elem.right !== undefined ) wall.style.right = `${elem.right}px`
         if ( elem.top !== undefined ) wall.style.top = `${elem.top}px`
         else if ( elem.bottom !== undefined ) wall.style.bottom = `${elem.bottom}px`
-        if ( !elem.side ) createTrackers(wall, elem)
+        if ( !elem.side ) {
+            createTrackers(wall, elem)
+            addAttribute(wall, 'side', false)  
+        } else addAttribute(wall, 'side', true)    
         roomToRender.append(wall)
         getCurrentRoomSolid().push(wall)
     })
