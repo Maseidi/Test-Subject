@@ -1,5 +1,5 @@
-import { getCurrentRoomSolid, getPlayer } from "./elements.js"
 import { angleOfTwoPoints, collide } from "./util.js"
+import { getCurrentRoomSolid, getPlayer } from "./elements.js"
 
 export const isPlayerVisible = (enemy) => {
     const enemyBound = enemy.getBoundingClientRect()
@@ -64,8 +64,8 @@ export const isPlayerVisible = (enemy) => {
         if ( enemyBound.top < wallBound.top && enemyBound.left < wallBound.left ) {
             if ( !(playerBound.top <= wallBound.top || playerBound.left <= wallBound.left) ) {
                 const angle1 = angleToEnemy(wallBound, enemyBound, 'right', 'top')    
-                const angle2 = angleToEnemy(wallBound, enemyBound, 'left', 'bottom')  
-                if ( angle3 > angle1 && angle3 < angle2 ) visible = false
+                const angle2 = angleToEnemy(wallBound, enemyBound, 'left', 'bottom')
+                if ( angle3 > angle1 || angle3 < angle2 ) visible = false
                 if ( !visible ) break
             }
         }

@@ -1,7 +1,7 @@
 import { collide } from "./util.js"
 import { getStat } from "./weapon-specs.js"
 import { removeUi, renderUi } from "./user-interface.js"
-import { getCurrentRoomSolid, getPlayer } from "./elements.js"
+import { getCurrentRoomEnemies, getCurrentRoomSolid, getPlayer } from "./elements.js"
 import { calculateTotalAmmo, equippedWeaponFromInventory, updateInventoryWeaponMag, useInventoryResource } from "./inventory.js"
 import { 
     getAimMode,
@@ -16,6 +16,7 @@ import {
     setShooting,
     setTarget } from "./variables.js"
 import { dropLoot } from "./loot-manager.js"
+import { notifyEnemy } from "./enemy-actions.js"
 
 const EMPTY_WEAPON = new Audio('../assets/audio/empty-weapon.mp3')
 
@@ -103,6 +104,7 @@ const shoot = () => {
         return
     }
     currMag--
+    getCurrentRoomEnemies().forEach(enemy => notifyEnemy(700, enemy))
     updateInventory(equippedWeapon, currMag, 0)
     if ( getTarget()?.getAttribute('name') === 'crate' ) dropLoot(getTarget())
 }

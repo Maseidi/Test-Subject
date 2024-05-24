@@ -82,5 +82,6 @@ class Torturer extends Enemy {
 export const enemies = new Map([
     [37, [
         new Torturer(new SquarePath(650, 240, 300), 0),
+        new Torturer(new SinglePointPath(100, 100), 0)
     ]]
 ])

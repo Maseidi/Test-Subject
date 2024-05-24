@@ -1,4 +1,5 @@
-import { getPlayer, getUiEl } from "./elements.js"
+import { getCurrentRoomEnemies, getPlayer, getUiEl } from "./elements.js"
+import { notifyEnemy } from "./enemy-actions.js"
 import { staminaManager } from "./user-interface.js"
 import { addClass, isMoving, removeClass } from "./util.js"
 import { 
@@ -33,4 +34,5 @@ const handleSprintAndStamina = (sprint, animator, stamina, refill) => {
     setStamina(getStamina() + stamina)
     setRefillStamina(refill)
     staminaManager(getStamina())
+    if ( sprint ) getCurrentRoomEnemies().forEach(enemy => notifyEnemy(200, enemy))
 }

@@ -1,4 +1,5 @@
 import { renderStash } from "./stash.js"
+import { heal } from "./player-health.js"
 import { getStat } from "./weapon-specs.js"
 import { dropLoot } from "./loot-manager.js"
 import { centralizePlayer } from "./startup.js"
@@ -84,7 +85,11 @@ export const control = () => {
                     break
                 case "Escape":
                     escapeDown()
-                    break            
+                    break
+                case "H":
+                case "h":
+                    hDown()
+                    break        
             }
         }
     }
@@ -254,6 +259,8 @@ const escapeDown = () => {
     if ( !getPause() ) return
     quitPage()
 }
+
+const hDown = () => heal()
 
 const wUp = () => disableDirection(setUpPressed)
 

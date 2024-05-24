@@ -35,6 +35,7 @@ import {
     setShootCounter,
     getShooting, 
     getPause} from "./variables.js"
+import { heal, useBandage } from "./player-health.js"
 
 export const MAX_PACKSIZE = {
     bandage: 3,
@@ -491,8 +492,7 @@ const use = (item) => {
     const itemObj = elementToObject(item)
     const row = itemObj.row
     const column = itemObj.column
-    inventory[row][column].amount -= 1
-    item.firstElementChild.firstElementChild.textContent = inventory[row][column].amount
+    if ( inventory[row][column].name === 'bandage' ) useBandage(inventory[row][column])
     if ( inventory[row][column].amount === 0 ) {
         inventory[row][column] = null
         replaceBlocks(item, itemObj.space)
