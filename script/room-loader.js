@@ -161,7 +161,6 @@ const renderEnemies = (roomToRender) => {
             return elem
         }).filter(elem => progress === getProgressString().indexOf(elem.progress))
         .forEach((elem, index) => {
-            console.log(elem);
             const enemy = createAndAddClass('div', `${elem.type}`, 'enemy')
             addAttribute(enemy, 'state', 'investigate')
             addAttribute(enemy, 'investigation-counter', 0)

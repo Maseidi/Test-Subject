@@ -17,7 +17,7 @@ export const torturerBehavior = (enemy) => {
             break
         case 'move-to-position':
             handleMoveToPositionState(enemy)
-            break
+            break   
     }
 }
 

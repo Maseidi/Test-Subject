@@ -1,3 +1,4 @@
+import { dropLoot } from "./loot-manager.js"
 import { takeDamage } from "./player-health.js"
 import { replaceForwardDetector } from "./player-angle.js"
 import { getSpecification, getStat } from "./weapon-specs.js"
@@ -156,7 +157,8 @@ export const moveToPlayer = (enemy) => {
 }
 
 export const notifyEnemy = (dist, enemy) => {
-    if ( enemy.getAttribute('state') === 'chase' || enemy.getAttribute('state') === 'no-offence' ) return
+    const state = enemy.getAttribute('state')
+    if ( state === 'chase' || state === 'no-offence' ) return
     const enemyBound = enemy.getBoundingClientRect()
     const playerBound = getPlayer().getBoundingClientRect()
     if ( distance(playerBound.x, playerBound.y, enemyBound.x, enemyBound.y) <= dist ) {
@@ -169,11 +171,14 @@ export const damageEnemy = (enemy, equipped) => {
     const damage = getStat(equipped.name, 'damage', equipped.damagelvl)
     const enemyHealth = Number(enemy.getAttribute('health'))
     const newHealth = enemyHealth - damage
+    addAttribute(enemy, 'health', newHealth)
     if ( newHealth <= 0 ) {
-        enemy.remove()
+        const enemyCpu = window.getComputedStyle(enemy)
+        addAttribute(enemy, 'left', enemyCpu.left.replace('px', ''))
+        addAttribute(enemy, 'top', enemyCpu.top.replace('px', ''))
+        dropLoot(enemy)
         return
     }
-    addAttribute(enemy, 'health', newHealth)
     const knockback = getSpecification(equipped.name, 'knockback')
     knockEnemy(enemy, knockback)
     addClass(enemy.firstElementChild.firstElementChild, 'damaged')

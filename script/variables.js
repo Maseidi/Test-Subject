@@ -232,7 +232,7 @@ export const setShootCounter = (val) => {
 }
 export const getShootCounter = () => shootCounter
 
-let progressString = 'a1-b2'
+let progressString = 'a1'
 export const setProgressString = (val) => {
     progressString = val
 }
