@@ -1,7 +1,7 @@
-import { getCurrentRoomEnemies, getPlayer, getUiEl } from "./elements.js"
 import { notifyEnemy } from "./enemy-actions.js"
 import { staminaManager } from "./user-interface.js"
 import { addClass, isMoving, removeClass } from "./util.js"
+import { getCurrentRoomEnemies, getPlayer } from "./elements.js"
 import { 
     getAimMode,
     getAllowMove,

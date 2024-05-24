@@ -2,7 +2,6 @@ import { rooms } from "./rooms.js"
 import { loaders } from "./loaders.js"
 import { torturerBehavior } from "./torturer.js"
 import { loadCurrentRoom } from "./room-loader.js"
-import { interactables } from "./interactables.js"
 import { addAttribute, collide, containsClass, removeClass } from "./util.js"
 import { 
     getCurrentRoom,
@@ -47,10 +46,7 @@ const manageLoaders = () => {
     calculateNewRoomLeftAndTop(cpu.left, cpu.top)
     getCurrentRoom().remove()
     loadCurrentRoom()
-    refactorInteractables(getPrevRoomId())
 }
-
-const refactorInteractables = (id) => interactables.set(id, interactables.get(id).filter(int => int !== null))
 
 const calculateNewRoomLeftAndTop = (cpuLeft, cpuTop) => {
     const newRoom = rooms.get(getCurrentRoomId())

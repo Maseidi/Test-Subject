@@ -260,7 +260,10 @@ const escapeDown = () => {
     quitPage()
 }
 
-const hDown = () => heal()
+const hDown = () => {
+    if ( getPause() ) return
+    heal()
+}
 
 const wUp = () => disableDirection(setUpPressed)
 

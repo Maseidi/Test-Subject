@@ -1,6 +1,7 @@
 import { takeDamage } from "./player-health.js"
 import { replaceForwardDetector } from "./player-angle.js"
-import { addAttribute, addClass, collide, createAndAddClass, distance } from "./util.js"
+import { getSpecification, getStat } from "./weapon-specs.js"
+import { addAttribute, addClass, collide, createAndAddClass, distance, removeClass } from "./util.js"
 import { getCurrentRoom, getCurrentRoomEnemies, getCurrentRoomSolid, getMapEl, getPlayer } from "./elements.js"
 import { 
     getMapX,
@@ -162,4 +163,36 @@ export const notifyEnemy = (dist, enemy) => {
         addAttribute(enemy, 'state', 'chase')
         updateDestination(enemy)
     }
+}
+
+export const damageEnemy = (enemy, equipped) => {
+    const damage = getStat(equipped.name, 'damage', equipped.damagelvl)
+    const enemyHealth = Number(enemy.getAttribute('health'))
+    const newHealth = enemyHealth - damage
+    if ( newHealth <= 0 ) {
+        enemy.remove()
+        return
+    }
+    addAttribute(enemy, 'health', newHealth)
+    const knockback = getSpecification(equipped.name, 'knockback')
+    knockEnemy(enemy, knockback)
+    addClass(enemy.firstElementChild.firstElementChild, 'damaged')
+    setTimeout(() => removeClass(enemy.firstElementChild.firstElementChild, 'damaged'), 100)
+}
+
+const knockEnemy = (enemy, knockback) => {
+    const enemyBound = enemy.getBoundingClientRect()
+    const playerBound = getPlayer().getBoundingClientRect()
+    let xAxis, yAxis
+    if ( enemyBound.left < playerBound.left ) xAxis = -1
+    else if ( enemyBound.left >= playerBound.left || enemyBound.right <= playerBound.right ) xAxis = 0
+    else xAxis = 1
+    if ( enemyBound.bottom < playerBound.top ) yAxis = -1
+    else if ( enemyBound.bottom >= playerBound.top || enemyBound.top <= playerBound.bottom ) yAxis = 0
+    else yAxis = 1
+    const enemyCpu = window.getComputedStyle(enemy)
+    const enemyLeft = Number(enemyCpu.left.replace('px', ''))
+    const enemyTop = Number(enemyCpu.top.replace('px', ''))
+    enemy.style.left = `${enemyLeft + xAxis * knockback}px`
+    enemy.style.top = `${enemyTop + yAxis * knockback}px`
 }

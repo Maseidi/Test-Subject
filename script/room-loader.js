@@ -4,7 +4,7 @@ import { loaders } from "./loaders.js"
 import { enemies } from "./enemies.js"
 import { interactables } from "./interactables.js"
 import { getWeaponSpecs } from "./weapon-specs.js"
-import { getCurrentRoomId, getProgressCounter, getRoomLeft, getRoomTop } from "./variables.js"
+import { getCurrentRoomId, getProgressString, getRoomLeft, getRoomTop } from "./variables.js"
 import { addAttribute, addClass, appendAll, createAndAddClass, objectToElement } from "./util.js"
 import { 
     getCurrentRoomEnemies,
@@ -93,7 +93,8 @@ const createTrackers = (solid, elem) => {
 }
 
 const renderInteractables = (roomToRender) => 
-    interactables.get(getCurrentRoomId()).forEach((interactable, index) => renderInteractable(roomToRender, interactable, index))
+    interactables.get(getCurrentRoomId())
+        .forEach((interactable, index) => interactable && renderInteractable(roomToRender, interactable, index))
 
 export const renderInteractable = (root, interactable, index) => {
     const int = objectToElement(interactable)
@@ -153,9 +154,14 @@ const renderDescription = (popup, interactable) => {
 
 const renderEnemies = (roomToRender) => {
     if ( !enemies.get(getCurrentRoomId()) ) return
-    enemies.get(getCurrentRoomId())
-        .filter((elem => elem.progress >= getProgressCounter()))
+    let progress = Number.MIN_SAFE_INTEGER
+    const a = enemies.get(getCurrentRoomId())
+        .map(elem => {
+            progress = Math.max(progress, getProgressString().indexOf(elem.progress))
+            return elem
+        }).filter(elem => progress === getProgressString().indexOf(elem.progress))
         .forEach((elem, index) => {
+            console.log(elem);
             const enemy = createAndAddClass('div', `${elem.type}`, 'enemy')
             addAttribute(enemy, 'state', 'investigate')
             addAttribute(enemy, 'investigation-counter', 0)

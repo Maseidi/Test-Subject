@@ -16,7 +16,7 @@ export const dropLoot = (rootElem) => {
     if ( !loot ) loot = decideItemDrop(SmgAmmo, 0.15, left, top, 20)
     if ( !loot ) loot = decideItemDrop(Coin, 0.2, left, top, 1)
     if ( !loot ) loot = decideItemDrop(PistolAmmo, 0.3, left, top, 10)
-    removeDrop(rootElem)    
+    removeDrop(rootElem)
     if ( !loot ) return
     const interactable = {...loot, left: left, top: top}
     let index = findSuitableId(interactable)

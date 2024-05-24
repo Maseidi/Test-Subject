@@ -13,7 +13,8 @@ class Weapon {
         magazine, 
         firerate,
         description,
-        price) {
+        price,
+        knockback) {
         this.heading = heading    
         this.ammotype = ammotype
         this.height = height
@@ -28,8 +29,11 @@ class Weapon {
         this.firerate = firerate
         this.description = description
         this.price = price
+        this.knockback = knockback
     }
 }
+
+export const getSpecification = (weaponName, statName) => weapons.get(weaponName)[statName]
 
 export const getStat = (weaponName, statName, statLvl) => weapons.get(weaponName)[statName][statLvl - 1]
 
@@ -48,7 +52,8 @@ const weapons = new Map([
         [5, 6, 7, 8, 9],
         [2, 1.9, 1.8, 1.7, 1.6],
         "A powerful magnum handy in very special scenarios",
-        100
+        100,
+        50
     )],
     ["revolver", new Weapon(
         "revolver",
@@ -64,7 +69,8 @@ const weapons = new Map([
         [6, 7, 8, 9, 10],
         [2.2, 2.1, 2, 1.9, 1.8],
         "A magnum capable of tearing through every living creature",
-        90
+        90,
+        30
     )],
     ["mauser", new Weapon(
         "mauser",
@@ -80,7 +86,8 @@ const weapons = new Map([
         [7, 9, 11, 13, 15],
         [2, 1.75, 1.5, 1.25, 1],
         "A high damage handgun making it a nice choice for every avid gun collector",
-        15
+        15,
+        10
     )],
     ["pistol", new Weapon(
         "pistol",
@@ -96,7 +103,8 @@ const weapons = new Map([
         [10, 11, 12, 13, 14],
         [1.3, 1.2, 1.1, 1, 0.9],
         "Small and fast paced pistol with a pretty decent range",
-        14
+        14,
+        10
     )],
     ["pistol2", new Weapon(
         "pistol 2",
@@ -112,7 +120,8 @@ const weapons = new Map([
         [12, 14, 16, 18, 20],
         [1.2, 1.1, 1, 0.9, 0.8],
         "A handgun with a clip capacity that barely makes you think of reloading",
-        13
+        13,
+        10
     )],
     ["pistol3", new Weapon(
         "pistol 3",
@@ -128,7 +137,8 @@ const weapons = new Map([
         [11, 12, 13, 14, 15],
         [1.4, 1.2, 1, 0.8, 0.6],
         "A pistol that every tiny bit of upgrade is definately a profitable move",
-        12
+        12,
+        10
     )],
     ["pistol4", new Weapon(
         "pistol 4",
@@ -144,7 +154,8 @@ const weapons = new Map([
         [14, 15, 16, 17, 18],
         [1.6, 1.5, 1.4, 1.3, 1.2],
         "The handgun every single person never thinks of upgrading its damage",
-        11
+        11,
+        10
     )],
     ["famas", new Weapon(
         "famas",
@@ -160,7 +171,8 @@ const weapons = new Map([
         [30, 35, 40, 45, 50],
         [0.2, 0.19, 0.18, 0.17, 0.16],
         "Sub-machine gun purely focused on dealing the most possible damage",
-        25
+        25,
+        5
     )],
     ["mp5k", new Weapon(
         "mp5k",
@@ -176,7 +188,8 @@ const weapons = new Map([
         [20, 25, 30, 35, 40],
         [0.14, 0.13, 0.12, 0.11, 0.1],
         "Pretty balanced SMG useful for most cases",
-        24
+        24,
+        5
     )],
     ["p90", new Weapon(
         "p90",
@@ -192,7 +205,8 @@ const weapons = new Map([
         [40, 50, 60, 70, 80],
         [0.15, 0.14, 0.13, 0.12, 0.11],
         "Decent damage and magazine capacity are this weapon's points of shine",
-        23
+        23,
+        5
     )],
     ["ppsh", new Weapon(
         "ppsh",
@@ -208,7 +222,8 @@ const weapons = new Map([
         [30, 40, 50, 60, 70],
         [0.13, 0.12, 0.11, 0.1, 0.09],
         "Decent range, fast reload and fire rate are the greatest highlights of this weapon",
-        22
+        22,
+        5
     )],
     ["uzi", new Weapon(
         "uzi",
@@ -224,7 +239,8 @@ const weapons = new Map([
         [50, 60, 70, 80, 90],
         [0.13, 0.11, 0.09, 0.07, 0.05],
         "The insane fire rate and reload speed make up for its low damage",
-        21
+        21,
+        5
     )],
     ["shotgun", new Weapon(
         "shotgon",
@@ -240,7 +256,8 @@ const weapons = new Map([
         [5, 7, 9, 11, 12],
         [2.5, 2.3, 2.1, 1.9, 1.7],
         "Long range shotgun suitable for dealing high damage from afar",
-        35
+        35,
+        40
     )],
     ["shotgun2", new Weapon(
         "shotgun 2",
@@ -256,7 +273,8 @@ const weapons = new Map([
         [7, 8, 9, 10, 11],
         [2.3, 2.1, 1.9, 1.7, 1.5],
         "Balanced shotgun for everyday use",
-        40
+        40,
+        30
     )],
     ["shotgun3", new Weapon(
         "shotgun 3",
@@ -272,7 +290,8 @@ const weapons = new Map([
         [6, 8, 10, 12, 14],
         [1.7, 1.6, 1.5, 1.4, 1.3],
         "This shotgun's decent damage and range is enough to make your lucky day",
-        45
+        45,
+        30
     )],
     ["riotgun", new Weapon(
         "riotgun",
@@ -288,7 +307,8 @@ const weapons = new Map([
         [5, 6, 7, 8, 9],
         [1.2, 1.1, 1, 0.9, 0.8],
         "A real boomstick ideal for shredding everything on its way",
-        70
+        70,
+        20
     )],
     ["spas", new Weapon(
         "spas",
@@ -304,7 +324,8 @@ const weapons = new Map([
         [14, 16, 18, 20, 22],
         [0.9, 0.8, 0.7, 0.6, 0.5],
         "An automatic shotgun with an insane fire rate and magazine capacity",
-        50
+        50,
+        30
     )],
     ["sniper", new Weapon(
         "sniper",
@@ -320,7 +341,8 @@ const weapons = new Map([
         [4, 6, 8, 10, 12],
         [2.4, 2.2, 2, 1.8, 1.6],
         "Slow paced sniper rifle focused primarily on dealing damage",
-        65
+        65,
+        20
     )],
     ["sniper2", new Weapon(
         "sniper 2",
@@ -336,7 +358,8 @@ const weapons = new Map([
         [12, 14, 16, 18, 20],
         [1.2, 1, 0.8, 0.6, 0.4],
         "A sniper rifle with incredibly fast fire rate making it one of a kind",
-        75
+        75,
+        30
     )],
     ["sniper3", new Weapon(
         "sniper 3",
@@ -352,7 +375,8 @@ const weapons = new Map([
         [8, 9, 10, 11, 12],
         [1.8, 1.6, 1.5, 1.4, 1.2],
         "Sniper rifle with the most balanced stats possible",
-        70
+        70,
+        40
     )]
 ])
 

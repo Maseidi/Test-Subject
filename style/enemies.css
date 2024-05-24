@@ -89,3 +89,11 @@
   height: 10px;
   background-color: green;
 }
+
+.damaged {
+  background-color: white !important;
+}
+
+.damaged > div {
+  background-color: white !important;
+}

@@ -4,7 +4,7 @@ import { renderStats } from "./weapon-examine.js"
 import { getStat, getWeaponSpecs } from "./weapon-specs.js"
 import { Coin, Drop, interactables } from "./interactables.js"
 import { getShopItems, getShopItemsWithId } from "./shop-item.js"
-import { getCurrentRoomId, getIntObj, getProgressCounter, setIntObj } from "./variables.js"
+import { getCurrentRoomId, getIntObj, getProgressString, setIntObj } from "./variables.js"
 import { 
     MAX_PACKSIZE,
     calculateTotalCoins,
@@ -93,7 +93,7 @@ const renderBuy = () => {
 const renderBuyItems = () => {
     return getShopItemsWithId()
     .filter(item => !item.sold)
-    .filter(item => getProgressCounter() >= item.progress)
+    .filter(item => getProgressString().includes(item.progress))
     .map((item) => {
         const buyItem = objectToElement(item)
         addClass(buyItem, 'buy-item')

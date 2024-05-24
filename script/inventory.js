@@ -1,3 +1,4 @@
+import { useBandage } from "./player-health.js"
 import { renderStats } from "./weapon-examine.js"
 import { interactables } from "./interactables.js"
 import { renderInteractable } from "./room-loader.js"
@@ -35,7 +36,6 @@ import {
     setShootCounter,
     getShooting, 
     getPause} from "./variables.js"
-import { heal, useBandage } from "./player-health.js"
 
 export const MAX_PACKSIZE = {
     bandage: 3,

@@ -74,17 +74,17 @@ class Pouch extends ShopItem {
 }
 
 let shopItems = [
-    new BandageShopItem(3, 1, 3, false),
-    new HardDriveShopItem(2, 1, 0, true),
-    new PistolAmmoShopItem(30, 1, 0, false),
-    new ShotgunShellsShopItem(20, 1, 0, false),
-    new MagnumAmmoShopItem(5, 1, 0, false),
-    new SmgAmmoShopItem(90, 1, 0, false),
-    new RifleAmmoShopItem(10, 1, 0, false),
-    new WeaponShopItem('uzi', 0, false),
-    new WeaponShopItem('mp5k', 0, false),
-    new WeaponShopItem('riotgun', 0, false),
-    new Pouch(1, 3, 0, false)
+    new BandageShopItem(3, 1, 'a1', false),
+    new HardDriveShopItem(2, 1, 'a1', true),
+    new PistolAmmoShopItem(30, 1, 'a1', false),
+    new ShotgunShellsShopItem(20, 1, 'a1', false),
+    new MagnumAmmoShopItem(5, 1, 'a1', false),
+    new SmgAmmoShopItem(90, 1, 'a1', false),
+    new RifleAmmoShopItem(10, 1, 'a1', false),
+    new WeaponShopItem('uzi', 'b2', false),
+    new WeaponShopItem('mp5k', 'c3', false),
+    new WeaponShopItem('riotgun', 'd4', false),
+    new Pouch(1, 3, 'e5', false)
 ]
 
 export const setShopItems = (val) => {
