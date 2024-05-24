@@ -168,7 +168,8 @@ export const notifyEnemy = (dist, enemy) => {
 }
 
 export const damageEnemy = (enemy, equipped) => {
-    const damage = getStat(equipped.name, 'damage', equipped.damagelvl)
+    let damage = getStat(equipped.name, 'damage', equipped.damagelvl)
+    if ( enemy.getAttribute('virus') === getSpecification(equipped.name, 'antivirus') ) damage *= 1.2
     const enemyHealth = Number(enemy.getAttribute('health'))
     const newHealth = enemyHealth - damage
     addAttribute(enemy, 'health', newHealth)
