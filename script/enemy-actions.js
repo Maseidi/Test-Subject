@@ -19,9 +19,9 @@ import {
 
 export const moveToDestination = (enemy) => {
     const enemyCpu = window.getComputedStyle(enemy)
-    const enemyLeft = parseInt(enemyCpu.left)
-    const enemyTop = parseInt(enemyCpu.top)
-    const enemyW = parseInt(enemyCpu.width)
+    const enemyLeft = Number(enemyCpu.left.replace('px', ''))
+    const enemyTop = Number(enemyCpu.top.replace('px', ''))
+    const enemyW = Number(enemyCpu.width.replace('px', ''))
     const destLeft = Number(enemy.getAttribute('dest-x'))
     const destTop = Number(enemy.getAttribute('dest-y'))
     const destW = Number(enemy.getAttribute('dest-w'))
@@ -58,8 +58,8 @@ export const moveToDestination = (enemy) => {
                 break                 
         }
     }
-    const currentX = parseInt(window.getComputedStyle(enemy).left)
-    const currentY = parseInt(window.getComputedStyle(enemy).top)
+    const currentX = Number(window.getComputedStyle(enemy).left.replace('px', ''))
+    const currentY = Number(window.getComputedStyle(enemy).top.replace('px', ''))
     enemy.style.left = `${currentX + speed * xMultiplier}px`
     enemy.style.top = `${currentY + speed * yMultiplier}px`
 }
@@ -136,7 +136,10 @@ const knockPlayer = (enemy) => {
             break                
     }
     if ( xAxis === undefined && yAxis === undefined ) return
-    if ( getCurrentRoomSolid().find(x => collide(x, getPlayer().firstElementChild.lastElementChild, 12)) !== undefined ) return
+    if ( getCurrentRoomSolid()
+        .find(x => 
+                x !== enemy.firstElementChild && 
+                collide(x, getPlayer().firstElementChild.lastElementChild, Number(enemy.getAttribute('knock')))) !== undefined ) return
     setMapX(xAxis * knock + getMapX())
     setMapY(yAxis * knock + getMapY())
     setPlayerX(-xAxis * knock + getPlayerX())
@@ -152,7 +155,7 @@ export const updateDestinationToPlayer = (enemy) =>
 
 export const updateDestinationToPath = (enemy, path) => {
     const pathCpu = window.getComputedStyle(path)
-    updateDestination(enemy, parseInt(pathCpu.left), parseInt(pathCpu.top), 10)
+    updateDestination(enemy, Number(pathCpu.left.replace('px', '')), Number(pathCpu.top.replace('px', '')), 10)
 }
     
 const updateDestination = (enemy, x, y, width) => {
@@ -179,8 +182,8 @@ export const damageEnemy = (enemy, equipped) => {
     addAttribute(enemy, 'health', newHealth)
     if ( newHealth <= 0 ) {
         const enemyCpu = window.getComputedStyle(enemy)
-        addAttribute(enemy, 'left', parseInt(enemyCpu.left))
-        addAttribute(enemy, 'top', parseInt(enemyCpu.top))
+        addAttribute(enemy, 'left', Number(enemyCpu.left.replace('px', '')))
+        addAttribute(enemy, 'top', Number(enemyCpu.top.replace('px', '')))
         dropLoot(enemy)
         return
     }
@@ -201,8 +204,8 @@ const knockEnemy = (enemy, knockback) => {
     else if ( enemyBound.bottom >= playerBound.top || enemyBound.top <= playerBound.bottom ) yAxis = 0
     else yAxis = 1
     const enemyCpu = window.getComputedStyle(enemy)
-    const enemyLeft = parseInt(enemyCpu.left)
-    const enemyTop = parseInt(enemyCpu.top)
+    const enemyLeft = Number(enemyCpu.left.replace('px', ''))
+    const enemyTop = Number(enemyCpu.top.replace('px', ''))
     enemy.style.left = `${enemyLeft + xAxis * knockback}px`
     enemy.style.top = `${enemyTop + yAxis * knockback}px`
 }

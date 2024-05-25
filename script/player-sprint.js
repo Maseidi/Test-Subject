@@ -34,5 +34,5 @@ const handleSprintAndStamina = (sprint, animator, stamina, refill) => {
     setStamina(getStamina() + stamina)
     setRefillStamina(refill)
     staminaManager(getStamina())
-    if ( sprint ) getCurrentRoomEnemies().forEach(enemy => notifyEnemy(300, enemy))
+    if ( sprint ) getCurrentRoomEnemies().forEach(enemy => notifyEnemy(400, enemy))
 }

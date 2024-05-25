@@ -108,7 +108,7 @@ const shoot = () => {
         return
     }
     currMag--
-    getCurrentRoomEnemies().forEach(enemy => notifyEnemy(700, enemy))
+    getCurrentRoomEnemies().forEach(enemy => notifyEnemy(800, enemy))
     if ( getTarget() && containsClass(getTarget().parentElement, 'enemy') &&
          Number(getTarget().parentElement.getAttribute('health')) > 0 ) damageEnemy(getTarget().parentElement, equippedWeapon)
     updateInventory(equippedWeapon, currMag, 0)

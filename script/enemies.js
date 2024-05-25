@@ -75,7 +75,7 @@ class Torturer extends Enemy {
         const health = Math.floor(90 + Math.random() * 20)
         const damage = Math.floor(17 + Math.random() * 6)
         const virus = ['red', 'green', 'yellow', 'blue', 'purple'][Math.floor(Math.random() * 5)]
-        super('torturer', 4, path, health, damage, 20, 4, progress, virus, 600)
+        super('torturer', 4, path, health, damage, 40, 4, progress, virus, 600)
     }
 }
 

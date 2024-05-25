@@ -12,17 +12,17 @@ export const findPath = (enemy) => {
     }
     if ( !wall ) return
     const enemyCpu = window.getComputedStyle(enemy)
-    const enemyLeft = parseInt(enemyCpu.left)
-    const enemyTop = parseInt(enemyCpu.top)
-    const enemyW = parseInt(enemyCpu.width)
+    const enemyLeft = Number(enemyCpu.left.replace('px', ''))
+    const enemyTop = Number(enemyCpu.top.replace('px', ''))
+    const enemyW = Number(enemyCpu.width.replace('px', ''))
 
     const destLeft = Number(enemy.getAttribute('dest-x'))
     const destTop = Number(enemy.getAttribute('dest-y'))
     const destW = Number(enemy.getAttribute('dest-w'))
 
     const wallCpu = window.getComputedStyle(wall)
-    const wallLeft = parseInt(wallCpu.left)
-    const wallTop = parseInt(wallCpu.top)
-    const wallWidth = parseInt(wallCpu.width)
-    const wallH = parseInt(wallCpu.height)
+    const wallLeft = Number(wallCpu.left.replace('px', ''))
+    const wallTop = Number(wallCpu.top.replace('px', ''))
+    const wallWidth = Number(wallCpu.width.replace('px', ''))
+    const wallH = Number(wallCpu.height.replace('px', ''))
 }

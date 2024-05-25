@@ -23,6 +23,7 @@ import {
     setPrevRoomId,
     setRoomLeft,
     setRoomTop} from "./variables.js"
+import { notifyEnemy } from "./enemy-actions.js"
 
 export const manageEntities = () => {
     manageSolidObjects()
@@ -35,6 +36,7 @@ const manageSolidObjects = () => {
     setAllowMove(true)
     const solid = getCurrentRoomSolid().find(solid => collide(getPlayer().firstElementChild.children[1], solid, 12))
     if ( solid ) setAllowMove(false)
+    if ( solid && containsClass(solid.parentElement, 'enemy') ) notifyEnemy(60, solid.parentElement)    
 }
 
 const manageLoaders = () => {
@@ -62,8 +64,8 @@ const calculateNewRoomLeftAndTop = (cpuLeft, cpuTop) => {
         top = loader.top === -26 ? loader.top + 52 : loader.top
     if ( loader.left !== undefined )
         left = loader.left === -26 ? loader.left + 52 : loader.left
-    setRoomLeft(getRoomLeft() - left + parseInt(cpuLeft))
-    setRoomTop(getRoomTop() - top + parseInt(cpuTop))
+    setRoomLeft(getRoomLeft() - left + Number(cpuLeft.replace('px', '')))
+    setRoomTop(getRoomTop() - top + Number(cpuTop.replace('px', '')))
 }
 
 const manageInteractables = () => {

@@ -54,7 +54,7 @@ const handleLostState = (enemy) => {
         return
     } 
     const counter = Number(enemy.getAttribute('lost-counter'))
-    if ( counter === 1200 ) {
+    if ( counter === 120 ) {
         addAttribute(enemy, 'state', 'move-to-position')
         return
     }
