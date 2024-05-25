@@ -41,7 +41,8 @@ export const loadCurrentRoom = () => {
 
 const renderWalls = (roomToRender) => {
     walls.get(getCurrentRoomId()).forEach((elem, index) => {
-        const wall = createAndAddClass('div', `wall-${index+1}`, 'solid')
+        const wall = createAndAddClass('div', 'solid')
+        wall.id = `wall-${index+1}`
         wall.style.backgroundColor = `darkgray`
         wall.style.width = `${elem.width}px`
         wall.style.height = `${elem.height}px`

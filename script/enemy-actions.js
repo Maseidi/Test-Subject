@@ -2,8 +2,8 @@ import { dropLoot } from "./loot-manager.js"
 import { takeDamage } from "./player-health.js"
 import { replaceForwardDetector } from "./player-angle.js"
 import { getSpecification, getStat } from "./weapon-specs.js"
-import { addAttribute, addClass, collide, createAndAddClass, distance, removeClass } from "./util.js"
-import { getCurrentRoom, getCurrentRoomEnemies, getCurrentRoomSolid, getMapEl, getPlayer } from "./elements.js"
+import { addAttribute, addClass, collide, distance, removeClass } from "./util.js"
+import { getCurrentRoomEnemies, getCurrentRoomSolid, getMapEl, getPlayer } from "./elements.js"
 import { 
     getMapX,
     getMapY,
@@ -17,74 +17,79 @@ import {
     setPlayerY,
     setNoOffenseCounter } from "./variables.js"
 
-export const moveToDestination = (src, dest) => {
-    const srcBound = src.getBoundingClientRect()
-    const destBound = dest.getBoundingClientRect()
+export const moveToDestination = (enemy) => {
+    const enemyCpu = window.getComputedStyle(enemy)
+    const enemyLeft = parseInt(enemyCpu.left)
+    const enemyTop = parseInt(enemyCpu.top)
+    const enemyW = parseInt(enemyCpu.width)
+    const destLeft = Number(enemy.getAttribute('dest-x'))
+    const destTop = Number(enemy.getAttribute('dest-y'))
+    const destW = Number(enemy.getAttribute('dest-w'))
     let xMultiplier, yMultiplier
-    if ( srcBound.left > destBound.left + destBound.width / 2 ) xMultiplier = -1
-    else if ( srcBound.right <= destBound.left + destBound.width / 2 ) xMultiplier = 1
-    if ( srcBound.top > destBound.top + destBound.height / 2 ) yMultiplier = -1
-    else if ( srcBound.bottom <= destBound.top + destBound.height / 2 ) yMultiplier = 1
-    calculateAngle(src, xMultiplier, yMultiplier)
-    let speed = Number(src.getAttribute("speed"))
-    if ( src.getAttribute('state') === 'no-offence' ) speed /= 2
-    if ( src.getAttribute('state') === 'investigate' ) speed /= 5
+    if ( enemyLeft > destLeft + destW / 2 ) xMultiplier = -1
+    else if ( enemyLeft + enemyW <= destLeft + destW / 2 ) xMultiplier = 1
+    if ( enemyTop > destTop + destW / 2 ) yMultiplier = -1
+    else if ( enemyTop + enemyW <= destTop + destW / 2 ) yMultiplier = 1
+    calculateAngle(enemy, xMultiplier, yMultiplier)
+    let speed = Number(enemy.getAttribute("speed"))
+    if ( enemy.getAttribute('state') === 'no-offence' ) speed /= 2
+    if ( enemy.getAttribute('state') === 'investigate' ) speed /= 5
     if ( xMultiplier && yMultiplier ) speed /= 1.41
     else if ( !xMultiplier && !yMultiplier ) {
-        switch ( src.getAttribute('state') ) {
+        switch ( enemy.getAttribute('state') ) {
             case 'investigate':
-                const path = document.getElementById(src.getAttribute('path'))
+                const path = document.getElementById(enemy.getAttribute('path'))
                 const numOfPoints = path.children.length
-                const currentPathPoint = Number(src.getAttribute('path-point'))
+                const currentPathPoint = Number(enemy.getAttribute('path-point'))
                 let nextPathPoint = currentPathPoint + 1
                 if ( nextPathPoint > numOfPoints - 1 ) nextPathPoint = 0
-                addAttribute(src, 'path-point', nextPathPoint)
-                addAttribute(src, 'investigation-counter', 1)
+                addAttribute(enemy, 'path-point', nextPathPoint)
+                addAttribute(enemy, 'investigation-counter', 1)
                 break
             case 'chase':
-                if ( collide(src, getPlayer(), 0) ) hitPlayer(src)
+                if ( collide(enemy, getPlayer(), 0) ) hitPlayer(enemy)
                 else { 
-                    addAttribute(src, 'state', 'lost')
-                    addAttribute(src, 'lost-counter', '0')
+                    addAttribute(enemy, 'state', 'lost')
+                    addAttribute(enemy, 'lost-counter', '0')
                 }
                 break
             case 'move-to-position':
-                addAttribute(src, 'state', 'investigate')
+                addAttribute(enemy, 'state', 'investigate')
                 break                 
         }
     }
-    const currentX = Number(window.getComputedStyle(src).left.replace('px', ''))
-    const currentY = Number(window.getComputedStyle(src).top.replace('px', ''))
-    src.style.left = `${currentX + speed * xMultiplier}px`
-    src.style.top = `${currentY + speed * yMultiplier}px`
+    const currentX = parseInt(window.getComputedStyle(enemy).left)
+    const currentY = parseInt(window.getComputedStyle(enemy).top)
+    enemy.style.left = `${currentX + speed * xMultiplier}px`
+    enemy.style.top = `${currentY + speed * yMultiplier}px`
 }
 
-export const calculateAngle = (src, x, y) => {
-    let newState = Number(src.getAttribute('angle-state'))
-    if ( x === 1 && y === 1 )        newState = changeEnemyAngleState(7, src, '100%', '0', '100%', '0')
-    else if ( x === 1 && y === -1 )  newState = changeEnemyAngleState(5, src, '100%', '0', '0', '-100%')
-    else if ( x === -1 && y === 1 )  newState = changeEnemyAngleState(1, src, '0', '-100%', '100%', '0')    
-    else if ( x === -1 && y === -1 ) newState = changeEnemyAngleState(3, src, '0', '-100%', '0', '-100%')
-    else if ( x === 1 && !y )        newState = changeEnemyAngleState(6, src, '100%', '0', '50%', '-50%')
-    else if ( x === -1 && !y )       newState = changeEnemyAngleState(2, src, '0', '-100%', '50%', '-50%')
-    else if ( !x && y === 1 )        newState = changeEnemyAngleState(0, src, '50%', '-50%', '100%', '0')
-    else if ( !x && y === -1 )       newState = changeEnemyAngleState(4, src, '50%', '-50%', '0', '-100%')
-    let diff = newState - Number(src.getAttribute('angle-state'))
+export const calculateAngle = (enemy, x, y) => {
+    let newState = Number(enemy.getAttribute('angle-state'))
+    if ( x === 1 && y === 1 )        newState = changeEnemyAngleState(7, enemy, '100%', '0', '100%', '0')
+    else if ( x === 1 && y === -1 )  newState = changeEnemyAngleState(5, enemy, '100%', '0', '0', '-100%')
+    else if ( x === -1 && y === 1 )  newState = changeEnemyAngleState(1, enemy, '0', '-100%', '100%', '0')    
+    else if ( x === -1 && y === -1 ) newState = changeEnemyAngleState(3, enemy, '0', '-100%', '0', '-100%')
+    else if ( x === 1 && !y )        newState = changeEnemyAngleState(6, enemy, '100%', '0', '50%', '-50%')
+    else if ( x === -1 && !y )       newState = changeEnemyAngleState(2, enemy, '0', '-100%', '50%', '-50%')
+    else if ( !x && y === 1 )        newState = changeEnemyAngleState(0, enemy, '50%', '-50%', '100%', '0')
+    else if ( !x && y === -1 )       newState = changeEnemyAngleState(4, enemy, '50%', '-50%', '0', '-100%')
+    let diff = newState - Number(enemy.getAttribute('angle-state'))
     if (Math.abs(diff) > 4 && diff >= 0) diff = -(8 - diff)
     else if (Math.abs(diff) > 4 && diff < 0) diff = 8 - Math.abs(diff) 
-    const newAngle = Number(src.getAttribute('angle')) + diff * 45    
-    addAttribute(src, 'angle', newAngle)
-    addAttribute(src, 'angle-state', newState)
-    src.firstElementChild.firstElementChild.style.transform = `rotateZ(${newAngle}deg)`
+    const newAngle = Number(enemy.getAttribute('angle')) + diff * 45    
+    addAttribute(enemy, 'angle', newAngle)
+    addAttribute(enemy, 'angle-state', newState)
+    enemy.firstElementChild.firstElementChild.style.transform = `rotateZ(${newAngle}deg)`
 }
 
-const changeEnemyAngleState = (state, src, left, translateX, top, translateY) => {
-    replaceEnemyVision(src, left, top, translateX, translateY)
+const changeEnemyAngleState = (state, enemy, left, translateX, top, translateY) => {
+    replaceEnemyVision(enemy, left, top, translateX, translateY)
     return state
 }
 
-const replaceEnemyVision = (src, left, top, translateX, translateY) => {
-    const vision = src.firstElementChild.children[1]
+const replaceEnemyVision = (enemy, left, top, translateX, translateY) => {
+    const vision = enemy.firstElementChild.children[1]
     vision.style.left = left
     vision.style.top = top
     vision.style.transform = `translateX(${translateX}) translateY(${translateY})`
@@ -102,29 +107,29 @@ const hitPlayer = (enemy) => {
 
 const knockPlayer = (enemy) => {
     const knock = Number(enemy.getAttribute('knock'))
-    const angle = Number(enemy.getAttribute('angle-state'))
+    const angle = enemy.getAttribute('angle-state')
     let xAxis, yAxis
     switch ( angle ) {
-        case 0:
+        case '0':
             xAxis = 0
             yAxis = -1
             replaceForwardDetector('calc(50% - 2px)', '100%')
             break
-        case 1:
-        case 2:
-        case 3:
+        case '1':
+        case '2':
+        case '3':
             xAxis = 1
             yAxis = 0
             replaceForwardDetector('-4px', 'calc(50% - 2px)')
             break
-        case 4:
+        case '4':
             xAxis = 0
             yAxis = 1
             replaceForwardDetector('calc(50% - 2px)', '-4px')
             break
-        case 5:
-        case 6:
-        case 7:
+        case '5':
+        case '6':
+        case '7':
             xAxis = -1
             yAxis = 0
             replaceForwardDetector('100%', 'calc(50% - 2px)')
@@ -142,28 +147,27 @@ const knockPlayer = (enemy) => {
     getPlayer().style.top = `${getPlayerY()}px`
 }
 
-export const updateDestination = (enemy) => {
-    addAttribute(enemy, 'player-x', Math.floor(getPlayerX() - getRoomLeft()))
-    addAttribute(enemy, 'player-y', Math.floor(getPlayerY() - getRoomTop()))
-}
+export const updateDestinationToPlayer = (enemy) => 
+    updateDestination(enemy, Math.floor(getPlayerX() - getRoomLeft()), Math.floor(getPlayerY() - getRoomTop()), 34)
 
-export const moveToPlayer = (enemy) => {
-    const next = createAndAddClass('div', 'dest')
-    next.style.left = `${enemy.getAttribute('player-x')}px`
-    next.style.top = `${enemy.getAttribute('player-y')}px`
-    getCurrentRoom().append(next)
-    moveToDestination(enemy, next)
-    next.remove()
+export const updateDestinationToPath = (enemy, path) => {
+    const pathCpu = window.getComputedStyle(path)
+    updateDestination(enemy, parseInt(pathCpu.left), parseInt(pathCpu.top), 10)
+}
+    
+const updateDestination = (enemy, x, y, width) => {
+    addAttribute(enemy, 'dest-x', x)
+    addAttribute(enemy, 'dest-y', y)
+    addAttribute(enemy, 'dest-w', width)
 }
 
 export const notifyEnemy = (dist, enemy) => {
-    const state = enemy.getAttribute('state')
-    if ( state === 'chase' || state === 'no-offence' ) return
     const enemyBound = enemy.getBoundingClientRect()
     const playerBound = getPlayer().getBoundingClientRect()
     if ( distance(playerBound.x, playerBound.y, enemyBound.x, enemyBound.y) <= dist ) {
-        addAttribute(enemy, 'state', 'chase')
-        updateDestination(enemy)
+        const state = enemy.getAttribute('state')
+        if (state !== 'chase' && state !== 'no-offence') addAttribute(enemy, 'state', 'chase')
+        updateDestinationToPlayer(enemy)
     }
 }
 
@@ -175,8 +179,8 @@ export const damageEnemy = (enemy, equipped) => {
     addAttribute(enemy, 'health', newHealth)
     if ( newHealth <= 0 ) {
         const enemyCpu = window.getComputedStyle(enemy)
-        addAttribute(enemy, 'left', enemyCpu.left.replace('px', ''))
-        addAttribute(enemy, 'top', enemyCpu.top.replace('px', ''))
+        addAttribute(enemy, 'left', parseInt(enemyCpu.left))
+        addAttribute(enemy, 'top', parseInt(enemyCpu.top))
         dropLoot(enemy)
         return
     }
@@ -197,8 +201,8 @@ const knockEnemy = (enemy, knockback) => {
     else if ( enemyBound.bottom >= playerBound.top || enemyBound.top <= playerBound.bottom ) yAxis = 0
     else yAxis = 1
     const enemyCpu = window.getComputedStyle(enemy)
-    const enemyLeft = Number(enemyCpu.left.replace('px', ''))
-    const enemyTop = Number(enemyCpu.top.replace('px', ''))
+    const enemyLeft = parseInt(enemyCpu.left)
+    const enemyTop = parseInt(enemyCpu.top)
     enemy.style.left = `${enemyLeft + xAxis * knockback}px`
     enemy.style.top = `${enemyTop + yAxis * knockback}px`
 }

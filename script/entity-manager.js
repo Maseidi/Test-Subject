@@ -62,8 +62,8 @@ const calculateNewRoomLeftAndTop = (cpuLeft, cpuTop) => {
         top = loader.top === -26 ? loader.top + 52 : loader.top
     if ( loader.left !== undefined )
         left = loader.left === -26 ? loader.left + 52 : loader.left
-    setRoomLeft(getRoomLeft() - left + Number(cpuLeft.replace('px', '')))
-    setRoomTop(getRoomTop() - top + Number(cpuTop.replace('px', '')))
+    setRoomLeft(getRoomLeft() - left + parseInt(cpuLeft))
+    setRoomTop(getRoomTop() - top + parseInt(cpuTop))
 }
 
 const manageInteractables = () => {

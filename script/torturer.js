@@ -1,23 +1,23 @@
 import { addAttribute } from "./util.js"
 import { isPlayerVisible } from "./enemy-vision.js"
-import { calculateAngle, moveToDestination, moveToPlayer, updateDestination } from "./enemy-actions.js"
+import { calculateAngle, moveToDestination, updateDestinationToPlayer, updateDestinationToPath } from "./enemy-actions.js"
 
 export const torturerBehavior = (enemy) => {
     isPlayerVisible(enemy)
     switch ( enemy.getAttribute('state') ) {
         case 'investigate':
             handleInvestigationState(enemy)
-            break  
+            break
         case 'chase':
-        case 'no-offence':    
+        case 'no-offence':
             handleChaseState(enemy)
-            break 
+            break
         case 'lost':
-            handleLostState(enemy)   
+            handleLostState(enemy)
             break
         case 'move-to-position':
             handleMoveToPositionState(enemy)
-            break   
+            break
     }
 }
 
@@ -38,16 +38,18 @@ const handleInvestigationState = (enemy) => {
         const y = Math.random() < 1 / 3 ? 1 : Math.random() < 0.5 ? 0 : -1
         calculateAngle(enemy, x, y)
     } 
-    moveToDestination(enemy, path.children[Number(enemy.getAttribute('path-point'))])
+    const dest = path.children[Number(enemy.getAttribute('path-point'))]
+    updateDestinationToPath(enemy, dest)
+    moveToDestination(enemy)
 }
 
 const handleChaseState = (enemy) => {
-    if ( isPlayerVisible(enemy) ) updateDestination(enemy)
-    moveToPlayer(enemy)
+    if ( isPlayerVisible(enemy) ) updateDestinationToPlayer(enemy)
+    moveToDestination(enemy)
 }
 
 const handleLostState = (enemy) => {
-    if ( isPlayerVisible(enemy) ) { 
+    if ( isPlayerVisible(enemy) ) {
         addAttribute(enemy, 'state', 'chase') 
         return
     } 
@@ -67,5 +69,7 @@ const handleMoveToPositionState = (enemy) => {
         addAttribute(enemy, 'state', 'chase') 
         return
     }
-    moveToDestination(enemy, document.getElementById(enemy.getAttribute('path')).children[Number(enemy.getAttribute('path-point'))])
+    const dest = document.getElementById(enemy.getAttribute('path')).children[Number(enemy.getAttribute('path-point'))]
+    updateDestinationToPath(enemy, dest)
+    moveToDestination(enemy)
 }

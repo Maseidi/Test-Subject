@@ -1,8 +1,14 @@
-import { collide, containsClass } from "./util.js"
 import { getStat } from "./weapon-specs.js"
+import { dropLoot } from "./loot-manager.js"
+import { collide, containsClass } from "./util.js"
 import { removeUi, renderUi } from "./user-interface.js"
+import { damageEnemy, notifyEnemy } from "./enemy-actions.js"
 import { getCurrentRoomEnemies, getCurrentRoomSolid, getPlayer } from "./elements.js"
-import { calculateTotalAmmo, equippedWeaponFromInventory, updateInventoryWeaponMag, useInventoryResource } from "./inventory.js"
+import { 
+    calculateTotalAmmo,
+    equippedWeaponFromInventory,
+    updateInventoryWeaponMag,
+    useInventoryResource } from "./inventory.js"
 import { 
     getAimMode,
     getEquippedWeapon,
@@ -15,8 +21,6 @@ import {
     setShootCounter,
     setShooting,
     setTarget } from "./variables.js"
-import { dropLoot } from "./loot-manager.js"
-import { damageEnemy, notifyEnemy } from "./enemy-actions.js"
 
 const EMPTY_WEAPON = new Audio('../assets/audio/empty-weapon.mp3')
 
