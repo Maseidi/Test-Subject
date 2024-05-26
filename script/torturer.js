@@ -1,7 +1,7 @@
 import { addAttribute } from "./util.js"
 import { isPlayerVisible } from "./enemy-vision.js"
 import { calculateAngle, moveToDestination, updateDestinationToPlayer, updateDestinationToPath } from "./enemy-actions.js"
-import { findPath } from "./enemy-pathfinding.js"
+import { findPath } from "./enemy-path-finding.js"
 
 export const torturerBehavior = (enemy) => {
     isPlayerVisible(enemy)

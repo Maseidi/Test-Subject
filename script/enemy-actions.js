@@ -22,9 +22,11 @@ export const moveToDestination = (enemy) => {
     const enemyLeft = Number(enemyCpu.left.replace('px', ''))
     const enemyTop = Number(enemyCpu.top.replace('px', ''))
     const enemyW = Number(enemyCpu.width.replace('px', ''))
-    const destLeft = Number(enemy.getAttribute('dest-x'))
-    const destTop = Number(enemy.getAttribute('dest-y'))
-    const destW = Number(enemy.getAttribute('dest-w'))
+    const destLeft = enemy.getAttribute('path-finding-x') === 'null' ? 
+        Number(enemy.getAttribute('dest-x')) : Number(enemy.getAttribute('path-finding-x'))
+    const destTop = enemy.getAttribute('path-finding-y') === 'null' ?
+        Number(enemy.getAttribute('dest-y')) : Number(enemy.getAttribute('path-finding-y'))
+    const destW = enemy.getAttribute('path-finding-x') === 'null' ? Number(enemy.getAttribute('dest-w')) : 10
     let xMultiplier, yMultiplier
     if ( enemyLeft > destLeft + destW / 2 ) xMultiplier = -1
     else if ( enemyLeft + enemyW <= destLeft + destW / 2 ) xMultiplier = 1
@@ -36,6 +38,8 @@ export const moveToDestination = (enemy) => {
     if ( enemy.getAttribute('state') === 'investigate' ) speed /= 5
     if ( xMultiplier && yMultiplier ) speed /= 1.41
     else if ( !xMultiplier && !yMultiplier ) {
+        addAttribute(enemy, 'path-finding-x', null)
+        addAttribute(enemy, 'path-finding-y', null)
         switch ( enemy.getAttribute('state') ) {
             case 'investigate':
                 const path = document.getElementById(enemy.getAttribute('path'))

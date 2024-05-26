@@ -8,12 +8,10 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    border: 1px solid orange;
 }
 
 .torturer > .torturer-collider > .vision {
   position: absolute;
-  border: 1px solid red;
 }
 
 .torturer > .torturer-collider > div:nth-of-type(1) {
@@ -66,7 +64,6 @@
   width: 34px;
   height: 34px;
   position: absolute;
-  background-color: gold;
 }
 
 @keyframes torturerAttack {
@@ -92,7 +89,6 @@
   position: absolute;
   width: 10px;
   height: 10px;
-  background-color: green;
 }
 
 .damaged, .damaged > div {

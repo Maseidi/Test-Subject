@@ -171,7 +171,9 @@ const renderEnemies = (roomToRender) => {
             addAttribute(enemy, 'speed', elem.speed)
             addAttribute(enemy, 'virus', elem.virus)
             addAttribute(enemy, 'path', `path-${index}`)
-            addAttribute(enemy, 'path-point', `0`)
+            addAttribute(enemy, 'path-point', '0')
+            addAttribute(enemy, 'path-finding-x', 'null')
+            addAttribute(enemy, 'path-finding-y', 'null')
             createPath(elem, index, roomToRender)
             enemy.style.left = `${elem.path.points[0].x}px`
             enemy.style.top = `${elem.path.points[0].y}px`
