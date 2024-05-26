@@ -139,7 +139,7 @@ const knockPlayer = (enemy) => {
     if ( getCurrentRoomSolid()
         .find(x => 
                 x !== enemy.firstElementChild && 
-                collide(x, getPlayer().firstElementChild.lastElementChild, Number(enemy.getAttribute('knock')))) !== undefined ) return
+                collide(x, getPlayer().firstElementChild.lastElementChild, knock)) !== undefined ) return
     setMapX(xAxis * knock + getMapX())
     setMapY(yAxis * knock + getMapY())
     setPlayerX(-xAxis * knock + getPlayerX())

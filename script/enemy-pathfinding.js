@@ -23,6 +23,22 @@ export const findPath = (enemy) => {
     const wallCpu = window.getComputedStyle(wall)
     const wallLeft = Number(wallCpu.left.replace('px', ''))
     const wallTop = Number(wallCpu.top.replace('px', ''))
-    const wallWidth = Number(wallCpu.width.replace('px', ''))
+    const wallW = Number(wallCpu.width.replace('px', ''))
     const wallH = Number(wallCpu.height.replace('px', ''))
+
+    let enemyState = getPositionState(enemyLeft, enemyTop, enemyW, enemyW, wallLeft, wallTop, wallW, wallH)
+    let destState = getPositionState(destLeft, destTop, destW, destW, wallLeft, wallTop, wallW, wallH)
+}
+
+const getPositionState = (left, top, width, height, wLeft, wTop, wWidth, wHeight) => {
+    let positionState
+    if ( left + width < wLeft ) positionState = 10
+    else if ( left + width >= wLeft && left < wLeft + wWidth ) positionState = 20
+    else positionState = 30
+
+    if ( top + height < wTop ) positionState += 1
+    else if ( top + height >= wTop && top < wTop + wHeight ) positionState += 2
+    else positionState += 3
+    
+    return positionState
 }

@@ -1,6 +1,7 @@
 import { addAttribute } from "./util.js"
 import { isPlayerVisible } from "./enemy-vision.js"
 import { calculateAngle, moveToDestination, updateDestinationToPlayer, updateDestinationToPath } from "./enemy-actions.js"
+import { findPath } from "./enemy-pathfinding.js"
 
 export const torturerBehavior = (enemy) => {
     isPlayerVisible(enemy)
@@ -45,6 +46,7 @@ const handleInvestigationState = (enemy) => {
 
 const handleChaseState = (enemy) => {
     if ( isPlayerVisible(enemy) ) updateDestinationToPlayer(enemy)
+    findPath(enemy)    
     moveToDestination(enemy)
 }
 
@@ -54,7 +56,7 @@ const handleLostState = (enemy) => {
         return
     } 
     const counter = Number(enemy.getAttribute('lost-counter'))
-    if ( counter === 120 ) {
+    if ( counter === 600 ) {
         addAttribute(enemy, 'state', 'move-to-position')
         return
     }
