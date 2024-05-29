@@ -80,10 +80,12 @@ const handleTopLeftState = (enemy, destState, wallLeft, wallTop, wallW, wallH) =
             addPathfinding(enemy, wallLeft + wallW + 50, wallTop - 50)
             break
         case 33:
-            if ( Number(enemy.getAttribute('path-finding-x')) === wallLeft + wallW + 50 || Math.random() < 0.5 )
+            if ( wallW < wallH )
                 addPathfinding(enemy, wallLeft + wallW + 50, wallTop - 50)
             else addPathfinding(enemy, wallLeft - 50, wallTop + wallH + 50)
-            break        
+            break  
+        default:
+            addPathfinding(enemy, 'null', 'null')          
     }
 }
 
@@ -95,9 +97,10 @@ const handlLeftState = (enemy, destState, trackerMap, wallLeft, wallTop, wallH) 
             break
         case 32:
             if ( trackerMap.has('top-left') && trackerMap.has('bottom-left') ) {
-                if ( Number(enemy.getAttribute('path-finding-y')) === wallTop + wallH + 50 || Math.random() < 0.5 )
-                    addPathfinding(enemy, wallLeft - 50, wallTop + wallH + 50)
-                else addPathfinding(enemy, wallLeft - 50, wallTop - 50)
+                const enemyTop = Number(window.getComputedStyle(enemy).top.replace('px', ''))
+                if ( enemyTop - wallTop < wallTop + wallH - enemyTop )
+                    addPathfinding(enemy, wallLeft - 50, wallTop - 50)             
+                else addPathfinding(enemy, wallLeft - 50, wallTop + wallH + 50)
             } 
             else if ( !trackerMap.has('top-left') ) addPathfinding(enemy, wallLeft - 50, wallTop + wallH + 50)
             else if ( !trackerMap.has('bottom-left') ) addPathfinding(enemy, wallLeft - 50, wallTop - 50)
@@ -105,7 +108,9 @@ const handlLeftState = (enemy, destState, trackerMap, wallLeft, wallTop, wallH) 
         case 23:
         case 33:
             addPathfinding(enemy, wallLeft - 50, wallTop + wallH + 50)
-            break                
+            break
+        default:
+            addPathfinding(enemy, 'null', 'null')                
     }
 }
 
@@ -115,13 +120,15 @@ const handleBottomLeftState = (enemy, destState, wallLeft, wallTop, wallW, wallH
             addPathfinding(enemy, wallLeft - 50, wallTop - 50)
             break
         case 31:
-            if ( Number(enemy.getAttribute('path-finding-x')) === wallLeft - 50 || Math.random() < 0.5 )
+            if ( wallH < wallW )
                 addPathfinding(enemy, wallLeft - 50, wallTop - 50)
             else addPathfinding(enemy, wallLeft + wallW + 50, wallTop + wallH + 50)
             break
         case 32:
             addPathfinding(enemy, wallLeft + wallW + 50, wallTop + wallH + 50)
-            break        
+            break
+        default:
+            addPathfinding(enemy, 'null', 'null')            
     }
 }
 
@@ -133,9 +140,10 @@ const handleTopState = (enemy, destState, trackerMap, wallLeft, wallTop, wallW) 
             break
         case 23:
             if ( trackerMap.has('top-left') && trackerMap.has('top-right') ) {
-                if ( Number(enemy.getAttribute('path-finding-x')) === wallLeft + wallW + 50 || Math.random() < 0.5 )
-                    addPathfinding(enemy, wallLeft + wallW + 50, wallTop - 50)
-                else addPathfinding(enemy, wallLeft - 50, wallTop - 50)
+                const enemyLeft = Number(window.getComputedStyle(enemy).left.replace('px', ''))
+                if ( enemyLeft - wallLeft < wallLeft + wallW - enemyLeft )
+                    addPathfinding(enemy, wallLeft - 50, wallTop - 50)
+                else addPathfinding(enemy, wallLeft + wallW + 50, wallTop - 50)
             }    
             else if ( !trackerMap.has('top-left') ) addPathfinding(enemy, wallLeft + wallW + 50, wallTop - 50)
             else if ( !trackerMap.has('top-right') ) addPathfinding(enemy, wallLeft - 50, wallTop - 50)
@@ -143,7 +151,9 @@ const handleTopState = (enemy, destState, trackerMap, wallLeft, wallTop, wallW) 
         case 32:
         case 33:
             addPathfinding(enemy, wallLeft + wallW + 50, wallTop - 50)
-            break                
+            break
+        default:
+            addPathfinding(enemy, 'null', 'null')                    
     }
 }
 
@@ -155,7 +165,8 @@ const handleBottomState = (enemy, destState, trackerMap, wallLeft, wallTop, wall
             break
         case 21:
             if ( trackerMap.has('bottom-left') && trackerMap.has('bottom-right') ) {
-                if ( Number(enemy.getAttribute('path-finding-x')) === wallLeft - 50 || Math.random() < 0.5 )
+                const enemyLeft = Number(window.getComputedStyle(enemy).left.replace('px', ''))
+                if ( enemyLeft - wallLeft < wallLeft + wallW - enemyLeft )
                     addPathfinding(enemy, wallLeft - 50, wallTop + wallH + 50)
                 else addPathfinding(enemy, wallLeft + wallW + 50, wallTop + wallH + 50)
             } 
@@ -165,7 +176,9 @@ const handleBottomState = (enemy, destState, trackerMap, wallLeft, wallTop, wall
         case 31:
         case 32:
             addPathfinding(enemy, wallLeft + wallW + 50, wallTop + wallH + 50)
-            break                
+            break  
+        default:
+            addPathfinding(enemy, 'null', 'null')                  
     }
 }
 
@@ -175,13 +188,15 @@ const handleTopRightState = (enemy, destState, wallLeft, wallTop, wallW, wallH) 
             addPathfinding(enemy, wallLeft - 50, wallTop - 50)
             break
         case 13:
-            if ( Number(enemy.getAttribute('path-finding-x')) === wallLeft - 50 || Math.random() < 0.5 )
+            if ( wallW < wallH )
                 addPathfinding(enemy, wallLeft - 50, wallTop - 50)
             else addPathfinding(enemy, wallLeft + wallW + 50, wallTop + wallH + 50)
             break
         case 23:
             addPathfinding(enemy, wallLeft + wallW + 50, wallTop + wallH + 50)
-            break        
+            break  
+        default:
+            addPathfinding(enemy, 'null', 'null')          
     }
 }
 
@@ -193,9 +208,10 @@ const handleRightState = (enemy, destState, trackerMap, wallLeft, wallTop, wallW
             break
         case 12:
             if ( trackerMap.has('bottom-left') && trackerMap.has('bottom-right') ) {
-                if ( Number(enemy.getAttribute('path-finding-y')) === wallTop + wallH + 50 || Math.random() < 0.5 )
-                    addPathfinding(enemy, wallLeft + wallW + 50, wallTop + wallH + 50)
-                else addPathfinding(enemy, wallLeft + wallW + 50, wallTop - 50)
+                const enemyTop = Number(window.getComputedStyle(enemy).top.replace('px', ''))
+                if ( enemyTop - wallTop < wallTop + wallH - enemyTop )
+                    addPathfinding(enemy, wallLeft + wallW + 50, wallTop - 50)
+                else addPathfinding(enemy, wallLeft + wallW + 50, wallTop + wallH + 50)
             } 
             else if ( !trackerMap.has('top-right') ) addPathfinding(enemy, wallLeft + wallW + 50, wallTop + wallH + 50)
             else if ( !trackerMap.has('bottom-right') ) addPathfinding(enemy, wallLeft + wallW + 50, wallTop - 50)
@@ -203,7 +219,9 @@ const handleRightState = (enemy, destState, trackerMap, wallLeft, wallTop, wallW
         case 13:
         case 23:
             addPathfinding(enemy, wallLeft + wallW + 50, wallTop + wallH + 50)
-            break                
+            break  
+        default:
+            addPathfinding(enemy, 'null', 'null')                  
     }
 }
 
@@ -213,13 +231,15 @@ const handleBottomRightState = (enemy, destState, wallLeft, wallTop, wallW, wall
             addPathfinding(enemy, wallLeft - 50, wallTop + wallH + 50)
             break
         case 11:
-            if ( Number(enemy.getAttribute('path-finding-x')) === wallLeft - 50 || Math.random() < 0.5 )
+            if ( wallW < wallH )
                 addPathfinding(enemy, wallLeft - 50, wallTop + wallH + 50)
             else addPathfinding(enemy, wallLeft + wallW + 50, wallTop - 50)
             break
         case 21:
             addPathfinding(enemy, wallLeft + wallW + 50, wallTop - 50)
-            break        
+            break
+        default:
+            addPathfinding(enemy, 'null', 'null')            
     }
 }
 

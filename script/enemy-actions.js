@@ -1,6 +1,5 @@
 import { dropLoot } from "./loot-manager.js"
 import { takeDamage } from "./player-health.js"
-import { replaceForwardDetector } from "./player-angle.js"
 import { getSpecification, getStat } from "./weapon-specs.js"
 import { addAttribute, addClass, collide, distance, removeClass } from "./util.js"
 import { getCurrentRoomEnemies, getCurrentRoomSolid, getMapEl, getPlayer } from "./elements.js"
@@ -38,28 +37,31 @@ export const moveToDestination = (enemy) => {
     if ( enemy.getAttribute('state') === 'investigate' ) speed /= 5
     if ( xMultiplier && yMultiplier ) speed /= 1.41
     else if ( !xMultiplier && !yMultiplier ) {
-        addAttribute(enemy, 'path-finding-x', null)
-        addAttribute(enemy, 'path-finding-y', null)
-        switch ( enemy.getAttribute('state') ) {
-            case 'investigate':
-                const path = document.getElementById(enemy.getAttribute('path'))
-                const numOfPoints = path.children.length
-                const currentPathPoint = Number(enemy.getAttribute('path-point'))
-                let nextPathPoint = currentPathPoint + 1
-                if ( nextPathPoint > numOfPoints - 1 ) nextPathPoint = 0
-                addAttribute(enemy, 'path-point', nextPathPoint)
-                addAttribute(enemy, 'investigation-counter', 1)
-                break
-            case 'chase':
-                if ( collide(enemy, getPlayer(), 0) ) hitPlayer(enemy)
-                else { 
-                    addAttribute(enemy, 'state', 'lost')
-                    addAttribute(enemy, 'lost-counter', '0')
-                }
-                break
-            case 'move-to-position':
-                addAttribute(enemy, 'state', 'investigate')
-                break                 
+        if ( enemy.getAttribute('path-finding-x') !== 'null' ) {
+            addAttribute(enemy, 'path-finding-x', null)
+            addAttribute(enemy, 'path-finding-y', null)
+        } else {
+            switch ( enemy.getAttribute('state') ) {
+                case 'investigate':
+                    const path = document.getElementById(enemy.getAttribute('path'))
+                    const numOfPoints = path.children.length
+                    const currentPathPoint = Number(enemy.getAttribute('path-point'))
+                    let nextPathPoint = currentPathPoint + 1
+                    if ( nextPathPoint > numOfPoints - 1 ) nextPathPoint = 0
+                    addAttribute(enemy, 'path-point', nextPathPoint)
+                    addAttribute(enemy, 'investigation-counter', 1)
+                    break
+                case 'chase':
+                    if ( collide(enemy, getPlayer(), 0) ) hitPlayer(enemy)
+                    else { 
+                        addAttribute(enemy, 'state', 'lost')
+                        addAttribute(enemy, 'lost-counter', '0')
+                    }
+                    break
+                case 'move-to-position':
+                    addAttribute(enemy, 'state', 'investigate')
+                    break                 
+            }
         }
     }
     const currentX = Number(window.getComputedStyle(enemy).left.replace('px', ''))
@@ -113,45 +115,56 @@ const knockPlayer = (enemy) => {
     const knock = Number(enemy.getAttribute('knock'))
     const angle = enemy.getAttribute('angle-state')
     let xAxis, yAxis
+    let finalKnock
     switch ( angle ) {
         case '0':
             xAxis = 0
             yAxis = -1
-            replaceForwardDetector('calc(50% - 2px)', '100%')
+            finalKnock = finalizeKnockValue('top', 'bottom', 'left', 'right', knock)
             break
         case '1':
         case '2':
         case '3':
             xAxis = 1
             yAxis = 0
-            replaceForwardDetector('-4px', 'calc(50% - 2px)')
+            finalKnock = finalizeKnockValue('right', 'left', 'top', 'bottom', knock)
             break
         case '4':
             xAxis = 0
             yAxis = 1
-            replaceForwardDetector('calc(50% - 2px)', '-4px')
+            finalKnock = finalizeKnockValue('bottom', 'top', 'left', 'right', knock)
             break
         case '5':
         case '6':
         case '7':
             xAxis = -1
             yAxis = 0
-            replaceForwardDetector('100%', 'calc(50% - 2px)')
+            finalKnock = finalizeKnockValue('left', 'right', 'top', 'bottom', knock)
             break                
     }
-    if ( xAxis === undefined && yAxis === undefined ) return
-    if ( getCurrentRoomSolid()
-        .find(x => 
-                x !== enemy.firstElementChild && 
-                collide(x, getPlayer().firstElementChild.lastElementChild, knock)) !== undefined ) return
-    setMapX(xAxis * knock + getMapX())
-    setMapY(yAxis * knock + getMapY())
-    setPlayerX(-xAxis * knock + getPlayerX())
-    setPlayerY(-yAxis * knock + getPlayerY())
+    if ( ( xAxis === undefined && yAxis === undefined ) ) return
+    setMapX(xAxis * finalKnock + getMapX())
+    setMapY(yAxis * finalKnock + getMapY())
+    setPlayerX(-xAxis * finalKnock + getPlayerX())
+    setPlayerY(-yAxis * finalKnock + getPlayerY())
     getMapEl().style.left = `${getMapX()}px`
     getMapEl().style.top = `${getMapY()}px`
     getPlayer().style.left = `${getPlayerX()}px`
     getPlayer().style.top = `${getPlayerY()}px`
+}
+
+const finalizeKnockValue = (a, b, x, y, knock) => {
+    const wall = getCurrentRoomSolid()
+        .filter(solid => 
+            Math.abs(solid.getBoundingClientRect()[a] - getPlayer().getBoundingClientRect()[b]) < knock
+            && solid.getBoundingClientRect()[x] < getPlayer().getBoundingClientRect()[x]
+            && solid.getBoundingClientRect()[y] > getPlayer().getBoundingClientRect()[y])
+        .sort((first, second) => 
+            Math.abs(first.getBoundingClientRect()[a] - getPlayer().getBoundingClientRect()[b]) -
+            Math.abs(second.getBoundingClientRect()[a] - getPlayer().getBoundingClientRect()[b]))[0]
+    if ( !wall ) return knock
+    const dist = Math.abs(wall.getBoundingClientRect()[a] - getPlayer().getBoundingClientRect()[b])
+    return dist < knock ? dist : knock
 }
 
 export const updateDestinationToPlayer = (enemy) => 

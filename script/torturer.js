@@ -4,7 +4,6 @@ import { calculateAngle, moveToDestination, updateDestinationToPlayer, updateDes
 import { findPath } from "./enemy-path-finding.js"
 
 export const torturerBehavior = (enemy) => {
-    isPlayerVisible(enemy)
     switch ( enemy.getAttribute('state') ) {
         case 'investigate':
             handleInvestigationState(enemy)
@@ -73,5 +72,6 @@ const handleMoveToPositionState = (enemy) => {
     }
     const dest = document.getElementById(enemy.getAttribute('path')).children[Number(enemy.getAttribute('path-point'))]
     updateDestinationToPath(enemy, dest)
+    findPath(enemy)
     moveToDestination(enemy)
 }
