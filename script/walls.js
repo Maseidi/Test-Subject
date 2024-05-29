@@ -410,7 +410,7 @@ export const walls = new Map([
         new AbstractWall(300, 100, 100, undefined, undefined, 200),
         new AbstractWall(300, 100, undefined, 100, 200, undefined),
         new AbstractWall(300, 100, undefined, 100, undefined, 200),
-        new AbstractWall(150, 150, 725, undefined, 325, undefined)
+        new AbstractWall(150, 150, 725, undefined, 325, undefined),
         ]
     ],[38, [
         new Hor_BL_Wall(375, 0),

@@ -46,14 +46,14 @@ const handleBreakpoints = () => {
 const manageNonAimModeAngle = () => {
     if ( !isMoving() ) return
     let newState
-    if (getUpPressed() && getRightPressed())        newState = changeState(5, '100%', '-4px')      
-    else if (getUpPressed() && getLeftPressed())    newState = changeState(3, '-4px', '-4px')
-    else if (getDownPressed() && getRightPressed()) newState = changeState(7, '100%', 'calc(100% + 4px)')
-    else if (getDownPressed() && getLeftPressed())  newState = changeState(1, '-4px', 'calc(100% + 4px)')
-    else if (getDownPressed())                      newState = changeState(0, 'calc(50% - 2px)', '100%')
-    else if (getLeftPressed())                      newState = changeState(2, '-4px', 'calc(50% - 2px)')
-    else if (getUpPressed())                        newState = changeState(4, 'calc(50% - 2px)', '-4px')
-    else if (getRightPressed())                     newState = changeState(6, '100%', 'calc(50% - 2px)')
+    if (getUpPressed() && getRightPressed())        newState = changeState(5, '100%', '0', '0', '-100%')     
+    else if (getUpPressed() && getLeftPressed())    newState = changeState(3, '0', '-100%', '0', '-100%')
+    else if (getDownPressed() && getRightPressed()) newState = changeState(7, '100%', '0', '100%', '0')
+    else if (getDownPressed() && getLeftPressed())  newState = changeState(1, '0', '-100%', '100%', '0') 
+    else if (getDownPressed())                      newState = changeState(0, '50%', '-50%', '100%', '0')
+    else if (getLeftPressed())                      newState = changeState(2, '0', '-100%', '50%', '-50%')
+    else if (getUpPressed())                        newState = changeState(4, '50%', '-50%', '0', '-100%')
+    else if (getRightPressed())                     newState = changeState(6, '100%', '0', '50%', '-50%')
     if ( getAimMode() ) return
     let diff = newState - getPlayerAngleState()   
     if (Math.abs(diff) > 4 && diff >= 0) diff = -(8 - diff)
@@ -63,13 +63,14 @@ const manageNonAimModeAngle = () => {
     setPlayerAngleState(newState)          
 }
 
-const changeState = (state, left, top) => {
-    replaceForwardDetector(left, top)
+const changeState = (state, left, translateX, top, translateY) => {
+    replaceForwardDetector(left, top, translateX, translateY)
     return getAimMode() ? getPlayerAngleState() : state
 }
 
-export const replaceForwardDetector = (left, top) => {
+const replaceForwardDetector = (left, top, translateX, translateY) => {
     const forwardDetector = getPlayer().firstElementChild.lastElementChild
     forwardDetector.style.left = left
     forwardDetector.style.top = top
+    forwardDetector.style.transform = `translateX(${translateX}) translateY(${translateY})`
 }

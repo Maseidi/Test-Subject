@@ -60,12 +60,12 @@ export const findPath = (enemy) => {
 
 const getPositionState = (left, top, width, height, wLeft, wTop, wWidth, wHeight) => {
     let positionState
-    if ( left + width < wLeft ) positionState = 10
-    else if ( left + width >= wLeft && left < wLeft + wWidth ) positionState = 20
+    if ( left + width < wLeft + 5 ) positionState = 10
+    else if ( left + width >= wLeft + 5 && left < wLeft + wWidth - 5 ) positionState = 20
     else positionState = 30
 
-    if ( top + height < wTop ) positionState += 1
-    else if ( top + height >= wTop && top < wTop + wHeight ) positionState += 2
+    if ( top + height < wTop + 5 ) positionState += 1
+    else if ( top + height >= wTop + 5 && top < wTop + wHeight - 5 ) positionState += 2
     else positionState += 3
     
     return positionState
@@ -79,13 +79,13 @@ const handleTopLeftState = (enemy, destState, wallLeft, wallTop, wallW, wallH) =
         case 32:
             addPathfinding(enemy, wallLeft + wallW + 50, wallTop - 50)
             break
-        case 33:
+        case 33:    
             if ( wallW < wallH )
                 addPathfinding(enemy, wallLeft + wallW + 50, wallTop - 50)
             else addPathfinding(enemy, wallLeft - 50, wallTop + wallH + 50)
             break  
         default:
-            addPathfinding(enemy, 'null', 'null')          
+            addPathfinding(enemy, 'null', 'null')
     }
 }
 
@@ -95,7 +95,7 @@ const handlLeftState = (enemy, destState, trackerMap, wallLeft, wallTop, wallH) 
         case 31:
             addPathfinding(enemy, wallLeft - 50, wallTop - 50)
             break
-        case 32:
+        case 32:    
             if ( trackerMap.has('top-left') && trackerMap.has('bottom-left') ) {
                 const enemyTop = Number(window.getComputedStyle(enemy).top.replace('px', ''))
                 if ( enemyTop - wallTop < wallTop + wallH - enemyTop )
@@ -119,7 +119,7 @@ const handleBottomLeftState = (enemy, destState, wallLeft, wallTop, wallW, wallH
         case 21:
             addPathfinding(enemy, wallLeft - 50, wallTop - 50)
             break
-        case 31:
+        case 31:        
             if ( wallH < wallW )
                 addPathfinding(enemy, wallLeft - 50, wallTop - 50)
             else addPathfinding(enemy, wallLeft + wallW + 50, wallTop + wallH + 50)
@@ -138,7 +138,7 @@ const handleTopState = (enemy, destState, trackerMap, wallLeft, wallTop, wallW) 
         case 13:
             addPathfinding(enemy, wallLeft - 50, wallTop - 50)
             break
-        case 23:
+        case 23:    
             if ( trackerMap.has('top-left') && trackerMap.has('top-right') ) {
                 const enemyLeft = Number(window.getComputedStyle(enemy).left.replace('px', ''))
                 if ( enemyLeft - wallLeft < wallLeft + wallW - enemyLeft )
@@ -163,7 +163,7 @@ const handleBottomState = (enemy, destState, trackerMap, wallLeft, wallTop, wall
         case 12:
             addPathfinding(enemy, wallLeft - 50, wallTop + wallH + 50)
             break
-        case 21:
+        case 21:    
             if ( trackerMap.has('bottom-left') && trackerMap.has('bottom-right') ) {
                 const enemyLeft = Number(window.getComputedStyle(enemy).left.replace('px', ''))
                 if ( enemyLeft - wallLeft < wallLeft + wallW - enemyLeft )
@@ -187,7 +187,7 @@ const handleTopRightState = (enemy, destState, wallLeft, wallTop, wallW, wallH) 
         case 12:
             addPathfinding(enemy, wallLeft - 50, wallTop - 50)
             break
-        case 13:
+        case 13:        
             if ( wallW < wallH )
                 addPathfinding(enemy, wallLeft - 50, wallTop - 50)
             else addPathfinding(enemy, wallLeft + wallW + 50, wallTop + wallH + 50)
@@ -206,7 +206,7 @@ const handleRightState = (enemy, destState, trackerMap, wallLeft, wallTop, wallW
         case 21:
             addPathfinding(enemy, wallLeft + wallW + 50, wallTop - 50)
             break
-        case 12:
+        case 12:    
             if ( trackerMap.has('bottom-left') && trackerMap.has('bottom-right') ) {
                 const enemyTop = Number(window.getComputedStyle(enemy).top.replace('px', ''))
                 if ( enemyTop - wallTop < wallTop + wallH - enemyTop )
@@ -230,7 +230,7 @@ const handleBottomRightState = (enemy, destState, wallLeft, wallTop, wallW, wall
         case 12:
             addPathfinding(enemy, wallLeft - 50, wallTop + wallH + 50)
             break
-        case 11:
+        case 11:            
             if ( wallW < wallH )
                 addPathfinding(enemy, wallLeft - 50, wallTop + wallH + 50)
             else addPathfinding(enemy, wallLeft + wallW + 50, wallTop - 50)

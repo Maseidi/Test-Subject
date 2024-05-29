@@ -56,16 +56,6 @@
   transition: 300ms;
 }
 
-.reset-body-transition {
-  transition: 0;
-}
-
-.dest {
-  width: 34px;
-  height: 34px;
-  position: absolute;
-}
-
 @keyframes torturerAttack {
   50% {
     transform: rotateZ(40deg);

@@ -154,16 +154,17 @@ const knockPlayer = (enemy) => {
 }
 
 const finalizeKnockValue = (a, b, x, y, knock) => {
+    const playerBound = getPlayer().getBoundingClientRect()
     const wall = getCurrentRoomSolid()
         .filter(solid => 
-            Math.abs(solid.getBoundingClientRect()[a] - getPlayer().getBoundingClientRect()[b]) < knock
-            && solid.getBoundingClientRect()[x] < getPlayer().getBoundingClientRect()[x]
-            && solid.getBoundingClientRect()[y] > getPlayer().getBoundingClientRect()[y])
+            Math.abs(solid.getBoundingClientRect()[a] - playerBound[b]) < knock
+            && (solid.getBoundingClientRect()[x] < playerBound[y]
+            || solid.getBoundingClientRect()[y] > playerBound[x]))
         .sort((first, second) => 
-            Math.abs(first.getBoundingClientRect()[a] - getPlayer().getBoundingClientRect()[b]) -
-            Math.abs(second.getBoundingClientRect()[a] - getPlayer().getBoundingClientRect()[b]))[0]
+            Math.abs(first.getBoundingClientRect()[a] - playerBound[b]) -
+            Math.abs(second.getBoundingClientRect()[a] - playerBound[b]))[0]
     if ( !wall ) return knock
-    const dist = Math.abs(wall.getBoundingClientRect()[a] - getPlayer().getBoundingClientRect()[b])
+    const dist = Math.abs(wall.getBoundingClientRect()[a] - playerBound[b])
     return dist < knock ? dist : knock
 }
 

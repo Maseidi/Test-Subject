@@ -156,7 +156,7 @@ const renderDescription = (popup, interactable) => {
 const renderEnemies = (roomToRender) => {
     if ( !enemies.get(getCurrentRoomId()) ) return
     let progress = Number.MIN_SAFE_INTEGER
-    const a = enemies.get(getCurrentRoomId())
+    enemies.get(getCurrentRoomId())
         .map(elem => {
             progress = Math.max(progress, getProgressString().indexOf(elem.progress))
             return elem
@@ -177,7 +177,7 @@ const renderEnemies = (roomToRender) => {
             createPath(elem, index, roomToRender)
             enemy.style.left = `${elem.path.points[0].x}px`
             enemy.style.top = `${elem.path.points[0].y}px`
-            const enemyCollider = createAndAddClass('div', `${elem.type}-collider`)
+            const enemyCollider = createAndAddClass('div', 'enemy-collider', `${elem.type}-collider`)
             const enemyBody = createAndAddClass('div', `${elem.type}-body`, 'body-transition')
             enemyBody.style.backgroundColor = `${elem.virus}`
             for ( let i = 1; i < elem.components; i++ ) {
