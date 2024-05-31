@@ -10,6 +10,12 @@
     align-items: center;
 }
 
+.enemy-forward-detector {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
 .torturer > .torturer-collider > .vision {
   position: absolute;
 }

@@ -74,8 +74,9 @@ class Torturer extends Enemy {
     constructor(path, progress) {
         const health = Math.floor(90 + Math.random() * 20)
         const damage = Math.floor(17 + Math.random() * 6)
+        const speed = 3.5 + Math.random()
         const virus = ['red', 'green', 'yellow', 'blue', 'purple'][Math.floor(Math.random() * 5)]
-        super('torturer', 4, path, health, damage, 50, 4, progress, virus, 600)
+        super('torturer', 4, path, health, damage, 50, speed, progress, virus, 600)
     }
 }
 
@@ -83,6 +84,9 @@ export const enemies = new Map([
     [37, [
         new Torturer(new SquarePath(650, 240, 300), 'a1'),
         new Torturer(new VerDoublePointPath(800, 100, 300), 'b2'),
-        new Torturer(new SinglePointPath(750, 240), 'c3'),
+        new Torturer(new SinglePointPath(750, 200), 'c3'),
+        new Torturer(new SinglePointPath(870, 200), 'c3'),
+        new Torturer(new SinglePointPath(990, 200), 'c3'),
+        new Torturer(new SinglePointPath(1110, 200), 'c3'),
     ]]
 ])
