@@ -1,6 +1,8 @@
 import { healthManager } from "./user-interface.js"
 import { getInventory, useInventoryResource } from "./inventory.js"
 import { getHealth, getMaxHealth, setHealth } from "./variables.js"
+import { addClass } from "./util.js"
+import { getPlayer } from "./elements.js"
 
 export const heal = () => {
     if ( getHealth() === getMaxHealth() ) return
@@ -19,6 +21,7 @@ export const useBandage = (bandage) => {
 }
 
 export const takeDamage = (damage) => {
+    addClass(getPlayer(), 'damaged-player')
     let newHealth = getHealth() - damage
     newHealth = newHealth < 0 ? 0 : newHealth
     modifyHealth(newHealth)

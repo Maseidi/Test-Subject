@@ -1,4 +1,4 @@
-import { isMoving } from "./util.js"
+import { containsClass, isMoving, removeClass } from "./util.js"
 import { getMapEl, getPlayer } from "./elements.js"
 import { 
     getAimMode,
@@ -39,10 +39,18 @@ const changePosition = (setMap, getMap, setPlayer, getPlayer, speed) => {
     setPlayer(getPlayer() - speed)
 }
 
+let damagedCounter = 0
 const normalizeSpeed = () => {
+    const damaged = containsClass(getPlayer(), 'damaged-player')
+    if ( damaged ) damagedCounter++
+    if ( damagedCounter === 120 ) {
+        damagedCounter = 0
+        removeClass(getPlayer(), 'damaged-player')
+    }
     let speed
     speed = getSprint() ? 2 * getPlayerSpeed() : getPlayerSpeed()
     speed = getAimMode() ? speed / 3 : speed
+    speed = !getAimMode() && damaged ? speed / 2 : speed
     if ((getUpPressed() && getLeftPressed()) || (getUpPressed() && getRightPressed()) || 
         (getDownPressed() && getLeftPressed()) || (getDownPressed() && getRightPressed()) ) {
             speed /= 1.41

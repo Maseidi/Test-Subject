@@ -25,7 +25,7 @@ export const isPlayerVisible = (enemy) => {
             if ( !(playerBound.right >= wallBound.right) ) {
                 const angle1 = angleToEnemy(wallBound, enemyBound, 'right', 'top')    
                 const angle2 = angleToEnemy(wallBound, enemyBound, 'right', 'bottom')
-                if ( angle3 < angle1 && angle3 > angle2 ) visible = false 
+                if ( angle3 < angle1 || angle3 > angle2 ) visible = false 
                 if ( !visible ) break
             }                   
         }
@@ -33,7 +33,7 @@ export const isPlayerVisible = (enemy) => {
             if ( !(playerBound.bottom >= wallBound.bottom) ) {
                 const angle1 = angleToEnemy(wallBound, enemyBound, 'left', 'bottom')    
                 const angle2 = angleToEnemy(wallBound, enemyBound, 'right', 'bottom') 
-                if ( angle3 > angle1 && angle3 < angle2 ) visible = false
+                if ( angle3 > angle1 || angle3 < angle2 ) visible = false
                 if ( !visible ) break
             }         
         }
@@ -41,7 +41,7 @@ export const isPlayerVisible = (enemy) => {
             if ( !(playerBound.left <= wallBound.left) ) {
                 const angle1 = angleToEnemy(wallBound, enemyBound, 'left', 'top')    
                 const angle2 = angleToEnemy(wallBound, enemyBound, 'left', 'bottom')
-                if ( angle3 > angle1 && angle3 < angle2 ) visible = false
+                if ( angle3 > angle1 || angle3 < angle2 ) visible = false
                 if ( !visible ) break
             }    
         }

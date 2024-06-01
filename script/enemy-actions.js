@@ -33,15 +33,16 @@ export const moveToDestination = (enemy) => {
     else if ( enemyTop + enemyW <= destTop + destW / 2 ) yMultiplier = 1
     calculateAngle(enemy, xMultiplier, yMultiplier)
     let speed = Number(enemy.getAttribute("speed"))
-    if ( enemy.getAttribute('state') === 'no-offence' ) speed /= 2
-    if ( enemy.getAttribute('state') === 'investigate' ) speed /= 5
+    const state = enemy.getAttribute('state')
+    if ( state === 'no-offence' ) speed /= 2
+    if ( state === 'investigate' ) speed /= 5
     if ( xMultiplier && yMultiplier ) speed /= 1.41
     else if ( !xMultiplier && !yMultiplier ) {
         if ( enemy.getAttribute('path-finding-x') !== 'null' ) {
             addAttribute(enemy, 'path-finding-x', null)
             addAttribute(enemy, 'path-finding-y', null)
         } else {
-            switch ( enemy.getAttribute('state') ) {
+            switch ( state ) {
                 case 'investigate':
                     const path = document.getElementById(enemy.getAttribute('path'))
                     const numOfPoints = path.children.length
