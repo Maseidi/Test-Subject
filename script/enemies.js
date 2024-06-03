@@ -76,7 +76,7 @@ class Torturer extends Enemy {
         const damage = Math.floor(level * 20 + Math.random() * 10)
         const speed = 3.5 + Math.random()
         const virus = ['red', 'green', 'yellow', 'blue', 'purple'][Math.floor(Math.random() * 5)]
-        super('torturer', 4, path, health, damage, 50, speed, progress, virus, 600)
+        super('torturer', 4, path, health, damage, 100, speed, progress, virus, 600)
     }
 }
 
@@ -96,7 +96,7 @@ class RockCrusher extends Enemy {
         const damage = Math.floor(level * 40 + Math.random() * 20)
         const speed = 2.5 + Math.random()
         const virus = ['red', 'green', 'yellow', 'blue', 'purple'][Math.floor(Math.random() * 5)]
-        super('rock-crusher', 4, path, health, damage, 50, speed, progress, virus, 800)
+        super('rock-crusher', 4, path, health, damage, 200, speed, progress, virus, 800)
     }
 }
 

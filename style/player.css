@@ -89,8 +89,8 @@
   animation-duration: 300ms;
 }
 
-.damaged-player > .player-collider > .player-body::after,
-.damaged-player > .player-collider > .player-body::before {
+.low-health-player > .player-collider > .player-body::after,
+.low-health-player > .player-collider > .player-body::before {
   animation-duration: 900ms !important;
 }
 

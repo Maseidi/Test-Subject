@@ -1,12 +1,14 @@
-import { containsClass, isMoving, removeClass } from "./util.js"
+import { checkLowHealth, containsClass, isMoving, removeClass } from "./util.js"
 import { getMapEl, getPlayer } from "./elements.js"
 import { 
     getAimMode,
     getAllowMove,
     getDownPressed,
+    getHealth,
     getLeftPressed,
     getMapX,
     getMapY,
+    getMaxHealth,
     getPlayerSpeed,
     getPlayerX,
     getPlayerY,
@@ -39,18 +41,11 @@ const changePosition = (setMap, getMap, setPlayer, getPlayer, speed) => {
     setPlayer(getPlayer() - speed)
 }
 
-let damagedCounter = 0
 const normalizeSpeed = () => {
-    const damaged = containsClass(getPlayer(), 'damaged-player')
-    if ( damaged ) damagedCounter++
-    if ( damagedCounter === 120 ) {
-        damagedCounter = 0
-        removeClass(getPlayer(), 'damaged-player')
-    }
     let speed
     speed = getSprint() ? 2 * getPlayerSpeed() : getPlayerSpeed()
     speed = getAimMode() ? speed / 3 : speed
-    speed = !getAimMode() && damaged ? speed / 2 : speed
+    speed = !getAimMode() && checkLowHealth() ? speed / 1.5 : speed
     if ((getUpPressed() && getLeftPressed()) || (getUpPressed() && getRightPressed()) || 
         (getDownPressed() && getLeftPressed()) || (getDownPressed() && getRightPressed()) ) {
             speed /= 1.41

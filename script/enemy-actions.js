@@ -116,57 +116,37 @@ const knockPlayer = (enemy) => {
     const knock = Number(enemy.getAttribute('knock'))
     const angle = enemy.getAttribute('angle-state')
     let xAxis, yAxis
-    let finalKnock
     switch ( angle ) {
         case '0':
             xAxis = 0
             yAxis = -1
-            finalKnock = finalizeKnockValue('top', 'bottom', 'left', 'right', knock)
             break
         case '1':
         case '2':
         case '3':
             xAxis = 1
             yAxis = 0
-            finalKnock = finalizeKnockValue('right', 'left', 'top', 'bottom', knock)
             break
         case '4':
             xAxis = 0
             yAxis = 1
-            finalKnock = finalizeKnockValue('bottom', 'top', 'left', 'right', knock)
             break
         case '5':
         case '6':
         case '7':
             xAxis = -1
             yAxis = 0
-            finalKnock = finalizeKnockValue('left', 'right', 'top', 'bottom', knock)
             break                
     }
     if ( ( xAxis === undefined && yAxis === undefined ) ) return
-    setMapX(xAxis * finalKnock + getMapX())
-    setMapY(yAxis * finalKnock + getMapY())
-    setPlayerX(-xAxis * finalKnock + getPlayerX())
-    setPlayerY(-yAxis * finalKnock + getPlayerY())
+    setMapX(xAxis * knock + getMapX())
+    setMapY(yAxis * knock + getMapY())
+    setPlayerX(-xAxis * knock + getPlayerX())
+    setPlayerY(-yAxis * knock + getPlayerY())
     getMapEl().style.left = `${getMapX()}px`
     getMapEl().style.top = `${getMapY()}px`
     getPlayer().style.left = `${getPlayerX()}px`
     getPlayer().style.top = `${getPlayerY()}px`
-}
-
-const finalizeKnockValue = (a, b, x, y, knock) => {
-    const playerBound = getPlayer().getBoundingClientRect()
-    const wall = getCurrentRoomSolid()
-        .filter(solid => 
-            Math.abs(solid.getBoundingClientRect()[a] - playerBound[b]) < knock
-            && (solid.getBoundingClientRect()[x] < playerBound[y]
-            || solid.getBoundingClientRect()[y] > playerBound[x]))
-        .sort((first, second) => 
-            Math.abs(first.getBoundingClientRect()[a] - playerBound[b]) -
-            Math.abs(second.getBoundingClientRect()[a] - playerBound[b]))[0]
-    if ( !wall ) return knock
-    const dist = Math.abs(wall.getBoundingClientRect()[a] - playerBound[b])
-    return dist < knock ? dist : knock
 }
 
 export const updateDestinationToPlayer = (enemy) => 

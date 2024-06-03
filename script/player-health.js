@@ -1,8 +1,8 @@
 import { healthManager } from "./user-interface.js"
 import { getInventory, useInventoryResource } from "./inventory.js"
 import { getHealth, getMaxHealth, setHealth } from "./variables.js"
-import { addClass } from "./util.js"
-import { getPlayer } from "./elements.js"
+import { addClass, checkLowHealth, removeClass } from "./util.js"
+import { getMapEl, getPlayer } from "./elements.js"
 
 export const heal = () => {
     if ( getHealth() === getMaxHealth() ) return
@@ -11,6 +11,7 @@ export const heal = () => {
     let newHealth = Math.min(getHealth() + 20, getMaxHealth())
     useInventoryResource('bandage', 1)
     modifyHealth(newHealth)
+    if ( !checkLowHealth() ) decideLowHealth(removeClass)
 }
 
 export const useBandage = (bandage) => {
@@ -18,16 +19,24 @@ export const useBandage = (bandage) => {
     let newHealth = Math.min(getHealth() + 20, getMaxHealth())
     bandage.amount -= 1
     modifyHealth(newHealth)
+    if ( !checkLowHealth() ) decideLowHealth(removeClass)
 }
 
 export const takeDamage = (damage) => {
-    addClass(getPlayer(), 'damaged-player')
+    addClass(getMapEl(), 'camera-shake')
+    setTimeout(() => removeClass(getMapEl(), 'camera-shake'), 300)
     let newHealth = getHealth() - damage
     newHealth = newHealth < 0 ? 0 : newHealth
     modifyHealth(newHealth)
+    if ( checkLowHealth() ) decideLowHealth(addClass)
 }
 
 const modifyHealth = (val) => {
     setHealth(val)
     healthManager(getHealth())
+}
+
+const decideLowHealth = (func) => {
+    func(getMapEl(), 'low-health')
+    func(getPlayer(), 'low-health-player')
 }

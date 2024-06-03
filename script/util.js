@@ -1,4 +1,4 @@
-import { getDownPressed, getLeftPressed, getRightPressed, getUpPressed } from "./variables.js"
+import { getDownPressed, getHealth, getLeftPressed, getRightPressed, getUpPressed } from "./variables.js"
 
 export const collide = (first, second, offset) => {
     const firstBound = first.getBoundingClientRect()
@@ -84,3 +84,5 @@ export const createAndAddClass = (type, ...classNames) => {
 }
 
 export const distance = (x1, y1, x2, y2) =>  Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2))
+
+export const checkLowHealth = () => getHealth() <= 20
