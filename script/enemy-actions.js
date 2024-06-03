@@ -1,8 +1,8 @@
 import { dropLoot } from "./loot-manager.js"
 import { takeDamage } from "./player-health.js"
 import { getSpecification, getStat } from "./weapon-specs.js"
+import { getCurrentRoomEnemies, getMapEl, getPlayer } from "./elements.js"
 import { addAttribute, addClass, collide, distance, removeClass } from "./util.js"
-import { getCurrentRoomEnemies, getCurrentRoomSolid, getMapEl, getPlayer } from "./elements.js"
 import { 
     getMapX,
     getMapY,
@@ -15,6 +15,7 @@ import {
     setPlayerX,
     setPlayerY,
     setNoOffenseCounter } from "./variables.js"
+import { manageKnock } from "./knock-manager.js"
 
 export const moveToDestination = (enemy) => {
     const enemyCpu = window.getComputedStyle(enemy)
@@ -116,33 +117,38 @@ const knockPlayer = (enemy) => {
     const knock = Number(enemy.getAttribute('knock'))
     const angle = enemy.getAttribute('angle-state')
     let xAxis, yAxis
+    let finalKnock
     switch ( angle ) {
         case '0':
             xAxis = 0
             yAxis = -1
+            finalKnock = manageKnock('to-down', getPlayer(), knock)
             break
         case '1':
         case '2':
         case '3':
             xAxis = 1
             yAxis = 0
+            finalKnock = manageKnock('to-left', getPlayer(), knock)
             break
         case '4':
             xAxis = 0
             yAxis = 1
+            finalKnock = manageKnock('to-up', getPlayer(), knock)
             break
         case '5':
         case '6':
         case '7':
             xAxis = -1
             yAxis = 0
+            finalKnock = manageKnock('to-right', getPlayer(), knock)
             break                
     }
     if ( ( xAxis === undefined && yAxis === undefined ) ) return
-    setMapX(xAxis * knock + getMapX())
-    setMapY(yAxis * knock + getMapY())
-    setPlayerX(-xAxis * knock + getPlayerX())
-    setPlayerY(-yAxis * knock + getPlayerY())
+    setMapX(xAxis * finalKnock + getMapX())
+    setMapY(yAxis * finalKnock + getMapY())
+    setPlayerX(-xAxis * finalKnock + getPlayerX())
+    setPlayerY(-yAxis * finalKnock + getPlayerY())
     getMapEl().style.left = `${getMapX()}px`
     getMapEl().style.top = `${getMapY()}px`
     getPlayer().style.left = `${getPlayerX()}px`
@@ -189,7 +195,7 @@ export const damageEnemy = (enemy, equipped) => {
     const knockback = getSpecification(equipped.name, 'knockback')
     knockEnemy(enemy, knockback)
     addClass(enemy.firstElementChild.firstElementChild, 'damaged')
-    setTimeout(() => removeClass(enemy.firstElementChild.firstElementChild, 'damaged'), 100)
+    addAttribute(enemy, 'damaged-counter', 6)
 }
 
 const knockEnemy = (enemy, knockback) => {
@@ -197,10 +203,10 @@ const knockEnemy = (enemy, knockback) => {
     const playerBound = getPlayer().getBoundingClientRect()
     let xAxis, yAxis
     if ( enemyBound.left < playerBound.left ) xAxis = -1
-    else if ( enemyBound.left >= playerBound.left || enemyBound.right <= playerBound.right ) xAxis = 0
+    else if ( enemyBound.left >= playerBound.left && enemyBound.right <= playerBound.right ) xAxis = 0
     else xAxis = 1
     if ( enemyBound.bottom < playerBound.top ) yAxis = -1
-    else if ( enemyBound.bottom >= playerBound.top || enemyBound.top <= playerBound.bottom ) yAxis = 0
+    else if ( enemyBound.bottom >= playerBound.top && enemyBound.top <= playerBound.bottom ) yAxis = 0
     else yAxis = 1
     const enemyCpu = window.getComputedStyle(enemy)
     const enemyLeft = Number(enemyCpu.left.replace('px', ''))

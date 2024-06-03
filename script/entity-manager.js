@@ -1,7 +1,8 @@
 import { rooms } from "./rooms.js"
 import { loaders } from "./loaders.js"
-import { torturerBehavior } from "./torturer.js"
+import { notifyEnemy } from "./enemy-actions.js"
 import { loadCurrentRoom } from "./room-loader.js"
+import { normalEnemyBehavior } from "./normal-enemy.js"
 import { addAttribute, collide, containsClass, removeClass } from "./util.js"
 import { 
     getCurrentRoom,
@@ -10,7 +11,7 @@ import {
     getCurrentRoomLoaders,
     getCurrentRoomSolid,
     getPlayer } from "./elements.js"
-import { 
+import {
     getCurrentRoomId,
     getNoOffenseCounter,
     getPrevRoomId,
@@ -23,7 +24,6 @@ import {
     setPrevRoomId,
     setRoomLeft,
     setRoomTop} from "./variables.js"
-import { notifyEnemy } from "./enemy-actions.js"
 
 export const manageEntities = () => {
     manageSolidObjects()
@@ -95,6 +95,19 @@ const manageEnemies = () => {
         setNoOffenseCounter(0)    
     }
     getCurrentRoomEnemies().forEach((enemy) => {
-        if ( containsClass(enemy, 'torturer') ) torturerBehavior(enemy)
+        manageDamagedState(enemy)
+        if ( containsClass(enemy, 'torturer') || 
+             containsClass(enemy, 'soul-drinker') || 
+             containsClass(enemy, 'rock-crusher') ) normalEnemyBehavior(enemy)
     })
+}
+
+const manageDamagedState = (enemy) => {
+    let damagedCounter = Number(enemy.getAttribute('damaged-counter'))
+    if ( damagedCounter === 0 ) {
+        removeClass(enemy.firstElementChild.firstElementChild, 'damaged')
+        return
+    }
+    damagedCounter--
+    addAttribute(enemy, 'damaged-counter', damagedCounter)
 }

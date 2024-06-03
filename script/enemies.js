@@ -72,7 +72,7 @@ class SquarePath extends RectPath {
 
 class Torturer extends Enemy {
     constructor(level, path, progress) {
-        const health = Math.floor(level * 90 + Math.random() * 20)
+        const health = Math.floor(level * 180 + Math.random() * 20)
         const damage = Math.floor(level * 20 + Math.random() * 10)
         const speed = 3.5 + Math.random()
         const virus = ['red', 'green', 'yellow', 'blue', 'purple'][Math.floor(Math.random() * 5)]
@@ -82,7 +82,7 @@ class Torturer extends Enemy {
 
 class SoulDrinker extends Enemy {
     constructor(level, path, progress) {
-        const health = Math.floor(level * 45 + Math.random() * 15)
+        const health = Math.floor(level * 90 + Math.random() * 15)
         const damage = Math.floor(level * 10 + Math.random() * 5)
         const speed = 4.5 + Math.random()
         const virus = ['red', 'green', 'yellow', 'blue', 'purple'][Math.floor(Math.random() * 5)]
@@ -92,7 +92,7 @@ class SoulDrinker extends Enemy {
 
 class RockCrusher extends Enemy {
     constructor(level, path, progress) {
-        const health = Math.floor(level * 180 + Math.random() * 25)
+        const health = Math.floor(level * 360 + Math.random() * 45)
         const damage = Math.floor(level * 40 + Math.random() * 20)
         const speed = 2.5 + Math.random()
         const virus = ['red', 'green', 'yellow', 'blue', 'purple'][Math.floor(Math.random() * 5)]
@@ -104,6 +104,8 @@ export const enemies = new Map([
     [37, [
         new Torturer(1, new SquarePath(650, 240, 300), 'a1'),
         new Torturer(1, new VerDoublePointPath(800, 100, 300), 'b2'),
-        new Torturer(1, new SquarePath(650, 240, 300), 'c3')
+        new Torturer(1, new SquarePath(650, 240, 300), 'c3'),
+        new SoulDrinker(1, new SinglePointPath(650, 140), 'c3'),
+        new RockCrusher(1, new SinglePointPath(850, 140), 'c3'),
     ]]
 ])

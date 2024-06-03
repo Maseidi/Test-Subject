@@ -3,7 +3,7 @@ import { findPath } from "./enemy-path-finding.js"
 import { isPlayerVisible } from "./enemy-vision.js"
 import { calculateAngle, moveToDestination, updateDestinationToPlayer, updateDestinationToPath } from "./enemy-actions.js"
 
-export const torturerBehavior = (enemy) => {
+export const normalEnemyBehavior = (enemy) => {
     switch ( enemy.getAttribute('state') ) {
         case 'investigate':
             handleInvestigationState(enemy)

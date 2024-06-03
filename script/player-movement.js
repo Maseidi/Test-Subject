@@ -45,7 +45,7 @@ const normalizeSpeed = () => {
     let speed
     speed = getSprint() ? 2 * getPlayerSpeed() : getPlayerSpeed()
     speed = getAimMode() ? speed / 3 : speed
-    speed = !getAimMode() && checkLowHealth() ? speed / 1.5 : speed
+    speed = !getAimMode() && checkLowHealth() ? speed / 1.25 : speed
     if ((getUpPressed() && getLeftPressed()) || (getUpPressed() && getRightPressed()) || 
         (getDownPressed() && getLeftPressed()) || (getDownPressed() && getRightPressed()) ) {
             speed /= 1.41

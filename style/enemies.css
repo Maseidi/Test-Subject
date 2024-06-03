@@ -1,49 +1,103 @@
-.torturer {
+.torturer, .soul-drinker, .rock-crusher {
     position: absolute;
 }
 
-.torturer > .torturer-collider {
-    height: 37px;
-    width: 37px;
+.torturer > .torturer-collider, .soul-drinker > .soul-drinker-collider, .rock-crusher > .rock-crusher-collider {
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-.torturer > .torturer-collider > .vision {
+.torturer > .torturer-collider {
+  height: 37px;
+  width: 37px;
+}
+
+.soul-drinker > .soul-drinker-collider {
+  height: 28px;
+  width: 28px;
+}
+
+.rock-crusher > .rock-crusher-collider {
+  height: 46px;
+  width: 46px;
+}
+
+.vision {
+  position: absolute;
+}
+
+.torturer > .torturer-collider > div:nth-of-type(1),
+.soul-drinker > .soul-drinker-collider > div:nth-of-type(1),
+.rock-crusher > .rock-crusher-collider > div:nth-of-type(1) {
+  border: 1px solid black;
   position: absolute;
 }
 
 .torturer > .torturer-collider > div:nth-of-type(1) {
   width: 25px;
   height: 14px;
-  border: 1px solid black;
-  position: absolute;
+}
+
+.soul-drinker > .soul-drinker-collider > div:nth-of-type(1) {
+  width: 22px;
+  height: 10px;
+}
+
+.rock-crusher > .rock-crusher-collider > div:nth-of-type(1) {
+  width: 32px;
+  height: 24px;
 }
 
 .torturer > .torturer-collider > div:nth-of-type(1) > div:nth-of-type(1),
-.torturer > .torturer-collider > div:nth-of-type(1) > div:nth-of-type(2) {
+.torturer > .torturer-collider > div:nth-of-type(1) > div:nth-of-type(2), 
+.soul-drinker > .soul-drinker-collider > div:nth-of-type(1) > div:nth-of-type(1),
+.soul-drinker > .soul-drinker-collider > div:nth-of-type(1) > div:nth-of-type(2), 
+.rock-crusher > .rock-crusher-collider > div:nth-of-type(1) > div:nth-of-type(1),
+.rock-crusher > .rock-crusher-collider > div:nth-of-type(1) > div:nth-of-type(2) {
   position: absolute;
-  width: 6px;
-  height: 16px;
-  top: 2px;
   border: 1px solid black;
   filter: brightness(66%);
   border-radius: 1px;
 }
 
-.torturer > .torturer-collider > div:nth-of-type(1) > div:nth-of-type(1) {
+.torturer > .torturer-collider > div:nth-of-type(1) > div:nth-of-type(1),
+.torturer > .torturer-collider > div:nth-of-type(1) > div:nth-of-type(2) {
+  width: 6px;
+  height: 16px;
+  top: 2px;
+}
+
+.soul-drinker > .soul-drinker-collider > div:nth-of-type(1) > div:nth-of-type(1),
+.soul-drinker > .soul-drinker-collider > div:nth-of-type(1) > div:nth-of-type(2) {
+  width: 4px;
+  height: 16px;
+  top: 2px;
+}
+
+.rock-crusher > .rock-crusher-collider > div:nth-of-type(1) > div:nth-of-type(1),
+.rock-crusher > .rock-crusher-collider > div:nth-of-type(1) > div:nth-of-type(2) {
+  width: 8px;
+  height: 28px;
+  top: 6px;
+}
+
+.torturer > .torturer-collider > div:nth-of-type(1) > div:nth-of-type(1),
+.soul-drinker > .soul-drinker-collider > div:nth-of-type(1) > div:nth-of-type(1),
+.rock-crusher > .rock-crusher-collider > div:nth-of-type(1) > div:nth-of-type(1) {
   left: 100%;
 }
 
-.torturer > .torturer-collider > div:nth-of-type(1) > div:nth-of-type(2) {
+.torturer > .torturer-collider > div:nth-of-type(1) > div:nth-of-type(2),
+.soul-drinker > .soul-drinker-collider > div:nth-of-type(1) > div:nth-of-type(2),
+.rock-crusher > .rock-crusher-collider > div:nth-of-type(1) > div:nth-of-type(2) {
   right: 100%;
 }
 
-.torturer > .torturer-collider > div:nth-of-type(1) > div:nth-of-type(3) {
+.torturer > .torturer-collider > div:nth-of-type(1) > div:nth-of-type(3),
+.soul-drinker > .soul-drinker-collider > div:nth-of-type(1) > div:nth-of-type(3),
+.rock-crusher > .rock-crusher-collider > div:nth-of-type(1) > div:nth-of-type(3) {
   position: absolute;
-  width: 8px;
-  height: 8px;
   left: 50%;
   top: 50%;
   border-radius: 50%;
@@ -52,11 +106,26 @@
   filter: brightness(33%);
 }
 
+.torturer > .torturer-collider > div:nth-of-type(1) > div:nth-of-type(3) {
+  width: 8px;
+  height: 8px;
+}
+
+.soul-drinker > .soul-drinker-collider > div:nth-of-type(1) > div:nth-of-type(3) {
+  width: 5px;
+  height: 5px;
+}
+
+.rock-crusher > .rock-crusher-collider > div:nth-of-type(1) > div:nth-of-type(3) {
+  width: 10px;
+  height: 10px;
+}
+
 .body-transition {
   transition: 300ms;
 }
 
-@keyframes torturerAttack {
+@keyframes normalAttack {
   50% {
     transform: rotateZ(40deg);
     top: 10px;
@@ -69,8 +138,10 @@
   }
 }
 
-.torturer > .torturer-collider > div:nth-of-type(1) > .attack {
-  animation-name: torturerAttack;
+.torturer > .torturer-collider > div:nth-of-type(1) > .attack,
+.soul-drinker > .soul-drinker-collider > div:nth-of-type(1) > .attack,
+.rock-crusher > .rock-crusher-collider > div:nth-of-type(1) > .attack {
+  animation-name: normalAttack;
   animation-duration: 500ms;
   animation-direction: alternate;
 }

@@ -42,10 +42,10 @@
 
 @keyframes camera {
   33%{
-    transform: translateX(0.25px);
+    transform: translateX(20px);
   }
   66%{
-    transform: translateY(0.25px);
+    transform: translateY(20px);
   }
   100% {
     transform: translateX(0) translateY(0);
