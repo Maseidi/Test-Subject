@@ -1,8 +1,11 @@
-.torturer, .soul-drinker, .rock-crusher {
+.torturer, .soul-drinker, .rock-crusher, .iron-master {
     position: absolute;
 }
 
-.torturer > .torturer-collider, .soul-drinker > .soul-drinker-collider, .rock-crusher > .rock-crusher-collider {
+.torturer > .torturer-collider, 
+.soul-drinker > .soul-drinker-collider, 
+.rock-crusher > .rock-crusher-collider,
+.iron-master > .iron-master-collider {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -23,13 +26,19 @@
   width: 46px;
 }
 
+.iron-master > .iron-master-collider {
+  height: 40px;
+  width: 40px;
+}
+
 .vision {
   position: absolute;
 }
 
 .torturer > .torturer-collider > div:nth-of-type(1),
 .soul-drinker > .soul-drinker-collider > div:nth-of-type(1),
-.rock-crusher > .rock-crusher-collider > div:nth-of-type(1) {
+.rock-crusher > .rock-crusher-collider > div:nth-of-type(1),
+.iron-master > .iron-master-collider > div:nth-of-type(1) {
   border: 1px solid black;
   position: absolute;
 }
@@ -49,12 +58,19 @@
   height: 24px;
 }
 
+.iron-master > .iron-master-collider > div:nth-of-type(1) {
+  width: 23px;
+  height: 23px;
+}
+
 .torturer > .torturer-collider > div:nth-of-type(1) > div:nth-of-type(1),
 .torturer > .torturer-collider > div:nth-of-type(1) > div:nth-of-type(2), 
 .soul-drinker > .soul-drinker-collider > div:nth-of-type(1) > div:nth-of-type(1),
 .soul-drinker > .soul-drinker-collider > div:nth-of-type(1) > div:nth-of-type(2), 
 .rock-crusher > .rock-crusher-collider > div:nth-of-type(1) > div:nth-of-type(1),
-.rock-crusher > .rock-crusher-collider > div:nth-of-type(1) > div:nth-of-type(2) {
+.rock-crusher > .rock-crusher-collider > div:nth-of-type(1) > div:nth-of-type(2),
+.iron-master > .iron-master-collider > div:nth-of-type(1) > div:nth-of-type(1),
+.iron-master > .iron-master-collider > div:nth-of-type(1) > div:nth-of-type(2) {
   position: absolute;
   border: 1px solid black;
   filter: brightness(66%);
@@ -82,21 +98,31 @@
   top: 6px;
 }
 
+.iron-master > .iron-master-collider > div:nth-of-type(1) > div:nth-of-type(1),
+.iron-master > .iron-master-collider > div:nth-of-type(1) > div:nth-of-type(2) {
+  width: 6px;
+  height: 24px;
+  top: 4px;
+}
+
 .torturer > .torturer-collider > div:nth-of-type(1) > div:nth-of-type(1),
 .soul-drinker > .soul-drinker-collider > div:nth-of-type(1) > div:nth-of-type(1),
-.rock-crusher > .rock-crusher-collider > div:nth-of-type(1) > div:nth-of-type(1) {
+.rock-crusher > .rock-crusher-collider > div:nth-of-type(1) > div:nth-of-type(1),
+.iron-master > .iron-master-collider > div:nth-of-type(1) > div:nth-of-type(1) {
   left: 100%;
 }
 
 .torturer > .torturer-collider > div:nth-of-type(1) > div:nth-of-type(2),
 .soul-drinker > .soul-drinker-collider > div:nth-of-type(1) > div:nth-of-type(2),
-.rock-crusher > .rock-crusher-collider > div:nth-of-type(1) > div:nth-of-type(2) {
+.rock-crusher > .rock-crusher-collider > div:nth-of-type(1) > div:nth-of-type(2), 
+.iron-master > .iron-master-collider > div:nth-of-type(1) > div:nth-of-type(2) {
   right: 100%;
 }
 
 .torturer > .torturer-collider > div:nth-of-type(1) > div:nth-of-type(3),
 .soul-drinker > .soul-drinker-collider > div:nth-of-type(1) > div:nth-of-type(3),
-.rock-crusher > .rock-crusher-collider > div:nth-of-type(1) > div:nth-of-type(3) {
+.rock-crusher > .rock-crusher-collider > div:nth-of-type(1) > div:nth-of-type(3),
+.iron-master > .iron-master-collider > div:nth-of-type(1) > div:nth-of-type(3) {
   position: absolute;
   left: 50%;
   top: 50%;
@@ -119,6 +145,42 @@
 .rock-crusher > .rock-crusher-collider > div:nth-of-type(1) > div:nth-of-type(3) {
   width: 10px;
   height: 10px;
+}
+
+.iron-master > .iron-master-collider > div:nth-of-type(1) > div:nth-of-type(3) {
+  width: 7px;
+  height: 7px;
+}
+
+.iron-master > .iron-master-collider > div:nth-of-type(1) > div:nth-of-type(4),
+.iron-master > .iron-master-collider > div:nth-of-type(1) > div:nth-of-type(5),
+.iron-master > .iron-master-collider > div:nth-of-type(1) > div:nth-of-type(6) {
+  position: absolute;
+  background-color: gray !important;
+}
+
+.iron-master > .iron-master-collider > div:nth-of-type(1) > div:nth-of-type(4) {
+  width: 40px;
+  height: 5px;
+  left: 0;
+  top: 100%;
+  transform: translateX(-9px) translateY(6px);
+}
+
+.iron-master > .iron-master-collider > div:nth-of-type(1) > div:nth-of-type(5) {
+  width: 3px;
+  height: 40px;
+  left: 0;
+  top: 0;
+  transform: translateX(-10px) translateY(-9px);
+}
+
+.iron-master > .iron-master-collider > div:nth-of-type(1) > div:nth-of-type(6) {
+  width: 3px;
+  height: 40px;
+  left: 100%;
+  top: 0;
+  transform: translateX(7px) translateY(-9px);
 }
 
 .body-transition {

@@ -36,7 +36,7 @@ const manageSolidObjects = () => {
     setAllowMove(true)
     const solid = getCurrentRoomSolid().find(solid => collide(getPlayer().firstElementChild.children[1], solid, 12))
     if ( solid ) setAllowMove(false)
-    if ( solid && containsClass(solid.parentElement, 'enemy') ) notifyEnemy(60, solid.parentElement)    
+    if ( solid && containsClass(solid.parentElement, 'enemy') ) notifyEnemy(100, solid.parentElement)    
 }
 
 const manageLoaders = () => {
@@ -98,7 +98,8 @@ const manageEnemies = () => {
         manageDamagedState(enemy)
         if ( containsClass(enemy, 'torturer') || 
              containsClass(enemy, 'soul-drinker') || 
-             containsClass(enemy, 'rock-crusher') ) normalEnemyBehavior(enemy)
+             containsClass(enemy, 'rock-crusher') || 
+             containsClass(enemy, 'iron-master') ) normalEnemyBehavior(enemy)
     })
 }
 

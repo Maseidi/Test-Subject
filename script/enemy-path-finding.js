@@ -6,7 +6,7 @@ export const findPath = (enemy) => {
     for ( const solid of getCurrentRoomSolid() ) {
         if ( solid.getAttribute('side') === 'true' ) continue
         if ( solid === enemy.firstElementChild ) continue
-        if ( !collide(enemy, solid, 50) ) continue
+        if ( !collide(enemy, solid, 75) ) continue
         wall = solid
         break
     }
@@ -54,7 +54,7 @@ export const findPath = (enemy) => {
             break
         case 33:
             handleBottomRightState(enemy, destState, wallLeft, wallTop, wallW, wallH)
-            break                            
+            break
     }
 }
 

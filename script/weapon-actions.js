@@ -40,24 +40,24 @@ const manageAim = () => {
         counter = 0
         setTarget(null)
     } 
-    if ( counter === 0 ) {       
-        const range = getStat(equippedWeapon.name, 'range', equippedWeapon.rangelvl)
-        const laser = getPlayer().children[0].children[0].children[1].children[0]
-        laser.style.height = `${range}px`
-        Array.from(laser.children).forEach((elem, index) => {
-            for ( const solid of getCurrentRoomSolid() ) {
-                if ( collide(elem, solid, 0) ) {
-                    setTarget(solid)
-                    laser.style.height = `${index/100 * range}px`
-                }
+    if ( counter !== 0 ) return       
+    const range = getStat(equippedWeapon.name, 'range', equippedWeapon.rangelvl)
+    const laser = getPlayer().children[0].children[0].children[1].children[0]
+    laser.style.height = `${range}px`
+    Array.from(laser.children).forEach((elem, index) => {
+        for ( const solid of getCurrentRoomSolid() ) {
+            if ( collide(elem, solid, 0) ) {
+                setTarget(solid)
+                laser.style.height = `${index/100 * range}px`
             }
-        })
-    }
+        }
+    })
+    
 }
 
 export const setupReload = () => {
     if ( equippedWeapon.currmag === getStat(equippedWeapon.name, 'magazine', equippedWeapon.magazinelvl) ) return
-    if ( calculateTotalAmmo() === 0 ) return
+    if ( calculateTotalAmmo(equippedWeapon) === 0 ) return
     if ( getShooting() ) return
     setReloading(true)
 }
@@ -76,7 +76,7 @@ const manageReload = () => {
 const reload = () => {
     const mag = getStat(equippedWeapon.name, 'magazine', equippedWeapon.magazinelvl)
     const currentMag = equippedWeapon.currmag
-    const totalAmmo = calculateTotalAmmo()
+    const totalAmmo = calculateTotalAmmo(equippedWeapon)
     const need = mag - currentMag
     const trade = need <= totalAmmo ? need : totalAmmo
     updateInventory(equippedWeapon, currentMag + trade, trade)
@@ -98,7 +98,7 @@ const manageShoot = () => {
 }
 
 const shoot = () => {
-    const totalAmmo = calculateTotalAmmo()
+    const totalAmmo = calculateTotalAmmo(equippedWeapon)
     let currMag = equippedWeapon.currmag
     if ( currMag === 0 ) {
         EMPTY_WEAPON.play()
@@ -116,7 +116,7 @@ const shoot = () => {
 }
 
 const updateInventory = (equippedWeapon, newMag, trade) => {
-    useInventoryResource(equippedWeapon.ammotype, trade)    
+    useInventoryResource(equippedWeapon.ammotype, trade)
     updateInventoryWeaponMag(newMag)
     removeUi()
     renderUi()

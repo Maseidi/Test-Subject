@@ -1,8 +1,9 @@
 import { dropLoot } from "./loot-manager.js"
 import { takeDamage } from "./player-health.js"
+import { manageKnock } from "./knock-manager.js"
 import { getSpecification, getStat } from "./weapon-specs.js"
+import { addAttribute, addClass, collide, distance } from "./util.js"
 import { getCurrentRoomEnemies, getMapEl, getPlayer } from "./elements.js"
-import { addAttribute, addClass, collide, distance, removeClass } from "./util.js"
 import { 
     getMapX,
     getMapY,
@@ -15,7 +16,6 @@ import {
     setPlayerX,
     setPlayerY,
     setNoOffenseCounter } from "./variables.js"
-import { manageKnock } from "./knock-manager.js"
 
 export const moveToDestination = (enemy) => {
     const enemyCpu = window.getComputedStyle(enemy)

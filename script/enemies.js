@@ -100,6 +100,16 @@ class RockCrusher extends Enemy {
     }
 }
 
+class IronMaster extends Enemy {
+    constructor(level, path, progress) {
+        const health = Math.floor(level * 270 + Math.random() * 32)
+        const damage = Math.floor(level * 30 + Math.random() * 15)
+        const speed = 3 + Math.random()
+        const virus = ['red', 'green', 'yellow', 'blue', 'purple'][Math.floor(Math.random() * 5)]
+        super('iron-master', 7, path, health, damage, 150, speed, progress, virus, 500)
+    }
+}
+
 export const enemies = new Map([
     [37, [
         new Torturer(1, new SquarePath(650, 240, 300), 'a1'),
@@ -107,5 +117,6 @@ export const enemies = new Map([
         new Torturer(1, new SquarePath(650, 240, 300), 'c3'),
         new SoulDrinker(1, new SinglePointPath(650, 140), 'c3'),
         new RockCrusher(1, new SinglePointPath(850, 140), 'c3'),
+        new IronMaster(1, new HorDoublePointPath(1000, 140, 500), 'c3')
     ]]
 ])

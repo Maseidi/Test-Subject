@@ -123,7 +123,7 @@ const inventoryFull = () => inventory.flat().every(item => item !== null)
 
 export const equippedWeaponFromInventory = () => inventory.flat().find(item => item && item.id === getEquippedWeapon())
 
-export const calculateTotalAmmo = () => countItem(equippedWeaponFromInventory().ammotype)
+export const calculateTotalAmmo = (equippedWeapon) => countItem(equippedWeapon.ammotype)
 
 export const calculateTotalCoins = () => countItem('coin')
 

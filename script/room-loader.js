@@ -184,6 +184,7 @@ const renderEnemies = (roomToRender) => {
                 const component = createAndAddClass('div', `${elem.type}-component`)
                 component.style.backgroundColor = `${elem.virus}`
                 enemyBody.append(component)
+                if ( elem.type === 'iron-master' && i >= 4 ) getCurrentRoomSolid().push(component)
             }
             const vision = createAndAddClass('div', 'vision')
             vision.style.top = '50%'

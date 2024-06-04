@@ -54,7 +54,7 @@ export const renderEquippedWeapon = () => {
     const mag = document.createElement('p')
     mag.textContent = `${equippedWeapon.currmag}`
     const total = document.createElement('p')
-    total.textContent = calculateTotalAmmo()
+    total.textContent = calculateTotalAmmo(equippedWeapon)
     appendAll(ammoCount, mag, total)
     appendAll(weaponContainer, weaponIcon, ammoCount)
     getUiEl().append(weaponContainer)   
