@@ -181,7 +181,7 @@ export const notifyEnemy = (dist, enemy) => {
     getCurrentRoomEnemies()
         .filter(e => e !== enemy &&
                      (distance(enemy.getBoundingClientRect().x, enemy.getBoundingClientRect().y,
-                     e.getBoundingClientRect().x, e.getBoundingClientRect().y) < 200 ) &&
+                     e.getBoundingClientRect().x, e.getBoundingClientRect().y) < 500 ) &&
                      e.getAttribute('state') !== 'chase' && e.getAttribute('state') !== 'no-offence'
         ).forEach(e => notifyEnemy(Number.MAX_SAFE_INTEGER, e))
 }
