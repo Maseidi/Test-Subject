@@ -15,7 +15,8 @@ import {
     setMapY,
     setPlayerX,
     setPlayerY,
-    setNoOffenseCounter } from "./variables.js"
+    setNoOffenseCounter, 
+    getNoOffenseCounter} from "./variables.js"
 
 export const moveToDestination = (enemy) => {
     const enemyCpu = window.getComputedStyle(enemy)
@@ -55,10 +56,10 @@ export const moveToDestination = (enemy) => {
                     break
                 case 'chase':
                     if ( collide(enemy, getPlayer(), 0) ) hitPlayer(enemy)
-                    else { 
-                        addAttribute(enemy, 'state', 'lost')
-                        addAttribute(enemy, 'lost-counter', '0')
-                    }
+                    break
+                case 'guess-search':
+                    addAttribute(enemy, 'state', 'lost')
+                    addAttribute(enemy, 'lost-counter', '0')
                     break
                 case 'move-to-position':
                     addAttribute(enemy, 'state', 'investigate')
@@ -173,8 +174,8 @@ export const notifyEnemy = (dist, enemy) => {
     const enemyBound = enemy.getBoundingClientRect()
     const playerBound = getPlayer().getBoundingClientRect()
     if ( distance(playerBound.x, playerBound.y, enemyBound.x, enemyBound.y) <= dist ) {
-        const state = enemy.getAttribute('state')
-        if (state !== 'chase' && state !== 'no-offence') addAttribute(enemy, 'state', 'chase')
+        if ( getNoOffenseCounter() === 0 ) addAttribute(enemy, 'state', 'chase')
+        else addAttribute(enemy, 'state', 'no-offence')    
         updateDestinationToPlayer(enemy)
     }
 }

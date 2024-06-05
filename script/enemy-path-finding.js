@@ -6,7 +6,7 @@ export const findPath = (enemy) => {
     for ( const solid of getCurrentRoomSolid() ) {
         if ( solid.getAttribute('side') === 'true' ) continue
         if ( solid === enemy.firstElementChild ) continue
-        if ( !collide(enemy, solid, 75) ) continue
+        if ( !collide(enemy, solid, 50) ) continue
         wall = solid
         break
     }

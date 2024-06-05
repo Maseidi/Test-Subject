@@ -13,64 +13,68 @@ export const isPlayerVisible = (enemy) => {
     let visible = true
     for ( const wall of walls ) {
         const wallBound = wall.getBoundingClientRect()
-        if ( enemyBound.top < wallBound.top && enemyBound.left >= wallBound.left && enemyBound.left < wallBound.right ) {
-            if ( !(playerBound.top <= wallBound.top) ) {
+        const wallTop = wallBound.top + 5
+        const wallLeft = wallBound.left + 5
+        const wallRight = wallBound.right - 5
+        const wallBottom = wallBound.bottom - 5
+        if ( enemyBound.top < wallTop && enemyBound.left >= wallLeft && enemyBound.left < wallRight ) {
+            if ( !(playerBound.top <= wallTop) ) {
                 const angle1 = angleToEnemy(wallBound, enemyBound, 'left', 'top')    
                 const angle2 = angleToEnemy(wallBound, enemyBound, 'right', 'top')
                 if ( angle3 < angle1 || angle3 > angle2 ) visible = false
                 if ( !visible ) break
             }
         }
-        if ( enemyBound.left >= wallBound.right && enemyBound.top >= wallBound.top && enemyBound.top < wallBound.bottom ) {
-            if ( !(playerBound.right >= wallBound.right) ) {
+        if ( enemyBound.left >= wallRight && enemyBound.top >= wallTop && enemyBound.top < wallBottom ) {
+            if ( !(playerBound.right >= wallRight) ) {
                 const angle1 = angleToEnemy(wallBound, enemyBound, 'right', 'top')    
                 const angle2 = angleToEnemy(wallBound, enemyBound, 'right', 'bottom')
                 if ( angle3 < angle1 || angle3 > angle2 ) visible = false 
                 if ( !visible ) break
             }                   
         }
-        if ( enemyBound.top >= wallBound.bottom && enemyBound.left >= wallBound.left && enemyBound.left < wallBound.right ) {
-            if ( !(playerBound.bottom >= wallBound.bottom) ) {
+        if ( enemyBound.top >= wallBottom && enemyBound.left >= wallLeft && enemyBound.left < wallRight ) {
+            if ( !(playerBound.bottom >= wallBottom) ) {
                 const angle1 = angleToEnemy(wallBound, enemyBound, 'left', 'bottom')    
                 const angle2 = angleToEnemy(wallBound, enemyBound, 'right', 'bottom') 
                 if ( angle3 > angle1 || angle3 < angle2 ) visible = false
                 if ( !visible ) break
             }         
         }
-        if ( enemyBound.left < wallBound.left && enemyBound.top >= wallBound.top && enemyBound.top < wallBound.bottom ) {
-            if ( !(playerBound.left <= wallBound.left) ) {
+        if ( enemyBound.left < wallLeft && enemyBound.top >= wallTop && enemyBound.top < wallBottom ) {
+            if ( !(playerBound.left <= wallLeft) ) {
                 const angle1 = angleToEnemy(wallBound, enemyBound, 'left', 'top')    
                 const angle2 = angleToEnemy(wallBound, enemyBound, 'left', 'bottom')
                 if ( angle3 > angle1 || angle3 < angle2 ) visible = false
                 if ( !visible ) break
             }    
         }
-        if ( enemyBound.top < wallBound.top && enemyBound.left >= wallBound.right ) {
-            if ( !(playerBound.top <= wallBound.top || playerBound.right >= wallBound.right) ) {
+        if ( enemyBound.top < wallTop && enemyBound.left >= wallRight ) {
+            if ( !(playerBound.top <= wallTop || playerBound.right >= wallRight) ) {
                 const angle1 = angleToEnemy(wallBound, enemyBound, 'left', 'top')    
                 const angle2 = angleToEnemy(wallBound, enemyBound, 'right', 'bottom')
                 if ( angle3 < angle1 && angle3 > angle2 ) visible = false
                 if ( !visible ) break
             }
         }
-        if ( enemyBound.top >= wallBound.bottom && enemyBound.left >= wallBound.right ) {
-            if ( !(playerBound.bottom >= wallBound.bottom || playerBound.right >= wallBound.right) ) {
+        if ( enemyBound.top >= wallBottom && enemyBound.left >= wallRight ) {
+            if ( !(playerBound.bottom >= wallBottom || playerBound.right >= wallRight) ) {
                 const angle1 = angleToEnemy(wallBound, enemyBound, 'right', 'top')    
                 const angle2 = angleToEnemy(wallBound, enemyBound, 'left', 'bottom')
                 if ( angle3 < angle1 && angle3 > angle2 ) visible = false
                 if ( !visible ) break
             }            
         }
-        if ( enemyBound.top < wallBound.top && enemyBound.left < wallBound.left ) {
-            if ( !(playerBound.top <= wallBound.top || playerBound.left <= wallBound.left) ) {
+        if ( enemyBound.top < wallTop && enemyBound.left < wallLeft ) {
+            if ( !(playerBound.top <= wallTop || playerBound.left <= wallLeft) ) {
                 const angle1 = angleToEnemy(wallBound, enemyBound, 'right', 'top')    
                 const angle2 = angleToEnemy(wallBound, enemyBound, 'left', 'bottom')
                 if ( angle3 > angle1 || angle3 < angle2 ) visible = false
                 if ( !visible ) break
             }
         }
-        if ( enemyBound.top >= wallBound.bottom && enemyBound.left < wallBound.left ) {
-            if ( !(playerBound.left <= wallBound.left || playerBound.bottom >= wallBound.bottom) ) {
+        if ( enemyBound.top >= wallBottom && enemyBound.left < wallLeft ) {
+            if ( !(playerBound.left <= wallLeft || playerBound.bottom >= wallBottom) ) {
                 const angle1 = angleToEnemy(wallBound, enemyBound, 'left', 'top')    
                 const angle2 = angleToEnemy(wallBound, enemyBound, 'right', 'bottom')   
                 if ( angle3 < angle2 && angle3 > angle1 ) visible = false
