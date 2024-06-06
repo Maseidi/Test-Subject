@@ -1,6 +1,7 @@
 import { createAndAddClass } from "./util.js"
 import { renderUi } from "./user-interface.js"
 import { loadPlayer } from "./player-loader.js"
+import { activateProgress } from "./progress.js"
 import { loadCurrentRoom } from "./room-loader.js"
 import { getMapX, getMapY, getPlayerX, getPlayerY } from "./variables.js"
 import { getMapEl, setMapEl, setPauseContainer, setRoomContainer } from "./elements.js"
@@ -13,6 +14,7 @@ export const startUp = () => {
     renderCurrentRoom()
     renderPlayer()
     centralizePlayer()
+    activateProgress('3')
 }
 
 const renderPauseContainer = () => {

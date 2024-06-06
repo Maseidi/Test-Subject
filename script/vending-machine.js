@@ -1,10 +1,11 @@
+import { getProgress } from "./progress.js"
 import { renderQuit } from "./user-interface.js"
 import { getPauseContainer } from "./elements.js"
 import { renderStats } from "./weapon-examine.js"
 import { getStat, getWeaponSpecs } from "./weapon-specs.js"
 import { Coin, Drop, interactables } from "./interactables.js"
 import { getShopItems, getShopItemsWithId } from "./shop-item.js"
-import { getCurrentRoomId, getIntObj, getProgressString, setIntObj } from "./variables.js"
+import { getCurrentRoomId, getIntObj, setIntObj } from "./variables.js"
 import { 
     MAX_PACKSIZE,
     calculateTotalCoins,
@@ -93,7 +94,7 @@ const renderBuy = () => {
 const renderBuyItems = () => {
     return getShopItemsWithId()
     .filter(item => !item.sold)
-    .filter(item => getProgressString().includes(item.progress))
+    .filter(item => getProgress(item.progress))
     .map((item) => {
         const buyItem = objectToElement(item)
         addClass(buyItem, 'buy-item')

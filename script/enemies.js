@@ -108,11 +108,11 @@ class IronMaster extends Enemy {
 
 export const enemies = new Map([
     [37, [
-        new Torturer(1, new SquarePath(650, 240, 300), 'a1'),
-        new Torturer(1, new VerDoublePointPath(800, 100, 300), 'b2'),
-        new Torturer(1, new SquarePath(650, 240, 300), 'c3'),
-        new SoulDrinker(1, new SinglePointPath(650, 140), 'c3'),
-        new RockCrusher(1, new SinglePointPath(850, 140), 'c3'),
-        new IronMaster(1, new HorDoublePointPath(1000, 140, 500), 'c3')
+        new Torturer(1, new SquarePath(650, 240, 300), '1'),
+        new Torturer(1, new VerDoublePointPath(800, 100, 300), '2'),
+        new Torturer(1, new SquarePath(650, 240, 300), '3'),
+        new SoulDrinker(1, new SinglePointPath(650, 140), '3'),
+        new RockCrusher(1, new SinglePointPath(850, 140), '3'),
+        new IronMaster(1, new HorDoublePointPath(1000, 140, 500), '3')
     ]]
 ])

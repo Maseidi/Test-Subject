@@ -16,7 +16,9 @@ import {
     setPlayerX,
     setPlayerY,
     setNoOffenseCounter, 
-    getNoOffenseCounter} from "./variables.js"
+    getNoOffenseCounter,
+    getCurrentRoomId} from "./variables.js"
+import { enemies } from "./enemies.js"
 
 export const moveToDestination = (enemy) => {
     const { enemyLeft, enemyTop, enemyW } = enemyCoordinates(enemy)
@@ -215,6 +217,8 @@ export const damageEnemy = (enemy, equipped) => {
     const enemyHealth = Number(enemy.getAttribute('health'))
     const newHealth = enemyHealth - damage
     addAttribute(enemy, 'health', newHealth)
+    const enemiesCopy = enemies.get(getCurrentRoomId())
+    enemiesCopy[Number(enemy.getAttribute('index'))].health = newHealth
     if ( newHealth <= 0 ) {
         const enemyCpu = window.getComputedStyle(enemy)
         addAttribute(enemy, 'left', Number(enemyCpu.left.replace('px', '')))

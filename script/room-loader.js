@@ -4,7 +4,7 @@ import { loaders } from "./loaders.js"
 import { enemies } from "./enemies.js"
 import { interactables } from "./interactables.js"
 import { getWeaponSpecs } from "./weapon-specs.js"
-import { getCurrentRoomId, getProgressString, getRoomLeft, getRoomTop } from "./variables.js"
+import { getCurrentRoomId, getRoomLeft, getRoomTop } from "./variables.js"
 import { addAttribute, addClass, appendAll, createAndAddClass, objectToElement } from "./util.js"
 import { 
     getCurrentRoomEnemies,
@@ -18,6 +18,7 @@ import {
     setCurrentRoomLoaders,
     setCurrentRoomSolid,
     } from "./elements.js"
+import { getProgress } from "./progress.js"
 
 export const loadCurrentRoom = () => {
     const room = rooms.get(getCurrentRoomId())
@@ -154,51 +155,51 @@ const renderDescription = (popup, interactable) => {
 }
 
 const renderEnemies = (roomToRender) => {
-    if ( !enemies.get(getCurrentRoomId()) ) return
-    let progress = Number.MIN_SAFE_INTEGER
-    enemies.get(getCurrentRoomId())
-        .map(elem => {
-            progress = Math.max(progress, getProgressString().indexOf(elem.progress))
-            return elem
-        }).filter(elem => progress === getProgressString().indexOf(elem.progress))
-        .forEach((elem, index) => {
-            const enemy = createAndAddClass('div', `${elem.type}`, 'enemy')
-            addAttribute(enemy, 'state', 'investigate')
-            addAttribute(enemy, 'investigation-counter', 0)
-            addAttribute(enemy, 'health', elem.health)
-            addAttribute(enemy, 'damage', elem.damage)
-            addAttribute(enemy, 'knock', elem.knock)
-            addAttribute(enemy, 'speed', elem.speed)
-            addAttribute(enemy, 'virus', elem.virus)
-            addAttribute(enemy, 'path', `path-${index}`)
-            addAttribute(enemy, 'path-point', '0')
-            addAttribute(enemy, 'path-finding-x', 'null')
-            addAttribute(enemy, 'path-finding-y', 'null')
-            createPath(elem, index, roomToRender)
-            enemy.style.left = `${elem.path.points[0].x}px`
-            enemy.style.top = `${elem.path.points[0].y}px`
-            const enemyCollider = createAndAddClass('div', 'enemy-collider', `${elem.type}-collider`)
-            const enemyBody = createAndAddClass('div', `${elem.type}-body`, 'body-transition')
-            enemyBody.style.backgroundColor = `${elem.virus}`
-            for ( let i = 1; i < elem.components; i++ ) {
-                const component = createAndAddClass('div', `${elem.type}-component`)
-                component.style.backgroundColor = `${elem.virus}`
-                enemyBody.append(component)
-                if ( elem.type === 'iron-master' && i >= 4 ) {
-                    getCurrentRoomSolid().push(component)
-                    if ( i === 7 ) addClass(component, 'weak-point')
-                }
-            }
-            const vision = createAndAddClass('div', 'vision')
-            vision.style.top = '50%'
-            vision.style.width = `${elem.vision}px`
-            vision.style.height = `${elem.vision}px`
-            appendAll(enemyCollider, enemyBody, vision)
-            enemy.append(enemyCollider)
-            roomToRender.append(enemy)
-            getCurrentRoomEnemies().push(enemy)
-            getCurrentRoomSolid().push(enemyCollider)
-        })
+    const currentRoomEnemies = enemies.get(getCurrentRoomId())
+    if ( !currentRoomEnemies ) return
+    const indexedEnemies = indexEnemies(currentRoomEnemies)
+    const filteredEnemies = filterEnemies(indexedEnemies)
+    spawnEnemies(filteredEnemies, roomToRender)
+}
+
+const indexEnemies = (enemies) => enemies.map((enemy, index) => { return {...enemy, index} })
+
+const filterEnemies = (enemies) => enemies.filter(enemy => enemy.health > 0 && getProgress(enemy.progress))
+
+const spawnEnemies = (enemies, roomToRender) => {
+    enemies.forEach(elem => {
+        const enemy = defineEnemy(elem)
+        createPath(elem, elem.index, roomToRender)
+        const enemyCollider = createAndAddClass('div', 'enemy-collider', `${elem.type}-collider`)
+        const enemyBody = createAndAddClass('div', `${elem.type}-body`, 'body-transition')
+        enemyBody.style.backgroundColor = `${elem.virus}`
+        defineComponents(elem, enemyBody)
+        const vision = defineVision(elem)
+        appendAll(enemyCollider, enemyBody, vision)
+        enemy.append(enemyCollider)
+        roomToRender.append(enemy)
+        getCurrentRoomEnemies().push(enemy)
+        getCurrentRoomSolid().push(enemyCollider)
+    })
+}
+
+const defineEnemy = (element) => {
+    const enemy = createAndAddClass('div', `${element.type}`, 'enemy')
+    addAttribute(enemy, 'index', element.index)
+    addAttribute(enemy, 'state', 'investigate')
+    addAttribute(enemy, 'investigation-counter', 0)
+    addAttribute(enemy, 'health', element.health)
+    addAttribute(enemy, 'damage', element.damage)
+    addAttribute(enemy, 'knock', element.knock)
+    addAttribute(enemy, 'speed', element.speed)
+    addAttribute(enemy, 'virus', element.virus)
+    addAttribute(enemy, 'path', `path-${element.index}`)
+    addAttribute(enemy, 'path-point', '0')
+    addAttribute(enemy, 'path-finding-x', 'null')
+    addAttribute(enemy, 'path-finding-y', 'null')
+    enemy.style.left = `${element.path.points[0].x}px`
+    enemy.style.top = `${element.path.points[0].y}px`
+    return enemy
 }
 
 const createPath = (elem, index, roomToRender) => {
@@ -211,4 +212,32 @@ const createPath = (elem, index, roomToRender) => {
         path.append(point)
     }
     roomToRender.append(path)
+}
+
+const defineComponents = (element, enemyBody) => {
+    for ( let componentNum = 1; componentNum < element.components; componentNum++ ) {
+        const component = createAndAddClass('div', `${element.type}-component`)
+        component.style.backgroundColor = `${element.virus}`
+        manageEnemyCriticalPoints(element, component, componentNum)
+        enemyBody.append(component)
+    }
+}
+
+const manageEnemyCriticalPoints = (element, component, componentNum) => {
+    if ( element.type === 'iron-master' ) addEnemyCriticalPoints(component, componentNum, 4, [7])
+}
+
+const addEnemyCriticalPoints = (component, componentNum, offset, weakpoints) => {
+    if ( componentNum >= offset ) {
+        getCurrentRoomSolid().push(component)
+        if ( weakpoints.includes(componentNum) ) addClass(component, 'weak-point')
+    }
+}
+
+const defineVision = (element) => {
+    const vision = createAndAddClass('div', 'vision')
+    vision.style.top = '50%'
+    vision.style.width = `${element.vision}px`
+    vision.style.height = `${element.vision}px`
+    return vision
 }
