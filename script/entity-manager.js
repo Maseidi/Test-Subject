@@ -24,6 +24,7 @@ import {
     setPrevRoomId,
     setRoomLeft,
     setRoomTop} from "./variables.js"
+import { detectCollision } from "./enemy-collision.js"
 
 export const manageEntities = () => {
     manageSolidObjects()
@@ -92,10 +93,11 @@ const manageEnemies = () => {
                 addAttribute(enemy, 'state', 'chase')
                 removeClass(enemy.firstElementChild.firstElementChild.firstElementChild, 'attack')
             })
-        setNoOffenseCounter(0)    
+        setNoOffenseCounter(0)
     }
     getCurrentRoomEnemies().forEach((enemy) => {
         manageDamagedState(enemy)
+        detectCollision(enemy)
         if ( containsClass(enemy, 'torturer') || 
              containsClass(enemy, 'soul-drinker') || 
              containsClass(enemy, 'rock-crusher') || 

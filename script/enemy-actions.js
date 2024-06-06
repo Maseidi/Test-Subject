@@ -2,7 +2,7 @@ import { dropLoot } from "./loot-manager.js"
 import { takeDamage } from "./player-health.js"
 import { manageKnock } from "./knock-manager.js"
 import { getSpecification, getStat } from "./weapon-specs.js"
-import { addAttribute, addClass, collide, distance } from "./util.js"
+import { addAttribute, addClass, collide, containsClass, distance } from "./util.js"
 import { getCurrentRoomEnemies, getMapEl, getPlayer } from "./elements.js"
 import { 
     getMapX,
@@ -60,10 +60,11 @@ const decideDirection = (enemyLeft, destLeft, enemyTop, destTop, enemyW, destW) 
 }
 
 const calculateSpeed = (enemy, xMultiplier, yMultiplier) => {
+    if ( containsClass(enemy, 'stop') ) return 0
     let speed = Number(enemy.getAttribute("speed"))
     const state = enemy.getAttribute('state')
     if ( state === 'no-offence' ) speed /= 2
-    if ( state === 'investigate' ) speed /= 5
+    else if ( state === 'investigate' ) speed /= 5
     if ( xMultiplier && yMultiplier ) speed /= 1.41
     return speed
 }
@@ -99,14 +100,14 @@ const reachedDestination = (enemy) => {
 
 export const calculateAngle = (enemy, x, y) => {
     let newState = Number(enemy.getAttribute('angle-state'))
-    if ( x === 1 && y === 1 )        newState = changeEnemyAngleState(7, enemy, '100%', '0', '100%', '0')
-    else if ( x === 1 && y === -1 )  newState = changeEnemyAngleState(5, enemy, '100%', '0', '0', '-100%')
-    else if ( x === -1 && y === 1 )  newState = changeEnemyAngleState(1, enemy, '0', '-100%', '100%', '0')    
-    else if ( x === -1 && y === -1 ) newState = changeEnemyAngleState(3, enemy, '0', '-100%', '0', '-100%')
-    else if ( x === 1 && !y )        newState = changeEnemyAngleState(6, enemy, '100%', '0', '50%', '-50%')
-    else if ( x === -1 && !y )       newState = changeEnemyAngleState(2, enemy, '0', '-100%', '50%', '-50%')
-    else if ( !x && y === 1 )        newState = changeEnemyAngleState(0, enemy, '50%', '-50%', '100%', '0')
-    else if ( !x && y === -1 )       newState = changeEnemyAngleState(4, enemy, '50%', '-50%', '0', '-100%')
+    if ( x === 1 && y === 1 )        newState = changeEnemyAngleState(7, enemy, '0', '0')
+    else if ( x === 1 && y === -1 )  newState = changeEnemyAngleState(5, enemy, '0', '-100%')
+    else if ( x === -1 && y === 1 )  newState = changeEnemyAngleState(1, enemy, '-100%', '0')    
+    else if ( x === -1 && y === -1 ) newState = changeEnemyAngleState(3, enemy, '-100%', '-100%')
+    else if ( x === 1 && !y )        newState = changeEnemyAngleState(6, enemy, '0', '-50%')
+    else if ( x === -1 && !y )       newState = changeEnemyAngleState(2, enemy, '-100%', '-50%')
+    else if ( !x && y === 1 )        newState = changeEnemyAngleState(0, enemy, '-50%', '0')
+    else if ( !x && y === -1 )       newState = changeEnemyAngleState(4, enemy, '-50%', '-100%')
     let diff = newState - Number(enemy.getAttribute('angle-state'))
     if (Math.abs(diff) > 4 && diff >= 0) diff = -(8 - diff)
     else if (Math.abs(diff) > 4 && diff < 0) diff = 8 - Math.abs(diff) 
@@ -116,16 +117,16 @@ export const calculateAngle = (enemy, x, y) => {
     enemy.firstElementChild.firstElementChild.style.transform = `rotateZ(${newAngle}deg)`
 }
 
-const changeEnemyAngleState = (state, enemy, left, translateX, top, translateY) => {
-    replaceEnemyVision(enemy, left, top, translateX, translateY)
+const changeEnemyAngleState = (state, enemy, translateX, translateY) => {
+    replaceEnemyComponent(enemy.firstElementChild.children[1], translateX, translateY)
+    replaceEnemyComponent(enemy.firstElementChild.children[2], translateX, translateY)
     return state
 }
 
-const replaceEnemyVision = (enemy, left, top, translateX, translateY) => {
-    const vision = enemy.firstElementChild.children[1]
-    vision.style.left = left
-    vision.style.top = top
-    vision.style.transform = `translateX(${translateX}) translateY(${translateY})`
+const replaceEnemyComponent = (component, translateX, translateY) => {
+    component.style.left = '50%'
+    component.style.top = '50%'
+    component.style.transform = `translateX(${translateX}) translateY(${translateY})`
 }
 
 const hitPlayer = (enemy) => {
@@ -218,7 +219,7 @@ export const damageEnemy = (enemy, equipped) => {
     const newHealth = enemyHealth - damage
     addAttribute(enemy, 'health', newHealth)
     const enemiesCopy = enemies.get(getCurrentRoomId())
-    enemiesCopy[Number(enemy.getAttribute('index'))].health = newHealth
+    enemiesCopy[Number(enemy.getAttribute('index'))].health = newHealth <= 0 ? 0 : newHealth
     if ( newHealth <= 0 ) {
         const enemyCpu = window.getComputedStyle(enemy)
         addAttribute(enemy, 'left', Number(enemyCpu.left.replace('px', '')))

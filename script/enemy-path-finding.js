@@ -1,9 +1,10 @@
-import { addAttribute, collide } from './util.js'
+import { addAttribute, collide, containsClass } from './util.js'
 import { getCurrentRoomSolid } from './elements.js'
 
 export const findPath = (enemy) => {
     let wall
     for ( const solid of getCurrentRoomSolid() ) {
+        if ( containsClass(solid.parentElement, 'enemy') ) continue
         if ( solid.getAttribute('side') === 'true' ) continue
         if ( solid === enemy.firstElementChild ) continue
         if ( !collide(enemy, solid, 50) ) continue

@@ -7,9 +7,7 @@ const handleDownKnock = (entity, knock) => {
     const wallBound = Array.from(getCurrentRoomSolid())
         .map(solid => solid.getBoundingClientRect())
         .filter(solidBound => 
-            solidBound.top + 5 > entityBound.bottom &&
-            ((solidBound.left < entityBound.left && entityBound.left < solidBound.right) ||
-            (solidBound.right > entityBound.right && entityBound.right > solidBound.left))
+            solidBound.top + 5 > entityBound.bottom && horizontalPredicate(solidBound, entityBound)
         ).sort((a,b) => a.top - b.top)[0]
     if ( !wallBound ) return knock
     const distance = wallBound.top - entityBound.bottom
@@ -22,9 +20,7 @@ const handleRightKnock = (entity, knock) => {
     const wallBound = Array.from(getCurrentRoomSolid())
         .map(solid => solid.getBoundingClientRect())
         .filter(solidBound => 
-            solidBound.left + 5 > entityBound.right &&
-            ((solidBound.top < entityBound.bottom && entityBound.bottom < solidBound.bottom) ||
-            (solidBound.bottom > entityBound.top && entityBound.top > solidBound.top))
+            solidBound.left + 5 > entityBound.right && verticalPredicate(solidBound, entityBound)
         ).sort((a,b) => a.left - b.left)[0]
     if ( !wallBound ) return knock
     const distance = wallBound.left - entityBound.right
@@ -37,9 +33,7 @@ const handleLeftKnock = (entity, knock) => {
     const wallBound = Array.from(getCurrentRoomSolid())
         .map(solid => solid.getBoundingClientRect())
         .filter(solidBound => 
-            solidBound.right - 5 < entityBound.left &&
-            ((solidBound.top < entityBound.bottom && entityBound.bottom < solidBound.bottom) ||
-            (solidBound.bottom > entityBound.top && entityBound.top > solidBound.top))
+            solidBound.right - 5 < entityBound.left && verticalPredicate(solidBound, entityBound)
         ).sort((a,b) => b.right - a.right)[0]
     if ( !wallBound ) return knock
     const distance = entityBound.left - wallBound.right
@@ -52,9 +46,7 @@ const handleUpKnock = (entity, knock) => {
     const wallBound = Array.from(getCurrentRoomSolid())
         .map(solid => solid.getBoundingClientRect())
         .filter(solidBound => 
-            solidBound.bottom - 5 < entityBound.top &&
-            ((solidBound.left < entityBound.left && entityBound.left < solidBound.right) ||
-            (solidBound.right > entityBound.right && entityBound.right > solidBound.left))
+            solidBound.bottom - 5 < entityBound.top && horizontalPredicate(solidBound, entityBound)
         ).sort((a,b) => b.bottom - a.bottom)[0]
     if ( !wallBound ) return knock
     const distance = entityBound.top - wallBound.bottom
@@ -68,3 +60,11 @@ const directionMapper = new Map([
     ['to-left', handleLeftKnock],
     ['to-up', handleUpKnock],
 ])
+
+const verticalPredicate = (a, b) => 
+    ((a.top < b.bottom && b.bottom < a.bottom) || (a.bottom > b.top && b.top > a.top)) ||
+    ((a.top > b.top && b.bottom > a.top) || (a.bottom < b.bottom && b.top < a.bottom))
+
+const horizontalPredicate = (a, b) =>
+    ((a.left < b.left && b.left < a.right) || (a.right > b.right && b.right > a.left)) || 
+    ((a.left > b.left && b.right > a.left) || (a.right < b.right && b.left < a.right))

@@ -2,6 +2,7 @@ import { walls } from "./walls.js"
 import { rooms } from "./rooms.js"
 import { loaders } from "./loaders.js"
 import { enemies } from "./enemies.js"
+import { getProgress } from "./progress.js"
 import { interactables } from "./interactables.js"
 import { getWeaponSpecs } from "./weapon-specs.js"
 import { getCurrentRoomId, getRoomLeft, getRoomTop } from "./variables.js"
@@ -18,7 +19,6 @@ import {
     setCurrentRoomLoaders,
     setCurrentRoomSolid,
     } from "./elements.js"
-import { getProgress } from "./progress.js"
 
 export const loadCurrentRoom = () => {
     const room = rooms.get(getCurrentRoomId())
@@ -175,7 +175,8 @@ const spawnEnemies = (enemies, roomToRender) => {
         enemyBody.style.backgroundColor = `${elem.virus}`
         defineComponents(elem, enemyBody)
         const vision = defineVision(elem)
-        appendAll(enemyCollider, enemyBody, vision)
+        const fwDetector = defineForwardDetector(elem)
+        appendAll(enemyCollider, enemyBody, vision, fwDetector)
         enemy.append(enemyCollider)
         roomToRender.append(enemy)
         getCurrentRoomEnemies().push(enemy)
@@ -240,4 +241,10 @@ const defineVision = (element) => {
     vision.style.width = `${element.vision}px`
     vision.style.height = `${element.vision}px`
     return vision
+}
+
+const defineForwardDetector = () => {
+    const forwardDetector = createAndAddClass('div', 'enemy-forward-detector')
+    forwardDetector.style.top = '50%'
+    return forwardDetector
 }

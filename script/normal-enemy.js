@@ -2,7 +2,12 @@ import { addAttribute } from "./util.js"
 import { findPath } from "./enemy-path-finding.js"
 import { isPlayerVisible } from "./enemy-vision.js"
 import { getNoOffenseCounter } from "./variables.js"
-import { calculateAngle, moveToDestination, updateDestinationToPlayer, updateDestinationToPath, notifyEnemy } from "./enemy-actions.js"
+import { 
+    calculateAngle,
+    moveToDestination,
+    updateDestinationToPlayer,
+    updateDestinationToPath,
+    notifyEnemy } from "./enemy-actions.js"
 
 export const normalEnemyBehavior = (enemy) => {
     switch ( enemy.getAttribute('state') ) {
