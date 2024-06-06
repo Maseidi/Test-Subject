@@ -124,7 +124,7 @@ export const control = () => {
     
     onmouseup = (e) => clickUp(e)
 
-    onresize = (e) => centralizePlayer()
+    onresize = () => centralizePlayer()
 
 }
 

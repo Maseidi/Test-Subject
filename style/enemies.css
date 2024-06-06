@@ -183,6 +183,15 @@
   transform: translateX(7px) translateY(-9px);
 }
 
+.iron-master > .iron-master-collider > div:nth-of-type(1) > div:nth-of-type(7) {
+  width: 40px;
+  height: 3px;
+  left: 100%;
+  top: 0;
+  transform: translateX(-10px) translateY(-9px);
+  opacity: 0;
+}
+
 .body-transition {
   transition: 300ms;
 }

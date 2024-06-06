@@ -90,7 +90,7 @@ const createTrackers = (solid, elem) => {
     if ( left && top ) solid.append(topLeft)
     if ( left && bottom ) solid.append(bottomLeft)
     if ( right && top ) solid.append(topRight)
-    if ( right && bottom ) solid.append(bottomRight)  
+    if ( right && bottom ) solid.append(bottomRight)
 }
 
 const renderInteractables = (roomToRender) => 
@@ -184,7 +184,10 @@ const renderEnemies = (roomToRender) => {
                 const component = createAndAddClass('div', `${elem.type}-component`)
                 component.style.backgroundColor = `${elem.virus}`
                 enemyBody.append(component)
-                if ( elem.type === 'iron-master' && i >= 4 ) getCurrentRoomSolid().push(component)
+                if ( elem.type === 'iron-master' && i >= 4 ) {
+                    getCurrentRoomSolid().push(component)
+                    if ( i === 7 ) addClass(component, 'weak-point')
+                }
             }
             const vision = createAndAddClass('div', 'vision')
             vision.style.top = '50%'

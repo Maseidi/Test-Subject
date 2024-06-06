@@ -102,7 +102,7 @@ class IronMaster extends Enemy {
         const health = Math.floor(level * 135 + Math.random() * 15)
         const damage = Math.floor(level * 30 + Math.random() * 15)
         const speed = 3 + Math.random()
-        super('iron-master', 7, path, health, damage, 150, speed, progress, 500)
+        super('iron-master', 8, path, health, damage, 150, speed, progress, 500)
     }
 }
 

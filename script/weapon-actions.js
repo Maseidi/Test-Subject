@@ -44,11 +44,14 @@ const manageAim = () => {
     const range = getStat(equippedWeapon.name, 'range', equippedWeapon.rangelvl)
     const laser = getPlayer().children[0].children[0].children[1].children[0]
     laser.style.height = `${range}px`
+    let found = false
     Array.from(laser.children).forEach((elem, index) => {
+        if ( found ) return
         for ( const solid of getCurrentRoomSolid() ) {
             if ( collide(elem, solid, 0) ) {
                 setTarget(solid)
                 laser.style.height = `${index/100 * range}px`
+                found = true
             }
         }
     })
@@ -108,10 +111,19 @@ const shoot = () => {
         return
     }
     currMag--
-    getCurrentRoomEnemies().forEach(enemy => notifyEnemy(800, enemy))
-    if ( getTarget() && containsClass(getTarget().parentElement, 'enemy') &&
-         Number(getTarget().parentElement.getAttribute('health')) > 0 ) damageEnemy(getTarget().parentElement, equippedWeapon)
+    notifyNearbyEnemies()
+    manageInteractivity()
     updateInventory(equippedWeapon, currMag, 0)
+}
+
+const notifyNearbyEnemies = () => getCurrentRoomEnemies().forEach(enemy => notifyEnemy(800, enemy))
+
+const manageInteractivity = () => {
+    if ( !getTarget() ) return
+    let enemy = getTarget().parentElement
+    if ( containsClass(enemy, 'iron-master') ) return
+    if ( containsClass(getTarget(), 'weak-point') ) enemy = getTarget().parentElement.parentElement.parentElement
+    if ( containsClass(enemy, 'enemy') && Number(enemy.getAttribute('health')) > 0 ) damageEnemy(enemy, equippedWeapon)
     if ( getTarget()?.getAttribute('name') === 'crate' ) dropLoot(getTarget())
 }
 

@@ -19,58 +19,80 @@ import {
     getNoOffenseCounter} from "./variables.js"
 
 export const moveToDestination = (enemy) => {
+    const { enemyLeft, enemyTop, enemyW } = enemyCoordinates(enemy)
+    const { destLeft, destTop, destW } = destinationCoordinates(enemy)
+    const { xMultiplier, yMultiplier } = decideDirection(enemyLeft, destLeft, enemyTop, destTop, enemyW, destW)
+    calculateAngle(enemy, xMultiplier, yMultiplier)
+    const speed = calculateSpeed(enemy, xMultiplier, yMultiplier)
+    if ( !xMultiplier && !yMultiplier ) reachedDestination(enemy)
+    const currentX = Number(window.getComputedStyle(enemy).left.replace('px', ''))
+    const currentY = Number(window.getComputedStyle(enemy).top.replace('px', ''))
+    enemy.style.left = `${currentX + speed * xMultiplier}px`
+    enemy.style.top = `${currentY + speed * yMultiplier}px`
+}
+
+const enemyCoordinates = (enemy) => {
     const enemyCpu = window.getComputedStyle(enemy)
     const enemyLeft = Number(enemyCpu.left.replace('px', ''))
     const enemyTop = Number(enemyCpu.top.replace('px', ''))
     const enemyW = Number(enemyCpu.width.replace('px', ''))
-    const destLeft = enemy.getAttribute('path-finding-x') === 'null' ? 
-        Number(enemy.getAttribute('dest-x')) : Number(enemy.getAttribute('path-finding-x'))
-    const destTop = enemy.getAttribute('path-finding-y') === 'null' ?
-        Number(enemy.getAttribute('dest-y')) : Number(enemy.getAttribute('path-finding-y'))
-    const destW = enemy.getAttribute('path-finding-x') === 'null' ? Number(enemy.getAttribute('dest-w')) : 10
+    return {enemyLeft, enemyTop, enemyW}
+}
+
+const destinationCoordinates = (enemy) => {
+    const pathFindingX = enemy.getAttribute('path-finding-x')
+    const pathFindingY = enemy.getAttribute('path-finding-y')
+    const destLeft = pathFindingX === 'null' ? Number(enemy.getAttribute('dest-x')) : Number(pathFindingX)
+    const destTop = pathFindingY === 'null' ? Number(enemy.getAttribute('dest-y')) : Number(pathFindingY)
+    const destW = pathFindingX === 'null' ? Number(enemy.getAttribute('dest-w')) : 10
+    return {destLeft, destTop, destW}
+}
+
+const decideDirection = (enemyLeft, destLeft, enemyTop, destTop, enemyW, destW) => {
     let xMultiplier, yMultiplier
     if ( enemyLeft > destLeft + destW / 2 ) xMultiplier = -1
     else if ( enemyLeft + enemyW <= destLeft + destW / 2 ) xMultiplier = 1
     if ( enemyTop > destTop + destW / 2 ) yMultiplier = -1
     else if ( enemyTop + enemyW <= destTop + destW / 2 ) yMultiplier = 1
-    calculateAngle(enemy, xMultiplier, yMultiplier)
+    return { xMultiplier, yMultiplier }
+}
+
+const calculateSpeed = (enemy, xMultiplier, yMultiplier) => {
     let speed = Number(enemy.getAttribute("speed"))
     const state = enemy.getAttribute('state')
     if ( state === 'no-offence' ) speed /= 2
     if ( state === 'investigate' ) speed /= 5
     if ( xMultiplier && yMultiplier ) speed /= 1.41
-    else if ( !xMultiplier && !yMultiplier ) {
-        if ( enemy.getAttribute('path-finding-x') !== 'null' ) {
-            addAttribute(enemy, 'path-finding-x', null)
-            addAttribute(enemy, 'path-finding-y', null)
-        } else {
-            switch ( state ) {
-                case 'investigate':
-                    const path = document.getElementById(enemy.getAttribute('path'))
-                    const numOfPoints = path.children.length
-                    const currentPathPoint = Number(enemy.getAttribute('path-point'))
-                    let nextPathPoint = currentPathPoint + 1
-                    if ( nextPathPoint > numOfPoints - 1 ) nextPathPoint = 0
-                    addAttribute(enemy, 'path-point', nextPathPoint)
-                    addAttribute(enemy, 'investigation-counter', 1)
-                    break
-                case 'chase':
-                    if ( collide(enemy, getPlayer(), 0) ) hitPlayer(enemy)
-                    break
-                case 'guess-search':
-                    addAttribute(enemy, 'state', 'lost')
-                    addAttribute(enemy, 'lost-counter', '0')
-                    break
-                case 'move-to-position':
-                    addAttribute(enemy, 'state', 'investigate')
-                    break                 
-            }
-        }
+    return speed
+}
+
+const reachedDestination = (enemy) => {
+    if ( enemy.getAttribute('path-finding-x') !== 'null' ) {
+        addAttribute(enemy, 'path-finding-x', null)
+        addAttribute(enemy, 'path-finding-y', null)
+        return
     }
-    const currentX = Number(window.getComputedStyle(enemy).left.replace('px', ''))
-    const currentY = Number(window.getComputedStyle(enemy).top.replace('px', ''))
-    enemy.style.left = `${currentX + speed * xMultiplier}px`
-    enemy.style.top = `${currentY + speed * yMultiplier}px`
+    switch ( enemy.getAttribute('state') ) {
+        case 'investigate':
+            const path = document.getElementById(enemy.getAttribute('path'))
+            const numOfPoints = path.children.length
+            const currentPathPoint = Number(enemy.getAttribute('path-point'))
+            let nextPathPoint = currentPathPoint + 1
+            if ( nextPathPoint > numOfPoints - 1 ) nextPathPoint = 0
+            addAttribute(enemy, 'path-point', nextPathPoint)
+            addAttribute(enemy, 'investigation-counter', 1)
+            break
+        case 'chase':
+            if ( collide(enemy, getPlayer(), 0) ) hitPlayer(enemy)
+            break
+        case 'guess-search':
+            addAttribute(enemy, 'state', 'lost')
+            addAttribute(enemy, 'lost-counter', '0')
+            break
+        case 'move-to-position':
+            addAttribute(enemy, 'state', 'investigate')
+            break                 
+    }
 }
 
 export const calculateAngle = (enemy, x, y) => {
@@ -189,6 +211,7 @@ export const notifyEnemy = (dist, enemy) => {
 export const damageEnemy = (enemy, equipped) => {
     let damage = getStat(equipped.name, 'damage', equipped.damagelvl)
     if ( enemy.getAttribute('virus') === getSpecification(equipped.name, 'antivirus') ) damage *= 1.2
+    if ( Math.random() < 0.01 ) damage *= (Math.random() + 1)
     const enemyHealth = Number(enemy.getAttribute('health'))
     const newHealth = enemyHealth - damage
     addAttribute(enemy, 'health', newHealth)
