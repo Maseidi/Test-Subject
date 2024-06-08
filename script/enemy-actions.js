@@ -21,6 +21,7 @@ import {
 import { enemies } from "./enemies.js"
 
 export const moveToDestination = (enemy) => {
+    if ( collidePlayer(enemy) ) return
     const { enemyLeft, enemyTop, enemyW } = enemyCoordinates(enemy)
     const { destLeft, destTop, destW } = destinationCoordinates(enemy)
     const { xMultiplier, yMultiplier } = decideDirection(enemyLeft, destLeft, enemyTop, destTop, enemyW, destW)
@@ -31,6 +32,13 @@ export const moveToDestination = (enemy) => {
     const currentY = Number(window.getComputedStyle(enemy).top.replace('px', ''))
     enemy.style.left = `${currentX + speed * xMultiplier}px`
     enemy.style.top = `${currentY + speed * yMultiplier}px`
+}
+
+const collidePlayer = (enemy) => {
+    const state = enemy.getAttribute('state')
+    if ( ( state !== 'chase' && state !== 'no-offence' ) || !collide(enemy, getPlayer(), 0) ) return false
+    if ( state === 'chase' ) hitPlayer(enemy)
+    return true
 }
 
 const enemyCoordinates = (enemy) => {
@@ -84,9 +92,6 @@ const reachedDestination = (enemy) => {
             if ( nextPathPoint > numOfPoints - 1 ) nextPathPoint = 0
             addAttribute(enemy, 'path-point', nextPathPoint)
             addAttribute(enemy, 'investigation-counter', 1)
-            break
-        case 'chase':
-            if ( collide(enemy, getPlayer(), 0) ) hitPlayer(enemy)
             break
         case 'guess-search':
             addAttribute(enemy, 'state', 'lost')
@@ -218,13 +223,13 @@ export const damageEnemy = (enemy, equipped) => {
     const enemyHealth = Number(enemy.getAttribute('health'))
     const newHealth = enemyHealth - damage
     addAttribute(enemy, 'health', newHealth)
-    const enemiesCopy = enemies.get(getCurrentRoomId())
-    enemiesCopy[Number(enemy.getAttribute('index'))].health = newHealth <= 0 ? 0 : newHealth
     if ( newHealth <= 0 ) {
         const enemyCpu = window.getComputedStyle(enemy)
         addAttribute(enemy, 'left', Number(enemyCpu.left.replace('px', '')))
         addAttribute(enemy, 'top', Number(enemyCpu.top.replace('px', '')))
         dropLoot(enemy)
+        const enemiesCopy = enemies.get(getCurrentRoomId())
+        enemiesCopy[Number(enemy.getAttribute('index'))].health = 0
         return
     }
     const knockback = getSpecification(equipped.name, 'knockback')

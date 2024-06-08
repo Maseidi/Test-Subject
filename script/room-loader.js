@@ -164,7 +164,7 @@ const renderEnemies = (roomToRender) => {
 
 const indexEnemies = (enemies) => enemies.map((enemy, index) => { return {...enemy, index} })
 
-const filterEnemies = (enemies) => enemies.filter(enemy => enemy.health > 0 && getProgress(enemy.progress))
+const filterEnemies = (enemies) => enemies.filter(enemy => enemy.health !== 0 && getProgress(enemy.progress))
 
 const spawnEnemies = (enemies, roomToRender) => {
     enemies.forEach(elem => {
@@ -185,15 +185,11 @@ const spawnEnemies = (enemies, roomToRender) => {
 }
 
 const defineEnemy = (element) => {
-    const enemy = createAndAddClass('div', `${element.type}`, 'enemy')
-    addAttribute(enemy, 'index', element.index)
+    const enemy = objectToElement(element)
+    addClass(enemy, `${element.type}`)
+    addClass(enemy, 'enemy')
     addAttribute(enemy, 'state', 'investigate')
     addAttribute(enemy, 'investigation-counter', 0)
-    addAttribute(enemy, 'health', element.health)
-    addAttribute(enemy, 'damage', element.damage)
-    addAttribute(enemy, 'knock', element.knock)
-    addAttribute(enemy, 'speed', element.speed)
-    addAttribute(enemy, 'virus', element.virus)
     addAttribute(enemy, 'path', `path-${element.index}`)
     addAttribute(enemy, 'path-point', '0')
     addAttribute(enemy, 'path-finding-x', 'null')
