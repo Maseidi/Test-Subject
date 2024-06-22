@@ -1,8 +1,8 @@
 import { rooms } from "./rooms.js"
 import { loaders } from "./loaders.js"
-import { notifyEnemy } from "./enemy-actions.js"
+import { getEnemyState, notifyEnemy } from "./enemy-actions.js"
 import { loadCurrentRoom } from "./room-loader.js"
-import { normalEnemyBehavior } from "./normal-enemy.js"
+import { CHASE, NO_OFFENCE, normalEnemyBehavior } from "./normal-enemy.js"
 import { addAttribute, collide, containsClass, removeClass } from "./util.js"
 import { 
     getCurrentRoom,
@@ -13,6 +13,7 @@ import {
     getPlayer } from "./elements.js"
 import {
     getCurrentRoomId,
+    getIntObj,
     getNoOffenseCounter,
     getPrevRoomId,
     getRoomLeft,
@@ -24,7 +25,7 @@ import {
     setPrevRoomId,
     setRoomLeft,
     setRoomTop} from "./variables.js"
-import { detectCollision } from "./enemy-collision.js"
+import { checkCollision } from "./enemy-collision.js"
 
 export const manageEntities = () => {
     manageSolidObjects()
@@ -73,7 +74,7 @@ const manageInteractables = () => {
     setIntObj(undefined)
     Array.from(getCurrentRoomInteractables()).forEach((int) => {
         const popup = int.children[1]
-        if ( collide(getPlayer().firstElementChild, int, 20) ) {
+        if ( collide(getPlayer().firstElementChild, int, 20) && !getIntObj() ) {
             popup.style.bottom = `calc(100% + 20px)`
             popup.style.opacity = `1`
             setIntObj(int)
@@ -88,16 +89,16 @@ const manageEnemies = () => {
     if ( getNoOffenseCounter() > 0 ) setNoOffenseCounter(getNoOffenseCounter() + 1)
     if ( getNoOffenseCounter() >= 180 ) {
         Array.from(getCurrentRoomEnemies())
-            .filter(enemy => enemy.getAttribute('state') === 'no-offence')
+            .filter(enemy => getEnemyState(enemy) === NO_OFFENCE)
             .forEach(enemy => {
-                addAttribute(enemy, 'state', 'chase')
+                addAttribute(enemy, 'state', CHASE)
                 removeClass(enemy.firstElementChild.firstElementChild.firstElementChild, 'attack')
             })
         setNoOffenseCounter(0)
     }
     getCurrentRoomEnemies().forEach((enemy) => {
         manageDamagedState(enemy)
-        detectCollision(enemy)
+        checkCollision(enemy)
         if ( containsClass(enemy, 'torturer') || 
              containsClass(enemy, 'soul-drinker') || 
              containsClass(enemy, 'rock-crusher') || 

@@ -7,24 +7,33 @@ import {
     moveToDestination,
     updateDestinationToPlayer,
     updateDestinationToPath,
-    notifyEnemy } from "./enemy-actions.js"
+    notifyEnemy, 
+    accelerateEnemy,
+    getEnemyState} from "./enemy-actions.js"
+    
+export const LOST = 'lost'
+export const CHASE = 'chase'
+export const NO_OFFENCE = 'no-offence'
+export const INVESTIGATE = 'investigate'
+export const GUESS_SEARCH = 'guess-search'
+export const MOVE_TO_POSITION = 'move-to-position'    
 
 export const normalEnemyBehavior = (enemy) => {
-    switch ( enemy.getAttribute('state') ) {
-        case 'investigate':
+    switch ( getEnemyState(enemy) ) {
+        case INVESTIGATE:
             handleInvestigationState(enemy)
             break
-        case 'chase':
-        case 'no-offence':
+        case CHASE:
+        case NO_OFFENCE:
             handleChaseState(enemy)
             break
-        case 'guess-search':
+        case GUESS_SEARCH:
             handleGuessSearchState(enemy)
             break    
-        case 'lost':
+        case LOST:
             handleLostState(enemy)
             break
-        case 'move-to-position':
+        case MOVE_TO_POSITION:
             handleMoveToPositionState(enemy)
             break
     }
@@ -44,16 +53,18 @@ const handleInvestigationState = (enemy) => {
     displaceEnemy(enemy)
 }
 
-const handleChaseState = (enemy) => {    
+const handleChaseState = (enemy) => {  
+    accelerateEnemy(enemy)
     if ( isPlayerVisible(enemy) ) notifyEnemy(Number.MAX_SAFE_INTEGER, enemy)
     else {
-        addAttribute(enemy, 'state', 'guess-search')
+        addAttribute(enemy, 'state', GUESS_SEARCH)
         addAttribute(enemy, 'guess-counter', 1)
     }
     displaceEnemy(enemy)
 }
 
 const handleGuessSearchState = (enemy) => {
+    accelerateEnemy(enemy)
     if ( playerLocated(enemy) ) return
     let guessCounter = Number(enemy.getAttribute('guess-counter'))
     if ( guessCounter > 0 ) {
@@ -69,7 +80,7 @@ const handleLostState = (enemy) => {
     if ( playerLocated(enemy) ) return
     const counter = Number(enemy.getAttribute('lost-counter'))
     if ( counter === 600 ) {
-        addAttribute(enemy, 'state', 'move-to-position')
+        addAttribute(enemy, 'state', MOVE_TO_POSITION)
         return
     }
     if ( counter % 120 === 0 ) checkSuroundings(enemy)
@@ -77,6 +88,7 @@ const handleLostState = (enemy) => {
 }
 
 const handleMoveToPositionState = (enemy) => {
+    accelerateEnemy(enemy)
     if ( playerLocated(enemy) ) return
     const dest = document.getElementById(enemy.getAttribute('path')).children[Number(enemy.getAttribute('path-point'))]
     updateDestinationToPath(enemy, dest)
@@ -86,8 +98,8 @@ const handleMoveToPositionState = (enemy) => {
 const playerLocated = (enemy) => {
     let result = false
     if ( isPlayerVisible(enemy) ) { 
-        if ( getNoOffenseCounter() === 0 ) addAttribute(enemy, 'state', 'chase')
-        else addAttribute(enemy, 'state', 'no-offence')   
+        if ( getNoOffenseCounter() === 0 ) addAttribute(enemy, 'state', CHASE)
+        else addAttribute(enemy, 'state', NO_OFFENCE)   
         result = true
     }
     return result

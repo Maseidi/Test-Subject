@@ -1,10 +1,10 @@
-import { getCurrentRoomSolid } from "./elements.js"
+import { getCurrentRoomLoaders, getCurrentRoomSolid } from "./elements.js"
 
 export const manageKnock = (direction, entity, knock) => directionMapper.get(direction)(entity, knock)
 
 const handleDownKnock = (entity, knock) => {
     const entityBound = entity.getBoundingClientRect()
-    const wallBound = Array.from(getCurrentRoomSolid())
+    const wallBound = [...getCurrentRoomSolid(), ...getCurrentRoomLoaders()]
         .map(solid => solid.getBoundingClientRect())
         .filter(solidBound => solidBound.top + 5 > entityBound.bottom && horizontalPredicate(solidBound, entityBound))
         .sort((a,b) => a.top - b.top)[0]
@@ -16,7 +16,7 @@ const handleDownKnock = (entity, knock) => {
 
 const handleRightKnock = (entity, knock) => {
     const entityBound = entity.getBoundingClientRect()
-    const wallBound = Array.from(getCurrentRoomSolid())
+    const wallBound = [...getCurrentRoomSolid(), ...getCurrentRoomLoaders()]
         .map(solid => solid.getBoundingClientRect())
         .filter(solidBound => solidBound.left + 5 > entityBound.right && verticalPredicate(solidBound, entityBound))
         .sort((a,b) => a.left - b.left)[0]
@@ -28,7 +28,7 @@ const handleRightKnock = (entity, knock) => {
 
 const handleLeftKnock = (entity, knock) => {
     const entityBound = entity.getBoundingClientRect()
-    const wallBound = Array.from(getCurrentRoomSolid())
+    const wallBound = [...getCurrentRoomSolid(), ...getCurrentRoomLoaders()]
         .map(solid => solid.getBoundingClientRect())
         .filter(solidBound => solidBound.right - 5 < entityBound.left && verticalPredicate(solidBound, entityBound))
         .sort((a,b) => b.right - a.right)[0]
@@ -40,7 +40,7 @@ const handleLeftKnock = (entity, knock) => {
 
 const handleUpKnock = (entity, knock) => {
     const entityBound = entity.getBoundingClientRect()
-    const wallBound = Array.from(getCurrentRoomSolid())
+    const wallBound = [...getCurrentRoomSolid(), ...getCurrentRoomLoaders()]
         .map(solid => solid.getBoundingClientRect())
         .filter(solidBound => solidBound.bottom - 5 < entityBound.top && horizontalPredicate(solidBound, entityBound))
         .sort((a,b) => b.bottom - a.bottom)[0]

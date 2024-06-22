@@ -1,15 +1,16 @@
 class Enemy {
-    constructor(type, components, path, health, damage, knock, speed, progress, vision) {
+    constructor(type, components, path, health, damage, knock, maxSpeed, progress, vision, acceleration) {
         this.type = type
         this.components = components
         this.path = path
         this.health = health
         this.damage = damage
         this.knock = knock
-        this.speed = speed
+        this.maxSpeed = maxSpeed
         this.progress = progress
         this.virus = ['red', 'green', 'yellow', 'blue', 'purple'][Math.floor(Math.random() * 5)]
         this.vision = vision
+        this.acceleration = acceleration
     }
 }
 
@@ -74,8 +75,8 @@ class Torturer extends Enemy {
     constructor(level, path, progress) {
         const health = Math.floor(level * 180 + Math.random() * 20)
         const damage = Math.floor(level * 20 + Math.random() * 10)
-        const speed = 3.5 + Math.random()
-        super('torturer', 4, path, health, damage, 100, speed, progress, 600)
+        const maxSpeed = 3.5 + Math.random()
+        super('torturer', 4, path, health, damage, 100, maxSpeed, progress, 600, 1.5)
     }
 }
 
@@ -83,8 +84,8 @@ class SoulDrinker extends Enemy {
     constructor(level, path, progress) {
         const health = Math.floor(level * 90 + Math.random() * 15)
         const damage = Math.floor(level * 10 + Math.random() * 5)
-        const speed = 4.5 + Math.random()
-        super('soul-drinker', 4, path, health, damage, 50, speed, progress, 400)
+        const maxSpeed = 4.5 + Math.random()
+        super('soul-drinker', 4, path, health, damage, 50, maxSpeed, progress, 400, 0.9)
     }
 }
 
@@ -92,8 +93,8 @@ class RockCrusher extends Enemy {
     constructor(level, path, progress) {
         const health = Math.floor(level * 360 + Math.random() * 45)
         const damage = Math.floor(level * 40 + Math.random() * 20)
-        const speed = 2.5 + Math.random()
-        super('rock-crusher', 4, path, health, damage, 200, speed, progress, 800)
+        const maxSpeed = 2.5 + Math.random()
+        super('rock-crusher', 4, path, health, damage, 200, maxSpeed, progress, 800, 1.8)
     }
 }
 
@@ -101,8 +102,8 @@ class IronMaster extends Enemy {
     constructor(level, path, progress) {
         const health = Math.floor(level * 135 + Math.random() * 15)
         const damage = Math.floor(level * 30 + Math.random() * 15)
-        const speed = 3 + Math.random()
-        super('iron-master', 8, path, health, damage, 150, speed, progress, 500)
+        const maxSpeed = 3 + Math.random()
+        super('iron-master', 8, path, health, damage, 150, maxSpeed, progress, 500, 1.2)
     }
 }
 

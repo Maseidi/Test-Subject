@@ -1,9 +1,10 @@
+import { enemies } from "./enemies.js"
 import { dropLoot } from "./loot-manager.js"
 import { takeDamage } from "./player-health.js"
 import { manageKnock } from "./knock-manager.js"
 import { getSpecification, getStat } from "./weapon-specs.js"
 import { addAttribute, addClass, collide, containsClass, distance } from "./util.js"
-import { getCurrentRoomEnemies, getMapEl, getPlayer } from "./elements.js"
+import { getCurrentRoomEnemies, getCurrentRoomSolid, getMapEl, getPlayer } from "./elements.js"
 import { 
     getMapX,
     getMapY,
@@ -18,7 +19,8 @@ import {
     setNoOffenseCounter, 
     getNoOffenseCounter,
     getCurrentRoomId} from "./variables.js"
-import { enemies } from "./enemies.js"
+import { GUESS_SEARCH, INVESTIGATE, LOST, MOVE_TO_POSITION, NO_OFFENCE, CHASE } from "./normal-enemy.js"
+export const getEnemyState = (enemy) => enemy.getAttribute('state') 
 
 export const moveToDestination = (enemy) => {
     if ( collidePlayer(enemy) ) return
@@ -35,9 +37,9 @@ export const moveToDestination = (enemy) => {
 }
 
 const collidePlayer = (enemy) => {
-    const state = enemy.getAttribute('state')
-    if ( ( state !== 'chase' && state !== 'no-offence' ) || !collide(enemy, getPlayer(), 0) ) return false
-    if ( state === 'chase' ) hitPlayer(enemy)
+    const state = getEnemyState(enemy)
+    if ( ( state !== CHASE && state !== NO_OFFENCE ) || !collide(enemy, getPlayer(), 0) ) return false
+    if ( state === CHASE ) hitPlayer(enemy)
     return true
 }
 
@@ -68,11 +70,10 @@ const decideDirection = (enemyLeft, destLeft, enemyTop, destTop, enemyW, destW) 
 }
 
 const calculateSpeed = (enemy, xMultiplier, yMultiplier) => {
-    if ( containsClass(enemy, 'stop') ) return 0
-    let speed = Number(enemy.getAttribute("speed"))
-    const state = enemy.getAttribute('state')
-    if ( state === 'no-offence' ) speed /= 2
-    else if ( state === 'investigate' ) speed /= 5
+    let speed = Number(enemy.getAttribute("curr-speed"))
+    const state = getEnemyState(enemy)
+    if ( state === NO_OFFENCE ) speed /= 2
+    else if ( state === INVESTIGATE ) speed = Number(enemy.getAttribute('maxspeed')) / 5
     if ( xMultiplier && yMultiplier ) speed /= 1.41
     return speed
 }
@@ -83,8 +84,8 @@ const reachedDestination = (enemy) => {
         addAttribute(enemy, 'path-finding-y', null)
         return
     }
-    switch ( enemy.getAttribute('state') ) {
-        case 'investigate':
+    switch ( getEnemyState(enemy) ) {
+        case INVESTIGATE:
             const path = document.getElementById(enemy.getAttribute('path'))
             const numOfPoints = path.children.length
             const currentPathPoint = Number(enemy.getAttribute('path-point'))
@@ -93,18 +94,26 @@ const reachedDestination = (enemy) => {
             addAttribute(enemy, 'path-point', nextPathPoint)
             addAttribute(enemy, 'investigation-counter', 1)
             break
-        case 'guess-search':
-            addAttribute(enemy, 'state', 'lost')
+        case GUESS_SEARCH:
+            addAttribute(enemy, 'state', LOST)
             addAttribute(enemy, 'lost-counter', '0')
+            resetAcceleration(enemy)
             break
-        case 'move-to-position':
-            addAttribute(enemy, 'state', 'investigate')
+        case MOVE_TO_POSITION:
+            addAttribute(enemy, 'state', INVESTIGATE)
+            resetAcceleration(enemy)
             break                 
     }
 }
 
+export const resetAcceleration = (enemy) => {
+    addAttribute(enemy, 'acc-counter', 0)
+    addAttribute(enemy, 'curr-speed', enemy.getAttribute('acceleration'))
+}
+
 export const calculateAngle = (enemy, x, y) => {
-    let newState = Number(enemy.getAttribute('angle-state'))
+    const currState = Number(enemy.getAttribute('angle-state'))
+    let newState = currState
     if ( x === 1 && y === 1 )        newState = changeEnemyAngleState(7, enemy, '0', '0')
     else if ( x === 1 && y === -1 )  newState = changeEnemyAngleState(5, enemy, '0', '-100%')
     else if ( x === -1 && y === 1 )  newState = changeEnemyAngleState(1, enemy, '-100%', '0')    
@@ -113,7 +122,8 @@ export const calculateAngle = (enemy, x, y) => {
     else if ( x === -1 && !y )       newState = changeEnemyAngleState(2, enemy, '-100%', '-50%')
     else if ( !x && y === 1 )        newState = changeEnemyAngleState(0, enemy, '-50%', '0')
     else if ( !x && y === -1 )       newState = changeEnemyAngleState(4, enemy, '-50%', '-100%')
-    let diff = newState - Number(enemy.getAttribute('angle-state'))
+    if ( newState === currState ) return
+    let diff = newState - currState
     if (Math.abs(diff) > 4 && diff >= 0) diff = -(8 - diff)
     else if (Math.abs(diff) > 4 && diff < 0) diff = 8 - Math.abs(diff) 
     const newAngle = Number(enemy.getAttribute('angle')) + diff * 45    
@@ -139,8 +149,8 @@ const hitPlayer = (enemy) => {
     takeDamage(enemy.getAttribute('damage'))
     knockPlayer(enemy)
     Array.from(getCurrentRoomEnemies())
-        .filter(enemy => enemy.getAttribute('state') === 'chase')
-        .forEach(enemy => addAttribute(enemy, 'state', 'no-offence'))
+        .filter(enemy => getEnemyState(enemy) === CHASE)
+        .forEach(enemy => addAttribute(enemy, 'state', NO_OFFENCE))
     setNoOffenseCounter(1)
 }
 
@@ -186,8 +196,25 @@ const knockPlayer = (enemy) => {
     getPlayer().style.top = `${getPlayerY()}px`
 }
 
-export const updateDestinationToPlayer = (enemy) => 
-    updateDestination(enemy, Math.floor(getPlayerX() - getRoomLeft()), Math.floor(getPlayerY() - getRoomTop()), 34)
+export const updateDestinationToPlayer = (enemy) => {
+    // const playerTracker = getPlayer().firstElementChild.children[2]
+    // const trackerCpu = window.getComputedStyle(playerTracker)
+    const playerX = Math.floor(getPlayerX() - getRoomLeft())
+    // const trackerX = playerX + Number(trackerCpu.left.replace('px', ''))
+    const playerY = Math.floor(getPlayerY() - getRoomTop())
+    // const trackerY = playerY + Number(trackerCpu.top.replace('px', ''))
+    // const enemyCpu = window.getComputedStyle(enemy)
+    // const enemyX = Number(enemyCpu.left.replace('px', ''))
+    // const enemyY = Number(enemyCpu.top.replace('px', ''))
+    // if ( 
+    //     distance(enemyX, enemyY, playerX, playerY) < 200 || 
+    //     distance(enemyX, enemyY, trackerX, trackerY) > distance(enemyX, enemyY, playerX, playerY) ||
+    //      Array.from(getCurrentRoomSolid()).find(solid => containsClass(solid, 'enemy') && collide(solid, playerTracker, 0)) ) {
+        updateDestination(enemy, playerX, playerY, 34)
+    // } else {
+    //     updateDestination(enemy, trackerX, trackerY, 10)
+    // }
+}
 
 export const updateDestinationToPath = (enemy, path) => {
     const pathCpu = window.getComputedStyle(path)
@@ -204,15 +231,15 @@ export const notifyEnemy = (dist, enemy) => {
     const enemyBound = enemy.getBoundingClientRect()
     const playerBound = getPlayer().getBoundingClientRect()
     if ( distance(playerBound.x, playerBound.y, enemyBound.x, enemyBound.y) <= dist ) {
-        if ( getNoOffenseCounter() === 0 ) addAttribute(enemy, 'state', 'chase')
-        else addAttribute(enemy, 'state', 'no-offence')    
+        if ( getNoOffenseCounter() === 0 ) addAttribute(enemy, 'state', CHASE)
+        else addAttribute(enemy, 'state', NO_OFFENCE)
         updateDestinationToPlayer(enemy)
     }
     getCurrentRoomEnemies()
         .filter(e => e !== enemy &&
                      (distance(enemy.getBoundingClientRect().x, enemy.getBoundingClientRect().y,
                      e.getBoundingClientRect().x, e.getBoundingClientRect().y) < 500 ) &&
-                     e.getAttribute('state') !== 'chase' && e.getAttribute('state') !== 'no-offence'
+                     getEnemyState(e) !== CHASE && getEnemyState(e) !== NO_OFFENCE
         ).forEach(e => notifyEnemy(Number.MAX_SAFE_INTEGER, e))
 }
 
@@ -253,4 +280,19 @@ const knockEnemy = (enemy, knockback) => {
     const enemyTop = Number(enemyCpu.top.replace('px', ''))
     enemy.style.left = `${enemyLeft + xAxis * knockback}px`
     enemy.style.top = `${enemyTop + yAxis * knockback}px`
+}
+
+export const accelerateEnemy = (enemy) => {
+    let counter = Number(enemy.getAttribute('acc-counter'))
+    counter++
+    if ( counter === 60 ) {
+        const currSpeed = Number(enemy.getAttribute('curr-speed'))
+        const acceleration = Number(enemy.getAttribute('acceleration'))
+        const maxSpeed = Number(enemy.getAttribute('maxspeed'))
+        let newSpeed = currSpeed + acceleration
+        if ( newSpeed > maxSpeed ) newSpeed = maxSpeed
+        addAttribute(enemy, 'curr-speed', newSpeed)
+        counter = 0
+    }  
+    addAttribute(enemy, 'acc-counter', counter)
 }

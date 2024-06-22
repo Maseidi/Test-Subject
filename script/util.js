@@ -26,13 +26,9 @@ const angleFormula = (s1, s2, x1, y1, x2, y2) => {
     return (s1 * Math.acos((AB ** 2 + CB ** 2 - AC ** 2) / (2 * AB * CB)) * 180) / Math.PI + s2 * 90 
 }
 
-export const addClass = (elem, className) => {
-    if ( !containsClass(elem, className) ) elem.classList.add(className)
-}
+export const addClass = (elem, className) => elem.classList.add(className)
 
-export const removeClass = (elem, className) => {
-    if ( containsClass(elem, className) ) elem.classList.remove(className)
-}
+export const removeClass = (elem, className) => elem.classList.remove(className)
 
 export const containsClass = (elem, className) => elem.classList.contains(className)
 
@@ -53,7 +49,7 @@ export const objectToElement = (obj) => {
     const props = Object.getOwnPropertyNames(obj)
     const elem = document.createElement('div')
     props.filter(prop => !isNullOrUndefined(obj[prop])).forEach(prop => addAttribute(elem, prop, obj[prop]))
-    return elem     
+    return elem
 }
 
 export const elementToObject = (elem) => {

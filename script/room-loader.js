@@ -19,6 +19,7 @@ import {
     setCurrentRoomLoaders,
     setCurrentRoomSolid,
     } from "./elements.js"
+import { INVESTIGATE } from "./normal-enemy.js"
 
 export const loadCurrentRoom = () => {
     const room = rooms.get(getCurrentRoomId())
@@ -188,12 +189,14 @@ const defineEnemy = (element) => {
     const enemy = objectToElement(element)
     addClass(enemy, `${element.type}`)
     addClass(enemy, 'enemy')
-    addAttribute(enemy, 'state', 'investigate')
+    addAttribute(enemy, 'state', INVESTIGATE)
     addAttribute(enemy, 'investigation-counter', 0)
     addAttribute(enemy, 'path', `path-${element.index}`)
     addAttribute(enemy, 'path-point', '0')
     addAttribute(enemy, 'path-finding-x', 'null')
     addAttribute(enemy, 'path-finding-y', 'null')
+    addAttribute(enemy, 'curr-speed', element.acceleration)
+    addAttribute(enemy, 'acc-counter', 0)
     enemy.style.left = `${element.path.points[0].x}px`
     enemy.style.top = `${element.path.points[0].y}px`
     return enemy

@@ -1,14 +1,12 @@
-import { checkLowHealth, containsClass, isMoving, removeClass } from "./util.js"
+import { checkLowHealth, isMoving } from "./util.js"
 import { getMapEl, getPlayer } from "./elements.js"
 import { 
     getAimMode,
     getAllowMove,
     getDownPressed,
-    getHealth,
     getLeftPressed,
     getMapX,
     getMapY,
-    getMaxHealth,
     getPlayerSpeed,
     getPlayerX,
     getPlayerY,
