@@ -19,7 +19,7 @@ import {
     setCurrentRoomLoaders,
     setCurrentRoomSolid,
     } from './elements.js'
-import { INVESTIGATE } from './normal-enemy.js'
+import { INVESTIGATE } from './enemy-state.js'
 
 export const loadCurrentRoom = () => {
     const room = rooms.get(getCurrentRoomId())

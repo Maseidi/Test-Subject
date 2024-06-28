@@ -1,9 +1,11 @@
 import { rooms } from './rooms.js'
 import { loaders } from './loaders.js'
-import { getEnemyState, notifyEnemy } from './enemy-actions.js'
 import { loadCurrentRoom } from './room-loader.js'
-import { CHASE, NO_OFFENCE, normalEnemyBehavior } from './normal-enemy.js'
+import { CHASE, NO_OFFENCE } from './enemy-state.js'
+import { checkCollision } from './enemy-collision.js'
+import { normalEnemyBehavior } from './normal-enemy.js'
 import { addAttribute, collide, containsClass, removeClass } from './util.js'
+import { getEnemyState, notifyEnemy, setEnemyState } from './enemy-actions.js'
 import { 
     getCurrentRoom,
     getCurrentRoomEnemies,
@@ -25,7 +27,6 @@ import {
     setPrevRoomId,
     setRoomLeft,
     setRoomTop} from './variables.js'
-import { checkCollision } from './enemy-collision.js'
 
 export const manageEntities = () => {
     manageSolidObjects()
@@ -91,7 +92,7 @@ const manageEnemies = () => {
         Array.from(getCurrentRoomEnemies())
             .filter(enemy => getEnemyState(enemy) === NO_OFFENCE)
             .forEach(enemy => {
-                addAttribute(enemy, 'state', CHASE)
+                setEnemyState(enemy, CHASE)
                 removeClass(enemy.firstElementChild.firstElementChild.firstElementChild, 'attack')
             })
         setNoOffenseCounter(0)

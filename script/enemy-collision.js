@@ -1,7 +1,7 @@
 import { addAttribute, collide } from './util.js'
 import { getCurrentRoomEnemies } from './elements.js'
-import { getEnemyState, resetAcceleration } from './enemy-actions.js'
-import { CHASE, GUESS_SEARCH, INVESTIGATE, LOST, MOVE_TO_POSITION, NO_OFFENCE } from './normal-enemy.js'
+import { getEnemyState, resetAcceleration, setEnemyState } from './enemy-actions.js'
+import { CHASE, GUESS_SEARCH, INVESTIGATE, LOST, MOVE_TO_POSITION, NO_OFFENCE } from './enemy-state.js'
 
 export const checkCollision = (enemy) => {
     const collidingEnemy = Array.from(getCurrentRoomEnemies())
@@ -14,7 +14,7 @@ export const checkCollision = (enemy) => {
     const enemyState = getEnemyState(enemy)
     const collidingState = getEnemyState(collidingEnemy)
     if ( collidingState === LOST && ( enemyState === CHASE || enemyState === NO_OFFENCE || enemyState === GUESS_SEARCH ) ) {
-        addAttribute(enemy, 'state', LOST)
+        setEnemyState(enemy, LOST)
         resetAcceleration(enemy)
     } 
     else if ( collidingState === LOST && ( enemyState === MOVE_TO_POSITION ) ) 

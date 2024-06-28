@@ -5,6 +5,7 @@ import { manageKnock } from './knock-manager.js'
 import { getSpecification, getStat } from './weapon-specs.js'
 import { addAttribute, addClass, collide, distance } from './util.js'
 import { getCurrentRoomEnemies, getMapEl, getPlayer } from './elements.js'
+import { GUESS_SEARCH, INVESTIGATE, LOST, MOVE_TO_POSITION, NO_OFFENCE, CHASE } from './enemy-state.js'
 import { 
     getMapX,
     getMapY,
@@ -19,8 +20,9 @@ import {
     setNoOffenseCounter, 
     getNoOffenseCounter,
     getCurrentRoomId} from './variables.js'
-import { GUESS_SEARCH, INVESTIGATE, LOST, MOVE_TO_POSITION, NO_OFFENCE, CHASE } from './normal-enemy.js'
+
 export const getEnemyState = (enemy) => enemy.getAttribute('state') 
+export const setEnemyState = (enemy, state) => addAttribute(enemy, 'state', state)
 
 export const moveToDestination = (enemy) => {
     if ( collidePlayer(enemy) ) return
@@ -95,12 +97,12 @@ const reachedDestination = (enemy) => {
             addAttribute(enemy, 'investigation-counter', 1)
             break
         case GUESS_SEARCH:
-            addAttribute(enemy, 'state', LOST)
+            setEnemyState(enemy, LOST)
             addAttribute(enemy, 'lost-counter', '0')
             resetAcceleration(enemy)
             break
         case MOVE_TO_POSITION:
-            addAttribute(enemy, 'state', INVESTIGATE)
+            setEnemyState(enemy, INVESTIGATE)
             resetAcceleration(enemy)
             break                 
     }
@@ -150,7 +152,7 @@ const hitPlayer = (enemy) => {
     knockPlayer(enemy)
     Array.from(getCurrentRoomEnemies())
         .filter(enemy => getEnemyState(enemy) === CHASE)
-        .forEach(enemy => addAttribute(enemy, 'state', NO_OFFENCE))
+        .forEach(enemy => setEnemyState(enemy, NO_OFFENCE))
     setNoOffenseCounter(1)
 }
 
@@ -214,8 +216,8 @@ export const notifyEnemy = (dist, enemy) => {
     const enemyBound = enemy.getBoundingClientRect()
     const playerBound = getPlayer().getBoundingClientRect()
     if ( distance(playerBound.x, playerBound.y, enemyBound.x, enemyBound.y) <= dist ) {
-        if ( getNoOffenseCounter() === 0 ) addAttribute(enemy, 'state', CHASE)
-        else addAttribute(enemy, 'state', NO_OFFENCE)
+        if ( getNoOffenseCounter() === 0 ) setEnemyState(enemy, CHASE)
+        else setEnemyState(enemy, NO_OFFENCE)
         updateDestinationToPlayer(enemy)
     }
     getCurrentRoomEnemies()
