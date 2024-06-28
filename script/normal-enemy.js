@@ -2,6 +2,7 @@ import { addAttribute } from "./util.js"
 import { findPath } from "./enemy-path-finding.js"
 import { isPlayerVisible } from "./enemy-vision.js"
 import { getNoOffenseCounter } from "./variables.js"
+import { CHASE, GUESS_SEARCH, INVESTIGATE, LOST, MOVE_TO_POSITION, NO_OFFENCE } from "./enemy-state.js"
 import { 
     calculateAngle,
     moveToDestination,
@@ -9,14 +10,7 @@ import {
     updateDestinationToPath,
     notifyEnemy, 
     accelerateEnemy,
-    getEnemyState} from "./enemy-actions.js"
-    
-export const LOST = 'lost'
-export const CHASE = 'chase'
-export const NO_OFFENCE = 'no-offence'
-export const INVESTIGATE = 'investigate'
-export const GUESS_SEARCH = 'guess-search'
-export const MOVE_TO_POSITION = 'move-to-position'    
+    getEnemyState} from "./enemy-actions.js" 
 
 export const normalEnemyBehavior = (enemy) => {
     switch ( getEnemyState(enemy) ) {

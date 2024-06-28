@@ -1,4 +1,4 @@
-import { isMoving } from "./util.js"
+import { ANGLE_STATE_MAP, isMoving } from "./util.js"
 import { getPlayer } from "./elements.js"
 import {
     getAimMode,
@@ -10,19 +10,7 @@ import {
     getRightPressed,
     getUpPressed,
     setPlayerAngle,
-    setPlayerAngleState } from "./variables.js"
-
-const ANGLE_STATE_MAP = new Map([
-    [0, 0],
-    [45, 1],
-    [90, 2],
-    [135, 3],
-    [180, 4],
-    [-180, 4],
-    [-135, 5],
-    [-90, 6],
-    [-45, 7]
-])    
+    setPlayerAngleState } from "./variables.js" 
 
 export const managePlayerAngle = () => {
     manageAimModeAngle()
@@ -65,22 +53,12 @@ const manageNonAimModeAngle = () => {
 
 const changeState = (state, left, translateX, top, translateY) => {
     replaceForwardDetector(left, top, translateX, translateY)
-    replaceTracker(left, top, translateX, translateY)
     return getAimMode() ? getPlayerAngleState() : state
 }
 
-const replaceForwardDetector = (left, top, translateX, translateY) => 
-    replaceElement(getPlayer().firstElementChild.children[1], left, top, translateX, translateY)
-
-const replaceTracker = (left, top, translateX, translateY) => {
-    const newLeft = left === '0' ? '-200px' : left === '50%' ? '17px' : '200px'
-    const newTop = top === '0' ? '-200px' : top === '50%' ? '17px' : '200px'
-    replaceElement(getPlayer().firstElementChild.children[2], newLeft, newTop, translateX, translateY)
-}
-    
-
-const replaceElement = (elem, left, top, translateX, translateY) => {
-    elem.style.left = left
-    elem.style.top = top
-    elem.style.transform = `translateX(${translateX}) translateY(${translateY})`
+const replaceForwardDetector = (left, top, translateX, translateY) => {
+    const forwardDetector = getPlayer().firstElementChild.children[1]
+    forwardDetector.style.left = left
+    forwardDetector.style.top = top
+    forwardDetector.style.transform = `translateX(${translateX}) translateY(${translateY})`
 }

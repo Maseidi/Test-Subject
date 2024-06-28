@@ -1,8 +1,10 @@
 import { rooms } from "./rooms.js"
 import { loaders } from "./loaders.js"
-import { getEnemyState, notifyEnemy } from "./enemy-actions.js"
 import { loadCurrentRoom } from "./room-loader.js"
-import { CHASE, NO_OFFENCE, normalEnemyBehavior } from "./normal-enemy.js"
+import { CHASE, NO_OFFENCE } from "./enemy-state.js"
+import { checkCollision } from "./enemy-collision.js"
+import { normalEnemyBehavior } from "./normal-enemy.js"
+import { getEnemyState, notifyEnemy } from "./enemy-actions.js"
 import { addAttribute, collide, containsClass, removeClass } from "./util.js"
 import { 
     getCurrentRoom,
@@ -25,7 +27,7 @@ import {
     setPrevRoomId,
     setRoomLeft,
     setRoomTop} from "./variables.js"
-import { checkCollision } from "./enemy-collision.js"
+import { rangerEnemyBehavior } from "./ranger-enemy.js"
 
 export const manageEntities = () => {
     manageSolidObjects()
@@ -74,7 +76,7 @@ const manageInteractables = () => {
     setIntObj(undefined)
     Array.from(getCurrentRoomInteractables()).forEach((int) => {
         const popup = int.children[1]
-        if ( collide(getPlayer().firstElementChild, int, 20) && !getIntObj() ) {
+        if ( collide(getPlayer().firstElementChild.children[1], int, 20) && !getIntObj() ) {
             popup.style.bottom = `calc(100% + 20px)`
             popup.style.opacity = `1`
             setIntObj(int)
@@ -103,6 +105,7 @@ const manageEnemies = () => {
              containsClass(enemy, 'soul-drinker') || 
              containsClass(enemy, 'rock-crusher') || 
              containsClass(enemy, 'iron-master') ) normalEnemyBehavior(enemy)
+        if ( containsClass(enemy, 'ranger') ) rangerEnemyBehavior(enemy)    
     })
 }
 

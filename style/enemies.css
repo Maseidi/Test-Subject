@@ -1,11 +1,12 @@
-.torturer, .soul-drinker, .rock-crusher, .iron-master {
+.torturer, .soul-drinker, .rock-crusher, .iron-master, .ranger {
     position: absolute;
 }
 
 .torturer > .torturer-collider, 
 .soul-drinker > .soul-drinker-collider, 
 .rock-crusher > .rock-crusher-collider,
-.iron-master > .iron-master-collider {
+.iron-master > .iron-master-collider,
+.ranger > .ranger-collider {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -31,6 +32,11 @@
   width: 40px;
 }
 
+.ranger > .ranger-collider {
+  height: 32px;
+  width: 32px;
+}
+
 .vision, .enemy-forward-detector {
   position: absolute;
 }
@@ -43,7 +49,8 @@
 .torturer > .torturer-collider > div:nth-of-type(1),
 .soul-drinker > .soul-drinker-collider > div:nth-of-type(1),
 .rock-crusher > .rock-crusher-collider > div:nth-of-type(1),
-.iron-master > .iron-master-collider > div:nth-of-type(1) {
+.iron-master > .iron-master-collider > div:nth-of-type(1),
+.ranger > .ranger-collider > div:nth-of-type(1) {
   border: 1px solid black;
   position: absolute;
 }
@@ -68,6 +75,11 @@
   height: 23px;
 }
 
+.ranger > .ranger-collider > div:nth-of-type(1) {
+  width: 21px;
+  height: 16px;
+}
+
 .torturer > .torturer-collider > div:nth-of-type(1) > div:nth-of-type(1),
 .torturer > .torturer-collider > div:nth-of-type(1) > div:nth-of-type(2), 
 .soul-drinker > .soul-drinker-collider > div:nth-of-type(1) > div:nth-of-type(1),
@@ -75,7 +87,9 @@
 .rock-crusher > .rock-crusher-collider > div:nth-of-type(1) > div:nth-of-type(1),
 .rock-crusher > .rock-crusher-collider > div:nth-of-type(1) > div:nth-of-type(2),
 .iron-master > .iron-master-collider > div:nth-of-type(1) > div:nth-of-type(1),
-.iron-master > .iron-master-collider > div:nth-of-type(1) > div:nth-of-type(2) {
+.iron-master > .iron-master-collider > div:nth-of-type(1) > div:nth-of-type(2),
+.ranger > .ranger-collider > div:nth-of-type(1) > div:nth-of-type(1),
+.ranger > .ranger-collider > div:nth-of-type(1) > div:nth-of-type(2) {
   position: absolute;
   border: 1px solid black;
   filter: brightness(66%);
@@ -110,24 +124,42 @@
   top: 4px;
 }
 
+.ranger > .ranger-collider > div:nth-of-type(1) > div:nth-of-type(1),
+.ranger > .ranger-collider > div:nth-of-type(1) > div:nth-of-type(2) {
+  width: 6px;
+  height: 21px;
+  top: 2px;
+}
+
 .torturer > .torturer-collider > div:nth-of-type(1) > div:nth-of-type(1),
 .soul-drinker > .soul-drinker-collider > div:nth-of-type(1) > div:nth-of-type(1),
 .rock-crusher > .rock-crusher-collider > div:nth-of-type(1) > div:nth-of-type(1),
-.iron-master > .iron-master-collider > div:nth-of-type(1) > div:nth-of-type(1) {
+.iron-master > .iron-master-collider > div:nth-of-type(1) > div:nth-of-type(1),
+.ranger > .ranger-collider > div:nth-of-type(1) > div:nth-of-type(1) {
   left: 100%;
 }
 
 .torturer > .torturer-collider > div:nth-of-type(1) > div:nth-of-type(2),
 .soul-drinker > .soul-drinker-collider > div:nth-of-type(1) > div:nth-of-type(2),
 .rock-crusher > .rock-crusher-collider > div:nth-of-type(1) > div:nth-of-type(2), 
-.iron-master > .iron-master-collider > div:nth-of-type(1) > div:nth-of-type(2) {
+.iron-master > .iron-master-collider > div:nth-of-type(1) > div:nth-of-type(2),
+.ranger > .ranger-collider > div:nth-of-type(1) > div:nth-of-type(2) {
   right: 100%;
+}
+
+.ranger > .ranger-collider > div:nth-of-type(1) > div:nth-of-type(1) {
+  border-bottom-right-radius: 10px;
+}
+
+.ranger > .ranger-collider > div:nth-of-type(1) > div:nth-of-type(2) {
+  border-bottom-left-radius: 10px;
 }
 
 .torturer > .torturer-collider > div:nth-of-type(1) > div:nth-of-type(3),
 .soul-drinker > .soul-drinker-collider > div:nth-of-type(1) > div:nth-of-type(3),
 .rock-crusher > .rock-crusher-collider > div:nth-of-type(1) > div:nth-of-type(3),
-.iron-master > .iron-master-collider > div:nth-of-type(1) > div:nth-of-type(3) {
+.iron-master > .iron-master-collider > div:nth-of-type(1) > div:nth-of-type(3),
+.ranger > .ranger-collider > div:nth-of-type(1) > div:nth-of-type(3) {
   position: absolute;
   left: 50%;
   top: 50%;
@@ -155,6 +187,32 @@
 .iron-master > .iron-master-collider > div:nth-of-type(1) > div:nth-of-type(3) {
   width: 7px;
   height: 7px;
+}
+
+.ranger > .ranger-collider > div:nth-of-type(1) > div:nth-of-type(3) {
+  width: 8px;
+  height: 8px;
+}
+
+.ranger > .ranger-collider > div:nth-of-type(1) > div:nth-of-type(4) {
+  position: absolute;
+  left: 50%;
+  bottom: 100%;
+  width: 4px;
+  height: 14px;
+  transform: translateX(-50%);
+  border: 1px solid black;
+}
+
+.ranger > .ranger-collider > div:nth-of-type(1) > div:nth-of-type(5) {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  top: -18px;
+  left: 50%;
+  border-radius: 50%;
+  border: 1px solid black;
+  transform: translateX(-50%);
 }
 
 .iron-master > .iron-master-collider > div:nth-of-type(1) > div:nth-of-type(4),
@@ -231,4 +289,23 @@
 .damaged, .damaged > div {
   background-color: white !important;
   filter: brightness(300%);
+}
+
+.ranger-laser {
+  width: 1px;
+  position: absolute;
+  background-color: red;
+  left: 50%;
+  top: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  transform-origin: top;
+}
+
+.ranger-laser > div {
+  width: 100%;
+  height: 1%;
+}
+
+.no-transition { 
+  transition: 0s !important;
 }

@@ -82,3 +82,15 @@ export const createAndAddClass = (type, ...classNames) => {
 export const distance = (x1, y1, x2, y2) =>  Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2))
 
 export const checkLowHealth = () => getHealth() <= 20
+
+export const ANGLE_STATE_MAP = new Map([
+    [0, 0],
+    [45, 1],
+    [90, 2],
+    [135, 3],
+    [180, 4],
+    [-180, 4],
+    [-135, 5],
+    [-90, 6],
+    [-45, 7]
+])   

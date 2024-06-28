@@ -107,13 +107,23 @@ class IronMaster extends Enemy {
     }
 }
 
+class Ranger extends Enemy {
+    constructor(level, path, progress) {
+        const health = Math.floor(level * 112 + Math.random() * 17)
+        const damage = Math.floor(level * 25 + Math.random() * 5)
+        const maxSpeed = 4 + Math.random()
+        super('ranger', 6, path, health, damage, 75, maxSpeed, progress, 450, 2)
+    }
+}
+
 export const enemies = new Map([
     [37, [
-        new Torturer(1, new SquarePath(650, 240, 300), '1'),
-        new Torturer(1, new VerDoublePointPath(800, 100, 300), '2'),
-        new Torturer(1, new SquarePath(650, 240, 300), '3'),
-        new SoulDrinker(1, new SinglePointPath(650, 140), '3'),
-        new RockCrusher(1, new SinglePointPath(850, 140), '3'),
-        new IronMaster(1, new HorDoublePointPath(1000, 140, 500), '3')
+        // new Torturer(1, new SquarePath(650, 240, 300), '1'),
+        // new Torturer(1, new VerDoublePointPath(800, 100, 300), '2'),
+        // new Torturer(1, new SquarePath(650, 240, 300), '3'),
+        // new SoulDrinker(1, new SinglePointPath(650, 140), '3'),
+        // new RockCrusher(1, new SinglePointPath(850, 140), '3'),
+        // new IronMaster(1, new HorDoublePointPath(1000, 140, 500), '3'),
+        new Ranger(1, new SquarePath(600, 100, 300), '3'),
     ]]
 ])

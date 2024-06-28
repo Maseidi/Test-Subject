@@ -3,8 +3,9 @@ import { dropLoot } from "./loot-manager.js"
 import { takeDamage } from "./player-health.js"
 import { manageKnock } from "./knock-manager.js"
 import { getSpecification, getStat } from "./weapon-specs.js"
-import { addAttribute, addClass, collide, containsClass, distance } from "./util.js"
-import { getCurrentRoomEnemies, getCurrentRoomSolid, getMapEl, getPlayer } from "./elements.js"
+import { addAttribute, addClass, collide, distance } from "./util.js"
+import { getCurrentRoomEnemies, getMapEl, getPlayer } from "./elements.js"
+import { GUESS_SEARCH, INVESTIGATE, LOST, MOVE_TO_POSITION, NO_OFFENCE, CHASE, MAKE_DECISION } from "./enemy-state.js"
 import { 
     getMapX,
     getMapY,
@@ -19,7 +20,7 @@ import {
     setNoOffenseCounter, 
     getNoOffenseCounter,
     getCurrentRoomId} from "./variables.js"
-import { GUESS_SEARCH, INVESTIGATE, LOST, MOVE_TO_POSITION, NO_OFFENCE, CHASE } from "./normal-enemy.js"
+
 export const getEnemyState = (enemy) => enemy.getAttribute('state') 
 
 export const moveToDestination = (enemy) => {
@@ -197,23 +198,7 @@ const knockPlayer = (enemy) => {
 }
 
 export const updateDestinationToPlayer = (enemy) => {
-    // const playerTracker = getPlayer().firstElementChild.children[2]
-    // const trackerCpu = window.getComputedStyle(playerTracker)
-    const playerX = Math.floor(getPlayerX() - getRoomLeft())
-    // const trackerX = playerX + Number(trackerCpu.left.replace('px', ''))
-    const playerY = Math.floor(getPlayerY() - getRoomTop())
-    // const trackerY = playerY + Number(trackerCpu.top.replace('px', ''))
-    // const enemyCpu = window.getComputedStyle(enemy)
-    // const enemyX = Number(enemyCpu.left.replace('px', ''))
-    // const enemyY = Number(enemyCpu.top.replace('px', ''))
-    // if ( 
-    //     distance(enemyX, enemyY, playerX, playerY) < 200 || 
-    //     distance(enemyX, enemyY, trackerX, trackerY) > distance(enemyX, enemyY, playerX, playerY) ||
-    //      Array.from(getCurrentRoomSolid()).find(solid => containsClass(solid, 'enemy') && collide(solid, playerTracker, 0)) ) {
-        updateDestination(enemy, playerX, playerY, 34)
-    // } else {
-    //     updateDestination(enemy, trackerX, trackerY, 10)
-    // }
+    updateDestination(enemy, getPlayerX() - getRoomLeft(), getPlayerY() - getRoomTop(), 34)
 }
 
 export const updateDestinationToPath = (enemy, path) => {
@@ -228,6 +213,7 @@ const updateDestination = (enemy, x, y, width) => {
 }
 
 export const notifyEnemy = (dist, enemy) => {
+    if ( getEnemyState(enemy) === MAKE_DECISION ) return
     const enemyBound = enemy.getBoundingClientRect()
     const playerBound = getPlayer().getBoundingClientRect()
     if ( distance(playerBound.x, playerBound.y, enemyBound.x, enemyBound.y) <= dist ) {

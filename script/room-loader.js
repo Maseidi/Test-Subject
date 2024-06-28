@@ -3,6 +3,7 @@ import { rooms } from "./rooms.js"
 import { loaders } from "./loaders.js"
 import { enemies } from "./enemies.js"
 import { getProgress } from "./progress.js"
+import { INVESTIGATE } from "./enemy-state.js"
 import { interactables } from "./interactables.js"
 import { getWeaponSpecs } from "./weapon-specs.js"
 import { getCurrentRoomId, getRoomLeft, getRoomTop } from "./variables.js"
@@ -19,7 +20,6 @@ import {
     setCurrentRoomLoaders,
     setCurrentRoomSolid,
     } from "./elements.js"
-import { INVESTIGATE } from "./normal-enemy.js"
 
 export const loadCurrentRoom = () => {
     const room = rooms.get(getCurrentRoomId())

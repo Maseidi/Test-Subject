@@ -12,8 +12,7 @@ export const loadPlayer = () => {
     const playerBody = createAndAddClass('div', 'player-body')
     playerBody.style.transform = `rotateZ(${getPlayerAngle()}deg)`
     const forwardDetector = createAndAddClass('div', 'forward-detector')
-    const tracker = createAndAddClass('div', 'player-tracker')
-    appendAll(playerCollider, playerBody, forwardDetector, tracker)
+    appendAll(playerCollider, playerBody, forwardDetector)
     const playerHead = createAndAddClass('div', 'player-head')
     playerBody.append(playerHead)
     setPlayer(player)

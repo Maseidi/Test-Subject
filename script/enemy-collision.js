@@ -1,13 +1,13 @@
 import { addAttribute, collide } from "./util.js"
 import { getCurrentRoomEnemies } from "./elements.js"
 import { getEnemyState, resetAcceleration } from "./enemy-actions.js"
-import { CHASE, GUESS_SEARCH, INVESTIGATE, LOST, MOVE_TO_POSITION, NO_OFFENCE } from "./normal-enemy.js"
+import { CHASE, GUESS_SEARCH, INVESTIGATE, LOST, MAKE_DECISION, MOVE_TO_POSITION, NO_OFFENCE } from "./enemy-state.js"
 
 export const checkCollision = (enemy) => {
     const collidingEnemy = Array.from(getCurrentRoomEnemies())
         .find(e => e !== enemy 
                 && collide(enemy.firstElementChild.children[2], e.firstElementChild, 0) 
-                && getEnemyState(e) !== INVESTIGATE)
+                && getEnemyState(e) !== INVESTIGATE && getEnemyState(e) !== MAKE_DECISION)
     addAttribute(enemy, 'colliding-enemy', null)
     if ( !collidingEnemy ) return
     addAttribute(enemy, 'colliding-enemy', collidingEnemy.getAttribute('index'))
