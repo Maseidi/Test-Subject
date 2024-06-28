@@ -1,12 +1,12 @@
-import { walls } from "./walls.js"
-import { rooms } from "./rooms.js"
-import { loaders } from "./loaders.js"
-import { enemies } from "./enemies.js"
-import { getProgress } from "./progress.js"
-import { interactables } from "./interactables.js"
-import { getWeaponSpecs } from "./weapon-specs.js"
-import { getCurrentRoomId, getRoomLeft, getRoomTop } from "./variables.js"
-import { addAttribute, addClass, appendAll, createAndAddClass, objectToElement } from "./util.js"
+import { walls } from './walls.js'
+import { rooms } from './rooms.js'
+import { loaders } from './loaders.js'
+import { enemies } from './enemies.js'
+import { getProgress } from './progress.js'
+import { interactables } from './interactables.js'
+import { getWeaponSpecs } from './weapon-specs.js'
+import { getCurrentRoomId, getRoomLeft, getRoomTop } from './variables.js'
+import { addAttribute, addClass, appendAll, createAndAddClass, objectToElement } from './util.js'
 import { 
     getCurrentRoomEnemies,
     getCurrentRoomInteractables, 
@@ -18,8 +18,8 @@ import {
     setCurrentRoomInteractables,
     setCurrentRoomLoaders,
     setCurrentRoomSolid,
-    } from "./elements.js"
-import { INVESTIGATE } from "./normal-enemy.js"
+    } from './elements.js'
+import { INVESTIGATE } from './normal-enemy.js'
 
 export const loadCurrentRoom = () => {
     const room = rooms.get(getCurrentRoomId())
@@ -117,7 +117,7 @@ export const renderInteractable = (root, interactable, index) => {
 }
 
 const renderImage = (int, interactable) => {
-    const image = document.createElement("img")
+    const image = document.createElement('img')
     image.src = `../assets/images/${interactable.name}.png`
     int.append(image)
 }
@@ -133,7 +133,7 @@ const renderPopUp = (int, interactable) => {
 }
 
 const renderHeading = (popup, interactable) => {
-    const heading = document.createElement("p")
+    const heading = document.createElement('p')
     let content = interactable.amount && !getWeaponSpecs().get(interactable.name) ? 
     `${interactable.amount} ${interactable.heading}` : `${interactable.heading}`
     heading.textContent = content
@@ -141,15 +141,15 @@ const renderHeading = (popup, interactable) => {
 }
 
 const renderLine = (popup) => {
-    const line = document.createElement("div")
+    const line = document.createElement('div')
     popup.append(line)
 }
 
 const renderDescription = (popup, interactable) => {
-    const descContainer = document.createElement("div")
-    const fButton = document.createElement("p")
-    fButton.textContent = "F"
-    const descText = document.createElement("p")
+    const descContainer = document.createElement('div')
+    const fButton = document.createElement('p')
+    fButton.textContent = 'F'
+    const descText = document.createElement('p')
     descText.textContent = `${interactable.popup}`
     appendAll(descContainer, fButton, descText)
     popup.append(descContainer)

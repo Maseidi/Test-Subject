@@ -1,15 +1,15 @@
-import { renderStash } from "./stash.js"
-import { heal } from "./player-health.js"
-import { getStat } from "./weapon-specs.js"
-import { dropLoot } from "./loot-manager.js"
-import { centralizePlayer } from "./startup.js"
-import { setupReload } from "./weapon-actions.js"
-import { renderStore } from "./vending-machine.js"
-import { removeWeapon, renderWeapon } from "./weapon-loader.js"
-import { getPauseContainer, getPlayer, getUiEl } from "./elements.js"
-import { addClass, angleOfTwoPoints, isMoving, removeClass } from "./util.js"
-import { renderUi, renderEquippedWeapon, quitPage } from "./user-interface.js"
-import { equippedWeaponFromInventory, pickupDrop, removeInventory, renderInventory } from "./inventory.js"
+import { renderStash } from './stash.js'
+import { heal } from './player-health.js'
+import { getStat } from './weapon-specs.js'
+import { dropLoot } from './loot-manager.js'
+import { centralizePlayer } from './startup.js'
+import { setupReload } from './weapon-actions.js'
+import { renderStore } from './vending-machine.js'
+import { removeWeapon, renderWeapon } from './weapon-loader.js'
+import { getPauseContainer, getPlayer, getUiEl } from './elements.js'
+import { addClass, angleOfTwoPoints, isMoving, removeClass } from './util.js'
+import { renderUi, renderEquippedWeapon, quitPage } from './user-interface.js'
+import { equippedWeaponFromInventory, pickupDrop, removeInventory, renderInventory } from './inventory.js'
 import { 
     getAimMode,
     getDraggedItem,
@@ -36,58 +36,58 @@ import {
     setShootCounter,
     setShootPressed,
     setSprintPressed,
-    setUpPressed } from "./variables.js"
+    setUpPressed } from './variables.js'
 
 export const control = () => {
     onkeydown = (e) => {
         e.preventDefault()
         if ( !e.repeat ) {
             switch ( e.key ) {
-                case "w":
-                case "W":
+                case 'w':
+                case 'W':
                     wDown()
                     break
-                case "a":
-                case "A":
+                case 'a':
+                case 'A':
                     aDown()
                     break
-                case "s":
-                case "S":
+                case 's':
+                case 'S':
                     sDown()
                     break
-                case "d":
-                case "D":
+                case 'd':
+                case 'D':
                     dDown()
                     break
-                case "e":                
-                case "E":
+                case 'e':                
+                case 'E':
                     eDown()
                     break
-                case "1":                    
-                case "2":                    
-                case "3":                    
-                case "4":
+                case '1':                    
+                case '2':                    
+                case '3':                    
+                case '4':
                     weaponSlotDown(e.key)
                     break  
-                case "Shift":
+                case 'Shift':
                     shiftDown()
                     break
-                case "F":
-                case "f":
+                case 'F':
+                case 'f':
                     fDown()
                     break   
-                case "Tab":
+                case 'Tab':
                     openInventory()
                     break
-                case "R":
-                case "r":
+                case 'R':
+                case 'r':
                     rDown()
                     break
-                case "Escape":
+                case 'Escape':
                     escapeDown()
                     break
-                case "H":
-                case "h":
+                case 'H':
+                case 'h':
                     hDown()
                     break        
             }
@@ -96,23 +96,23 @@ export const control = () => {
     
     onkeyup = (e) => {
         switch ( e.key ) {
-            case "w":
-            case "W":
+            case 'w':
+            case 'W':
                 wUp()
                 break
-            case "a":
-            case "A":
+            case 'a':
+            case 'A':
                 aUp()
                 break
-            case "s":
-            case "S":
+            case 's':
+            case 'S':
                 sUp()
                 break
-            case "d":
-            case "D":
+            case 'd':
+            case 'D':
                 dUp()
                 break
-            case "Shift":
+            case 'Shift':
                 ShiftUp()
                 break                      
             }

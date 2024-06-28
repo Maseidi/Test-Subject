@@ -1,4 +1,4 @@
-import { getDownPressed, getHealth, getLeftPressed, getRightPressed, getUpPressed } from "./variables.js"
+import { getDownPressed, getHealth, getLeftPressed, getRightPressed, getUpPressed } from './variables.js'
 
 export const collide = (first, second, offset) => {
     const firstBound = first.getBoundingClientRect()
@@ -62,8 +62,8 @@ export const elementToObject = (elem) => {
         obj = {
             ...obj,
             [name] : isNaN(Number(attrValue)) ? (
-                attrValue === "true" ? true : (
-                    attrValue === "false" ? false : (
+                attrValue === 'true' ? true : (
+                    attrValue === 'false' ? false : (
                         attrValue
                     )
                 )

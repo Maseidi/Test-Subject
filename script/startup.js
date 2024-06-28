@@ -1,10 +1,10 @@
-import { createAndAddClass } from "./util.js"
-import { renderUi } from "./user-interface.js"
-import { loadPlayer } from "./player-loader.js"
-import { activateProgress } from "./progress.js"
-import { loadCurrentRoom } from "./room-loader.js"
-import { getMapX, getMapY, getPlayerX, getPlayerY } from "./variables.js"
-import { getMapEl, setMapEl, setPauseContainer, setRoomContainer } from "./elements.js"
+import { createAndAddClass } from './util.js'
+import { renderUi } from './user-interface.js'
+import { loadPlayer } from './player-loader.js'
+import { activateProgress } from './progress.js'
+import { loadCurrentRoom } from './room-loader.js'
+import { getMapX, getMapY, getPlayerX, getPlayerY } from './variables.js'
+import { getMapEl, setMapEl, setPauseContainer, setRoomContainer } from './elements.js'
 
 export const startUp = () => {
     renderPauseContainer()
@@ -18,14 +18,14 @@ export const startUp = () => {
 }
 
 const renderPauseContainer = () => {
-    const root = document.getElementById("root")
+    const root = document.getElementById('root')
     const pauseContainer = createAndAddClass('div', 'pause-container')
     setPauseContainer(pauseContainer)
     root.append(pauseContainer)
 }
 
 const renderMap = () => {
-    const root = document.getElementById("root")
+    const root = document.getElementById('root')
     const map = createAndAddClass('div', 'map')
     map.style.left = `${getMapX()}px`
     map.style.top = `${getMapY()}px`

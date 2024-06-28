@@ -1,8 +1,8 @@
-import { elementToObject } from "./util.js"
-import { getCurrentRoom } from "./elements.js"
-import { renderInteractable } from "./room-loader.js"
-import { findSuitableId, removeDrop } from "./inventory.js"
-import { Bandage, Coin, HardDrive, MagnumAmmo, PistolAmmo, RifleAmmo, ShotgunShells, SmgAmmo } from "./interactables.js"
+import { elementToObject } from './util.js'
+import { getCurrentRoom } from './elements.js'
+import { renderInteractable } from './room-loader.js'
+import { findSuitableId, removeDrop } from './inventory.js'
+import { Bandage, Coin, HardDrive, MagnumAmmo, PistolAmmo, RifleAmmo, ShotgunShells, SmgAmmo } from './interactables.js'
 
 export const dropLoot = (rootElem) => {
     const root = elementToObject(rootElem)

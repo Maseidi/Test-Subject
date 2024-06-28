@@ -1,11 +1,11 @@
-import { getProgress } from "./progress.js"
-import { renderQuit } from "./user-interface.js"
-import { getPauseContainer } from "./elements.js"
-import { renderStats } from "./weapon-examine.js"
-import { getStat, getWeaponSpecs } from "./weapon-specs.js"
-import { Coin, Drop, interactables } from "./interactables.js"
-import { getShopItems, getShopItemsWithId } from "./shop-item.js"
-import { getCurrentRoomId, getIntObj, setIntObj } from "./variables.js"
+import { getProgress } from './progress.js'
+import { renderQuit } from './user-interface.js'
+import { getPauseContainer } from './elements.js'
+import { renderStats } from './weapon-examine.js'
+import { getStat, getWeaponSpecs } from './weapon-specs.js'
+import { Coin, Drop, interactables } from './interactables.js'
+import { getShopItems, getShopItemsWithId } from './shop-item.js'
+import { getCurrentRoomId, getIntObj, setIntObj } from './variables.js'
 import { 
     MAX_PACKSIZE,
     calculateTotalCoins,
@@ -14,14 +14,14 @@ import {
     pickupDrop,
     upgradeInventory,
     upgradeWeaponStat,
-    useInventoryResource } from "./inventory.js"
+    useInventoryResource } from './inventory.js'
 import { 
     addAttribute,
     addClass,
     appendAll,
     createAndAddClass,
     elementToObject,
-    objectToElement } from "./util.js"
+    objectToElement } from './util.js'
 
 let page = 1
 export const renderStore = () => {

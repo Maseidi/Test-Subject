@@ -1,6 +1,6 @@
-import { renderQuit } from "./user-interface.js"
-import { getPauseContainer } from "./elements.js"
-import { getIntObj, setIntObj } from "./variables.js"
+import { renderQuit } from './user-interface.js'
+import { getPauseContainer } from './elements.js'
+import { getIntObj, setIntObj } from './variables.js'
 import { 
     addAttribute,
     addClass,
@@ -8,7 +8,7 @@ import {
     containsClass,
     createAndAddClass,
     elementToObject,
-    objectToElement } from "./util.js"
+    objectToElement } from './util.js'
 import { 
     descriptionEvent,
     handleWeaponDrop,
@@ -16,7 +16,7 @@ import {
     removeDescriptionEvent,
     renderBlocks,
     renderHeadingAndDescription,
-    useItemAtPosition } from "./inventory.js"
+    useItemAtPosition } from './inventory.js'
 
 let stash = []
 export const setStash = (val) => {

@@ -1,4 +1,4 @@
-import { getWeaponSpecs } from "./weapon-specs.js"
+import { getWeaponSpecs } from './weapon-specs.js'
 
 class Interactable {
     constructor(width, left, top, name, heading, popup, solid, amount, space, description, price) {
@@ -18,25 +18,25 @@ class Interactable {
 
 class PC extends Interactable {
     constructor(left, top) {
-        super(50, left, top, "computer", "computer", "Save game", true, undefined, undefined, undefined, undefined)
+        super(50, left, top, 'computer', 'computer', 'Save game', true, undefined, undefined, undefined, undefined)
     }
 }
 
 class Stash extends Interactable {
     constructor(left, top) {
-        super(80, left, top, "stash", "stash", "Open stash", true, undefined, undefined, undefined, undefined)
+        super(80, left, top, 'stash', 'stash', 'Open stash', true, undefined, undefined, undefined, undefined)
     }
 }
 
 class VendingMachine extends Interactable {
     constructor(left, top) {
-        super(35, left, top, "vendingMachine", "vending machine", "Trade", true, undefined, undefined, undefined, undefined)
+        super(35, left, top, 'vendingMachine', 'vending machine', 'Trade', true, undefined, undefined, undefined, undefined)
     }
 }
 
 class Crate extends Interactable {
     constructor(left, top) {
-        super(35, left, top, "crate", "crate", "Break", true, undefined, undefined, undefined, undefined)
+        super(35, left, top, 'crate', 'crate', 'Break', true, undefined, undefined, undefined, undefined)
     }
 }
 
@@ -48,49 +48,49 @@ export class Drop extends Interactable {
 
 export class Bandage extends Drop {
     constructor(left, top, amount) {
-        super(50, left, top, "bandage", "bandage", "Pick up", amount, 1, "Might come in handy in case of injuries", 1/3)
+        super(50, left, top, 'bandage', 'bandage', 'Pick up', amount, 1, 'Might come in handy in case of injuries', 1/3)
     }
 }
 
 export class Coin extends Drop {
     constructor(left, top, amount) {
-        super(25, left, top, "coin", "coin", "Pick up", amount, 1, "A neccesity when trading with the vending machine", undefined)
+        super(25, left, top, 'coin', 'coin', 'Pick up', amount, 1, 'A neccesity when trading with the vending machine', undefined)
     }
 }
 
 export class HardDrive extends Drop {
     constructor(left, top, amount) {
-        super(30, left, top, "hardDrive", "hard drive", "Pick up", amount, 1, "PC needs one of these to save your progress", 1/2)
+        super(30, left, top, 'hardDrive', 'hard drive', 'Pick up', amount, 1, 'PC needs one of these to save your progress', 1/2)
     }
 }
 
 export class PistolAmmo extends Drop {
     constructor(left, top, amount) {
-        super(50, left, top, "pistolAmmo", "pistol ammo", "Pick up", amount, 1, "Ammo for all sorts of handguns", 1/30)
+        super(50, left, top, 'pistolAmmo', 'pistol ammo', 'Pick up', amount, 1, 'Ammo for all sorts of handguns', 1/30)
     }
 }
 
 export class ShotgunShells extends Drop {
     constructor(left, top, amount) {
-        super(40, left, top, "shotgunShells", "shotgun shells", "Pick up", amount, 1, "Shells for all sorts of shotguns", 1/20)
+        super(40, left, top, 'shotgunShells', 'shotgun shells', 'Pick up', amount, 1, 'Shells for all sorts of shotguns', 1/20)
     }
 }
 
 export class MagnumAmmo extends Drop {
     constructor(left, top, amount) {
-        super(40, left, top, "magnumAmmo", "magnum ammo", "Pick up", amount, 1, "Ammo for all sorts of magnums", 1/5)
+        super(40, left, top, 'magnumAmmo', 'magnum ammo', 'Pick up', amount, 1, 'Ammo for all sorts of magnums', 1/5)
     }
 }
 
 export class SmgAmmo extends Drop {
     constructor(left, top, amount) {
-        super(40, left, top, "smgAmmo", "smg ammo", "Pick up", amount, 1, "Ammo for all sorts of sub-machine guns", 1/90)
+        super(40, left, top, 'smgAmmo', 'smg ammo', 'Pick up', amount, 1, 'Ammo for all sorts of sub-machine guns', 1/90)
     }
 }
 
 export class RifleAmmo extends Drop {
     constructor(left, top, amount) {
-        super(30, left, top, "rifleAmmo", "rifle ammo", "Pick up", amount, 1, "Ammo for all sorts of rifles", 1/10)
+        super(30, left, top, 'rifleAmmo', 'rifle ammo', 'Pick up', amount, 1, 'Ammo for all sorts of rifles', 1/10)
     }
 }
 
@@ -102,7 +102,7 @@ export class WeaponDrop extends Drop {
             top,
             name,
             getWeaponSpecs().get(name).heading,
-            "Pick up",
+            'Pick up',
             1,
             getWeaponSpecs().get(name).space,
             getWeaponSpecs().get(name).description,
@@ -125,10 +125,10 @@ export const interactables = new Map([
         new HardDrive(500, 500, 3),
         new PC(700, 700),
         new Stash(900, 900),
-        new WeaponDrop(800, 200, "remington1858", 0, 1, 1, 1, 1, 1),
-        new WeaponDrop(100, 900, "sniper", 0, 1, 1, 1, 1, 1),
-        new WeaponDrop(200, 950, "riotgun", 0, 1, 1, 1, 1, 1),
-        new WeaponDrop(300, 1000, "mauser", 0, 1, 1, 1, 1, 1),
+        new WeaponDrop(800, 200, 'remington1858', 0, 1, 1, 1, 1, 1),
+        new WeaponDrop(100, 900, 'sniper', 0, 1, 1, 1, 1, 1),
+        new WeaponDrop(200, 950, 'riotgun', 0, 1, 1, 1, 1, 1),
+        new WeaponDrop(300, 1000, 'mauser', 0, 1, 1, 1, 1, 1),
         new PistolAmmo(200, 700, 10),
         new ShotgunShells(300, 800, 11),
         new SmgAmmo(200, 400, 100),

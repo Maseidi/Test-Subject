@@ -1,7 +1,7 @@
-import { addAttribute, collide } from "./util.js"
-import { getCurrentRoomEnemies } from "./elements.js"
-import { getEnemyState, resetAcceleration } from "./enemy-actions.js"
-import { CHASE, GUESS_SEARCH, INVESTIGATE, LOST, MOVE_TO_POSITION, NO_OFFENCE } from "./normal-enemy.js"
+import { addAttribute, collide } from './util.js'
+import { getCurrentRoomEnemies } from './elements.js'
+import { getEnemyState, resetAcceleration } from './enemy-actions.js'
+import { CHASE, GUESS_SEARCH, INVESTIGATE, LOST, MOVE_TO_POSITION, NO_OFFENCE } from './normal-enemy.js'
 
 export const checkCollision = (enemy) => {
     const collidingEnemy = Array.from(getCurrentRoomEnemies())

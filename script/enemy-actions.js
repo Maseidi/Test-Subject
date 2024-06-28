@@ -1,10 +1,10 @@
-import { enemies } from "./enemies.js"
-import { dropLoot } from "./loot-manager.js"
-import { takeDamage } from "./player-health.js"
-import { manageKnock } from "./knock-manager.js"
-import { getSpecification, getStat } from "./weapon-specs.js"
-import { addAttribute, addClass, collide, containsClass, distance } from "./util.js"
-import { getCurrentRoomEnemies, getCurrentRoomSolid, getMapEl, getPlayer } from "./elements.js"
+import { enemies } from './enemies.js'
+import { dropLoot } from './loot-manager.js'
+import { takeDamage } from './player-health.js'
+import { manageKnock } from './knock-manager.js'
+import { getSpecification, getStat } from './weapon-specs.js'
+import { addAttribute, addClass, collide, distance } from './util.js'
+import { getCurrentRoomEnemies, getMapEl, getPlayer } from './elements.js'
 import { 
     getMapX,
     getMapY,
@@ -18,8 +18,8 @@ import {
     setPlayerY,
     setNoOffenseCounter, 
     getNoOffenseCounter,
-    getCurrentRoomId} from "./variables.js"
-import { GUESS_SEARCH, INVESTIGATE, LOST, MOVE_TO_POSITION, NO_OFFENCE, CHASE } from "./normal-enemy.js"
+    getCurrentRoomId} from './variables.js'
+import { GUESS_SEARCH, INVESTIGATE, LOST, MOVE_TO_POSITION, NO_OFFENCE, CHASE } from './normal-enemy.js'
 export const getEnemyState = (enemy) => enemy.getAttribute('state') 
 
 export const moveToDestination = (enemy) => {
@@ -70,7 +70,7 @@ const decideDirection = (enemyLeft, destLeft, enemyTop, destTop, enemyW, destW) 
 }
 
 const calculateSpeed = (enemy, xMultiplier, yMultiplier) => {
-    let speed = Number(enemy.getAttribute("curr-speed"))
+    let speed = Number(enemy.getAttribute('curr-speed'))
     const state = getEnemyState(enemy)
     if ( state === NO_OFFENCE ) speed /= 2
     else if ( state === INVESTIGATE ) speed = Number(enemy.getAttribute('maxspeed')) / 5
@@ -196,25 +196,8 @@ const knockPlayer = (enemy) => {
     getPlayer().style.top = `${getPlayerY()}px`
 }
 
-export const updateDestinationToPlayer = (enemy) => {
-    // const playerTracker = getPlayer().firstElementChild.children[2]
-    // const trackerCpu = window.getComputedStyle(playerTracker)
-    const playerX = Math.floor(getPlayerX() - getRoomLeft())
-    // const trackerX = playerX + Number(trackerCpu.left.replace('px', ''))
-    const playerY = Math.floor(getPlayerY() - getRoomTop())
-    // const trackerY = playerY + Number(trackerCpu.top.replace('px', ''))
-    // const enemyCpu = window.getComputedStyle(enemy)
-    // const enemyX = Number(enemyCpu.left.replace('px', ''))
-    // const enemyY = Number(enemyCpu.top.replace('px', ''))
-    // if ( 
-    //     distance(enemyX, enemyY, playerX, playerY) < 200 || 
-    //     distance(enemyX, enemyY, trackerX, trackerY) > distance(enemyX, enemyY, playerX, playerY) ||
-    //      Array.from(getCurrentRoomSolid()).find(solid => containsClass(solid, 'enemy') && collide(solid, playerTracker, 0)) ) {
-        updateDestination(enemy, playerX, playerY, 34)
-    // } else {
-    //     updateDestination(enemy, trackerX, trackerY, 10)
-    // }
-}
+export const updateDestinationToPlayer = (enemy) => 
+    updateDestination(enemy, Math.floor(getPlayerX() - getRoomLeft()), Math.floor(getPlayerY() - getRoomTop()), 34)
 
 export const updateDestinationToPath = (enemy, path) => {
     const pathCpu = window.getComputedStyle(path)

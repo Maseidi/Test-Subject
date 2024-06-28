@@ -1,5 +1,5 @@
-import { checkLowHealth, isMoving } from "./util.js"
-import { getMapEl, getPlayer } from "./elements.js"
+import { checkLowHealth, isMoving } from './util.js'
+import { getMapEl, getPlayer } from './elements.js'
 import { 
     getAimMode,
     getAllowMove,
@@ -16,7 +16,7 @@ import {
     setMapX,
     setMapY, 
     setPlayerX, 
-    setPlayerY} from "./variables.js"
+    setPlayerY} from './variables.js'
 
 export const managePlayerMovement = () => {
     if ( isMoving() && getAllowMove() ) move()

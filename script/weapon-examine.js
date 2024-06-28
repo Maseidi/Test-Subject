@@ -1,8 +1,8 @@
-import { getInventory } from "./inventory.js"
-import { renderQuit } from "./user-interface.js"
-import { getPauseContainer } from "./elements.js"
-import { getStat, getWeaponSpecs } from "./weapon-specs.js"
-import { addClass, appendAll, createAndAddClass } from "./util.js"
+import { getInventory } from './inventory.js'
+import { renderQuit } from './user-interface.js'
+import { getPauseContainer } from './elements.js'
+import { getStat, getWeaponSpecs } from './weapon-specs.js'
+import { addClass, appendAll, createAndAddClass } from './util.js'
 
 export const renderStats = (itemObj) => {
     const weaponStatsContainer = createAndAddClass('div', 'weapon-stats-container', 'ui-theme')

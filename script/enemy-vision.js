@@ -1,5 +1,5 @@
-import { angleOfTwoPoints, collide } from "./util.js"
-import { getCurrentRoomSolid, getPlayer } from "./elements.js"
+import { angleOfTwoPoints, collide } from './util.js'
+import { getCurrentRoomSolid, getPlayer } from './elements.js'
 
 export const isPlayerVisible = (enemy) => {
     const enemyBound = enemy.getBoundingClientRect()

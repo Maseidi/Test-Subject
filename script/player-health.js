@@ -1,8 +1,8 @@
-import { healthManager } from "./user-interface.js"
-import { getInventory, useInventoryResource } from "./inventory.js"
-import { getHealth, getMaxHealth, setHealth } from "./variables.js"
-import { addClass, checkLowHealth, removeClass } from "./util.js"
-import { getMapEl, getPlayer } from "./elements.js"
+import { healthManager } from './user-interface.js'
+import { getInventory, useInventoryResource } from './inventory.js'
+import { getHealth, getMaxHealth, setHealth } from './variables.js'
+import { addClass, checkLowHealth, removeClass } from './util.js'
+import { getMapEl, getPlayer } from './elements.js'
 
 export const heal = () => {
     if ( getHealth() === getMaxHealth() ) return

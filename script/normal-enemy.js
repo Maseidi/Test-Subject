@@ -1,7 +1,7 @@
-import { addAttribute } from "./util.js"
-import { findPath } from "./enemy-path-finding.js"
-import { isPlayerVisible } from "./enemy-vision.js"
-import { getNoOffenseCounter } from "./variables.js"
+import { addAttribute } from './util.js'
+import { findPath } from './enemy-path-finding.js'
+import { isPlayerVisible } from './enemy-vision.js'
+import { getNoOffenseCounter } from './variables.js'
 import { 
     calculateAngle,
     moveToDestination,
@@ -9,7 +9,7 @@ import {
     updateDestinationToPath,
     notifyEnemy, 
     accelerateEnemy,
-    getEnemyState} from "./enemy-actions.js"
+    getEnemyState} from './enemy-actions.js'
     
 export const LOST = 'lost'
 export const CHASE = 'chase'

@@ -1,4 +1,4 @@
-import { getCurrentRoomLoaders, getCurrentRoomSolid } from "./elements.js"
+import { getCurrentRoomLoaders, getCurrentRoomSolid } from './elements.js'
 
 export const manageKnock = (direction, entity, knock) => directionMapper.get(direction)(entity, knock)
 

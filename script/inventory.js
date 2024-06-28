@@ -1,11 +1,11 @@
-import { useBandage } from "./player-health.js"
-import { renderStats } from "./weapon-examine.js"
-import { interactables } from "./interactables.js"
-import { renderInteractable } from "./room-loader.js"
-import { getStat, getWeaponSpecs } from "./weapon-specs.js"
-import { removeWeapon, renderWeapon } from "./weapon-loader.js"
-import { removeUi, renderQuit, renderUi } from "./user-interface.js"
-import { getCurrentRoom, getPauseContainer, getPlayer } from "./elements.js"
+import { useBandage } from './player-health.js'
+import { renderStats } from './weapon-examine.js'
+import { interactables } from './interactables.js'
+import { renderInteractable } from './room-loader.js'
+import { getStat, getWeaponSpecs } from './weapon-specs.js'
+import { removeWeapon, renderWeapon } from './weapon-loader.js'
+import { removeUi, renderQuit, renderUi } from './user-interface.js'
+import { getCurrentRoom, getPauseContainer, getPlayer } from './elements.js'
 import { 
     addAttribute,
     addClass,
@@ -14,7 +14,7 @@ import {
     objectToElement,
     removeClass,
     appendAll, 
-    createAndAddClass} from "./util.js"
+    createAndAddClass} from './util.js'
 import { 
     getAimMode,
     getCurrentRoomId,
@@ -35,7 +35,7 @@ import {
     getReloading,
     setShootCounter,
     getShooting, 
-    getPause} from "./variables.js"
+    getPause} from './variables.js'
 
 export const MAX_PACKSIZE = {
     bandage: 3,
@@ -97,7 +97,7 @@ const searchEmpty = () => {
                 if ( skip ) continue   
                 let diff = Math.min(pack, drop.amount)
                 inventory[i][j] = {...drop, amount: diff, row: i, column: j}
-                for ( let k = 1; k < drop.space; k++ ) inventory[i][j+k] = "taken"
+                for ( let k = 1; k < drop.space; k++ ) inventory[i][j+k] = 'taken'
                 updateAmount(drop.amount - diff)
                 if ( drop.amount > 0 && inventoryFull() ) return
                 searchEmpty()
@@ -154,12 +154,12 @@ export const updateInventoryWeaponMag = (newMag) => {
 }
 
 const updateAmount = (newValue) => {
-    getIntObj().setAttribute("amount", newValue)
+    getIntObj().setAttribute('amount', newValue)
     if ( getIntObj().children.length === 0 ) return
-    getIntObj().children[1].children[0].textContent = `${newValue} ${getIntObj().getAttribute("heading")}`
+    getIntObj().children[1].children[0].textContent = `${newValue} ${getIntObj().getAttribute('heading')}`
     interactables.set(getCurrentRoomId(), 
     interactables.get(getCurrentRoomId()).map((int, index) => {
-        return `${getCurrentRoomId()}-${index}` === getIntObj().getAttribute("id") ? 
+        return `${getCurrentRoomId()}-${index}` === getIntObj().getAttribute('id') ? 
         {
             ...int,
             amount: newValue
@@ -171,7 +171,7 @@ export const removeDrop = (element) => {
     element.remove()
     interactables.set(getCurrentRoomId(), 
     interactables.get(getCurrentRoomId()).map((elem, index) =>
-        `${getCurrentRoomId()}-${index}` === element.getAttribute("id") ? null : elem
+        `${getCurrentRoomId()}-${index}` === element.getAttribute('id') ? null : elem
     ))
 }
 
@@ -213,15 +213,15 @@ export const renderBlocks = () => {
     const inventoryEl = createAndAddClass('div', 'inventory')
     inventory.forEach((row) => {
         row.forEach((block) => {
-            const theBlock = block === "taken" ? document.createElement('div') : objectToElement(block)
+            const theBlock = block === 'taken' ? document.createElement('div') : objectToElement(block)
             addClass(theBlock, 'block')
             let skip = false
-            if ( block === "taken" ) skip = true
+            if ( block === 'taken' ) skip = true
             else if (block === null || block === undefined) theBlock.style.width = `25%`
             else {
                 theBlock.style.width = `${block.space * 25}%`
                 const amount = createAndAddClass('div', 'amount')
-                const amountText = document.createElement("p")
+                const amountText = document.createElement('p')
                 if ( getWeaponSpecs().get(block.name) === undefined ) amountText.textContent = `${block.amount}`
                 else amountText.textContent = `${block.currmag}`
                 amount.append(amountText)
@@ -231,7 +231,7 @@ export const renderBlocks = () => {
                 if ( block === undefined ) theBlock.style.backgroundColor = `rgba(255, 0, 0, 0.1)`
                 if ( block === null || block === undefined ) skip = true   
                 if ( !skip ) {
-                    const image = document.createElement("img")
+                    const image = document.createElement('img')
                     image.src = `../assets/images/${block.name}.png`
                     theBlock.append(image)
                 }
@@ -246,8 +246,8 @@ export const renderBlocks = () => {
 export const renderHeadingAndDescription = () => {
     const background = getPauseContainer().firstElementChild
     const desc = createAndAddClass('div', 'description')
-    const heading = document.createElement("h2")
-    const paragraph = document.createElement("p")
+    const heading = document.createElement('h2')
+    const paragraph = document.createElement('p')
     appendAll(desc, heading, paragraph)
     background.firstElementChild.append(desc)
 }
@@ -271,7 +271,7 @@ export const descriptionEvent = (item) => {
 }
 
 const addDescEvent = (e) => {
-    const desc = document.querySelector(".description")
+    const desc = document.querySelector('.description')
     if (e.target.h) desc.children[0].textContent = `${e.target.h}`
     if (e.target.d) desc.children[1].textContent = `${e.target.d}`
 }
@@ -281,7 +281,7 @@ export const removeDescriptionEvent = (item) => {
 }
 
 const removeDescEvent = () => {
-    const desc = document.querySelector(".description")
+    const desc = document.querySelector('.description')
     desc.children[0].textContent = ``
     desc.children[1].textContent = ``
 }
@@ -596,7 +596,7 @@ const OPTIONS = new Map([
 ])
 
 const createOption = (options, text) => {
-    const elem = document.createElement("div")
+    const elem = document.createElement('div')
     elem.textContent = `${text}`
     elem.addEventListener('click', () => {
         OPTIONS.get(text)(options.parentElement)
@@ -610,9 +610,9 @@ const renderWeaponWheel = () => {
     const weaponWheel = createAndAddClass('div', 'weapon-wheel')
     let slots = 4
     while (slots) {
-        const slot = document.createElement("div")
-        const image = document.createElement("img")
-        const slotNum = document.createElement("p")
+        const slot = document.createElement('div')
+        const image = document.createElement('img')
+        const slotNum = document.createElement('p')
         let name = inventory.flat().find(item => item && item.id === getWeaponWheel()[4-slots])?.name
         if ( !name ) name = getDraggedItem()?.getAttribute('id') === getWeaponWheel()[4 - slots] + '' ? 
             getDraggedItem()?.getAttribute('name') : null

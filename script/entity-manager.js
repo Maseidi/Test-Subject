@@ -1,16 +1,16 @@
-import { rooms } from "./rooms.js"
-import { loaders } from "./loaders.js"
-import { getEnemyState, notifyEnemy } from "./enemy-actions.js"
-import { loadCurrentRoom } from "./room-loader.js"
-import { CHASE, NO_OFFENCE, normalEnemyBehavior } from "./normal-enemy.js"
-import { addAttribute, collide, containsClass, removeClass } from "./util.js"
+import { rooms } from './rooms.js'
+import { loaders } from './loaders.js'
+import { getEnemyState, notifyEnemy } from './enemy-actions.js'
+import { loadCurrentRoom } from './room-loader.js'
+import { CHASE, NO_OFFENCE, normalEnemyBehavior } from './normal-enemy.js'
+import { addAttribute, collide, containsClass, removeClass } from './util.js'
 import { 
     getCurrentRoom,
     getCurrentRoomEnemies,
     getCurrentRoomInteractables,
     getCurrentRoomLoaders,
     getCurrentRoomSolid,
-    getPlayer } from "./elements.js"
+    getPlayer } from './elements.js'
 import {
     getCurrentRoomId,
     getIntObj,
@@ -24,8 +24,8 @@ import {
     setNoOffenseCounter,
     setPrevRoomId,
     setRoomLeft,
-    setRoomTop} from "./variables.js"
-import { checkCollision } from "./enemy-collision.js"
+    setRoomTop} from './variables.js'
+import { checkCollision } from './enemy-collision.js'
 
 export const manageEntities = () => {
     manageSolidObjects()

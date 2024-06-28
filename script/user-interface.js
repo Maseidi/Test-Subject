@@ -1,8 +1,8 @@
-import { managePause } from "./controls.js"
-import { addClass, appendAll, createAndAddClass } from "./util.js"
-import { getPauseContainer, getUiEl, setUiEl } from "./elements.js"
-import { calculateTotalAmmo, equippedWeaponFromInventory } from "./inventory.js"
-import { getDraggedItem, getEquippedWeapon, getHealth, getMaxHealth, getMaxStamina, getStamina } from "./variables.js"
+import { managePause } from './controls.js'
+import { addClass, appendAll, createAndAddClass } from './util.js'
+import { getPauseContainer, getUiEl, setUiEl } from './elements.js'
+import { calculateTotalAmmo, equippedWeaponFromInventory } from './inventory.js'
+import { getDraggedItem, getEquippedWeapon, getHealth, getMaxHealth, getMaxStamina, getStamina } from './variables.js'
 
 export const renderUi = () => {
     renderBackground()
@@ -12,7 +12,7 @@ export const renderUi = () => {
 }
 
 const renderBackground = () => {
-    const root = document.getElementById("root")
+    const root = document.getElementById('root')
     const ui = createAndAddClass('div', 'ui', 'ui-theme')
     setUiEl(ui)
     root.append(ui)
@@ -64,9 +64,9 @@ export const removeUi = () => getUiEl().remove()
 
 export const renderQuit = () => {
     const quitContainer = createAndAddClass('div', 'quit')
-    const quitBtn = document.createElement("p")
+    const quitBtn = document.createElement('p')
     quitBtn.textContent = 'esc'
-    const quitText = document.createElement("p")
+    const quitText = document.createElement('p')
     quitText.textContent = 'quit'
     appendAll(quitContainer, quitBtn, quitText)
     quitContainer.addEventListener('click', quitPage)
