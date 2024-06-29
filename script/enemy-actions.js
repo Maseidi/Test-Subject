@@ -21,7 +21,7 @@ import {
     setPlayerY,
     setNoOffenseCounter, 
     getNoOffenseCounter,
-    getCurrentRoomId} from './variables.js'
+    getCurrentRoomId } from './variables.js'
 
 export const getEnemyState = (enemy) => enemy.getAttribute('state') 
 export const setEnemyState = (enemy, state) => addAttribute(enemy, 'state', state)
@@ -164,7 +164,7 @@ const knockPlayer = (enemy) => {
     let xAxis, yAxis
     let finalKnock
     switch ( angle ) {
-        case '0':
+        case '0': 
             xAxis = 0
             yAxis = -1
             finalKnock = manageKnock('to-down', getPlayer(), knock)
@@ -189,7 +189,7 @@ const knockPlayer = (enemy) => {
             finalKnock = manageKnock('to-right', getPlayer(), knock)
             break                
     }
-    if ( ( xAxis === undefined && yAxis === undefined ) ) return
+    if ( xAxis == null && yAxis == null ) return
     setMapX(xAxis * finalKnock + getMapX())
     setMapY(yAxis * finalKnock + getMapY())
     setPlayerX(-xAxis * finalKnock + getPlayerX())
@@ -218,8 +218,7 @@ export const notifyEnemy = (dist, enemy) => {
     const enemyBound = enemy.getBoundingClientRect()
     const playerBound = getPlayer().getBoundingClientRect()
     if ( distance(playerBound.x, playerBound.y, enemyBound.x, enemyBound.y) <= dist ) {
-        if ( getNoOffenseCounter() === 0 ) setEnemyState(enemy, CHASE)
-        else setEnemyState(enemy, NO_OFFENCE)
+        switch2ChaseMode(enemy)
         updateDestinationToPlayer(enemy)
     }
     getCurrentRoomEnemies()
@@ -228,6 +227,11 @@ export const notifyEnemy = (dist, enemy) => {
                      e.getBoundingClientRect().x, e.getBoundingClientRect().y) < 500 ) &&
                      getEnemyState(e) !== CHASE && getEnemyState(e) !== NO_OFFENCE
         ).forEach(e => notifyEnemy(Number.MAX_SAFE_INTEGER, e))
+}
+
+export const switch2ChaseMode = (enemy) => {
+    if ( getNoOffenseCounter() == 0 ) setEnemyState(enemy, CHASE)
+    else setEnemyState(enemy, NO_OFFENCE)
 }
 
 export const damageEnemy = (enemy, equipped) => {
@@ -287,8 +291,7 @@ export const accelerateEnemy = (enemy) => {
 export const playerLocated = (enemy) => {
     let result = false
     if ( isPlayerVisible(enemy) ) { 
-        if ( getNoOffenseCounter() === 0 ) setEnemyState(enemy, CHASE)
-        else setEnemyState(enemy, NO_OFFENCE)
+        switch2ChaseMode(enemy)
         result = true
     }
     return result

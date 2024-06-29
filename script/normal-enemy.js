@@ -10,7 +10,7 @@ import {
     setEnemyState,
     displaceEnemy,
     playerLocated,
-    checkSuroundings} from './enemy-actions.js'
+    checkSuroundings } from './enemy-actions.js'
 
 export const normalEnemyBehavior = (enemy) => {
     switch ( getEnemyState(enemy) ) {
@@ -28,12 +28,12 @@ export const normalEnemyBehavior = (enemy) => {
             handleLostState(enemy)
             break
         case MOVE_TO_POSITION:
-            handleMoveToPositionState(enemy)
+            handleMove2PositionState(enemy)
             break
     }
 }
 
-const handleInvestigationState = (enemy) => {
+export const handleInvestigationState = (enemy) => {
     if ( playerLocated(enemy) ) return
     const path = document.getElementById(enemy.getAttribute('path'))
     const counter = Number(enemy.getAttribute('investigation-counter'))
@@ -47,7 +47,7 @@ const handleInvestigationState = (enemy) => {
     displaceEnemy(enemy)
 }
 
-const handleChaseState = (enemy) => {  
+export const handleChaseState = (enemy) => {  
     accelerateEnemy(enemy)
     if ( isPlayerVisible(enemy) ) notifyEnemy(Number.MAX_SAFE_INTEGER, enemy)
     else {
@@ -81,7 +81,7 @@ export const handleLostState = (enemy) => {
     addAttribute(enemy, 'lost-counter', counter + 1)
 }
 
-export const handleMoveToPositionState = (enemy) => {
+export const handleMove2PositionState = (enemy) => {
     accelerateEnemy(enemy)
     if ( playerLocated(enemy) ) return
     const dest = document.getElementById(enemy.getAttribute('path')).children[Number(enemy.getAttribute('path-point'))]
