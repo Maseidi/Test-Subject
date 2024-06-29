@@ -1,71 +1,83 @@
-.torturer, .soul-drinker, .rock-crusher, .iron-master {
-    position: absolute;
+.torturer, .soul-drinker, .rock-crusher, .iron-master, .ranger {
+  position: absolute;
 }
 
 .torturer > .torturer-collider, 
 .soul-drinker > .soul-drinker-collider, 
 .rock-crusher > .rock-crusher-collider,
-.iron-master > .iron-master-collider {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.iron-master > .iron-master-collider,
+.ranger > .ranger-collider {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .torturer > .torturer-collider {
-  height: 37px;
-  width: 37px;
+height: 37px;
+width: 37px;
 }
 
 .soul-drinker > .soul-drinker-collider {
-  height: 28px;
-  width: 28px;
+height: 28px;
+width: 28px;
 }
 
 .rock-crusher > .rock-crusher-collider {
-  height: 46px;
-  width: 46px;
+height: 46px;
+width: 46px;
 }
 
 .iron-master > .iron-master-collider {
-  height: 40px;
-  width: 40px;
+height: 40px;
+width: 40px;
+}
+
+.ranger > .ranger-collider {
+height: 32px;
+width: 32px;
 }
 
 .vision, .enemy-forward-detector {
-  position: absolute;
+position: absolute;
 }
 
 .enemy-forward-detector {
-  width: 100%;
-  height: 100%;
+width: 100%;
+height: 100%;
 }
 
 .torturer > .torturer-collider > div:nth-of-type(1),
 .soul-drinker > .soul-drinker-collider > div:nth-of-type(1),
 .rock-crusher > .rock-crusher-collider > div:nth-of-type(1),
-.iron-master > .iron-master-collider > div:nth-of-type(1) {
-  border: 1px solid black;
-  position: absolute;
+.iron-master > .iron-master-collider > div:nth-of-type(1),
+.ranger > .ranger-collider > div:nth-of-type(1) {
+border: 1px solid black;
+position: absolute;
 }
 
 .torturer > .torturer-collider > div:nth-of-type(1) {
-  width: 25px;
-  height: 14px;
+width: 25px;
+height: 14px;
 }
 
 .soul-drinker > .soul-drinker-collider > div:nth-of-type(1) {
-  width: 22px;
-  height: 10px;
+width: 22px;
+height: 10px;
 }
 
 .rock-crusher > .rock-crusher-collider > div:nth-of-type(1) {
-  width: 32px;
-  height: 24px;
+width: 32px;
+height: 24px;
 }
 
 .iron-master > .iron-master-collider > div:nth-of-type(1) {
-  width: 23px;
-  height: 23px;
+width: 23px;
+height: 23px;
+}
+
+.ranger > .ranger-collider > div:nth-of-type(1) {
+width: 21px;
+height: 16px;
 }
 
 .torturer > .torturer-collider > div:nth-of-type(1) > div:nth-of-type(1),
@@ -75,160 +87,225 @@
 .rock-crusher > .rock-crusher-collider > div:nth-of-type(1) > div:nth-of-type(1),
 .rock-crusher > .rock-crusher-collider > div:nth-of-type(1) > div:nth-of-type(2),
 .iron-master > .iron-master-collider > div:nth-of-type(1) > div:nth-of-type(1),
-.iron-master > .iron-master-collider > div:nth-of-type(1) > div:nth-of-type(2) {
-  position: absolute;
-  border: 1px solid black;
-  filter: brightness(66%);
-  border-radius: 1px;
+.iron-master > .iron-master-collider > div:nth-of-type(1) > div:nth-of-type(2),
+.ranger > .ranger-collider > div:nth-of-type(1) > div:nth-of-type(1),
+.ranger > .ranger-collider > div:nth-of-type(1) > div:nth-of-type(2) {
+position: absolute;
+border: 1px solid black;
+filter: brightness(66%);
+border-radius: 1px;
 }
 
 .torturer > .torturer-collider > div:nth-of-type(1) > div:nth-of-type(1),
 .torturer > .torturer-collider > div:nth-of-type(1) > div:nth-of-type(2) {
-  width: 6px;
-  height: 16px;
-  top: 2px;
+width: 6px;
+height: 16px;
+top: 2px;
 }
 
 .soul-drinker > .soul-drinker-collider > div:nth-of-type(1) > div:nth-of-type(1),
 .soul-drinker > .soul-drinker-collider > div:nth-of-type(1) > div:nth-of-type(2) {
-  width: 4px;
-  height: 16px;
-  top: 2px;
+width: 4px;
+height: 16px;
+top: 2px;
 }
 
 .rock-crusher > .rock-crusher-collider > div:nth-of-type(1) > div:nth-of-type(1),
 .rock-crusher > .rock-crusher-collider > div:nth-of-type(1) > div:nth-of-type(2) {
-  width: 8px;
-  height: 28px;
-  top: 6px;
+width: 8px;
+height: 28px;
+top: 6px;
 }
 
 .iron-master > .iron-master-collider > div:nth-of-type(1) > div:nth-of-type(1),
 .iron-master > .iron-master-collider > div:nth-of-type(1) > div:nth-of-type(2) {
-  width: 6px;
-  height: 24px;
-  top: 4px;
+width: 6px;
+height: 24px;
+top: 4px;
+}
+
+.ranger > .ranger-collider > div:nth-of-type(1) > div:nth-of-type(1),
+.ranger > .ranger-collider > div:nth-of-type(1) > div:nth-of-type(2) {
+width: 6px;
+height: 21px;
+top: 2px;
 }
 
 .torturer > .torturer-collider > div:nth-of-type(1) > div:nth-of-type(1),
 .soul-drinker > .soul-drinker-collider > div:nth-of-type(1) > div:nth-of-type(1),
 .rock-crusher > .rock-crusher-collider > div:nth-of-type(1) > div:nth-of-type(1),
-.iron-master > .iron-master-collider > div:nth-of-type(1) > div:nth-of-type(1) {
-  left: 100%;
+.iron-master > .iron-master-collider > div:nth-of-type(1) > div:nth-of-type(1),
+.ranger > .ranger-collider > div:nth-of-type(1) > div:nth-of-type(1) {
+left: 100%;
 }
 
 .torturer > .torturer-collider > div:nth-of-type(1) > div:nth-of-type(2),
 .soul-drinker > .soul-drinker-collider > div:nth-of-type(1) > div:nth-of-type(2),
 .rock-crusher > .rock-crusher-collider > div:nth-of-type(1) > div:nth-of-type(2), 
-.iron-master > .iron-master-collider > div:nth-of-type(1) > div:nth-of-type(2) {
-  right: 100%;
+.iron-master > .iron-master-collider > div:nth-of-type(1) > div:nth-of-type(2),
+.ranger > .ranger-collider > div:nth-of-type(1) > div:nth-of-type(2) {
+right: 100%;
+}
+
+.ranger > .ranger-collider > div:nth-of-type(1) > div:nth-of-type(1) {
+border-bottom-right-radius: 10px;
+}
+
+.ranger > .ranger-collider > div:nth-of-type(1) > div:nth-of-type(2) {
+border-bottom-left-radius: 10px;
 }
 
 .torturer > .torturer-collider > div:nth-of-type(1) > div:nth-of-type(3),
 .soul-drinker > .soul-drinker-collider > div:nth-of-type(1) > div:nth-of-type(3),
 .rock-crusher > .rock-crusher-collider > div:nth-of-type(1) > div:nth-of-type(3),
-.iron-master > .iron-master-collider > div:nth-of-type(1) > div:nth-of-type(3) {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  border-radius: 50%;
-  transform: translateX(-50%) translateY(-50%);
-  border: 1px solid black;
-  filter: brightness(33%);
+.iron-master > .iron-master-collider > div:nth-of-type(1) > div:nth-of-type(3),
+.ranger > .ranger-collider > div:nth-of-type(1) > div:nth-of-type(3) {
+position: absolute;
+left: 50%;
+top: 50%;
+border-radius: 50%;
+transform: translateX(-50%) translateY(-50%);
+border: 1px solid black;
+filter: brightness(33%);
 }
 
 .torturer > .torturer-collider > div:nth-of-type(1) > div:nth-of-type(3) {
-  width: 8px;
-  height: 8px;
+width: 8px;
+height: 8px;
 }
 
 .soul-drinker > .soul-drinker-collider > div:nth-of-type(1) > div:nth-of-type(3) {
-  width: 5px;
-  height: 5px;
+width: 5px;
+height: 5px;
 }
 
 .rock-crusher > .rock-crusher-collider > div:nth-of-type(1) > div:nth-of-type(3) {
-  width: 10px;
-  height: 10px;
+width: 10px;
+height: 10px;
 }
 
 .iron-master > .iron-master-collider > div:nth-of-type(1) > div:nth-of-type(3) {
-  width: 7px;
-  height: 7px;
+width: 7px;
+height: 7px;
+}
+
+.ranger > .ranger-collider > div:nth-of-type(1) > div:nth-of-type(3) {
+width: 8px;
+height: 8px;
+}
+
+.ranger > .ranger-collider > div:nth-of-type(1) > div:nth-of-type(4) {
+position: absolute;
+left: 50%;
+bottom: 100%;
+width: 4px;
+height: 14px;
+transform: translateX(-50%);
+border: 1px solid black;
+}
+
+.ranger > .ranger-collider > div:nth-of-type(1) > div:nth-of-type(5) {
+position: absolute;
+width: 8px;
+height: 8px;
+top: -18px;
+left: 50%;
+border-radius: 50%;
+border: 1px solid black;
+transform: translateX(-50%);
 }
 
 .iron-master > .iron-master-collider > div:nth-of-type(1) > div:nth-of-type(4),
 .iron-master > .iron-master-collider > div:nth-of-type(1) > div:nth-of-type(5),
 .iron-master > .iron-master-collider > div:nth-of-type(1) > div:nth-of-type(6) {
-  position: absolute;
-  background-color: gray !important;
+position: absolute;
+background-color: gray !important;
 }
 
 .iron-master > .iron-master-collider > div:nth-of-type(1) > div:nth-of-type(4) {
-  width: 40px;
-  height: 5px;
-  left: 0;
-  top: 100%;
-  transform: translateX(-9px) translateY(6px);
+width: 40px;
+height: 5px;
+left: 0;
+top: 100%;
+transform: translateX(-9px) translateY(6px);
 }
 
 .iron-master > .iron-master-collider > div:nth-of-type(1) > div:nth-of-type(5) {
-  width: 3px;
-  height: 40px;
-  left: 0;
-  top: 0;
-  transform: translateX(-10px) translateY(-9px);
+width: 3px;
+height: 40px;
+left: 0;
+top: 0;
+transform: translateX(-10px) translateY(-9px);
 }
 
 .iron-master > .iron-master-collider > div:nth-of-type(1) > div:nth-of-type(6) {
-  width: 3px;
-  height: 40px;
-  left: 100%;
-  top: 0;
-  transform: translateX(7px) translateY(-9px);
+width: 3px;
+height: 40px;
+left: 100%;
+top: 0;
+transform: translateX(7px) translateY(-9px);
 }
 
 .iron-master > .iron-master-collider > div:nth-of-type(1) > div:nth-of-type(7) {
-  width: 40px;
-  height: 3px;
-  left: 100%;
-  top: 0;
-  transform: translateX(-10px) translateY(-9px);
-  opacity: 0;
+width: 40px;
+height: 3px;
+left: 100%;
+top: 0;
+transform: translateX(-10px) translateY(-9px);
+opacity: 0;
 }
 
 .body-transition {
-  transition: 300ms;
+transition: 300ms;
 }
 
 @keyframes normalAttack {
-  50% {
-    transform: rotateZ(40deg);
-    top: 10px;
-    left: 60%;
-  }
-  100% {
-    transform: rotateZ(0deg);
-    top: 2px;
-    left: 100%;
-  }
+50% {
+  transform: rotateZ(40deg);
+  top: 10px;
+  left: 60%;
+}
+100% {
+  transform: rotateZ(0deg);
+  top: 2px;
+  left: 100%;
+}
 }
 
 .torturer > .torturer-collider > div:nth-of-type(1) > .attack,
 .soul-drinker > .soul-drinker-collider > div:nth-of-type(1) > .attack,
 .rock-crusher > .rock-crusher-collider > div:nth-of-type(1) > .attack {
-  animation-name: normalAttack;
-  animation-duration: 600ms;
-  animation-direction: alternate;
+animation-name: normalAttack;
+animation-duration: 600ms;
+animation-direction: alternate;
 }
 
 .path-point {
-  position: absolute;
-  width: 10px;
-  height: 10px;
+position: absolute;
+width: 10px;
+height: 10px;
 }
 
 .damaged, .damaged > div {
-  background-color: white !important;
-  filter: brightness(300%);
+background-color: white !important;
+filter: brightness(300%);
+}
+
+.ranger-laser {
+width: 1px;
+position: absolute;
+background-color: red;
+left: 50%;
+top: 50%;
+transform: translateX(-50%) translateY(-50%);
+transform-origin: top;
+}
+
+.ranger-laser > div {
+width: 100%;
+height: 1%;
+}
+
+.no-transition { 
+transition: 0s !important;
 }

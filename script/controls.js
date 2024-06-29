@@ -7,7 +7,7 @@ import { setupReload } from './weapon-actions.js'
 import { renderStore } from './vending-machine.js'
 import { removeWeapon, renderWeapon } from './weapon-loader.js'
 import { getPauseContainer, getPlayer, getUiEl } from './elements.js'
-import { addClass, angleOfTwoPoints, isMoving, removeClass } from './util.js'
+import { addAttribute, addClass, angleOfTwoPoints, isMoving, removeClass } from './util.js'
 import { renderUi, renderEquippedWeapon, quitPage } from './user-interface.js'
 import { equippedWeaponFromInventory, pickupDrop, removeInventory, renderInventory } from './inventory.js'
 import { 
@@ -24,7 +24,6 @@ import {
     getSprintPressed,
     getWeaponWheel,
     setAimMode,
-    setAimingPlayerAngle,
     setDownPressed,
     setEquippedWeapon,
     setLeftPressed,
@@ -299,7 +298,7 @@ const aimAngle = (event) => {
             event.clientX,
             event.clientY
         )
-    if ( angle ) setAimingPlayerAngle(angle)
+    if ( angle ) addAttribute(getPlayer(), 'aim-angle', angle)
 }
 
 const manageDragItem = (event) => {

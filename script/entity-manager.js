@@ -27,6 +27,7 @@ import {
     setPrevRoomId,
     setRoomLeft,
     setRoomTop} from './variables.js'
+import { rangerEnemyBehavior } from './ranger-enemy.js'
 
 export const manageEntities = () => {
     manageSolidObjects()
@@ -104,6 +105,7 @@ const manageEnemies = () => {
              containsClass(enemy, 'soul-drinker') || 
              containsClass(enemy, 'rock-crusher') || 
              containsClass(enemy, 'iron-master') ) normalEnemyBehavior(enemy)
+        else if ( containsClass(enemy, 'ranger') ) rangerEnemyBehavior(enemy)     
     })
 }
 

@@ -1,6 +1,6 @@
 import { getMapEl, setPlayer } from './elements.js'
-import { appendAll, createAndAddClass } from './util.js'
-import { getPlayerAngle, getPlayerX, getPlayerY } from './variables.js'
+import { getPlayerX, getPlayerY } from './variables.js'
+import { addAttribute, appendAll, createAndAddClass } from './util.js'
 
 export const loadPlayer = () => {
     const player = createAndAddClass('div', 'player')
@@ -10,7 +10,8 @@ export const loadPlayer = () => {
     const playerCollider = createAndAddClass('div', 'player-collider')
     player.append(playerCollider)
     const playerBody = createAndAddClass('div', 'player-body')
-    playerBody.style.transform = `rotateZ(${getPlayerAngle()}deg)`
+    playerBody.style.transform = `rotateZ(0deg)`
+    addAttribute(player, 'angle', 0)
     const forwardDetector = createAndAddClass('div', 'forward-detector')
     appendAll(playerCollider, playerBody, forwardDetector)
     const playerHead = createAndAddClass('div', 'player-head')

@@ -1,17 +1,16 @@
 import { addAttribute } from './util.js'
-import { findPath } from './enemy-path-finding.js'
 import { isPlayerVisible } from './enemy-vision.js'
-import { getNoOffenseCounter } from './variables.js'
+import { CHASE, GUESS_SEARCH, INVESTIGATE, LOST, MOVE_TO_POSITION, NO_OFFENCE } from './enemy-state.js'
 import { 
-    calculateAngle,
-    moveToDestination,
     updateDestinationToPlayer,
     updateDestinationToPath,
     notifyEnemy, 
     accelerateEnemy,
     getEnemyState,
-    setEnemyState} from './enemy-actions.js'
-import { CHASE, GUESS_SEARCH, INVESTIGATE, MOVE_TO_POSITION, NO_OFFENCE } from './enemy-state.js'
+    setEnemyState,
+    displaceEnemy,
+    playerLocated,
+    checkSuroundings} from './enemy-actions.js'
 
 export const normalEnemyBehavior = (enemy) => {
     switch ( getEnemyState(enemy) ) {
@@ -58,7 +57,7 @@ const handleChaseState = (enemy) => {
     displaceEnemy(enemy)
 }
 
-const handleGuessSearchState = (enemy) => {
+export const handleGuessSearchState = (enemy) => {
     accelerateEnemy(enemy)
     if ( playerLocated(enemy) ) return
     let guessCounter = Number(enemy.getAttribute('guess-counter'))
@@ -71,7 +70,7 @@ const handleGuessSearchState = (enemy) => {
     displaceEnemy(enemy)
 }
 
-const handleLostState = (enemy) => {
+export const handleLostState = (enemy) => {
     if ( playerLocated(enemy) ) return
     const counter = Number(enemy.getAttribute('lost-counter'))
     if ( counter === 600 ) {
@@ -82,31 +81,10 @@ const handleLostState = (enemy) => {
     addAttribute(enemy, 'lost-counter', counter + 1)
 }
 
-const handleMoveToPositionState = (enemy) => {
+export const handleMoveToPositionState = (enemy) => {
     accelerateEnemy(enemy)
     if ( playerLocated(enemy) ) return
     const dest = document.getElementById(enemy.getAttribute('path')).children[Number(enemy.getAttribute('path-point'))]
     updateDestinationToPath(enemy, dest)
     displaceEnemy(enemy)
-}
-
-const playerLocated = (enemy) => {
-    let result = false
-    if ( isPlayerVisible(enemy) ) { 
-        if ( getNoOffenseCounter() === 0 ) setEnemyState(enemy, CHASE)
-        else setEnemyState(enemy, NO_OFFENCE)
-        result = true
-    }
-    return result
-}
-
-const checkSuroundings = (enemy) => {
-    const x = Math.random() < 1 / 3 ? 1 : Math.random() < 0.5 ? 0 : -1
-    const y = Math.random() < 1 / 3 ? 1 : Math.random() < 0.5 ? 0 : -1
-    calculateAngle(enemy, x, y)
-}
-
-const displaceEnemy = (enemy) => {
-    findPath(enemy)
-    moveToDestination(enemy)
 }

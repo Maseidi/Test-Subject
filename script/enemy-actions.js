@@ -2,6 +2,8 @@ import { enemies } from './enemies.js'
 import { dropLoot } from './loot-manager.js'
 import { takeDamage } from './player-health.js'
 import { manageKnock } from './knock-manager.js'
+import { findPath } from './enemy-path-finding.js'
+import { isPlayerVisible } from './enemy-vision.js'
 import { getSpecification, getStat } from './weapon-specs.js'
 import { addAttribute, addClass, collide, distance } from './util.js'
 import { getCurrentRoomEnemies, getMapEl, getPlayer } from './elements.js'
@@ -280,4 +282,25 @@ export const accelerateEnemy = (enemy) => {
         counter = 0
     }  
     addAttribute(enemy, 'acc-counter', counter)
+}
+
+export const playerLocated = (enemy) => {
+    let result = false
+    if ( isPlayerVisible(enemy) ) { 
+        if ( getNoOffenseCounter() === 0 ) setEnemyState(enemy, CHASE)
+        else setEnemyState(enemy, NO_OFFENCE)
+        result = true
+    }
+    return result
+}
+
+export const checkSuroundings = (enemy) => {
+    const x = Math.random() < 1 / 3 ? 1 : Math.random() < 0.5 ? 0 : -1
+    const y = Math.random() < 1 / 3 ? 1 : Math.random() < 0.5 ? 0 : -1
+    calculateAngle(enemy, x, y)
+}
+
+export const displaceEnemy = (enemy) => {
+    findPath(enemy)
+    moveToDestination(enemy)
 }

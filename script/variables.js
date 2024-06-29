@@ -70,24 +70,6 @@ export const setLeftPressed = (val) => {
 }
 export const getLeftPressed = () => leftPressed
 
-let playerAngleState = 0
-export const setPlayerAngleState = (val) => {
-    playerAngleState = val
-}
-export const getPlayerAngleState = () => playerAngleState
-
-let playerAngle = 0
-export const setPlayerAngle = (val) => {
-    playerAngle = val
-}
-export const getPlayerAngle = () => playerAngle
-
-let aimingPlayerAngle = 0
-export const setAimingPlayerAngle = (val) => {
-    aimingPlayerAngle = val
-}
-export const getAimingPlayerAngle = () => aimingPlayerAngle
-
 let playerSpeed = 5
 export const setPlayerSpeed = (val) => {
     playerSpeed = val
