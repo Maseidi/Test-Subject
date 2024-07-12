@@ -7,7 +7,16 @@ import { isPlayerVisible } from './enemy-vision.js'
 import { getSpecification, getStat } from './weapon-specs.js'
 import { addAttribute, addClass, collide, distance } from './util.js'
 import { getCurrentRoomEnemies, getMapEl, getPlayer } from './elements.js'
-import { GUESS_SEARCH, INVESTIGATE, LOST, MOVE_TO_POSITION, NO_OFFENCE, CHASE } from './enemy-state.js'
+import { 
+    GUESS_SEARCH,
+    INVESTIGATE,
+    LOST,
+    MOVE_TO_POSITION,
+    NO_OFFENCE,
+    CHASE,
+    GO_FOR_MELEE,
+    GO_FOR_RANGED,
+    MAKE_DECISION } from './enemy-state.js'
 import { 
     getMapX,
     getMapY,
@@ -42,8 +51,8 @@ export const move2Destination = (enemy) => {
 
 const collidePlayer = (enemy) => {
     const state = getEnemyState(enemy)
-    if ( ( state !== CHASE && state !== NO_OFFENCE ) || !collide(enemy, getPlayer(), 0) ) return false
-    if ( state === CHASE ) hitPlayer(enemy)
+    if ( ( state != CHASE && state != NO_OFFENCE && state != GO_FOR_MELEE ) || !collide(enemy, getPlayer(), 0) ) return false
+    if ( state == CHASE || state == GO_FOR_MELEE ) hitPlayer(enemy)
     return true
 }
 
@@ -152,9 +161,13 @@ const hitPlayer = (enemy) => {
     addClass(enemy.firstElementChild.firstElementChild.firstElementChild, 'attack')
     takeDamage(enemy.getAttribute('damage'))
     knockPlayer(enemy)
+    noOffenceAllEnemies(enemy)
+}
+
+export const noOffenceAllEnemies = () => {
     Array.from(getCurrentRoomEnemies())
-        .filter(enemy => getEnemyState(enemy) === CHASE)
-        .forEach(enemy => setEnemyState(enemy, NO_OFFENCE))
+    .filter(enemy => getEnemyState(enemy) == CHASE || getEnemyState(enemy) == GO_FOR_MELEE )
+    .forEach(enemy => setEnemyState(enemy, NO_OFFENCE))
     setNoOffenseCounter(1)
 }
 
@@ -225,12 +238,17 @@ export const notifyEnemy = (dist, enemy) => {
         .filter(e => e !== enemy &&
                      (distance(enemy.getBoundingClientRect().x, enemy.getBoundingClientRect().y,
                      e.getBoundingClientRect().x, e.getBoundingClientRect().y) < 500 ) &&
-                     getEnemyState(e) !== CHASE && getEnemyState(e) !== NO_OFFENCE
+                     getEnemyState(e) !== CHASE && getEnemyState(e) !== NO_OFFENCE && 
+                     getEnemyState(e) !== GO_FOR_MELEE && getEnemyState(e) !== GO_FOR_RANGED && 
+                     getEnemyState(e) !== MAKE_DECISION
         ).forEach(e => notifyEnemy(Number.MAX_SAFE_INTEGER, e))
 }
 
 export const switch2ChaseMode = (enemy) => {
-    if ( getNoOffenseCounter() == 0 ) setEnemyState(enemy, CHASE)
+    if ( getNoOffenseCounter() == 0 ) {
+        if ( getEnemyState(enemy) == GO_FOR_MELEE ) setEnemyState(enemy, GO_FOR_MELEE)
+        else setEnemyState(enemy, CHASE)    
+    }
     else setEnemyState(enemy, NO_OFFENCE)
 }
 

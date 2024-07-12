@@ -5,7 +5,7 @@ import { CHASE, NO_OFFENCE } from './enemy-state.js'
 import { checkCollision } from './enemy-collision.js'
 import { normalEnemyBehavior } from './normal-enemy.js'
 import { addAttribute, collide, containsClass, removeClass } from './util.js'
-import { getEnemyState, notifyEnemy, setEnemyState } from './enemy-actions.js'
+import { getEnemyState, noOffenceAllEnemies, notifyEnemy, setEnemyState } from './enemy-actions.js'
 import { 
     getCurrentRoom,
     getCurrentRoomEnemies,
@@ -18,17 +18,16 @@ import {
     getCurrentRoomId,
     getIntObj,
     getNoOffenseCounter,
-    getPrevRoomId,
     getRoomLeft,
     getRoomTop,
     setAllowMove,
     setCurrentRoomId,
     setIntObj,
     setNoOffenseCounter,
-    setPrevRoomId,
     setRoomLeft,
     setRoomTop} from './variables.js'
 import { rangerEnemyBehavior } from './ranger-enemy.js'
+import { takeDamage } from './player-health.js'
 
 export const manageEntities = () => {
     manageSolidObjects()
@@ -45,11 +44,12 @@ const manageSolidObjects = () => {
     if ( solid && containsClass(solid.parentElement, 'enemy') ) notifyEnemy(100, solid.parentElement)    
 }
 
+let prevRoomId
 const manageLoaders = () => {
     const loader = getCurrentRoomLoaders().find(loader => collide(getPlayer().firstElementChild, loader, 0))
     if ( !loader ) return
     const cpu = window.getComputedStyle(loader)
-    setPrevRoomId(getCurrentRoomId())
+    prevRoomId = getCurrentRoomId()
     setCurrentRoomId(Number(loader.classList[0]))
     calculateNewRoomLeftAndTop(cpu.left, cpu.top)
     getCurrentRoom().remove()
@@ -58,7 +58,7 @@ const manageLoaders = () => {
 
 const calculateNewRoomLeftAndTop = (cpuLeft, cpuTop) => {
     const newRoom = rooms.get(getCurrentRoomId())
-    const loader = loaders.get(getCurrentRoomId()).find(loader => loader.className === getPrevRoomId())
+    const loader = loaders.get(getCurrentRoomId()).find(loader => loader.className === prevRoomId)
     let left, top
     if ( loader.bottom !== undefined )
         top = loader.bottom === -26 ? newRoom.height - loader.height - loader.bottom - 52 : 
@@ -109,7 +109,7 @@ const handleNoOffenceMode = () => {
 const BEHAVIOR_MAP = new Map([
     ['torturer', normalEnemyBehavior],
     ['soul-drinker', normalEnemyBehavior],
-    ['rock-cruhser', normalEnemyBehavior],
+    ['rock-crusher', normalEnemyBehavior],
     ['iron-master', normalEnemyBehavior],
     ['ranger', rangerEnemyBehavior],
 ])
@@ -140,10 +140,15 @@ const manageRangerBullets = () => {
         const speedY = +bullet.getAttribute('speed-y')
         bullet.style.left = `${x + speedX}px`
         bullet.style.top = `${y + speedY}px`
+        if ( collide(bullet, getPlayer().firstElementChild, 0) ) {
+            takeDamage(+bullet.getAttribute('damage'))
+            bullet.remove()
+            noOffenceAllEnemies()
+            continue
+        }
         for ( const solid of getCurrentRoomSolid() )
-            if ( !containsClass(solid, 'enemy-collider') && collide(bullet, solid, 0) || !collide(bullet, getCurrentRoom(), 0) ) {
+            if ( !containsClass(solid, 'enemy-collider') && collide(bullet, solid, 0) || !collide(bullet, getCurrentRoom(), 0) )
                 bullet.remove()
-            }
     }
     
 }

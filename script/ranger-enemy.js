@@ -4,7 +4,8 @@ import {
     updateDestinationToPlayer,
     getEnemyState, 
     setEnemyState, 
-    switch2ChaseMode} from './enemy-actions.js' 
+    switch2ChaseMode,
+    resetAcceleration} from './enemy-actions.js' 
 import { 
     handleChaseState,
     handleGuessSearchState,
@@ -57,9 +58,12 @@ export const rangerEnemyBehavior = (enemy) => {
             addClass(body, 'no-transition')
             handleRangedAttackState(enemy)    
             break
+        case GO_FOR_MELEE:
+            handleChaseState(enemy)
+            break
         case GUESS_SEARCH:
             handleGuessSearchState(enemy)
-            break    
+            break
         case LOST:
             handleLostState(enemy)
             break
@@ -96,7 +100,7 @@ const switch2MakeDecisionState = (enemy) => {
     const enemyBound = enemy.getBoundingClientRect()
     const playerBound = getPlayer().getBoundingClientRect()
     wallsInTheWay(enemy)
-    if ( distance(enemyBound.x, enemyBound.y, playerBound.x, playerBound.y) < enemy.getAttribute('range') * (2 / 3) && 
+    if ( distance(enemyBound.x, enemyBound.y, playerBound.x, playerBound.y) < enemy.getAttribute('range') && 
          enemy.getAttribute('wall-in-the-way') === 'false' ) {
         setEnemyState(enemy, MAKE_DECISION)
         return true
@@ -162,24 +166,30 @@ const decideAttack = (enemy) => {
 }
 
 const handleRangedAttackState = (enemy) => {
-    if ( wallsInTheWay(enemy) || !isPlayerVisible(enemy) || enemy.getAttribute('rotate') == '90' ) {
-        setEnemyState(enemy, CHASE)
-        addAttribute(enemy, 'rotate', -1)
+    let shootCounter = Number(enemy.getAttribute('shoot-counter'))
+    shootCounter++
+    if ( shootCounter == 90 ) {
+        addAttribute(enemy, 'shoot-counter', -1)
         return
     }
+    if ( !isPlayerVisible(enemy) || wallsInTheWay(enemy) ) {
+        updateAngle2Player(enemy)
+        setEnemyState(enemy, CHASE)
+        return
+    }
+    if ( shootCounter > 29 ) updateAngle2Player(enemy)
+    addAttribute(enemy, 'shoot-counter', shootCounter)
+    if ( shootCounter < 89 ) return
     shootAnimation(enemy)
-    if ( Number(enemy.getAttribute('rotate')) !== 0 ) return
     shoot(enemy)
 }
 
 const shootAnimation = (enemy) => {
     const body = enemy.firstElementChild.firstElementChild
-    let rotate = enemy.getAttribute('rotate') || -1
-    rotate++
+    const shootCounter = Number(enemy.getAttribute('shoot-counter'))
     let currAngle = +body.style.transform.replace('rotateZ(', '').replace('deg)', '')
-    if ( rotate < 15 ) body.style.transform = `rotateZ(${currAngle + 12}deg)`
-    else if ( rotate < 29 ) body.style.transform = `rotateZ(${currAngle - 12}deg)`
-    addAttribute(enemy, 'rotate', rotate)
+    if ( shootCounter < 15 ) body.style.transform = `rotateZ(${currAngle + 12}deg)`
+    else if ( shootCounter < 29 ) body.style.transform = `rotateZ(${currAngle - 12}deg)`
 }
 
 const shoot = (enemy) => {
@@ -194,11 +204,13 @@ const shoot = (enemy) => {
     const bullet = createAndAddClass('div', 'ranger-bullet')
     addAttribute(bullet, 'speed-x', speedX)
     addAttribute(bullet, 'speed-y', speedY)
+    addAttribute(bullet, 'damage', enemy.getAttribute('damage'))
     bullet.style.left = `${srcX}px`
     bullet.style.top = `${srcY}px`
     bullet.style.backgroundColor = `${enemy.getAttribute('virus')}`
     getCurrentRoom().append(bullet)
     getCurrentRoomRangerBullets().push(bullet)
+    resetAcceleration(enemy)
 }
 
 const calculateBulletSpeed = (deg, slope, diffX, diffY) => {

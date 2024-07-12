@@ -22,12 +22,6 @@ export const setPlayerY = (val) => {
 }
 export const getPlayerY = () => playerY
 
-let prevRoomId
-export const setPrevRoomId = (val) => {
-    prevRoomId = val
-}
-export const getPrevRoomId = () => prevRoomId
-
 let currentRoomId = 16
 export const setCurrentRoomId = (val) => {
     currentRoomId = val
