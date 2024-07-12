@@ -13,7 +13,8 @@ import {
     getCurrentRoomLoaders,
     getCurrentRoomRangerBullets,
     getCurrentRoomSolid,
-    getPlayer } from './elements.js'
+    getPlayer, 
+    setCurrentRoomRangerBullets} from './elements.js'
 import {
     getCurrentRoomId,
     getIntObj,
@@ -133,6 +134,7 @@ const manageDamagedState = (enemy) => {
 }
 
 const manageRangerBullets = () => {
+    const bullets2Remove = []
     for ( const bullet of getCurrentRoomRangerBullets() ) {
         const x = +bullet.style.left.replace('px', '')
         const y = +bullet.style.top.replace('px', '')
@@ -142,13 +144,16 @@ const manageRangerBullets = () => {
         bullet.style.top = `${y + speedY}px`
         if ( collide(bullet, getPlayer().firstElementChild, 0) ) {
             takeDamage(+bullet.getAttribute('damage'))
+            bullets2Remove.push(bullet)
             bullet.remove()
             noOffenceAllEnemies()
             continue
         }
         for ( const solid of getCurrentRoomSolid() )
-            if ( !containsClass(solid, 'enemy-collider') && collide(bullet, solid, 0) || !collide(bullet, getCurrentRoom(), 0) )
+            if ( !containsClass(solid, 'enemy-collider') && collide(bullet, solid, 0) || !collide(bullet, getCurrentRoom(), 0) ) {
+                bullets2Remove.push(bullet)
                 bullet.remove()
+            }
     }
-    
+    setCurrentRoomRangerBullets(getCurrentRoomRangerBullets().filter(bullet => !bullets2Remove.includes(bullet)))
 }

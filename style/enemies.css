@@ -357,7 +357,6 @@
 .ranger-laser {
   width: 1px;
   position: absolute;
-  background-color: red;
   left: 50%;
   top: 50%;
   transform: translateX(-50%) translateY(-50%);

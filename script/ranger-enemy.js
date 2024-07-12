@@ -1,4 +1,6 @@
+import { isPlayerVisible } from './enemy-vision.js'
 import { manageAimModeAngle } from './player-angle.js'
+import { getPlayerX, getPlayerY, getRoomLeft, getRoomTop } from './variables.js'
 import { getCurrentRoom, getCurrentRoomRangerBullets, getCurrentRoomSolid, getPlayer } from './elements.js'
 import { 
     updateDestinationToPlayer,
@@ -31,9 +33,6 @@ import {
     MAKE_DECISION,
     MOVE_TO_POSITION,
     NO_OFFENCE } from './enemy-state.js'
-import { getPlayerX, getPlayerY, getRoomLeft, getRoomTop } from './variables.js'
-import { isPlayerVisible } from './enemy-vision.js'
-
 
 let angle
 export const rangerEnemyBehavior = (enemy) => {
@@ -162,6 +161,7 @@ const decideAttack = (enemy) => {
         const decision = Math.random()
         if ( decision < 0.8 ) setEnemyState(enemy, GO_FOR_RANGED)
         else setEnemyState(enemy, GO_FOR_MELEE)
+        addAttribute(enemy, 'decision-timer', 1)
     }
 }
 
@@ -173,14 +173,14 @@ const handleRangedAttackState = (enemy) => {
         return
     }
     if ( !isPlayerVisible(enemy) || wallsInTheWay(enemy) ) {
-        updateAngle2Player(enemy)
         setEnemyState(enemy, CHASE)
+        addAttribute(enemy, 'shoot-counter', -1)
         return
     }
     if ( shootCounter > 29 ) updateAngle2Player(enemy)
     addAttribute(enemy, 'shoot-counter', shootCounter)
-    if ( shootCounter < 89 ) return
     shootAnimation(enemy)
+    if ( shootCounter !== 15 ) return
     shoot(enemy)
 }
 
