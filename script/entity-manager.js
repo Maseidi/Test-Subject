@@ -11,6 +11,7 @@ import {
     getCurrentRoomEnemies,
     getCurrentRoomInteractables,
     getCurrentRoomLoaders,
+    getCurrentRoomRangerBullets,
     getCurrentRoomSolid,
     getPlayer } from './elements.js'
 import {
@@ -34,6 +35,7 @@ export const manageEntities = () => {
     manageLoaders()
     manageInteractables()
     manageEnemies()
+    manageRangerBullets()
 }
 
 const manageSolidObjects = () => {
@@ -88,24 +90,35 @@ const manageInteractables = () => {
 }
 
 const manageEnemies = () => {
+    handleNoOffenceMode()
+    handleEnemies()
+}
+
+const handleNoOffenceMode = () => {
     if ( getNoOffenseCounter() > 0 ) setNoOffenseCounter(getNoOffenseCounter() + 1)
-    if ( getNoOffenseCounter() >= 180 ) {
-        Array.from(getCurrentRoomEnemies())
-            .filter(enemy => getEnemyState(enemy) === NO_OFFENCE)
-            .forEach(enemy => {
-                setEnemyState(enemy, CHASE)
-                removeClass(enemy.firstElementChild.firstElementChild.firstElementChild, 'attack')
-            })
-        setNoOffenseCounter(0)
-    }
+    if ( getNoOffenseCounter() < 180 ) return
+    Array.from(getCurrentRoomEnemies())
+        .filter(enemy => getEnemyState(enemy) === NO_OFFENCE)
+        .forEach(enemy => {
+            setEnemyState(enemy, CHASE)
+            removeClass(enemy.firstElementChild.firstElementChild.firstElementChild, 'attack')
+        })
+    setNoOffenseCounter(0)
+}
+
+const BEHAVIOR_MAP = new Map([
+    ['torturer', normalEnemyBehavior],
+    ['soul-drinker', normalEnemyBehavior],
+    ['rock-cruhser', normalEnemyBehavior],
+    ['iron-master', normalEnemyBehavior],
+    ['ranger', rangerEnemyBehavior],
+])
+
+const handleEnemies = () => {
     getCurrentRoomEnemies().forEach((enemy) => {
         manageDamagedState(enemy)
         checkCollision(enemy)
-        if ( containsClass(enemy, 'torturer') || 
-             containsClass(enemy, 'soul-drinker') || 
-             containsClass(enemy, 'rock-crusher') || 
-             containsClass(enemy, 'iron-master') ) normalEnemyBehavior(enemy)
-        else if ( containsClass(enemy, 'ranger') ) rangerEnemyBehavior(enemy)     
+        BEHAVIOR_MAP.get(enemy.getAttribute('type'))(enemy) 
     })
 }
 
@@ -117,4 +130,20 @@ const manageDamagedState = (enemy) => {
     }
     damagedCounter--
     addAttribute(enemy, 'damaged-counter', damagedCounter)
+}
+
+const manageRangerBullets = () => {
+    for ( const bullet of getCurrentRoomRangerBullets() ) {
+        const x = +bullet.style.left.replace('px', '')
+        const y = +bullet.style.top.replace('px', '')
+        const speedX = +bullet.getAttribute('speed-x')
+        const speedY = +bullet.getAttribute('speed-y')
+        bullet.style.left = `${x + speedX}px`
+        bullet.style.top = `${y + speedY}px`
+        for ( const solid of getCurrentRoomSolid() )
+            if ( !containsClass(solid, 'enemy-collider') && collide(bullet, solid, 0) || !collide(bullet, getCurrentRoom(), 0) ) {
+                bullet.remove()
+            }
+    }
+    
 }

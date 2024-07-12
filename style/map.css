@@ -41,10 +41,10 @@
 }
 
 @keyframes camera {
-  33%{
+  33% {
     transform: translateX(20px);
   }
-  66%{
+  66% {
     transform: translateY(20px);
   }
   100% {
@@ -65,7 +65,7 @@
 }
 
 @keyframes lowHP {
-  0%{
+  0% {
     opacity: 0;
   }
   100% {

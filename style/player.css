@@ -138,9 +138,8 @@
   width: 0.25px;
   position: absolute;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translateX(-50%) translateZ(-10px);
   top: 0;
-  transform: translateZ(-10px)
 }
 
 .laser > div {

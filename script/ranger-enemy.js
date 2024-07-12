@@ -1,5 +1,5 @@
 import { manageAimModeAngle } from './player-angle.js'
-import { getCurrentRoomSolid, getPlayer } from './elements.js'
+import { getCurrentRoom, getCurrentRoomRangerBullets, getCurrentRoomSolid, getPlayer } from './elements.js'
 import { 
     updateDestinationToPlayer,
     getEnemyState, 
@@ -23,12 +23,15 @@ import {
 import { 
     CHASE,
     GO_FOR_MELEE,
+    GO_FOR_RANGED,
     GUESS_SEARCH,
     INVESTIGATE,
     LOST,
     MAKE_DECISION,
     MOVE_TO_POSITION,
     NO_OFFENCE } from './enemy-state.js'
+import { getPlayerX, getPlayerY, getRoomLeft, getRoomTop } from './variables.js'
+import { isPlayerVisible } from './enemy-vision.js'
 
 
 let angle
@@ -49,6 +52,10 @@ export const rangerEnemyBehavior = (enemy) => {
         case MAKE_DECISION:
             addClass(body, 'no-transition')
             handleMakeDecisionState(enemy)
+            break
+        case GO_FOR_RANGED:
+            addClass(body, 'no-transition')
+            handleRangedAttackState(enemy)    
             break
         case GUESS_SEARCH:
             handleGuessSearchState(enemy)
@@ -123,8 +130,7 @@ const handleMakeDecisionState = (enemy) => {
     wallsInTheWay(enemy)
     if ( enemy.getAttribute('wall-in-the-way') === 'true' ) return
     updateDestinationToPlayer(enemy)
-    addAttribute(enemy, 'aim-angle', angle)
-    manageAimModeAngle(enemy)
+    updateAngle2Player(enemy)
     const enemyBound = enemy.getBoundingClientRect()
     const playerBound = getPlayer().getBoundingClientRect()
     const dist = distance(enemyBound.x, enemyBound.y, playerBound.x, playerBound.y)
@@ -138,12 +144,79 @@ const handleMakeDecisionState = (enemy) => {
     decideAttack(enemy)
 }
 
+const updateAngle2Player = (enemy) => {
+    addAttribute(enemy, 'aim-angle', angle)
+    manageAimModeAngle(enemy)
+}
+
 const decideAttack = (enemy) => {
     let decisionTimer = Number(enemy.getAttribute('decision-timer')) || 1
     decisionTimer++
     if ( decisionTimer === 30 ) decisionTimer = 0
     addAttribute(enemy, 'decision-timer', decisionTimer)
     if ( decisionTimer === 0 ) {
-        // TODO add other states
+        const decision = Math.random()
+        if ( decision < 0.8 ) setEnemyState(enemy, GO_FOR_RANGED)
+        else setEnemyState(enemy, GO_FOR_MELEE)
     }
+}
+
+const handleRangedAttackState = (enemy) => {
+    if ( wallsInTheWay(enemy) || !isPlayerVisible(enemy) || enemy.getAttribute('rotate') == '90' ) {
+        setEnemyState(enemy, CHASE)
+        addAttribute(enemy, 'rotate', -1)
+        return
+    }
+    shootAnimation(enemy)
+    if ( Number(enemy.getAttribute('rotate')) !== 0 ) return
+    shoot(enemy)
+}
+
+const shootAnimation = (enemy) => {
+    const body = enemy.firstElementChild.firstElementChild
+    let rotate = enemy.getAttribute('rotate') || -1
+    rotate++
+    let currAngle = +body.style.transform.replace('rotateZ(', '').replace('deg)', '')
+    if ( rotate < 15 ) body.style.transform = `rotateZ(${currAngle + 12}deg)`
+    else if ( rotate < 29 ) body.style.transform = `rotateZ(${currAngle - 12}deg)`
+    addAttribute(enemy, 'rotate', rotate)
+}
+
+const shoot = (enemy) => {
+    const enemyCpu = window.getComputedStyle(enemy)
+    const { x: srcX, y: srcY } = { x: +enemyCpu.left.replace('px', '') + 16, y: +enemyCpu.top.replace('px', '') + 16 }
+    const { x: destX, y: destY } = { x: getPlayerX() - getRoomLeft() + 17, y: getPlayerY() - getRoomTop() + 17 }
+    const deg = angleOfTwoPoints(srcX, srcY, destX, destY)
+    const diffY = destY - srcY
+    const diffX = destX - srcX
+    const slope = Math.abs(diffY / diffX)
+    const { speedX, speedY } = calculateBulletSpeed(deg, slope, diffY, diffX)
+    const bullet = createAndAddClass('div', 'ranger-bullet')
+    addAttribute(bullet, 'speed-x', speedX)
+    addAttribute(bullet, 'speed-y', speedY)
+    bullet.style.left = `${srcX}px`
+    bullet.style.top = `${srcY}px`
+    bullet.style.backgroundColor = `${enemy.getAttribute('virus')}`
+    getCurrentRoom().append(bullet)
+    getCurrentRoomRangerBullets().push(bullet)
+}
+
+const calculateBulletSpeed = (deg, slope, diffX, diffY) => {
+    let speedX
+    let speedY
+    const baseSpeed = 10
+    if ( (deg < 45 && deg >= 0) || (deg < -135 && deg >= -180) ) {
+        speedX = diffX < 0 ? baseSpeed * (1 / slope) : -baseSpeed * (1/ slope)
+        speedY = diffY < 0 ? baseSpeed : -baseSpeed
+    } else if ( (deg >= 135 && deg < 180) || (deg < 0 && deg >= -45) ) {
+        speedX = diffX < 0 ? -baseSpeed * (1 / slope) : baseSpeed * (1/ slope)
+        speedY = diffY < 0 ? -baseSpeed : baseSpeed
+    } else if ( (deg >= 45 && deg < 90) || (deg < -90 && deg >= -135) ) {
+        speedX = diffX < 0 ? baseSpeed : -baseSpeed
+        speedY = diffY < 0 ? baseSpeed * slope : -baseSpeed * slope
+    } else if ( (deg >= 90 && deg < 135) || (deg < -45 && deg >= -90) ) {
+        speedX = diffX < 0 ? -baseSpeed : baseSpeed
+        speedY = diffY < 0 ? -baseSpeed * slope : baseSpeed * slope
+    }
+    return { speedX, speedY }
 }

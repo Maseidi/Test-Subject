@@ -17,6 +17,7 @@ import {
     setCurrentRoomEnemies,
     setCurrentRoomInteractables,
     setCurrentRoomLoaders,
+    setCurrentRoomRangerBullets,
     setCurrentRoomSolid,
     } from './elements.js'
 import { INVESTIGATE } from './enemy-state.js'
@@ -27,6 +28,7 @@ export const loadCurrentRoom = () => {
     setCurrentRoomLoaders([])
     setCurrentRoomInteractables([])
     setCurrentRoomEnemies([])
+    setCurrentRoomRangerBullets([])
     const roomToRender = createAndAddClass('div', `${getCurrentRoomId()}`)
     roomToRender.style.width = `${room.width}px`
     roomToRender.style.height = `${room.height}px`

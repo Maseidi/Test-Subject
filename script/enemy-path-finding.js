@@ -68,7 +68,7 @@ const managePathfindingState = (enemy, enemyState, destState, trackerMap, wallLe
     switch ( enemyState ) {
         case 11: handleTopLeftState(enemy, destState, wallLeft, wallTop, wallW, wallH)
             break
-        case 12: handlLeftState(enemy, destState, trackerMap, wallLeft, wallTop, wallH)
+        case 12: handleLeftState(enemy, destState, trackerMap, wallLeft, wallTop, wallH)
             break
         case 13: handleBottomLeftState(enemy, destState, wallLeft, wallTop, wallW, wallH)
             break
@@ -108,7 +108,7 @@ const handleTopLeftState = (enemy, destState, wallLeft, wallTop, wallW, wallH) =
     }
 }
 
-const handlLeftState = (enemy, destState, trackerMap, wallLeft, wallTop, wallH) => {
+const handleLeftState = (enemy, destState, trackerMap, wallLeft, wallTop, wallH) => {
     switch ( destState ) {
         case 21:
         case 31:

@@ -26,7 +26,7 @@ import {
 export const getEnemyState = (enemy) => enemy.getAttribute('state') 
 export const setEnemyState = (enemy, state) => addAttribute(enemy, 'state', state)
 
-export const moveToDestination = (enemy) => {
+export const move2Destination = (enemy) => {
     if ( collidePlayer(enemy) ) return
     const { enemyLeft, enemyTop, enemyW } = enemyCoordinates(enemy)
     const { destLeft, destTop, destW } = destinationCoordinates(enemy)
@@ -305,5 +305,5 @@ export const checkSuroundings = (enemy) => {
 
 export const displaceEnemy = (enemy) => {
     findPath(enemy)
-    moveToDestination(enemy)
+    move2Destination(enemy)
 }
