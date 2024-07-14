@@ -1,6 +1,6 @@
 import { healthManager } from './user-interface.js'
 import { getInventory, useInventoryResource } from './inventory.js'
-import { getHealth, getMaxHealth, setHealth } from './variables.js'
+import { getHealth, getMaxHealth, getNoOffenseCounter, setHealth } from './variables.js'
 import { addClass, checkLowHealth, removeClass } from './util.js'
 import { getMapEl, getPlayer } from './elements.js'
 
@@ -23,6 +23,7 @@ export const useBandage = (bandage) => {
 }
 
 export const takeDamage = (damage) => {
+    if ( getNoOffenseCounter() != 0 ) return
     addClass(getMapEl(), 'camera-shake')
     setTimeout(() => removeClass(getMapEl(), 'camera-shake'), 300)
     let newHealth = getHealth() - damage

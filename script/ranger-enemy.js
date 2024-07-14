@@ -58,6 +58,10 @@ export const rangerEnemyBehavior = (enemy) => {
             handleRangedAttackState(enemy)    
             break
         case GO_FOR_MELEE:
+            if ( Math.random() < 0.001 ) {
+                setEnemyState(enemy, GO_FOR_RANGED)
+                break
+            }
             handleChaseState(enemy)
             break
         case GUESS_SEARCH:
@@ -107,7 +111,7 @@ const switch2MakeDecisionState = (enemy) => {
     return false
 }
 
-const wallsInTheWay = (enemy) => {
+export const wallsInTheWay = (enemy) => {
     let wallCheckCounter = Number(enemy.getAttribute('wall-check-counter')) || 1
     wallCheckCounter = wallCheckCounter + 1 === 16 ? 0 : wallCheckCounter + 1
     addAttribute(enemy, 'wall-check-counter', wallCheckCounter)
@@ -168,12 +172,13 @@ const decideAttack = (enemy) => {
 const handleRangedAttackState = (enemy) => {
     let shootCounter = Number(enemy.getAttribute('shoot-counter'))
     shootCounter++
+    wallsInTheWay(enemy)
     if ( shootCounter == 90 ) {
-        addAttribute(enemy, 'shoot-counter', -1)
-        return
-    }
-    if ( !isPlayerVisible(enemy) || wallsInTheWay(enemy) ) {
-        setEnemyState(enemy, CHASE)
+        if (  distance(enemy.getBoundingClientRect().x, enemy.getBoundingClientRect().y, 
+              getPlayer().getBoundingClientRect().x, getPlayer().getBoundingClientRect().y) > enemy.getAttribute('range') ||
+              enemy.getAttribute('wall-in-the-way') == 'true' || 
+              Math.random() < 0.001 ) 
+            setEnemyState(enemy, GO_FOR_MELEE)    
         addAttribute(enemy, 'shoot-counter', -1)
         return
     }

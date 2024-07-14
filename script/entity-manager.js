@@ -150,7 +150,10 @@ const manageRangerBullets = () => {
             continue
         }
         for ( const solid of getCurrentRoomSolid() )
-            if ( !containsClass(solid, 'enemy-collider') && collide(bullet, solid, 0) || !collide(bullet, getCurrentRoom(), 0) ) {
+            if ((!containsClass(solid, 'enemy-collider') && 
+                 !containsClass(solid, 'iron-master-component') && 
+                 collide(bullet, solid, 0)) || 
+                 !collide(bullet, getCurrentRoom(), 0) ) {
                 bullets2Remove.push(bullet)
                 bullet.remove()
             }

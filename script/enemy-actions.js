@@ -245,10 +245,8 @@ export const notifyEnemy = (dist, enemy) => {
 }
 
 export const switch2ChaseMode = (enemy) => {
-    if ( getNoOffenseCounter() == 0 ) {
-        if ( getEnemyState(enemy) == GO_FOR_MELEE ) setEnemyState(enemy, GO_FOR_MELEE)
-        else setEnemyState(enemy, CHASE)    
-    }
+    if ( getEnemyState(enemy) == GO_FOR_MELEE || getEnemyState(enemy) == GO_FOR_RANGED ) return
+    if ( getNoOffenseCounter() == 0 ) setEnemyState(enemy, CHASE)
     else setEnemyState(enemy, NO_OFFENCE)
 }
 
