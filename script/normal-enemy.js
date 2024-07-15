@@ -2,8 +2,8 @@ import { addAttribute } from './util.js'
 import { isPlayerVisible } from './enemy-vision.js'
 import { CHASE, GUESS_SEARCH, INVESTIGATE, LOST, MOVE_TO_POSITION, NO_OFFENCE } from './enemy-state.js'
 import { 
-    updateDestinationToPlayer,
-    updateDestinationToPath,
+    updateDestination2Player,
+    updateDestination2Path,
     notifyEnemy, 
     accelerateEnemy,
     getEnemyState,
@@ -43,7 +43,7 @@ export const handleInvestigationState = (enemy) => {
     if ( counter !== 0 ) return
     if ( path.children.length === 1 ) checkSuroundings(enemy)
     const dest = path.children[Number(enemy.getAttribute('path-point'))]
-    updateDestinationToPath(enemy, dest)
+    updateDestination2Path(enemy, dest)
     displaceEnemy(enemy)
 }
 
@@ -65,7 +65,7 @@ export const handleGuessSearchState = (enemy) => {
         guessCounter++
         addAttribute(enemy, 'guess-counter', guessCounter)
     }
-    if ( guessCounter !== 0 && guessCounter <= 15 ) updateDestinationToPlayer(enemy)
+    if ( guessCounter !== 0 && guessCounter <= 15 ) updateDestination2Player(enemy)
     else addAttribute(enemy, 'guess-counter', 0)
     displaceEnemy(enemy)
 }
@@ -85,6 +85,6 @@ export const handleMove2PositionState = (enemy) => {
     accelerateEnemy(enemy)
     if ( playerLocated(enemy) ) return
     const dest = document.getElementById(enemy.getAttribute('path')).children[Number(enemy.getAttribute('path-point'))]
-    updateDestinationToPath(enemy, dest)
+    updateDestination2Path(enemy, dest)
     displaceEnemy(enemy)
 }

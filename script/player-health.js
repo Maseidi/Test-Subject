@@ -1,8 +1,10 @@
 import { healthManager } from './user-interface.js'
 import { getInventory, useInventoryResource } from './inventory.js'
-import { getHealth, getMaxHealth, getNoOffenseCounter, setHealth } from './variables.js'
+import { getHealth, getMaxHealth, getNoOffenseCounter, setHealth, setNoOffenseCounter } from './variables.js'
 import { addClass, checkLowHealth, removeClass } from './util.js'
-import { getMapEl, getPlayer } from './elements.js'
+import { getCurrentRoomEnemies, getMapEl, getPlayer } from './elements.js'
+import { getEnemyState, setEnemyState } from './enemy-actions.js'
+import { CHASE, GO_FOR_MELEE, NO_OFFENCE } from './enemy-state.js'
 
 export const heal = () => {
     if ( getHealth() === getMaxHealth() ) return
@@ -23,13 +25,21 @@ export const useBandage = (bandage) => {
 }
 
 export const takeDamage = (damage) => {
-    if ( getNoOffenseCounter() != 0 ) return
+    if ( getNoOffenseCounter() !== 0 ) return
     addClass(getMapEl(), 'camera-shake')
     setTimeout(() => removeClass(getMapEl(), 'camera-shake'), 300)
     let newHealth = getHealth() - damage
     newHealth = newHealth < 0 ? 0 : newHealth
     modifyHealth(newHealth)
     if ( checkLowHealth() ) decideLowHealth(addClass)
+    noOffenceAllEnemies()    
+}
+
+const noOffenceAllEnemies = () => {
+    Array.from(getCurrentRoomEnemies())
+        .filter(enemy => getEnemyState(enemy) === CHASE || getEnemyState(enemy) === GO_FOR_MELEE )
+        .forEach(enemy => setEnemyState(enemy, NO_OFFENCE))
+    setNoOffenseCounter(1)
 }
 
 const modifyHealth = (val) => {

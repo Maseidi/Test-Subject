@@ -1,9 +1,8 @@
-import { isPlayerVisible } from './enemy-vision.js'
 import { manageAimModeAngle } from './player-angle.js'
 import { getPlayerX, getPlayerY, getRoomLeft, getRoomTop } from './variables.js'
-import { getCurrentRoom, getCurrentRoomRangerBullets, getCurrentRoomSolid, getPlayer } from './elements.js'
+import { getCurrentRoom, getCurrentRoomRangerBullets, getPlayer } from './elements.js'
 import { 
-    updateDestinationToPlayer,
+    updateDestination2Player,
     getEnemyState, 
     setEnemyState, 
     switch2ChaseMode,
@@ -18,8 +17,6 @@ import {
     addAttribute,
     addClass,
     angleOfTwoPoints,
-    collide,
-    containsClass,
     createAndAddClass,
     distance,
     removeClass } from './util.js'    
@@ -34,12 +31,8 @@ import {
     MOVE_TO_POSITION,
     NO_OFFENCE } from './enemy-state.js'
 
-let angle
 export const rangerEnemyBehavior = (enemy) => {
-    const body = enemy.firstElementChild.firstElementChild
-    angle = angle2Player(enemy)
-    renderEnemyLaser(enemy)
-    removeClass(body, 'no-transition')
+    transferEnemy(enemy, false)
     switch ( getEnemyState(enemy) ) {
         case INVESTIGATE:
             handleInvestigationState(enemy)
@@ -50,19 +43,13 @@ export const rangerEnemyBehavior = (enemy) => {
             handleChaseState(enemy)
             break
         case MAKE_DECISION:
-            addClass(body, 'no-transition')
             handleMakeDecisionState(enemy)
             break
         case GO_FOR_RANGED:
-            addClass(body, 'no-transition')
             handleRangedAttackState(enemy)    
             break
         case GO_FOR_MELEE:
-            if ( Math.random() < 0.001 ) {
-                setEnemyState(enemy, GO_FOR_RANGED)
-                break
-            }
-            handleChaseState(enemy)
+            handleMeleeAttackState(enemy)
             break
         case GUESS_SEARCH:
             handleGuessSearchState(enemy)
@@ -76,34 +63,16 @@ export const rangerEnemyBehavior = (enemy) => {
     }
 }
 
-const angle2Player = (enemy) => {
-    const enemyBound = enemy.getBoundingClientRect()
-    const playerBound = getPlayer().getBoundingClientRect()
-    return angleOfTwoPoints(enemyBound.x + enemyBound.width / 2, enemyBound.y + enemyBound.height / 2, 
-                            playerBound.x + playerBound.width / 2, playerBound.y + playerBound.height / 2)
-}
-
-const renderEnemyLaser = (enemy) => {
-    const collider = enemy.firstElementChild
-    if ( containsClass(collider.lastElementChild, 'ranger-laser') ) {
-        const laser = collider.lastElementChild
-        laser.style.transform = `rotateZ(${angle}deg)`
-        return
-    }
-    const laser = createAndAddClass('div', 'ranger-laser')
-    laser.style.height = `${enemy.getAttribute('range')}px`
-    for ( let i = 0; i < 100; i++ ) {
-        const laserComponent = document.createElement('div')
-        laser.append(laserComponent)
-    }
-    collider.append(laser)
+const transferEnemy = (enemy, toggle) => {
+    const body = enemy.firstElementChild.firstElementChild
+    if ( toggle ) addClass(body, 'no-transition')
+    else removeClass(body, 'no-transition')
 }
 
 const switch2MakeDecisionState = (enemy) => {
     const enemyBound = enemy.getBoundingClientRect()
     const playerBound = getPlayer().getBoundingClientRect()
-    wallsInTheWay(enemy)
-    if ( distance(enemyBound.x, enemyBound.y, playerBound.x, playerBound.y) < enemy.getAttribute('range') && 
+    if ( distance(enemyBound.x, enemyBound.y, playerBound.x, playerBound.y) < enemy.getAttribute('vision') && 
          enemy.getAttribute('wall-in-the-way') === 'false' ) {
         setEnemyState(enemy, MAKE_DECISION)
         return true
@@ -111,40 +80,18 @@ const switch2MakeDecisionState = (enemy) => {
     return false
 }
 
-export const wallsInTheWay = (enemy) => {
-    let wallCheckCounter = Number(enemy.getAttribute('wall-check-counter')) || 1
-    wallCheckCounter = wallCheckCounter + 1 === 16 ? 0 : wallCheckCounter + 1
-    addAttribute(enemy, 'wall-check-counter', wallCheckCounter)
-    if ( wallCheckCounter !== 15 ) return
-    const walls = Array.from(getCurrentRoomSolid()).filter(solid => !containsClass(solid, 'enemy-collider'))
-    const laser = enemy.firstElementChild.lastElementChild
-    for ( const component of laser.children ) {
-        if ( collide(component, getPlayer(), 0) ) {
-            addAttribute(enemy, 'wall-in-the-way', 'false')
-            return
-        }
-        for ( const wall of walls )
-            if ( collide(component, wall, 0) ) {
-                switch2ChaseMode(enemy)
-                addAttribute(enemy, 'wall-in-the-way', 'true')
-                return
-            }
-    }
-    addAttribute(enemy, 'wall-in-the-way', 'false')
-}
-
 const handleMakeDecisionState = (enemy) => {
-    wallsInTheWay(enemy)
-    if ( enemy.getAttribute('wall-in-the-way') === 'true' ) return
-    updateDestinationToPlayer(enemy)
+    if ( enemy.getAttribute('wall-in-the-way') !== 'false' ) return
+    updateDestination2Player(enemy)
+    transferEnemy(enemy, true)
     updateAngle2Player(enemy)
     const enemyBound = enemy.getBoundingClientRect()
     const playerBound = getPlayer().getBoundingClientRect()
     const dist = distance(enemyBound.x, enemyBound.y, playerBound.x, playerBound.y)
-    if ( dist > enemy.getAttribute('range') ) {
+    if ( dist > enemy.getAttribute('vision') ) {
         switch2ChaseMode(enemy)
         return
-    } else if ( dist < enemy.getAttribute('range') / 3 ) {
+    } else if ( dist < enemy.getAttribute('vision') / 3 ) {
         setEnemyState(enemy, GO_FOR_MELEE)
         return
     }
@@ -152,7 +99,8 @@ const handleMakeDecisionState = (enemy) => {
 }
 
 const updateAngle2Player = (enemy) => {
-    addAttribute(enemy, 'aim-angle', angle)
+    addAttribute(enemy, 'aim-angle', 
+        enemy.firstElementChild.children[1].style.transform.replace('rotateZ(', '').replace('deg)', ''))
     manageAimModeAngle(enemy)
 }
 
@@ -170,15 +118,16 @@ const decideAttack = (enemy) => {
 }
 
 const handleRangedAttackState = (enemy) => {
+    transferEnemy(enemy, true)
     let shootCounter = Number(enemy.getAttribute('shoot-counter'))
     shootCounter++
-    wallsInTheWay(enemy)
-    if ( shootCounter == 90 ) {
+    if ( shootCounter === 90 ) {
         if (  distance(enemy.getBoundingClientRect().x, enemy.getBoundingClientRect().y, 
-              getPlayer().getBoundingClientRect().x, getPlayer().getBoundingClientRect().y) > enemy.getAttribute('range') ||
-              enemy.getAttribute('wall-in-the-way') == 'true' || 
-              Math.random() < 0.001 ) 
-            setEnemyState(enemy, GO_FOR_MELEE)    
+              getPlayer().getBoundingClientRect().x, getPlayer().getBoundingClientRect().y) > 
+              enemy.getAttribute('vision') ||
+              enemy.getAttribute('wall-in-the-way') !== 'false' || 
+              Math.random() < 0.01 )
+            setEnemyState(enemy, GO_FOR_MELEE)
         addAttribute(enemy, 'shoot-counter', -1)
         return
     }
@@ -187,6 +136,14 @@ const handleRangedAttackState = (enemy) => {
     shootAnimation(enemy)
     if ( shootCounter !== 15 ) return
     shoot(enemy)
+}
+
+const handleMeleeAttackState = (enemy) => {
+    if ( Math.random() < 0.001 ) {
+        setEnemyState(enemy, GO_FOR_RANGED)
+        return
+    }
+    handleChaseState(enemy)
 }
 
 const shootAnimation = (enemy) => {

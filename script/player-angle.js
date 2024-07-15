@@ -9,7 +9,7 @@ import {
 
 export const managePlayerAngle = () => {
     if ( getAimMode() ) manageAimModeAngle(getPlayer())
-    else manageNonAimModeAngle()
+    manageNonAimModeAngle()
 }
 
 export const manageAimModeAngle = (elem) => {

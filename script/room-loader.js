@@ -238,9 +238,11 @@ const addEnemyCriticalPoints = (component, componentNum, offset, weakpoints) => 
 
 const defineVision = (element) => {
     const vision = createAndAddClass('div', 'vision')
-    vision.style.top = '50%'
-    vision.style.width = `${element.vision}px`
     vision.style.height = `${element.vision}px`
+    for ( let i = 0; i < 100; i++ ) {
+        const visionComponent = document.createElement('div')
+        vision.append(visionComponent)
+    }
     return vision
 }
 

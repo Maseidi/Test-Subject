@@ -5,8 +5,8 @@ import { manageKnock } from './knock-manager.js'
 import { findPath } from './enemy-path-finding.js'
 import { isPlayerVisible } from './enemy-vision.js'
 import { getSpecification, getStat } from './weapon-specs.js'
-import { addAttribute, addClass, collide, distance } from './util.js'
-import { getCurrentRoomEnemies, getMapEl, getPlayer } from './elements.js'
+import { addAttribute, addClass, angleOfTwoPoints, collide, containsClass, distance } from './util.js'
+import { getCurrentRoomEnemies, getCurrentRoomSolid, getMapEl, getPlayer } from './elements.js'
 import { 
     GUESS_SEARCH,
     INVESTIGATE,
@@ -51,8 +51,8 @@ export const move2Destination = (enemy) => {
 
 const collidePlayer = (enemy) => {
     const state = getEnemyState(enemy)
-    if ( ( state != CHASE && state != NO_OFFENCE && state != GO_FOR_MELEE ) || !collide(enemy, getPlayer(), 0) ) return false
-    if ( state == CHASE || state == GO_FOR_MELEE ) hitPlayer(enemy)
+    if ( ( state !== CHASE && state !== NO_OFFENCE && state !== GO_FOR_MELEE ) || !collide(enemy, getPlayer(), 0) ) return false
+    if ( state === CHASE || state === GO_FOR_MELEE ) hitPlayer(enemy)
     return true
 }
 
@@ -146,29 +146,17 @@ export const calculateAngle = (enemy, x, y) => {
 }
 
 const changeEnemyAngleState = (state, enemy, translateX, translateY) => {
-    replaceEnemyComponent(enemy.firstElementChild.children[1], translateX, translateY)
-    replaceEnemyComponent(enemy.firstElementChild.children[2], translateX, translateY)
+    const forwardDetector = enemy.firstElementChild.children[2]
+    forwardDetector.style.left = '50%'
+    forwardDetector.style.top = '50%'
+    forwardDetector.style.transform = `translateX(${translateX}) translateY(${translateY})`
     return state
-}
-
-const replaceEnemyComponent = (component, translateX, translateY) => {
-    component.style.left = '50%'
-    component.style.top = '50%'
-    component.style.transform = `translateX(${translateX}) translateY(${translateY})`
 }
 
 const hitPlayer = (enemy) => {
     addClass(enemy.firstElementChild.firstElementChild.firstElementChild, 'attack')
     takeDamage(enemy.getAttribute('damage'))
     knockPlayer(enemy)
-    noOffenceAllEnemies(enemy)
-}
-
-export const noOffenceAllEnemies = () => {
-    Array.from(getCurrentRoomEnemies())
-    .filter(enemy => getEnemyState(enemy) == CHASE || getEnemyState(enemy) == GO_FOR_MELEE )
-    .forEach(enemy => setEnemyState(enemy, NO_OFFENCE))
-    setNoOffenseCounter(1)
 }
 
 const knockPlayer = (enemy) => {
@@ -202,7 +190,7 @@ const knockPlayer = (enemy) => {
             finalKnock = manageKnock('to-right', getPlayer(), knock)
             break                
     }
-    if ( xAxis == null && yAxis == null ) return
+    if ( xAxis === null && yAxis === null ) return
     setMapX(xAxis * finalKnock + getMapX())
     setMapY(yAxis * finalKnock + getMapY())
     setPlayerX(-xAxis * finalKnock + getPlayerX())
@@ -213,10 +201,10 @@ const knockPlayer = (enemy) => {
     getPlayer().style.top = `${getPlayerY()}px`
 }
 
-export const updateDestinationToPlayer = (enemy) => 
+export const updateDestination2Player = (enemy) => 
     updateDestination(enemy, Math.floor(getPlayerX() - getRoomLeft()), Math.floor(getPlayerY() - getRoomTop()), 34)
 
-export const updateDestinationToPath = (enemy, path) => {
+export const updateDestination2Path = (enemy, path) => {
     const pathCpu = window.getComputedStyle(path)
     updateDestination(enemy, Number(pathCpu.left.replace('px', '')), Number(pathCpu.top.replace('px', '')), 10)
 }
@@ -232,22 +220,26 @@ export const notifyEnemy = (dist, enemy) => {
     const playerBound = getPlayer().getBoundingClientRect()
     if ( distance(playerBound.x, playerBound.y, enemyBound.x, enemyBound.y) <= dist ) {
         switch2ChaseMode(enemy)
-        updateDestinationToPlayer(enemy)
+        updateDestination2Player(enemy)
     }
-    getCurrentRoomEnemies()
-        .filter(e => e !== enemy &&
-                     (distance(enemy.getBoundingClientRect().x, enemy.getBoundingClientRect().y,
-                     e.getBoundingClientRect().x, e.getBoundingClientRect().y) < 500 ) &&
-                     getEnemyState(e) !== CHASE && getEnemyState(e) !== NO_OFFENCE && 
-                     getEnemyState(e) !== GO_FOR_MELEE && getEnemyState(e) !== GO_FOR_RANGED && 
-                     getEnemyState(e) !== MAKE_DECISION
-        ).forEach(e => notifyEnemy(Number.MAX_SAFE_INTEGER, e))
+    notifyNearbyEnemies(enemy)
 }
 
 export const switch2ChaseMode = (enemy) => {
-    if ( getEnemyState(enemy) == GO_FOR_MELEE || getEnemyState(enemy) == GO_FOR_RANGED ) return
-    if ( getNoOffenseCounter() == 0 ) setEnemyState(enemy, CHASE)
+    if ( getEnemyState(enemy) === GO_FOR_MELEE || getEnemyState(enemy) === GO_FOR_RANGED ) return
+    if ( getNoOffenseCounter() === 0 ) setEnemyState(enemy, CHASE)
     else setEnemyState(enemy, NO_OFFENCE)
+}
+
+const notifyNearbyEnemies = (enemy) => {
+    getCurrentRoomEnemies()
+        .filter(e => e !== enemy &&
+                 (distance(enemy.getBoundingClientRect().x, enemy.getBoundingClientRect().y,
+                 e.getBoundingClientRect().x, e.getBoundingClientRect().y) < 500 ) &&
+                 getEnemyState(e) !== CHASE && getEnemyState(e) !== NO_OFFENCE && 
+                 getEnemyState(e) !== GO_FOR_MELEE && getEnemyState(e) !== GO_FOR_RANGED && 
+                 getEnemyState(e) !== MAKE_DECISION
+        ).forEach(e => notifyEnemy(Number.MAX_SAFE_INTEGER, e))
 }
 
 export const damageEnemy = (enemy, equipped) => {
@@ -322,4 +314,38 @@ export const checkSuroundings = (enemy) => {
 export const displaceEnemy = (enemy) => {
     findPath(enemy)
     move2Destination(enemy)
+}
+
+export const vision2Player = (enemy) => {
+    const vision = enemy.firstElementChild.children[1]
+    vision.style.transform = `rotateZ(${angle2Player(enemy)}deg)`
+}
+
+const angle2Player = (enemy) => {
+    const enemyBound = enemy.getBoundingClientRect()
+    const playerBound = getPlayer().getBoundingClientRect()
+    return angleOfTwoPoints(enemyBound.x + enemyBound.width / 2, enemyBound.y + enemyBound.height / 2, 
+                            playerBound.x + playerBound.width / 2, playerBound.y + playerBound.height / 2)
+}
+
+export const wallsInTheWay = (enemy) => {
+    let wallCheckCounter = Number(enemy.getAttribute('wall-check-counter')) || 1
+    wallCheckCounter = wallCheckCounter + 1 === 21 ? 0 : wallCheckCounter + 1
+    addAttribute(enemy, 'wall-check-counter', wallCheckCounter)
+    if ( wallCheckCounter !== 20 ) return
+    const walls = Array.from(getCurrentRoomSolid())
+        .filter(solid => !containsClass(solid, 'enemy-collider') && !containsClass(solid, 'iron-master-component'))
+    const vision = enemy.firstElementChild.children[1]
+    for ( const component of vision.children ) {
+        if ( collide(component, getPlayer(), 0) ) {
+            addAttribute(enemy, 'wall-in-the-way', 'false')
+            return
+        }
+        for ( const wall of walls )
+            if ( collide(component, wall, 0) ) {
+                addAttribute(enemy, 'wall-in-the-way', wall.id)
+                return
+            }
+    }
+    addAttribute(enemy, 'wall-in-the-way', 'out-of-range')
 }

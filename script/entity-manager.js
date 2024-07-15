@@ -5,7 +5,12 @@ import { CHASE, NO_OFFENCE } from './enemy-state.js'
 import { checkCollision } from './enemy-collision.js'
 import { normalEnemyBehavior } from './normal-enemy.js'
 import { addAttribute, collide, containsClass, removeClass } from './util.js'
-import { getEnemyState, noOffenceAllEnemies, notifyEnemy, setEnemyState } from './enemy-actions.js'
+import { 
+    getEnemyState,
+    notifyEnemy,
+    setEnemyState,
+    vision2Player,
+    wallsInTheWay } from './enemy-actions.js'
 import { 
     getCurrentRoom,
     getCurrentRoomEnemies,
@@ -13,8 +18,7 @@ import {
     getCurrentRoomLoaders,
     getCurrentRoomRangerBullets,
     getCurrentRoomSolid,
-    getPlayer, 
-    setCurrentRoomRangerBullets} from './elements.js'
+    getPlayer } from './elements.js'
 import {
     getCurrentRoomId,
     getIntObj,
@@ -117,6 +121,8 @@ const BEHAVIOR_MAP = new Map([
 
 const handleEnemies = () => {
     getCurrentRoomEnemies().forEach((enemy) => {
+        wallsInTheWay(enemy)
+        vision2Player(enemy)
         manageDamagedState(enemy)
         checkCollision(enemy)
         BEHAVIOR_MAP.get(enemy.getAttribute('type'))(enemy) 
@@ -134,7 +140,6 @@ const manageDamagedState = (enemy) => {
 }
 
 const manageRangerBullets = () => {
-    const bullets2Remove = []
     for ( const bullet of getCurrentRoomRangerBullets() ) {
         const x = +bullet.style.left.replace('px', '')
         const y = +bullet.style.top.replace('px', '')
@@ -144,9 +149,7 @@ const manageRangerBullets = () => {
         bullet.style.top = `${y + speedY}px`
         if ( collide(bullet, getPlayer().firstElementChild, 0) ) {
             takeDamage(+bullet.getAttribute('damage'))
-            bullets2Remove.push(bullet)
             bullet.remove()
-            noOffenceAllEnemies()
             continue
         }
         for ( const solid of getCurrentRoomSolid() )
@@ -154,9 +157,7 @@ const manageRangerBullets = () => {
                  !containsClass(solid, 'iron-master-component') && 
                  collide(bullet, solid, 0)) || 
                  !collide(bullet, getCurrentRoom(), 0) ) {
-                bullets2Remove.push(bullet)
                 bullet.remove()
             }
     }
-    setCurrentRoomRangerBullets(getCurrentRoomRangerBullets().filter(bullet => !bullets2Remove.includes(bullet)))
 }

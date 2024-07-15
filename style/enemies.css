@@ -41,7 +41,20 @@
   width: 32px;
 }
 
-.vision,
+.vision {
+  width: 1px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translateX(-50%) translateY(-50%);
+  transform-origin: top;
+}
+
+.vision > div {
+  width: 100%;
+  height: 1%;
+}
+
 .enemy-forward-detector {
   position: absolute;
 }
@@ -352,20 +365,6 @@
 .damaged > div {
   background-color: white !important;
   filter: brightness(300%);
-}
-
-.ranger-laser {
-  width: 1px;
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translateX(-50%) translateY(-50%);
-  transform-origin: top;
-}
-
-.ranger-laser > div {
-  width: 100%;
-  height: 1%;
 }
 
 .no-transition {

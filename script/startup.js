@@ -1,10 +1,9 @@
-import { createAndAddClass } from './util.js'
 import { renderUi } from './user-interface.js'
-import { loadPlayer } from './player-loader.js'
 import { activateProgress } from './progress.js'
 import { loadCurrentRoom } from './room-loader.js'
+import { addAttribute, appendAll, createAndAddClass } from './util.js'
 import { getMapX, getMapY, getPlayerX, getPlayerY } from './variables.js'
-import { getMapEl, setMapEl, setPauseContainer, setRoomContainer } from './elements.js'
+import { getMapEl, setMapEl, setPauseContainer, setPlayer, setRoomContainer } from './elements.js'
 
 export const startUp = () => {
     renderPauseContainer()
@@ -44,7 +43,21 @@ const renderCurrentRoom = () => {
 }
 
 const renderPlayer = () => {
-    loadPlayer()
+    const player = createAndAddClass('div', 'player')
+    player.id = 'player'
+    player.style.left = `${getPlayerX()}px`
+    player.style.top = `${getPlayerY()}px`
+    const playerCollider = createAndAddClass('div', 'player-collider')
+    player.append(playerCollider)
+    const playerBody = createAndAddClass('div', 'player-body')
+    playerBody.style.transform = `rotateZ(0deg)`
+    addAttribute(player, 'angle', 0)
+    const forwardDetector = createAndAddClass('div', 'forward-detector')
+    appendAll(playerCollider, playerBody, forwardDetector)
+    const playerHead = createAndAddClass('div', 'player-head')
+    playerBody.append(playerHead)
+    setPlayer(player)
+    getMapEl().append(player)
 }
 
 export const centralizePlayer = () => {
