@@ -141,10 +141,10 @@ const manageDamagedState = (enemy) => {
 
 const manageRangerBullets = () => {
     for ( const bullet of getCurrentRoomRangerBullets() ) {
-        const x = +bullet.style.left.replace('px', '')
-        const y = +bullet.style.top.replace('px', '')
-        const speedX = +bullet.getAttribute('speed-x')
-        const speedY = +bullet.getAttribute('speed-y')
+        const x = Number(bullet.style.left.replace('px', ''))
+        const y = Number(bullet.style.top.replace('px', ''))
+        const speedX = Number(bullet.getAttribute('speed-x'))
+        const speedY = Number(bullet.getAttribute('speed-y'))
         bullet.style.left = `${x + speedX}px`
         bullet.style.top = `${y + speedY}px`
         if ( collide(bullet, getPlayer().firstElementChild, 0) ) {

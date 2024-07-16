@@ -86,42 +86,36 @@ let maxStamina = 600
 export const setMaxStamina = (val) => {
     maxStamina = val
 }
-
 export const getMaxStamina = () => maxStamina
 
 let stamina = 600
 export const setStamina = (val) => {
     stamina = val
 }
-
 export const getStamina = () => stamina
 
 let maxHealth = 100
 export const setMaxHealth = (val) => {
     maxHealth = val
 }
-
 export const getMaxHealth = () => maxHealth
 
 let health = 100
 export const setHealth = (val) => {
     health = val
 }
-
 export const getHealth = () => health
 
 let refillStamina = false
 export const setRefillStamina = (val) => {
     refillStamina = val
 }
-
 export const getRefillStamina = () => refillStamina
 
 let sprintPressed = false
 export const setSprintPressed = (val) => {
     sprintPressed = val
 }
-
 export const getSprintPressed = () => sprintPressed
 
 let aimMode = false
@@ -213,3 +207,9 @@ export const setNoOffenseCounter = (val) => {
     noOffenseCounter = val
 }
 export const getNoOffenseCounter = () => noOffenseCounter
+
+let entityId = 0
+export const setEntityId = (val) => {
+    entityId = val
+}
+export const getEntityId = () => entityId

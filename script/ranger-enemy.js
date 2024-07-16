@@ -28,14 +28,13 @@ import {
     NO_OFFENCE } from './enemy-state.js'
 
 export const rangerEnemyBehavior = (enemy) => {
-    console.log(getEnemyState(enemy));
     transferEnemy(enemy, false)
     switch ( getEnemyState(enemy) ) {
         case INVESTIGATE:
             handleInvestigationState(enemy)
             break
         case CHASE:
-            if ( Math.random() < 0.005 ) setEnemyState(enemy, GO_FOR_RANGED)
+            if ( Math.random() < 0.008 ) setEnemyState(enemy, GO_FOR_RANGED)
         case NO_OFFENCE:
             handleChaseState(enemy)
             break
@@ -69,7 +68,7 @@ const handleRangedAttackState = (enemy) => {
               getPlayer().getBoundingClientRect().x, getPlayer().getBoundingClientRect().y) > 
               enemy.getAttribute('vision') ||
               enemy.getAttribute('wall-in-the-way') !== 'false' || 
-              Math.random() < 0.5 )
+              Math.random() < 0.2 )
             setEnemyState(enemy, CHASE)
         addAttribute(enemy, 'shoot-counter', -1)
         return
@@ -90,14 +89,14 @@ const updateAngle2Player = (enemy) => {
 const shootAnimation = (enemy) => {
     const body = enemy.firstElementChild.firstElementChild
     const shootCounter = Number(enemy.getAttribute('shoot-counter'))
-    let currAngle = +body.style.transform.replace('rotateZ(', '').replace('deg)', '')
+    let currAngle = Number(body.style.transform.replace('rotateZ(', '').replace('deg)', ''))
     if ( shootCounter < 15 ) body.style.transform = `rotateZ(${currAngle + 12}deg)`
     else if ( shootCounter < 29 ) body.style.transform = `rotateZ(${currAngle - 12}deg)`
 }
 
 const shoot = (enemy) => {
     const enemyCpu = window.getComputedStyle(enemy)
-    const { x: srcX, y: srcY } = { x: +enemyCpu.left.replace('px', '') + 16, y: +enemyCpu.top.replace('px', '') + 16 }
+    const { x: srcX, y: srcY } = { x: Number(enemyCpu.left.replace('px', '')) + 16, y: Number(enemyCpu.top.replace('px', '')) + 16 }
     const { x: destX, y: destY } = { x: getPlayerX() - getRoomLeft() + 17, y: getPlayerY() - getRoomTop() + 17 }
     const deg = angleOfTwoPoints(srcX, srcY, destX, destY)
     const diffY = destY - srcY

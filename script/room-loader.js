@@ -5,7 +5,7 @@ import { enemies } from './enemies.js'
 import { getProgress } from './progress.js'
 import { interactables } from './interactables.js'
 import { getWeaponSpecs } from './weapon-specs.js'
-import { getCurrentRoomId, getRoomLeft, getRoomTop } from './variables.js'
+import { getCurrentRoomId, getEntityId, getRoomLeft, getRoomTop, setEntityId } from './variables.js'
 import { addAttribute, addClass, appendAll, createAndAddClass, objectToElement } from './util.js'
 import { 
     getCurrentRoomEnemies,
@@ -99,12 +99,12 @@ const createTrackers = (solid, elem) => {
 
 const renderInteractables = (roomToRender) => 
     interactables.get(getCurrentRoomId())
-        .forEach((interactable, index) => interactable && renderInteractable(roomToRender, interactable, index))
+        .forEach((interactable, index) => renderInteractable(roomToRender, interactable, index))
 
 export const renderInteractable = (root, interactable, index) => {
     const int = objectToElement(interactable)
     addClass(int, 'interactable')
-    int.id = `${getCurrentRoomId()}-${index}`
+    setInteractableId(interactable, int, index)
     int.style.left = `${interactable.left}px`
     int.style.top = `${interactable.top}px`
     int.style.width = `${interactable.width}px`
@@ -116,6 +116,15 @@ export const renderInteractable = (root, interactable, index) => {
         createTrackers(int, interactable)
     }    
     getCurrentRoomInteractables().push(int)
+}
+
+const setInteractableId = (interactable, int, index) => {
+    if ( interactable.id != null ) return
+    int.id = getEntityId()
+    setEntityId(getEntityId() + 1)
+    const newInteractables = interactables.get(getCurrentRoomId())
+    newInteractables[index] = { ...interactable, id: +int.id }
+    interactables.set(getCurrentRoomId(), newInteractables)
 }
 
 const renderImage = (int, interactable) => {

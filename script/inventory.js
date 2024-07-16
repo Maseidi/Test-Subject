@@ -63,6 +63,7 @@ export const pickupDrop = () => {
     searchPack()
     searchEmpty()
     checkSpecialScenarios()
+    console.log(interactables.get(getCurrentRoomId()));
 }
 
 const searchPack = () => {
@@ -158,8 +159,8 @@ const updateAmount = (newValue) => {
     if ( getIntObj().children.length === 0 ) return
     getIntObj().children[1].children[0].textContent = `${newValue} ${getIntObj().getAttribute('heading')}`
     interactables.set(getCurrentRoomId(), 
-    interactables.get(getCurrentRoomId()).map((int, index) => {
-        return `${getCurrentRoomId()}-${index}` === getIntObj().getAttribute('id') ? 
+    interactables.get(getCurrentRoomId()).map(int => {
+        return int.id === +getIntObj().getAttribute('id') ? 
         {
             ...int,
             amount: newValue
@@ -169,10 +170,7 @@ const updateAmount = (newValue) => {
 
 export const removeDrop = (element) => {
     element.remove()
-    interactables.set(getCurrentRoomId(), 
-    interactables.get(getCurrentRoomId()).map((elem, index) =>
-        `${getCurrentRoomId()}-${index}` === element.getAttribute('id') ? null : elem
-    ))
+    interactables.set(getCurrentRoomId(), interactables.get(getCurrentRoomId()).filter(elem => elem.id !== +element.id))
 }
 
 const updateWeaponWheel = () => {
@@ -553,9 +551,10 @@ const drop = (item) => {
     const top = Math.floor(getPlayerY() - getRoomTop())
     const interactable = {...itemObj, left: left, top: top}
     getPauseContainer().firstElementChild.remove()
-    let index = findSuitableId(interactable)
+    interactables.get(getCurrentRoomId()).push(interactable)
     dropFromInventory(itemObj)
-    renderInteractable(getCurrentRoom(), interactable, index)
+    renderInteractable(getCurrentRoom(), interactable)
+    console.log(interactables.get(getCurrentRoomId()));
     handleWeaponDrop(itemObj)
     renderInventory()
 }
