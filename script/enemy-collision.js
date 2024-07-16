@@ -7,7 +7,6 @@ import {
     GUESS_SEARCH,
     INVESTIGATE,
     LOST,
-    MAKE_DECISION,
     MOVE_TO_POSITION,
     NO_OFFENCE } from './enemy-state.js'
 
@@ -15,7 +14,7 @@ export const checkCollision = (enemy) => {
     const collidingEnemy = Array.from(getCurrentRoomEnemies())
         .find(e => e !== enemy 
                 && collide(enemy.firstElementChild.children[2], e.firstElementChild, 0) 
-                && getEnemyState(e) !== INVESTIGATE && getEnemyState(e) !== MAKE_DECISION && getEnemyState(e) !== GO_FOR_RANGED)
+                && getEnemyState(e) !== INVESTIGATE && getEnemyState(e) !== GO_FOR_RANGED)
     addAttribute(enemy, 'colliding-enemy', null)
     if ( !collidingEnemy ) return
     handleRangerEnemy(enemy)

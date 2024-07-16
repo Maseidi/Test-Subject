@@ -4,7 +4,7 @@ import { getHealth, getMaxHealth, getNoOffenseCounter, setHealth, setNoOffenseCo
 import { addClass, checkLowHealth, removeClass } from './util.js'
 import { getCurrentRoomEnemies, getMapEl, getPlayer } from './elements.js'
 import { getEnemyState, setEnemyState } from './enemy-actions.js'
-import { CHASE, GO_FOR_MELEE, NO_OFFENCE } from './enemy-state.js'
+import { CHASE, NO_OFFENCE } from './enemy-state.js'
 
 export const heal = () => {
     if ( getHealth() === getMaxHealth() ) return
@@ -37,7 +37,7 @@ export const takeDamage = (damage) => {
 
 const noOffenceAllEnemies = () => {
     Array.from(getCurrentRoomEnemies())
-        .filter(enemy => getEnemyState(enemy) === CHASE || getEnemyState(enemy) === GO_FOR_MELEE )
+        .filter(enemy => getEnemyState(enemy) === CHASE )
         .forEach(enemy => setEnemyState(enemy, NO_OFFENCE))
     setNoOffenseCounter(1)
 }

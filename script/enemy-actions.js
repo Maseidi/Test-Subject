@@ -14,9 +14,7 @@ import {
     MOVE_TO_POSITION,
     NO_OFFENCE,
     CHASE,
-    GO_FOR_MELEE,
-    GO_FOR_RANGED,
-    MAKE_DECISION } from './enemy-state.js'
+    GO_FOR_RANGED } from './enemy-state.js'
 import { 
     getMapX,
     getMapY,
@@ -51,8 +49,8 @@ export const move2Destination = (enemy) => {
 
 const collidePlayer = (enemy) => {
     const state = getEnemyState(enemy)
-    if ( ( state !== CHASE && state !== NO_OFFENCE && state !== GO_FOR_MELEE ) || !collide(enemy, getPlayer(), 0) ) return false
-    if ( state === CHASE || state === GO_FOR_MELEE ) hitPlayer(enemy)
+    if ( ( state !== CHASE && state !== NO_OFFENCE ) || !collide(enemy, getPlayer(), 0) ) return false
+    if ( state === CHASE ) hitPlayer(enemy)
     return true
 }
 
@@ -226,7 +224,7 @@ export const notifyEnemy = (dist, enemy) => {
 }
 
 export const switch2ChaseMode = (enemy) => {
-    if ( getEnemyState(enemy) === GO_FOR_MELEE || getEnemyState(enemy) === GO_FOR_RANGED ) return
+    if ( getEnemyState(enemy) === GO_FOR_RANGED ) return
     if ( getNoOffenseCounter() === 0 ) setEnemyState(enemy, CHASE)
     else setEnemyState(enemy, NO_OFFENCE)
 }
@@ -237,8 +235,7 @@ const notifyNearbyEnemies = (enemy) => {
                  (distance(enemy.getBoundingClientRect().x, enemy.getBoundingClientRect().y,
                  e.getBoundingClientRect().x, e.getBoundingClientRect().y) < 500 ) &&
                  getEnemyState(e) !== CHASE && getEnemyState(e) !== NO_OFFENCE && 
-                 getEnemyState(e) !== GO_FOR_MELEE && getEnemyState(e) !== GO_FOR_RANGED && 
-                 getEnemyState(e) !== MAKE_DECISION
+                 getEnemyState(e) !== GO_FOR_RANGED
         ).forEach(e => notifyEnemy(Number.MAX_SAFE_INTEGER, e))
 }
 
