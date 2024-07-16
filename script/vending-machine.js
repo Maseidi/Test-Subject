@@ -5,7 +5,7 @@ import { renderStats } from './weapon-examine.js'
 import { getStat, getWeaponSpecs } from './weapon-specs.js'
 import { Coin, Drop, interactables } from './interactables.js'
 import { getShopItems, getShopItemsWithId } from './shop-item.js'
-import { getCurrentRoomId, getIntObj, setIntObj } from './variables.js'
+import { getCurrentRoomId, getEntityId, getIntObj, setEntityId, setIntObj } from './variables.js'
 import { 
     MAX_PACKSIZE,
     calculateTotalCoins,
@@ -225,10 +225,11 @@ const manageBuy = (itemObj) => {
 
 const handleNewWeapnPurchase = (purchasedItem, itemObj) => {
     if ( !getWeaponSpecs().has(itemObj.name) ) return purchasedItem 
-    interactables.get(getCurrentRoomId()).push(null)
+    const newId = getEntityId()
+    setEntityId(getEntityId() + 1)
     return {
         ...purchasedItem,
-        id: `${getCurrentRoomId()}-${interactables.get(getCurrentRoomId()).length}`,
+        id: newId,
         currmag: 0, 
         damagelvl: 1, 
         rangelvl: 1, 

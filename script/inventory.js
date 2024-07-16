@@ -35,7 +35,9 @@ import {
     getReloading,
     setShootCounter,
     getShooting, 
-    getPause} from './variables.js'
+    getPause,
+    getEntityId,
+    setEntityId} from './variables.js'
 
 export const MAX_PACKSIZE = {
     bandage: 3,
@@ -170,12 +172,12 @@ const updateAmount = (newValue) => {
 
 export const removeDrop = (element) => {
     element.remove()
-    interactables.set(getCurrentRoomId(), interactables.get(getCurrentRoomId()).filter(elem => elem.id !== +element.id))
+    interactables.set(getCurrentRoomId(), interactables.get(getCurrentRoomId()).filter(elem => elem.id !== Number(element.id)))
 }
 
 const updateWeaponWheel = () => {
     const index = getWeaponWheel().findIndex(item => item === null)
-    getWeaponWheel()[index] = getIntObj().getAttribute('id')
+    getWeaponWheel()[index] = Number(getIntObj().getAttribute('id'))
 }
 
 export const upgradeInventory = () => {
@@ -549,12 +551,16 @@ const drop = (item) => {
     const itemObj = elementToObject(item)
     const left = Math.floor(getPlayerX() - getRoomLeft())
     const top = Math.floor(getPlayerY() - getRoomTop())
-    const interactable = {...itemObj, left: left, top: top}
+    let interactable = {...itemObj, left: left, top: top}
+    if ( interactables.get(getCurrentRoomId()).find(elem => elem.id === interactable.id) ) {
+        const newId = getEntityId()
+        setEntityId(getEntityId() + 1)
+        interactable = {...interactable, id: newId}
+    }
     getPauseContainer().firstElementChild.remove()
     interactables.get(getCurrentRoomId()).push(interactable)
     dropFromInventory(itemObj)
     renderInteractable(getCurrentRoom(), interactable)
-    console.log(interactables.get(getCurrentRoomId()));
     handleWeaponDrop(itemObj)
     renderInventory()
 }
@@ -565,11 +571,6 @@ const dropFromInventory = (itemObj) => {
     inventory[row][column] = null
     if ( inventory[row][column] === null && column + itemObj.space <= 4 )
         for ( let k = 1; k < itemObj.space; k++ ) inventory[row][column+k] = null
-}
-
-export const findSuitableId = (interactable) => {
-    const roomInts = interactables.get(getCurrentRoomId())
-    return roomInts.push(interactable) - 1
 }
 
 export const handleWeaponDrop = (itemObj) => {

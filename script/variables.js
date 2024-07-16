@@ -208,7 +208,7 @@ export const setNoOffenseCounter = (val) => {
 }
 export const getNoOffenseCounter = () => noOffenseCounter
 
-let entityId = 0
+let entityId = 1
 export const setEntityId = (val) => {
     entityId = val
 }

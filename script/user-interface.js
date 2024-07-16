@@ -57,7 +57,7 @@ export const renderEquippedWeapon = () => {
     total.textContent = calculateTotalAmmo(equippedWeapon)
     appendAll(ammoCount, mag, total)
     appendAll(weaponContainer, weaponIcon, ammoCount)
-    getUiEl().append(weaponContainer)   
+    getUiEl().append(weaponContainer)
 }
 
 export const removeUi = () => getUiEl().remove()

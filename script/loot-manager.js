@@ -1,8 +1,9 @@
 import { elementToObject } from './util.js'
+import { removeDrop } from './inventory.js'
 import { getCurrentRoom } from './elements.js'
 import { renderInteractable } from './room-loader.js'
-import { findSuitableId, removeDrop } from './inventory.js'
-import { Bandage, Coin, HardDrive, MagnumAmmo, PistolAmmo, RifleAmmo, ShotgunShells, SmgAmmo } from './interactables.js'
+import { Bandage, Coin, HardDrive, interactables, MagnumAmmo, PistolAmmo, RifleAmmo, ShotgunShells, SmgAmmo } from './interactables.js'
+import { getCurrentRoomId } from './variables.js'
 
 export const dropLoot = (rootElem) => {
     const root = elementToObject(rootElem)
@@ -19,8 +20,8 @@ export const dropLoot = (rootElem) => {
     removeDrop(rootElem)
     if ( !loot ) return
     const interactable = {...loot, left: left, top: top}
-    let index = findSuitableId(interactable)
-    renderInteractable(getCurrentRoom(), interactable, index)
+    interactables.get(getCurrentRoomId()).push(interactable)
+    renderInteractable(getCurrentRoom(), interactable)
 }
 
 const decideItemDrop = (drop, chance, left, top, amount) => {
