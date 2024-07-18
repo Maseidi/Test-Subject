@@ -26,7 +26,6 @@ import {
     setMapY,
     setPlayerX,
     setPlayerY,
-    setNoOffenseCounter, 
     getNoOffenseCounter,
     getCurrentRoomId } from './variables.js'
 
@@ -40,14 +39,14 @@ export const move2Destination = (enemy) => {
     const { xMultiplier, yMultiplier } = decideDirection(enemyLeft, destLeft, enemyTop, destTop, enemyW, destW)
     calculateAngle(enemy, xMultiplier, yMultiplier)
     const speed = calculateSpeed(enemy, xMultiplier, yMultiplier)
-    if ( !xMultiplier && !yMultiplier ) reachedDestination(enemy)
+    if ( xMultiplier === 0 && yMultiplier === 0 ) reachedDestination(enemy)
     const currentX = Number(window.getComputedStyle(enemy).left.replace('px', ''))
     const currentY = Number(window.getComputedStyle(enemy).top.replace('px', ''))
     enemy.style.left = `${currentX + speed * xMultiplier}px`
     enemy.style.top = `${currentY + speed * yMultiplier}px`
 }
 
-const collidePlayer = (enemy) => {
+export const collidePlayer = (enemy) => {
     const state = getEnemyState(enemy)
     if ( ( state !== CHASE && state !== NO_OFFENCE ) || !collide(enemy, getPlayer(), 0) ) return false
     if ( state === CHASE ) hitPlayer(enemy)
@@ -294,12 +293,9 @@ export const accelerateEnemy = (enemy) => {
 }
 
 export const playerLocated = (enemy) => {
-    let result = false
-    if ( isPlayerVisible(enemy) ) { 
-        switch2ChaseMode(enemy)
-        result = true
-    }
-    return result
+    const visible = isPlayerVisible(enemy)
+    if ( visible ) switch2ChaseMode(enemy)
+    return visible   
 }
 
 export const checkSuroundings = (enemy) => {

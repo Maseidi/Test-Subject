@@ -3,9 +3,9 @@ import { renderQuit } from './user-interface.js'
 import { getPauseContainer } from './elements.js'
 import { renderStats } from './weapon-examine.js'
 import { getStat, getWeaponSpecs } from './weapon-specs.js'
-import { Coin, Drop, interactables } from './interactables.js'
+import { Coin, Drop } from './interactables.js'
 import { getShopItems, getShopItemsWithId } from './shop-item.js'
-import { getCurrentRoomId, getEntityId, getIntObj, setEntityId, setIntObj } from './variables.js'
+import { getIntObj, setIntObj } from './variables.js'
 import { 
     MAX_PACKSIZE,
     calculateTotalCoins,
@@ -21,6 +21,7 @@ import {
     appendAll,
     createAndAddClass,
     elementToObject,
+    nextId,
     objectToElement } from './util.js'
 
 let page = 1
@@ -225,11 +226,9 @@ const manageBuy = (itemObj) => {
 
 const handleNewWeapnPurchase = (purchasedItem, itemObj) => {
     if ( !getWeaponSpecs().has(itemObj.name) ) return purchasedItem 
-    const newId = getEntityId()
-    setEntityId(getEntityId() + 1)
     return {
         ...purchasedItem,
-        id: newId,
+        id: nextId(),
         currmag: 0, 
         damagelvl: 1, 
         rangelvl: 1, 

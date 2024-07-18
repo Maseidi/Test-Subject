@@ -14,7 +14,8 @@ import {
     objectToElement,
     removeClass,
     appendAll, 
-    createAndAddClass} from './util.js'
+    createAndAddClass,
+    nextId } from './util.js'
 import { 
     getAimMode,
     getCurrentRoomId,
@@ -35,9 +36,7 @@ import {
     getReloading,
     setShootCounter,
     getShooting, 
-    getPause,
-    getEntityId,
-    setEntityId} from './variables.js'
+    getPause } from './variables.js'
 
 export const MAX_PACKSIZE = {
     bandage: 3,
@@ -65,7 +64,6 @@ export const pickupDrop = () => {
     searchPack()
     searchEmpty()
     checkSpecialScenarios()
-    console.log(interactables.get(getCurrentRoomId()));
 }
 
 const searchPack = () => {
@@ -539,7 +537,7 @@ const shortcut = (item) => {
 const selectAsSlot = (e) => {
     const targetSlotNum = Number(e.target.getAttribute('slot-num'))
     const slotWeaponId = getWeaponWheel()[targetSlotNum]
-    const selectedId = e.target.getAttribute('selected-weapon')
+    const selectedId = Number(e.target.getAttribute('selected-weapon'))
     const selectedSlotNum = getWeaponWheel().findIndex(x => x === selectedId)
     getWeaponWheel()[targetSlotNum] = selectedId
     getWeaponWheel()[selectedSlotNum] = slotWeaponId
@@ -552,11 +550,8 @@ const drop = (item) => {
     const left = Math.floor(getPlayerX() - getRoomLeft())
     const top = Math.floor(getPlayerY() - getRoomTop())
     let interactable = {...itemObj, left: left, top: top}
-    if ( interactables.get(getCurrentRoomId()).find(elem => elem.id === interactable.id) ) {
-        const newId = getEntityId()
-        setEntityId(getEntityId() + 1)
-        interactable = {...interactable, id: newId}
-    }
+    if ( interactables.get(getCurrentRoomId()).find(elem => elem.id === interactable.id) ) 
+        interactable = {...interactable, id: nextId()}
     getPauseContainer().firstElementChild.remove()
     interactables.get(getCurrentRoomId()).push(interactable)
     dropFromInventory(itemObj)

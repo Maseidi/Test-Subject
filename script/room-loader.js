@@ -5,8 +5,8 @@ import { enemies } from './enemies.js'
 import { getProgress } from './progress.js'
 import { interactables } from './interactables.js'
 import { getWeaponSpecs } from './weapon-specs.js'
-import { getCurrentRoomId, getEntityId, getRoomLeft, getRoomTop, setEntityId } from './variables.js'
-import { addAttribute, addClass, appendAll, createAndAddClass, objectToElement } from './util.js'
+import { getCurrentRoomId, getRoomLeft, getRoomTop } from './variables.js'
+import { addAttribute, addClass, appendAll, createAndAddClass, nextId, objectToElement, removeClass } from './util.js'
 import { 
     getCurrentRoomEnemies,
     getCurrentRoomInteractables, 
@@ -120,8 +120,7 @@ export const renderInteractable = (root, interactable, index) => {
 
 const setInteractableId = (interactable, int, index) => {
     if ( interactable.id != null ) return
-    int.id = getEntityId()
-    setEntityId(getEntityId() + 1)
+    int.id = nextId()
     const newInteractables = interactables.get(getCurrentRoomId())
     newInteractables[index] = { ...interactable, id: +int.id }
     interactables.set(getCurrentRoomId(), newInteractables)
@@ -184,6 +183,7 @@ const spawnEnemies = (enemies, roomToRender) => {
         createPath(elem, elem.index, roomToRender)
         const enemyCollider = createAndAddClass('div', 'enemy-collider', `${elem.type}-collider`)
         const enemyBody = createAndAddClass('div', `${elem.type}-body`, 'body-transition')
+        if ( elem.type === 'spiker' ) removeClass(enemyBody, 'body-transition')
         enemyBody.style.backgroundColor = `${elem.virus}`
         defineComponents(elem, enemyBody)
         const vision = defineVision(elem)

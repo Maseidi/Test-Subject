@@ -33,6 +33,7 @@ import {
     setRoomTop} from './variables.js'
 import { rangerEnemyBehavior } from './ranger-enemy.js'
 import { takeDamage } from './player-health.js'
+import { spikerEnemyBehavior } from './spiker-enemy.js'
 
 export const manageEntities = () => {
     manageSolidObjects()
@@ -117,6 +118,7 @@ const BEHAVIOR_MAP = new Map([
     ['rock-crusher', normalEnemyBehavior],
     ['iron-master', normalEnemyBehavior],
     ['ranger', rangerEnemyBehavior],
+    ['spiker', spikerEnemyBehavior],
 ])
 
 const handleEnemies = () => {

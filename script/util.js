@@ -1,4 +1,4 @@
-import { getDownPressed, getHealth, getLeftPressed, getRightPressed, getUpPressed } from './variables.js'
+import { getDownPressed, getEntityId, getHealth, getLeftPressed, getRightPressed, getUpPressed, setEntityId } from './variables.js'
 
 export const collide = (first, second, offset) => {
     const firstBound = first.getBoundingClientRect()
@@ -94,3 +94,9 @@ export const ANGLE_STATE_MAP = new Map([
     [-90, 6],
     [-45, 7]
 ])    
+
+export const nextId = () => {
+    const newId = getEntityId()
+    setEntityId(getEntityId() + 1)
+    return newId
+}

@@ -64,12 +64,11 @@ const handleRangedAttackState = (enemy) => {
     let shootCounter = Number(enemy.getAttribute('shoot-counter'))
     shootCounter++
     if ( shootCounter === 90 ) {
-        if (  distance(enemy.getBoundingClientRect().x, enemy.getBoundingClientRect().y, 
-              getPlayer().getBoundingClientRect().x, getPlayer().getBoundingClientRect().y) > 
-              enemy.getAttribute('vision') ||
-              enemy.getAttribute('wall-in-the-way') !== 'false' || 
-              Math.random() < 0.2 )
-            setEnemyState(enemy, CHASE)
+        const d = distance(enemy.getBoundingClientRect().x, enemy.getBoundingClientRect().y, 
+                           getPlayer().getBoundingClientRect().x, getPlayer().getBoundingClientRect().y)
+        if ( d > enemy.getAttribute('vision') || d < 200 ||
+             enemy.getAttribute('wall-in-the-way') !== 'false' || 
+             Math.random() < 0.2 ) setEnemyState(enemy, CHASE)
         addAttribute(enemy, 'shoot-counter', -1)
         return
     }
