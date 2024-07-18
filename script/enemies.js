@@ -122,8 +122,9 @@ class Spiker extends Enemy {
         const health = Math.floor(level * 50 + Math.random() * 25)
         const damage = Math.floor(level * 17 + Math.random() * 4)
         const maxSpeed = 9 + Math.random()
-        super('spiker', 6, path, health, damage, 100, maxSpeed, progress, 300, 3)
-        this.axis = Math.random() < 0.5 ? 1 : 2
+        super('spiker', 6, path, health, damage, 100, maxSpeed, progress, 1000, 3)
+        // this.axis = Math.random() < 0.5 ? 1 : 2
+        this.axis = 1
     }
 }
 

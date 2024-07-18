@@ -13,6 +13,7 @@ import { addAttribute } from './util.js'
 import { findPath } from './enemy-path-finding.js'
 
 export const spikerEnemyBehavior = (enemy) => {
+    console.log(enemy.getAttribute('investigation-counter'));
     handleRotation(enemy)
     switch ( getEnemyState(enemy) ) {
         case INVESTIGATE:
@@ -61,10 +62,9 @@ const displaceEnemy = (enemy) => {
 
 const move2Destination = (enemy) => {
     if ( collidePlayer(enemy) ) return
-    const axis = Number(enemy.getAttribute('axis'))
     const { enemyLeft, enemyTop, enemyW } = enemyCoordinates(enemy)
     const { destLeft, destTop, destW } = destinationCoordinates(enemy)
-    const { xMultiplier, yMultiplier } = decideDirection(axis, enemyLeft, destLeft, enemyTop, destTop, enemyW, destW)
+    const { xMultiplier, yMultiplier } = decideDirection(enemy, enemyLeft, destLeft, enemyTop, destTop, enemyW, destW)
     calculateAngle(enemy, xMultiplier, yMultiplier)
     const speed = calculateSpeed(enemy, xMultiplier, yMultiplier)
     manageAxis(enemy, xMultiplier, yMultiplier)
@@ -92,8 +92,18 @@ const destinationCoordinates = (enemy) => {
     return {destLeft, destTop, destW}
 }
 
-const decideDirection = (axis, enemyLeft, destLeft, enemyTop, destTop, enemyW, destW) => {
+const decideDirection = (enemy, enemyLeft, destLeft, enemyTop, destTop, enemyW, destW) => {
+    const axis = Number(enemy.getAttribute('axis'))
     let xMultiplier, yMultiplier
+    const pathFindingX = enemy.getAttribute('path-finding-x')
+    const pathFindingY = enemy.getAttribute('path-finding-y')
+    if ( pathFindingX !== 'null' && pathFindingY !== 'null' ) {
+        if ( enemyLeft > destLeft + destW / 2 ) xMultiplier = -1
+        else if ( enemyLeft + enemyW <= destLeft + destW / 2 ) xMultiplier = 1
+        if ( enemyTop > destTop + destW / 2 ) yMultiplier = -1
+        else if ( enemyTop + enemyW <= destTop + destW / 2 ) yMultiplier = 1
+        return { xMultiplier, yMultiplier }
+    }
     if ( axis === 1 ) {
         if ( enemyLeft > destLeft + destW / 2 ) xMultiplier = -1
         else if ( enemyLeft + enemyW <= destLeft + destW / 2 ) xMultiplier = 1
