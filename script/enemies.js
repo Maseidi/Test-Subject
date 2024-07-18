@@ -119,10 +119,10 @@ class Ranger extends Enemy {
 
 class Spiker extends Enemy {
     constructor(level, path, progress) {
-        const health = Math.floor(level * 50 + Math.random() * 25)
-        const damage = Math.floor(level * 17 + Math.random() * 4)
-        const maxSpeed = 9 + Math.random()
-        super('spiker', 6, path, health, damage, 100, maxSpeed, progress, 1000, 3)
+        const health = Math.floor(level * 25 + Math.random() * 5)
+        const damage = Math.floor(level * 15 + Math.random() * 5)
+        const maxSpeed = 6 + Math.random()
+        super('spiker', 6, path, health, damage, 100, maxSpeed, progress, 1000, maxSpeed)
         // this.axis = Math.random() < 0.5 ? 1 : 2
         this.axis = 1
     }
@@ -132,13 +132,15 @@ export const enemies = new Map([
     [37, [
         // new Torturer(1, new SquarePath(650, 240, 300), '1'),
         // new Torturer(1, new VerDoublePointPath(800, 100, 300), '2'),
-        // new Torturer(1, new SquarePath(650, 240, 300), '3'),
+        new Torturer(1, new SquarePath(650, 240, 300), '3'),
         // new SoulDrinker(1, new SinglePointPath(650, 140), '3'),
         // new RockCrusher(1, new SinglePointPath(850, 140), '3'),
         // new IronMaster(1, new HorDoublePointPath(1000, 140, 500), '3'),
         // new Ranger(1, new SquarePath(600, 100, 300), '3'),
         // new Ranger(1, new SquarePath(700, 100, 300), '3'),
         // new Ranger(1, new SquarePath(800, 100, 300), '3'),
-        new Spiker(1, new SquarePath(600, 200, 300), '3'),
+        // new Spiker(1, new SquarePath(600, 600, 100), '3'),
+        // new Spiker(1, new SquarePath(700, 600, 100), '3'),
+        // new Spiker(1, new SquarePath(800, 600, 100), '3'),
     ]]
 ])

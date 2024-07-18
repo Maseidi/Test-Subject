@@ -44,8 +44,8 @@
 }
 
 .spiker-collider {
-  height: 50px;
-  width: 50px;
+  height: 27px;
+  width: 27px;
 }
 
 .vision {
@@ -107,8 +107,8 @@
 }
 
 .spiker-collider > div:nth-of-type(1) {
-  width: 20px;
-  height: 20px;
+  width: 15px;
+  height: 15px;
   border-radius: 50%;
 }
 
@@ -175,12 +175,13 @@
   width: 0;
   height: 0;
   background-color: transparent !important;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  border-bottom: 10px solid white;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 5px solid white;
   position: absolute;
+  left: 50%;
   bottom: 100%;
-  transform: translateY(-3px);
+  transform: translateY(-3px) translateX(-50%);
 }
 
 .torturer-collider > div:nth-of-type(1) > div:nth-of-type(2),
@@ -203,12 +204,13 @@
   width: 0;
   height: 0;
   background-color: transparent !important;
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent;
-  border-top: 10px solid white;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-top: 5px solid white;
   position: absolute;
+  left: 50%;
   top: 100%;
-  transform: translateY(3px);
+  transform: translateY(3px) translateX(-50%);
 }
 
 .torturer-collider > div:nth-of-type(1) > div:nth-of-type(3),
@@ -254,12 +256,13 @@
   width: 0;
   height: 0;
   background-color: transparent !important;
-  border-top: 10px solid transparent;
-  border-bottom: 10px solid transparent;
-  border-right: 10px solid white;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-right: 5px solid white;
   position: absolute;
+  top: 50%;
   right: 100%;
-  transform: translateX(-3px);
+  transform: translateX(-3px) translateY(-50%);
 }
 
 .ranger-collider > div:nth-of-type(1) > div:nth-of-type(4) {
@@ -276,12 +279,13 @@
   width: 0;
   height: 0;
   background-color: transparent !important;
-  border-top: 10px solid transparent;
-  border-bottom: 10px solid transparent;
-  border-left: 10px solid white;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  border-left: 5px solid white;
   position: absolute;
+  top: 50%;
   left: 100%;
-  transform: translateX(3px);
+  transform: translateX(3px) translateY(-50%);
 }
 
 .ranger-collider > div:nth-of-type(1) > div:nth-of-type(5) {

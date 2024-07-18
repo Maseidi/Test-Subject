@@ -17,6 +17,7 @@ export const checkCollision = (enemy) => {
                 && getEnemyState(e) !== INVESTIGATE && getEnemyState(e) !== GO_FOR_RANGED)
     addAttribute(enemy, 'colliding-enemy', null)
     if ( !collidingEnemy ) return
+    if ( enemy.getAttribute('type') === 'spiker' && collidingEnemy.getAttribute('type') !== 'spiker' ) return
     handleRangerEnemy(enemy)
     addAttribute(enemy, 'colliding-enemy', collidingEnemy.getAttribute('index'))
     const enemyState = getEnemyState(enemy)

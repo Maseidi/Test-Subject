@@ -3,7 +3,6 @@ import { loaders } from './loaders.js'
 import { loadCurrentRoom } from './room-loader.js'
 import { CHASE, NO_OFFENCE } from './enemy-state.js'
 import { checkCollision } from './enemy-collision.js'
-import { normalEnemyBehavior } from './normal-enemy.js'
 import { addAttribute, collide, containsClass, removeClass } from './util.js'
 import { 
     getEnemyState,
@@ -31,9 +30,8 @@ import {
     setNoOffenseCounter,
     setRoomLeft,
     setRoomTop} from './variables.js'
-import { rangerEnemyBehavior } from './ranger-enemy.js'
 import { takeDamage } from './player-health.js'
-import { spikerEnemyBehavior } from './spiker-enemy.js'
+import { createEnemy } from './enemy-factory.js'
 
 export const manageEntities = () => {
     manageSolidObjects()
@@ -112,22 +110,14 @@ const handleNoOffenceMode = () => {
     setNoOffenseCounter(0)
 }
 
-const BEHAVIOR_MAP = new Map([
-    ['torturer', normalEnemyBehavior],
-    ['soul-drinker', normalEnemyBehavior],
-    ['rock-crusher', normalEnemyBehavior],
-    ['iron-master', normalEnemyBehavior],
-    ['ranger', rangerEnemyBehavior],
-    ['spiker', spikerEnemyBehavior],
-])
-
 const handleEnemies = () => {
-    getCurrentRoomEnemies().forEach((enemy) => {
-        wallsInTheWay(enemy)
-        vision2Player(enemy)
-        manageDamagedState(enemy)
-        checkCollision(enemy)
-        BEHAVIOR_MAP.get(enemy.getAttribute('type'))(enemy) 
+    getCurrentRoomEnemies().forEach((elem) => {
+        wallsInTheWay(elem)
+        vision2Player(elem)
+        manageDamagedState(elem)
+        checkCollision(elem)
+        const enemy = createEnemy(elem)
+        enemy.behave()
     })
 }
 

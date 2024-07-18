@@ -39,7 +39,7 @@ export const move2Destination = (enemy) => {
     const { xMultiplier, yMultiplier } = decideDirection(enemyLeft, destLeft, enemyTop, destTop, enemyW, destW)
     calculateAngle(enemy, xMultiplier, yMultiplier)
     const speed = calculateSpeed(enemy, xMultiplier, yMultiplier)
-    if ( xMultiplier === 0 && yMultiplier === 0 ) reachedDestination(enemy)
+    if ( !xMultiplier && !yMultiplier ) reachedDestination(enemy)
     const currentX = Number(window.getComputedStyle(enemy).left.replace('px', ''))
     const currentY = Number(window.getComputedStyle(enemy).top.replace('px', ''))
     enemy.style.left = `${currentX + speed * xMultiplier}px`

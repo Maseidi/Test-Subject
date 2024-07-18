@@ -13,7 +13,6 @@ import { addAttribute } from './util.js'
 import { findPath } from './enemy-path-finding.js'
 
 export const spikerEnemyBehavior = (enemy) => {
-    console.log(enemy.getAttribute('investigation-counter'));
     handleRotation(enemy)
     switch ( getEnemyState(enemy) ) {
         case INVESTIGATE:
@@ -68,7 +67,7 @@ const move2Destination = (enemy) => {
     calculateAngle(enemy, xMultiplier, yMultiplier)
     const speed = calculateSpeed(enemy, xMultiplier, yMultiplier)
     manageAxis(enemy, xMultiplier, yMultiplier)
-    if ( xMultiplier === 0 && yMultiplier === 0 ) reachedDestination(enemy)
+    if ( !xMultiplier && !yMultiplier ) reachedDestination(enemy)
     const currentX = Number(window.getComputedStyle(enemy).left.replace('px', ''))
     const currentY = Number(window.getComputedStyle(enemy).top.replace('px', ''))
     enemy.style.left = `${currentX + speed * xMultiplier}px`
@@ -97,7 +96,7 @@ const decideDirection = (enemy, enemyLeft, destLeft, enemyTop, destTop, enemyW, 
     let xMultiplier, yMultiplier
     const pathFindingX = enemy.getAttribute('path-finding-x')
     const pathFindingY = enemy.getAttribute('path-finding-y')
-    if ( pathFindingX !== 'null' && pathFindingY !== 'null' ) {
+    if ( getEnemyState(enemy) === INVESTIGATE || ( pathFindingX !== 'null' && pathFindingY !== 'null' ) ) {
         if ( enemyLeft > destLeft + destW / 2 ) xMultiplier = -1
         else if ( enemyLeft + enemyW <= destLeft + destW / 2 ) xMultiplier = 1
         if ( enemyTop > destTop + destW / 2 ) yMultiplier = -1
