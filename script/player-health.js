@@ -1,10 +1,9 @@
 import { healthManager } from './user-interface.js'
-import { getInventory, useInventoryResource } from './inventory.js'
-import { getHealth, getMaxHealth, getNoOffenseCounter, setHealth, setNoOffenseCounter } from './variables.js'
+import { CHASE, NO_OFFENCE } from './enemy-constants.js'
 import { addClass, checkLowHealth, removeClass } from './util.js'
+import { getInventory, useInventoryResource } from './inventory.js'
 import { getCurrentRoomEnemies, getMapEl, getPlayer } from './elements.js'
-import { getEnemyState, setEnemyState } from './enemy-actions.js'
-import { CHASE, NO_OFFENCE } from './enemy-state.js'
+import { getHealth, getMaxHealth, getNoOffenseCounter, setHealth, setNoOffenseCounter } from './variables.js'
 
 export const heal = () => {
     if ( getHealth() === getMaxHealth() ) return
@@ -37,8 +36,8 @@ export const takeDamage = (damage) => {
 
 const noOffenceAllEnemies = () => {
     Array.from(getCurrentRoomEnemies())
-        .filter(enemy => getEnemyState(enemy) === CHASE )
-        .forEach(enemy => setEnemyState(enemy, NO_OFFENCE))
+        .filter(elem => elem.getEnemyState() === CHASE )
+        .forEach(elem => elem.setEnemyState(NO_OFFENCE))
     setNoOffenseCounter(1)
 }
 

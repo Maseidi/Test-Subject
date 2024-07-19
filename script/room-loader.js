@@ -3,8 +3,10 @@ import { rooms } from './rooms.js'
 import { loaders } from './loaders.js'
 import { enemies } from './enemies.js'
 import { getProgress } from './progress.js'
+import { createEnemy } from './enemy-factory.js'
 import { interactables } from './interactables.js'
 import { getWeaponSpecs } from './weapon-specs.js'
+import { INVESTIGATE } from './enemy-constants.js'
 import { getCurrentRoomId, getRoomLeft, getRoomTop } from './variables.js'
 import { addAttribute, addClass, appendAll, createAndAddClass, nextId, objectToElement, removeClass } from './util.js'
 import { 
@@ -20,7 +22,6 @@ import {
     setCurrentRoomRangerBullets,
     setCurrentRoomSolid,
     } from './elements.js'
-import { INVESTIGATE } from './enemy-state.js'
 
 export const loadCurrentRoom = () => {
     const room = rooms.get(getCurrentRoomId())
@@ -191,7 +192,7 @@ const spawnEnemies = (enemies, roomToRender) => {
         appendAll(enemyCollider, enemyBody, vision, fwDetector)
         enemy.append(enemyCollider)
         roomToRender.append(enemy)
-        getCurrentRoomEnemies().push(enemy)
+        getCurrentRoomEnemies().push(createEnemy(enemy))
         getCurrentRoomSolid().push(enemyCollider)
     })
 }

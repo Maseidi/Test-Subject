@@ -1,15 +1,10 @@
 import { rooms } from './rooms.js'
 import { loaders } from './loaders.js'
+import { takeDamage } from './player-health.js'
 import { loadCurrentRoom } from './room-loader.js'
-import { CHASE, NO_OFFENCE } from './enemy-state.js'
-import { checkCollision } from './enemy-collision.js'
-import { addAttribute, collide, containsClass, removeClass } from './util.js'
-import { 
-    getEnemyState,
-    notifyEnemy,
-    setEnemyState,
-    vision2Player,
-    wallsInTheWay } from './enemy-actions.js'
+import { AbstractEnemy } from './abstract-enemy.js'
+import { CHASE, NO_OFFENCE } from './enemy-constants.js'
+import { collide, containsClass, removeClass } from './util.js'
 import { 
     getCurrentRoom,
     getCurrentRoomEnemies,
@@ -30,8 +25,6 @@ import {
     setNoOffenseCounter,
     setRoomLeft,
     setRoomTop} from './variables.js'
-import { takeDamage } from './player-health.js'
-import { createEnemy } from './enemy-factory.js'
 
 export const manageEntities = () => {
     manageSolidObjects()
@@ -45,7 +38,7 @@ const manageSolidObjects = () => {
     setAllowMove(true)
     const solid = getCurrentRoomSolid().find(solid => collide(getPlayer().firstElementChild.children[1], solid, 12))
     if ( solid ) setAllowMove(false)
-    if ( solid && containsClass(solid.parentElement, 'enemy') ) notifyEnemy(100, solid.parentElement)    
+    if ( solid && solid.enemy ) solid.notifyEnemy(100)    
 }
 
 let prevRoomId
@@ -102,33 +95,22 @@ const handleNoOffenceMode = () => {
     if ( getNoOffenseCounter() > 0 ) setNoOffenseCounter(getNoOffenseCounter() + 1)
     if ( getNoOffenseCounter() < 180 ) return
     Array.from(getCurrentRoomEnemies())
-        .filter(enemy => getEnemyState(enemy) === NO_OFFENCE)
-        .forEach(enemy => {
-            setEnemyState(enemy, CHASE)
-            removeClass(enemy.firstElementChild.firstElementChild.firstElementChild, 'attack')
+        .filter(elem => elem.getEnemyState() === NO_OFFENCE)
+        .forEach(elem => {
+            elem.setEnemyState(CHASE)
+            removeClass(elem.enemy.firstElementChild.firstElementChild.firstElementChild, 'attack')
         })
     setNoOffenseCounter(0)
 }
 
 const handleEnemies = () => {
     getCurrentRoomEnemies().forEach((elem) => {
-        wallsInTheWay(elem)
-        vision2Player(elem)
-        manageDamagedState(elem)
-        checkCollision(elem)
-        const enemy = createEnemy(elem)
-        enemy.behave()
+        AbstractEnemy.wallsInTheWay(elem.enemy)
+        AbstractEnemy.vision2Player(elem.enemy)
+        elem.manageDamagedState()
+        elem.checkCollision()
+        elem.behave()
     })
-}
-
-const manageDamagedState = (enemy) => {
-    let damagedCounter = Number(enemy.getAttribute('damaged-counter'))
-    if ( damagedCounter === 0 ) {
-        removeClass(enemy.firstElementChild.firstElementChild, 'damaged')
-        return
-    }
-    damagedCounter--
-    addAttribute(enemy, 'damaged-counter', damagedCounter)
 }
 
 const manageRangerBullets = () => {

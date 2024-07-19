@@ -1,8 +1,8 @@
 import { getStat } from './weapon-specs.js'
 import { dropLoot } from './loot-manager.js'
 import { collide, containsClass } from './util.js'
+import { IRON_MASTER } from './enemy-constants.js'
 import { removeUi, renderUi } from './user-interface.js'
-import { damageEnemy, notifyEnemy } from './enemy-actions.js'
 import { getCurrentRoomEnemies, getCurrentRoomSolid, getPlayer } from './elements.js'
 import { 
     calculateTotalAmmo,
@@ -116,14 +116,15 @@ const shoot = () => {
     updateInventory(equippedWeapon, currMag, 0)
 }
 
-const notifyNearbyEnemies = () => getCurrentRoomEnemies().forEach(enemy => notifyEnemy(800, enemy))
+const notifyNearbyEnemies = () => getCurrentRoomEnemies().forEach(elem => elem.notifyEnemy(800))
 
 const manageInteractivity = () => {
     if ( !getTarget() ) return
-    let enemy = getTarget().parentElement
-    if ( containsClass(enemy, 'iron-master') ) return
-    if ( containsClass(getTarget(), 'weak-point') ) enemy = getTarget().parentElement.parentElement.parentElement
-    if ( containsClass(enemy, 'enemy') && Number(enemy.getAttribute('health')) > 0 ) damageEnemy(enemy, equippedWeapon)
+    let find = getTarget().parentElement
+    if ( containsClass(find, IRON_MASTER) ) return
+    if ( containsClass(getTarget(), 'weak-point') ) find = getTarget().parentElement.parentElement.parentElement
+    if ( containsClass(find, 'enemy') && Number(find.getAttribute('health')) > 0 ) 
+        getCurrentRoomEnemies().find(elem => elem.enemy === find).damageEnemy(equippedWeapon)
     if ( getTarget()?.getAttribute('name') === 'crate' ) dropLoot(getTarget())
 }
 
