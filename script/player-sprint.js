@@ -4,6 +4,7 @@ import { getCurrentRoomEnemies, getPlayer } from './elements.js'
 import { 
     getAimMode,
     getAllowMove,
+    getNoOffenseCounter,
     getRefillStamina,
     getSprint,
     getSprintPressed,
@@ -11,6 +12,7 @@ import {
     setRefillStamina,
     setSprint,
     setStamina } from './variables.js'
+import { TRACKER } from './enemy-constants.js'
 
 export const manageSprint = () => {
     if ( getSprintPressed() && !getAimMode() && isMoving()) {
@@ -33,5 +35,11 @@ const handleSprintAndStamina = (sprint, animator, stamina, refill) => {
     setStamina(getStamina() + stamina)
     setRefillStamina(refill)
     staminaManager(getStamina())
-    if ( sprint ) getCurrentRoomEnemies().forEach(elem => elem.notifyEnemy(400))
+    if ( sprint ) 
+        getCurrentRoomEnemies().forEach(elem => {
+            if ( elem.enemy.getAttribute('type') === TRACKER ) {
+                if ( getNoOffenseCounter() === 0 ) elem.notifyEnemy(1500)
+            }
+            else elem.notifyEnemy(400)
+        })
 }

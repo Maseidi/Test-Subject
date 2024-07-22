@@ -2,7 +2,6 @@ import { rooms } from './rooms.js'
 import { loaders } from './loaders.js'
 import { takeDamage } from './player-health.js'
 import { loadCurrentRoom } from './room-loader.js'
-import { AbstractEnemy } from './abstract-enemy.js'
 import { CHASE, NO_OFFENCE } from './enemy-constants.js'
 import { collide, containsClass, removeClass } from './util.js'
 import { 
@@ -105,8 +104,8 @@ const handleNoOffenceMode = () => {
 
 const handleEnemies = () => {
     getCurrentRoomEnemies().forEach((elem) => {
-        AbstractEnemy.wallsInTheWay(elem.enemy)
-        AbstractEnemy.vision2Player(elem.enemy)
+        elem.wallsInTheWay()
+        elem.vision2Player()
         elem.manageDamagedState()
         elem.checkCollision()
         elem.behave()
@@ -128,7 +127,7 @@ const manageRangerBullets = () => {
         }
         for ( const solid of getCurrentRoomSolid() )
             if ((!containsClass(solid, 'enemy-collider') && 
-                 !containsClass(solid, 'iron-master-component') && 
+                 !containsClass(solid, 'tracker-component') && 
                  collide(bullet, solid, 0)) || 
                  !collide(bullet, getCurrentRoom(), 0) ) {
                 bullet.remove()

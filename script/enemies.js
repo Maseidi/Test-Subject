@@ -1,4 +1,4 @@
-import { IRON_MASTER, RANGER, ROCK_CRUSHER, SOUL_DRINKER, SPIKER, TORTURER } from './enemy-constants.js'
+import { TRACKER, RANGER, ROCK_CRUSHER, SOUL_DRINKER, SPIKER, TORTURER } from './enemy-constants.js'
 
 class Enemy {
     constructor(type, components, path, health, damage, knock, maxSpeed, progress, vision, acceleration) {
@@ -100,12 +100,12 @@ class RockCrusher extends Enemy {
     }
 }
 
-class IronMaster extends Enemy {
-    constructor(level, path, progress) {
+class Tracker extends Enemy {
+    constructor(level, x, y, progress) {
         const health = Math.floor(level * 135 + Math.random() * 15)
         const damage = Math.floor(level * 30 + Math.random() * 15)
-        const maxSpeed = 3 + Math.random()
-        super(IRON_MASTER, 8, path, health, damage, 150, maxSpeed, progress, 500, 1.2)
+        const maxSpeed = 8 + Math.random()
+        super(TRACKER, 8, new SinglePointPath(x, y), health, damage, 50, maxSpeed, progress, 500, maxSpeed)
     }
 }
 
@@ -124,24 +124,25 @@ class Spiker extends Enemy {
         const health = Math.floor(level * 25 + Math.random() * 5)
         const damage = Math.floor(level * 15 + Math.random() * 5)
         const maxSpeed = 6 + Math.random()
-        super(SPIKER, 6, path, health, damage, 100, maxSpeed, progress, 1000, maxSpeed)
+        super(SPIKER, 6, path, health, damage, 100, maxSpeed, progress, 400, maxSpeed)
         this.axis = Math.random() < 0.5 ? 1 : 2
     }
 }
 
 export const enemies = new Map([
     [37, [
-        new Torturer(1, new SquarePath(650, 240, 300), '1'),
-        new Torturer(1, new VerDoublePointPath(800, 100, 300), '2'),
-        new Torturer(1, new SquarePath(650, 240, 300), '3'),
+        // new Torturer(1, new SquarePath(650, 240, 300), '1'),
+        // new Torturer(1, new VerDoublePointPath(800, 100, 300), '2'),
+        // new Torturer(1, new SquarePath(650, 240, 300), '3'),
         new SoulDrinker(1, new SinglePointPath(650, 140), '3'),
         new RockCrusher(1, new SinglePointPath(850, 140), '3'),
-        new IronMaster(1, new HorDoublePointPath(1000, 140, 500), '3'),
-        new Ranger(1, new SquarePath(600, 100, 300), '3'),
-        new Ranger(1, new SquarePath(700, 100, 300), '3'),
-        new Ranger(1, new SquarePath(800, 100, 300), '3'),
-        new Spiker(1, new SquarePath(600, 600, 100), '3'),
+        new Tracker(1, 1000, 140, '3'),
+        new Tracker(1, 1000, 240, '3'),
+        new Ranger(1, new SquarePath(1000, 100, 300), '3'),
+        new Ranger(1, new SquarePath(1100, 100, 300), '3'),
+        // new Ranger(1, new SquarePath(1200, 100, 300), '3'),
+        // new Spiker(1, new SquarePath(600, 600, 100), '3'),
         new Spiker(1, new SquarePath(700, 600, 100), '3'),
-        new Spiker(1, new SquarePath(800, 600, 100), '3'),
+        // new Spiker(1, new SquarePath(800, 600, 100), '3'),
     ]]
 ])

@@ -6,7 +6,7 @@ import { getProgress } from './progress.js'
 import { createEnemy } from './enemy-factory.js'
 import { interactables } from './interactables.js'
 import { getWeaponSpecs } from './weapon-specs.js'
-import { INVESTIGATE } from './enemy-constants.js'
+import { INVESTIGATE, TRACKER } from './enemy-constants.js'
 import { getCurrentRoomId, getRoomLeft, getRoomTop } from './variables.js'
 import { addAttribute, addClass, appendAll, createAndAddClass, nextId, objectToElement, removeClass } from './util.js'
 import { 
@@ -187,7 +187,7 @@ const spawnEnemies = (enemies, roomToRender) => {
         if ( elem.type === 'spiker' ) removeClass(enemyBody, 'body-transition')
         enemyBody.style.backgroundColor = `${elem.virus}`
         defineComponents(elem, enemyBody)
-        const vision = defineVision(elem)
+        const vision = elem.type === TRACKER ? createAndAddClass('div', 'vision') : defineVision(elem)
         const fwDetector = defineForwardDetector(elem)
         appendAll(enemyCollider, enemyBody, vision, fwDetector)
         enemy.append(enemyCollider)
@@ -236,7 +236,7 @@ const defineComponents = (element, enemyBody) => {
 }
 
 const manageEnemyCriticalPoints = (element, component, componentNum) => {
-    if ( element.type === 'iron-master' ) addEnemyCriticalPoints(component, componentNum, 4, [7])
+    if ( element.type === TRACKER ) addEnemyCriticalPoints(component, componentNum, 4, [7])
 }
 
 const addEnemyCriticalPoints = (component, componentNum, offset, weakpoints) => {

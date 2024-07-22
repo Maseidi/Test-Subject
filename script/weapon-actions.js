@@ -1,7 +1,7 @@
 import { getStat } from './weapon-specs.js'
 import { dropLoot } from './loot-manager.js'
+import { TRACKER } from './enemy-constants.js'
 import { collide, containsClass } from './util.js'
-import { IRON_MASTER } from './enemy-constants.js'
 import { removeUi, renderUi } from './user-interface.js'
 import { getCurrentRoomEnemies, getCurrentRoomSolid, getPlayer } from './elements.js'
 import { 
@@ -12,6 +12,7 @@ import {
 import { 
     getAimMode,
     getEquippedWeapon,
+    getNoOffenseCounter,
     getReloading,
     getShootCounter,
     getShootPressed,
@@ -116,12 +117,17 @@ const shoot = () => {
     updateInventory(equippedWeapon, currMag, 0)
 }
 
-const notifyNearbyEnemies = () => getCurrentRoomEnemies().forEach(elem => elem.notifyEnemy(800))
+const notifyNearbyEnemies = () => getCurrentRoomEnemies().forEach(elem => {
+    if ( elem.enemy.getAttribute('type') === TRACKER ) {
+        if ( getNoOffenseCounter() === 0 ) elem.notifyEnemy(2000)
+    }
+    else elem.notifyEnemy(800)
+})
 
 const manageInteractivity = () => {
     if ( !getTarget() ) return
     let find = getTarget().parentElement
-    if ( containsClass(find, IRON_MASTER) ) return
+    if ( containsClass(find, TRACKER) ) return
     if ( containsClass(getTarget(), 'weak-point') ) find = getTarget().parentElement.parentElement.parentElement
     if ( containsClass(find, 'enemy') && Number(find.getAttribute('health')) > 0 ) 
         getCurrentRoomEnemies().find(elem => elem.enemy === find).damageEnemy(equippedWeapon)

@@ -47,8 +47,7 @@ export class RangerEnemy extends NormalEnemy {
         let shootCounter = Number(this.enemy.getAttribute('shoot-counter'))
         shootCounter++
         if ( shootCounter === 90 ) {
-            const d = distance(this.enemy.getBoundingClientRect().x, this.enemy.getBoundingClientRect().y, 
-                               getPlayer().getBoundingClientRect().x, getPlayer().getBoundingClientRect().y)
+            const d = this.distance2Player()
             if ( d > this.enemy.getAttribute('vision') || d < 200 ||
                  this.enemy.getAttribute('wall-in-the-way') !== 'false' || 
                  Math.random() < 0.2 ) this.setEnemyState(CHASE)
@@ -59,7 +58,7 @@ export class RangerEnemy extends NormalEnemy {
         addAttribute(this.enemy, 'shoot-counter', shootCounter)
         this.shootAnimation()
         if ( shootCounter !== 15 ) return
-        this.shoot()
+        if ( this.enemy.getAttribute('health') > 0 ) this.shoot()
     }
 
     updateAngle2Player() {

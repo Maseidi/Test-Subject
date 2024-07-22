@@ -12,7 +12,8 @@ import {
     INVESTIGATE,
     LOST,
     MOVE_TO_POSITION,
-    NO_OFFENCE } from './enemy-constants.js'
+    NO_OFFENCE, 
+    TRACKER } from './enemy-constants.js'
 import { 
     getCurrentRoomId,
     getMapX,
@@ -242,7 +243,7 @@ export class AbstractEnemy {
                      (distance(this.enemy.getBoundingClientRect().x, this.enemy.getBoundingClientRect().y,
                      e.enemy.getBoundingClientRect().x, e.enemy.getBoundingClientRect().y) < 500 ) &&
                      e.enemy.getAttribute('state') !== CHASE && e.enemy.getAttribute('state') !== NO_OFFENCE && 
-                     e.enemy.getAttribute('state') !== GO_FOR_RANGED
+                     e.enemy.getAttribute('state') !== GO_FOR_RANGED && e.enemy.getAttribute('type') !== TRACKER
             ).forEach(e => e.notifyEnemy(Number.MAX_SAFE_INTEGER))
     }
 
@@ -315,38 +316,42 @@ export class AbstractEnemy {
         this.move2Destination()
     }
 
-    static vision2Player(enemy) {
-        const vision = enemy.firstElementChild.children[1]
-        vision.style.transform = `rotateZ(${this.angle2Player(enemy)}deg)`
+    vision2Player() {
+        const vision = this.enemy.firstElementChild.children[1]
+        vision.style.transform = `rotateZ(${this.angle2Player()}deg)`
     }
 
-    static angle2Player(enemy) {
-        const enemyBound = enemy.getBoundingClientRect()
-        const playerBound = getPlayer().getBoundingClientRect()
+    angle2Player() {
+        return this.angle2Target(getPlayer())
+    }
+
+    angle2Target(target) {
+        const enemyBound = this.enemy.getBoundingClientRect()
+        const targetBound = target.getBoundingClientRect()
         return angleOfTwoPoints(enemyBound.x + enemyBound.width / 2, enemyBound.y + enemyBound.height / 2, 
-                                playerBound.x + playerBound.width / 2, playerBound.y + playerBound.height / 2)
+                                targetBound.x + targetBound.width / 2, targetBound.y + targetBound.height / 2)
     }
 
-    static wallsInTheWay(enemy) {
-        let wallCheckCounter = Number(enemy.getAttribute('wall-check-counter')) || 1
+    wallsInTheWay() {
+        let wallCheckCounter = Number(this.enemy.getAttribute('wall-check-counter')) || 1
         wallCheckCounter = wallCheckCounter + 1 === 21 ? 0 : wallCheckCounter + 1
-        addAttribute(enemy, 'wall-check-counter', wallCheckCounter)
+        addAttribute(this.enemy, 'wall-check-counter', wallCheckCounter)
         if ( wallCheckCounter !== 20 ) return
         const walls = Array.from(getCurrentRoomSolid())
-            .filter(solid => !containsClass(solid, 'enemy-collider') && !containsClass(solid, 'iron-master-component'))
-        const vision = enemy.firstElementChild.children[1]
+            .filter(solid => !containsClass(solid, 'enemy-collider') && !containsClass(solid, 'tracker-component'))
+        const vision = this.enemy.firstElementChild.children[1]
         for ( const component of vision.children ) {
             if ( collide(component, getPlayer(), 0) ) {
-                addAttribute(enemy, 'wall-in-the-way', 'false')
+                addAttribute(this.enemy, 'wall-in-the-way', 'false')
                 return
             }
             for ( const wall of walls )
                 if ( collide(component, wall, 0) ) {
-                    addAttribute(enemy, 'wall-in-the-way', wall.id)
+                    addAttribute(this.enemy, 'wall-in-the-way', wall.id)
                     return
                 }
         }
-        addAttribute(enemy, 'wall-in-the-way', 'out-of-range')
+        addAttribute(this.enemy, 'wall-in-the-way', 'out-of-range')
     }
 
     manageDamagedState() {
@@ -420,6 +425,15 @@ export class AbstractEnemy {
             stateCounter++
             return state === stateCounter && ((angle > s1 && angle < e1) || (angle > s2 && angle <= e2)) 
         }
+    }
+
+    distance2Player() {
+        return this.distance2Target(getPlayer())
+    }
+
+    distance2Target(target) {
+        return distance(this.enemy.getBoundingClientRect().x, this.enemy.getBoundingClientRect().y, 
+                        target.getBoundingClientRect().x, target.getBoundingClientRect().y)
     }
 
     findPath() {
