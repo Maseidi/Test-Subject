@@ -1,8 +1,8 @@
 import { getPlayer } from './elements.js'
 import { NormalEnemy } from './normal-enemy.js'
 import { addAttribute, collide } from './util.js'
-import { CHASE, GUESS_SEARCH, INVESTIGATE, LOST, NO_OFFENCE, TRACKER } from './enemy-constants.js'
 import { getNoOffenseCounter } from './variables.js'
+import { CHASE, GUESS_SEARCH, INVESTIGATE, LOST, NO_OFFENCE, TRACKER } from './enemy-constants.js'
 
 export class TrackerEnemy extends NormalEnemy {
     constructor(enemy) {
@@ -10,7 +10,6 @@ export class TrackerEnemy extends NormalEnemy {
     }
 
     behave() {
-        this.handleCollision2Player()
         switch ( this.getEnemyState() ) {
             case INVESTIGATE:
                 this.handleInvestigationState()
@@ -28,12 +27,6 @@ export class TrackerEnemy extends NormalEnemy {
         }
     }
 
-    handleCollision2Player() {
-        if ( !(this.getEnemyState() !== NO_OFFENCE && collide(this.enemy, getPlayer(), 0)) ) return
-        this.hitPlayer()
-        this.setEnemyState(LOST)
-    }
-
     handleInvestigationState() {
         if ( this.distance2Player() < 100 && getNoOffenseCounter() === 0 ) {
             this.setEnemyState(CHASE)
@@ -41,19 +34,19 @@ export class TrackerEnemy extends NormalEnemy {
         }
         const counter = Number(this.enemy.getAttribute('investigation-counter'))
         if ( counter >= 0 ) addAttribute(this.enemy, 'investigation-counter', counter + 1)
-        if ( counter && counter !== 300 && counter % 100 === 0 ) this.checkSuroundings()
+        if ( counter && counter !== 300 && counter % 100 === 0 ) this.checkSurroundings()
         if ( counter >= 300 ) addAttribute(this.enemy, 'investigation-counter', 0)       
     }
 
     handleChaseState() {
-        this.accelerateEnemy()
+        this.accelerateEnemy() // TODO: remove after handleCollidingEnemy is done
         this.displaceEnemy()
         this.setEnemyState(GUESS_SEARCH)
         addAttribute(this.enemy, 'guess-counter', 1)
     }
 
     handleGuessSearchState() {
-        this.accelerateEnemy()
+        this.accelerateEnemy() // TODO: remove after handleCollidingEnemy is done
         let guessCounter = Number(this.enemy.getAttribute('guess-counter'))
         if ( guessCounter > 0 ) {
             guessCounter++
@@ -65,21 +58,14 @@ export class TrackerEnemy extends NormalEnemy {
     }
 
     handleLostState() {
-        const counter = Number(this.enemy.getAttribute('lost-counter'))
-        if ( counter === 600 ) {
             this.setEnemyState(INVESTIGATE)
-            return
-        }
-        if ( counter % 120 === 0 ) this.checkSuroundings()
-        addAttribute(this.enemy, 'lost-counter', counter + 1)
     }
 
-    wallsInTheWay() {
-        return
-    }
-
-    vision2Player() {
-        return
+    collidePlayer() {
+        if ( !(this.getEnemyState() !== NO_OFFENCE && collide(this.enemy, getPlayer(), 0)) ) return false
+        this.hitPlayer()
+        this.setEnemyState(INVESTIGATE)
+        return true
     }
 
     checkCollision() {
@@ -87,6 +73,34 @@ export class TrackerEnemy extends NormalEnemy {
         if ( !collidingEnemy ) return
         if ( collidingEnemy.enemy.getAttribute('type') !== TRACKER ) return
         this.handleCollision(collidingEnemy)
+    }
+
+    // TODO: implement handleCollision
+    // handleCollision(collidingEnemy) {
+    //     addAttribute(this.enemy, 'colliding-enemy', collidingEnemy.enemy.getAttribute('index'))
+    //     const enemyState = this.getEnemyState()
+    //     const collidingState = collidingEnemy.getEnemyState()
+    //     if ( [INVESTIGATE, LOST].includes(collidingState) && 
+    //          ( enemyState === CHASE || enemyState === NO_OFFENCE || enemyState === GUESS_SEARCH ) ) {
+    //         this.setEnemyState(INVESTIGATE)
+    //         this.resetAcceleration()
+    //     }
+    //     else {
+    //         const c1 = this.enemy.getAttribute('colliding-enemy')
+    //         const c2 = collidingEnemy.enemy.getAttribute('colliding-enemy')
+    //         const i1 = this.enemy.getAttribute('index')
+    //         const i2 = collidingEnemy.enemy.getAttribute('index')
+    //         if ( c1 === i2 && c2 === i1 ) return
+    //         this.resetAcceleration()
+    //     }
+    // }
+
+    wallsInTheWay() {
+        return
+    }
+
+    vision2Player() {
+        return
     }
 
 }

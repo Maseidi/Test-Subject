@@ -305,7 +305,7 @@ export class AbstractEnemy {
         return visible
     }
 
-    checkSuroundings() {
+    checkSurroundings() {
         const x = Math.random() < 1 / 3 ? 1 : Math.random() < 0.5 ? 0 : -1
         const y = Math.random() < 1 / 3 ? 1 : Math.random() < 0.5 ? 0 : -1
         this.calculateAngle(x, y)

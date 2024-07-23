@@ -39,10 +39,10 @@ export class NormalEnemy extends AbstractEnemy {
         const path = document.getElementById(this.enemy.getAttribute('path'))
         const counter = Number(this.enemy.getAttribute('investigation-counter'))
         if ( counter > 0 ) addAttribute(this.enemy, 'investigation-counter', counter + 1)
-        if ( counter && counter !== 300 && counter % 100 === 0 ) this.checkSuroundings()
+        if ( counter && counter !== 300 && counter % 100 === 0 ) this.checkSurroundings()
         if ( counter >= 300 ) addAttribute(this.enemy, 'investigation-counter', 0)
         if ( counter !== 0 ) return
-        if ( path.children.length === 1 ) this.checkSuroundings()
+        if ( path.children.length === 1 ) this.checkSurroundings()
         const dest = path.children[Number(this.enemy.getAttribute('path-point'))]
         this.updateDestination2Path(dest)
         this.displaceEnemy()
@@ -78,7 +78,7 @@ export class NormalEnemy extends AbstractEnemy {
             this.setEnemyState(MOVE_TO_POSITION)
             return
         }
-        if ( counter % 120 === 0 ) this.checkSuroundings()
+        if ( counter % 120 === 0 ) this.checkSurroundings()
         addAttribute(this.enemy, 'lost-counter', counter + 1)
     }
     
