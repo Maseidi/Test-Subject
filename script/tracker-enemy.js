@@ -1,4 +1,4 @@
-import { getPlayer } from './elements.js'
+import { getCurrentRoomEnemies, getPlayer } from './elements.js'
 import { NormalEnemy } from './normal-enemy.js'
 import { addAttribute, collide } from './util.js'
 import { getNoOffenseCounter } from './variables.js'
@@ -15,7 +15,6 @@ export class TrackerEnemy extends NormalEnemy {
                 this.handleInvestigationState()
                 break
             case CHASE:
-            case NO_OFFENCE:
                 this.handleChaseState()
                 break
             case GUESS_SEARCH:
@@ -28,7 +27,7 @@ export class TrackerEnemy extends NormalEnemy {
     }
 
     handleInvestigationState() {
-        if ( this.distance2Player() < 100 && getNoOffenseCounter() === 0 ) {
+        if ( this.distance2Player() < 50 && getNoOffenseCounter() === 0 ) {
             this.setEnemyState(CHASE)
             return
         }
@@ -39,14 +38,11 @@ export class TrackerEnemy extends NormalEnemy {
     }
 
     handleChaseState() {
-        this.accelerateEnemy() // TODO: remove after handleCollidingEnemy is done
-        this.displaceEnemy()
         this.setEnemyState(GUESS_SEARCH)
         addAttribute(this.enemy, 'guess-counter', 1)
     }
 
     handleGuessSearchState() {
-        this.accelerateEnemy() // TODO: remove after handleCollidingEnemy is done
         let guessCounter = Number(this.enemy.getAttribute('guess-counter'))
         if ( guessCounter > 0 ) {
             guessCounter++
@@ -54,46 +50,62 @@ export class TrackerEnemy extends NormalEnemy {
         }
         if ( guessCounter !== 0 && guessCounter <= 45 ) this.updateDestination2Player()
         else addAttribute(this.enemy, 'guess-counter', 0)
+        const stopCounter = Number(this.enemy.getAttribute('stop-counter'))
+        if ( stopCounter > 0 ) addAttribute(this.enemy, 'stop-counter', stopCounter + 1)
+        if ( stopCounter === 60 ) addAttribute(this.enemy, 'stop-counter', 0)
+        if ( stopCounter > 0 ) return 
         this.displaceEnemy()
     }
 
     handleLostState() {
-            this.setEnemyState(INVESTIGATE)
+        this.setEnemyState(INVESTIGATE)
     }
 
     collidePlayer() {
-        if ( !(this.getEnemyState() !== NO_OFFENCE && collide(this.enemy, getPlayer(), 0)) ) return false
+        if ( !collide(this.enemy, getPlayer(), 0) ) return false
         this.hitPlayer()
         this.setEnemyState(INVESTIGATE)
         return true
     }
 
+    switch2ChaseMode() {
+        if ( getNoOffenseCounter() !== 0 ) return
+        this.setEnemyState(GUESS_SEARCH)
+        addAttribute(this.enemy, 'guess-counter', 1)
+    }
+
     checkCollision() {
         const collidingEnemy = this.findCollidingEnemy()
         if ( !collidingEnemy ) return
-        if ( collidingEnemy.enemy.getAttribute('type') !== TRACKER ) return
         this.handleCollision(collidingEnemy)
     }
 
-    // TODO: implement handleCollision
-    // handleCollision(collidingEnemy) {
-    //     addAttribute(this.enemy, 'colliding-enemy', collidingEnemy.enemy.getAttribute('index'))
-    //     const enemyState = this.getEnemyState()
-    //     const collidingState = collidingEnemy.getEnemyState()
-    //     if ( [INVESTIGATE, LOST].includes(collidingState) && 
-    //          ( enemyState === CHASE || enemyState === NO_OFFENCE || enemyState === GUESS_SEARCH ) ) {
-    //         this.setEnemyState(INVESTIGATE)
-    //         this.resetAcceleration()
-    //     }
-    //     else {
-    //         const c1 = this.enemy.getAttribute('colliding-enemy')
-    //         const c2 = collidingEnemy.enemy.getAttribute('colliding-enemy')
-    //         const i1 = this.enemy.getAttribute('index')
-    //         const i2 = collidingEnemy.enemy.getAttribute('index')
-    //         if ( c1 === i2 && c2 === i1 ) return
-    //         this.resetAcceleration()
-    //     }
-    // }
+    findCollidingEnemy() {
+        const collidingEnemy = Array.from(getCurrentRoomEnemies())
+            .find(e => e.enemy !== this.enemy 
+            && collide(this.enemy.firstElementChild.children[2], e.enemy.firstElementChild, 0)
+            && e.enemy.getAttribute('type') === TRACKER )
+        addAttribute(this.enemy, 'colliding-enemy', null)
+        return collidingEnemy
+    }
+
+    handleCollision(collidingEnemy) {
+        addAttribute(this.enemy, 'colliding-enemy', collidingEnemy.enemy.getAttribute('index'))
+        const enemyState = this.getEnemyState()
+        const collidingState = collidingEnemy.getEnemyState()
+        if ( [INVESTIGATE, LOST].includes(collidingState) && 
+             ( enemyState === CHASE || enemyState === GUESS_SEARCH ) ) {
+            this.setEnemyState(INVESTIGATE)
+        }
+        else {
+            const c1 = this.enemy.getAttribute('colliding-enemy')
+            const c2 = collidingEnemy.enemy.getAttribute('colliding-enemy')
+            const i1 = this.enemy.getAttribute('index')
+            const i2 = collidingEnemy.enemy.getAttribute('index')
+            if ( c1 === i2 && c2 === i1 ) return
+            addAttribute(this.enemy, 'stop-counter', 1)
+        }
+    }
 
     wallsInTheWay() {
         return

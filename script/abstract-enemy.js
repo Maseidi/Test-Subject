@@ -242,8 +242,8 @@ export class AbstractEnemy {
             .filter(e => e.enemy !== this.enemy &&
                      (distance(this.enemy.getBoundingClientRect().x, this.enemy.getBoundingClientRect().y,
                      e.enemy.getBoundingClientRect().x, e.enemy.getBoundingClientRect().y) < 500 ) &&
-                     e.enemy.getAttribute('state') !== CHASE && e.enemy.getAttribute('state') !== NO_OFFENCE && 
-                     e.enemy.getAttribute('state') !== GO_FOR_RANGED && e.enemy.getAttribute('type') !== TRACKER
+                     e.getEnemyState() !== CHASE && e.getEnemyState() !== NO_OFFENCE && 
+                     e.getEnemyState() !== GO_FOR_RANGED && e.enemy.getAttribute('type') !== TRACKER
             ).forEach(e => e.notifyEnemy(Number.MAX_SAFE_INTEGER))
     }
 

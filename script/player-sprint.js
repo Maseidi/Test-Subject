@@ -1,3 +1,4 @@
+import { TRACKER } from './enemy-constants.js'
 import { staminaManager } from './user-interface.js'
 import { addClass, isMoving, removeClass } from './util.js'
 import { getCurrentRoomEnemies, getPlayer } from './elements.js'
@@ -12,7 +13,6 @@ import {
     setRefillStamina,
     setSprint,
     setStamina } from './variables.js'
-import { TRACKER } from './enemy-constants.js'
 
 export const manageSprint = () => {
     if ( getSprintPressed() && !getAimMode() && isMoving()) {
