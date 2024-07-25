@@ -14,6 +14,7 @@ import {
     getPlayer } from './elements.js'
 import {
     getCurrentRoomId,
+    getGrabbed,
     getIntObj,
     getNoOffenseCounter,
     getRoomLeft,
@@ -121,7 +122,7 @@ const manageRangerBullets = () => {
         bullet.style.left = `${x + speedX}px`
         bullet.style.top = `${y + speedY}px`
         if ( collide(bullet, getPlayer().firstElementChild, 0) ) {
-            takeDamage(+bullet.getAttribute('damage'))
+            if ( !getGrabbed() ) takeDamage(+bullet.getAttribute('damage'))
             bullet.remove()
             continue
         }

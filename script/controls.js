@@ -1,12 +1,12 @@
 import { renderStash } from './stash.js'
-import { heal } from './player-health.js'
+import { heal, takeDamage } from './player-health.js'
 import { getStat } from './weapon-specs.js'
 import { dropLoot } from './loot-manager.js'
 import { centralizePlayer } from './startup.js'
 import { setupReload } from './weapon-actions.js'
 import { renderStore } from './vending-machine.js'
 import { removeWeapon, renderWeapon } from './weapon-loader.js'
-import { getPauseContainer, getPlayer, getUiEl } from './elements.js'
+import { getGrabBar, getPauseContainer, getPlayer, getUiEl } from './elements.js'
 import { addAttribute, addClass, angleOfTwoPoints, isMoving, removeClass } from './util.js'
 import { renderUi, renderEquippedWeapon, quitPage } from './user-interface.js'
 import { equippedWeaponFromInventory, pickupDrop, removeInventory, renderInventory } from './inventory.js'
@@ -198,12 +198,34 @@ const startSprint = () => {
 }
 
 const fDown = () => {
-    if ( getPause() || getGrabbed() || !getIntObj() ) return
+    if ( getGrabbed() ) {
+        breakFree()
+        return
+    }
+    if ( getPause() || !getIntObj() ) return
     if ( getIntObj().getAttribute('amount') ) pickupDrop()
     if ( getShooting() || getReloading() ) return    
     if ( getIntObj().getAttribute('name') === 'stash' ) openStash()    
     if ( getIntObj().getAttribute('name') === 'vendingMachine' ) openVendingMachine()    
     if ( getIntObj().getAttribute('name') === 'crate' ) breakCrate()    
+}
+
+const breakFree = () => {
+    const slider = getGrabBar().lastElementChild
+    const left = Number(slider.style.left.replace('%', '')) * 10
+    const first = Number(getGrabBar().getAttribute('first'))
+    const second = Number(getGrabBar().getAttribute('second'))
+    const third = Number(getGrabBar().getAttribute('third'))
+    if ( left >= first && left <= first + 100 )        processPart('first-done', 'first-ok')
+    else if ( left >= second && left <= second + 100 ) processPart('second-done', 'second-ok')
+    else if ( left >= third && left <= third + 100 )   processPart('third-done', 'third-ok')
+    else takeDamage(Number(getGrabBar().getAttribute('damage')))
+}
+
+const processPart = (predicate, className) => {
+    if ( getGrabBar().getAttribute(predicate) === 'true' ) return
+    addAttribute(getGrabBar(), predicate, true)
+    addClass(getGrabBar(), className)
 }
 
 const openStash = () => openPause('stash', renderStash)

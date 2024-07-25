@@ -112,8 +112,16 @@
 .grab-bar > .breakpoint {
   width: 10%;
   height: 100%;
-  background: linear-gradient(to right, rgb(34, 139, 34), rgb(52, 238, 52));
   position: absolute;
+  background: linear-gradient(to right, rgb(255, 165, 0), rgb(255, 203, 107));
+}
+
+.first-ok > div:nth-of-type(1), .second-ok > div:nth-of-type(2), .third-ok > div:nth-of-type(3) {
+  background: linear-gradient(to right, rgb(34, 139, 34), rgb(45, 183, 45)) !important;
+}
+
+.first-fail > div:nth-of-type(1), .second-fail > div:nth-of-type(2), .third-fail > div:nth-of-type(3) {
+  background: linear-gradient(to right, rgb(220, 20, 60), rgb(220, 68, 99)) !important;
 }
 
 .grab-bar > .slider {

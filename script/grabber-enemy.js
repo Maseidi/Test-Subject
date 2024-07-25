@@ -1,7 +1,7 @@
 import { addAttribute, addClass, appendAll, collide, createAndAddClass, isMoving, removeClass } from './util.js'
 import { getCurrentRoomEnemies, getGrabBar, getPauseContainer, getPlayer, setGrabBar } from './elements.js'
 import { NormalEnemy } from './normal-enemy.js'
-import { CHASE, GRAB, GUESS_SEARCH, INVESTIGATE, LOST, MOVE_TO_POSITION, NO_OFFENCE, STAND_AND_WATCH } from './enemy-constants.js'
+import { CHASE, GRAB, GUESS_SEARCH, INVESTIGATE, LOST, MOVE_TO_POSITION, NO_OFFENCE, STAND_AND_WATCH, TRACKER } from './enemy-constants.js'
 import { manageAimModeAngle } from './player-angle.js'
 import { takeDamage } from './player-health.js'
 import { getSprintPressed, setAimMode, setGrabbed, setNoOffenseCounter } from './variables.js'
@@ -37,21 +37,35 @@ export class GrabberEnemy extends NormalEnemy {
     }
 
     handleGrabState() {
+        setNoOffenseCounter(0)
         const slider = getGrabBar().lastElementChild
         const percent = Number(slider.style.left.replace('%', ''))
         if ( percent >= 100 ) this.releasePlayer()
         slider.style.left = `${percent + 0.7}%`
+        const current = 10 * ( percent + 0.7 )
+        this.#processPart(current, 'first')
+        this.#processPart(current, 'second')
+        this.#processPart(current, 'third')
+    }
+
+    #processPart(current, part) {
+        const damage = Number(getGrabBar().getAttribute('damage'))
+        if ( current > Number(getGrabBar().getAttribute(part)) + 100 && getGrabBar().getAttribute(`${part}-done`) !== 'true' ) {
+            addClass(getGrabBar(), `${part}-fail`)
+            takeDamage(damage)
+            addAttribute(getGrabBar(), `${part}-done`, true)
+        }
     }
 
     collidePlayer() {
         const state = this.getEnemyState()
         if ( ( state !== CHASE && state !== NO_OFFENCE ) || !collide(this.enemy, getPlayer(), 0) ) return false
         if ( state === CHASE ) {
-            // const decision = Math.random()
-            // if ( decision < 0.2 ) {
-            //     this.hitPlayer()
-            //     return
-            // }
+            const decision = Math.random()
+            if ( decision < 0.2 ) {
+                this.hitPlayer()
+                return
+            }
             this.grabPlayer()
         }
         return true
@@ -102,6 +116,7 @@ export class GrabberEnemy extends NormalEnemy {
         addAttribute(grabBar, 'first', first)
         addAttribute(grabBar, 'second', second)
         addAttribute(grabBar, 'third', third)
+        addAttribute(grabBar, 'damage', this.enemy.getAttribute('damage') / 6)
         getPauseContainer().append(grabBar)
         setGrabBar(grabBar)
     }
@@ -113,7 +128,10 @@ export class GrabberEnemy extends NormalEnemy {
         removeClass(getPlayer().firstElementChild.firstElementChild, 'no-transition')
         removeClass(this.enemy, 'grab')
         setGrabbed(false)
-        getCurrentRoomEnemies().forEach(elem => elem.setEnemyState(NO_OFFENCE))
+        getCurrentRoomEnemies().forEach(elem => {
+            if ( elem.enemy.getAttribute('type') === TRACKER ) elem.setEnemyState(INVESTIGATE)
+            else elem.setEnemyState(NO_OFFENCE)    
+        })
         setNoOffenseCounter(1)
         this.removeQte()
     }
