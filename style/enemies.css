@@ -3,7 +3,8 @@
 .rock-crusher,
 .tracker,
 .ranger,
-.spiker {
+.spiker,
+.grabber {
   position: absolute;
 }
 
@@ -12,13 +13,14 @@
 .rock-crusher-collider,
 .tracker-collider,
 .ranger-collider,
-.spiker-collider {
+.spiker-collider,
+.grabber-collider {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.torturer-collider {
+.torturer-collider, .grabber-collider {
   height: 37px;
   width: 37px;
 }
@@ -72,6 +74,7 @@
 }
 
 .torturer-collider > div:nth-of-type(1),
+.grabber-collider > div:nth-of-type(1),
 .soul-drinker-collider > div:nth-of-type(1),
 .rock-crusher-collider > div:nth-of-type(1),
 .tracker-collider > div:nth-of-type(1),
@@ -81,7 +84,7 @@
   position: absolute;
 }
 
-.torturer-collider > div:nth-of-type(1) {
+.torturer-collider > div:nth-of-type(1), .grabber-collider > div:nth-of-type(1) {
   width: 25px;
   height: 14px;
 }
@@ -114,6 +117,8 @@
 
 .torturer-collider > div:nth-of-type(1) > div:nth-of-type(1),
 .torturer-collider > div:nth-of-type(1) > div:nth-of-type(2),
+.grabber-collider > div:nth-of-type(1) > div:nth-of-type(1),
+.grabber-collider > div:nth-of-type(1) > div:nth-of-type(2),
 .soul-drinker-collider > div:nth-of-type(1) > div:nth-of-type(1),
 .soul-drinker-collider > div:nth-of-type(1) > div:nth-of-type(2),
 .rock-crusher-collider > div:nth-of-type(1) > div:nth-of-type(1),
@@ -133,6 +138,21 @@
   width: 6px;
   height: 16px;
   top: 2px;
+}
+
+.grabber-collider > div:nth-of-type(1) > div:nth-of-type(1),
+.grabber-collider > div:nth-of-type(1) > div:nth-of-type(2) {
+  width: 7px;
+  height: 22px;
+  top: 2px;
+}
+
+.grabber-collider > div:nth-of-type(1) > div:nth-of-type(1) {
+  border-bottom-right-radius: 10px;
+}
+
+.grabber-collider > div:nth-of-type(1) > div:nth-of-type(2) {
+  border-bottom-left-radius: 10px;
 }
 
 .soul-drinker-collider > div:nth-of-type(1) > div:nth-of-type(1),
@@ -164,6 +184,7 @@
 }
 
 .torturer-collider > div:nth-of-type(1) > div:nth-of-type(1),
+.grabber-collider > div:nth-of-type(1) > div:nth-of-type(1),
 .soul-drinker-collider > div:nth-of-type(1) > div:nth-of-type(1),
 .rock-crusher-collider > div:nth-of-type(1) > div:nth-of-type(1),
 .tracker-collider > div:nth-of-type(1) > div:nth-of-type(1),
@@ -185,6 +206,7 @@
 }
 
 .torturer-collider > div:nth-of-type(1) > div:nth-of-type(2),
+.grabber-collider > div:nth-of-type(1) > div:nth-of-type(2),
 .soul-drinker-collider > div:nth-of-type(1) > div:nth-of-type(2),
 .rock-crusher-collider > div:nth-of-type(1) > div:nth-of-type(2),
 .tracker-collider > div:nth-of-type(1) > div:nth-of-type(2),
@@ -214,6 +236,7 @@
 }
 
 .torturer-collider > div:nth-of-type(1) > div:nth-of-type(3),
+.grabber-collider > div:nth-of-type(1) > div:nth-of-type(3),
 .soul-drinker-collider > div:nth-of-type(1) > div:nth-of-type(3),
 .rock-crusher-collider > div:nth-of-type(1) > div:nth-of-type(3),
 .tracker-collider > div:nth-of-type(1) > div:nth-of-type(3),
@@ -227,7 +250,8 @@
   filter: brightness(33%);
 }
 
-.torturer-collider > div:nth-of-type(1) > div:nth-of-type(3) {
+.torturer-collider > div:nth-of-type(1) > div:nth-of-type(3),
+.grabber-collider > div:nth-of-type(1) > div:nth-of-type(3) {
   width: 8px;
   height: 8px;
 }
@@ -376,13 +400,44 @@
   }
 }
 
+@keyframes leftGrabAttack {
+  100% {
+    transform: rotateZ(20deg);
+    top: 5px;
+    left: 80%;
+  }
+}
+
+@keyframes rightGrabAttack {
+  100% {
+    transform: rotateZ(-20deg);
+    top: 5px;
+    right: 80%;
+  }
+}
+
 .torturer-collider > div:nth-of-type(1) > .attack,
+.grabber-collider > div:nth-of-type(1) > .attack,
 .soul-drinker-collider > div:nth-of-type(1) > .attack,
 .rock-crusher-collider > div:nth-of-type(1) > .attack,
 .ranger-collider > div:nth-of-type(1) > .attack {
   animation-name: normalAttack;
   animation-duration: 600ms;
   animation-direction: alternate;
+}
+
+.grab > .grabber-collider > .grabber-body > div:nth-of-type(1),
+.grab > .grabber-collider > .grabber-body > div:nth-of-type(2) {
+  animation-duration: 200ms;
+  animation-fill-mode: forwards;
+}
+
+.grab > .grabber-collider > .grabber-body > div:nth-of-type(1) {
+  animation-name: leftGrabAttack;
+}
+
+.grab > .grabber-collider > .grabber-body > div:nth-of-type(2) {
+  animation-name: rightGrabAttack;
 }
 
 .path-point {

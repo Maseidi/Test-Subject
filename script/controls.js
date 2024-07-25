@@ -14,6 +14,7 @@ import {
     getAimMode,
     getDraggedItem,
     getEquippedWeapon,
+    getGrabbed,
     getIntObj,
     getMouseX,
     getMouseY,
@@ -137,11 +138,11 @@ const dDown = () => enableDirection(setRightPressed)
 
 const enableDirection = (setPressed) => {
     setPressed(true)
-    if ( !getAimMode() && !getPause() ) addClass(getPlayer(), 'walk')
+    if ( !getAimMode() && !getPause() && !getGrabbed() ) addClass(getPlayer(), 'walk')
 }
 
 const eDown = () => {
-    if ( getPause() ) return
+    if ( getPause() || getGrabbed() ) return
     if ( getEquippedWeapon() !== null  ) {
         setAimMode(!getAimMode())
         if ( getAimMode() ) {
@@ -158,9 +159,7 @@ const eDown = () => {
 }
 
 const weaponSlotDown = (key) => {
-    if ( getPause() ) return
-    if ( getReloading() ) return
-    if ( getShooting() ) return
+    if ( getPause() || getReloading() || getShooting() || getGrabbed() ) return
     removeWeapon()
     if ( getWeaponWheel()[Number(key) - 1] === getEquippedWeapon() ) {
         setEquippedWeapon(null)
@@ -187,7 +186,7 @@ const weaponSlotDown = (key) => {
 
 const shiftDown = () => {
     setSprintPressed(true)
-    if ( getPause() ) return
+    if ( getPause() || getGrabbed() ) return
     startSprint()
 }
 
@@ -199,8 +198,7 @@ const startSprint = () => {
 }
 
 const fDown = () => {
-    if ( getPause() ) return
-    if ( !getIntObj() ) return
+    if ( getPause() || getGrabbed() || !getIntObj() ) return
     if ( getIntObj().getAttribute('amount') ) pickupDrop()
     if ( getShooting() || getReloading() ) return    
     if ( getIntObj().getAttribute('name') === 'stash' ) openStash()    
@@ -221,6 +219,7 @@ const openPause = (cause, func) => {
 }
 
 const openInventory = () => {
+    if ( getGrabbed() ) return
     if ( getPause() && getPauseCause() !== 'inventory' ) return
     if ( getPause() && getPauseCause() === 'inventory' && getDraggedItem() ) return
     if ( getPauseContainer().children.length > 1 ) return
@@ -249,7 +248,7 @@ export const managePause = () => {
 }
 
 const rDown = () => {
-    if ( getPause() ) return
+    if ( getPause() || getGrabbed() ) return
     if ( !getEquippedWeapon() ) return
     setupReload()
 }
@@ -260,7 +259,7 @@ const escapeDown = () => {
 }
 
 const hDown = () => {
-    if ( getPause() ) return
+    if ( getPause() || getGrabbed() ) return
     heal()
 }
 
@@ -280,7 +279,7 @@ const disableDirection = (setPressed) => {
 const ShiftUp = () => {
     setSprintPressed(false)
     stopWalkingAnimation()
-    if ( isMoving() && !getAimMode() ) addClass(getPlayer(), 'walk')
+    if ( isMoving() && !getAimMode() && !getGrabbed() ) addClass(getPlayer(), 'walk')
 }
 
 const stopWalkingAnimation = () => {

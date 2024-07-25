@@ -5,6 +5,7 @@ import { getCurrentRoomEnemies, getPlayer } from './elements.js'
 import { 
     getAimMode,
     getAllowMove,
+    getGrabbed,
     getNoOffenseCounter,
     getRefillStamina,
     getSprint,
@@ -15,7 +16,7 @@ import {
     setStamina } from './variables.js'
 
 export const manageSprint = () => {
-    if ( getSprintPressed() && !getAimMode() && isMoving()) {
+    if ( getSprintPressed() && !getAimMode() && isMoving() && !getGrabbed()) {
         if ( !getRefillStamina() && getAllowMove()) {
             handleSprintAndStamina(true, addClass, -2, getRefillStamina())
             if ( getStamina() <= 0 ) handleSprintAndStamina(getSprint(), removeClass, -getStamina(), true)

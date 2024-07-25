@@ -213,3 +213,9 @@ export const setEntityId = (val) => {
     entityId = val
 }
 export const getEntityId = () => entityId
+
+let grabbed
+export const setGrabbed = (val) => {
+    grabbed = val
+}
+export const getGrabbed = () => grabbed

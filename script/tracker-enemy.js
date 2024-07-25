@@ -52,7 +52,7 @@ export class TrackerEnemy extends NormalEnemy {
         else addAttribute(this.enemy, 'guess-counter', 0)
         const stopCounter = Number(this.enemy.getAttribute('stop-counter'))
         if ( stopCounter > 0 ) addAttribute(this.enemy, 'stop-counter', stopCounter + 1)
-        if ( stopCounter === 60 ) addAttribute(this.enemy, 'stop-counter', 0)
+        if ( stopCounter === 10 ) addAttribute(this.enemy, 'stop-counter', 0)
         if ( stopCounter > 0 ) return 
         this.displaceEnemy()
     }
@@ -103,6 +103,7 @@ export class TrackerEnemy extends NormalEnemy {
             const i1 = this.enemy.getAttribute('index')
             const i2 = collidingEnemy.enemy.getAttribute('index')
             if ( c1 === i2 && c2 === i1 ) return
+            if ( Number(collidingEnemy.enemy.getAttribute('stop-counter')) > 0 ) return
             addAttribute(this.enemy, 'stop-counter', 1)
         }
     }

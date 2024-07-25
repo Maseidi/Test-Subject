@@ -1,6 +1,7 @@
-import { addAttribute } from './util.js'
+import { addAttribute, collide } from './util.js'
 import { NormalEnemy } from './normal-enemy.js'
-import { CHASE, GUESS_SEARCH, INVESTIGATE, LOST, MOVE_TO_POSITION, NO_OFFENCE, SPIKER } from './enemy-constants.js'
+import { CHASE, GO_FOR_RANGED, GUESS_SEARCH, INVESTIGATE, LOST, MOVE_TO_POSITION, NO_OFFENCE, SPIKER, TRACKER } from './enemy-constants.js'
+import { getCurrentRoomEnemies } from './elements.js'
 
 export class SpikerEnemy extends NormalEnemy {
     constructor(enemy) {
@@ -107,6 +108,16 @@ export class SpikerEnemy extends NormalEnemy {
         if ( !collidingEnemy ) return
         if ( collidingEnemy.enemy.getAttribute('type') !== SPIKER ) return
         this.handleCollision(collidingEnemy)
+    }
+
+    findCollidingEnemy() {
+        const collidingEnemy = Array.from(getCurrentRoomEnemies())
+            .find(e => e.enemy !== this.enemy 
+            && collide(this.enemy.firstElementChild.children[2], e.enemy.firstElementChild, 0) 
+            && e.enemy.getAttribute('type') !== TRACKER
+            && e.getEnemyState() !== INVESTIGATE && e.getEnemyState() !== GO_FOR_RANGED)
+        addAttribute(this.enemy, 'colliding-enemy', null)
+        return collidingEnemy
     }
 
 }

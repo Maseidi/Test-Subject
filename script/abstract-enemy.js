@@ -13,6 +13,7 @@ import {
     LOST,
     MOVE_TO_POSITION,
     NO_OFFENCE, 
+    SPIKER, 
     TRACKER } from './enemy-constants.js'
 import { 
     getCurrentRoomId,
@@ -374,6 +375,7 @@ export class AbstractEnemy {
         const collidingEnemy = Array.from(getCurrentRoomEnemies())
             .find(e => e.enemy !== this.enemy 
             && collide(this.enemy.firstElementChild.children[2], e.enemy.firstElementChild, 0) 
+            && e.enemy.getAttribute('type') !== TRACKER && e.enemy.getAttribute('type') !== SPIKER
             && e.getEnemyState() !== INVESTIGATE && e.getEnemyState() !== GO_FOR_RANGED)
         addAttribute(this.enemy, 'colliding-enemy', null)
         return collidingEnemy

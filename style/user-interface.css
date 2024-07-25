@@ -94,3 +94,61 @@
 .quit > p:nth-of-type(2) {
   text-transform: capitalize;
 }
+
+.grab-bar {
+  width: 30%;
+  height: 16px;
+  position: fixed;
+  left: 50%;
+  bottom: 40%;
+  transform: translateX(-50%) skewX(-40deg);
+  box-shadow: 1px 1px 10px darkmagenta;
+  backdrop-filter: blur(3.3px);
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7));
+  border: 3px solid wheat;
+  z-index: 1;
+}
+
+.grab-bar > .breakpoint {
+  width: 10%;
+  height: 100%;
+  background: linear-gradient(to right, rgb(34, 139, 34), rgb(52, 238, 52));
+  position: absolute;
+}
+
+.grab-bar > .slider {
+  width: 1%;
+  height: 200%;
+  background-color: wheat;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+@keyframes grabBarMessage {
+  0% {
+    transform: scale(1) skewX(40deg);
+  }
+  100% {
+    transform: scale(1.2) skewX(40deg);
+  }
+}
+
+.grab-bar-message-container {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  text-transform: capitalize;
+  position: absolute;
+  color: white;
+  bottom: 30px;
+  animation-name: grabBarMessage;
+  animation-direction: alternate;
+  animation-iteration-count: infinite;
+  animation-duration: 200ms;
+}
+
+.grab-bar-btn {
+  border: 1px solid white;
+  padding: 1px 5px 0 5px;
+}

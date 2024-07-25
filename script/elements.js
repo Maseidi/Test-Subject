@@ -63,3 +63,9 @@ export const setPlayer = (val) => {
     player = val
 }
 export const getPlayer = () => player
+
+let grabBar
+export const setGrabBar = (val) => {
+    grabBar = val
+}
+export const getGrabBar = () => grabBar

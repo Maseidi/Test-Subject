@@ -4,6 +4,7 @@ import {
     getAimMode,
     getAllowMove,
     getDownPressed,
+    getGrabbed,
     getLeftPressed,
     getMapX,
     getMapY,
@@ -19,7 +20,7 @@ import {
     setPlayerY} from './variables.js'
 
 export const managePlayerMovement = () => {
-    if ( isMoving() && getAllowMove() ) move()
+    if ( isMoving() && getAllowMove() && !getGrabbed() ) move()
 }
 
 const move = () => {

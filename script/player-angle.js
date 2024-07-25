@@ -3,13 +3,14 @@ import { ANGLE_STATE_MAP, addAttribute, isMoving } from './util.js'
 import {
     getAimMode,
     getDownPressed,
+    getGrabbed,
     getLeftPressed,
     getRightPressed,
     getUpPressed } from './variables.js'
 
 export const managePlayerAngle = () => {
     if ( getAimMode() ) manageAimModeAngle(getPlayer())
-    manageNonAimModeAngle()
+    if ( !getGrabbed() ) manageNonAimModeAngle()
 }
 
 export const manageAimModeAngle = (elem) => {
