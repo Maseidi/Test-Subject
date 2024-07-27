@@ -1,4 +1,11 @@
-import { getDownPressed, getEntityId, getHealth, getLeftPressed, getRightPressed, getUpPressed, setEntityId } from './variables.js'
+import { 
+    getDownPressed,
+    getEntityId,
+    getHealth,
+    getLeftPressed,
+    getRightPressed,
+    getUpPressed,
+    setEntityId } from './variables.js'
 
 export const collide = (first, second, offset) => {
     const firstBound = first.getBoundingClientRect()
@@ -99,4 +106,11 @@ export const nextId = () => {
     const newId = getEntityId()
     setEntityId(getEntityId() + 1)
     return newId
+}
+
+export const addFireEffect = () => {
+    const fire = document.createElement('img')
+    addClass(fire, 'fire')
+    fire.src = `../assets/images/fire.gif`
+    return fire
 }

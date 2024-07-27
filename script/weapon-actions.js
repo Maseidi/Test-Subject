@@ -43,7 +43,8 @@ const manageAim = () => {
     } 
     if ( counter !== 0 ) return       
     const range = getStat(equippedWeapon.name, 'range', equippedWeapon.rangelvl)
-    const laser = getPlayer().children[0].children[0].children[1].children[0]
+    const laser = Array.from(getPlayer().firstElementChild.firstElementChild.children)
+        .find(child => containsClass(child, 'weapon')).firstElementChild
     laser.style.height = `${range}px`
     let found = false
     Array.from(laser.children).forEach((elem, index) => {

@@ -219,3 +219,9 @@ export const setGrabbed = (val) => {
     grabbed = val
 }
 export const getGrabbed = () => grabbed
+
+let burning = 0
+export const setBurning = (val) => {
+    burning = val
+}
+export const getBurning = () => burning

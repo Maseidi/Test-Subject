@@ -8,7 +8,15 @@ import { interactables } from './interactables.js'
 import { getWeaponSpecs } from './weapon-specs.js'
 import { INVESTIGATE, SCORCHER, TRACKER } from './enemy-constants.js'
 import { getCurrentRoomId, getRoomLeft, getRoomTop } from './variables.js'
-import { addAttribute, addClass, appendAll, createAndAddClass, nextId, objectToElement, removeClass } from './util.js'
+import { 
+    addAttribute,
+    addClass,
+    addFireEffect,
+    appendAll,
+    createAndAddClass,
+    nextId,
+    objectToElement,
+    removeClass } from './util.js'
 import { 
     getCurrentRoomEnemies,
     getCurrentRoomInteractables, 
@@ -229,19 +237,12 @@ const createPath = (elem, index, roomToRender) => {
 const defineComponents = (element, enemyBody) => {
     for ( let componentNum = 1; componentNum < element.components; componentNum++ ) {
         const predicate = componentNum === element.components - 1 && element.type === SCORCHER
-        const component = predicate ? addFireEffect() : createAndAddClass('div', `${element.type}-component`)
+        const component = predicate ? addFireEffect() : document.createElement('div')
         if (!predicate) component.style.backgroundColor = `${element.virus}`
+        addClass(component, `${element.style}-component`)
         manageEnemyCriticalPoints(element, component, componentNum)
         enemyBody.append(component)
     }
-}
-
-const addFireEffect = () => {
-    const fire = document.createElement('img')
-    addClass(fire, 'fire')
-    addClass(fire, `${SCORCHER}-component`)
-    fire.src = `../assets/images/fire.gif`
-    return fire
 }
 
 const manageEnemyCriticalPoints = (element, component, componentNum) => {

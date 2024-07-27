@@ -1,5 +1,5 @@
 import { getPlayer } from './elements.js'
-import { createAndAddClass } from './util.js'
+import { containsClass, createAndAddClass } from './util.js'
 import { getStat, getWeaponSpecs } from './weapon-specs.js'
 import { equippedWeaponFromInventory } from './inventory.js'
 
@@ -16,4 +16,6 @@ export const renderWeapon = () => {
     getPlayer().children[0].children[0].append(weapon)
 }
 
-export const removeWeapon = () => getPlayer().children[0].children[0].children[1]?.remove()
+export const removeWeapon = () => 
+    Array.from(getPlayer().firstElementChild.firstElementChild.children)
+        .find(child => containsClass(child, 'weapon'))?.remove()
