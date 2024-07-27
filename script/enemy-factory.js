@@ -3,7 +3,8 @@ import { RangerEnemy } from './ranger-enemy.js'
 import { SpikerEnemy } from './spiker-enemy.js'
 import { TrackerEnemy } from './tracker-enemy.js'
 import { GrabberEnemy } from './grabber-enemy.js'
-import { TRACKER, RANGER, ROCK_CRUSHER, SOUL_DRINKER, SPIKER, TORTURER, GRABBER } from './enemy-constants.js'
+import { TRACKER, RANGER, ROCK_CRUSHER, SOUL_DRINKER, SPIKER, TORTURER, GRABBER, SCORCHER } from './enemy-constants.js'
+import { ScorcherEnemy } from './scorcher-enemy.js'
 
 export const createEnemy = (elem) => {
     const type = elem.getAttribute('type')
@@ -14,4 +15,5 @@ export const createEnemy = (elem) => {
     else if ( type === RANGER ) return new RangerEnemy(elem)
     else if ( type === SPIKER ) return new SpikerEnemy(elem)
     else if ( type === GRABBER ) return new GrabberEnemy(elem)
+    else if ( type === SCORCHER ) return new ScorcherEnemy(elem)
 }
