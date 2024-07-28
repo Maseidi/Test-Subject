@@ -42,19 +42,20 @@ export class AbstractEnemy {
         this.virus = ['red', 'green', 'yellow', 'blue', 'purple'][Math.floor(Math.random() * 5)]
         this.vision = vision
         this.acceleration = acceleration
+        this.x = waypoint.points[0].x
+        this.y = waypoint.points[0].y
     }
 
     move2Destination() {
         if ( this.collidePlayer() ) return
-        const { enemyLeft, enemyTop, enemyW } = this.enemyCoordinates()
-        const { destLeft, destTop, destW } = this.destinationCoordinates()
-        console.log(destLeft, destTop, destW);
-        const { xMultiplier, yMultiplier } = this.decideDirection(enemyLeft, destLeft, enemyTop, destTop, enemyW, destW)
+        const enemyW = Number(window.getComputedStyle(this.element).width.replace('px', ''))
+        const { destW } = this.#destinationCoordinates()
+        const { xMultiplier, yMultiplier } = this.#decideDirection(enemyW, destW)
         this.calculateAngle(xMultiplier, yMultiplier)
-        const speed = this.calculateSpeed(xMultiplier, yMultiplier)
-        if ( !xMultiplier && !yMultiplier ) this.reachedDestination()
-        this.x += (speed * xMultiplier)
-        this.y += (speed * yMultiplier)
+        const speed = this.#calculateSpeed(xMultiplier, yMultiplier)
+        if ( !xMultiplier && !yMultiplier ) this.#reachedDestination()
+        this.x += (xMultiplier ? (speed * xMultiplier) : 0)
+        this.y += (yMultiplier ? (speed * yMultiplier) : 0)
         this.element.style.left = `${this.x}px`
         this.element.style.top = `${this.y}px`
     }
@@ -65,39 +66,31 @@ export class AbstractEnemy {
         return true
     }
 
-    enemyCoordinates() {
-        const enemyCpu = window.getComputedStyle(this.element)
-        const enemyLeft = this.x
-        const enemyTop = this.y
-        const enemyW = Number(enemyCpu.width.replace('px', ''))
-        return {enemyLeft, enemyTop, enemyW}
+    #destinationCoordinates() {
+        this.destX = this.pathFindingX === null ? this.destX : this.pathFindingX
+        this.destY = this.pathFindingY === null ? this.destY : this.pathFindingY
+        const destW = this.pathFindingX === 'null' ? Number(this.enemy.getAttribute('dest-w')) : 10
+        return {destW}
     }
 
-    destinationCoordinates() {
-        const destLeft = this.destX
-        const destTop = this.destY
-        const destW = this.pathFindingX === null ? this.destWidth : 10
-        return {destLeft, destTop, destW}
-    }
-
-    decideDirection(enemyLeft, destLeft, enemyTop, destTop, enemyW, destW) {
+    #decideDirection(enemyW, destW) {
         let xMultiplier, yMultiplier
-        if ( enemyLeft > destLeft + destW / 2 ) xMultiplier = -1
-        else if ( enemyLeft + enemyW <= destLeft + destW / 2 ) xMultiplier = 1
-        if ( enemyTop > destTop + destW / 2 ) yMultiplier = -1
-        else if ( enemyTop + enemyW <= destTop + destW / 2 ) yMultiplier = 1
+        if ( this.x > this.destX + destW / 2 ) xMultiplier = -1
+        else if ( this.x + enemyW <= this.destX + destW / 2 ) xMultiplier = 1
+        if ( this.y > this.destY + destW / 2 ) yMultiplier = -1
+        else if ( this.y + enemyW <= this.destY + destW / 2 ) yMultiplier = 1
         return { xMultiplier, yMultiplier }
     }
 
-    calculateSpeed(xMultiplier, yMultiplier) {
-        let speed = this.speed
+    #calculateSpeed(xMultiplier, yMultiplier) {
+        let speed = this.currentSpeed
         if ( this.state === NO_OFFENCE ) speed /= 2
         else if ( this.state === INVESTIGATE ) speed = this.maxSpeed / 5
         if ( xMultiplier && yMultiplier ) speed /= 1.41
         return speed
     }
 
-    reachedDestination() {
+    #reachedDestination() {
         if ( this.pathFindingX !== null ) {
             this.pathFindingX = null
             this.pathFindingY = null
@@ -520,7 +513,7 @@ export class AbstractEnemy {
                 this.#addPathfinding(wallLeft - 50, wallTop + wallH + 50)
                 break  
             default:
-                this.#addPathfinding('null', 'null')
+                this.#addPathfinding(null, null)
         }
     }
 
@@ -549,7 +542,7 @@ export class AbstractEnemy {
                 this.#addPathfinding(wallLeft - 50, wallTop + wallH + 50)
                 break
             default:
-                this.#addPathfinding('null', 'null')                
+                this.#addPathfinding(null, null)                
         }
     }
 
@@ -572,7 +565,7 @@ export class AbstractEnemy {
                 this.#addPathfinding(wallLeft + wallW + 50, wallTop + wallH + 50)
                 break
             default:
-                this.#addPathfinding('null', 'null')            
+                this.#addPathfinding(null, null)            
         }
     }
 
@@ -601,7 +594,7 @@ export class AbstractEnemy {
                 this.#addPathfinding(wallLeft + wallW + 50, wallTop - 50)
                 break
             default:
-                this.#addPathfinding('null', 'null')                    
+                this.#addPathfinding(null, null)                    
         }
     }
 
@@ -630,7 +623,7 @@ export class AbstractEnemy {
                 this.#addPathfinding(wallLeft + wallW + 50, wallTop + wallH + 50)
                 break  
             default:
-                this.#addPathfinding('null', 'null')                  
+                this.#addPathfinding(null, null)                  
         }
     }
 
@@ -653,7 +646,7 @@ export class AbstractEnemy {
                 this.#addPathfinding(wallLeft + wallW + 50, wallTop + wallH + 50)
                 break  
             default:
-                this.#addPathfinding('null', 'null')          
+                this.#addPathfinding(null, null)          
         }
     }
 
@@ -682,7 +675,7 @@ export class AbstractEnemy {
                 this.#addPathfinding(wallLeft + wallW + 50, wallTop + wallH + 50)
                 break  
             default:
-                this.#addPathfinding('null', 'null')                  
+                this.#addPathfinding(null, null)                  
         }
     }
 
@@ -704,7 +697,7 @@ export class AbstractEnemy {
                 this.#addPathfinding(wallLeft + wallW + 50, wallTop - 50)
                 break
             default:
-                this.#addPathfinding('null', 'null')            
+                this.#addPathfinding(null, null)            
         }
     }
 

@@ -215,8 +215,6 @@ const defineEnemy = (elem) => {
     elem.pathFindingY = null
     elem.currentSpeed = elem.acceleration
     elem.accelerationCounter = 0
-    elem.x = elem.waypoint.points[0].x
-    elem.y = elem.waypoint.points[0].y
     enemy.style.left = `${elem.x}px`
     enemy.style.top = `${elem.y}px`
     return enemy

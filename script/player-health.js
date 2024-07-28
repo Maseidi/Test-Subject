@@ -62,8 +62,8 @@ export const takeDamage = (damage) => {
 
 const noOffenceAllEnemies = () => {
     Array.from(getCurrentRoomEnemies())
-        .filter(elem => elem.getEnemyState() === CHASE )
-        .forEach(elem => elem.setEnemyState(NO_OFFENCE))
+        .filter(elem => elem.state === CHASE )
+        .forEach(elem => elem.state = NO_OFFENCE)
     setNoOffenseCounter(1)
 }
 

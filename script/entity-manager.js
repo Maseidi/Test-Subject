@@ -95,10 +95,10 @@ const handleNoOffenceMode = () => {
     if ( getNoOffenseCounter() > 0 ) setNoOffenseCounter(getNoOffenseCounter() + 1)
     if ( getNoOffenseCounter() < 180 ) return
     Array.from(getCurrentRoomEnemies())
-        .filter(elem => elem.getEnemyState() === NO_OFFENCE)
+        .filter(elem => elem.state === NO_OFFENCE)
         .forEach(elem => {
-            elem.setEnemyState(CHASE)
-            removeClass(elem.enemy.firstElementChild.firstElementChild.firstElementChild, 'attack')
+            elem.state = CHASE
+            removeClass(elem.element.firstElementChild.firstElementChild.firstElementChild, 'attack')
         })
     setNoOffenseCounter(0)
 }
