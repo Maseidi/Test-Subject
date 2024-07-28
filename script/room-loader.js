@@ -6,7 +6,7 @@ import { getProgress } from './progress.js'
 import { createEnemy } from './enemy-factory.js'
 import { interactables } from './interactables.js'
 import { getWeaponSpecs } from './weapon-specs.js'
-import { INVESTIGATE, SCORCHER, TRACKER } from './enemy-constants.js'
+import { INVESTIGATE, SCORCHER, SPIKER, TRACKER } from './enemy-constants.js'
 import { getCurrentRoomId, getRoomLeft, getRoomTop } from './variables.js'
 import { 
     addAttribute,
@@ -177,12 +177,12 @@ const renderDescription = (popup, interactable) => {
 const renderEnemies = (roomToRender) => {
     const currentRoomEnemies = enemies.get(getCurrentRoomId())
     if ( !currentRoomEnemies ) return
-    const indexedEnemies = indexEnemies(currentRoomEnemies)
-    const filteredEnemies = filterEnemies(indexedEnemies)
+    indexEnemies(currentRoomEnemies)
+    const filteredEnemies = filterEnemies(currentRoomEnemies)
     spawnEnemies(filteredEnemies, roomToRender)
 }
 
-const indexEnemies = (enemies) => enemies.map((enemy, index) => { return {...enemy, index} })
+const indexEnemies = (enemies) => enemies.forEach((enemy, index) => enemy.index = index)
 
 const filterEnemies = (enemies) => enemies.filter(enemy => enemy.health !== 0 && getProgress(enemy.progress))
 
@@ -191,8 +191,8 @@ const spawnEnemies = (enemies, roomToRender) => {
         const enemy = defineEnemy(elem)
         createPath(elem, elem.index, roomToRender)
         const enemyCollider = createAndAddClass('div', 'enemy-collider', `${elem.type}-collider`)
-        const enemyBody = createAndAddClass('div', `${elem.type}-body`, 'body-transition')
-        if ( elem.type === 'spiker' ) removeClass(enemyBody, 'body-transition')
+        const enemyBody = createAndAddClass('div', 'enemy-body', `${elem.type}-body`, 'body-transition')
+        if ( elem.type === SPIKER ) removeClass(enemyBody, 'body-transition')
         enemyBody.style.backgroundColor = `${elem.virus}`
         defineComponents(elem, enemyBody)
         const vision = elem.type === TRACKER ? createAndAddClass('div', 'vision') : defineVision(elem)
@@ -200,25 +200,26 @@ const spawnEnemies = (enemies, roomToRender) => {
         appendAll(enemyCollider, enemyBody, vision, fwDetector)
         enemy.append(enemyCollider)
         roomToRender.append(enemy)
-        getCurrentRoomEnemies().push(createEnemy(enemy))
+        elem.element = enemy
+        getCurrentRoomEnemies().push(elem)
         getCurrentRoomSolid().push(enemyCollider)
     })
 }
 
-const defineEnemy = (element) => {
-    const enemy = objectToElement(element)
-    addClass(enemy, `${element.type}`)
-    addClass(enemy, 'enemy')
-    addAttribute(enemy, 'state', INVESTIGATE)
-    addAttribute(enemy, 'investigation-counter', 0)
-    addAttribute(enemy, 'path', `path-${element.index}`)
-    addAttribute(enemy, 'path-point', '0')
-    addAttribute(enemy, 'path-finding-x', 'null')
-    addAttribute(enemy, 'path-finding-y', 'null')
-    addAttribute(enemy, 'curr-speed', element.acceleration)
-    addAttribute(enemy, 'acc-counter', 0)
-    enemy.style.left = `${element.path.points[0].x}px`
-    enemy.style.top = `${element.path.points[0].y}px`
+const defineEnemy = (elem) => {
+    const enemy = createAndAddClass('div', `${elem.type}`, 'enemy')
+    elem.state = INVESTIGATE
+    elem.investigationCounter = 0
+    elem.path = `path-${elem.index}`
+    elem.pathPoint = 0
+    elem.pathFindingX = null
+    elem.pathFindingY = null
+    elem.currentSpeed = elem.acceleration
+    elem.accelerationCounter = 0
+    elem.x = elem.path.points[0].x
+    elem.y = elem.path.points[0].y
+    enemy.style.left = `${elem.x}px`
+    enemy.style.top = `${elem.y}px`
     return enemy
 }
 

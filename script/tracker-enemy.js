@@ -1,8 +1,8 @@
-import { getCurrentRoomEnemies, getPlayer } from './elements.js'
 import { NormalEnemy } from './normal-enemy.js'
 import { addAttribute, collide } from './util.js'
 import { getNoOffenseCounter } from './variables.js'
-import { CHASE, GUESS_SEARCH, INVESTIGATE, LOST, NO_OFFENCE, TRACKER } from './enemy-constants.js'
+import { getCurrentRoomEnemies, getPlayer } from './elements.js'
+import { CHASE, GUESS_SEARCH, INVESTIGATE, LOST, TRACKER } from './enemy-constants.js'
 
 export class TrackerEnemy extends NormalEnemy {
     constructor(enemy) {

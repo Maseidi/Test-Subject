@@ -1,22 +1,8 @@
-.torturer,
-.soul-drinker,
-.rock-crusher,
-.tracker,
-.ranger,
-.spiker,
-.grabber,
-.scorcher {
+.enemy {
   position: absolute;
 }
 
-.torturer-collider,
-.soul-drinker-collider,
-.rock-crusher-collider,
-.tracker-collider,
-.ranger-collider,
-.spiker-collider,
-.grabber-collider,
-.scorcher-collider {
+.enemy-collider {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -75,14 +61,7 @@
   height: 100%;
 }
 
-.torturer-collider > div:nth-of-type(1),
-.soul-drinker-collider > div:nth-of-type(1),
-.rock-crusher-collider > div:nth-of-type(1),
-.tracker-collider > div:nth-of-type(1),
-.ranger-collider > div:nth-of-type(1),
-.spiker-collider > div:nth-of-type(1),
-.grabber-collider > div:nth-of-type(1),
-.scorcher-collider > div:nth-of-type(1) {
+.enemy-collider > div:nth-of-type(1) {
   border: 1px solid black;
   position: absolute;
 }
@@ -120,20 +99,8 @@
   border-radius: 50%;
 }
 
-.torturer-collider > div:nth-of-type(1) > div:nth-of-type(1),
-.torturer-collider > div:nth-of-type(1) > div:nth-of-type(2),
-.soul-drinker-collider > div:nth-of-type(1) > div:nth-of-type(1),
-.soul-drinker-collider > div:nth-of-type(1) > div:nth-of-type(2),
-.rock-crusher-collider > div:nth-of-type(1) > div:nth-of-type(1),
-.rock-crusher-collider > div:nth-of-type(1) > div:nth-of-type(2),
-.tracker-collider > div:nth-of-type(1) > div:nth-of-type(1),
-.tracker-collider > div:nth-of-type(1) > div:nth-of-type(2),
-.ranger-collider > div:nth-of-type(1) > div:nth-of-type(1),
-.ranger-collider > div:nth-of-type(1) > div:nth-of-type(2),
-.grabber-collider > div:nth-of-type(1) > div:nth-of-type(1),
-.grabber-collider > div:nth-of-type(1) > div:nth-of-type(2),
-.scorcher-collider > div:nth-of-type(1) > div:nth-of-type(1),
-.scorcher-collider > div:nth-of-type(1) > div:nth-of-type(2) {
+.enemy-collider > div:nth-of-type(1) > div:nth-of-type(1),
+.enemy-collider > div:nth-of-type(1) > div:nth-of-type(2) {
   position: absolute;
   border: 1px solid black;
   filter: brightness(66%);
@@ -198,13 +165,7 @@
   top: 2px;
 }
 
-.torturer-collider > div:nth-of-type(1) > div:nth-of-type(1),
-.soul-drinker-collider > div:nth-of-type(1) > div:nth-of-type(1),
-.rock-crusher-collider > div:nth-of-type(1) > div:nth-of-type(1),
-.tracker-collider > div:nth-of-type(1) > div:nth-of-type(1),
-.ranger-collider > div:nth-of-type(1) > div:nth-of-type(1),
-.grabber-collider > div:nth-of-type(1) > div:nth-of-type(1),
-.scorcher-collider > div:nth-of-type(1) > div:nth-of-type(1) {
+.enemy-collider > div:nth-of-type(1) > div:nth-of-type(1) {
   left: 100%;
 }
 
@@ -221,13 +182,7 @@
   transform: translateY(-3px) translateX(-50%);
 }
 
-.torturer-collider > div:nth-of-type(1) > div:nth-of-type(2),
-.soul-drinker-collider > div:nth-of-type(1) > div:nth-of-type(2),
-.rock-crusher-collider > div:nth-of-type(1) > div:nth-of-type(2),
-.tracker-collider > div:nth-of-type(1) > div:nth-of-type(2),
-.ranger-collider > div:nth-of-type(1) > div:nth-of-type(2),
-.grabber-collider > div:nth-of-type(1) > div:nth-of-type(2),
-.scorcher-collider > div:nth-of-type(1) > div:nth-of-type(2) {
+.enemy-collider > div:nth-of-type(1) > div:nth-of-type(2) {
   right: 100%;
 }
 
@@ -252,13 +207,7 @@
   transform: translateY(3px) translateX(-50%);
 }
 
-.torturer-collider > div:nth-of-type(1) > div:nth-of-type(3),
-.soul-drinker-collider > div:nth-of-type(1) > div:nth-of-type(3),
-.rock-crusher-collider > div:nth-of-type(1) > div:nth-of-type(3),
-.tracker-collider > div:nth-of-type(1) > div:nth-of-type(3),
-.ranger-collider > div:nth-of-type(1) > div:nth-of-type(3),
-.grabber-collider > div:nth-of-type(1) > div:nth-of-type(3),
-.scorcher-collider > div:nth-of-type(1) > div:nth-of-type(3) {
+.enemy-collider > div:nth-of-type(1) > div:nth-of-type(3) {
   position: absolute;
   left: 50%;
   top: 50%;
@@ -435,32 +384,23 @@
   }
 }
 
-.torturer-collider > div:nth-of-type(1) > .attack,
-.grabber-collider > div:nth-of-type(1) > .attack,
-.soul-drinker-collider > div:nth-of-type(1) > .attack,
-.rock-crusher-collider > div:nth-of-type(1) > .attack,
-.ranger-collider > div:nth-of-type(1) > .attack,
-.scorcher-collider > div:nth-of-type(1) > .attack {
+.enemy-collider > div:nth-of-type(1) > .attack {
   animation-name: normalAttack;
   animation-duration: 600ms;
   animation-direction: alternate;
 }
 
-.grab > .grabber-collider > .grabber-body > div:nth-of-type(1),
-.grab > .grabber-collider > .grabber-body > div:nth-of-type(2),
-.grab > .scorcher-collider > .scorcher-body > div:nth-of-type(1),
-.grab > .scorcher-collider > .scorcher-body > div:nth-of-type(2) {
+.grab > .enemy-collider > .enemy-body > div:nth-of-type(1),
+.grab > .enemy-collider > .enemy-body > div:nth-of-type(2) {
   animation-duration: 200ms;
   animation-fill-mode: forwards;
 }
 
-.grab > .grabber-collider > .grabber-body > div:nth-of-type(1),
-.grab > .scorcher-collider > .scorcher-body > div:nth-of-type(1) {
+.grab > .enemy-collider > .enemy-body > div:nth-of-type(1) {
   animation-name: leftGrabAttack;
 }
 
-.grab > .grabber-collider > .grabber-body > div:nth-of-type(2),
-.grab > .scorcher-collider > .scorcher-body > div:nth-of-type(2) {
+.grab > .enemy-collider > .enemy-body > div:nth-of-type(2) {
   animation-name: rightGrabAttack;
 }
 

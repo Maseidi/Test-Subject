@@ -1,3 +1,4 @@
+import { HorDoublePointPath, SinglePointPath, SquarePath, VerDoublePointPath } from './path.js'
 import { TRACKER, RANGER, ROCK_CRUSHER, SOUL_DRINKER, SPIKER, TORTURER, GRABBER, SCORCHER } from './enemy-constants.js'
 
 class Enemy {
@@ -13,63 +14,6 @@ class Enemy {
         this.virus = ['red', 'green', 'yellow', 'blue', 'purple'][Math.floor(Math.random() * 5)]
         this.vision = vision
         this.acceleration = acceleration
-    }
-}
-
-class Point {
-    constructor(x, y) {
-        this.x = x
-        this.y = y
-    }
-}
-
-class Path {
-    constructor(points) {
-        this.points = points
-    }
-}
-
-class SinglePointPath extends Path {
-    constructor(x, y) {
-        super([new Point(x, y)])
-    }
-}
-
-class DoublePointPath extends Path {
-    constructor(x1, y1, x2, y2) {
-        super([
-            new Point(x1, y1),
-            new Point(x2, y2)
-        ])
-    }
-}
-
-class VerDoublePointPath extends DoublePointPath {
-    constructor(x, y, distance) {
-        super(x, y, x, y + distance)
-    }
-}
-
-class HorDoublePointPath extends DoublePointPath {
-    constructor(x, y, distance) {
-        super(x, y, x + distance, y)
-    }
-}
-
-class RectPath extends Path {
-    constructor(x, y, width, height) {
-        super([
-            new Point(x, y),
-            new Point(x + width, y),
-            new Point(x + width, y + height),
-            new Point(x, y + height)
-        ])
-    }
-}
-
-class SquarePath extends RectPath {
-    constructor(x, y, width) {
-        super(x, y, width, width)
     }
 }
 
@@ -148,21 +92,21 @@ class Scorcher extends Enemy {
 
 export const enemies = new Map([
     [37, [
-        // new Torturer(1, new SquarePath(650, 240, 300), '1'),
-        // new Torturer(1, new VerDoublePointPath(800, 100, 300), '2'),
-        // new Torturer(1, new SquarePath(650, 240, 300), '3'),
-        // new SoulDrinker(1, new SinglePointPath(650, 140), '3'),
-        // new RockCrusher(1, new SinglePointPath(850, 140), '3'),
-        // new Tracker(1, 1000, 140, '3'),
-        // new Tracker(1, 1000, 240, '3'),
-        // new Tracker(1, 1000, 340, '3'),
-        // new Ranger(1, new SquarePath(1000, 100, 300), '3'),
-        // new Ranger(1, new SquarePath(1100, 100, 300), '3'),
-        // new Ranger(1, new SquarePath(1200, 100, 300), '3'),
-        // new Spiker(1, new SquarePath(600, 600, 100), '3'),
-        // new Spiker(1, new SquarePath(700, 600, 100), '3'),
-        // new Spiker(1, new SquarePath(800, 600, 100), '3'),
-        // new Grabber(1, new VerDoublePointPath(1400, 100, 600), '3'),
+        new Torturer(1, new SquarePath(650, 240, 300), '1'),
+        new Torturer(1, new VerDoublePointPath(800, 100, 300), '2'),
+        new Torturer(1, new SquarePath(650, 240, 300), '3'),
+        new SoulDrinker(1, new SinglePointPath(650, 140), '3'),
+        new RockCrusher(1, new SinglePointPath(850, 140), '3'),
+        new Tracker(1, 1000, 140, '3'),
+        new Tracker(1, 1000, 240, '3'),
+        new Tracker(1, 1000, 340, '3'),
+        new Ranger(1, new SquarePath(1000, 100, 300), '3'),
+        new Ranger(1, new SquarePath(1100, 100, 300), '3'),
+        new Ranger(1, new SquarePath(1200, 100, 300), '3'),
+        new Spiker(1, new SquarePath(600, 600, 100), '3'),
+        new Spiker(1, new SquarePath(700, 600, 100), '3'),
+        new Spiker(1, new SquarePath(800, 600, 100), '3'),
+        new Grabber(1, new VerDoublePointPath(1400, 100, 600), '3'),
         new Scorcher(1, new HorDoublePointPath(1000, 700, 600), '3')
     ]]
 ])
