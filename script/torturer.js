@@ -1,4 +1,3 @@
-import { addAttribute } from './util.js'
 import { AbstractEnemy } from './abstract-enemy.js'
 import { 
     CHASE,
@@ -6,15 +5,19 @@ import {
     INVESTIGATE,
     LOST,
     MOVE_TO_POSITION,
-    NO_OFFENCE } from './enemy-constants.js'
+    NO_OFFENCE, 
+    TORTURER} from './enemy-constants.js'
 
-export class NormalEnemy extends AbstractEnemy {
-    constructor(enemy) {
-        super(enemy)
+export class Torturer extends AbstractEnemy {
+    constructor(level, waypoint, progress) {
+        const health = Math.floor(level * 180 + Math.random() * 20)
+        const damage = Math.floor(level * 20 + Math.random() * 10)
+        const maxSpeed = 3.5 + Math.random()
+        super(TORTURER, 4, waypoint, health, damage, 100, maxSpeed, progress, 600, 1.5)
     }
 
     behave() {
-        switch ( this.getEnemyState() ) {
+        switch ( this.state ) {
             case INVESTIGATE:
                 this.handleInvestigationState()
                 break
@@ -36,14 +39,14 @@ export class NormalEnemy extends AbstractEnemy {
 
     handleInvestigationState() {
         if ( this.playerLocated() ) return
-        const path = document.getElementById(this.enemy.getAttribute('path'))
-        const counter = Number(this.enemy.getAttribute('investigation-counter'))
-        if ( counter > 0 ) addAttribute(this.enemy, 'investigation-counter', counter + 1)
+        const path = document.getElementById(this.path)
+        const counter = this.investigationCounter
+        if ( counter > 0 ) this.investigationCounter += 1
         if ( counter && counter !== 300 && counter % 100 === 0 ) this.checkSurroundings()
-        if ( counter >= 300 ) addAttribute(this.enemy, 'investigation-counter', 0)
+        if ( counter >= 300 ) this.investigationCounter = 0
         if ( counter !== 0 ) return
-        if ( path.children.length === 1 ) this.checkSurroundings()
-        const dest = path.children[Number(this.enemy.getAttribute('path-point'))]
+        if ( path.children.length === 1 ) this.checkSurroundings()    
+        const dest = path.children[this.pathPoint]
         this.updateDestination2Path(dest)
         this.displaceEnemy()
     }
@@ -52,8 +55,8 @@ export class NormalEnemy extends AbstractEnemy {
         this.accelerateEnemy()
         if ( this.isPlayerVisible() ) this.notifyEnemy(Number.MAX_SAFE_INTEGER)
         else {
-            this.setEnemyState(GUESS_SEARCH)
-            addAttribute(this.enemy, 'guess-counter', 1)
+            this.state = GUESS_SEARCH
+            this.guessCounter = 1
         }
         this.displaceEnemy()
     }
@@ -61,31 +64,26 @@ export class NormalEnemy extends AbstractEnemy {
     handleGuessSearchState() {
         this.accelerateEnemy()
         if ( this.playerLocated() ) return
-        let guessCounter = Number(this.enemy.getAttribute('guess-counter'))
-        if ( guessCounter > 0 ) {
-            guessCounter++
-            addAttribute(this.enemy, 'guess-counter', guessCounter)
-        }
-        if ( guessCounter !== 0 && guessCounter <= 15 ) this.updateDestination2Player()
-        else addAttribute(this.enemy, 'guess-counter', 0)
+        if ( this.guessCounter > 0 ) this.guessCounter += 1
+        if ( this.guessCounter !== 0 && this.guessCounter <= 15 ) this.updateDestination2Player()
+        else this.guessCounter = 0
         this.displaceEnemy()
     }
 
     handleLostState() {
         if ( this.playerLocated() ) return
-        const counter = Number(this.enemy.getAttribute('lost-counter'))
-        if ( counter === 600 ) {
-            this.setEnemyState(MOVE_TO_POSITION)
+        if ( this.lostCounter === 600 ) {
+            this.state = MOVE_TO_POSITION
             return
         }
-        if ( counter % 120 === 0 ) this.checkSurroundings()
-        addAttribute(this.enemy, 'lost-counter', counter + 1)
+        if ( this.lostCounter % 120 === 0 ) this.checkSurroundings()
+        this.lostCounter += 1
     }
     
     handleMove2PositionState() {
         this.accelerateEnemy()
         if ( this.playerLocated() ) return
-        const dest = document.getElementById(this.enemy.getAttribute('path')).children[Number(this.enemy.getAttribute('path-point'))]
+        const dest = document.getElementById(this.path).children[this.pathPoint]
         this.updateDestination2Path(dest)
         this.displaceEnemy()
     }

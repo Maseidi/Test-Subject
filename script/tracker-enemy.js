@@ -1,4 +1,4 @@
-import { NormalEnemy } from './normal-enemy.js'
+import { NormalEnemy } from './torturer.js'
 import { addAttribute, collide } from './util.js'
 import { getNoOffenseCounter } from './variables.js'
 import { getCurrentRoomEnemies, getPlayer } from './elements.js'

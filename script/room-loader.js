@@ -3,7 +3,6 @@ import { rooms } from './rooms.js'
 import { loaders } from './loaders.js'
 import { enemies } from './enemies.js'
 import { getProgress } from './progress.js'
-import { createEnemy } from './enemy-factory.js'
 import { interactables } from './interactables.js'
 import { getWeaponSpecs } from './weapon-specs.js'
 import { INVESTIGATE, SCORCHER, SPIKER, TRACKER } from './enemy-constants.js'
@@ -216,8 +215,8 @@ const defineEnemy = (elem) => {
     elem.pathFindingY = null
     elem.currentSpeed = elem.acceleration
     elem.accelerationCounter = 0
-    elem.x = elem.path.points[0].x
-    elem.y = elem.path.points[0].y
+    elem.x = elem.waypoint.points[0].x
+    elem.y = elem.waypoint.points[0].y
     enemy.style.left = `${elem.x}px`
     enemy.style.top = `${elem.y}px`
     return enemy
@@ -226,7 +225,7 @@ const defineEnemy = (elem) => {
 const createPath = (elem, index, roomToRender) => {
     const path = document.createElement('div')
     path.id = `path-${index}`
-    for ( let p of elem.path.points ) {
+    for ( let p of elem.waypoint.points ) {
         const point = createAndAddClass('div', 'path-point')
         point.style.left = `${p.x}px`
         point.style.top = `${p.y}px`

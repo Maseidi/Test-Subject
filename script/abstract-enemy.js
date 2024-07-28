@@ -30,10 +30,10 @@ import {
     setPlayerY } from './variables.js'
 
 export class AbstractEnemy {
-    constructor(type, components, path, health, damage, knock, maxSpeed, progress, vision, acceleration) {
+    constructor(type, components, waypoint, health, damage, knock, maxSpeed, progress, vision, acceleration) {
         this.type = type
         this.components = components
-        this.path = path
+        this.waypoint = waypoint
         this.health = health
         this.damage = damage
         this.knock = knock
@@ -46,14 +46,15 @@ export class AbstractEnemy {
 
     move2Destination() {
         if ( this.collidePlayer() ) return
-        const { enemyLeft, enemyTop, enemyW } = this.elementCoordinates()
+        const { enemyLeft, enemyTop, enemyW } = this.enemyCoordinates()
         const { destLeft, destTop, destW } = this.destinationCoordinates()
+        console.log(destLeft, destTop, destW);
         const { xMultiplier, yMultiplier } = this.decideDirection(enemyLeft, destLeft, enemyTop, destTop, enemyW, destW)
         this.calculateAngle(xMultiplier, yMultiplier)
         const speed = this.calculateSpeed(xMultiplier, yMultiplier)
         if ( !xMultiplier && !yMultiplier ) this.reachedDestination()
-        this.x += speed * xMultiplier
-        this.y += speed * yMultiplier    
+        this.x += (speed * xMultiplier)
+        this.y += (speed * yMultiplier)
         this.element.style.left = `${this.x}px`
         this.element.style.top = `${this.y}px`
     }
@@ -73,11 +74,9 @@ export class AbstractEnemy {
     }
 
     destinationCoordinates() {
-        const pathFindingX = this.pathFindingX
-        const pathFindingY = this.pathFindingY
-        const destLeft = pathFindingX === null ? this.destX : pathFindingX
-        const destTop = pathFindingY === null ? this.destY : pathFindingY
-        const destW = pathFindingX === null ? this.destWidth : 10
+        const destLeft = this.destX
+        const destTop = this.destY
+        const destW = this.pathFindingX === null ? this.destWidth : 10
         return {destLeft, destTop, destW}
     }
 
@@ -242,9 +241,9 @@ export class AbstractEnemy {
         getCurrentRoomEnemies()
             .filter(e => e.enemy !== this.element &&
                      (distance(this.element.getBoundingClientRect().x, this.element.getBoundingClientRect().y,
-                     e.enemy.getBoundingClientRect().x, e.enemy.getBoundingClientRect().y) < 500 ) &&
+                     e.element.getBoundingClientRect().x, e.element.getBoundingClientRect().y) < 500 ) &&
                      this.state !== CHASE && this.state !== NO_OFFENCE && 
-                     this.state !== GO_FOR_RANGED && e.enemy.getAttribute('type') !== TRACKER
+                     this.state !== GO_FOR_RANGED && e.type !== TRACKER
             ).forEach(e => e.notifyEnemy(Number.MAX_SAFE_INTEGER))
     }
 
@@ -286,8 +285,7 @@ export class AbstractEnemy {
     accelerateEnemy() {
         this.accelerationCounter += 1
         if ( this.accelerationCounter === 60 ) {
-            const currSpeed = this.currentSpeed
-            let newSpeed = currSpeed + this.acceleration
+            let newSpeed = this.currentSpeed + this.acceleration
             if ( newSpeed > this.maxSpeed ) newSpeed = this.maxSpeed
             this.currentSpeed = newSpeed
             this.accelerationCounter = 0
