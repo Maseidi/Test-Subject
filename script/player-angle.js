@@ -5,26 +5,31 @@ import {
     getDownPressed,
     getGrabbed,
     getLeftPressed,
+    getPlayerAimAngle,
+    getPlayerAngle,
+    getPlayerAngleState,
     getRightPressed,
-    getUpPressed } from './variables.js'
+    getUpPressed, 
+    setPlayerAngle,
+    setPlayerAngleState} from './variables.js'
 
 export const managePlayerAngle = () => {
-    if ( getAimMode() ) manageAimModeAngle(getPlayer())
+    if ( getAimMode() ) 
+        manageAimModeAngle(getPlayer(), getPlayerAimAngle(), getPlayerAngle(), setPlayerAngle, setPlayerAngleState)
     if ( !getGrabbed() ) manageNonAimModeAngle()
 }
 
-export const manageAimModeAngle = (elem) => {
-    elem.firstElementChild.firstElementChild.style.transform = `rotateZ(${elem.getAttribute('aim-angle')}deg)`
-    handleBreakpoints(elem)
+export const manageAimModeAngle = (elem, aimAngle, angle, setAngle, setAngleState) => {
+    elem.firstElementChild.firstElementChild.style.transform = `rotateZ(${aimAngle}deg)`
+    handleBreakpoints(aimAngle, angle, setAngle, setAngleState)
 }
 
-const handleBreakpoints = (elem) => {
-    const aimAngle = Number(elem.getAttribute('aim-angle'))
+const handleBreakpoints = (aimAngle, angle, setAngle, setAngleState) => {
     const sign = aimAngle < 0 ? -1 : 1
     const q = aimAngle / (sign * 45)
-    if ( (q - Math.floor(q)) < 0.5 ) addAttribute(elem, 'angle', sign * Math.floor(q) * 45)
-    else addAttribute(elem, 'angle', sign * (Math.floor(q) + 1) * 45)
-    addAttribute(elem, 'angle-state', ANGLE_STATE_MAP.get(Number(elem.getAttribute('angle'))))
+    if ( (q - Math.floor(q)) < 0.5 ) setAngle(sign * Math.floor(q) * 45)
+    else setAngle(sign * (Math.floor(q) + 1) * 45)
+    setAngleState(ANGLE_STATE_MAP.get(angle))
 }
 
 const manageNonAimModeAngle = () => {
@@ -39,14 +44,14 @@ const manageNonAimModeAngle = () => {
     else if (getUpPressed())                        newState = changeState(4, '50%', '-50%', '0', '-100%')
     else if (getRightPressed())                     newState = changeState(6, '100%', '0', '50%', '-50%')
     if ( getAimMode() ) return
-    const angleState = getPlayer().getAttribute('angle-state')
-    const angle = getPlayer().getAttribute('angle')
+    const angleState = getPlayerAngleState()
+    const angle = getPlayerAngle()
     let diff = newState - angleState
     if (Math.abs(diff) > 4 && diff >= 0) diff = -(8 - diff)
     else if (Math.abs(diff) > 4 && diff < 0) diff = 8 - Math.abs(diff)  
-    addAttribute(getPlayer(), 'angle', Number(angle) + diff * 45)
-    getPlayer().firstElementChild.firstElementChild.style.transform = `rotateZ(${getPlayer().getAttribute('angle')}deg)`
-    addAttribute(getPlayer(), 'angle-state', newState)
+    setPlayerAngle(angle + diff * 45)
+    getPlayer().firstElementChild.firstElementChild.style.transform = `rotateZ(${getPlayerAngle()}deg)`
+    setPlayerAngleState(newState)
 }
 
 const changeState = (state, left, translateX, top, translateY) => {

@@ -238,7 +238,7 @@ const defineComponents = (element, enemyBody) => {
         const predicate = componentNum === element.components - 1 && element.type === SCORCHER
         const component = predicate ? addFireEffect() : document.createElement('div')
         if (!predicate) component.style.backgroundColor = `${element.virus}`
-        addClass(component, `${element.style}-component`)
+        addClass(component, `${element.type}-component`)
         manageEnemyCriticalPoints(element, component, componentNum)
         enemyBody.append(component)
     }

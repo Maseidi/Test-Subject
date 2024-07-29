@@ -386,7 +386,8 @@
 
 .torturer-collider > div:nth-of-type(1) > .attack ,
 .soul-drinker-collider > div:nth-of-type(1) > .attack,
-.rock-crusher-collider > div:nth-of-type(1) > .attack {
+.rock-crusher-collider > div:nth-of-type(1) > .attack,
+.ranger-collider > div:nth-of-type(1) > .attack {
   animation-name: normalAttack;
   animation-duration: 600ms;
   animation-direction: alternate;

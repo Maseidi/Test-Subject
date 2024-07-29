@@ -32,6 +32,7 @@ import {
     setMouseY,
     setPause,
     setPauseCause,
+    setPlayerAimAngle,
     setRightPressed,
     setShootCounter,
     setShootPressed,
@@ -319,7 +320,7 @@ const aimAngle = (event) => {
             event.clientX,
             event.clientY
         )
-    if ( angle ) addAttribute(getPlayer(), 'aim-angle', angle)
+    if ( angle ) setPlayerAimAngle(angle)
 }
 
 const manageDragItem = (event) => {

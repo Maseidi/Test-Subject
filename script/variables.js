@@ -82,6 +82,24 @@ export const setSprint = (val) => {
 }
 export const getSprint = () => sprint
 
+let playerAngle = 0
+export const setPlayerAngle = (val) => {
+    playerAngle = val
+}
+export const getPlayerAngle = () => playerAngle
+
+let playerAngleState = 0
+export const setPlayerAngleState = (val) => {
+    playerAngleState = val
+}
+export const getPlayerAngleState = () => playerAngleState
+
+let playerAimAngle = 0
+export const setPlayerAimAngle = (val) => {
+    playerAimAngle = val
+}
+export const getPlayerAimAngle = () => playerAimAngle
+
 let maxStamina = 600
 export const setMaxStamina = (val) => {
     maxStamina = val

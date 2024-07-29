@@ -1,16 +1,7 @@
 import { Tracker } from './tracker.js'
 import { SinglePointPath, SquarePath } from './path.js'
 import { RockCrusher, SoulDrinker, Torturer } from './normal-enemy.js'
-
-// class Ranger extends Enemy {
-//     constructor(level, path, progress) {
-//         const health = Math.floor(level * 112 + Math.random() * 17)
-//         const damage = Math.floor(level * 25 + Math.random() * 5)
-//         const maxSpeed = 4 + Math.random()
-//         const vision = Math.floor(500 + Math.random() * 300)
-//         super(RANGER, 6, path, health, damage, 75, maxSpeed, progress, vision, 2)
-//     }
-// }
+import { Ranger } from './ranger.js'
 
 // class Spiker extends Enemy {
 //     constructor(level, path, progress) {
@@ -48,8 +39,8 @@ export const enemies = new Map([
         // new RockCrusher(1, new SinglePointPath(850, 140), '3'),
         // new Tracker(1, 1000, 140, '3'),
         // new Tracker(1, 1000, 240, '3'),
-        new Tracker(1, 1000, 340, '3'),
-        // new Ranger(1, new SquarePath(1000, 100, 300), '3'),
+        // new Tracker(1, 1000, 340, '3'),
+        new Ranger(1, new SquarePath(1000, 100, 300), '3'),
         // new Ranger(1, new SquarePath(1100, 100, 300), '3'),
         // new Ranger(1, new SquarePath(1200, 100, 300), '3'),
         // new Spiker(1, new SquarePath(600, 600, 100), '3'),
