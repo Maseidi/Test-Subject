@@ -6,14 +6,13 @@ import {
     LOST,
     MOVE_TO_POSITION,
     NO_OFFENCE, 
+    ROCK_CRUSHER, 
+    SOUL_DRINKER, 
     TORTURER} from './enemy-constants.js'
 
-export class Torturer extends AbstractEnemy {
-    constructor(level, waypoint, progress) {
-        const health = Math.floor(level * 180 + Math.random() * 20)
-        const damage = Math.floor(level * 20 + Math.random() * 10)
-        const maxSpeed = 3.5 + Math.random()
-        super(TORTURER, 4, waypoint, health, damage, 100, maxSpeed, progress, 600, 1.5)
+export class NormalEnemy extends AbstractEnemy {
+    constructor(type, level, waypoint, health, damage, knock, maxSpeed, progress, vision, acceleration) {
+        super(type, level, waypoint, health, damage, knock, maxSpeed, progress, vision, acceleration)
     }
 
     behave() {
@@ -88,4 +87,31 @@ export class Torturer extends AbstractEnemy {
         this.displaceEnemy()
     }
 
+}
+
+export class Torturer extends NormalEnemy {
+    constructor(level, waypoint, progress) {
+        const health = Math.floor(level * 180 + Math.random() * 20)
+        const damage = Math.floor(level * 20 + Math.random() * 10)
+        const maxSpeed = 3.5 + Math.random()
+        super(TORTURER, 4, waypoint, health, damage, 100, maxSpeed, progress, 600, 1.5)
+    }
+}
+
+export class SoulDrinker extends NormalEnemy {
+    constructor(level, waypoint, progress) {
+        const health = Math.floor(level * 90 + Math.random() * 15)
+        const damage = Math.floor(level * 10 + Math.random() * 5)
+        const maxSpeed = 4.5 + Math.random()
+        super(SOUL_DRINKER, 4, waypoint, health, damage, 50, maxSpeed, progress, 400, 0.9)
+    }
+}
+
+export class RockCrusher extends NormalEnemy {
+    constructor(level, waypoint, progress) {
+        const health = Math.floor(level * 360 + Math.random() * 45)
+        const damage = Math.floor(level * 40 + Math.random() * 20)
+        const maxSpeed = 2.5 + Math.random()
+        super(ROCK_CRUSHER, 4, waypoint, health, damage, 200, maxSpeed, progress, 800, 1.8)
+    }
 }

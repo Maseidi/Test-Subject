@@ -124,7 +124,8 @@ export class AbstractEnemy {
     }
 
     calculateAngle = (x, y) => {
-        const currState = Number(this.htmlTag.getAttribute('angle-state'))
+        const currState = this.angleState || 0
+        const currAngle = this.angle || 0
         let newState = currState
         if ( x === 1 && y === 1 )        newState = this.changeEnemyAngleState(7, '0', '0')
         else if ( x === 1 && y === -1 )  newState = this.changeEnemyAngleState(5, '0', '-100%')
@@ -138,10 +139,10 @@ export class AbstractEnemy {
         let diff = newState - currState
         if (Math.abs(diff) > 4 && diff >= 0) diff = -(8 - diff)
         else if (Math.abs(diff) > 4 && diff < 0) diff = 8 - Math.abs(diff) 
-        const newAngle = Number(this.htmlTag.getAttribute('angle')) + diff * 45    
-        addAttribute(this.htmlTag, 'angle', newAngle)
-        addAttribute(this.htmlTag, 'angle-state', newState)
-        this.htmlTag.firstElementChild.firstElementChild.style.transform = `rotateZ(${newAngle}deg)`
+        const newAngle = currAngle + diff * 45    
+        this.angle = newAngle
+        this.angleState = newState
+        this.htmlTag.firstElementChild.firstElementChild.style.transform = `rotateZ(${this.angle}deg)`
     }
 
     changeEnemyAngleState(state, translateX, translateY) {
@@ -160,30 +161,29 @@ export class AbstractEnemy {
 
     knockPlayer() {
         const knock = this.knock
-        const angle = this.htmlTag.getAttribute('angle-state')
         let xAxis, yAxis
         let finalKnock
-        switch ( angle ) {
-            case '0': 
+        switch ( this.angleState ) {
+            case 0: 
                 xAxis = 0
                 yAxis = -1
                 finalKnock = manageKnock('to-down', getPlayer(), knock)
                 break
-            case '1':
-            case '2':
-            case '3':
+            case 1:
+            case 2:
+            case 3:
                 xAxis = 1
                 yAxis = 0
                 finalKnock = manageKnock('to-left', getPlayer(), knock)
                 break
-            case '4':
+            case 4:
                 xAxis = 0
                 yAxis = 1
                 finalKnock = manageKnock('to-up', getPlayer(), knock)
                 break
-            case '5':
-            case '6':
-            case '7':
+            case 5:
+            case 6:
+            case 7:
                 xAxis = -1
                 yAxis = 0
                 finalKnock = manageKnock('to-right', getPlayer(), knock)
@@ -231,11 +231,11 @@ export class AbstractEnemy {
 
     notifyNearbyEnemies() {
         getCurrentRoomEnemies()
-            .filter(e => e.enemy !== this.htmlTag &&
+            .filter(e => e.htmlTag !== this.htmlTag &&
                      (distance(this.htmlTag.getBoundingClientRect().x, this.htmlTag.getBoundingClientRect().y,
                      e.htmlTag.getBoundingClientRect().x, e.htmlTag.getBoundingClientRect().y) < 500 ) &&
-                     this.state !== CHASE && this.state !== NO_OFFENCE && 
-                     this.state !== GO_FOR_RANGED && e.type !== TRACKER
+                     e.state !== CHASE && e.state !== NO_OFFENCE && 
+                     e.state !== GO_FOR_RANGED && e.type !== TRACKER
             ).forEach(e => e.notifyEnemy(Number.MAX_SAFE_INTEGER))
     }
 
@@ -383,8 +383,7 @@ export class AbstractEnemy {
         let result = false
         if ( this.wallInTheWay !== false ) return result
         const angle = this.htmlTag.firstElementChild.children[1].style.transform.replace('rotateZ(', '').replace('deg)', '')
-        const angleState = Number(this.htmlTag.getAttribute('angle-state'))
-        const predicateRunner = this.predicate(angleState, angle)
+        const predicateRunner = this.predicate(this.angleState, angle)
         const runners = [
             predicateRunner(0, 80, -80, 0),
             predicateRunner(0, 125, -35, 0),
@@ -644,11 +643,9 @@ export class AbstractEnemy {
                 if ( trackerMap.has('bl') && trackerMap.has('br') ) {
                     if ( Math.random() < 0.5 ) {
                         if ( this.pathFindingX === wallX + wallW + 50 && this.pathFindingY === wallY + wallH + 50 ) return
-                        debugger
                         this.#addPathFinding(wallX + wallW + 50, wallY - 50)
                         return
                     }
-                    debugger
                     if ( this.pathFindingX === wallX + wallW + 50 && this.pathFindingY === wallY - 50) return
                     this.#addPathFinding(wallX + wallW + 50, wallY + wallH + 50)
                 } 

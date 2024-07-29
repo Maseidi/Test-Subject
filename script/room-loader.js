@@ -5,8 +5,8 @@ import { enemies } from './enemies.js'
 import { getProgress } from './progress.js'
 import { interactables } from './interactables.js'
 import { getWeaponSpecs } from './weapon-specs.js'
-import { INVESTIGATE, SCORCHER, SPIKER, TRACKER } from './enemy-constants.js'
 import { getCurrentRoomId, getRoomLeft, getRoomTop } from './variables.js'
+import { INVESTIGATE, SCORCHER, SPIKER, TRACKER } from './enemy-constants.js'
 import { 
     addAttribute,
     addClass,
@@ -191,6 +191,7 @@ const spawnEnemies = (enemies, roomToRender) => {
         createPath(elem, elem.index, roomToRender)
         const enemyCollider = createAndAddClass('div', 'enemy-collider', `${elem.type}-collider`)
         const enemyBody = createAndAddClass('div', 'enemy-body', `${elem.type}-body`, 'body-transition')
+        enemyBody.style.transform = `rotateZ(${elem.angle}deg)`
         if ( elem.type === SPIKER ) removeClass(enemyBody, 'body-transition')
         enemyBody.style.backgroundColor = `${elem.virus}`
         defineComponents(elem, enemyBody)

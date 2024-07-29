@@ -1,32 +1,6 @@
-import { SquarePath } from './path.js'
-import { Torturer } from './torturer.js'
-
-// class SoulDrinker extends Enemy {
-//     constructor(level, path, progress) {
-//         const health = Math.floor(level * 90 + Math.random() * 15)
-//         const damage = Math.floor(level * 10 + Math.random() * 5)
-//         const maxSpeed = 4.5 + Math.random()
-//         super(SOUL_DRINKER, 4, path, health, damage, 50, maxSpeed, progress, 400, 0.9)
-//     }
-// }
-
-// class RockCrusher extends Enemy {
-//     constructor(level, path, progress) {
-//         const health = Math.floor(level * 360 + Math.random() * 45)
-//         const damage = Math.floor(level * 40 + Math.random() * 20)
-//         const maxSpeed = 2.5 + Math.random()
-//         super(ROCK_CRUSHER, 4, path, health, damage, 200, maxSpeed, progress, 800, 1.8)
-//     }
-// }
-
-// class Tracker extends Enemy {
-//     constructor(level, x, y, progress) {
-//         const health = Math.floor(level * 135 + Math.random() * 15)
-//         const damage = Math.floor(level * 30 + Math.random() * 15)
-//         const maxSpeed = 8 + Math.random()
-//         super(TRACKER, 8, new SinglePointPath(x, y), health, damage, 50, maxSpeed, progress, 500, maxSpeed)
-//     }
-// }
+import { Tracker } from './tracker.js'
+import { SinglePointPath, SquarePath } from './path.js'
+import { RockCrusher, SoulDrinker, Torturer } from './normal-enemy.js'
 
 // class Ranger extends Enemy {
 //     constructor(level, path, progress) {
@@ -69,12 +43,12 @@ export const enemies = new Map([
     [37, [
         // new Torturer(1, new SquarePath(650, 240, 300), '1'),
         // new Torturer(1, new VerDoublePointPath(800, 100, 300), '2'),
-        new Torturer(1, new SquarePath(650, 240, 300), '3'),
+        // new Torturer(1, new SquarePath(650, 240, 300), '3'),
         // new SoulDrinker(1, new SinglePointPath(650, 140), '3'),
         // new RockCrusher(1, new SinglePointPath(850, 140), '3'),
         // new Tracker(1, 1000, 140, '3'),
         // new Tracker(1, 1000, 240, '3'),
-        // new Tracker(1, 1000, 340, '3'),
+        new Tracker(1, 1000, 340, '3'),
         // new Ranger(1, new SquarePath(1000, 100, 300), '3'),
         // new Ranger(1, new SquarePath(1100, 100, 300), '3'),
         // new Ranger(1, new SquarePath(1200, 100, 300), '3'),
