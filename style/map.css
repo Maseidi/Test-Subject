@@ -11,31 +11,31 @@
   position: absolute;
 }
 
-.top-left,
-.bottom-left,
-.top-right,
-.bottom-right {
+.tl,
+.bl,
+.tr,
+.br {
   position: absolute;
   width: 10px;
   height: 10px;
 }
 
-.top-left {
+.tl {
   top: -50px;
   left: -50px;
 }
 
-.top-right {
+.tr {
   top: -50px;
   right: -50px;
 }
 
-.bottom-left {
+.bl {
   bottom: -50px;
   left: -50px;
 }
 
-.bottom-right {
+.br {
   bottom: -50px;
   right: -50px;
 }

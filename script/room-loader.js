@@ -95,10 +95,10 @@ const createTrackers = (solid, elem) => {
     if ( elem.top === 0 ) top = false
     if ( elem.right === 0 ) right = false
     if ( elem.bottom === 0 ) bottom = false
-    const topLeft = createAndAddClass('div', 'top-left')
-    const topRight = createAndAddClass('div', 'top-right')
-    const bottomLeft = createAndAddClass('div', 'bottom-left')
-    const bottomRight = createAndAddClass('div', 'bottom-right')
+    const topLeft = createAndAddClass('div', 'tl')
+    const topRight = createAndAddClass('div', 'tr')
+    const bottomLeft = createAndAddClass('div', 'bl')
+    const bottomRight = createAndAddClass('div', 'br')
     if ( left && top ) solid.append(topLeft)
     if ( left && bottom ) solid.append(bottomLeft)
     if ( right && top ) solid.append(topRight)
@@ -199,7 +199,7 @@ const spawnEnemies = (enemies, roomToRender) => {
         appendAll(enemyCollider, enemyBody, vision, fwDetector)
         enemy.append(enemyCollider)
         roomToRender.append(enemy)
-        elem.element = enemy
+        elem.htmlTag = enemy
         getCurrentRoomEnemies().push(elem)
         getCurrentRoomSolid().push(enemyCollider)
     })

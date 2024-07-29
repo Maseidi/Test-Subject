@@ -48,37 +48,37 @@ export class AbstractEnemy {
 
     move2Destination() {
         if ( this.collidePlayer() ) return
-        const enemyW = Number(window.getComputedStyle(this.element).width.replace('px', ''))
-        const { destW } = this.#destinationCoordinates()
-        const { xMultiplier, yMultiplier } = this.#decideDirection(enemyW, destW)
+        const enemyWidth = Number(window.getComputedStyle(this.htmlTag).width.replace('px', ''))
+        const { destX, destY, destWidth } = this.#destinationCoordinates()
+        const { xMultiplier, yMultiplier } = this.#decideDirection(enemyWidth, destX, destY, destWidth)
         this.calculateAngle(xMultiplier, yMultiplier)
         const speed = this.#calculateSpeed(xMultiplier, yMultiplier)
         if ( !xMultiplier && !yMultiplier ) this.#reachedDestination()
         this.x += (xMultiplier ? (speed * xMultiplier) : 0)
         this.y += (yMultiplier ? (speed * yMultiplier) : 0)
-        this.element.style.left = `${this.x}px`
-        this.element.style.top = `${this.y}px`
+        this.htmlTag.style.left = `${this.x}px`
+        this.htmlTag.style.top = `${this.y}px`
     }
 
     collidePlayer() {
-        if ( ( this.state !== CHASE && this.state !== NO_OFFENCE ) || !collide(this.element, getPlayer(), 0) ) return false
+        if ( ( this.state !== CHASE && this.state !== NO_OFFENCE ) || !collide(this.htmlTag, getPlayer(), 0) ) return false
         if ( this.state === CHASE ) this.hitPlayer()
         return true
     }
 
     #destinationCoordinates() {
-        this.destX = this.pathFindingX === null ? this.destX : this.pathFindingX
-        this.destY = this.pathFindingY === null ? this.destY : this.pathFindingY
-        const destW = this.pathFindingX === 'null' ? Number(this.enemy.getAttribute('dest-w')) : 10
-        return {destW}
+        const destX = this.pathFindingX === null ? this.destX : this.pathFindingX
+        const destY = this.pathFindingY === null ? this.destY : this.pathFindingY
+        const destWidth = this.pathFindingX === null ? this.destWidth : 10
+        return {destX, destY, destWidth}
     }
 
-    #decideDirection(enemyW, destW) {
+    #decideDirection(enemyWidth, destX, destY, destWidth) {
         let xMultiplier, yMultiplier
-        if ( this.x > this.destX + destW / 2 ) xMultiplier = -1
-        else if ( this.x + enemyW <= this.destX + destW / 2 ) xMultiplier = 1
-        if ( this.y > this.destY + destW / 2 ) yMultiplier = -1
-        else if ( this.y + enemyW <= this.destY + destW / 2 ) yMultiplier = 1
+        if ( this.x > destX + destWidth / 2 ) xMultiplier = -1
+        else if ( this.x + enemyWidth <= destX + destWidth / 2 ) xMultiplier = 1
+        if ( this.y > destY + destWidth / 2 ) yMultiplier = -1
+        else if ( this.y + enemyWidth <= destY + destWidth / 2 ) yMultiplier = 1
         return { xMultiplier, yMultiplier }
     }
 
@@ -124,7 +124,7 @@ export class AbstractEnemy {
     }
 
     calculateAngle = (x, y) => {
-        const currState = Number(this.element.getAttribute('angle-state'))
+        const currState = Number(this.htmlTag.getAttribute('angle-state'))
         let newState = currState
         if ( x === 1 && y === 1 )        newState = this.changeEnemyAngleState(7, '0', '0')
         else if ( x === 1 && y === -1 )  newState = this.changeEnemyAngleState(5, '0', '-100%')
@@ -138,14 +138,14 @@ export class AbstractEnemy {
         let diff = newState - currState
         if (Math.abs(diff) > 4 && diff >= 0) diff = -(8 - diff)
         else if (Math.abs(diff) > 4 && diff < 0) diff = 8 - Math.abs(diff) 
-        const newAngle = Number(this.element.getAttribute('angle')) + diff * 45    
-        addAttribute(this.element, 'angle', newAngle)
-        addAttribute(this.element, 'angle-state', newState)
-        this.element.firstElementChild.firstElementChild.style.transform = `rotateZ(${newAngle}deg)`
+        const newAngle = Number(this.htmlTag.getAttribute('angle')) + diff * 45    
+        addAttribute(this.htmlTag, 'angle', newAngle)
+        addAttribute(this.htmlTag, 'angle-state', newState)
+        this.htmlTag.firstElementChild.firstElementChild.style.transform = `rotateZ(${newAngle}deg)`
     }
 
     changeEnemyAngleState(state, translateX, translateY) {
-        const forwardDetector = this.element.firstElementChild.children[2]
+        const forwardDetector = this.htmlTag.firstElementChild.children[2]
         forwardDetector.style.left = '50%'
         forwardDetector.style.top = '50%'
         forwardDetector.style.transform = `translateX(${translateX}) translateY(${translateY})`
@@ -153,14 +153,14 @@ export class AbstractEnemy {
     }
 
     hitPlayer() {
-        addClass(this.element.firstElementChild.firstElementChild.firstElementChild, 'attack')
+        addClass(this.htmlTag.firstElementChild.firstElementChild.firstElementChild, 'attack')
         takeDamage(this.damage)
         this.knockPlayer()
     }
 
     knockPlayer() {
         const knock = this.knock
-        const angle = this.element.getAttribute('angle-state')
+        const angle = this.htmlTag.getAttribute('angle-state')
         let xAxis, yAxis
         let finalKnock
         switch ( angle ) {
@@ -215,7 +215,7 @@ export class AbstractEnemy {
     }
 
     notifyEnemy(dist) {
-        const enemyBound = this.element.getBoundingClientRect()
+        const enemyBound = this.htmlTag.getBoundingClientRect()
         const playerBound = getPlayer().getBoundingClientRect()
         if ( distance(playerBound.x, playerBound.y, enemyBound.x, enemyBound.y) <= dist ) {
             this.switch2ChaseMode()
@@ -226,15 +226,14 @@ export class AbstractEnemy {
 
     switch2ChaseMode() {
         if ( this.state === GO_FOR_RANGED ) return
-        if ( getNoOffenseCounter() === 0 ) this.state = CHASE
-        else this.state = NO_OFFENCE
+        this.state = getNoOffenseCounter() === 0 ? CHASE : NO_OFFENCE
     }
 
     notifyNearbyEnemies() {
         getCurrentRoomEnemies()
-            .filter(e => e.enemy !== this.element &&
-                     (distance(this.element.getBoundingClientRect().x, this.element.getBoundingClientRect().y,
-                     e.element.getBoundingClientRect().x, e.element.getBoundingClientRect().y) < 500 ) &&
+            .filter(e => e.enemy !== this.htmlTag &&
+                     (distance(this.htmlTag.getBoundingClientRect().x, this.htmlTag.getBoundingClientRect().y,
+                     e.htmlTag.getBoundingClientRect().x, e.htmlTag.getBoundingClientRect().y) < 500 ) &&
                      this.state !== CHASE && this.state !== NO_OFFENCE && 
                      this.state !== GO_FOR_RANGED && e.type !== TRACKER
             ).forEach(e => e.notifyEnemy(Number.MAX_SAFE_INTEGER))
@@ -248,21 +247,21 @@ export class AbstractEnemy {
         const newHealth = enemyHealth - damage
         this.health = newHealth
         if ( newHealth <= 0 ) {
-            addAttribute(this.element, 'left', Number(this.element.style.left.replace('px', '')))
-            addAttribute(this.element, 'top', Number(this.element.style.top.replace('px', '')))
-            dropLoot(this.element)
+            addAttribute(this.htmlTag, 'left', Number(this.htmlTag.style.left.replace('px', '')))
+            addAttribute(this.htmlTag, 'top', Number(this.htmlTag.style.top.replace('px', '')))
+            dropLoot(this.htmlTag)
             const enemiesCopy = enemies.get(getCurrentRoomId())
             enemiesCopy[this.index].health = 0
             return
         }
         const knockback = getSpecification(equipped.name, 'knockback')
         this.knockEnemy(knockback)
-        addClass(this.element.firstElementChild.firstElementChild, 'damaged')
+        addClass(this.htmlTag.firstElementChild.firstElementChild, 'damaged')
         this.damagedCounter = 6
     }
 
     knockEnemy(knockback) {
-        const enemyBound = this.element.getBoundingClientRect()
+        const enemyBound = this.htmlTag.getBoundingClientRect()
         const playerBound = getPlayer().getBoundingClientRect()
         let xAxis, yAxis
         if ( enemyBound.left < playerBound.left ) xAxis = -1
@@ -271,8 +270,8 @@ export class AbstractEnemy {
         if ( enemyBound.bottom < playerBound.top ) yAxis = -1
         else if ( enemyBound.bottom >= playerBound.top && enemyBound.top <= playerBound.bottom ) yAxis = 0
         else yAxis = 1
-        this.element.style.left = `${this.x + xAxis * knockback}px`
-        this.element.style.top = `${this.y + yAxis * knockback}px`
+        this.htmlTag.style.left = `${this.x + xAxis * knockback}px`
+        this.htmlTag.style.top = `${this.y + yAxis * knockback}px`
     }
 
     accelerateEnemy() {
@@ -303,7 +302,7 @@ export class AbstractEnemy {
     }
 
     vision2Player() {
-        const vision = this.element.firstElementChild.children[1]
+        const vision = this.htmlTag.firstElementChild.children[1]
         vision.style.transform = `rotateZ(${this.angle2Player()}deg)`
     }
 
@@ -312,7 +311,7 @@ export class AbstractEnemy {
     }
 
     angle2Target(target) {
-        const enemyBound = this.element.getBoundingClientRect()
+        const enemyBound = this.htmlTag.getBoundingClientRect()
         const targetBound = target.getBoundingClientRect()
         return angleOfTwoPoints(enemyBound.x + enemyBound.width / 2, enemyBound.y + enemyBound.height / 2, 
                                 targetBound.x + targetBound.width / 2, targetBound.y + targetBound.height / 2)
@@ -324,7 +323,7 @@ export class AbstractEnemy {
         if ( this.wallCheckCounter !== 20 ) return
         const walls = Array.from(getCurrentRoomSolid())
             .filter(solid => !containsClass(solid, 'enemy-collider') && !containsClass(solid, 'tracker-component'))
-        const vision = this.element.firstElementChild.children[1]
+        const vision = this.htmlTag.firstElementChild.children[1]
         for ( const component of vision.children ) {
             if ( collide(component, getPlayer(), 0) ) {
                 this.wallInTheWay = false
@@ -341,7 +340,7 @@ export class AbstractEnemy {
 
     manageDamagedState() {
         if ( this.damagedCounter === 0 ) {
-            removeClass(this.element.firstElementChild.firstElementChild, 'damaged')
+            removeClass(this.htmlTag.firstElementChild.firstElementChild, 'damaged')
             return
         }
         this.damagedCounter -= 1
@@ -356,17 +355,18 @@ export class AbstractEnemy {
 
     findCollidingEnemy() {
         const collidingEnemy = Array.from(getCurrentRoomEnemies())
-            .find(e => e.element !== this.element 
-            && collide(this.element.firstElementChild.children[2], e.element.firstElementChild, 0) 
-            && e.type !== TRACKER && e.type !== SPIKER
-            && e.state !== INVESTIGATE && e.state !== GO_FOR_RANGED)
+            .find(e => e.htmlTag !== this.htmlTag 
+                  && collide(this.htmlTag.firstElementChild.children[2], e.htmlTag.firstElementChild, 0) 
+                  && e.type !== TRACKER && e.type !== SPIKER
+                  && e.state !== INVESTIGATE && e.state !== GO_FOR_RANGED)
         this.collidingEnemy = null
         return collidingEnemy
     }
 
     handleCollision(collidingEnemy) {
         this.collidingEnemy = collidingEnemy.index
-        if ( collidingEnemy.state === LOST && ( this.state === CHASE || this.state === NO_OFFENCE || this.state === GUESS_SEARCH ) ) {
+        if ( collidingEnemy.state === LOST && 
+           ( this.state === CHASE || this.state === NO_OFFENCE || this.state === GUESS_SEARCH ) ) {
             this.state = LOST
             this.resetAcceleration()
         }
@@ -382,8 +382,8 @@ export class AbstractEnemy {
     isPlayerVisible() {
         let result = false
         if ( this.wallInTheWay !== false ) return result
-        const angle = this.element.firstElementChild.children[1].style.transform.replace('rotateZ(', '').replace('deg)', '')
-        const angleState = Number(this.element.getAttribute('angle-state'))
+        const angle = this.htmlTag.firstElementChild.children[1].style.transform.replace('rotateZ(', '').replace('deg)', '')
+        const angleState = Number(this.htmlTag.getAttribute('angle-state'))
         const predicateRunner = this.predicate(angleState, angle)
         const runners = [
             predicateRunner(0, 80, -80, 0),
@@ -411,21 +411,20 @@ export class AbstractEnemy {
     }
 
     distance2Target(target) {
-        return distance(this.element.getBoundingClientRect().x, this.element.getBoundingClientRect().y, 
+        return distance(this.htmlTag.getBoundingClientRect().x, this.htmlTag.getBoundingClientRect().y, 
                         target.getBoundingClientRect().x, target.getBoundingClientRect().y)
     }
 
     findPath() {
         const wall = this.#findWall()
         if ( !wall ) return
-        const { enemyLeft, enemyTop, enemyW } = this.#getEnemyCoordinates()
-        const { destLeft, destTop, destW } = this.#getDestinationCoordinates()
-        const { wallLeft, wallTop, wallW, wallH } = this.#getWallCoordinates(wall)
-        let enemyState = this.#getPositionState(enemyLeft, enemyTop, enemyW, enemyW, wallLeft, wallTop, wallW, wallH)
-        let destState = this.#getPositionState(destLeft, destTop, destW, destW, wallLeft, wallTop, wallW, wallH)
+        const enemyWidth = Number(window.getComputedStyle(this.htmlTag).width.replace('px', ''))
+        const { wallX, wallY, wallW, wallH } = this.#getWallCoordinates(wall)
+        let enemyState = this.#getPositionState(this.x, this.y, enemyWidth, wallX, wallY, wallW, wallH)
+        let destState = this.#getPositionState(this.destX, this.destY, this.destWidth, wallX, wallY, wallW, wallH)
         const trackerMap = new Map([])
         Array.from(wall.children).forEach(tracker => trackerMap.set(tracker.classList[0], tracker))
-        this.#managePathfindingState(enemyState, destState, trackerMap, wallLeft, wallTop, wallW, wallH)
+        this.#managePathFindingState(enemyState, destState, trackerMap, wallX, wallY, wallW, wallH)
     }
 
     #findWall() {
@@ -433,284 +432,262 @@ export class AbstractEnemy {
         for ( const solid of getCurrentRoomSolid() ) {
             if ( containsClass(solid.parentElement, 'enemy') ) continue
             if ( solid.getAttribute('side') === 'true' ) continue
-            if ( solid === this.element.firstElementChild ) continue
-            if ( !collide(this.element, solid, 50) ) continue
+            if ( solid === this.htmlTag.firstElementChild ) continue
+            if ( !collide(this.htmlTag, solid, 50) ) continue
             wall = solid
             break
         }
         return wall
     }
 
-    #getEnemyCoordinates() {
-        const enemyCpu = window.getComputedStyle(this.element)
-        const enemyW = Number(enemyCpu.width.replace('px', ''))
-        return { enemyLeft: this.x, enemyTop: this.y, enemyW }
-    }
-
-    #getDestinationCoordinates() {
-        return { destLeft: this.destX, destTop: this.destY, destW: this.destWidth }
-    }
-
     #getWallCoordinates(wall) {
         const wallCpu = window.getComputedStyle(wall)
-        const wallLeft = Number(wallCpu.left.replace('px', ''))
-        const wallTop = Number(wallCpu.top.replace('px', ''))
+        const wallX = Number(wallCpu.left.replace('px', ''))
+        const wallY = Number(wallCpu.top.replace('px', ''))
         const wallW = Number(wallCpu.width.replace('px', ''))
         const wallH = Number(wallCpu.height.replace('px', ''))
-        return { wallLeft, wallTop, wallW, wallH }
+        return { wallX, wallY, wallW, wallH }
     }
 
-    #getPositionState(left, top, width, height, wLeft, wTop, wWidth, wHeight) {
+    #getPositionState(left, top, width, wallX, wallY, wallW, wallH) {
         let positionState
-        if ( left + width < wLeft + 5 ) positionState = 10
-        else if ( left + width >= wLeft + 5 && left < wLeft + wWidth - 5 ) positionState = 20
+        const height = width
+        if ( left + width < wallX + 5 ) positionState = 10
+        else if ( left + width >= wallX + 5 && left < wallX + wallW - 5 ) positionState = 20
         else positionState = 30
     
-        if ( top + height < wTop + 5 ) positionState += 1
-        else if ( top + height >= wTop + 5 && top < wTop + wHeight - 5 ) positionState += 2
+        if ( top + height < wallY + 5 ) positionState += 1
+        else if ( top + height >= wallY + 5 && top < wallY + wallH - 5 ) positionState += 2
         else positionState += 3
         
         return positionState
     }
 
-    #managePathfindingState(enemyState, destState, trackerMap, wallLeft, wallTop, wallW, wallH) {
+    #managePathFindingState(enemyState, destState, trackerMap, wallX, wallY, wallW, wallH) {
         switch ( enemyState ) {
-            case 11: this.#handleTopLeftState(destState, wallLeft, wallTop, wallW, wallH)
+            case 11: this.#handleTopLeftState(destState, wallX, wallY, wallW, wallH)
                 break
-            case 12: this.#handleLeftState(destState, trackerMap, wallLeft, wallTop, wallH)
+            case 12: this.#handleLeftState(destState, trackerMap, wallX, wallY, wallH)
                 break
-            case 13: this.#handleBottomLeftState(destState, wallLeft, wallTop, wallW, wallH)
+            case 13: this.#handleBottomLeftState(destState, wallX, wallY, wallW, wallH)
                 break
-            case 21: this.#handleTopState(destState, trackerMap, wallLeft, wallTop, wallW)
+            case 21: this.#handleTopState(destState, trackerMap, wallX, wallY, wallW)
                 break
-            case 23: this.#handleBottomState(destState, trackerMap, wallLeft, wallTop, wallW, wallH)
+            case 23: this.#handleBottomState(destState, trackerMap, wallX, wallY, wallW, wallH)
                 break
-            case 31: this.#handleTopRightState(destState, wallLeft, wallTop, wallW, wallH)
+            case 31: this.#handleTopRightState(destState, wallX, wallY, wallW, wallH)
                 break
-            case 32: this.#handleRightState(destState, trackerMap, wallLeft, wallTop, wallW, wallH)
+            case 32: this.#handleRightState(destState, trackerMap, wallX, wallY, wallW, wallH)
                 break
-            case 33: this.#handleBottomRightState(destState, wallLeft, wallTop, wallW, wallH)
+            case 33: this.#handleBottomRightState(destState, wallX, wallY, wallW, wallH)
                 break
         }
     }
 
-    #handleTopLeftState(destState, wallLeft, wallTop, wallW, wallH) {
+    #handleTopLeftState(destState, wallX, wallY, wallW, wallH) {
         switch ( destState ) {
             case 23:
-                this.#addPathfinding(wallLeft - 50, wallTop + wallH + 50)
+                this.#addPathFinding(wallX - 50, wallY + wallH + 50)
                 break
             case 32:
-                this.#addPathfinding(wallLeft + wallW + 50, wallTop - 50)
+                this.#addPathFinding(wallX + wallW + 50, wallY - 50)
                 break
             case 33:
-                const { destX, destY } = this.#getDestination()
                 if ( Math.random() < 0.5 ) {
-                    if ( destX === wallLeft - 50 && destY === wallTop + wallH + 50 ) return
-                    this.#addPathfinding(wallLeft + wallW + 50, wallTop - 50)
+                    if ( this.pathFindingX === wallX - 50 && this.pathFindingY === wallY + wallH + 50 ) return
+                    this.#addPathFinding(wallX + wallW + 50, wallY - 50)
                     return
                 } 
-                if ( destX === wallLeft + wallW + 50 && destY === wallTop - 50 ) return
-                this.#addPathfinding(wallLeft - 50, wallTop + wallH + 50)
+                if ( this.pathFindingX === wallX + wallW + 50 && this.pathFindingY === wallY - 50 ) return
+                this.#addPathFinding(wallX - 50, wallY + wallH + 50)
                 break  
             default:
-                this.#addPathfinding(null, null)
+                this.#addPathFinding(null, null)
         }
     }
 
-    #handleLeftState(destState, trackerMap, wallLeft, wallTop, wallH) {
+    #handleLeftState(destState, trackerMap, wallX, wallY, wallH) {
         switch ( destState ) {
             case 21:
             case 31:
-                this.#addPathfinding(wallLeft - 50, wallTop - 50)
+                this.#addPathFinding(wallX - 50, wallY - 50)
                 break
             case 32:    
-                if ( trackerMap.has('top-left') && trackerMap.has('bottom-left') ) {
-                    const { destX, destY } = this.#getDestination()
+                if ( trackerMap.has('tl') && trackerMap.has('bl') ) {
                     if ( Math.random() < 0.5 ) {
-                        if ( destX === wallLeft - 50 && destY === wallTop - 50 ) return
-                        this.#addPathfinding(wallLeft - 50, wallTop + wallH + 50)
+                        if ( this.pathFindingX === wallX - 50 && this.pathFindingY === wallY - 50 ) return
+                        this.#addPathFinding(wallX - 50, wallY + wallH + 50)
                         return
                     } 
-                    if ( destX === wallLeft - 50 && destY === wallTop + wallH + 50 ) return
-                    this.#addPathfinding(wallLeft - 50, wallTop - 50)
+                    if ( this.pathFindingX === wallX - 50 && this.pathFindingY === wallY + wallH + 50 ) return
+                    this.#addPathFinding(wallX - 50, wallY - 50)
                 } 
-                else if ( !trackerMap.has('top-left') ) this.#addPathfinding(wallLeft - 50, wallTop + wallH + 50)
-                else if ( !trackerMap.has('bottom-left') ) this.#addPathfinding(wallLeft - 50, wallTop - 50)
+                else if ( !trackerMap.has('tl') ) this.#addPathFinding(wallX - 50, wallY + wallH + 50)
+                else if ( !trackerMap.has('bl') ) this.#addPathFinding(wallX - 50, wallY - 50)
                 break
             case 23:
             case 33:
-                this.#addPathfinding(wallLeft - 50, wallTop + wallH + 50)
+                this.#addPathFinding(wallX - 50, wallY + wallH + 50)
                 break
             default:
-                this.#addPathfinding(null, null)                
+                this.#addPathFinding(null, null)                
         }
     }
 
-    #handleBottomLeftState(destState, wallLeft, wallTop, wallW, wallH) {
+    #handleBottomLeftState(destState, wallX, wallY, wallW, wallH) {
         switch ( destState ) {
             case 21:
-                this.#addPathfinding(wallLeft - 50, wallTop - 50)
+                this.#addPathFinding(wallX - 50, wallY - 50)
                 break
             case 31:       
-                const { destX, destY } = this.#getDestination()
                 if ( Math.random() < 0.5 ) {
-                    if ( destX === wallLeft - 50 && destY === wallTop - 50 ) return
-                    this.#addPathfinding(wallLeft + wallW + 50, wallTop + wallH + 50)
+                    if ( this.pathFindingX === wallX - 50 && this.pathFindingY === wallY - 50 ) return
+                    this.#addPathFinding(wallX + wallW + 50, wallY + wallH + 50)
                     return
                 } 
-                if ( destX === wallLeft + wallW + 50 && destY === wallTop + wallH + 50 ) return
-                this.#addPathfinding(wallLeft - 50, wallTop - 50)
+                if ( this.pathFindingX === wallX + wallW + 50 && this.pathFindingY === wallY + wallH + 50 ) return
+                this.#addPathFinding(wallX - 50, wallY - 50)
                 break
             case 32:
-                this.#addPathfinding(wallLeft + wallW + 50, wallTop + wallH + 50)
+                this.#addPathFinding(wallX + wallW + 50, wallY + wallH + 50)
                 break
             default:
-                this.#addPathfinding(null, null)            
+                this.#addPathFinding(null, null)            
         }
     }
 
-    #handleTopState(destState, trackerMap, wallLeft, wallTop, wallW) {
+    #handleTopState(destState, trackerMap, wallX, wallY, wallW) {
         switch ( destState ) {
             case 12:
             case 13:
-                this.#addPathfinding(wallLeft - 50, wallTop - 50)
+                this.#addPathFinding(wallX - 50, wallY - 50)
                 break
             case 23:    
-                if ( trackerMap.has('top-left') && trackerMap.has('top-right') ) {
-                    const { destX, destY } = this.#getDestination()
+                if ( trackerMap.has('tl') && trackerMap.has('tr') ) {
                     if ( Math.random() < 0.5 ) {
-                        if ( destX === wallLeft - 50 && destY === wallTop - 50 ) return
-                        this.#addPathfinding(wallLeft + wallW + 50, wallTop - 50)
+                        if ( this.pathFindingX === wallX - 50 && this.pathFindingY === wallY - 50 ) return
+                        this.#addPathFinding(wallX + wallW + 50, wallY - 50)
                         return
                     }
-                    if ( destX === wallLeft + wallW + 50 && destY === wallTop - 50) return
-                    this.#addPathfinding(wallLeft - 50, wallTop - 50)
+                    if ( this.pathFindingX === wallX + wallW + 50 && this.pathFindingY === wallY - 50) return
+                    this.#addPathFinding(wallX - 50, wallY - 50)
                 }    
-                else if ( !trackerMap.has('top-left') ) this.#addPathfinding(wallLeft + wallW + 50, wallTop - 50)
-                else if ( !trackerMap.has('top-right') ) this.#addPathfinding(wallLeft - 50, wallTop - 50)
+                else if ( !trackerMap.has('tl') ) this.#addPathFinding(wallX + wallW + 50, wallY - 50)
+                else if ( !trackerMap.has('tr') ) this.#addPathFinding(wallX - 50, wallY - 50)
                 break
             case 32:
             case 33:
-                this.#addPathfinding(wallLeft + wallW + 50, wallTop - 50)
+                this.#addPathFinding(wallX + wallW + 50, wallY - 50)
                 break
             default:
-                this.#addPathfinding(null, null)                    
+                this.#addPathFinding(null, null)                    
         }
     }
 
-    #handleBottomState(destState, trackerMap, wallLeft, wallTop, wallW, wallH) {
+    #handleBottomState(destState, trackerMap, wallX, wallY, wallW, wallH) {
         switch ( destState ) {
             case 11:
             case 12:
-                this.#addPathfinding(wallLeft - 50, wallTop + wallH + 50)
+                this.#addPathFinding(wallX - 50, wallY + wallH + 50)
                 break
             case 21:    
-                if ( trackerMap.has('bottom-left') && trackerMap.has('bottom-right') ) {
-                    const { destX, destY } = this.#getDestination()
+                if ( trackerMap.has('bl') && trackerMap.has('br') ) {
                     if ( Math.random() < 0.5 ) {
-                        if ( destX === wallLeft - 50 && destY === wallTop + wallH + 50 ) return
-                        this.#addPathfinding(wallLeft + wallW + 50, wallTop + wallH + 50)
+                        if ( this.pathFindingX === wallX - 50 && this.pathFindingY === wallY + wallH + 50 ) return
+                        this.#addPathFinding(wallX + wallW + 50, wallY + wallH + 50)
                         return
                     }
-                    if ( destX === wallLeft + wallW + 50 && destY === wallTop + wallH + 50) return
-                    this.#addPathfinding(wallLeft - 50, wallTop + wallH + 50)
+                    if ( this.pathFindingX === wallX + wallW + 50 && this.pathFindingY === wallY + wallH + 50) return
+                    this.#addPathFinding(wallX - 50, wallY + wallH + 50)
                 } 
-                else if ( !trackerMap.has('bottom-left') ) this.#addPathfinding(wallLeft + wallW + 50, wallTop + wallH + 50)
-                else if ( !trackerMap.has('bottom-right') ) this.#addPathfinding(wallLeft - 50, wallTop + wallH + 50)
+                else if ( !trackerMap.has('bl') ) this.#addPathFinding(wallX + wallW + 50, wallY + wallH + 50)
+                else if ( !trackerMap.has('br') ) this.#addPathFinding(wallX - 50, wallY + wallH + 50)
                 break
             case 31:
             case 32:
-                this.#addPathfinding(wallLeft + wallW + 50, wallTop + wallH + 50)
+                this.#addPathFinding(wallX + wallW + 50, wallY + wallH + 50)
                 break  
             default:
-                this.#addPathfinding(null, null)                  
+                this.#addPathFinding(null, null)                  
         }
     }
 
-    #handleTopRightState(destState, wallLeft, wallTop, wallW, wallH) {
+    #handleTopRightState(destState, wallX, wallY, wallW, wallH) {
         switch ( destState ) {
             case 12:
-                this.#addPathfinding(wallLeft - 50, wallTop - 50)
+                this.#addPathFinding(wallX - 50, wallY - 50)
                 break
             case 13:        
-                const { destX, destY } = this.#getDestination()
                 if ( Math.random() < 0.5 ) {
-                    if ( destX === wallLeft - 50 && destY === wallTop - 50 ) return
-                    this.#addPathfinding(wallLeft + wallW + 50, wallTop + wallH + 50)
+                    if ( this.pathFindingX === wallX - 50 && this.pathFindingY === wallY - 50 ) return
+                    this.#addPathFinding(wallX + wallW + 50, wallY + wallH + 50)
                     return
                 }
-                if ( destX === wallLeft + wallW + 50 && destY === wallTop + wallH + 50) return
-                this.#addPathfinding(wallLeft - 50, wallTop - 50)
+                if ( this.pathFindingX === wallX + wallW + 50 && this.pathFindingY === wallY + wallH + 50) return
+                this.#addPathFinding(wallX - 50, wallY - 50)
                 break
             case 23:
-                this.#addPathfinding(wallLeft + wallW + 50, wallTop + wallH + 50)
+                this.#addPathFinding(wallX + wallW + 50, wallY + wallH + 50)
                 break  
             default:
-                this.#addPathfinding(null, null)          
+                this.#addPathFinding(null, null)          
         }
     }
 
-    #handleRightState(destState, trackerMap, wallLeft, wallTop, wallW, wallH) {
+    #handleRightState(destState, trackerMap, wallX, wallY, wallW, wallH) {
         switch ( destState ) {
             case 11:
             case 21:
-                this.#addPathfinding(wallLeft + wallW + 50, wallTop - 50)
+                this.#addPathFinding(wallX + wallW + 50, wallY - 50)
                 break
             case 12:    
-                if ( trackerMap.has('bottom-left') && trackerMap.has('bottom-right') ) {
-                    const { destX, destY } = this.#getDestination()
+                if ( trackerMap.has('bl') && trackerMap.has('br') ) {
                     if ( Math.random() < 0.5 ) {
-                        if ( destX === wallLeft + wallW + 50 && destY === wallTop + wallH + 50 ) return
-                        this.#addPathfinding(wallLeft + wallW + 50, wallTop - 50)
+                        if ( this.pathFindingX === wallX + wallW + 50 && this.pathFindingY === wallY + wallH + 50 ) return
+                        debugger
+                        this.#addPathFinding(wallX + wallW + 50, wallY - 50)
                         return
                     }
-                    if ( destX === wallLeft + wallW + 50 && destY === wallTop - 50) return
-                    this.#addPathfinding(wallLeft + wallW + 50, wallTop + wallH + 50)
+                    debugger
+                    if ( this.pathFindingX === wallX + wallW + 50 && this.pathFindingY === wallY - 50) return
+                    this.#addPathFinding(wallX + wallW + 50, wallY + wallH + 50)
                 } 
-                else if ( !trackerMap.has('top-right') ) this.#addPathfinding(wallLeft + wallW + 50, wallTop + wallH + 50)
-                else if ( !trackerMap.has('bottom-right') ) this.#addPathfinding(wallLeft + wallW + 50, wallTop - 50)
+                else if ( !trackerMap.has('tr') ) this.#addPathFinding(wallX + wallW + 50, wallY + wallH + 50)
+                else if ( !trackerMap.has('br') ) this.#addPathFinding(wallX + wallW + 50, wallY - 50)
                 break
             case 13:
             case 23:
-                this.#addPathfinding(wallLeft + wallW + 50, wallTop + wallH + 50)
+                this.#addPathFinding(wallX + wallW + 50, wallY + wallH + 50)
                 break  
             default:
-                this.#addPathfinding(null, null)                  
+                this.#addPathFinding(null, null)
         }
     }
 
-    #handleBottomRightState(destState, wallLeft, wallTop, wallW, wallH) {
+    #handleBottomRightState(destState, wallX, wallY, wallW, wallH) {
         switch ( destState ) {
             case 12:
-                this.#addPathfinding(wallLeft - 50, wallTop + wallH + 50)
+                this.#addPathFinding(wallX - 50, wallY + wallH + 50)
                 break
             case 11:            
-                const { destX, destY } = this.#getDestination()
                 if ( Math.random() < 0.5 ) {
-                    if ( destX === wallLeft - 50 && destY === wallTop + wallH + 50 ) return
-                    this.#addPathfinding(wallLeft + wallW + 50, wallTop - 50)
+                    if ( this.pathFindingX === wallX - 50 && this.pathFindingY === wallY + wallH + 50 ) return
+                    this.#addPathFinding(wallX + wallW + 50, wallY - 50)
                     return
                 }
-                if ( destX === wallLeft + wallW + 50 && destY === wallTop - 50) return
-                this.#addPathfinding(wallLeft - 50, wallTop + wallH + 50)
+                if ( this.pathFindingX === wallX + wallW + 50 && this.pathFindingY === wallY - 50) return
+                this.#addPathFinding(wallX - 50, wallY + wallH + 50)
             case 21:
-                this.#addPathfinding(wallLeft + wallW + 50, wallTop - 50)
+                this.#addPathFinding(wallX + wallW + 50, wallY - 50)
                 break
             default:
-                this.#addPathfinding(null, null)            
+                this.#addPathFinding(null, null)            
         }
     }
 
-    #addPathfinding(x, y) {
+    #addPathFinding(x, y) {
         this.pathFindingX = x
         this.pathFindingY = y
-    }
-    
-    #getDestination() {
-        return {
-            destX: this.destX,
-            destY: this.destY
-        }
     }
 
 }

@@ -98,7 +98,7 @@ const handleNoOffenceMode = () => {
         .filter(elem => elem.state === NO_OFFENCE)
         .forEach(elem => {
             elem.state = CHASE
-            removeClass(elem.element.firstElementChild.firstElementChild.firstElementChild, 'attack')
+            removeClass(elem.htmlTag.firstElementChild.firstElementChild.firstElementChild, 'attack')
         })
     setNoOffenseCounter(0)
 }
