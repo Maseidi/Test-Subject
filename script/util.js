@@ -116,9 +116,12 @@ export const addFireEffect = () => {
 }
 
 export const getProperty = (elem, property, ...toRemoveList) => {
-    let res = window.getComputedStyle(elem)[property]
+    let res = property === 'transform' ? 
+        elem.style.transform : toRemoveList.includes('%') ? 
+            elem.style[property] : window.getComputedStyle(elem)[property]
+
     toRemoveList.forEach(remove => {
         res = res.replace(remove, '')
     })
-    return res
+    return Number(res)
 }

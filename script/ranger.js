@@ -77,7 +77,7 @@ export class Ranger extends NormalEnemy {
         manageAimModeAngle(
             this.htmlTag, 
             getProperty(this.htmlTag.firstElementChild.children[1], 'transform', 'rotateZ(', 'deg)'),
-            this.angle,
+            () => this.angle,
             (val) => this.angle = val,
             (val) => this.angleState = val
         )

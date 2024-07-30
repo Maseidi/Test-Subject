@@ -15,21 +15,21 @@ import {
 
 export const managePlayerAngle = () => {
     if ( getAimMode() ) 
-        manageAimModeAngle(getPlayer(), getPlayerAimAngle(), getPlayerAngle(), setPlayerAngle, setPlayerAngleState)
+        manageAimModeAngle(getPlayer(), getPlayerAimAngle(), getPlayerAngle, setPlayerAngle, setPlayerAngleState)
     if ( !getGrabbed() ) manageNonAimModeAngle()
 }
 
-export const manageAimModeAngle = (elem, aimAngle, angle, setAngle, setAngleState) => {
+export const manageAimModeAngle = (elem, aimAngle, getAngle, setAngle, setAngleState) => {
     elem.firstElementChild.firstElementChild.style.transform = `rotateZ(${aimAngle}deg)`
-    handleBreakpoints(aimAngle, angle, setAngle, setAngleState)
+    handleBreakpoints(aimAngle, getAngle, setAngle, setAngleState)
 }
 
-const handleBreakpoints = (aimAngle, angle, setAngle, setAngleState) => {
+const handleBreakpoints = (aimAngle, getAngle, setAngle, setAngleState) => {
     const sign = aimAngle < 0 ? -1 : 1
     const q = aimAngle / (sign * 45)
     if ( (q - Math.floor(q)) < 0.5 ) setAngle(sign * Math.floor(q) * 45)
     else setAngle(sign * (Math.floor(q) + 1) * 45)
-    setAngleState(ANGLE_STATE_MAP.get(angle))
+    setAngleState(ANGLE_STATE_MAP.get(getAngle()))
 }
 
 const manageNonAimModeAngle = () => {

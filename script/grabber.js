@@ -1,19 +1,40 @@
-import { addAttribute, addClass, appendAll, collide, createAndAddClass, isMoving, removeClass } from './util.js'
-import { getCurrentRoomEnemies, getGrabBar, getPauseContainer, getPlayer, setGrabBar } from './elements.js'
-import { NormalEnemy } from './normal-enemy.js'
-import { CHASE, GRAB, GUESS_SEARCH, INVESTIGATE, LOST, MOVE_TO_POSITION, NO_OFFENCE, STAND_AND_WATCH, TRACKER } from './enemy-constants.js'
-import { manageAimModeAngle } from './player-angle.js'
 import { takeDamage } from './player-health.js'
-import { getSprintPressed, setAimMode, setGrabbed, setNoOffenseCounter } from './variables.js'
+import { NormalEnemy } from './normal-enemy.js'
 import { removeWeapon } from './weapon-loader.js'
+import { manageAimModeAngle } from './player-angle.js'
+import { getCurrentRoomEnemies, getGrabBar, getPauseContainer, getPlayer, setGrabBar } from './elements.js'
+import { addAttribute, addClass, appendAll, collide, createAndAddClass, getProperty, isMoving, removeClass } from './util.js'
+import { 
+    getPlayerAngle,
+    getPlayerAngleState,
+    getSprintPressed,
+    setAimMode,
+    setGrabbed,
+    setNoOffenseCounter,
+    setPlayerAngle,
+    setPlayerAngleState } from './variables.js'
+import { 
+    CHASE,
+    GRAB,
+    GRABBER,
+    GUESS_SEARCH,
+    INVESTIGATE,
+    LOST,
+    MOVE_TO_POSITION,
+    NO_OFFENCE,
+    STAND_AND_WATCH,
+    TRACKER } from './enemy-constants.js'
 
-export class GrabberEnemy extends NormalEnemy {
-    constructor(enemy) {
-        super(enemy)
+export class Grabber extends NormalEnemy {
+    constructor(level, path, progress) {
+        const health = Math.floor(level * 100 + Math.random() * 50)
+        const damage = Math.floor(level * 20 + Math.random() * 10)
+        const maxSpeed = 3 + Math.random()
+        super(GRABBER, 4, path, health, damage, 100, maxSpeed, progress, 400, 1.4)
     }
 
     behave() {
-        switch ( this.getEnemyState() ) {
+        switch ( this.state ) {
             case INVESTIGATE:
                 this.handleInvestigationState()
                 break
@@ -49,18 +70,16 @@ export class GrabberEnemy extends NormalEnemy {
     }
 
     #processPart(current, part) {
-        const damage = Number(getGrabBar().getAttribute('damage'))
         if ( current > Number(getGrabBar().getAttribute(part)) + 100 && getGrabBar().getAttribute(`${part}-done`) !== 'true' ) {
             addClass(getGrabBar(), `${part}-fail`)
-            takeDamage(damage)
+            takeDamage(Number(getGrabBar().getAttribute('damage')))
             addAttribute(getGrabBar(), `${part}-done`, true)
         }
     }
 
     collidePlayer() {
-        const state = this.getEnemyState()
-        if ( ( state !== CHASE && state !== NO_OFFENCE ) || !collide(this.enemy, getPlayer(), 0) ) return false
-        if ( state === CHASE ) {
+        if ( ( this.state !== CHASE && this.state !== NO_OFFENCE ) || !collide(this.htmlTag, getPlayer(), 0) ) return false
+        if ( this.state === CHASE ) {
             const decision = Math.random()
             if ( decision < 0.2 ) {
                 this.hitPlayer()
@@ -75,21 +94,26 @@ export class GrabberEnemy extends NormalEnemy {
         setAimMode(false)
         removeClass(getPlayer(), 'aim')
         removeWeapon()
-        takeDamage(this.enemy.getAttribute('damage') / 2)
+        takeDamage(this.damage / 2)
         if ( getSprintPressed() ) removeClass(getPlayer(), 'run')
-        if ( isMoving() ) removeClass(getPlayer(), 'walk')    
-        addClass(this.enemy.firstElementChild.firstElementChild, 'no-transition')
+        if ( isMoving() ) removeClass(getPlayer(), 'walk')
+        addClass(this.htmlTag.firstElementChild.firstElementChild, 'no-transition')
         addClass(getPlayer().firstElementChild.firstElementChild, 'no-transition')
+
         const angle2Player = this.angle2Player()
-        addAttribute(this.enemy, 'aim-angle', angle2Player)
-        manageAimModeAngle(this.enemy)
+        manageAimModeAngle(
+            this.htmlTag, angle2Player, () => this.angle, (val) => this.angle = val, (val) => this.angleState = val
+        )
+
         const angle2Enemy = -Math.sign(angle2Player) * ( 180 - Math.abs(angle2Player) )
-        addAttribute(getPlayer(), 'aim-angle', angle2Enemy)
-        manageAimModeAngle(getPlayer())
-        addClass(this.enemy, 'grab')
+        manageAimModeAngle(
+            getPlayer(), angle2Enemy, getPlayerAngle, setPlayerAngle, setPlayerAngleState
+        )
+
+        addClass(this.htmlTag, 'grab')
         setGrabbed(true)
-        getCurrentRoomEnemies().forEach(elem => elem.setEnemyState(STAND_AND_WATCH))
-        this.setEnemyState(GRAB)
+        getCurrentRoomEnemies().forEach(elem => elem.state = STAND_AND_WATCH)
+        this.state = GRAB
         this.renderQte()
     }
 
@@ -116,7 +140,7 @@ export class GrabberEnemy extends NormalEnemy {
         addAttribute(grabBar, 'first', first)
         addAttribute(grabBar, 'second', second)
         addAttribute(grabBar, 'third', third)
-        addAttribute(grabBar, 'damage', this.enemy.getAttribute('damage') / 6)
+        addAttribute(grabBar, 'damage', this.damage / 6)
         getPauseContainer().append(grabBar)
         setGrabBar(grabBar)
     }
@@ -124,14 +148,11 @@ export class GrabberEnemy extends NormalEnemy {
     releasePlayer() {
         if ( getSprintPressed() ) addClass(getPlayer(), 'run')
         if ( isMoving() ) addClass(getPlayer(), 'walk')    
-        removeClass(this.enemy.firstElementChild.firstElementChild, 'no-transition')
+        removeClass(this.htmlTag.firstElementChild.firstElementChild, 'no-transition')
         removeClass(getPlayer().firstElementChild.firstElementChild, 'no-transition')
-        removeClass(this.enemy, 'grab')
+        removeClass(this.htmlTag, 'grab')
         setGrabbed(false)
-        getCurrentRoomEnemies().forEach(elem => {
-            if ( elem.enemy.getAttribute('type') === TRACKER ) elem.setEnemyState(INVESTIGATE)
-            else elem.setEnemyState(NO_OFFENCE)    
-        })
+        getCurrentRoomEnemies().forEach(elem => elem.state = elem.type === TRACKER ? INVESTIGATE : NO_OFFENCE)
         setNoOffenseCounter(1)
         this.removeQte()
     }

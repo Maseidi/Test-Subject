@@ -49,11 +49,11 @@ export class AbstractEnemy {
     move2Destination() {
         if ( this.collidePlayer() ) return
         const enemyWidth = getProperty(this.htmlTag, 'width', 'px')
-        const { destX, destY, destWidth } = this.#destinationCoordinates()
-        const { xMultiplier, yMultiplier } = this.#decideDirection(enemyWidth, destX, destY, destWidth)
+        const { destX, destY, destWidth } = this.destinationCoordinates()
+        const { xMultiplier, yMultiplier } = this.decideDirection(enemyWidth, destX, destY, destWidth)
         this.calculateAngle(xMultiplier, yMultiplier)
-        const speed = this.#calculateSpeed(xMultiplier, yMultiplier)
-        if ( !xMultiplier && !yMultiplier ) this.#reachedDestination()
+        const speed = this.calculateSpeed(xMultiplier, yMultiplier)
+        if ( !xMultiplier && !yMultiplier ) this.reachedDestination()
         this.x += (xMultiplier ? (speed * xMultiplier) : 0)
         this.y += (yMultiplier ? (speed * yMultiplier) : 0)
         this.htmlTag.style.left = `${this.x}px`
@@ -66,14 +66,14 @@ export class AbstractEnemy {
         return true
     }
 
-    #destinationCoordinates() {
+    destinationCoordinates() {
         const destX = this.pathFindingX === null ? this.destX : this.pathFindingX
         const destY = this.pathFindingY === null ? this.destY : this.pathFindingY
         const destWidth = this.pathFindingX === null ? this.destWidth : 10
         return {destX, destY, destWidth}
     }
 
-    #decideDirection(enemyWidth, destX, destY, destWidth) {
+    decideDirection(enemyWidth, destX, destY, destWidth) {
         let xMultiplier, yMultiplier
         if ( this.x > destX + destWidth / 2 ) xMultiplier = -1
         else if ( this.x + enemyWidth <= destX + destWidth / 2 ) xMultiplier = 1
@@ -82,7 +82,7 @@ export class AbstractEnemy {
         return { xMultiplier, yMultiplier }
     }
 
-    #calculateSpeed(xMultiplier, yMultiplier) {
+    calculateSpeed(xMultiplier, yMultiplier) {
         let speed = this.currentSpeed
         if ( this.state === NO_OFFENCE ) speed /= 2
         else if ( this.state === INVESTIGATE ) speed = this.maxSpeed / 5
@@ -90,7 +90,7 @@ export class AbstractEnemy {
         return speed
     }
 
-    #reachedDestination() {
+    reachedDestination() {
         if ( this.pathFindingX !== null ) {
             this.pathFindingX = null
             this.pathFindingY = null
