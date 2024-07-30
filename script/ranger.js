@@ -2,7 +2,7 @@ import { NormalEnemy } from './normal-enemy.js'
 import { manageAimModeAngle } from './player-angle.js'
 import { getCurrentRoom, getCurrentRoomRangerBullets } from './elements.js'
 import { getPlayerX, getPlayerY, getRoomLeft, getRoomTop } from './variables.js'
-import { addAttribute, addClass, angleOfTwoPoints, createAndAddClass, removeClass } from './util.js'
+import { addAttribute, addClass, angleOfTwoPoints, createAndAddClass, getProperty, removeClass } from './util.js'
 import { 
     CHASE,
     GO_FOR_RANGED,
@@ -76,7 +76,7 @@ export class Ranger extends NormalEnemy {
     updateAngle2Player() {
         manageAimModeAngle(
             this.htmlTag, 
-            this.aimAngle, 
+            getProperty(this.htmlTag.firstElementChild.children[1], 'transform', 'rotateZ(', 'deg)'),
             this.angle,
             (val) => this.angle = val,
             (val) => this.angleState = val
@@ -84,16 +84,20 @@ export class Ranger extends NormalEnemy {
     }
 
     shootAnimation() {
-        //TODO: fix angle issue
-        this.aimAngle = this.aimAngle ?? 0
-        if ( this.shootCounter < 15 ) this.aimAngle += 12
-        else if ( this.shootCounter < 29 ) this.aimAngle -= 12
-        this.htmlTag.firstElementChild.firstElementChild.style.transform = `rotateZ(${this.aimAngle}deg)`
+        this.angle = this.angle || 0
+        this.rotateBody(this.shootCounter < 15, 12)
+        this.rotateBody(this.shootCounter >= 15 && this.shootCounter < 29, -12)
+    }
+
+    rotateBody(predicate, amount) {
+        if ( !predicate ) return
+        this.angle = this.angle + amount
+        this.htmlTag.firstElementChild.firstElementChild.style.transform = `rotateZ(${this.angle}deg)`
     }
 
     shoot() {
-        const enemyCpu = window.getComputedStyle(this.htmlTag)
-        const { x: srcX, y: srcY } = { x: +enemyCpu.left.replace('px', '') + 16, y: +enemyCpu.top.replace('px', '') + 16 }
+        const { x: srcX, y: srcY } = 
+            { x: getProperty(this.htmlTag, 'left', 'px') + 16, y: getProperty(this.htmlTag, 'top', 'px') + 16 }
         const { x: destX, y: destY } = { x: getPlayerX() - getRoomLeft() + 17, y: getPlayerY() - getRoomTop() + 17 }
         const deg = angleOfTwoPoints(srcX, srcY, destX, destY)
         const diffY = destY - srcY

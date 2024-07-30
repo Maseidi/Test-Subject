@@ -4,7 +4,7 @@ import { takeDamage } from './player-health.js'
 import { manageKnock } from './knock-manager.js'
 import { getSpecification, getStat } from './weapon-specs.js'
 import { getCurrentRoomEnemies, getCurrentRoomSolid, getMapEl, getPlayer } from './elements.js'
-import { addAttribute, addClass, angleOfTwoPoints, collide, containsClass, distance, removeClass } from './util.js'
+import { addAttribute, addClass, angleOfTwoPoints, collide, containsClass, distance, getProperty, removeClass } from './util.js'
 import { 
     CHASE,
     GO_FOR_RANGED,
@@ -48,7 +48,7 @@ export class AbstractEnemy {
 
     move2Destination() {
         if ( this.collidePlayer() ) return
-        const enemyWidth = Number(window.getComputedStyle(this.htmlTag).width.replace('px', ''))
+        const enemyWidth = getProperty(this.htmlTag, 'width', 'px')
         const { destX, destY, destWidth } = this.#destinationCoordinates()
         const { xMultiplier, yMultiplier } = this.#decideDirection(enemyWidth, destX, destY, destWidth)
         this.calculateAngle(xMultiplier, yMultiplier)
@@ -205,7 +205,7 @@ export class AbstractEnemy {
     } 
 
     updateDestination2Path = (path) => {
-        this.updateDestination(Number(path.style.left.replace('px', '')), Number(path.style.top.replace('px', '')), 10)
+        this.updateDestination(getProperty(path, 'left', 'px'), getProperty(path, 'top', 'px'), 10)
     }
 
     updateDestination(x, y, width) {
@@ -382,7 +382,7 @@ export class AbstractEnemy {
     isPlayerVisible() {
         let result = false
         if ( this.wallInTheWay !== false ) return result
-        const angle = this.htmlTag.firstElementChild.children[1].style.transform.replace('rotateZ(', '').replace('deg)', '')
+        const angle = getProperty(this.htmlTag.firstElementChild.children[1], 'transform', 'rotateZ(', 'deg)')
         const predicateRunner = this.predicate(this.angleState, angle)
         const runners = [
             predicateRunner(0, 80, -80, 0),
@@ -417,7 +417,7 @@ export class AbstractEnemy {
     findPath() {
         const wall = this.#findWall()
         if ( !wall ) return
-        const enemyWidth = Number(window.getComputedStyle(this.htmlTag).width.replace('px', ''))
+        const enemyWidth = getProperty(this.htmlTag, 'width', 'px')
         const { wallX, wallY, wallW, wallH } = this.#getWallCoordinates(wall)
         let enemyState = this.#getPositionState(this.x, this.y, enemyWidth, wallX, wallY, wallW, wallH)
         let destState = this.#getPositionState(this.destX, this.destY, this.destWidth, wallX, wallY, wallW, wallH)
@@ -440,11 +440,10 @@ export class AbstractEnemy {
     }
 
     #getWallCoordinates(wall) {
-        const wallCpu = window.getComputedStyle(wall)
-        const wallX = Number(wallCpu.left.replace('px', ''))
-        const wallY = Number(wallCpu.top.replace('px', ''))
-        const wallW = Number(wallCpu.width.replace('px', ''))
-        const wallH = Number(wallCpu.height.replace('px', ''))
+        const wallX = getProperty(wall, 'left', 'px')
+        const wallY = getProperty(wall, 'top', 'px')
+        const wallW = getProperty(wall, 'width', 'px')
+        const wallH = getProperty(wall, 'height', 'px')
         return { wallX, wallY, wallW, wallH }
     }
 

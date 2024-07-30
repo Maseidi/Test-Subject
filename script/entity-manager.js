@@ -3,7 +3,7 @@ import { loaders } from './loaders.js'
 import { takeDamage } from './player-health.js'
 import { loadCurrentRoom } from './room-loader.js'
 import { CHASE, NO_OFFENCE } from './enemy-constants.js'
-import { collide, containsClass, removeClass } from './util.js'
+import { collide, containsClass, getProperty, removeClass } from './util.js'
 import { 
     getCurrentRoom,
     getCurrentRoomEnemies,
@@ -45,15 +45,14 @@ let prevRoomId
 const manageLoaders = () => {
     const loader = getCurrentRoomLoaders().find(loader => collide(getPlayer().firstElementChild, loader, 0))
     if ( !loader ) return
-    const cpu = window.getComputedStyle(loader)
     prevRoomId = getCurrentRoomId()
     setCurrentRoomId(Number(loader.classList[0]))
-    calculateNewRoomLeftAndTop(cpu.left, cpu.top)
+    calculateNewRoomLeftAndTop(loader)
     getCurrentRoom().remove()
     loadCurrentRoom()
 }
 
-const calculateNewRoomLeftAndTop = (cpuLeft, cpuTop) => {
+const calculateNewRoomLeftAndTop = (prevLoader) => {
     const newRoom = rooms.get(getCurrentRoomId())
     const loader = loaders.get(getCurrentRoomId()).find(loader => loader.className === prevRoomId)
     let left, top
@@ -67,8 +66,8 @@ const calculateNewRoomLeftAndTop = (cpuLeft, cpuTop) => {
         top = loader.top === -26 ? loader.top + 52 : loader.top
     if ( loader.left !== undefined )
         left = loader.left === -26 ? loader.left + 52 : loader.left
-    setRoomLeft(getRoomLeft() - left + Number(cpuLeft.replace('px', '')))
-    setRoomTop(getRoomTop() - top + Number(cpuTop.replace('px', '')))
+    setRoomLeft(getRoomLeft() - left + getProperty(prevLoader, 'left', 'px'))
+    setRoomTop(getRoomTop() - top + getProperty(prevLoader, 'top', 'px'))
 }
 
 const manageInteractables = () => {
@@ -115,8 +114,8 @@ const handleEnemies = () => {
 
 const manageRangerBullets = () => {
     for ( const bullet of getCurrentRoomRangerBullets() ) {
-        const x = Number(bullet.style.left.replace('px', ''))
-        const y = Number(bullet.style.top.replace('px', ''))
+        const x = getProperty(bullet, 'left', 'px')
+        const y = getProperty(bullet, 'top', 'px')
         const speedX = Number(bullet.getAttribute('speed-x'))
         const speedY = Number(bullet.getAttribute('speed-y'))
         bullet.style.left = `${x + speedX}px`

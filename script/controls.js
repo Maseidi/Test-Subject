@@ -7,7 +7,7 @@ import { setupReload } from './weapon-actions.js'
 import { renderStore } from './vending-machine.js'
 import { removeWeapon, renderWeapon } from './weapon-loader.js'
 import { getGrabBar, getPauseContainer, getPlayer, getUiEl } from './elements.js'
-import { addAttribute, addClass, angleOfTwoPoints, isMoving, removeClass } from './util.js'
+import { addAttribute, addClass, angleOfTwoPoints, getProperty, isMoving, removeClass } from './util.js'
 import { renderUi, renderEquippedWeapon, quitPage } from './user-interface.js'
 import { equippedWeaponFromInventory, pickupDrop, removeInventory, renderInventory } from './inventory.js'
 import { 
@@ -213,7 +213,7 @@ const fDown = () => {
 
 const breakFree = () => {
     const slider = getGrabBar().lastElementChild
-    const left = Number(slider.style.left.replace('%', '')) * 10
+    const left = getProperty(slider, 'left', '%') * 10
     const first = Number(getGrabBar().getAttribute('first'))
     const second = Number(getGrabBar().getAttribute('second'))
     const third = Number(getGrabBar().getAttribute('third'))

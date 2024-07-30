@@ -39,7 +39,7 @@ export class GrabberEnemy extends NormalEnemy {
     handleGrabState() {
         setNoOffenseCounter(0)
         const slider = getGrabBar().lastElementChild
-        const percent = Number(slider.style.left.replace('%', ''))
+        const percent = getProperty(slider, 'left', '%')
         if ( percent >= 100 ) this.releasePlayer()
         slider.style.left = `${percent + 0.7}%`
         const current = 10 * ( percent + 0.7 )

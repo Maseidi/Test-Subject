@@ -114,3 +114,11 @@ export const addFireEffect = () => {
     fire.src = `../assets/images/fire.gif`
     return fire
 }
+
+export const getProperty = (elem, property, ...toRemoveList) => {
+    let res = window.getComputedStyle(elem)[property]
+    toRemoveList.forEach(remove => {
+        res = res.replace(remove, '')
+    })
+    return res
+}

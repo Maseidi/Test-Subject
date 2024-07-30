@@ -1,4 +1,4 @@
-import { addAttribute, collide } from './util.js'
+import { addAttribute, collide, getProperty } from './util.js'
 import { NormalEnemy } from './normal-enemy.js'
 import { CHASE, GO_FOR_RANGED, GUESS_SEARCH, INVESTIGATE, LOST, MOVE_TO_POSITION, NO_OFFENCE, SPIKER, TRACKER } from './enemy-constants.js'
 import { getCurrentRoomEnemies } from './elements.js'
@@ -62,8 +62,8 @@ export class SpikerEnemy extends NormalEnemy {
         const speed = this.calculateSpeed(xMultiplier, yMultiplier)
         this.manageAxis(xMultiplier, yMultiplier)
         if ( !xMultiplier && !yMultiplier ) this.reachedDestination()
-        const currentX = Number(window.getComputedStyle(this.enemy).left.replace('px', ''))
-        const currentY = Number(window.getComputedStyle(this.enemy).top.replace('px', ''))
+        const currentX = getProperty(this.enemy, 'left', 'px')
+        const currentY = getProperty(this.enemy, 'top', 'px')
         this.enemy.style.left = `${currentX + speed * xMultiplier}px`
         this.enemy.style.top = `${currentY + speed * yMultiplier}px`
     }
