@@ -1,7 +1,7 @@
 import { NormalEnemy } from './normal-enemy.js'
 import { manageAimModeAngle } from './player-angle.js'
 import { getCurrentRoom, getCurrentRoomRangerBullets } from './elements.js'
-import { getPlayerX, getPlayerY, getRoomLeft, getRoomTop } from './variables.js'
+import { getGrabbed, getPlayerX, getPlayerY, getRoomLeft, getRoomTop } from './variables.js'
 import { addAttribute, addClass, angleOfTwoPoints, createAndAddClass, getProperty, removeClass } from './util.js'
 import { 
     CHASE,
@@ -11,7 +11,8 @@ import {
     LOST,
     MOVE_TO_POSITION,
     NO_OFFENCE,
-    RANGER } from './enemy-constants.js'
+    RANGER, 
+    STAND_AND_WATCH} from './enemy-constants.js'
 
 export class Ranger extends NormalEnemy {
     constructor(level, waypoint, progress) {
@@ -60,7 +61,8 @@ export class Ranger extends NormalEnemy {
         shootCounter++
         if ( shootCounter === 90 ) {
             const d = this.distance2Player()
-            if ( d > this.vision || d < 200 ||
+            if ( getGrabbed() ) this.state = STAND_AND_WATCH
+            else if ( d > this.vision || d < 200 ||
                  this.wallInTheWay !== false || 
                  Math.random() < 0.2 ) this.state = CHASE
             this.shootCounter = -1
@@ -139,7 +141,7 @@ export class Ranger extends NormalEnemy {
     checkCollision() {
         const collidingEnemy = this.findCollidingEnemy()
         if ( !collidingEnemy ) return
-        if ( this.wallInTheWay === false ) this.state = GO_FOR_RANGED
+        if ( this.wallInTheWay === false && !getGrabbed() ) this.state = GO_FOR_RANGED
         this.handleCollision(collidingEnemy)
     }
 

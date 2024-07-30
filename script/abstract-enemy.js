@@ -270,8 +270,10 @@ export class AbstractEnemy {
         if ( enemyBound.bottom < playerBound.top ) yAxis = -1
         else if ( enemyBound.bottom >= playerBound.top && enemyBound.top <= playerBound.bottom ) yAxis = 0
         else yAxis = 1
-        this.htmlTag.style.left = `${this.x + xAxis * knockback}px`
-        this.htmlTag.style.top = `${this.y + yAxis * knockback}px`
+        this.x += (xAxis * knockback)
+        this.y += (yAxis * knockback)
+        this.htmlTag.style.left = `${this.x}px`
+        this.htmlTag.style.top = `${this.y}px`
     }
 
     accelerateEnemy() {

@@ -103,13 +103,15 @@ const handleNoOffenceMode = () => {
 }
 
 const handleEnemies = () => {
-    getCurrentRoomEnemies().forEach((elem) => {
-        elem.wallsInTheWay()
-        elem.vision2Player()
-        elem.manageDamagedState()
-        elem.checkCollision()
-        elem.behave()
-    })
+    Array.from(getCurrentRoomEnemies())
+        .sort(() => Math.random() - 0.5)
+        .forEach((elem) => {
+            elem.wallsInTheWay()
+            elem.vision2Player()
+            elem.manageDamagedState()
+            elem.checkCollision()
+            elem.behave()
+        })
 }
 
 const manageRangerBullets = () => {

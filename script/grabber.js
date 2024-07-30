@@ -15,6 +15,7 @@ import {
     setPlayerAngleState } from './variables.js'
 import { 
     CHASE,
+    GO_FOR_RANGED,
     GRAB,
     GRABBER,
     GUESS_SEARCH,
@@ -22,6 +23,7 @@ import {
     LOST,
     MOVE_TO_POSITION,
     NO_OFFENCE,
+    RANGER,
     STAND_AND_WATCH,
     TRACKER } from './enemy-constants.js'
 
@@ -112,7 +114,10 @@ export class Grabber extends NormalEnemy {
 
         addClass(this.htmlTag, 'grab')
         setGrabbed(true)
-        getCurrentRoomEnemies().forEach(elem => elem.state = STAND_AND_WATCH)
+        getCurrentRoomEnemies().forEach(elem => {
+            if ( elem.type === RANGER && elem.state === GO_FOR_RANGED ) return
+            else elem.state = STAND_AND_WATCH
+        })
         this.state = GRAB
         this.renderQte()
     }
