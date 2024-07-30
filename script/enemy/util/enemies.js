@@ -1,10 +1,10 @@
-import { Tracker } from './tracker.js'
-import { HorDoublePointPath, SinglePointPath, SquarePath, VerDoublePointPath } from './path.js'
-import { RockCrusher, SoulDrinker, Torturer } from './normal-enemy.js'
+import { Tracker } from '../tracker.js'
+import { HorDoublePointPath, SinglePointPath, SquarePath, VerDoublePointPath } from '../../path.js'
+import { RockCrusher, SoulDrinker, Torturer } from '../type/normal-enemy.js'
 import { Ranger } from './ranger.js'
 import { Spiker } from './spiker.js'
 import { Grabber } from './grabber.js'
-import { Scorcher } from './scorcher.js'
+import { Scorcher } from '../type/scorcher.js'
 
 // class Scorcher extends Enemy {
 //     constructor(level, path, progress) {

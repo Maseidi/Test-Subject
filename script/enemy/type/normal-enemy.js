@@ -8,7 +8,7 @@ import {
     NO_OFFENCE, 
     ROCK_CRUSHER, 
     SOUL_DRINKER, 
-    TORTURER} from './enemy-constants.js'
+    TORTURER} from '../util/enemy-constants.js'
 
 export class NormalEnemy extends AbstractEnemy {
     constructor(type, level, waypoint, health, damage, knock, maxSpeed, progress, vision, acceleration) {

@@ -1,10 +1,10 @@
-import { enemies } from './enemies.js'
-import { dropLoot } from './loot-manager.js'
-import { takeDamage } from './player-health.js'
-import { manageKnock } from './knock-manager.js'
-import { getSpecification, getStat } from './weapon-specs.js'
-import { getCurrentRoomEnemies, getCurrentRoomSolid, getMapEl, getPlayer } from './elements.js'
-import { addAttribute, addClass, angleOfTwoPoints, collide, containsClass, distance, getProperty, removeClass } from './util.js'
+import { enemies } from '../util/enemies.js'
+import { dropLoot } from '../../loot-manager.js'
+import { takeDamage } from '../../player-health.js'
+import { manageKnock } from '../../knock-manager.js'
+import { getSpecification, getStat } from '../../weapon-specs.js'
+import { getCurrentRoomEnemies, getCurrentRoomSolid, getMapEl, getPlayer } from '../../elements.js'
+import { addAttribute, addClass, angleOfTwoPoints, collide, containsClass, distance, getProperty, removeClass } from '../../util.js'
 import { 
     CHASE,
     GO_FOR_RANGED,
@@ -14,7 +14,7 @@ import {
     MOVE_TO_POSITION,
     NO_OFFENCE, 
     SPIKER, 
-    TRACKER } from './enemy-constants.js'
+    TRACKER } from '../util/enemy-constants.js'
 import { 
     getCurrentRoomId,
     getMapX,
@@ -27,7 +27,7 @@ import {
     setMapX,
     setMapY,
     setPlayerX,
-    setPlayerY } from './variables.js'
+    setPlayerY } from '../../variables.js'
 
 export class AbstractEnemy {
     constructor(type, components, waypoint, health, damage, knock, maxSpeed, progress, vision, acceleration) {
@@ -44,83 +44,6 @@ export class AbstractEnemy {
         this.acceleration = acceleration
         this.x = waypoint.points[0].x
         this.y = waypoint.points[0].y
-    }
-
-    move2Destination() {
-        if ( this.collidePlayer() ) return
-        const enemyWidth = getProperty(this.htmlTag, 'width', 'px')
-        const { destX, destY, destWidth } = this.destinationCoordinates()
-        const { xMultiplier, yMultiplier } = this.decideDirection(enemyWidth, destX, destY, destWidth)
-        this.calculateAngle(xMultiplier, yMultiplier)
-        const speed = this.calculateSpeed(xMultiplier, yMultiplier)
-        if ( !xMultiplier && !yMultiplier ) this.reachedDestination()
-        this.x += (xMultiplier ? (speed * xMultiplier) : 0)
-        this.y += (yMultiplier ? (speed * yMultiplier) : 0)
-        this.htmlTag.style.left = `${this.x}px`
-        this.htmlTag.style.top = `${this.y}px`
-    }
-
-    collidePlayer() {
-        if ( ( this.state !== CHASE && this.state !== NO_OFFENCE ) || !collide(this.htmlTag, getPlayer(), 0) ) return false
-        if ( this.state === CHASE ) this.hitPlayer()
-        return true
-    }
-
-    destinationCoordinates() {
-        const destX = this.pathFindingX === null ? this.destX : this.pathFindingX
-        const destY = this.pathFindingY === null ? this.destY : this.pathFindingY
-        const destWidth = this.pathFindingX === null ? this.destWidth : 10
-        return {destX, destY, destWidth}
-    }
-
-    decideDirection(enemyWidth, destX, destY, destWidth) {
-        let xMultiplier, yMultiplier
-        if ( this.x > destX + destWidth / 2 ) xMultiplier = -1
-        else if ( this.x + enemyWidth <= destX + destWidth / 2 ) xMultiplier = 1
-        if ( this.y > destY + destWidth / 2 ) yMultiplier = -1
-        else if ( this.y + enemyWidth <= destY + destWidth / 2 ) yMultiplier = 1
-        return { xMultiplier, yMultiplier }
-    }
-
-    calculateSpeed(xMultiplier, yMultiplier) {
-        let speed = this.currentSpeed
-        if ( this.state === NO_OFFENCE ) speed /= 2
-        else if ( this.state === INVESTIGATE ) speed = this.maxSpeed / 5
-        if ( xMultiplier && yMultiplier ) speed /= 1.41
-        return speed
-    }
-
-    reachedDestination() {
-        if ( this.pathFindingX !== null ) {
-            this.pathFindingX = null
-            this.pathFindingY = null
-            return
-        }
-        switch ( this.state ) {
-            case INVESTIGATE:
-                const path = document.getElementById(this.path)
-                const numOfPoints = path.children.length
-                const currentPathPoint = this.pathPoint
-                let nextPathPoint = currentPathPoint + 1
-                if ( nextPathPoint > numOfPoints - 1 ) nextPathPoint = 0
-                this.pathPoint = nextPathPoint
-                this.investigationCounter = 1
-                break
-            case GUESS_SEARCH:
-                this.state = LOST
-                this.lostCounter = 0
-                this.resetAcceleration()
-                break
-            case MOVE_TO_POSITION:
-                this.state = INVESTIGATE
-                this.resetAcceleration()
-                break                 
-        }
-    }
-
-    resetAcceleration() {
-        this.accelerationCounter = 0
-        this.currentSpeed = this.acceleration 
     }
 
     calculateAngle = (x, y) => {
@@ -151,53 +74,6 @@ export class AbstractEnemy {
         forwardDetector.style.top = '50%'
         forwardDetector.style.transform = `translateX(${translateX}) translateY(${translateY})`
         return state
-    }
-
-    hitPlayer() {
-        addClass(this.htmlTag.firstElementChild.firstElementChild.firstElementChild, 'attack')
-        takeDamage(this.damage)
-        this.knockPlayer()
-    }
-
-    knockPlayer() {
-        const knock = this.knock
-        let xAxis, yAxis
-        let finalKnock
-        switch ( this.angleState ) {
-            case 0: 
-                xAxis = 0
-                yAxis = -1
-                finalKnock = manageKnock('to-down', getPlayer(), knock)
-                break
-            case 1:
-            case 2:
-            case 3:
-                xAxis = 1
-                yAxis = 0
-                finalKnock = manageKnock('to-left', getPlayer(), knock)
-                break
-            case 4:
-                xAxis = 0
-                yAxis = 1
-                finalKnock = manageKnock('to-up', getPlayer(), knock)
-                break
-            case 5:
-            case 6:
-            case 7:
-                xAxis = -1
-                yAxis = 0
-                finalKnock = manageKnock('to-right', getPlayer(), knock)
-                break                
-        }
-        if ( xAxis === null && yAxis === null ) return
-        setMapX(xAxis * finalKnock + getMapX())
-        setMapY(yAxis * finalKnock + getMapY())
-        setPlayerX(-xAxis * finalKnock + getPlayerX())
-        setPlayerY(-yAxis * finalKnock + getPlayerY())
-        getMapEl().style.left = `${getMapX()}px`
-        getMapEl().style.top = `${getMapY()}px`
-        getPlayer().style.left = `${getPlayerX()}px`
-        getPlayer().style.top = `${getPlayerY()}px`
     }
 
     updateDestination2Player() { 

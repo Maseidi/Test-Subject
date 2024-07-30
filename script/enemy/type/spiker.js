@@ -1,6 +1,6 @@
-import { NormalEnemy } from './normal-enemy.js'
-import { collide, getProperty } from './util.js'
-import { getCurrentRoomEnemies } from './elements.js'
+import { NormalEnemy } from './type/normal-enemy.js'
+import { collide, getProperty } from '../util.js'
+import { getCurrentRoomEnemies } from '../elements.js'
 import { 
     CHASE,
     GO_FOR_RANGED,

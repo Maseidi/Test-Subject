@@ -1,9 +1,9 @@
-import { takeDamage } from './player-health.js'
-import { NormalEnemy } from './normal-enemy.js'
-import { removeWeapon } from './weapon-loader.js'
-import { manageAimModeAngle } from './player-angle.js'
-import { getCurrentRoomEnemies, getGrabBar, getPauseContainer, getPlayer, setGrabBar } from './elements.js'
-import { addAttribute, addClass, appendAll, collide, createAndAddClass, getProperty, isMoving, removeClass } from './util.js'
+import { takeDamage } from '../player-health.js'
+import { NormalEnemy } from './type/normal-enemy.js'
+import { removeWeapon } from '../weapon-loader.js'
+import { manageAimModeAngle } from '../player-angle.js'
+import { getCurrentRoomEnemies, getGrabBar, getPauseContainer, getPlayer, setGrabBar } from '../elements.js'
+import { addAttribute, addClass, appendAll, collide, createAndAddClass, getProperty, isMoving, removeClass } from '../util.js'
 import { 
     getPlayerAngle,
     getPlayerAngleState,
@@ -12,7 +12,7 @@ import {
     setGrabbed,
     setNoOffenseCounter,
     setPlayerAngle,
-    setPlayerAngleState } from './variables.js'
+    setPlayerAngleState } from '../variables.js'
 import { 
     CHASE,
     GRAB,

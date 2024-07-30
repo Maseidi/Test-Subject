@@ -1,8 +1,8 @@
-import { collide } from './util.js'
+import { collide } from '../../util.js'
 import { Grabber } from './grabber.js'
-import { getPlayer } from './elements.js'
-import { setPlayer2Fire } from './player-health.js'
-import { CHASE, NO_OFFENCE, SCORCHER } from './enemy-constants.js'
+import { getPlayer } from '../../elements.js'
+import { setPlayer2Fire } from '../../player-health.js'
+import { CHASE, NO_OFFENCE, SCORCHER } from '../util/enemy-constants.js'
 
 export class Scorcher extends Grabber {
     constructor(level, waypoint, progress) {

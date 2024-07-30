@@ -1,8 +1,8 @@
-import { NormalEnemy } from './normal-enemy.js'
-import { manageAimModeAngle } from './player-angle.js'
-import { getCurrentRoom, getCurrentRoomRangerBullets } from './elements.js'
-import { getPlayerX, getPlayerY, getRoomLeft, getRoomTop } from './variables.js'
-import { addAttribute, addClass, angleOfTwoPoints, createAndAddClass, getProperty, removeClass } from './util.js'
+import { NormalEnemy } from './type/normal-enemy.js'
+import { manageAimModeAngle } from '../player-angle.js'
+import { getCurrentRoom, getCurrentRoomRangerBullets } from '../elements.js'
+import { getPlayerX, getPlayerY, getRoomLeft, getRoomTop } from '../variables.js'
+import { addAttribute, addClass, angleOfTwoPoints, createAndAddClass, getProperty, removeClass } from '../util.js'
 import { 
     CHASE,
     GO_FOR_RANGED,

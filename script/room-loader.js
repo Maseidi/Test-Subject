@@ -1,12 +1,12 @@
 import { walls } from './walls.js'
 import { rooms } from './rooms.js'
 import { loaders } from './loaders.js'
-import { enemies } from './enemies.js'
+import { enemies } from './enemy/util/enemies.js'
 import { getProgress } from './progress.js'
 import { interactables } from './interactables.js'
 import { getWeaponSpecs } from './weapon-specs.js'
 import { getCurrentRoomId, getRoomLeft, getRoomTop } from './variables.js'
-import { INVESTIGATE, SCORCHER, SPIKER, TRACKER } from './enemy-constants.js'
+import { INVESTIGATE, SCORCHER, SPIKER, TRACKER } from './enemy/util/enemy-constants.js'
 import { 
     addAttribute,
     addClass,
