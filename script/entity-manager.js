@@ -2,7 +2,7 @@ import { rooms } from './rooms.js'
 import { loaders } from './loaders.js'
 import { takeDamage } from './player-health.js'
 import { loadCurrentRoom } from './room-loader.js'
-import { CHASE, NO_OFFENCE } from './enemy-constants.js'
+import { CHASE, NO_OFFENCE } from './enemy/util/enemy-constants.js'
 import { collide, containsClass, getProperty, removeClass } from './util.js'
 import { 
     getCurrentRoom,

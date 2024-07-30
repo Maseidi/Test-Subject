@@ -1,10 +1,10 @@
-import { enemies } from './enemies.js'
-import { dropLoot } from './loot-manager.js'
-import { takeDamage } from './player-health.js'
-import { manageKnock } from './knock-manager.js'
-import { getSpecification, getStat } from './weapon-specs.js'
-import { getCurrentRoomEnemies, getCurrentRoomSolid, getMapEl, getPlayer } from './elements.js'
-import { addAttribute, addClass, angleOfTwoPoints, collide, containsClass, distance, getProperty, removeClass } from './util.js'
+import { enemies } from '../util/enemies.js'
+import { dropLoot } from '../../loot-manager.js'
+import { takeDamage } from '../../player-health.js'
+import { manageKnock } from '../../knock-manager.js'
+import { getSpecification, getStat } from '../../weapon-specs.js'
+import { getCurrentRoomEnemies, getCurrentRoomSolid, getMapEl, getPlayer } from '../../elements.js'
+import { addAttribute, addClass, angleOfTwoPoints, collide, containsClass, distance, getProperty, removeClass } from '../../util.js'
 import { 
     CHASE,
     GO_FOR_RANGED,
@@ -14,7 +14,7 @@ import {
     MOVE_TO_POSITION,
     NO_OFFENCE, 
     SPIKER, 
-    TRACKER } from './enemy-constants.js'
+    TRACKER } from '../util/enemy-constants.js'
 import { 
     getCurrentRoomId,
     getMapX,
@@ -27,7 +27,7 @@ import {
     setMapX,
     setMapY,
     setPlayerX,
-    setPlayerY } from './variables.js'
+    setPlayerY } from '../../variables.js'
 
 export class AbstractEnemy {
     constructor(type, components, waypoint, health, damage, knock, maxSpeed, progress, vision, acceleration) {
@@ -370,6 +370,7 @@ export class AbstractEnemy {
         if ( collidingEnemy.state === LOST && 
            ( this.state === CHASE || this.state === NO_OFFENCE || this.state === GUESS_SEARCH ) ) {
             this.state = LOST
+            this.lostCounter = 1
             this.resetAcceleration()
         }
         else if ( collidingEnemy.state === LOST && ( this.state === MOVE_TO_POSITION ) ) 

@@ -1,5 +1,5 @@
-import { NormalEnemy } from './normal-enemy.js'
 import { collide, getProperty } from './util.js'
+import { AbstractEnemy } from './abstract-enemy.js'
 import { getCurrentRoomEnemies } from './elements.js'
 import { 
     CHASE,
@@ -12,7 +12,7 @@ import {
     SPIKER,
     TRACKER } from './enemy-constants.js'
 
-export class Spiker extends NormalEnemy {
+export class Spiker extends AbstractEnemy {
     constructor(level, waypoint, progress) {
         const health = Math.floor(level * 25 + Math.random() * 5)
         const damage = Math.floor(level * 15 + Math.random() * 5)

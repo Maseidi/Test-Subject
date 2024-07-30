@@ -1,4 +1,4 @@
-import { NormalEnemy } from './normal-enemy.js'
+import { AbstractEnemy } from './abstract-enemy.js'
 import { manageAimModeAngle } from './player-angle.js'
 import { getCurrentRoom, getCurrentRoomRangerBullets } from './elements.js'
 import { getGrabbed, getPlayerX, getPlayerY, getRoomLeft, getRoomTop } from './variables.js'
@@ -14,7 +14,7 @@ import {
     RANGER, 
     STAND_AND_WATCH} from './enemy-constants.js'
 
-export class Ranger extends NormalEnemy {
+export class Ranger extends AbstractEnemy {
     constructor(level, waypoint, progress) {
         const health = Math.floor(level * 112 + Math.random() * 17)
         const damage = Math.floor(level * 25 + Math.random() * 5)

@@ -1,18 +1,17 @@
-import { takeDamage } from './player-health.js'
-import { NormalEnemy } from './normal-enemy.js'
-import { removeWeapon } from './weapon-loader.js'
-import { manageAimModeAngle } from './player-angle.js'
-import { getCurrentRoomEnemies, getGrabBar, getPauseContainer, getPlayer, setGrabBar } from './elements.js'
-import { addAttribute, addClass, appendAll, collide, createAndAddClass, getProperty, isMoving, removeClass } from './util.js'
+import { takeDamage } from '../../player-health.js'
+import { removeWeapon } from '../../weapon-loader.js'
+import { AbstractEnemy } from '../type/abstract-enemy.js'
+import { manageAimModeAngle } from '../../player-angle.js'
+import { getCurrentRoomEnemies, getGrabBar, getPauseContainer, getPlayer, setGrabBar } from '../../elements.js'
+import { addAttribute, addClass, appendAll, collide, createAndAddClass, getProperty, isMoving, removeClass } from '../../util.js'
 import { 
     getPlayerAngle,
-    getPlayerAngleState,
     getSprintPressed,
     setAimMode,
     setGrabbed,
     setNoOffenseCounter,
     setPlayerAngle,
-    setPlayerAngleState } from './variables.js'
+    setPlayerAngleState } from '../../variables.js'
 import { 
     CHASE,
     GO_FOR_RANGED,
@@ -25,9 +24,9 @@ import {
     NO_OFFENCE,
     RANGER,
     STAND_AND_WATCH,
-    TRACKER } from './enemy-constants.js'
+    TRACKER } from '../util/enemy-constants.js'
 
-export class Grabber extends NormalEnemy {
+export class Grabber extends AbstractEnemy {
     constructor(level, path, progress) {
         const health = Math.floor(level * 100 + Math.random() * 50)
         const damage = Math.floor(level * 20 + Math.random() * 10)

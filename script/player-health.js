@@ -1,5 +1,5 @@
 import { healthManager } from './user-interface.js'
-import { CHASE, NO_OFFENCE } from './enemy-constants.js'
+import { CHASE, NO_OFFENCE } from './enemy/util/enemy-constants.js'
 import { getInventory, useInventoryResource } from './inventory.js'
 import { getCurrentRoomEnemies, getMapEl, getPlayer } from './elements.js'
 import { addClass, addFireEffect, checkLowHealth, containsClass, removeClass } from './util.js'

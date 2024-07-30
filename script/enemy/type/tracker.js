@@ -1,11 +1,11 @@
-import { NormalEnemy } from './normal-enemy.js'
-import { addAttribute, collide } from './util.js'
+import { collide } from './util.js'
+import { SinglePointPath } from './path.js'
+import { AbstractEnemy } from './abstract-enemy.js'
 import { getNoOffenseCounter } from './variables.js'
 import { getCurrentRoomEnemies, getPlayer } from './elements.js'
 import { CHASE, GUESS_SEARCH, INVESTIGATE, LOST, TRACKER } from './enemy-constants.js'
-import { SinglePointPath } from './path.js'
 
-export class Tracker extends NormalEnemy {
+export class Tracker extends AbstractEnemy {
     constructor(level, x, y, progress) {
         const health = Math.floor(level * 135 + Math.random() * 15)
         const damage = Math.floor(level * 30 + Math.random() * 15)

@@ -8,9 +8,9 @@ import {
     NO_OFFENCE, 
     ROCK_CRUSHER, 
     SOUL_DRINKER, 
-    TORTURER} from './enemy-constants.js'
+    TORTURER} from '../util/enemy-constants.js'
 
-export class NormalEnemy extends AbstractEnemy {
+class NormalEnemy extends AbstractEnemy {
     constructor(type, level, waypoint, health, damage, knock, maxSpeed, progress, vision, acceleration) {
         super(type, level, waypoint, health, damage, knock, maxSpeed, progress, vision, acceleration)
     }
@@ -78,7 +78,7 @@ export class NormalEnemy extends AbstractEnemy {
         if ( this.lostCounter % 120 === 0 ) this.checkSurroundings()
         this.lostCounter += 1
     }
-    
+
     handleMove2PositionState() {
         this.accelerateEnemy()
         if ( this.playerLocated() ) return

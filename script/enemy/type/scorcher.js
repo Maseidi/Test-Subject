@@ -1,10 +1,10 @@
 import { collide } from './util.js'
-import { Grabber } from './grabber.js'
 import { getPlayer } from './elements.js'
 import { setPlayer2Fire } from './player-health.js'
+import { AbstractEnemy } from './abstract-enemy.js'
 import { CHASE, NO_OFFENCE, SCORCHER } from './enemy-constants.js'
 
-export class Scorcher extends Grabber {
+export class Scorcher extends AbstractEnemy {
     constructor(level, waypoint, progress) {
         const health = Math.floor(level * 135 + Math.random() * 15)
         const damage = Math.floor(level * 15 + Math.random() * 10)
