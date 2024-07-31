@@ -1,6 +1,6 @@
 import { rooms } from './rooms.js'
 import { loaders } from './loaders.js'
-import { takeDamage } from './player-health.js'
+import { damagePlayer } from './player-health.js'
 import { loadCurrentRoom } from './room-loader.js'
 import { CHASE, NO_OFFENCE } from './enemy/util/enemy-constants.js'
 import { collide, containsClass, getProperty, removeClass } from './util.js'
@@ -123,7 +123,7 @@ const manageRangerBullets = () => {
         bullet.style.left = `${x + speedX}px`
         bullet.style.top = `${y + speedY}px`
         if ( collide(bullet, getPlayer().firstElementChild, 0) ) {
-            if ( !getGrabbed() ) takeDamage(+bullet.getAttribute('damage'))
+            if ( !getGrabbed() ) damagePlayer(+bullet.getAttribute('damage'))
             bullet.remove()
             continue
         }

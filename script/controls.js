@@ -1,5 +1,5 @@
 import { renderStash } from './stash.js'
-import { heal, takeDamage } from './player-health.js'
+import { heal, damagePlayer } from './player-health.js'
 import { getStat } from './weapon-specs.js'
 import { dropLoot } from './loot-manager.js'
 import { centralizePlayer } from './startup.js'
@@ -220,7 +220,7 @@ const breakFree = () => {
     if ( left >= first && left <= first + 100 )        processPart('first-done', 'first-ok')
     else if ( left >= second && left <= second + 100 ) processPart('second-done', 'second-ok')
     else if ( left >= third && left <= third + 100 )   processPart('third-done', 'third-ok')
-    else takeDamage(Number(getGrabBar().getAttribute('damage')))
+    else damagePlayer(Number(getGrabBar().getAttribute('damage')))
 }
 
 const processPart = (predicate, className) => {

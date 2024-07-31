@@ -1,4 +1,4 @@
-import { takeDamage } from '../../player-health.js'
+import { damagePlayer } from '../../player-health.js'
 import { removeWeapon } from '../../weapon-loader.js'
 import { AbstractEnemy } from '../type/abstract-enemy.js'
 import { manageAimModeAngle } from '../../player-angle.js'
@@ -73,7 +73,7 @@ export class Grabber extends AbstractEnemy {
     #processPart(current, part) {
         if ( current > Number(getGrabBar().getAttribute(part)) + 100 && getGrabBar().getAttribute(`${part}-done`) !== 'true' ) {
             addClass(getGrabBar(), `${part}-fail`)
-            takeDamage(Number(getGrabBar().getAttribute('damage')))
+            damagePlayer(Number(getGrabBar().getAttribute('damage')))
             addAttribute(getGrabBar(), `${part}-done`, true)
         }
     }
@@ -95,7 +95,7 @@ export class Grabber extends AbstractEnemy {
         setAimMode(false)
         removeClass(getPlayer(), 'aim')
         removeWeapon()
-        takeDamage(this.damage / 2)
+        damagePlayer(this.damage / 2)
         if ( getSprintPressed() ) removeClass(getPlayer(), 'run')
         if ( isMoving() ) removeClass(getPlayer(), 'walk')
         addClass(this.htmlTag.firstElementChild.firstElementChild, 'no-transition')

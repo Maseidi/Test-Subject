@@ -49,7 +49,7 @@ export const useBandage = (bandage) => {
     if ( !checkLowHealth() ) decideLowHealth(removeClass)
 }
 
-export const takeDamage = (damage) => {
+export const damagePlayer = (damage) => {
     if ( getNoOffenseCounter() !== 0 ) return
     addClass(getMapEl(), 'camera-shake')
     setTimeout(() => removeClass(getMapEl(), 'camera-shake'), 300)
