@@ -1,5 +1,5 @@
-import { getCurrentRoomSolid, getPlayer } from '../../elements.js'
-import { collide, containsClass, getProperty } from '../../util.js'
+import { getCurrentRoomSolid, getPlayer } from '../../../elements.js'
+import { collide, containsClass, getProperty } from '../../../util.js'
 
 export class AbstractVisionService {
     constructor(enemy) {
@@ -8,13 +8,13 @@ export class AbstractVisionService {
 
     playerLocated() {
         const visible = this.isPlayerVisible()
-        if ( visible ) this.switch2ChaseMode()
+        if ( visible ) this.enemy.notificationService.switch2ChaseMode()
         return visible
     }
 
     vision2Player() {
         const vision = this.enemy.htmlTag.firstElementChild.children[1]
-        vision.style.transform = `rotateZ(${this.angle2Player()}deg)`
+        vision.style.transform = `rotateZ(${this.enemy.angleService.angle2Player()}deg)`
     }
 
     wallsInTheWay() {

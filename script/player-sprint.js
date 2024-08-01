@@ -39,8 +39,8 @@ const handleSprintAndStamina = (sprint, animator, stamina, refill) => {
     if ( sprint ) 
         getCurrentRoomEnemies().forEach(elem => {
             if ( elem.type === TRACKER ) {
-                if ( getNoOffenseCounter() === 0 ) elem.notifyEnemy(1500)
+                if ( getNoOffenseCounter() === 0 ) elem.notificationService.notifyEnemy(1500)
             }
-            else elem.notifyEnemy(400)
+            else elem.notificationService.notifyEnemy(400)
         })
 }

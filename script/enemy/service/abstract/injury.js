@@ -1,8 +1,9 @@
-import { enemies } from '../util/enemies.js'
-import { getPlayer } from '../../elements.js'
-import { getCurrentRoomId } from '../../variables.js'
-import { getSpecification, getStat } from '../../weapon-specs.js'
-import { addAttribute, addClass, removeClass } from '../../util.js'
+import { enemies } from '../../util/enemies.js'
+import { getPlayer } from '../../../elements.js'
+import { dropLoot } from '../../../loot-manager.js'
+import { getCurrentRoomId } from '../../../variables.js'
+import { getSpecification, getStat } from '../../../weapon-specs.js'
+import { addAttribute, addClass, removeClass } from '../../../util.js'
 
 export class AbstractInjuryService {
     constructor(enemy) {
@@ -27,7 +28,7 @@ export class AbstractInjuryService {
         const knockback = getSpecification(equipped.name, 'knockback')
         this.knockEnemy(knockback)
         addClass(this.enemy.htmlTag.firstElementChild.firstElementChild, 'damaged')
-        this.damagedCounter = 6
+        this.enemy.damagedCounter = 6
     }
 
     knockEnemy(knockback) {

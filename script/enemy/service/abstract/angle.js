@@ -1,3 +1,6 @@
+import { getPlayer } from '../../../elements.js'
+import { angleOfTwoPoints } from '../../../util.js'
+
 export class AbstractAngleService {
     constructor(enemy) {
         this.enemy = enemy

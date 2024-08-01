@@ -1,8 +1,8 @@
-import { addClass } from '../../util.js'
-import { damagePlayer } from '../../player-health.js'
-import { manageKnock } from '../../knock-manager.js'
-import { getMapEl, getPlayer } from '../../elements.js'
-import { getMapX, getMapY, getPlayerX, getPlayerY, setMapX, setMapY, setPlayerX, setPlayerY } from '../../variables.js'
+import { addClass } from '../../../util.js'
+import { manageKnock } from '../../../knock-manager.js'
+import { damagePlayer } from '../../../player-health.js'
+import { getMapEl, getPlayer } from '../../../elements.js'
+import { getMapX, getMapY, getPlayerX, getPlayerY, setMapX, setMapY, setPlayerX, setPlayerY } from '../../../variables.js'
 
 export class AbstractOffenceService {
     constructor(enemy) {

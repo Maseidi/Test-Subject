@@ -1,6 +1,6 @@
-import { collide } from '../../util.js'
-import { getPlayer } from '../../elements.js'
-import { CHASE, GUESS_SEARCH, INVESTIGATE, MOVE_TO_POSITION, NO_OFFENCE } from '../util/enemy-constants.js'
+import { getPlayer } from '../../../elements.js'
+import { collide, distance, getProperty } from '../../../util.js'
+import { CHASE, GUESS_SEARCH, INVESTIGATE, LOST, MOVE_TO_POSITION, NO_OFFENCE } from '../../util/enemy-constants.js'
 
 export class AbstractMovementService {
     constructor(enemy) {
@@ -12,7 +12,7 @@ export class AbstractMovementService {
         const enemyWidth = getProperty(this.enemy.htmlTag, 'width', 'px')
         const { destX, destY, destWidth } = this.destinationCoordinates()
         const { xMultiplier, yMultiplier } = this.decideDirection(enemyWidth, destX, destY, destWidth)
-        this.calculateAngle(xMultiplier, yMultiplier)
+        this.enemy.angleService.calculateAngle(xMultiplier, yMultiplier)
         const speed = this.calculateSpeed(xMultiplier, yMultiplier)
         if ( !xMultiplier && !yMultiplier ) this.reachedDestination()
         this.enemy.x += (xMultiplier ? (speed * xMultiplier) : 0)
@@ -24,7 +24,7 @@ export class AbstractMovementService {
     collidePlayer() {
         if ( ( this.enemy.state !== CHASE && this.enemy.state !== NO_OFFENCE ) || !collide(this.enemy.htmlTag, getPlayer(), 0) ) 
             return false
-        if ( this.enemy.state === CHASE ) this.hitPlayer()
+        if ( this.enemy.state === CHASE ) this.enemy.offenceService.hitPlayer()
         return true
     }
 
@@ -96,7 +96,7 @@ export class AbstractMovementService {
     }
 
     displaceEnemy() {
-        this.findPath()
+        this.enemy.pathFindingService.findPath()
         this.move2Destination()
     }
 

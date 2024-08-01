@@ -1,5 +1,5 @@
-import { getCurrentRoomSolid } from '../../elements.js'
-import { collide, containsClass, getProperty } from '../../util.js'
+import { getCurrentRoomSolid } from '../../../elements.js'
+import { collide, containsClass, getProperty } from '../../../util.js'
 
 export class AbstractPathFindingService {
     constructor(enemy) {

@@ -1,3 +1,12 @@
+import { AbstractAngleService } from '../service/abstract/angle.js'
+import { AbstractVisionService } from '../service/abstract/vision.js'
+import { AbstractInjuryService } from '../service/abstract/injury.js'
+import { AbstractOffenceService } from '../service/abstract/offence.js'
+import { AbstractMovementService } from '../service/abstract/movement.js'
+import { AbstractCollisionService } from '../service/abstract/collision.js'
+import { AbstractPathFindingService } from '../service/abstract/path-finding.js'
+import { AbstractNotificationService } from '../service/abstract/notification.js'
+
 export class AbstractEnemy {
     constructor(type, components, waypoint, health, damage, knock, maxSpeed, progress, vision, acceleration) {
         this.type = type
@@ -13,6 +22,14 @@ export class AbstractEnemy {
         this.acceleration = acceleration
         this.x = waypoint.points[0].x
         this.y = waypoint.points[0].y
+        this.angleService = new AbstractAngleService(this)
+        this.injuryService = new AbstractInjuryService(this)
+        this.offenceService = new AbstractOffenceService(this)
+        this.pathFindingService = new AbstractPathFindingService(this)
+        this.notificationService = new AbstractNotificationService(this)
+        this.visionService = new AbstractVisionService(this)
+        this.movementService = new AbstractMovementService(this)
+        this.collisionService = new AbstractCollisionService(this)
     }
 
 }

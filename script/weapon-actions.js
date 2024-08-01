@@ -120,9 +120,9 @@ const shoot = () => {
 
 const notifyNearbyEnemies = () => getCurrentRoomEnemies().forEach(elem => {
     if ( elem.htmlTag.type === TRACKER ) {
-        if ( getNoOffenseCounter() === 0 ) elem.notifyEnemy(2000)
+        if ( getNoOffenseCounter() === 0 ) elem.notificationService.notifyEnemy(2000)
     }
-    else elem.notifyEnemy(800)
+    else elem.notificationService.notifyEnemy(800)
 })
 
 const manageInteractivity = () => {
@@ -131,7 +131,7 @@ const manageInteractivity = () => {
     if ( containsClass(element, TRACKER) ) return
     if ( containsClass(getTarget(), 'weak-point') ) element = getTarget().parentElement.parentElement.parentElement
     const enemy = getCurrentRoomEnemies().find(elem => elem.htmlTag === element)
-    if ( containsClass(element, 'enemy') && enemy.health > 0 ) enemy.damageEnemy(equippedWeapon)
+    if ( containsClass(element, 'enemy') && enemy.health > 0 ) enemy.injuryService.damageEnemy(equippedWeapon)
     if ( getTarget()?.getAttribute('name') === 'crate' ) dropLoot(getTarget())
 }
 

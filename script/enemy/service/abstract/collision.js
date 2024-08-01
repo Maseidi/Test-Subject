@@ -1,14 +1,15 @@
-import { collide } from '../../util.js'
-import { getCurrentRoomEnemies } from '../../elements.js'
+import { collide } from '../../../util.js'
+import { getCurrentRoomEnemies } from '../../../elements.js'
 import { 
     CHASE,
     GO_FOR_RANGED,
     GUESS_SEARCH,
     INVESTIGATE,
     LOST,
+    MOVE_TO_POSITION,
     NO_OFFENCE,
     SPIKER,
-    TRACKER } from '../util/enemy-constants.js'
+    TRACKER } from '../../util/enemy-constants.js'
 
 export class AbstractCollisionService {
     constructor(enemy) {
@@ -37,7 +38,7 @@ export class AbstractCollisionService {
            ( this.enemy.state === CHASE || this.enemy.state === NO_OFFENCE || this.enemy.state === GUESS_SEARCH ) ) {
             this.enemy.state = LOST
             this.enemy.lostCounter = 1
-            this.resetAcceleration()
+            this.enemy.movementService.resetAcceleration()
         }
         else if ( collidingEnemy.state === LOST && ( this.enemy.state === MOVE_TO_POSITION ) ) 
             collidingEnemy.state = MOVE_TO_POSITION

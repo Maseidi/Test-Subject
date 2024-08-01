@@ -1,6 +1,7 @@
-import { getProperty } from '../../util.js'
-import { getPlayerX, getPlayerY, getRoomLeft, getRoomTop } from '../../variables.js'
-import { CHASE, GO_FOR_RANGED, NO_OFFENCE, TRACKER } from '../util/enemy-constants.js'
+import { distance, getProperty } from '../../../util.js'
+import { getCurrentRoomEnemies, getPlayer } from '../../../elements.js'
+import { CHASE, GO_FOR_RANGED, NO_OFFENCE, TRACKER } from '../../util/enemy-constants.js'
+import { getNoOffenseCounter, getPlayerX, getPlayerY, getRoomLeft, getRoomTop } from '../../../variables.js'
 
 export class AbstractNotificationService {
     constructor(enemy) {
@@ -43,7 +44,7 @@ export class AbstractNotificationService {
                      e.htmlTag.getBoundingClientRect().x, e.htmlTag.getBoundingClientRect().y) < 500 ) &&
                      e.state !== CHASE && e.state !== NO_OFFENCE && 
                      e.state !== GO_FOR_RANGED && e.type !== TRACKER
-            ).forEach(e => e.notifyEnemy(Number.MAX_SAFE_INTEGER))
+            ).forEach(e => e.notificationService.notifyEnemy(Number.MAX_SAFE_INTEGER))
     }
 
 }
