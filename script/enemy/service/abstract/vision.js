@@ -6,7 +6,7 @@ export class AbstractVisionService {
         this.enemy = enemy
     }
 
-    playerLocated() {
+    playerSpotted() {
         const visible = this.isPlayerVisible()
         if ( visible ) this.enemy.notificationService.switch2ChaseMode()
         return visible
@@ -17,7 +17,7 @@ export class AbstractVisionService {
         vision.style.transform = `rotateZ(${this.enemy.angleService.angle2Player()}deg)`
     }
 
-    wallsInTheWay() {
+    getWallInTheWay() {
         this.enemy.wallCheckCounter = this.enemy.wallCheckCounter ?? 1
         this.enemy.wallCheckCounter = this.enemy.wallCheckCounter + 1 === 21 ? 0 : this.enemy.wallCheckCounter + 1
         if ( this.enemy.wallCheckCounter !== 20 ) return

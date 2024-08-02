@@ -1,6 +1,6 @@
 import { getCurrentRoomLoaders, getCurrentRoomSolid } from './elements.js'
 
-export const manageKnock = (direction, entity, knock) => directionMapper.get(direction)(entity, knock)
+export const knockObject = (direction, entity, knock) => directionMapper.get(direction)(entity, knock)
 
 const handleDownKnock = (entity, knock) => {
     const entityBound = entity.getBoundingClientRect()

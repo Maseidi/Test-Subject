@@ -187,12 +187,11 @@ const weaponSlotDown = (key) => {
 
 const shiftDown = () => {
     setSprintPressed(true)
-    if ( getPause() || getGrabbed() ) return
     startSprint()
 }
 
 const startSprint = () => {
-    if ( !isMoving() ) return
+    if ( !isMoving() || getPause() || getGrabbed() ) return
     setAimMode(false)
     removeClass(getPlayer(), 'aim')
     removeWeapon()

@@ -1,6 +1,8 @@
-export class TrackerGuessSearchService {
+import { NormalChaseService } from '../normal/chase.js'
+
+export class TrackerGuessSearchService extends NormalChaseService {
     constructor(enemy) {
-        this.enemy = enemy
+        super(enemy)
     }
 
     handleGuessSearchState() {

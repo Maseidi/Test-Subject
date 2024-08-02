@@ -33,7 +33,7 @@ export class AbstractCollisionService {
     }
 
     handleCollision(collidingEnemy) {
-        this.collidingEnemy = collidingEnemy.index
+        this.enemy.collidingEnemy = collidingEnemy.index
         if ( collidingEnemy.state === LOST && 
            ( this.enemy.state === CHASE || this.enemy.state === NO_OFFENCE || this.enemy.state === GUESS_SEARCH ) ) {
             this.enemy.state = LOST
@@ -43,7 +43,7 @@ export class AbstractCollisionService {
         else if ( collidingEnemy.state === LOST && ( this.enemy.state === MOVE_TO_POSITION ) ) 
             collidingEnemy.state = MOVE_TO_POSITION
         else {
-            if ( this.collidingEnemy === collidingEnemy.index && this.enemy.index === collidingEnemy.collidingEnemy ) return
+            if ( this.enemy.collidingEnemy === collidingEnemy.index && this.enemy.index === collidingEnemy.collidingEnemy ) return
             this.enemy.accelerationCounter = 45
             this.enemy.currentSpeed = 0
         }

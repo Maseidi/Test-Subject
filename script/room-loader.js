@@ -6,11 +6,12 @@ import { getProgress } from './progress.js'
 import { interactables } from './interactables.js'
 import { getWeaponSpecs } from './weapon-specs.js'
 import { getCurrentRoomId, getRoomLeft, getRoomTop } from './variables.js'
-import { INVESTIGATE, MOVE_TO_POSITION, SCORCHER, SPIKER, TRACKER } from './enemy/util/enemy-constants.js'
+import { GO_FOR_RANGED, INVESTIGATE, MOVE_TO_POSITION, RANGER, SCORCHER, SPIKER, TRACKER } from './enemy/util/enemy-constants.js'
 import { 
     addAttribute,
     addClass,
     addFireEffect,
+    ANGLE_STATE_MAP,
     appendAll,
     createAndAddClass,
     nextId,
@@ -208,6 +209,8 @@ const spawnEnemies = (enemies, roomToRender) => {
 
 const defineEnemy = (elem) => {
     const enemy = createAndAddClass('div', `${elem.type}`, 'enemy')
+    elem.angle = elem.type === RANGER && elem.state === GO_FOR_RANGED ? Math.ceil(Math.random() * 7) : elem.angle
+    elem.angleState = elem.type === RANGER && elem.state === GO_FOR_RANGED ? ANGLE_STATE_MAP.get(elem.angle) : elem.angleState
     elem.state = elem.type === TRACKER ? INVESTIGATE : MOVE_TO_POSITION
     elem.investigationCounter = 0
     elem.path = `path-${elem.index}`

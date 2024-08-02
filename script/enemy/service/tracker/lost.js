@@ -1,8 +1,9 @@
+import { NormalLostService } from '../normal/lost.js'
 import { INVESTIGATE } from '../../util/enemy-constants.js'
 
-export class TrackerLostService {
+export class TrackerLostService extends NormalLostService {
     constructor(enemy) {
-        this.enemy = enemy
+        super(enemy)
     }
 
     handleLostState() {

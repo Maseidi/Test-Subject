@@ -106,11 +106,13 @@ const handleEnemies = () => {
     Array.from(getCurrentRoomEnemies())
         .sort(() => Math.random() - 0.5)
         .forEach((elem) => {
-            elem.visionService.wallsInTheWay()
-            elem.visionService.vision2Player()
-            elem.injuryService.manageDamagedState()
-            elem.collisionService.checkCollision()
-            elem.behave()
+            if ( elem.health > 0 ) {
+                elem.visionService.getWallInTheWay()
+                elem.visionService.vision2Player()
+                elem.injuryService.manageDamagedState()
+                elem.collisionService.checkCollision()
+                elem.behave()
+            }
         })
 }
 

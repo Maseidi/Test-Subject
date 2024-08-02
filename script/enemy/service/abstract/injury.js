@@ -53,7 +53,6 @@ export class AbstractInjuryService {
             return
         }
         this.enemy.damagedCounter -= 1
-
     }
 
 }

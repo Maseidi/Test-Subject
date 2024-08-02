@@ -1,30 +1,20 @@
-import { damagePlayer } from '../../player-health.js'
-import { removeWeapon } from '../../weapon-loader.js'
-import { AbstractEnemy } from '../type/abstract-enemy.js'
-import { manageAimModeAngle } from '../../player-angle.js'
-import { getCurrentRoomEnemies, getGrabBar, getPauseContainer, getPlayer, setGrabBar } from '../../elements.js'
-import { addAttribute, addClass, appendAll, collide, createAndAddClass, getProperty, isMoving, removeClass } from '../../util.js'
-import { 
-    getPlayerAngle,
-    getSprintPressed,
-    setAimMode,
-    setGrabbed,
-    setNoOffenseCounter,
-    setPlayerAngle,
-    setPlayerAngleState } from '../../variables.js'
+import { AbstractEnemy } from './abstract-enemy.js'
+import { NormalLostService } from '../service/normal/lost.js'
+import { GrabberGrabService } from '../service/grabber/grab.js'
+import { NormalChaseService } from '../service/normal/chase.js'
+import { NormalReturnService } from '../service/normal/return.js'
+import { GrabberMovementService } from '../service/grabber/movement.js'
+import { NormalGuessSearchService } from '../service/normal/guess-search.js'
+import { NormalInvestigationService } from '../service/normal/investigate.js'
 import { 
     CHASE,
-    GO_FOR_RANGED,
     GRAB,
     GRABBER,
     GUESS_SEARCH,
     INVESTIGATE,
     LOST,
     MOVE_TO_POSITION,
-    NO_OFFENCE,
-    RANGER,
-    STAND_AND_WATCH,
-    TRACKER } from '../util/enemy-constants.js'
+    NO_OFFENCE } from '../util/enemy-constants.js'
 
 export class Grabber extends AbstractEnemy {
     constructor(level, path, progress) {
@@ -32,137 +22,37 @@ export class Grabber extends AbstractEnemy {
         const damage = Math.floor(level * 20 + Math.random() * 10)
         const maxSpeed = 3 + Math.random()
         super(GRABBER, 4, path, health, damage, 100, maxSpeed, progress, 400, 1.4)
+        this.movementService = new GrabberMovementService(this)
+        this.investigationService = new NormalInvestigationService(this)
+        this.chaseService = new NormalChaseService(this)
+        this.guessSearchService = new NormalGuessSearchService(this)
+        this.lostService = new NormalLostService(this)
+        this.returnService = new NormalReturnService(this)
+        this.grabService = new GrabberGrabService(this)
     }
 
     behave() {
         switch ( this.state ) {
             case INVESTIGATE:
-                this.handleInvestigationState()
+                this.investigationService.handleInvestigationState()
                 break
             case CHASE:
             case NO_OFFENCE:
-                this.handleChaseState()
+                this.chaseService.handleChaseState()
                 break
             case GUESS_SEARCH:
-                this.handleGuessSearchState()
+                this.guessSearchService.handleGuessSearchState()
                 break    
             case LOST:
-                this.handleLostState()
+                this.lostService.handleLostState()
                 break
             case MOVE_TO_POSITION:
-                this.handleMove2PositionState()
+                this.returnService.handleMove2PositionState()
                 break
             case GRAB:
-                this.handleGrabState()
+                this.grabService.handleGrabState()
                 break
         }
-    }
-
-    handleGrabState() {
-        setNoOffenseCounter(0)
-        const slider = getGrabBar().lastElementChild
-        const percent = getProperty(slider, 'left', '%')
-        if ( percent >= 100 ) this.releasePlayer()
-        slider.style.left = `${percent + 0.7}%`
-        const current = 10 * ( percent + 0.7 )
-        this.#processPart(current, 'first')
-        this.#processPart(current, 'second')
-        this.#processPart(current, 'third')
-    }
-
-    #processPart(current, part) {
-        if ( current > Number(getGrabBar().getAttribute(part)) + 100 && getGrabBar().getAttribute(`${part}-done`) !== 'true' ) {
-            addClass(getGrabBar(), `${part}-fail`)
-            damagePlayer(Number(getGrabBar().getAttribute('damage')))
-            addAttribute(getGrabBar(), `${part}-done`, true)
-        }
-    }
-
-    collidePlayer() {
-        if ( ( this.state !== CHASE && this.state !== NO_OFFENCE ) || !collide(this.htmlTag, getPlayer(), 0) ) return false
-        if ( this.state === CHASE ) {
-            const decision = Math.random()
-            if ( decision < 0.2 ) {
-                this.hitPlayer()
-                return
-            }
-            this.grabPlayer()
-        }
-        return true
-    }
-
-    grabPlayer() {
-        setAimMode(false)
-        removeClass(getPlayer(), 'aim')
-        removeWeapon()
-        damagePlayer(this.damage / 2)
-        if ( getSprintPressed() ) removeClass(getPlayer(), 'run')
-        if ( isMoving() ) removeClass(getPlayer(), 'walk')
-        addClass(this.htmlTag.firstElementChild.firstElementChild, 'no-transition')
-        addClass(getPlayer().firstElementChild.firstElementChild, 'no-transition')
-
-        const angle2Player = this.angle2Player()
-        manageAimModeAngle(
-            this.htmlTag, angle2Player, () => this.angle, (val) => this.angle = val, (val) => this.angleState = val
-        )
-
-        const angle2Enemy = -Math.sign(angle2Player) * ( 180 - Math.abs(angle2Player) )
-        manageAimModeAngle(
-            getPlayer(), angle2Enemy, getPlayerAngle, setPlayerAngle, setPlayerAngleState
-        )
-
-        addClass(this.htmlTag, 'grab')
-        setGrabbed(true)
-        getCurrentRoomEnemies().forEach(elem => {
-            if ( elem.type === RANGER && elem.state === GO_FOR_RANGED ) return
-            else elem.state = STAND_AND_WATCH
-        })
-        this.state = GRAB
-        this.renderQte()
-    }
-
-    renderQte() {
-        const grabBar = createAndAddClass('div', 'grab-bar')
-        const first = Math.floor(Math.random() * 230)
-        const second = 330 + Math.floor(Math.random() * 230)
-        const third = 660 + Math.floor(Math.random() * 230)
-        const firstElem = createAndAddClass('div', 'first', 'breakpoint')
-        firstElem.style.left = `${first / 10}%`
-        const secondElem = createAndAddClass('div', 'second', 'breakpoint')
-        secondElem.style.left = `${second / 10}%`
-        const thirdElem = createAndAddClass('div', 'third', 'breakpoint')
-        thirdElem.style.left = `${third / 10}%`
-        const slider = createAndAddClass('div', 'slider')
-        slider.style.left = `0%`
-        const messageContainer = createAndAddClass('div', 'grab-bar-message-container')
-        const message = createAndAddClass('p', 'grab-bar-message')
-        message.textContent = 'press'
-        const button = createAndAddClass('p', 'grab-bar-btn')
-        button.textContent = 'f'
-        appendAll(messageContainer, message, button)
-        appendAll(grabBar, firstElem, secondElem, thirdElem, messageContainer, slider)
-        addAttribute(grabBar, 'first', first)
-        addAttribute(grabBar, 'second', second)
-        addAttribute(grabBar, 'third', third)
-        addAttribute(grabBar, 'damage', this.damage / 6)
-        getPauseContainer().append(grabBar)
-        setGrabBar(grabBar)
-    }
-
-    releasePlayer() {
-        if ( getSprintPressed() ) addClass(getPlayer(), 'run')
-        if ( isMoving() ) addClass(getPlayer(), 'walk')    
-        removeClass(this.htmlTag.firstElementChild.firstElementChild, 'no-transition')
-        removeClass(getPlayer().firstElementChild.firstElementChild, 'no-transition')
-        removeClass(this.htmlTag, 'grab')
-        setGrabbed(false)
-        getCurrentRoomEnemies().forEach(elem => elem.state = elem.type === TRACKER ? INVESTIGATE : NO_OFFENCE)
-        setNoOffenseCounter(1)
-        this.removeQte()
-    }
-
-    removeQte() {
-        getPauseContainer().firstElementChild.remove()
     }
 
 }

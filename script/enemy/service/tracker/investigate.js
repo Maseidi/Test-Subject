@@ -1,9 +1,10 @@
 import { CHASE } from '../../util/enemy-constants.js'
 import { getNoOffenseCounter } from '../../../variables.js'
+import { NormalInvestigationService } from '../normal/investigate.js'
 
-export class TrackerInvestigationService {
+export class TrackerInvestigationService extends NormalInvestigationService {
     constructor(enemy) {
-        this.enemy = enemy
+        super(enemy)
     }
 
     handleInvestigationState() {

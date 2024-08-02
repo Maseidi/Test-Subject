@@ -5,7 +5,7 @@ export class TrackerVisionService extends AbstractVisionService {
         super(enemy)
     }
 
-    wallsInTheWay() {
+    getWallInTheWay() {
         return
     }
 

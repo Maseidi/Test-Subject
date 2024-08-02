@@ -1,5 +1,5 @@
 import { addClass } from '../../../util.js'
-import { manageKnock } from '../../../knock-manager.js'
+import { knockObject } from '../../../knock-manager.js'
 import { damagePlayer } from '../../../player-health.js'
 import { getMapEl, getPlayer } from '../../../elements.js'
 import { getMapX, getMapY, getPlayerX, getPlayerY, setMapX, setMapY, setPlayerX, setPlayerY } from '../../../variables.js'
@@ -23,26 +23,26 @@ export class AbstractOffenceService {
             case 0: 
                 xAxis = 0
                 yAxis = -1
-                finalKnock = manageKnock('to-down', getPlayer(), knock)
+                finalKnock = knockObject('to-down', getPlayer(), knock)
                 break
             case 1:
             case 2:
             case 3:
                 xAxis = 1
                 yAxis = 0
-                finalKnock = manageKnock('to-left', getPlayer(), knock)
+                finalKnock = knockObject('to-left', getPlayer(), knock)
                 break
             case 4:
                 xAxis = 0
                 yAxis = 1
-                finalKnock = manageKnock('to-up', getPlayer(), knock)
+                finalKnock = knockObject('to-up', getPlayer(), knock)
                 break
             case 5:
             case 6:
             case 7:
                 xAxis = -1
                 yAxis = 0
-                finalKnock = manageKnock('to-right', getPlayer(), knock)
+                finalKnock = knockObject('to-right', getPlayer(), knock)
                 break                
         }
         if ( xAxis === null && yAxis === null ) return

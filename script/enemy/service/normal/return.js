@@ -5,7 +5,7 @@ export class NormalReturnService {
 
     handleMove2PositionState() {
         this.enemy.movementService.accelerateEnemy()
-        if ( this.enemy.visionService.playerLocated() ) return
+        if ( this.enemy.visionService.playerSpotted() ) return
         const dest = document.getElementById(this.enemy.path).children[this.enemy.pathPoint]
         this.enemy.notificationService.updateDestination2Path(dest)
         this.enemy.movementService.displaceEnemy()

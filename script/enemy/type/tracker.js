@@ -17,13 +17,13 @@ export class Tracker extends AbstractEnemy {
         const maxSpeed = 8 + Math.random()
         super(TRACKER, 8, new SinglePointPath(x, y), health, damage, 50, maxSpeed, progress, 500, maxSpeed)
         this.notificationService = new TrackerNotificationService(this)
+        this.lostService = new TrackerLostService(this)
         this.visionService = new TrackerVisionService(this)
         this.movementService = new TrackerMovemenetService(this)
         this.collisionService = new TrackerCollisionService(this)
         this.investigationService = new TrackerInvestigationService(this)
         this.chaseService = new TrackerChaseService(this)
         this.guessSearchService = new TrackerGuessSearchService(this)
-        this.lostService = new TrackerLostService(this)
     }
 
     behave() {
