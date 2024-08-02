@@ -1,15 +1,16 @@
 import { rooms } from './rooms.js'
 import { loaders } from './loaders.js'
-import { damagePlayer } from './player-health.js'
 import { loadCurrentRoom } from './room-loader.js'
+import { damagePlayer, setPlayer2Fire } from './player-health.js'
 import { CHASE, NO_OFFENCE } from './enemy/util/enemy-constants.js'
-import { collide, containsClass, getProperty, removeClass } from './util.js'
+import { addAttribute, collide, containsClass, getProperty, removeClass } from './util.js'
 import { 
     getCurrentRoom,
     getCurrentRoomEnemies,
+    getCurrentRoomFlames,
     getCurrentRoomInteractables,
     getCurrentRoomLoaders,
-    getCurrentRoomRangerBullets,
+    getCurrentRoomBullets,
     getCurrentRoomSolid,
     getPlayer } from './elements.js'
 import {
@@ -31,7 +32,8 @@ export const manageEntities = () => {
     manageLoaders()
     manageInteractables()
     manageEnemies()
-    manageRangerBullets()
+    manageBullets()
+    manageFlames()
 }
 
 const manageSolidObjects = () => {
@@ -116,8 +118,8 @@ const handleEnemies = () => {
         })
 }
 
-const manageRangerBullets = () => {
-    for ( const bullet of getCurrentRoomRangerBullets() ) {
+const manageBullets = () => {
+    for ( const bullet of getCurrentRoomBullets() ) {
         const x = getProperty(bullet, 'left', 'px')
         const y = getProperty(bullet, 'top', 'px')
         const speedX = Number(bullet.getAttribute('speed-x'))
@@ -125,7 +127,10 @@ const manageRangerBullets = () => {
         bullet.style.left = `${x + speedX}px`
         bullet.style.top = `${y + speedY}px`
         if ( collide(bullet, getPlayer().firstElementChild, 0) ) {
-            if ( !getGrabbed() ) damagePlayer(+bullet.getAttribute('damage'))
+            if ( !getGrabbed() ) {
+                damagePlayer(+bullet.getAttribute('damage'))
+                if ( containsClass(bullet, 'scorcher-bullet') ) setPlayer2Fire()
+            }
             bullet.remove()
             continue
         }
@@ -137,4 +142,13 @@ const manageRangerBullets = () => {
                 bullet.remove()
             }
     }
+}
+
+const manageFlames = () => {
+    getCurrentRoomFlames().forEach(flame => {
+        const time = Number(flame.getAttribute('time'))
+        if ( time === 900 ) flame.remove()
+        addAttribute(flame, 'time', time + 1)
+        if ( collide(flame, getPlayer(), 0) ) setPlayer2Fire()    
+    })
 }

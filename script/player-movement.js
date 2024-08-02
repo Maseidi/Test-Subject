@@ -1,5 +1,5 @@
-import { checkLowHealth, isMoving } from './util.js'
 import { getMapEl, getPlayer } from './elements.js'
+import { checkLowHealth, isMoving } from './util.js'
 import { 
     getAimMode,
     getAllowMove,

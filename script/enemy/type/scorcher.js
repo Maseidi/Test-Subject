@@ -1,13 +1,15 @@
 import { AbstractEnemy } from './abstract-enemy.js'
 import { NormalLostService } from '../service/normal/lost.js'
-import { NormalChaseService } from '../service/normal/chase.js'
 import { GrabberGrabService } from '../service/grabber/grab.js'
 import { NormalReturnService } from '../service/normal/return.js'
+import { ScorcherChaseService } from '../service/scorcher/chase.js'
 import { ScorcherMovementService } from '../service/scorcher/movement.js'
+import { ScorcherShootingService } from '../service/scorcher/shooting.js'
 import { NormalGuessSearchService } from '../service/normal/guess-search.js'
 import { NormalInvestigationService } from '../service/normal/investigate.js'
 import { 
     CHASE,
+    GO_FOR_RANGED,
     GRAB,
     GUESS_SEARCH,
     INVESTIGATE,
@@ -24,7 +26,8 @@ export class Scorcher extends AbstractEnemy {
         super(SCORCHER, 5, waypoint, health, damage, 100, maxSpeed, progress, 600, 1.1)
         this.movementService = new ScorcherMovementService(this)
         this.investigationService = new NormalInvestigationService(this)
-        this.chaseService = new NormalChaseService(this)
+        this.chaseService = new ScorcherChaseService(this)
+        this.shootingService = new ScorcherShootingService(this)
         this.guessSearchService = new NormalGuessSearchService(this)
         this.lostService = new NormalLostService(this)
         this.returnService = new NormalReturnService(this)
@@ -32,13 +35,18 @@ export class Scorcher extends AbstractEnemy {
     }
 
     behave() {
+        this.shootingService.transferEnemy(false)
         switch ( this.state ) {
             case INVESTIGATE:
                 this.investigationService.handleInvestigationState()
                 break
             case CHASE:
+                if ( Math.random() < 0.005 ) this.state = GO_FOR_RANGED
             case NO_OFFENCE:
                 this.chaseService.handleChaseState()
+                break
+            case GO_FOR_RANGED:
+                this.shootingService.handleRangedAttackState()
                 break
             case GUESS_SEARCH:
                 this.guessSearchService.handleGuessSearchState()

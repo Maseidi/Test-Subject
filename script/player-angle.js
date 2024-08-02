@@ -1,5 +1,5 @@
 import { getPlayer } from './elements.js'
-import { ANGLE_STATE_MAP, addAttribute, isMoving } from './util.js'
+import { ANGLE_STATE_MAP, isMoving } from './util.js'
 import {
     getAimMode,
     getDownPressed,

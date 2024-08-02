@@ -52,11 +52,17 @@ export const setCurrentRoomEnemies = (val) => {
 }
 export const getCurrentRoomEnemies = () => currentRoomEnemies
 
-let currentRoomRangerBullets
-export const setCurrentRoomRangerBullets = (val) => {
-    currentRoomRangerBullets = val
+let currentRoomBullets
+export const setCurrentRoomBullets = (val) => {
+    currentRoomBullets = val
 }
-export const getCurrentRoomRangerBullets = () => currentRoomRangerBullets
+export const getCurrentRoomBullets = () => currentRoomBullets
+
+let currentRoomFlames
+export const setCurrentRoomFlames = (val) => {
+    currentRoomFlames = val
+}
+export const getCurrentRoomFlames = () => currentRoomFlames
 
 let player
 export const setPlayer = (val) => {

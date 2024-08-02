@@ -25,7 +25,7 @@ const manageBurningState = () => {
             .find(child => containsClass(child, 'fire')).remove()
         return
     }
-    let newHealth = getHealth() - 0.01
+    let newHealth = getHealth() - 0.015
     newHealth = newHealth < 0 ? 0 : newHealth
     modifyHealth(newHealth)
     if ( checkLowHealth() ) decideLowHealth(addClass)
@@ -78,7 +78,9 @@ const decideLowHealth = (func) => {
 }
 
 export const setPlayer2Fire = () => {
+    const wasBurninig = getBurning() > 0
     setBurning(1)
+    if ( wasBurninig ) return
     const fire = addFireEffect()
     getPlayer().firstElementChild.firstElementChild.append(fire)
 }

@@ -1,5 +1,6 @@
 .enemy {
   position: absolute;
+  z-index: 1;
 }
 
 .enemy-collider {
@@ -321,7 +322,7 @@
   border: 1px solid black;
 }
 
-.ranger-bullet {
+.ranger-bullet, .scorcher-bullet {
   position: absolute;
   width: 8px;
   height: 8px;

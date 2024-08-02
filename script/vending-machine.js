@@ -1,11 +1,11 @@
 import { getProgress } from './progress.js'
+import { Coin, Drop } from './interactables.js'
 import { renderQuit } from './user-interface.js'
 import { getPauseContainer } from './elements.js'
 import { renderStats } from './weapon-examine.js'
-import { getStat, getWeaponSpecs } from './weapon-specs.js'
-import { Coin, Drop } from './interactables.js'
-import { getShopItems, getShopItemsWithId } from './shop-item.js'
 import { getIntObj, setIntObj } from './variables.js'
+import { getStat, getWeaponSpecs } from './weapon-specs.js'
+import { getShopItems, getShopItemsWithId } from './shop-item.js'
 import { 
     MAX_PACKSIZE,
     calculateTotalCoins,

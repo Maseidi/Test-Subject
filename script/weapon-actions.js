@@ -1,8 +1,8 @@
 import { getStat } from './weapon-specs.js'
 import { dropLoot } from './loot-manager.js'
-import { TRACKER } from './enemy/util/enemy-constants.js'
 import { collide, containsClass } from './util.js'
 import { removeUi, renderUi } from './user-interface.js'
+import { TRACKER } from './enemy/util/enemy-constants.js'
 import { getCurrentRoomEnemies, getCurrentRoomSolid, getPlayer } from './elements.js'
 import { 
     calculateTotalAmmo,

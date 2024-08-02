@@ -1,4 +1,4 @@
-import { getWeaponSpecs } from './weapon-specs.js';
+import { getWeaponSpecs } from './weapon-specs.js'
 import { 
     Bandage,
     Drop,
@@ -8,7 +8,7 @@ import {
     RifleAmmo,
     ShotgunShells,
     SmgAmmo,
-    WeaponDrop } from './interactables.js';
+    WeaponDrop } from './interactables.js'
 
 class ShopItem extends Drop {
     constructor(drop, amount, price, progress, sold) {

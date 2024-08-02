@@ -1,14 +1,14 @@
 import { renderStash } from './stash.js'
-import { heal, damagePlayer } from './player-health.js'
 import { getStat } from './weapon-specs.js'
 import { dropLoot } from './loot-manager.js'
 import { centralizePlayer } from './startup.js'
 import { setupReload } from './weapon-actions.js'
 import { renderStore } from './vending-machine.js'
+import { heal, damagePlayer } from './player-health.js'
 import { removeWeapon, renderWeapon } from './weapon-loader.js'
+import { renderUi, renderEquippedWeapon, quitPage } from './user-interface.js'
 import { getGrabBar, getPauseContainer, getPlayer, getUiEl } from './elements.js'
 import { addAttribute, addClass, angleOfTwoPoints, getProperty, isMoving, removeClass } from './util.js'
-import { renderUi, renderEquippedWeapon, quitPage } from './user-interface.js'
 import { equippedWeaponFromInventory, pickupDrop, removeInventory, renderInventory } from './inventory.js'
 import { 
     getAimMode,

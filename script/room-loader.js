@@ -1,12 +1,19 @@
 import { walls } from './walls.js'
 import { rooms } from './rooms.js'
 import { loaders } from './loaders.js'
-import { enemies } from './enemy/util/enemies.js'
 import { getProgress } from './progress.js'
+import { enemies } from './enemy/util/enemies.js'
 import { interactables } from './interactables.js'
 import { getWeaponSpecs } from './weapon-specs.js'
 import { getCurrentRoomId, getRoomLeft, getRoomTop } from './variables.js'
-import { GO_FOR_RANGED, INVESTIGATE, MOVE_TO_POSITION, RANGER, SCORCHER, SPIKER, TRACKER } from './enemy/util/enemy-constants.js'
+import { 
+    GO_FOR_RANGED,
+    INVESTIGATE,
+    MOVE_TO_POSITION,
+    RANGER,
+    SCORCHER,
+    SPIKER,
+    TRACKER } from './enemy/util/enemy-constants.js'
 import { 
     addAttribute,
     addClass,
@@ -25,9 +32,10 @@ import {
     getRoomContainer,
     setCurrentRoom,
     setCurrentRoomEnemies,
+    setCurrentRoomFlames,
     setCurrentRoomInteractables,
     setCurrentRoomLoaders,
-    setCurrentRoomRangerBullets,
+    setCurrentRoomBullets,
     setCurrentRoomSolid,
     } from './elements.js'
 
@@ -37,7 +45,8 @@ export const loadCurrentRoom = () => {
     setCurrentRoomLoaders([])
     setCurrentRoomInteractables([])
     setCurrentRoomEnemies([])
-    setCurrentRoomRangerBullets([])
+    setCurrentRoomBullets([])
+    setCurrentRoomFlames([])
     const roomToRender = createAndAddClass('div', `${getCurrentRoomId()}`)
     roomToRender.style.width = `${room.width}px`
     roomToRender.style.height = `${room.height}px`

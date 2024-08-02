@@ -10,7 +10,8 @@ export class ScorcherMovementService extends AbstractMovementService {
     }
 
     collidePlayer() {
-        if ( ( this.enemy.state !== CHASE && this.enemy.state !== NO_OFFENCE ) || !collide(this.enemy.htmlTag, getPlayer(), 0) ) 
+        if ( ( this.enemy.state !== CHASE && this.enemy.state !== NO_OFFENCE ) || 
+             !collide(this.enemy.htmlTag, getPlayer(), 0) ) 
             return false
         if ( this.enemy.state === CHASE ) {
             const decision = Math.random()
@@ -19,6 +20,7 @@ export class ScorcherMovementService extends AbstractMovementService {
                 this.enemy.offenceService.hitPlayer()
                 return
             }
+            if ( Math.random() < 0.5 ) setPlayer2Fire()
             this.enemy.grabService.grabPlayer()
         }
         return true

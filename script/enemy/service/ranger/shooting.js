@@ -1,12 +1,13 @@
 import { manageAimModeAngle } from '../../../player-angle.js'
 import { CHASE, STAND_AND_WATCH } from '../../util/enemy-constants.js'
-import { getCurrentRoom, getCurrentRoomRangerBullets } from '../../../elements.js'
+import { getCurrentRoom, getCurrentRoomBullets } from '../../../elements.js'
 import { getGrabbed, getPlayerX, getPlayerY, getRoomLeft, getRoomTop } from '../../../variables.js'
 import { addAttribute, addClass, angleOfTwoPoints, createAndAddClass, getProperty, removeClass } from '../../../util.js'
 
 export class RangerShootingService {
     constructor(enemy) {
         this.enemy = enemy
+        this.fireRate = 30
     }
 
     transferEnemy(toggle) {
@@ -19,7 +20,7 @@ export class RangerShootingService {
         this.transferEnemy(true)
         let shootCounter = this.enemy.shootCounter || 0
         shootCounter++
-        if ( shootCounter === 90 ) {
+        if ( shootCounter === 3 * this.fireRate ) {
             const d = this.enemy.movementService.distance2Player()
             if ( getGrabbed() ) this.enemy.state = STAND_AND_WATCH
             else if ( d > this.enemy.vision || d < 200 ||
@@ -28,10 +29,10 @@ export class RangerShootingService {
             this.enemy.shootCounter = -1
             return
         }
-        if ( shootCounter > 29 ) this.updateAngle2Player()
+        if ( shootCounter > this.fireRate - 1 ) this.updateAngle2Player()
         this.enemy.shootCounter = shootCounter
         this.shootAnimation()
-        if ( shootCounter !== 15 ) return
+        if ( shootCounter !== this.fireRate / 2 ) return
         if ( this.enemy.health > 0 ) this.shoot()
     }
 
@@ -47,8 +48,8 @@ export class RangerShootingService {
 
     shootAnimation() {
         this.enemy.angle = this.enemy.angle || 0
-        this.rotateBody(this.enemy.shootCounter < 15, 12)
-        this.rotateBody(this.enemy.shootCounter >= 15 && this.enemy.shootCounter < 29, -12)
+        this.rotateBody(this.enemy.shootCounter < this.fireRate / 2, 12)
+        this.rotateBody(this.enemy.shootCounter >= this.fireRate / 2 && this.enemy.shootCounter < this.fireRate - 1, -12)
     }
 
     rotateBody(predicate, amount) {
@@ -58,8 +59,10 @@ export class RangerShootingService {
     }
 
     shoot() {
-        const { x: srcX, y: srcY } = 
-            { x: getProperty(this.enemy.htmlTag, 'left', 'px') + 16, y: getProperty(this.enemy.htmlTag, 'top', 'px') + 16 }
+        const { x: srcX, y: srcY } = { 
+            x: getProperty(this.enemy.htmlTag, 'left', 'px') + 16, 
+            y: getProperty(this.enemy.htmlTag, 'top', 'px') + 16 
+        }
         const { x: destX, y: destY } = { x: getPlayerX() - getRoomLeft() + 17, y: getPlayerY() - getRoomTop() + 17 }
         const deg = angleOfTwoPoints(srcX, srcY, destX, destY)
         const diffY = destY - srcY
@@ -74,7 +77,7 @@ export class RangerShootingService {
         bullet.style.top = `${srcY}px`
         bullet.style.backgroundColor = `${this.enemy.virus}`
         getCurrentRoom().append(bullet)
-        getCurrentRoomRangerBullets().push(bullet)
+        getCurrentRoomBullets().push(bullet)
         this.enemy.movementService.resetAcceleration()
     }
 
