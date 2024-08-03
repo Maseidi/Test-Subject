@@ -2,10 +2,10 @@ import { Ranger } from '../type/ranger.js'
 import { Spiker } from '../type/spiker.js'
 import { Tracker } from '../type/tracker.js'
 import { Grabber } from '../type/grabber.js'
+import { Stinger } from '../type/stinger.js'
 import { Scorcher } from '../type/scorcher.js'
 import { RockCrusher, SoulDrinker, Torturer } from '../type/normal-enemy.js'
 import { HorDoublePointPath, Path, Point, SinglePointPath, SquarePath, VerDoublePointPath } from '../../path.js'
-import { Stinger } from '../type/stinger.js'
 
 export const enemies = new Map([
     [37, [

@@ -8,12 +8,15 @@ import {
     getHealth,
     getMaxHealth,
     getNoOffenseCounter,
+    getPoisoned,
     setBurning,
     setHealth,
-    setNoOffenseCounter } from './variables.js'
+    setNoOffenseCounter, 
+    setPoisoned} from './variables.js'
 
 export const manageHealthStatus = () => {
     manageBurningState()
+    managePoisonedState()
 }
 
 const manageBurningState = () => {
@@ -26,6 +29,14 @@ const manageBurningState = () => {
         return
     }
     let newHealth = getHealth() - 0.015
+    newHealth = newHealth < 0 ? 0 : newHealth
+    modifyHealth(newHealth)
+    if ( checkLowHealth() ) decideLowHealth(addClass)
+}
+
+const managePoisonedState = () => {
+    if ( !getPoisoned() ) return
+    let newHealth = getHealth() - 0.005
     newHealth = newHealth < 0 ? 0 : newHealth
     modifyHealth(newHealth)
     if ( checkLowHealth() ) decideLowHealth(addClass)
@@ -83,4 +94,9 @@ export const setPlayer2Fire = () => {
     if ( wasBurninig ) return
     const fire = addFireEffect()
     getPlayer().firstElementChild.firstElementChild.append(fire)
+}
+
+export const poisonPlayer = () => {
+    setPoisoned(true)
+    addClass(getMapEl(), 'poisoned')
 }

@@ -243,3 +243,9 @@ export const setBurning = (val) => {
     burning = val
 }
 export const getBurning = () => burning
+
+let poisoned = false
+export const setPoisoned = (val) => {
+    poisoned = val
+}
+export const getPoisoned = () => poisoned

@@ -3,7 +3,7 @@ import { NormalLostService } from '../service/normal/lost.js'
 import { GrabberGrabService } from '../service/grabber/grab.js'
 import { NormalReturnService } from '../service/normal/return.js'
 import { ScorcherChaseService } from '../service/scorcher/chase.js'
-import { ScorcherMovementService } from '../service/scorcher/movement.js'
+import { StingerMovementService } from '../service/stinger/movement.js'
 import { ScorcherShootingService } from '../service/scorcher/shooting.js'
 import { NormalGuessSearchService } from '../service/normal/guess-search.js'
 import { NormalInvestigationService } from '../service/normal/investigate.js'
@@ -24,7 +24,7 @@ export class Stinger extends AbstractEnemy {
         const damage = Math.floor(level * 25 + Math.random() * 15)
         const maxSpeed = 2.75 + Math.random()
         super(STINGER, 5, waypoint, health, damage, 60, maxSpeed, progress, 700, 1.3)
-        this.movementService = new ScorcherMovementService(this)
+        this.movementService = new StingerMovementService(this)
         this.investigationService = new NormalInvestigationService(this)
         this.chaseService = new ScorcherChaseService(this)
         this.shootingService = new ScorcherShootingService(this)

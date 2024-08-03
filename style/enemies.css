@@ -436,7 +436,7 @@
   content: "";
   width: 7px;
   height: 7px;
-  background-color: green;
+  background-color: rgb(177, 151, 5);
   border-radius: 50%;
   border: 1px solid black;
   position: absolute;

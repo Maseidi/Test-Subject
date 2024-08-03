@@ -64,7 +64,7 @@
   filter: grayscale(50%);
 }
 
-@keyframes lowHP {
+@keyframes alert {
   0% {
     opacity: 0;
   }
@@ -73,20 +73,27 @@
   }
 }
 
-.low-health::after {
+.low-health::after, .poisoned::after {
   content: "";
   width: 100%;
   height: 100%;
-  background-color: red;
   position: fixed;
   left: 0;
   top: 0;
-  animation-name: lowHP;
+  animation-name: alert;
   animation-duration: 1000ms;
   animation-timing-function: linear;
   animation-iteration-count: infinite;
   animation-direction: alternate;
   animation-fill-mode: both;
+}
+
+.low-health::after {
+  background-color: red;
+}
+
+.poisoned::after {
+  background-color: green;
 }
 
 .flame {
