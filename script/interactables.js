@@ -94,6 +94,12 @@ export class RifleAmmo extends Drop {
     }
 }
 
+export class Antidote extends Drop {
+    constructor(left, top, amount) {
+        super(30, left, top, 'antidote', 'antidote', 'Pick up', amount, 1, 'An emergency when poison is all over the place', 1/3)
+    }
+}
+
 export class WeaponDrop extends Drop {
     constructor(left, top, name, currmag, damageLvl, rangeLvl, reloadspeedLvl, magazineLvl, fireratelvl) {
         super(
@@ -174,7 +180,8 @@ export const interactables = new Map([
         [
         new WeaponDrop(500, 600, 'famas', 10, 1, 1, 1, 1, 1),
         new SmgAmmo(500, 700, 300),
-        new Bandage(600, 700, 5)
+        new Bandage(600, 700, 5),
+        new Antidote(600, 600, 5)
         ]
     ],[17, 
         []

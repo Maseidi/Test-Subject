@@ -374,7 +374,7 @@
   border: 1px solid black;
 }
 
-.ranger-bullet, .scorcher-bullet {
+.ranger-bullet, .scorcher-bullet, .stinger-bullet {
   position: absolute;
   width: 8px;
   height: 8px;
@@ -478,6 +478,33 @@
   }
 }
 
+@keyframes stingerAttack {
+  50% {
+    transform: rotateZ(0deg);
+    top: 10px;
+    left: 60%;
+  }
+  100% {
+    transform: rotateZ(-60deg);
+    top: 2px;
+    left: 100%;
+  }
+}
+
+@keyframes stingerLeftGrabAttack {
+  100% {
+    transform: rotateZ(-40deg);
+    top: 10px;
+  }
+}
+
+@keyframes stingerRightGrabAttack {
+  100% {
+    transform: rotateZ(40deg);
+    top: 10px;
+  }
+}
+
 .torturer-collider > div:nth-of-type(1) > .attack ,
 .soul-drinker-collider > div:nth-of-type(1) > .attack,
 .rock-crusher-collider > div:nth-of-type(1) > .attack,
@@ -487,6 +514,12 @@
   animation-name: normalAttack;
   animation-duration: 600ms;
   animation-direction: alternate;
+}
+
+.stinger-collider > div:nth-of-type(1) > .attack {
+  animation-name: stingerAttack;
+  animation-duration: 600ms;
+  animation-duration: alternate;
 }
 
 .grab > .enemy-collider > .enemy-body > div:nth-of-type(1),
@@ -501,6 +534,14 @@
 
 .grab > .enemy-collider > .enemy-body > div:nth-of-type(2) {
   animation-name: rightGrabAttack;
+}
+
+.grab > .stinger-collider > .enemy-body > div:nth-of-type(1) {
+  animation-name: stingerLeftGrabAttack !important;
+}
+
+.grab > .stinger-collider > .enemy-body > div:nth-of-type(2) {
+  animation-name: stingerRightGrabAttack !important;
 }
 
 .path-point {

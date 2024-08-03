@@ -15,8 +15,8 @@ export class StingerMovementService extends AbstractMovementService {
             return false
         if ( this.enemy.state === CHASE ) {
             const decision = Math.random()
-            if ( decision < 1 ) {
-                if ( Math.random() < 1 ) poisonPlayer()
+            if ( decision < 0.5 ) {
+                if ( Math.random() < 0.5 ) poisonPlayer()
                 this.enemy.offenceService.hitPlayer()
                 return
             }

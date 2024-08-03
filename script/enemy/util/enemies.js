@@ -24,7 +24,7 @@ export const enemies = new Map([
         // new Spiker(1, new SquarePath(700, 600, 100), '3'),
         // new Spiker(1, new SquarePath(800, 600, 100), '3'),
         // new Grabber(1, new VerDoublePointPath(1400, 100, 600), '3'),
-        // new Scorcher(1, new HorDoublePointPath(1000, 700, 600), '3'),
+        new Scorcher(1, new HorDoublePointPath(1000, 700, 600), '3'),
         new Stinger(1, new Path([
             new Point(100, 100),
             new Point(500, 500),

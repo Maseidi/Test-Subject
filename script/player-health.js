@@ -28,7 +28,7 @@ const manageBurningState = () => {
             .find(child => containsClass(child, 'fire')).remove()
         return
     }
-    let newHealth = getHealth() - 0.015
+    let newHealth = getHealth() - 0.02
     newHealth = newHealth < 0 ? 0 : newHealth
     modifyHealth(newHealth)
     if ( checkLowHealth() ) decideLowHealth(addClass)
@@ -36,7 +36,7 @@ const manageBurningState = () => {
 
 const managePoisonedState = () => {
     if ( !getPoisoned() ) return
-    let newHealth = getHealth() - 0.005
+    let newHealth = getHealth() - 0.01
     newHealth = newHealth < 0 ? 0 : newHealth
     modifyHealth(newHealth)
     if ( checkLowHealth() ) decideLowHealth(addClass)
@@ -58,6 +58,13 @@ export const useBandage = (bandage) => {
     bandage.amount -= 1
     modifyHealth(newHealth)
     if ( !checkLowHealth() ) decideLowHealth(removeClass)
+}
+
+export const useAntidote = (antidote) => {
+    if ( !getPoisoned() ) return
+    antidote.amount -= 1
+    setPoisoned(false)
+    removeClass(getMapEl(), 'poisoned')
 }
 
 export const damagePlayer = (damage) => {

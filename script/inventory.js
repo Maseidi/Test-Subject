@@ -1,4 +1,4 @@
-import { useBandage } from './player-health.js'
+import { useAntidote, useBandage } from './player-health.js'
 import { renderStats } from './weapon-examine.js'
 import { interactables } from './interactables.js'
 import { renderInteractable } from './room-loader.js'
@@ -40,6 +40,7 @@ import {
 
 export const MAX_PACKSIZE = {
     bandage: 3,
+    antidote: 3,
     coin: 10,
     hardDrive: 2,
     smgAmmo: 90,
@@ -300,7 +301,7 @@ const addOptionsEvent = (e) => {
 const renderOptions = (item, options) => {
     let renderDropOption = true
     const itemObj = elementToObject(item)
-    if ( itemObj.name === 'bandage' ) createOption(options, 'use')
+    if ( itemObj.name === 'bandage' || itemObj.name === 'antidote' ) createOption(options, 'use')
     if ( getWeaponSpecs().get(itemObj.name) ) {
         if ( getEquippedWeapon() && itemObj.name === equippedWeaponFromInventory().name ) {
              if ( getReloading() || getShooting() ) renderDropOption = false
@@ -490,9 +491,11 @@ const use = (item) => {
     const itemObj = elementToObject(item)
     const row = itemObj.row
     const column = itemObj.column
-    if ( inventory[row][column].name === 'bandage' ) useBandage(inventory[row][column])
-    if ( inventory[row][column].amount === 0 ) {
-        inventory[row][column] = null
+    const theItem = inventory[row][column]
+    if ( theItem.name === 'bandage' ) useBandage(theItem)
+    if ( theItem.name === 'antidote' ) useAntidote(theItem)    
+    if ( theItem.amount === 0 ) {
+        theItem = null
         replaceBlocks(item, itemObj.space)
         item.remove()
     }

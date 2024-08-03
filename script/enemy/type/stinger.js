@@ -2,9 +2,9 @@ import { AbstractEnemy } from './abstract-enemy.js'
 import { NormalLostService } from '../service/normal/lost.js'
 import { GrabberGrabService } from '../service/grabber/grab.js'
 import { NormalReturnService } from '../service/normal/return.js'
-import { ScorcherChaseService } from '../service/scorcher/chase.js'
+import { StingerChaseService } from '../service/stinger/chase.js'
 import { StingerMovementService } from '../service/stinger/movement.js'
-import { ScorcherShootingService } from '../service/scorcher/shooting.js'
+import { StingerShootingService } from '../service/stinger/shooting.js'
 import { NormalGuessSearchService } from '../service/normal/guess-search.js'
 import { NormalInvestigationService } from '../service/normal/investigate.js'
 import { 
@@ -26,8 +26,8 @@ export class Stinger extends AbstractEnemy {
         super(STINGER, 5, waypoint, health, damage, 60, maxSpeed, progress, 700, 1.3)
         this.movementService = new StingerMovementService(this)
         this.investigationService = new NormalInvestigationService(this)
-        this.chaseService = new ScorcherChaseService(this)
-        this.shootingService = new ScorcherShootingService(this)
+        this.chaseService = new StingerChaseService(this)
+        this.shootingService = new StingerShootingService(this)
         this.guessSearchService = new NormalGuessSearchService(this)
         this.lostService = new NormalLostService(this)
         this.returnService = new NormalReturnService(this)
@@ -41,7 +41,7 @@ export class Stinger extends AbstractEnemy {
                 this.investigationService.handleInvestigationState()
                 break
             case CHASE:
-                if ( Math.random() < 0.005 ) this.state = GO_FOR_RANGED
+                if ( Math.random() < 0.002 ) this.state = GO_FOR_RANGED
             case NO_OFFENCE:
                 this.chaseService.handleChaseState()
                 break

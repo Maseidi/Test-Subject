@@ -64,6 +64,12 @@ export const setCurrentRoomFlames = (val) => {
 }
 export const getCurrentRoomFlames = () => currentRoomFlames
 
+let currentRoomPoisons
+export const setCurrentRoomPoisons = (val) => {
+    currentRoomPoisons = val
+}
+export const getCurrentRoomPoisons = () => currentRoomPoisons
+
 let player
 export const setPlayer = (val) => {
     player = val

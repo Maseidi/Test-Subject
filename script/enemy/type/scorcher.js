@@ -41,7 +41,7 @@ export class Scorcher extends AbstractEnemy {
                 this.investigationService.handleInvestigationState()
                 break
             case CHASE:
-                if ( Math.random() < 0.005 ) this.state = GO_FOR_RANGED
+                if ( Math.random() < 0.004 ) this.state = GO_FOR_RANGED
             case NO_OFFENCE:
                 this.chaseService.handleChaseState()
                 break

@@ -101,3 +101,9 @@
   width: 30px;
   height: 25px;
 }
+
+.poison {
+  position: absolute;
+  width: 60px;
+  height: 50px;
+}

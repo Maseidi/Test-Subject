@@ -1,8 +1,8 @@
 import { rooms } from './rooms.js'
 import { loaders } from './loaders.js'
 import { loadCurrentRoom } from './room-loader.js'
-import { damagePlayer, setPlayer2Fire } from './player-health.js'
 import { CHASE, NO_OFFENCE } from './enemy/util/enemy-constants.js'
+import { damagePlayer, poisonPlayer, setPlayer2Fire } from './player-health.js'
 import { addAttribute, collide, containsClass, getProperty, removeClass } from './util.js'
 import { 
     getCurrentRoom,
@@ -12,7 +12,8 @@ import {
     getCurrentRoomLoaders,
     getCurrentRoomBullets,
     getCurrentRoomSolid,
-    getPlayer } from './elements.js'
+    getPlayer, 
+    getCurrentRoomPoisons} from './elements.js'
 import {
     getCurrentRoomId,
     getGrabbed,
@@ -34,6 +35,7 @@ export const manageEntities = () => {
     manageEnemies()
     manageBullets()
     manageFlames()
+    managePoisons()
 }
 
 const manageSolidObjects = () => {
@@ -130,6 +132,7 @@ const manageBullets = () => {
             if ( !getGrabbed() ) {
                 damagePlayer(+bullet.getAttribute('damage'))
                 if ( containsClass(bullet, 'scorcher-bullet') ) setPlayer2Fire()
+                if ( containsClass(bullet, 'stinger-bullet') ) poisonPlayer()    
             }
             bullet.remove()
             continue
@@ -150,5 +153,14 @@ const manageFlames = () => {
         if ( time === 900 ) flame.remove()
         addAttribute(flame, 'time', time + 1)
         if ( collide(flame, getPlayer(), 0) ) setPlayer2Fire()    
+    })
+}
+
+const managePoisons = () => {
+    getCurrentRoomPoisons().forEach(poison => {
+        const time = Number(poison.getAttribute('time'))
+        if ( time === 600 ) poison.remove()
+        addAttribute(poison, 'time', time + 1)
+        if ( collide(poison, getPlayer(), 0) ) poisonPlayer()    
     })
 }
