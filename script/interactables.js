@@ -1,4 +1,5 @@
 import { getWeaponSpecs } from './weapon-specs.js'
+import { getThrowableSpecs } from './throwable-specs.js'
 
 class Interactable {
     constructor(width, left, top, name, heading, popup, solid, amount, space, description, price) {
@@ -100,6 +101,38 @@ export class Antidote extends Drop {
     }
 }
 
+class ThrowableDrop extends Drop {
+    constructor(left, top, name, amount) {
+        super(
+            20,
+            left,
+            top,
+            name,
+            name,
+            'Pick up',
+            amount,
+            1,
+            getThrowableSpecs().get(name).description, 
+            getThrowableSpecs().get(name).price
+        )
+        this.damage = getThrowableSpecs().get(name).damage
+        this.firerate = getThrowableSpecs().get(name).firerate
+        this.range = getThrowableSpecs().get(name).range
+    }
+}
+
+export class Grenade extends ThrowableDrop {
+    constructor(left, top, amount) {
+        super(left, top, 'grenade', amount)
+    }
+}
+
+export class Flashbang extends ThrowableDrop {
+    constructor(left, top, amount) {
+        super(left, top, 'flashbang', amount)
+    }
+}
+
 export class WeaponDrop extends Drop {
     constructor(left, top, name, currmag, damageLvl, rangeLvl, reloadspeedLvl, magazineLvl, fireratelvl) {
         super(
@@ -181,7 +214,9 @@ export const interactables = new Map([
         new WeaponDrop(500, 600, 'famas', 10, 1, 1, 1, 1, 1),
         new SmgAmmo(500, 700, 300),
         new Bandage(600, 700, 5),
-        new Antidote(600, 600, 5)
+        new Antidote(600, 600, 5),
+        new Grenade(800, 600, 2),
+        new Flashbang(800, 700, 3)
         ]
     ],[17, 
         []

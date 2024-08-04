@@ -37,6 +37,7 @@ import {
     setShootCounter,
     getShooting, 
     getPause } from './variables.js'
+import { getThrowableSpecs } from './throwable-specs.js'
 
 export const MAX_PACKSIZE = {
     bandage: 3,
@@ -47,7 +48,9 @@ export const MAX_PACKSIZE = {
     pistolAmmo: 30,
     shotgunShells: 20,
     rifleAmmo: 10,
-    magnumAmmo: 5
+    magnumAmmo: 5,
+    grenade: 2,
+    flashbang: 3
 }
 
 let inventory = [
@@ -111,7 +114,7 @@ const searchEmpty = () => {
 
 const checkSpecialScenarios = () => {
     const obj = elementToObject(getIntObj())
-    if ( getWeaponSpecs().get(obj.name) && obj.amount === 0 ) updateWeaponWheel()
+    if ( (getWeaponSpecs().get(obj.name) && obj.amount === 0) || getThrowableSpecs().get(obj.name) ) updateWeaponWheel()    
     if ( getPause() ) return
     if ( obj.amount === 0 ) removeDrop(getIntObj())
     const equippedWeapon = equippedWeaponFromInventory()
