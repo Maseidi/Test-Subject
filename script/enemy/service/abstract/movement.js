@@ -8,7 +8,7 @@ export class AbstractMovementService {
     }
 
     move2Destination() {
-        if ( this.collidePlayer() ) return
+        if ( this.playerInRange() ) return
         const enemyWidth = getProperty(this.enemy.htmlTag, 'width', 'px')
         const { destX, destY, destWidth } = this.destinationCoordinates()
         const { xMultiplier, yMultiplier } = this.decideDirection(enemyWidth, destX, destY, destWidth)
@@ -21,7 +21,7 @@ export class AbstractMovementService {
         this.enemy.htmlTag.style.top = `${this.enemy.y}px`
     }
 
-    collidePlayer() {
+    playerInRange() {
         if ( ( this.enemy.state !== CHASE && this.enemy.state !== NO_OFFENCE ) || !collide(this.enemy.htmlTag, getPlayer(), 0) ) 
             return false
         if ( this.enemy.state === CHASE ) this.enemy.offenceService.hitPlayer()

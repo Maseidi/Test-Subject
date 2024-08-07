@@ -8,11 +8,11 @@ export class SpikerCollisionService extends AbstractCollisionService {
         super(enemy)
     }
 
-    checkCollision() {
+    manageCollision() {
         const collidingEnemy = this.findCollidingEnemy()
         if ( !collidingEnemy ) return
         if ( collidingEnemy.type !== SPIKER ) return
-        this.handleCollision(collidingEnemy)
+        this.react2Collision(collidingEnemy)
     }
 
     findCollidingEnemy() {

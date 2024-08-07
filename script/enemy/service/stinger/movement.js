@@ -9,7 +9,7 @@ export class StingerMovementService extends AbstractMovementService {
         super(enemy)
     }
 
-    collidePlayer() {
+    playerInRange() {
         if ( ( this.enemy.state !== CHASE && this.enemy.state !== NO_OFFENCE ) || 
              !collide(this.enemy.htmlTag, getPlayer(), 0) ) 
             return false

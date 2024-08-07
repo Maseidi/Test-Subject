@@ -47,7 +47,9 @@ export const MAX_PACKSIZE = {
     pistolAmmo: 30,
     shotgunShells: 20,
     rifleAmmo: 10,
-    magnumAmmo: 5
+    magnumAmmo: 5,
+    grenade: 2,
+    flashbang: 3
 }
 
 let inventory = [

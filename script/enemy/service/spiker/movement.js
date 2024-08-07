@@ -8,7 +8,7 @@ export class SpikerMovementService extends AbstractMovementService {
     }
 
     move2Destination() {
-        if ( this.collidePlayer() ) return
+        if ( this.playerInRange() ) return
         const enemyWidth = getProperty(this.enemy.htmlTag, 'width', 'px')
         const { destX, destY, destWidth } = this.destinationCoordinates()
         const { xMultiplier, yMultiplier } = this.decideDirection(enemyWidth, destX, destY, destWidth)

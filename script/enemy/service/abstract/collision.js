@@ -16,10 +16,10 @@ export class AbstractCollisionService {
         this.enemy = enemy
     }
 
-    checkCollision() {
+    manageCollision() {
         const collidingEnemy = this.findCollidingEnemy()
         if ( !collidingEnemy ) return
-        this.handleCollision(collidingEnemy)
+        this.react2Collision(collidingEnemy)
     }
 
     findCollidingEnemy() {
@@ -32,7 +32,7 @@ export class AbstractCollisionService {
         return collidingEnemy
     }
 
-    handleCollision(collidingEnemy) {
+    react2Collision(collidingEnemy) {
         this.enemy.collidingEnemy = collidingEnemy.index
         if ( collidingEnemy.state === LOST && 
            ( this.enemy.state === CHASE || this.enemy.state === NO_OFFENCE || this.enemy.state === GUESS_SEARCH ) ) {

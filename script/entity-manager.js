@@ -114,7 +114,7 @@ const handleEnemies = () => {
                 elem.visionService.getWallInTheWay()
                 elem.visionService.vision2Player()
                 elem.injuryService.manageDamagedState()
-                elem.collisionService.checkCollision()
+                elem.collisionService.manageCollision()
                 elem.behave()
             }
         })

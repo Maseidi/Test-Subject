@@ -7,11 +7,11 @@ export class RangerCollisionService extends AbstractCollisionService {
         super(enemy)
     }
 
-    checkCollision() {
+    manageCollision() {
         const collidingEnemy = this.findCollidingEnemy()
         if ( !collidingEnemy ) return
         if ( this.enemy.wallInTheWay === false && !getGrabbed() ) this.enemy.state = GO_FOR_RANGED
-        this.handleCollision(collidingEnemy)
+        this.react2Collision(collidingEnemy)
     }
 
 }

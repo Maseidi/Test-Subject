@@ -8,7 +8,7 @@ import { getWeaponSpecs } from './weapon-specs.js'
 import { getCurrentRoomId, getRoomLeft, getRoomTop } from './variables.js'
 import { 
     GO_FOR_RANGED,
-    INVESTIGATE,
+    LOST,
     MOVE_TO_POSITION,
     RANGER,
     SCORCHER,
@@ -49,21 +49,21 @@ export const loadCurrentRoom = () => {
     setCurrentRoomBullets([])
     setCurrentRoomFlames([])
     setCurrentRoomPoisons([])
-    const roomToRender = createAndAddClass('div', `${getCurrentRoomId()}`)
-    roomToRender.style.width = `${room.width}px`
-    roomToRender.style.height = `${room.height}px`
-    roomToRender.style.left = `${getRoomLeft()}px`
-    roomToRender.style.top = `${getRoomTop()}px`
-    roomToRender.style.backgroundColor = `lightgray`
-    renderWalls(roomToRender)
-    renderLoaders(roomToRender)
-    renderInteractables(roomToRender)
-    renderEnemies(roomToRender)
-    setCurrentRoom(roomToRender)
-    getRoomContainer().append(roomToRender)
+    const room2Render = createAndAddClass('div', `${getCurrentRoomId()}`)
+    room2Render.style.width = `${room.width}px`
+    room2Render.style.height = `${room.height}px`
+    room2Render.style.left = `${getRoomLeft()}px`
+    room2Render.style.top = `${getRoomTop()}px`
+    room2Render.style.backgroundColor = `lightgray`
+    renderWalls(room2Render)
+    renderLoaders(room2Render)
+    renderInteractables(room2Render)
+    renderEnemies(room2Render)
+    setCurrentRoom(room2Render)
+    getRoomContainer().append(room2Render)
 }
 
-const renderWalls = (roomToRender) => {
+const renderWalls = (room2Render) => {
     walls.get(getCurrentRoomId()).forEach((elem, index) => {
         const wall = createAndAddClass('div', 'solid')
         wall.id = `wall-${index+1}`
@@ -78,12 +78,12 @@ const renderWalls = (roomToRender) => {
             createTrackers(wall, elem)
             addAttribute(wall, 'side', false)  
         } else addAttribute(wall, 'side', true)    
-        roomToRender.append(wall)
+        room2Render.append(wall)
         getCurrentRoomSolid().push(wall)
     })
 }
 
-const renderLoaders = (roomToRender) => {
+const renderLoaders = (room2Render) => {
     loaders.get(getCurrentRoomId()).forEach((elem) => {
         const loader = createAndAddClass('div', elem.className, 'loader')
         loader.style.width = `${elem.width}px`
@@ -93,7 +93,7 @@ const renderLoaders = (roomToRender) => {
         else if ( elem.right !== undefined ) loader.style.right = `${elem.right}px`
         if ( elem.top !== undefined ) loader.style.top = `${elem.top}px`
         else if ( elem.bottom !== undefined ) loader.style.bottom = `${elem.bottom}px`
-        roomToRender.append(loader)
+        room2Render.append(loader)
         getCurrentRoomLoaders().push(loader)
     })
 }
@@ -117,9 +117,9 @@ const createTrackers = (solid, elem) => {
     if ( right && bottom ) solid.append(bottomRight)
 }
 
-const renderInteractables = (roomToRender) => 
+const renderInteractables = (room2Render) => 
     interactables.get(getCurrentRoomId())
-        .forEach((interactable, index) => renderInteractable(roomToRender, interactable, index))
+        .forEach((interactable, index) => renderInteractable(room2Render, interactable, index))
 
 export const renderInteractable = (root, interactable, index) => {
     const int = objectToElement(interactable)
@@ -185,22 +185,22 @@ const renderDescription = (popup, interactable) => {
     popup.append(descContainer)
 }
 
-const renderEnemies = (roomToRender) => {
+const renderEnemies = (room2Render) => {
     const currentRoomEnemies = enemies.get(getCurrentRoomId())
     if ( !currentRoomEnemies ) return
     indexEnemies(currentRoomEnemies)
     const filteredEnemies = filterEnemies(currentRoomEnemies)
-    spawnEnemies(filteredEnemies, roomToRender)
+    spawnEnemies(filteredEnemies, room2Render)
 }
 
 const indexEnemies = (enemies) => enemies.forEach((enemy, index) => enemy.index = index)
 
 const filterEnemies = (enemies) => enemies.filter(enemy => enemy.health !== 0 && getProgress(enemy.progress))
 
-const spawnEnemies = (enemies, roomToRender) => {
+const spawnEnemies = (enemies, room2Render) => {
     enemies.forEach(elem => {
         const enemy = defineEnemy(elem)
-        createPath(elem, elem.index, roomToRender)
+        createPath(elem, elem.index, room2Render)
         const enemyCollider = createAndAddClass('div', 'enemy-collider', `${elem.type}-collider`)
         const enemyBody = createAndAddClass('div', 'enemy-body', `${elem.type}-body`, 'body-transition')
         enemyBody.style.transform = `rotateZ(${elem.angle}deg)`
@@ -211,7 +211,7 @@ const spawnEnemies = (enemies, roomToRender) => {
         const fwDetector = defineForwardDetector(elem)
         appendAll(enemyCollider, enemyBody, vision, fwDetector)
         enemy.append(enemyCollider)
-        roomToRender.append(enemy)
+        room2Render.append(enemy)
         elem.htmlTag = enemy
         getCurrentRoomEnemies().push(elem)
         getCurrentRoomSolid().push(enemyCollider)
@@ -222,7 +222,7 @@ const defineEnemy = (elem) => {
     const enemy = createAndAddClass('div', `${elem.type}`, 'enemy')
     elem.angle = elem.type === RANGER && elem.state === GO_FOR_RANGED ? Math.ceil(Math.random() * 7) : elem.angle
     elem.angleState = elem.type === RANGER && elem.state === GO_FOR_RANGED ? ANGLE_STATE_MAP.get(elem.angle) : elem.angleState
-    elem.state = elem.type === TRACKER ? INVESTIGATE : MOVE_TO_POSITION
+    elem.state = elem.type === TRACKER ? LOST : MOVE_TO_POSITION
     elem.investigationCounter = 0
     elem.path = `path-${elem.index}`
     elem.pathPoint = 0
@@ -235,7 +235,7 @@ const defineEnemy = (elem) => {
     return enemy
 }
 
-const createPath = (elem, index, roomToRender) => {
+const createPath = (elem, index, room2Render) => {
     const path = document.createElement('div')
     path.id = `path-${index}`
     for ( let p of elem.waypoint.points ) {
@@ -244,7 +244,7 @@ const createPath = (elem, index, roomToRender) => {
         point.style.top = `${p.y}px`
         path.append(point)
     }
-    roomToRender.append(path)
+    room2Render.append(path)
 }
 
 const defineComponents = (element, enemyBody) => {

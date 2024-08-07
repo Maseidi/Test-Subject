@@ -100,6 +100,18 @@ export class Antidote extends Drop {
     }
 }
 
+export class Grenade extends Drop {
+    constructor(left, top, amount) {
+        super(20, left, top, 'grenade', 'grenade', 'Pick up', amount, 1, 'Toss one to witness your foes fly high!', 1/2)
+    }
+}
+
+export class Flashbang extends Drop {
+    constructor(left, top, amount) {
+        super(20, left, top, 'flashbang', 'flashbang', 'Pick up', amount, 1, 'Blinding enemies can be a game changer in emergencies', 1/3)
+    }
+}
+
 export class WeaponDrop extends Drop {
     constructor(left, top, name, currmag, damageLvl, rangeLvl, reloadspeedLvl, magazineLvl, fireratelvl) {
         super(
@@ -181,7 +193,9 @@ export const interactables = new Map([
         new WeaponDrop(500, 600, 'famas', 10, 1, 1, 1, 1, 1),
         new SmgAmmo(500, 700, 300),
         new Bandage(600, 700, 5),
-        new Antidote(600, 600, 5)
+        new Antidote(600, 600, 5),
+        new Grenade(500, 800, 3),
+        new Flashbang(600, 800, 5)
         ]
     ],[17, 
         []
