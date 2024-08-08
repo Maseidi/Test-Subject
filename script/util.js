@@ -6,6 +6,8 @@ import {
     getRightPressed,
     getUpPressed,
     setEntityId } from './variables.js'
+import { getStat } from './weapon-specs.js'
+import { getThrowableSpec, getThrowableSpecs } from './throwable-specs.js'
 
 export const collide = (first, second, offset) => {
     const firstBound = first.getBoundingClientRect()
@@ -125,3 +127,8 @@ export const getProperty = (elem, property, ...toRemoveList) => {
     })
     return Number(res)
 }
+
+export const getFireRate = (equipped) =>      
+    getThrowableSpecs().get(equipped?.name) ? 
+    getThrowableSpec(equipped.name, 'firerate') : 
+    getStat(equipped.name, 'firerate', equipped.fireratelvl)

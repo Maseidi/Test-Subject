@@ -15,7 +15,8 @@ import {
     removeClass,
     appendAll, 
     createAndAddClass,
-    nextId } from './util.js'
+    nextId, 
+    getFireRate} from './util.js'
 import { 
     getAimMode,
     getCurrentRoomId,
@@ -37,6 +38,7 @@ import {
     setShootCounter,
     getShooting, 
     getPause } from './variables.js'
+import { getThrowableSpecs } from './throwable-specs.js'
 
 export const MAX_PACKSIZE = {
     bandage: 3,
@@ -114,9 +116,10 @@ const searchEmpty = () => {
 const checkSpecialScenarios = () => {
     const obj = elementToObject(getIntObj())
     if ( getWeaponSpecs().get(obj.name) && obj.amount === 0 ) updateWeaponWheel()
+    if ( getThrowableSpecs().get(obj.name) ) updateWeaponWheel()    
     if ( getPause() ) return
     if ( obj.amount === 0 ) removeDrop(getIntObj())
-    const equippedWeapon = equippedWeaponFromInventory()
+    const equippedWeapon = equippedItem()
     if ( getEquippedWeapon() && obj.name === getWeaponSpecs().get(equippedWeapon.name).ammotype ) {
         removeUi()
         renderUi()
@@ -125,9 +128,11 @@ const checkSpecialScenarios = () => {
 
 const inventoryFull = () => inventory.flat().every(item => item !== null)
 
-export const equippedWeaponFromInventory = () => inventory.flat().find(item => item && item.id === getEquippedWeapon())
+export const equippedItem = () => inventory.flat().find(item => item && item.id === getEquippedWeapon())
 
 export const calculateTotalAmmo = (equippedWeapon) => countItem(equippedWeapon.ammotype)
+
+export const calculateThrowableAmount = (throwable) => countItem(throwable.name)
 
 export const calculateTotalCoins = () => countItem('coin')
 
@@ -153,7 +158,7 @@ export const useItemAtPosition = (row, column, reduce) => {
 }
 
 export const updateInventoryWeaponMag = (newMag) => {
-    const weapon = equippedWeaponFromInventory()
+    const weapon = equippedItem()
     inventory[weapon.row][weapon.column].currmag = newMag
 }
 
@@ -304,17 +309,18 @@ const renderOptions = (item, options) => {
     let renderDropOption = true
     const itemObj = elementToObject(item)
     if ( itemObj.name === 'bandage' || itemObj.name === 'antidote' ) createOption(options, 'use')
+    if ( getThrowableSpecs().get(itemObj.name) ) createOption(options, 'equip')    
     if ( getWeaponSpecs().get(itemObj.name) ) {
-        if ( getEquippedWeapon() && itemObj.name === equippedWeaponFromInventory().name ) {
+        if ( getEquippedWeapon() && itemObj.name === equippedItem().name ) {
              if ( getReloading() || getShooting() ) renderDropOption = false
         } else {
-            if ( !getReloading() && !getShooting() ) createOption(options, 'equip') 
+            if ( !getReloading() && !getShooting() ) createOption(options, 'equip')
         }
         createOption(options, 'shortcut')
         createOption(options, 'examine')
     }
     if ( getReloading() ) 
-        if ( itemObj.name === equippedWeaponFromInventory().ammotype ) renderDropOption = false
+        if ( itemObj.name === equippedItem().ammotype ) renderDropOption = false
     createOption(options, 'replace')
     if (renderDropOption) createOption(options, 'drop')
 }
@@ -520,8 +526,7 @@ const equip = (item) => {
     const row = itemObj.row
     const column = itemObj.column
     setEquippedWeapon(inventory[row][column].id)
-    const equippedWeapon = equippedWeaponFromInventory()
-    setShootCounter(getStat(equippedWeapon.name, 'firerate', equippedWeapon.fireratelvl) * 60)
+    setShootCounter(getFireRate(equippedItem()) * 60)
     if ( getAimMode() ) {
         removeWeapon()
         renderWeapon()

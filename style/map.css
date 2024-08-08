@@ -73,7 +73,7 @@
   }
 }
 
-.low-health::after, .poisoned::after {
+.low-health::after, .poisoned::before {
   content: "";
   width: 100%;
   height: 100%;
@@ -92,7 +92,7 @@
   background-color: red;
 }
 
-.poisoned::after {
+.poisoned::before {
   background-color: green;
 }
 

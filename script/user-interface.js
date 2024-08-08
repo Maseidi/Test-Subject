@@ -1,8 +1,9 @@
 import { managePause } from './controls.js'
 import { addClass, appendAll, createAndAddClass } from './util.js'
 import { getPauseContainer, getUiEl, setUiEl } from './elements.js'
-import { calculateTotalAmmo, equippedWeaponFromInventory } from './inventory.js'
+import { calculateThrowableAmount, calculateTotalAmmo, equippedItem } from './inventory.js'
 import { getDraggedItem, getEquippedWeapon, getHealth, getMaxHealth, getMaxStamina, getStamina } from './variables.js'
+import { getThrowableSpecs } from './throwable-specs.js'
 
 export const renderUi = () => {
     renderBackground()
@@ -44,10 +45,14 @@ const abstractManager = (input, elem, max) => elem.style.width = `${input / max 
 
 export const renderEquippedWeapon = () => {
     if ( getUiEl().children[2] ) getUiEl().children[2].remove() 
-    if ( !getEquippedWeapon() ) return    
+    if ( !getEquippedWeapon() ) return
+    const equippedWeapon = equippedItem()
+    if ( getThrowableSpecs().get(equippedWeapon.name) ) {
+        renderEquippedThrowable(equippedWeapon)
+        return
+    }
     const weaponContainer = createAndAddClass('div', 'weapon-container')
     const weaponIcon = createAndAddClass('img', 'weapon-icon')
-    const equippedWeapon = equippedWeaponFromInventory()
     weaponIcon.src = `../assets/images/${equippedWeapon.name}.png`
     addClass(weaponIcon, 'weapon-icon')
     const ammoCount = createAndAddClass('div', 'ammo-count')
@@ -58,6 +63,19 @@ export const renderEquippedWeapon = () => {
     appendAll(ammoCount, mag, total)
     appendAll(weaponContainer, weaponIcon, ammoCount)
     getUiEl().append(weaponContainer)
+}
+
+const renderEquippedThrowable = (equippedThrowable) => {
+    const throwableContainer = createAndAddClass('div', 'weapon-container')
+    const throwableIcon = createAndAddClass('img', 'weapon-icon')
+    throwableIcon.src = `../assets/images/${equippedThrowable.name}.png`
+    addClass(throwableIcon, 'weapon-icon')
+    const ammoCount = createAndAddClass('div', 'ammo-count')
+    const total = document.createElement('p')
+    total.textContent = calculateThrowableAmount(equippedThrowable)
+    appendAll(ammoCount, total)
+    appendAll(throwableContainer, throwableIcon, ammoCount)
+    getUiEl().append(throwableContainer)
 }
 
 export const removeUi = () => getUiEl().remove()

@@ -8,8 +8,8 @@ import { heal, damagePlayer } from './player-health.js'
 import { removeWeapon, renderWeapon } from './weapon-loader.js'
 import { renderUi, renderEquippedWeapon, quitPage } from './user-interface.js'
 import { getGrabBar, getPauseContainer, getPlayer, getUiEl } from './elements.js'
-import { addAttribute, addClass, angleOfTwoPoints, getProperty, isMoving, removeClass } from './util.js'
-import { equippedWeaponFromInventory, pickupDrop, removeInventory, renderInventory } from './inventory.js'
+import { addAttribute, addClass, angleOfTwoPoints, getFireRate, getProperty, isMoving, removeClass } from './util.js'
+import { equippedItem, pickupDrop, removeInventory, renderInventory } from './inventory.js'
 import { 
     getAimMode,
     getDraggedItem,
@@ -38,6 +38,7 @@ import {
     setShootPressed,
     setSprintPressed,
     setUpPressed } from './variables.js'
+import { getThrowableSpec, getThrowableSpecs } from './throwable-specs.js'
 
 export const control = () => {
     onkeydown = (e) => {
@@ -172,10 +173,7 @@ const weaponSlotDown = (key) => {
     }
     setEquippedWeapon(getWeaponWheel()[Number(key) - 1])
     renderEquippedWeapon()
-    if ( getEquippedWeapon() ) {
-        const equippedWeapon = equippedWeaponFromInventory()
-        setShootCounter(getStat(equippedWeapon.name, 'firerate', equippedWeapon.fireratelvl) * 60)
-    }
+    if ( getEquippedWeapon() ) setShootCounter(getFireRate(equippedItem()) * 60)
     if ( getEquippedWeapon() && getAimMode() ) {
         renderWeapon()
         return

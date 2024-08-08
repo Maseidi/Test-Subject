@@ -1,10 +1,10 @@
 import { getPlayer } from './elements.js'
 import { getStat, getWeaponSpecs } from './weapon-specs.js'
 import { containsClass, createAndAddClass } from './util.js'
-import { equippedWeaponFromInventory } from './inventory.js'
+import { equippedItem } from './inventory.js'
 
 export const renderWeapon = () => {
-    const equippedWeapon = equippedWeaponFromInventory()
+    const equippedWeapon = equippedItem()
     const weapon = createAndAddClass('div', 'weapon')
     weapon.style.height = `${getWeaponSpecs().get(equippedWeapon.name).height}px`
     weapon.style.backgroundColor = `${getWeaponSpecs().get(equippedWeapon.name).color}`

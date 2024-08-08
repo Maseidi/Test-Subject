@@ -31,7 +31,7 @@ class Weapon {
     }
 }
 
-export const getSpecification = (weaponName, statName) => weapons.get(weaponName)[statName]
+export const getWeaponSpec = (weaponName, statName) => weapons.get(weaponName)[statName]
 
 export const getStat = (weaponName, statName, statLvl) => weapons.get(weaponName)[statName][statLvl - 1]
 

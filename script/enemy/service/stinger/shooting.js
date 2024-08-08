@@ -30,7 +30,6 @@ export class StingerShootingService extends RangerShootingService {
         getCurrentRoom().append(bullet)
         getCurrentRoomBullets().push(bullet)
         this.enemy.movementService.resetAcceleration()
-        debugger
     }
 
 }

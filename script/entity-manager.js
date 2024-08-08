@@ -13,7 +13,10 @@ import {
     getCurrentRoomBullets,
     getCurrentRoomSolid,
     getPlayer, 
-    getCurrentRoomPoisons} from './elements.js'
+    getCurrentRoomPoisons,
+    setCurrentRoomBullets,
+    setCurrentRoomFlames,
+    setCurrentRoomPoisons} from './elements.js'
 import {
     getCurrentRoomId,
     getGrabbed,
@@ -121,6 +124,7 @@ const handleEnemies = () => {
 }
 
 const manageBullets = () => {
+    const bullets2Remove = new Map([])
     for ( const bullet of getCurrentRoomBullets() ) {
         const x = getProperty(bullet, 'left', 'px')
         const y = getProperty(bullet, 'top', 'px')
@@ -130,11 +134,12 @@ const manageBullets = () => {
         bullet.style.top = `${y + speedY}px`
         if ( collide(bullet, getPlayer().firstElementChild, 0) ) {
             if ( !getGrabbed() ) {
-                damagePlayer(+bullet.getAttribute('damage'))
+                damagePlayer(Number(bullet.getAttribute('damage')))
                 if ( containsClass(bullet, 'scorcher-bullet') ) setPlayer2Fire()
                 if ( containsClass(bullet, 'stinger-bullet') ) poisonPlayer()    
             }
             bullet.remove()
+            bullets2Remove.set(bullet, true)
             continue
         }
         for ( const solid of getCurrentRoomSolid() )
@@ -143,24 +148,29 @@ const manageBullets = () => {
                  collide(bullet, solid, 0)) || 
                  !collide(bullet, getCurrentRoom(), 0) ) {
                 bullet.remove()
+                bullets2Remove.set(bullet, true)
             }
     }
+    setCurrentRoomBullets(getCurrentRoomBullets().filter(bullet => !bullets2Remove.get(bullet)))    
 }
 
-const manageFlames = () => {
-    getCurrentRoomFlames().forEach(flame => {
-        const time = Number(flame.getAttribute('time'))
-        if ( time === 900 ) flame.remove()
-        addAttribute(flame, 'time', time + 1)
-        if ( collide(flame, getPlayer(), 0) ) setPlayer2Fire()    
-    })
-}
+const manageFlames = () => manageItems(getCurrentRoomFlames, setCurrentRoomFlames, 900, setPlayer2Fire)
 
-const managePoisons = () => {
-    getCurrentRoomPoisons().forEach(poison => {
-        const time = Number(poison.getAttribute('time'))
-        if ( time === 600 ) poison.remove()
-        addAttribute(poison, 'time', time + 1)
-        if ( collide(poison, getPlayer(), 0) ) poisonPlayer()    
+const managePoisons = () => manageItems(getCurrentRoomPoisons, setCurrentRoomPoisons, 600, poisonPlayer)
+
+const manageItems = (getItems, setItems, time, harmPlayer) => {
+    const items2Remove = new Map([])
+    getItems().forEach(item => {
+        const theTime = Number(item.getAttribute('time'))
+        if ( theTime === time ) {
+            item.remove()
+            items2Remove.set(item, true)
+        }
+        addAttribute(item, 'time', theTime + 1)
+        if ( collide(item, getPlayer(), 0) ) {
+            harmPlayer()
+            items2Remove.set(item, true)
+        }    
     })
+    setItems(getItems().filter(item => !items2Remove.get(item)))
 }

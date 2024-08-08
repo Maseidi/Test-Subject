@@ -1,12 +1,12 @@
-import { getStat } from './weapon-specs.js'
+import { getWeaponSpec, getStat } from './weapon-specs.js'
 import { dropLoot } from './loot-manager.js'
-import { collide, containsClass } from './util.js'
+import { collide, containsClass, getFireRate } from './util.js'
 import { removeUi, renderUi } from './user-interface.js'
 import { TRACKER } from './enemy/util/enemy-constants.js'
 import { getCurrentRoomEnemies, getCurrentRoomSolid, getPlayer } from './elements.js'
 import { 
     calculateTotalAmmo,
-    equippedWeaponFromInventory,
+    equippedItem,
     updateInventoryWeaponMag,
     useInventoryResource } from './inventory.js'
 import { 
@@ -22,12 +22,13 @@ import {
     setShootCounter,
     setShooting,
     setTarget } from './variables.js'
+import { getThrowableSpec, getThrowableSpecs } from './throwable-specs.js'
 
 const EMPTY_WEAPON = new Audio('../assets/audio/empty-weapon.mp3')
 
 let equippedWeapon
 export const manageWeaponActions = () => {
-    equippedWeapon = equippedWeaponFromInventory()
+    equippedWeapon = equippedItem()
     manageAim()
     manageReload()
     manageShoot()
@@ -69,6 +70,7 @@ export const setupReload = () => {
 
 let reloadCounter = 0
 const manageReload = () => {
+    if ( getThrowableSpecs().get(equippedWeapon?.name) ) return
     if ( !getEquippedWeapon() ) return
     if ( getReloading() ) reloadCounter++
     if ( reloadCounter / 60 >= getStat(equippedWeapon.name, 'reloadspeed', equippedWeapon.reloadspeedlvl) ) {
@@ -89,7 +91,7 @@ const reload = () => {
 
 const manageShoot = () => {
     if ( !getEquippedWeapon() ) return
-    const fireRate = getStat(equippedWeapon.name, 'firerate', equippedWeapon.fireratelvl)
+    const fireRate = getFireRate(equippedWeapon)
     setShootCounter(getShootCounter() + 1)
     if ( getShootCounter() / 60 >= fireRate ) setShootCounter(getShootCounter() - 1)
     if ( (getShootCounter() + 1) / 60 >= fireRate ) {

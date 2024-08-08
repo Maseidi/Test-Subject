@@ -5,7 +5,6 @@ class Throwable {
         damage, 
         range, 
         firerate,
-        description,
         price,
         knockback) {
         this.heading = heading
@@ -13,11 +12,12 @@ class Throwable {
         this.damage = damage
         this.range = range
         this.firerate = firerate
-        this.description = description
         this.price = price
         this.knockback = knockback
     }
 }
+
+export const getThrowableSpec = (throwableName, statName) => throwables.get(throwableName)[statName]
 
 const throwables = new Map([
     ['grenade', new Throwable(
@@ -26,7 +26,6 @@ const throwables = new Map([
         3000,
         300,
         2,
-        'grenade',
         1/2,
         100
     )],
@@ -36,7 +35,6 @@ const throwables = new Map([
         0,
         300,
         2,
-        'flashbang',
         1/3,
         0
     )]
