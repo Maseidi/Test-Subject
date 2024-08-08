@@ -2,7 +2,7 @@ import { useAntidote, useBandage } from './player-health.js'
 import { renderStats } from './weapon-examine.js'
 import { interactables } from './interactables.js'
 import { renderInteractable } from './room-loader.js'
-import { getStat, getWeaponSpecs } from './weapon-specs.js'
+import { getWeaponSpecs } from './weapon-specs.js'
 import { removeWeapon, renderWeapon } from './weapon-loader.js'
 import { removeUi, renderQuit, renderUi } from './user-interface.js'
 import { getCurrentRoom, getPauseContainer, getPlayer } from './elements.js'
@@ -16,7 +16,7 @@ import {
     appendAll, 
     createAndAddClass,
     nextId, 
-    getFireRate} from './util.js'
+    getEquippedSpec} from './util.js'
 import { 
     getAimMode,
     getCurrentRoomId,
@@ -102,6 +102,13 @@ const searchEmpty = () => {
                     if ( inventory[i][j+k] !== null ) skip = true
                 if ( skip ) continue   
                 let diff = Math.min(pack, drop.amount)
+                if ( getThrowableSpecs().get(drop.name) ) {
+                    const throwable = inventory.flat().find(item => item?.name === drop.name)
+                    if ( throwable ) {
+                        drop.id = throwable.id
+                        addAttribute(getIntObj(), 'id', throwable.id)
+                    }
+                }
                 inventory[i][j] = {...drop, amount: diff, row: i, column: j}
                 for ( let k = 1; k < drop.space; k++ ) inventory[i][j+k] = 'taken'
                 updateAmount(drop.amount - diff)
@@ -115,12 +122,23 @@ const searchEmpty = () => {
 
 const checkSpecialScenarios = () => {
     const obj = elementToObject(getIntObj())
-    if ( getWeaponSpecs().get(obj.name) && obj.amount === 0 ) updateWeaponWheel()
-    if ( getThrowableSpecs().get(obj.name) ) updateWeaponWheel()    
+    if ( ( getThrowableSpecs().get(obj.name) && !getWeaponWheel().includes(obj.id) ) ||
+         ( getWeaponSpecs().get(obj.name) && obj.amount === 0 ) ) updateWeaponWheel()        
     if ( getPause() ) return
     if ( obj.amount === 0 ) removeDrop(getIntObj())
-    const equippedWeapon = equippedItem()
-    if ( getEquippedWeapon() && obj.name === getWeaponSpecs().get(equippedWeapon.name).ammotype ) {
+    ammo4Equipped(obj)
+}
+
+const ammo4Equipped = (obj) => {
+    const equipped = equippedItem()
+    if ( getEquippedWeapon() && 
+        ((
+            getWeaponSpecs().get(equipped.name) &&
+            obj.name === getWeaponSpecs().get(equipped.name).ammotype
+        ) || (
+            getThrowableSpecs().get(equipped.name) &&
+            obj.name === equipped.name
+        )) ) {
         removeUi()
         renderUi()
     }
@@ -526,7 +544,7 @@ const equip = (item) => {
     const row = itemObj.row
     const column = itemObj.column
     setEquippedWeapon(inventory[row][column].id)
-    setShootCounter(getFireRate(equippedItem()) * 60)
+    setShootCounter(getEquippedSpec(equippedItem()) * 60, 'firerate')
     if ( getAimMode() ) {
         removeWeapon()
         renderWeapon()
@@ -583,6 +601,7 @@ export const handleWeaponDrop = (itemObj) => {
     if ( getEquippedWeapon() === itemObj.id ) {
         setEquippedWeapon(null)
         removeClass(getPlayer(), 'aim')
+        removeClass(getPlayer(), 'throwable-aim')
         setAimMode(false)
         removeWeapon()
     }

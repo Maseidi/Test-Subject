@@ -128,7 +128,7 @@ export const getProperty = (elem, property, ...toRemoveList) => {
     return Number(res)
 }
 
-export const getFireRate = (equipped) =>      
+export const getEquippedSpec = (equipped, spec) =>  
     getThrowableSpecs().get(equipped?.name) ? 
-    getThrowableSpec(equipped.name, 'firerate') : 
-    getStat(equipped.name, 'firerate', equipped.fireratelvl)
+    getThrowableSpec(equipped.name, spec) : 
+    getStat(equipped.name, spec, equipped[spec+'lvl'])     

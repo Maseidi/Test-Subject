@@ -41,7 +41,7 @@
   position: absolute;
   left: 50%;
   top: 50%;
-  z-index: 20;
+  z-index: 3;
   text-transform: capitalize;
 }
 
@@ -89,7 +89,7 @@
   right: 0;
   bottom: 0;
   color: white;
-  z-index: 10;
+  z-index: 2;
 }
 
 .description {
@@ -174,7 +174,7 @@ div.selectable-slot {
   position: absolute;
   left: 0;
   top: 0;
-  z-index: 50;
+  z-index: 6;
   display: flex;
   flex-flow: row wrap;
 }

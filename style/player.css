@@ -9,7 +9,7 @@
 
 .player {
   position: absolute;
-  z-index: 30;
+  z-index: 4;
 }
 
 .player-collider {
@@ -106,10 +106,22 @@
   right: 2px;
 }
 
+.throwable-aim > .player-collider > .player-body::after {
+  right: 2px;
+  height: 12px;
+}
+
 .aim > .player-collider > .player-body::before {
   transform: rotateZ(-40deg);
   right: unset;
   left: 2px;
+}
+
+.throwable-aim > .player-collider > .player-body::before {
+  top: -8px;
+  transform: rotateZ(-5deg);
+  transform-style: preserve-3d;
+  z-index: 8;
 }
 
 .aim > .player-collider > .player-body::after,
@@ -119,18 +131,35 @@
   border-radius: 2px;
 }
 
-.aim > .player-collider > .player-body {
+.aim > .player-collider > .player-body, .throwable-aim > .player-collider > .player-body {
   transition: 0ms !important;
 }
 
 .weapon {
-  position: absolute;
-  width: 4px;
   left: 50%;
-  transform: translateX(-50%);
   top: 15px;
-  z-index: 60;
+  width: 4px;
+  z-index: 7;
+  position: absolute;
   border: 1px solid black;
+  transform: translateX(-50%);
+  transform-style: preserve-3d;
+}
+
+.throwable {
+  z-index: 7;
+  left: -3px;
+  top: -8px;
+  position: absolute;
+}
+
+.throwable-img {
+  top: -5px;
+  z-index: 9;
+  left: -5px;
+  width: 10px;
+  position: absolute;
+  transform: rotateZ(-5deg);
   transform-style: preserve-3d;
 }
 

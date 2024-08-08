@@ -1,6 +1,6 @@
-import { getWeaponSpec, getStat } from './weapon-specs.js'
+import { getStat } from './weapon-specs.js'
 import { dropLoot } from './loot-manager.js'
-import { collide, containsClass, getFireRate } from './util.js'
+import { collide, containsClass, getEquippedSpec } from './util.js'
 import { removeUi, renderUi } from './user-interface.js'
 import { TRACKER } from './enemy/util/enemy-constants.js'
 import { getCurrentRoomEnemies, getCurrentRoomSolid, getPlayer } from './elements.js'
@@ -22,7 +22,7 @@ import {
     setShootCounter,
     setShooting,
     setTarget } from './variables.js'
-import { getThrowableSpec, getThrowableSpecs } from './throwable-specs.js'
+import { getThrowableSpecs } from './throwable-specs.js'
 
 const EMPTY_WEAPON = new Audio('../assets/audio/empty-weapon.mp3')
 
@@ -43,9 +43,9 @@ const manageAim = () => {
         setTarget(null)
     } 
     if ( counter !== 0 ) return       
-    const range = getStat(equippedWeapon.name, 'range', equippedWeapon.rangelvl)
+    const range = getEquippedSpec(equippedWeapon, 'range')
     const laser = Array.from(getPlayer().firstElementChild.firstElementChild.children)
-        .find(child => containsClass(child, 'weapon')).firstElementChild
+        .find(child => containsClass(child, 'weapon') || containsClass(child, 'throwable')).firstElementChild
     laser.style.height = `${range}px`
     let found = false
     Array.from(laser.children).forEach((elem, index) => {
@@ -91,7 +91,7 @@ const reload = () => {
 
 const manageShoot = () => {
     if ( !getEquippedWeapon() ) return
-    const fireRate = getFireRate(equippedWeapon)
+    const fireRate = getEquippedSpec(equippedWeapon, 'firerate')
     setShootCounter(getShootCounter() + 1)
     if ( getShootCounter() / 60 >= fireRate ) setShootCounter(getShootCounter() - 1)
     if ( (getShootCounter() + 1) / 60 >= fireRate ) {

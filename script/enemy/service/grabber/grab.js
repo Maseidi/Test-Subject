@@ -41,6 +41,7 @@ export class GrabberGrabService {
     grabPlayer() {
         setAimMode(false)
         removeClass(getPlayer(), 'aim')
+        removeClass(getPlayer(), 'throwable-aim')
         removeWeapon()
         damagePlayer(this.enemy.damage / 2)
         if ( getSprintPressed() ) removeClass(getPlayer(), 'run')

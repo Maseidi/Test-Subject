@@ -1,14 +1,14 @@
 import { renderStash } from './stash.js'
-import { getStat } from './weapon-specs.js'
+import { getStat, getWeaponSpecs } from './weapon-specs.js'
 import { dropLoot } from './loot-manager.js'
 import { centralizePlayer } from './startup.js'
 import { setupReload } from './weapon-actions.js'
 import { renderStore } from './vending-machine.js'
 import { heal, damagePlayer } from './player-health.js'
 import { removeWeapon, renderWeapon } from './weapon-loader.js'
-import { renderUi, renderEquippedWeapon, quitPage } from './user-interface.js'
+import { renderUi, renderWeaponUi, quitPage } from './user-interface.js'
 import { getGrabBar, getPauseContainer, getPlayer, getUiEl } from './elements.js'
-import { addAttribute, addClass, angleOfTwoPoints, getFireRate, getProperty, isMoving, removeClass } from './util.js'
+import { addAttribute, addClass, angleOfTwoPoints, getEquippedSpec, getProperty, isMoving, removeClass } from './util.js'
 import { equippedItem, pickupDrop, removeInventory, renderInventory } from './inventory.js'
 import { 
     getAimMode,
@@ -39,6 +39,7 @@ import {
     setSprintPressed,
     setUpPressed } from './variables.js'
 import { getThrowableSpec, getThrowableSpecs } from './throwable-specs.js'
+import { removeThrowable, renderThrowable } from './throwable-loader.js'
 
 export const control = () => {
     onkeydown = (e) => {
@@ -150,12 +151,23 @@ const eDown = () => {
         if ( getAimMode() ) {
             removeClass(getPlayer(), 'walk')
             removeClass(getPlayer(), 'run')
-            addClass(getPlayer(), 'aim')
-            renderWeapon()
+            const equipped = equippedItem()
+            const isWeapon = getWeaponSpecs().get(equipped.name)
+            const isThrowable = getThrowableSpecs().get(equipped.name) 
+            if ( isWeapon ) {
+                addClass(getPlayer(), 'aim')
+                renderWeapon()
+            }
+            else if ( isThrowable ) {
+                addClass(getPlayer(), 'throwable-aim')
+                renderThrowable()
+            }
             return
         }
         removeClass(getPlayer(), 'aim')
+        removeClass(getPlayer(), 'throwable-aim')
         removeWeapon()
+        removeThrowable()
         if ( isMoving() ) addClass(getPlayer(), 'walk')
     }
 }
@@ -163,22 +175,27 @@ const eDown = () => {
 const weaponSlotDown = (key) => {
     if ( getPause() || getReloading() || getShooting() || getGrabbed() ) return
     removeWeapon()
+    removeThrowable()
     if ( getWeaponWheel()[Number(key) - 1] === getEquippedWeapon() ) {
         setEquippedWeapon(null)
         setAimMode(false)
         removeClass(getPlayer(), 'aim')
-        renderEquippedWeapon()
+        removeClass(getPlayer(), 'throwable-aim')
+        renderWeaponUi()
         if (isMoving()) addClass(getPlayer(), 'walk')
         return
     }
     setEquippedWeapon(getWeaponWheel()[Number(key) - 1])
-    renderEquippedWeapon()
-    if ( getEquippedWeapon() ) setShootCounter(getFireRate(equippedItem()) * 60)
+    renderWeaponUi()
+    if ( getEquippedWeapon() ) setShootCounter(getEquippedSpec(equippedItem(), 'firerate') * 60)
     if ( getEquippedWeapon() && getAimMode() ) {
-        renderWeapon()
+        const equipped = equippedItem()
+        if ( getWeaponSpecs().get(equipped.name) ) renderWeapon()
+        else if ( getThrowableSpecs().get(equipped.name) ) renderThrowable()    
         return
     }
     removeClass(getPlayer(), 'aim')
+    removeClass(getPlayer(), 'throwable-aim')
     if (isMoving()) addClass(getPlayer(), 'walk')
     setAimMode(false)
 }
@@ -192,7 +209,9 @@ const startSprint = () => {
     if ( !isMoving() || getPause() || getGrabbed() ) return
     setAimMode(false)
     removeClass(getPlayer(), 'aim')
+    removeClass(getPlayer(), 'throwable-aim')
     removeWeapon()
+    removeThrowable()
 }
 
 const fDown = () => {

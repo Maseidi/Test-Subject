@@ -1,17 +1,14 @@
 class Throwable {
     constructor(
         heading,
-        space,
         damage, 
-        range, 
-        firerate,
         price,
         knockback) {
         this.heading = heading
-        this.space = space
+        this.space = 1
         this.damage = damage
-        this.range = range
-        this.firerate = firerate
+        this.range = 300
+        this.firerate = 2
         this.price = price
         this.knockback = knockback
     }
@@ -22,19 +19,13 @@ export const getThrowableSpec = (throwableName, statName) => throwables.get(thro
 const throwables = new Map([
     ['grenade', new Throwable(
         'grenade',
-        1,
         3000,
-        300,
-        2,
         1/2,
         100
     )],
     ['flashbang', new Throwable(
         'flashbang',
-        1,
         0,
-        300,
-        2,
         1/3,
         0
     )]

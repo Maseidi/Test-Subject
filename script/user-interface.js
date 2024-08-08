@@ -9,7 +9,7 @@ export const renderUi = () => {
     renderBackground()
     renderHealthBar()
     renderStaminaBar()
-    renderEquippedWeapon()
+    renderWeaponUi()
 }
 
 const renderBackground = () => {
@@ -43,39 +43,26 @@ export const staminaManager = (inputStamina) =>
 
 const abstractManager = (input, elem, max) => elem.style.width = `${input / max * 100}%`
 
-export const renderEquippedWeapon = () => {
+export const renderWeaponUi = () => {
     if ( getUiEl().children[2] ) getUiEl().children[2].remove() 
     if ( !getEquippedWeapon() ) return
     const equippedWeapon = equippedItem()
-    if ( getThrowableSpecs().get(equippedWeapon.name) ) {
-        renderEquippedThrowable(equippedWeapon)
-        return
-    }
+    const predicate = getThrowableSpecs().get(equippedWeapon.name) 
     const weaponContainer = createAndAddClass('div', 'weapon-container')
     const weaponIcon = createAndAddClass('img', 'weapon-icon')
     weaponIcon.src = `../assets/images/${equippedWeapon.name}.png`
     addClass(weaponIcon, 'weapon-icon')
     const ammoCount = createAndAddClass('div', 'ammo-count')
-    const mag = document.createElement('p')
-    mag.textContent = `${equippedWeapon.currmag}`
+    if ( !predicate ) {
+        var mag = document.createElement('p')
+        mag.textContent = `${equippedWeapon.currmag}`
+    }
     const total = document.createElement('p')
-    total.textContent = calculateTotalAmmo(equippedWeapon)
-    appendAll(ammoCount, mag, total)
+    total.textContent = predicate ? calculateThrowableAmount(equippedWeapon) : calculateTotalAmmo(equippedWeapon)
+    if ( !predicate )  ammoCount.append(mag)
+    ammoCount.append(total)
     appendAll(weaponContainer, weaponIcon, ammoCount)
     getUiEl().append(weaponContainer)
-}
-
-const renderEquippedThrowable = (equippedThrowable) => {
-    const throwableContainer = createAndAddClass('div', 'weapon-container')
-    const throwableIcon = createAndAddClass('img', 'weapon-icon')
-    throwableIcon.src = `../assets/images/${equippedThrowable.name}.png`
-    addClass(throwableIcon, 'weapon-icon')
-    const ammoCount = createAndAddClass('div', 'ammo-count')
-    const total = document.createElement('p')
-    total.textContent = calculateThrowableAmount(equippedThrowable)
-    appendAll(ammoCount, total)
-    appendAll(throwableContainer, throwableIcon, ammoCount)
-    getUiEl().append(throwableContainer)
 }
 
 export const removeUi = () => getUiEl().remove()
