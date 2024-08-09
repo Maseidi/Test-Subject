@@ -4,6 +4,7 @@ import {
     getHealth,
     getLeftPressed,
     getRightPressed,
+    getThrowCounter,
     getUpPressed,
     setEntityId } from './variables.js'
 import { getStat } from './weapon-specs.js'
@@ -132,3 +133,5 @@ export const getEquippedSpec = (equipped, spec) =>
     getThrowableSpecs().get(equipped?.name) ? 
     getThrowableSpec(equipped.name, spec) : 
     getStat(equipped.name, spec, equipped[spec+'lvl'])
+
+export const isThrowing = () => getThrowCounter() > 0    

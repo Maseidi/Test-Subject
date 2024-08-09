@@ -8,7 +8,7 @@ import { heal, damagePlayer } from './player-health.js'
 import { removeWeapon, renderWeapon } from './weapon-loader.js'
 import { renderUi, renderWeaponUi, quitPage } from './user-interface.js'
 import { getGrabBar, getPauseContainer, getPlayer, getUiEl } from './elements.js'
-import { addAttribute, addClass, angleOfTwoPoints, getEquippedSpec, getProperty, isMoving, removeClass } from './util.js'
+import { addAttribute, addClass, angleOfTwoPoints, getEquippedSpec, getProperty, isMoving, isThrowing, removeClass } from './util.js'
 import { equippedItem, pickupDrop, removeInventory, renderInventory } from './inventory.js'
 import { 
     getAimMode,
@@ -145,7 +145,7 @@ const enableDirection = (setPressed) => {
 }
 
 const eDown = () => {
-    if ( getPause() || getGrabbed() ) return
+    if ( getPause() || getGrabbed() || isThrowing() ) return
     if ( getEquippedWeapon() !== null  ) {
         setAimMode(!getAimMode())
         if ( getAimMode() ) {
@@ -214,7 +214,7 @@ const shiftDown = () => {
 }
 
 const startSprint = () => {
-    if ( !isMoving() || getPause() || getGrabbed() ) return
+    if ( !isMoving() || getPause() || getGrabbed() || isThrowing() ) return
     setAimMode(false)
     removeClass(getPlayer(), 'aim')
     removeClass(getPlayer(), 'throwable-aim')

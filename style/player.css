@@ -3,7 +3,7 @@
     height: 8px;
   }
   100% {
-    height: 14px;
+    height: 16px;
   }
 }
 
@@ -41,56 +41,55 @@
   background-color: black;
 }
 
-.player-body::after,
-.player-body::before {
-  content: "";
+.player-left-hand,
+.player-right-hand {
   position: absolute;
-  width: 3.5px;
-  height: 12px;
+  width: 5px;
+  height: 14px;
   top: 1px;
   background-color: wheat;
   border: 1px solid black;
   border-radius: 1px;
 }
 
-.player-body::after {
+.player-left-hand {
   left: 100%;
 }
 
-.player-body::before {
+.player-right-hand {
   right: 100%;
 }
 
-.walk > .player-collider > .player-body::after,
-.walk > .player-collider > .player-body::before,
-.run > .player-collider > .player-body::after,
-.run > .player-collider > .player-body::before {
+.walk > .player-collider > .player-body > .player-left-hand,
+.walk > .player-collider > .player-body > .player-right-hand,
+.run > .player-collider > .player-body > .player-left-hand,
+.run > .player-collider > .player-body > .player-right-hand {
   animation-name: walk;
   animation-iteration-count: infinite;
   animation-timing-function: linear;
   animation-fill-mode: both;
 }
 
-.player-body::after {
+.player-left-hand {
   animation-direction: alternate;
 }
 
-.player-body::before {
+.player-right-hand {
   animation-direction: alternate-reverse;
 }
 
-.walk > .player-collider > .player-body::after,
-.walk > .player-collider > .player-body::before {
+.walk > .player-collider > .player-body > .player-left-hand,
+.walk > .player-collider > .player-body > .player-right-hand {
   animation-duration: 600ms;
 }
 
-.run > .player-collider > .player-body::after,
-.run > .player-collider > .player-body::before {
+.run > .player-collider > .player-body > .player-left-hand,
+.run > .player-collider > .player-body > .player-right-hand {
   animation-duration: 300ms;
 }
 
-.low-health-player > .player-collider > .player-body::after,
-.low-health-player > .player-collider > .player-body::before {
+.low-health-player > .player-collider > .player-body > .player-left-hand,
+.low-health-player > .player-collider > .player-body > .player-right-hand {
   animation-duration: 900ms !important;
 }
 
@@ -100,32 +99,31 @@
   height: 4px;
 }
 
-.aim > .player-collider > .player-body::after {
+.aim > .player-collider > .player-body > .player-left-hand {
   transform: rotateZ(40deg);
   left: unset;
   right: 2px;
 }
 
-.throwable-aim > .player-collider > .player-body::after {
+.throwable-aim > .player-collider > .player-body > .player-left-hand {
   right: 2px;
-  height: 12px;
+  height: 14px;
 }
 
-.aim > .player-collider > .player-body::before {
+.aim > .player-collider > .player-body > .player-right-hand {
   transform: rotateZ(-40deg);
   right: unset;
   left: 2px;
 }
 
-.throwable-aim > .player-collider > .player-body::before {
+.throwable-aim > .player-collider > .player-body > .player-right-hand {
   top: -8px;
   transform: rotateZ(-5deg);
-  transform-style: preserve-3d;
   z-index: 8;
 }
 
-.aim > .player-collider > .player-body::after,
-.aim > .player-collider > .player-body::before {
+.aim > .player-collider > .player-body > .player-left-hand,
+.aim > .player-collider > .player-body > .player-right-hand {
   top: 2px;
   height: 20px;
   border-radius: 2px;
@@ -149,12 +147,12 @@
 .throwable {
   z-index: 7;
   left: -3px;
-  top: -8px;
+  top: 0px;
   position: absolute;
 }
 
 .throwable-img {
-  top: -12px;
+  top: -20px;
   left: -5px;
   width: 10px;
   position: absolute;

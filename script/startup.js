@@ -54,8 +54,10 @@ const renderPlayer = () => {
     addAttribute(player, 'angle', 0)
     const forwardDetector = createAndAddClass('div', 'forward-detector')
     appendAll(playerCollider, playerBody, forwardDetector)
+    const leftHand = createAndAddClass('div', 'player-left-hand')
     const playerHead = createAndAddClass('div', 'player-head')
-    playerBody.append(playerHead)
+    const rightHand = createAndAddClass('div', 'player-right-hand')
+    playerBody.append(leftHand, playerHead, rightHand)
     setPlayer(player)
     getMapEl().append(player)
 }

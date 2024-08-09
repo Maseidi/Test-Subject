@@ -249,3 +249,9 @@ export const setPoisoned = (val) => {
     poisoned = val
 }
 export const getPoisoned = () => poisoned
+
+let throwCounter = 0
+export const setThrowCounter = (val) => {
+    throwCounter = val
+}
+export const getThrowCounter = () => throwCounter
