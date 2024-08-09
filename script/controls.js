@@ -190,8 +190,16 @@ const weaponSlotDown = (key) => {
     if ( getEquippedWeapon() ) setShootCounter(getEquippedSpec(equippedItem(), 'firerate') * 60)
     if ( getEquippedWeapon() && getAimMode() ) {
         const equipped = equippedItem()
-        if ( getWeaponSpecs().get(equipped.name) ) renderWeapon()
-        else if ( getThrowableSpecs().get(equipped.name) ) renderThrowable()    
+        if ( getWeaponSpecs().get(equipped.name) ) {
+            removeClass(getPlayer(), 'throwable-aim')
+            addClass(getPlayer(), 'aim')
+            renderWeapon()
+        }
+        else if ( getThrowableSpecs().get(equipped.name) ) {
+            removeClass(getPlayer(), 'aim')
+            addClass(getPlayer(), 'throwable-aim')
+            renderThrowable()
+        }  
         return
     }
     removeClass(getPlayer(), 'aim')

@@ -131,4 +131,4 @@ export const getProperty = (elem, property, ...toRemoveList) => {
 export const getEquippedSpec = (equipped, spec) =>  
     getThrowableSpecs().get(equipped?.name) ? 
     getThrowableSpec(equipped.name, spec) : 
-    getStat(equipped.name, spec, equipped[spec+'lvl'])     
+    getStat(equipped.name, spec, equipped[spec+'lvl'])

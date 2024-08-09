@@ -6,10 +6,13 @@ import { containsClass, createAndAddClass } from './util.js'
 export const renderThrowable = () => {
     const equippedThrowable = equippedItem()
     const throwable = createAndAddClass('div', 'throwable')
-    const laser = createAndAddClass('div', 'laser')
+    const laser = createAndAddClass('div', 'throwable-laser')
     laser.style.height = `${getThrowableSpec(equippedThrowable.name, 'range')}px`
-    laser.style.backgroundColor = 'orange'
-    for ( let i = 0; i < 100; i++ ) laser.append(document.createElement('div'))
+    for ( let i = 0; i < 100; i++ ) {
+        const part = document.createElement('div')
+        if ( i % 3 === 0 ) part.style.backgroundColor = 'black'
+        laser.append(part)
+    }
     throwable.append(laser)
     const throwableImg = createAndAddClass('img', 'throwable-img')
     throwableImg.src = `/assets/images/${equippedThrowable.name}.png` 

@@ -10,8 +10,12 @@ export const renderWeapon = () => {
     weapon.style.backgroundColor = `${getWeaponSpecs().get(equippedWeapon.name).color}`
     const laser = createAndAddClass('div', 'laser')
     laser.style.height = `${getStat(equippedWeapon.name, 'range', equippedWeapon.rangelvl)}px`
-    laser.style.backgroundColor = `${getWeaponSpecs().get(equippedWeapon.name).antivirus}`
-    for ( let i = 0; i < 100; i++ ) laser.append(document.createElement('div'))
+    for ( let i = 0; i < 100; i++ ) {
+        const part = document.createElement('div')
+        part.style.opacity = `${(100 - (0.9 * i))/100}`
+        part.style.backgroundColor = `${getWeaponSpecs().get(equippedWeapon.name).antivirus}`
+        laser.append(part)
+    }
     weapon.append(laser)
     getPlayer().children[0].children[0].append(weapon)
 }

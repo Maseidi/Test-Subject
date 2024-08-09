@@ -1,4 +1,4 @@
-import { getStat } from './weapon-specs.js'
+import { getStat, getWeaponSpecs } from './weapon-specs.js'
 import { dropLoot } from './loot-manager.js'
 import { collide, containsClass, getEquippedSpec } from './util.js'
 import { removeUi, renderUi } from './user-interface.js'
@@ -48,12 +48,15 @@ const manageAim = () => {
         .find(child => containsClass(child, 'weapon') || containsClass(child, 'throwable')).firstElementChild
     laser.style.height = `${range}px`
     let found = false
-    Array.from(laser.children).forEach((elem, index) => {
-        if ( found ) return
+    Array.from(laser.children).forEach(elem => {
+        elem.style.display = 'block'
+        if ( found ) {
+            elem.style.display = 'none'
+            return
+        }
         for ( const solid of getCurrentRoomSolid() ) {
             if ( collide(elem, solid, 0) ) {
                 setTarget(solid)
-                laser.style.height = `${index/100 * range}px`
                 found = true
             }
         }
@@ -61,7 +64,8 @@ const manageAim = () => {
     
 }
 
-export const setupReload = () => {
+export const setupReload = () => {    
+    if ( getThrowableSpecs().get(equippedWeapon.name) ) return
     if ( equippedWeapon.currmag === getStat(equippedWeapon.name, 'magazine', equippedWeapon.magazinelvl) ) return
     if ( calculateTotalAmmo(equippedWeapon) === 0 ) return
     if ( getShooting() ) return
@@ -80,7 +84,7 @@ const manageReload = () => {
     }
 }
 
-const reload = () => {
+const reload = () => {    
     const mag = getStat(equippedWeapon.name, 'magazine', equippedWeapon.magazinelvl)
     const currentMag = equippedWeapon.currmag
     const totalAmmo = calculateTotalAmmo(equippedWeapon)

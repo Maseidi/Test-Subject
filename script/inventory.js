@@ -39,6 +39,7 @@ import {
     getShooting, 
     getPause } from './variables.js'
 import { getThrowableSpecs } from './throwable-specs.js'
+import { removeThrowable, renderThrowable } from './throwable-loader.js'
 
 export const MAX_PACKSIZE = {
     bandage: 3,
@@ -544,10 +545,20 @@ const equip = (item) => {
     const row = itemObj.row
     const column = itemObj.column
     setEquippedWeapon(inventory[row][column].id)
-    setShootCounter(getEquippedSpec(equippedItem()) * 60, 'firerate')
+    const equipped = equippedItem()
+    setShootCounter(getEquippedSpec(equipped, 'firerate') * 60)
     if ( getAimMode() ) {
         removeWeapon()
-        renderWeapon()
+        removeThrowable()
+        removeClass(getPlayer(), 'aim')
+        removeClass(getPlayer(), 'throwable-aim')
+        if ( getWeaponSpecs().get(equipped.name) ) {
+            addClass(getPlayer(), 'aim')
+            renderWeapon()
+        } else if ( getThrowableSpecs().get(equipped.name) ) {
+            addClass(getPlayer(), 'throwable-aim')
+            renderThrowable()
+        }
     }
     renderInventory()
 }
@@ -604,6 +615,7 @@ export const handleWeaponDrop = (itemObj) => {
         removeClass(getPlayer(), 'throwable-aim')
         setAimMode(false)
         removeWeapon()
+        removeThrowable()
     }
     setWeaponWheel(getWeaponWheel().map(weapon => weapon === itemObj.id ? null : weapon))
 }

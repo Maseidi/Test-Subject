@@ -12,6 +12,7 @@ import {
     setNoOffenseCounter,
     setPlayerAngle,
     setPlayerAngleState } from '../../../variables.js'
+import { removeThrowable } from '../../../throwable-loader.js'
 
 export class GrabberGrabService {
     constructor(enemy) {
@@ -43,6 +44,7 @@ export class GrabberGrabService {
         removeClass(getPlayer(), 'aim')
         removeClass(getPlayer(), 'throwable-aim')
         removeWeapon()
+        removeThrowable()
         damagePlayer(this.enemy.damage / 2)
         if ( getSprintPressed() ) removeClass(getPlayer(), 'run')
         if ( isMoving() ) removeClass(getPlayer(), 'walk')
