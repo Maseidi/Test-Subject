@@ -70,6 +70,12 @@ export const setCurrentRoomPoisons = (val) => {
 }
 export const getCurrentRoomPoisons = () => currentRoomPoisons
 
+let currentRoomThrowables
+export const setCurrentRoomThrowables = (val) => {
+    currentRoomThrowables = val
+}
+export const getCurrentRoomThrowables = () => currentRoomThrowables
+
 let player
 export const setPlayer = (val) => {
     player = val

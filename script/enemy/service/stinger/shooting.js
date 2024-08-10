@@ -1,7 +1,7 @@
 import { RangerShootingService } from '../ranger/shooting.js'
 import { getCurrentRoom, getCurrentRoomBullets } from '../../../elements.js'
 import { getPlayerX, getPlayerY, getRoomLeft, getRoomTop } from '../../../variables.js'
-import { addAttribute, angleOfTwoPoints, createAndAddClass, getProperty } from '../../../util.js'
+import { addAttribute, angleOfTwoPoints, calculateBulletSpeed, createAndAddClass, getProperty } from '../../../util.js'
 
 export class StingerShootingService extends RangerShootingService {
     constructor(enemy) {
@@ -19,7 +19,7 @@ export class StingerShootingService extends RangerShootingService {
         const diffY = destY - srcY
         const diffX = destX - srcX
         const slope = Math.abs(diffY / diffX)
-        const { speedX, speedY } = this.calculateBulletSpeed(deg, slope, diffY, diffX)
+        const { speedX, speedY } = calculateBulletSpeed(deg, slope, diffY, diffX, 10)
         const bullet = createAndAddClass('div', 'stinger-bullet')
         addAttribute(bullet, 'speed-x', speedX)
         addAttribute(bullet, 'speed-y', speedY)

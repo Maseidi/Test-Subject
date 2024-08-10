@@ -2,7 +2,14 @@ import { manageAimModeAngle } from '../../../player-angle.js'
 import { CHASE, STAND_AND_WATCH } from '../../util/enemy-constants.js'
 import { getCurrentRoom, getCurrentRoomBullets } from '../../../elements.js'
 import { getGrabbed, getPlayerX, getPlayerY, getRoomLeft, getRoomTop } from '../../../variables.js'
-import { addAttribute, addClass, angleOfTwoPoints, createAndAddClass, getProperty, removeClass } from '../../../util.js'
+import { 
+    addAttribute,
+    addClass,
+    angleOfTwoPoints,
+    calculateBulletSpeed,
+    createAndAddClass,
+    getProperty,
+    removeClass } from '../../../util.js'
 
 export class RangerShootingService {
     constructor(enemy) {
@@ -68,7 +75,7 @@ export class RangerShootingService {
         const diffY = destY - srcY
         const diffX = destX - srcX
         const slope = Math.abs(diffY / diffX)
-        const { speedX, speedY } = this.calculateBulletSpeed(deg, slope, diffY, diffX)
+        const { speedX, speedY } = calculateBulletSpeed(deg, slope, diffY, diffX, 10)
         const bullet = createAndAddClass('div', 'ranger-bullet')
         addAttribute(bullet, 'speed-x', speedX)
         addAttribute(bullet, 'speed-y', speedY)
@@ -79,26 +86,6 @@ export class RangerShootingService {
         getCurrentRoom().append(bullet)
         getCurrentRoomBullets().push(bullet)
         this.enemy.movementService.resetAcceleration()
-    }
-
-    calculateBulletSpeed(deg, slope, diffX, diffY) {
-        let speedX
-        let speedY
-        const baseSpeed = 10
-        if ( (deg < 45 && deg >= 0) || (deg < -135 && deg >= -180) ) {
-            speedX = diffX < 0 ? baseSpeed * (1 / slope) : -baseSpeed * (1/ slope)
-            speedY = diffY < 0 ? baseSpeed : -baseSpeed
-        } else if ( (deg >= 135 && deg < 180) || (deg < 0 && deg >= -45) ) {
-            speedX = diffX < 0 ? -baseSpeed * (1 / slope) : baseSpeed * (1/ slope)
-            speedY = diffY < 0 ? -baseSpeed : baseSpeed
-        } else if ( (deg >= 45 && deg < 90) || (deg < -90 && deg >= -135) ) {
-            speedX = diffX < 0 ? baseSpeed : -baseSpeed
-            speedY = diffY < 0 ? baseSpeed * slope : -baseSpeed * slope
-        } else if ( (deg >= 90 && deg < 135) || (deg < -45 && deg >= -90) ) {
-            speedX = diffX < 0 ? -baseSpeed : baseSpeed
-            speedY = diffY < 0 ? -baseSpeed * slope : baseSpeed * slope
-        }
-        return { speedX, speedY }
     }
 
 }

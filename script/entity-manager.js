@@ -16,7 +16,8 @@ import {
     getCurrentRoomPoisons,
     setCurrentRoomBullets,
     setCurrentRoomFlames,
-    setCurrentRoomPoisons} from './elements.js'
+    setCurrentRoomPoisons,
+    getCurrentRoomThrowables} from './elements.js'
 import {
     getCurrentRoomId,
     getGrabbed,
@@ -39,6 +40,7 @@ export const manageEntities = () => {
     manageBullets()
     manageFlames()
     managePoisons()
+    manageThrowables()
 }
 
 const manageSolidObjects = () => {
@@ -173,4 +175,15 @@ const manageItems = (getItems, setItems, time, harmPlayer) => {
         }    
     })
     setItems(getItems().filter(item => !items2Remove.get(item)))
+}
+
+const manageThrowables = () => {
+    for ( const throwable of getCurrentRoomThrowables() ) {
+        const x = getProperty(throwable, 'left', 'px')
+        const y = getProperty(throwable, 'top', 'px')
+        const speedX = Number(throwable.getAttribute('speed-x'))
+        const speedY = Number(throwable.getAttribute('speed-y'))
+        throwable.style.left = `${x + speedX}px`
+        throwable.style.top = `${y + speedY}px`
+    }
 }

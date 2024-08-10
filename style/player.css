@@ -179,3 +179,16 @@
   width: 100%;
   height: 1%;
 }
+
+.throwable-item {
+  width: 10px;
+  position: absolute;
+}
+
+.throw-target {
+  width: 10px;
+  height: 10px;
+  position: absolute;
+  top: 300px;
+  left: 22px;
+}

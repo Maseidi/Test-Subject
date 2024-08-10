@@ -1,7 +1,7 @@
 import { getPlayer } from './elements.js'
 import { equippedItem } from './inventory.js'
 import { getThrowableSpec } from './throwable-specs.js'
-import { containsClass, createAndAddClass } from './util.js'
+import { appendAll, containsClass, createAndAddClass } from './util.js'
 
 export const renderThrowable = () => {
     const equippedThrowable = equippedItem()
@@ -13,10 +13,9 @@ export const renderThrowable = () => {
         if ( i % 3 === 0 ) part.style.backgroundColor = 'black'
         laser.append(part)
     }
-    throwable.append(laser)
     const throwableImg = createAndAddClass('img', 'throwable-img')
     throwableImg.src = `/assets/images/${equippedThrowable.name}.png` 
-    throwable.append(throwableImg)
+    appendAll(throwable, laser, throwableImg, createAndAddClass('div', 'throw-target'))
     getPlayer().children[0].children[0].append(throwable)
 }
 

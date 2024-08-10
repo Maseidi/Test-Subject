@@ -1,9 +1,9 @@
 import { getStat, getWeaponSpecs } from './weapon-specs.js'
 import { dropLoot } from './loot-manager.js'
-import { collide, containsClass, getEquippedSpec, getProperty, isThrowing } from './util.js'
+import { addAttribute, calculateBulletSpeed, collide, containsClass, createAndAddClass, getEquippedSpec, getProperty, isThrowing } from './util.js'
 import { removeUi, renderUi } from './user-interface.js'
 import { TRACKER } from './enemy/util/enemy-constants.js'
-import { getCurrentRoomEnemies, getCurrentRoomSolid, getPlayer } from './elements.js'
+import { getCurrentRoom, getCurrentRoomEnemies, getCurrentRoomSolid, getCurrentRoomThrowables, getPlayer } from './elements.js'
 import { 
     calculateTotalAmmo,
     equippedItem,
@@ -13,7 +13,12 @@ import {
     getAimMode,
     getEquippedWeapon,
     getNoOffenseCounter,
+    getPlayerAimAngle,
+    getPlayerX,
+    getPlayerY,
     getReloading,
+    getRoomLeft,
+    getRoomTop,
     getShootCounter,
     getShootPressed,
     getShooting,
@@ -161,6 +166,7 @@ const updateInventory = (equipped, newMag, trade) => {
 
 const manageThrow = () => {
     throwAnimation()
+    throwItem()
 }
 
 const throwAnimation = () => {
@@ -174,14 +180,58 @@ const throwAnimation = () => {
     animateThrow(rightHand, 1, 13, `${handHeight - 1}px`, `${handTop + 1}px`)
     animateThrow(rightHand, 14, 14, '2px', '0')
     animateThrow(rightHand, 17, 28, `${handHeight + 1}px`, `${handTop + 0.08}px`)
-    animateThrow(rightHand, 45, 45, '', '')
-    if ( getThrowCounter() === 45 ) throwable.style.top = ''
+    animateThrow(rightHand, 29, 29, '', '')
+    if ( getThrowCounter() === 29 ) throwable.style.top = ''
     if ( getThrowCounter() > 0 && getThrowCounter() <= 28 ) throwable.style.top = `${throwableTop + 1}px`
-    if ( getThrowCounter() === 60 ) setThrowCounter(0)
+    if ( getThrowCounter() === 30 ) setThrowCounter(0)
 }
 
 const animateThrow = (hand, start, end, height, top) => {
     if ( !( getThrowCounter() >= start && getThrowCounter() <= end ) ) return
     hand.style.height = height
     hand.style.top = top
+}
+
+const throwItem = () => {
+    if ( getThrowCounter() !== 28 ) return 
+    const { srcX, srcY } = getSourceCoordinates()
+    const { destX, destY } = getDestinationCoordinates()
+    const diffY = destY - srcY
+    const diffX = destX - srcX
+    const slope = Math.abs(diffY / diffX)
+    const { speedX, speedY } = calculateBulletSpeed(getPlayerAimAngle(), slope, diffY, diffX, 2)
+    const item = createAndAddClass('img', 'throwable-item')
+    item.src = `/assets/images/${equipped.name}.png`
+    item.style.left = `${srcX}px`
+    item.style.top = `${srcY}px`
+    addAttribute(item, 'speed-x', speedX)
+    addAttribute(item, 'speed-y', speedY)
+    getCurrentRoomThrowables().push(item)
+    getCurrentRoom().append(item)
+}
+
+const getSourceCoordinates = () => {
+    const playerX = getPlayer().getBoundingClientRect().x
+    const playerY = getPlayer().getBoundingClientRect().y
+    const throwable = getPlayer().firstElementChild.firstElementChild.children[3].children[1]
+    const throwableX = throwable.getBoundingClientRect().x
+    const throwableY = throwable.getBoundingClientRect().y
+    const diffX = throwableX - playerX
+    const diffY = throwableY - playerY
+    const srcX = ( getPlayerX() - getRoomLeft() ) + diffX
+    const srcY = ( getPlayerY() - getRoomTop() ) + diffY
+    return { srcX, srcY }
+}
+
+const getDestinationCoordinates = () => {
+    const playerX = getPlayer().getBoundingClientRect().x
+    const playerY = getPlayer().getBoundingClientRect().y
+    const target = getPlayer().firstElementChild.firstElementChild.children[3].children[2]
+    const targetX = target.getBoundingClientRect().x
+    const targetY = target.getBoundingClientRect().y
+    const diffX = targetX - playerX
+    const diffY = targetY - playerY
+    const destX = ( getPlayerX() - getRoomLeft() ) + diffX
+    const destY = ( getPlayerY() - getRoomTop() ) + diffY
+    return { destX, destY }
 }

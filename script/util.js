@@ -111,6 +111,25 @@ export const nextId = () => {
     return newId
 }
 
+export const calculateBulletSpeed = (deg, slope, diffX, diffY, baseSpeed) => {
+    let speedX
+    let speedY
+    if ( (deg < 45 && deg >= 0) || (deg < -135 && deg >= -180) ) {
+        speedX = diffX < 0 ? baseSpeed * (1 / slope) : -baseSpeed * (1/ slope)
+        speedY = diffY < 0 ? baseSpeed : -baseSpeed
+    } else if ( (deg >= 135 && deg < 180) || (deg < 0 && deg >= -45) ) {
+        speedX = diffX < 0 ? -baseSpeed * (1 / slope) : baseSpeed * (1/ slope)
+        speedY = diffY < 0 ? -baseSpeed : baseSpeed
+    } else if ( (deg >= 45 && deg < 90) || (deg < -90 && deg >= -135) ) {
+        speedX = diffX < 0 ? baseSpeed : -baseSpeed
+        speedY = diffY < 0 ? baseSpeed * slope : -baseSpeed * slope
+    } else if ( (deg >= 90 && deg < 135) || (deg < -45 && deg >= -90) ) {
+        speedX = diffX < 0 ? -baseSpeed : baseSpeed
+        speedY = diffY < 0 ? -baseSpeed * slope : baseSpeed * slope
+    }
+    return { speedX, speedY }
+}
+
 export const addFireEffect = () => {
     const fire = document.createElement('img')
     addClass(fire, 'fire')
@@ -134,4 +153,4 @@ export const getEquippedSpec = (equipped, spec) =>
     getThrowableSpec(equipped.name, spec) : 
     getStat(equipped.name, spec, equipped[spec+'lvl'])
 
-export const isThrowing = () => getThrowCounter() > 0    
+export const isThrowing = () => getThrowCounter() > 0
