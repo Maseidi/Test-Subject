@@ -8,7 +8,7 @@ import { heal, damagePlayer } from './player-health.js'
 import { removeWeapon, renderWeapon } from './weapon-loader.js'
 import { renderUi, renderWeaponUi, quitPage } from './user-interface.js'
 import { getGrabBar, getPauseContainer, getPlayer, getUiEl } from './elements.js'
-import { addAttribute, addClass, angleOfTwoPoints, getEquippedSpec, getProperty, isMoving, isThrowing, removeClass } from './util.js'
+import { addAttribute, addClass, angleOf2Points, getEquippedSpec, getProperty, isMoving, isThrowing, removeClass } from './util.js'
 import { equippedItem, pickupDrop, removeInventory, renderInventory } from './inventory.js'
 import { 
     getAimMode,
@@ -338,7 +338,7 @@ const stopWalkingAnimation = () => {
 const aimAngle = (event) => {
     manageDragItem(event)
     if ( getPause() ) return
-    const angle = angleOfTwoPoints(
+    const angle = angleOf2Points(
             getPlayer().getBoundingClientRect().x + 17, 
             getPlayer().getBoundingClientRect().y + 17,
             event.clientX,

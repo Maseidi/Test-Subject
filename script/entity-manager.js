@@ -183,7 +183,43 @@ const manageThrowables = () => {
         const y = getProperty(throwable, 'top', 'px')
         const speedX = Number(throwable.getAttribute('speed-x'))
         const speedY = Number(throwable.getAttribute('speed-y'))
+        const diffX = Number(throwable.getAttribute('diff-x'))
+        const diffY = Number(throwable.getAttribute('diff-y'))
+        const distance = Number(throwable.getAttribute('distance'))
+        const displacement = Math.sqrt(Math.pow(speedX * diffY / diffX, 2) + Math.pow(speedY * diffX / diffY, 2))
+        const newDistance = distance + displacement
+        if ( newDistance >= 300 ) continue
+        addAttribute(throwable, 'distance', newDistance)
         throwable.style.left = `${x + speedX}px`
         throwable.style.top = `${y + speedY}px`
+        wallIntersection(throwable, speedX, speedY)
     }
+}
+
+const wallIntersection = (throwable, speedX, speedY) => {
+    const walls = Array.from(getCurrentRoomSolid())
+        .filter(solid => !containsClass(solid, 'enemy-collider') && !containsClass(solid, 'tracker-component'))
+    for ( const wall of walls ) {
+        const stateX = speedX < 0 ? 10 : 20
+        const stateY = speedY < 0 ? 1 : 2  
+        switch( stateX + stateY ) {
+            case 11: 
+                updateSpeed(throwable, wall, throwable.children[2], throwable.children[1], speedX, speedY)
+                break
+            case 12:
+                updateSpeed(throwable, wall, throwable.children[2], throwable.children[4], speedX, speedY)
+                break
+            case 21:
+                updateSpeed(throwable, wall, throwable.children[3], throwable.children[1], speedX, speedY)
+                break
+            case 22:
+                updateSpeed(throwable, wall, throwable.children[3], throwable.children[4], speedX, speedY)
+                break
+        }
+    }    
+}
+
+const updateSpeed = (throwable, wall, colliderX, colliderY, speedX, speedY) => {
+    if ( collide(colliderX, wall, 0) ) addAttribute(throwable, 'speed-x', -speedX)
+    else if ( collide(colliderY, wall, 0) ) addAttribute(throwable, 'speed-y', -speedY)
 }

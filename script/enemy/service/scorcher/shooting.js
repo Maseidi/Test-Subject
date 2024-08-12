@@ -4,7 +4,7 @@ import { getPlayerX, getPlayerY, getRoomLeft, getRoomTop } from '../../../variab
 import { 
     addAttribute,
     addFireEffect,
-    angleOfTwoPoints,
+    angleOf2Points,
     calculateBulletSpeed,
     createAndAddClass,
     getProperty } from '../../../util.js'
@@ -38,7 +38,7 @@ export class ScorcherShootingService extends RangerShootingService {
             y: getProperty(this.enemy.htmlTag, 'top', 'px') + 18.5 
         }
         const { x: destX, y: destY } = { x: getPlayerX() - getRoomLeft() + 17, y: getPlayerY() - getRoomTop() + 17 }
-        const deg = angleOfTwoPoints(srcX, srcY, destX, destY)
+        const deg = angleOf2Points(srcX, srcY, destX, destY)
         const diffY = destY - srcY
         const diffX = destX - srcX
         const slope = Math.abs(diffY / diffX)

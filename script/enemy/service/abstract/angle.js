@@ -1,5 +1,5 @@
 import { getPlayer } from '../../../elements.js'
-import { angleOfTwoPoints } from '../../../util.js'
+import { angleOf2Points } from '../../../util.js'
 
 export class AbstractAngleService {
     constructor(enemy) {
@@ -43,7 +43,7 @@ export class AbstractAngleService {
     angle2Target(target) {
         const enemyBound = this.enemy.htmlTag.getBoundingClientRect()
         const targetBound = target.getBoundingClientRect()
-        return angleOfTwoPoints(enemyBound.x + enemyBound.width / 2, enemyBound.y + enemyBound.height / 2, 
+        return angleOf2Points(enemyBound.x + enemyBound.width / 2, enemyBound.y + enemyBound.height / 2, 
                                 targetBound.x + targetBound.width / 2, targetBound.y + targetBound.height / 2)
     }
 

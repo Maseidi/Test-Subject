@@ -19,7 +19,7 @@ export const collide = (first, second, offset) => {
         firstBound.left < secondBound.right + offset
 }
 
-export const angleOfTwoPoints = (x1, y1, x2, y2) => {
+export const angleOf2Points = (x1, y1, x2, y2) => {
     let sign2 = x1 > x2 ? 1 : -1
     let sign1 = y1 > y2 ? sign2 : -sign2
     return angleFormula(sign1, sign2, x1, y1, x2, y2)

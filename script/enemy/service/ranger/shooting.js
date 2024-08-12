@@ -5,7 +5,7 @@ import { getGrabbed, getPlayerX, getPlayerY, getRoomLeft, getRoomTop } from '../
 import { 
     addAttribute,
     addClass,
-    angleOfTwoPoints,
+    angleOf2Points,
     calculateBulletSpeed,
     createAndAddClass,
     getProperty,
@@ -71,7 +71,7 @@ export class RangerShootingService {
             y: getProperty(this.enemy.htmlTag, 'top', 'px') + 16 
         }
         const { x: destX, y: destY } = { x: getPlayerX() - getRoomLeft() + 17, y: getPlayerY() - getRoomTop() + 17 }
-        const deg = angleOfTwoPoints(srcX, srcY, destX, destY)
+        const deg = angleOf2Points(srcX, srcY, destX, destY)
         const diffY = destY - srcY
         const diffX = destX - srcX
         const slope = Math.abs(diffY / diffX)

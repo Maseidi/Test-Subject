@@ -185,10 +185,44 @@
   position: absolute;
 }
 
+.throwable-image {
+  width: 100%;
+}
+
 .throw-target {
   width: 10px;
   height: 10px;
   position: absolute;
   top: 300px;
   left: 22px;
+}
+
+.top-collider, .right-collider, .left-collider, .bottom-collider {
+  width: 2px;
+  height: 2px;
+  position: absolute;
+}
+
+.top-collider {
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.bottom-collider {
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.left-collider {
+  right: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.right-collider {
+  left: 100%;
+  top: 50%;
+  transform: translateY(-50%);
 }

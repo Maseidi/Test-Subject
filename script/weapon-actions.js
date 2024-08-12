@@ -1,6 +1,6 @@
 import { getStat, getWeaponSpecs } from './weapon-specs.js'
 import { dropLoot } from './loot-manager.js'
-import { addAttribute, calculateBulletSpeed, collide, containsClass, createAndAddClass, getEquippedSpec, getProperty, isThrowing } from './util.js'
+import { addAttribute, angleOf2Points, appendAll, calculateBulletSpeed, collide, containsClass, createAndAddClass, getEquippedSpec, getProperty, isThrowing } from './util.js'
 import { removeUi, renderUi } from './user-interface.js'
 import { TRACKER } from './enemy/util/enemy-constants.js'
 import { getCurrentRoom, getCurrentRoomEnemies, getCurrentRoomSolid, getCurrentRoomThrowables, getPlayer } from './elements.js'
@@ -183,7 +183,7 @@ const throwAnimation = () => {
     animateThrow(rightHand, 29, 29, '', '')
     if ( getThrowCounter() === 29 ) throwable.style.top = ''
     if ( getThrowCounter() > 0 && getThrowCounter() <= 28 ) throwable.style.top = `${throwableTop + 1}px`
-    if ( getThrowCounter() === 30 ) setThrowCounter(0)
+    if ( getThrowCounter() === 60 ) setThrowCounter(0)
 }
 
 const animateThrow = (hand, start, end, height, top) => {
@@ -198,14 +198,21 @@ const throwItem = () => {
     const { destX, destY } = getDestinationCoordinates()
     const diffY = destY - srcY
     const diffX = destX - srcX
+    const deg = angleOf2Points(srcX, srcY, destX, destY)
     const slope = Math.abs(diffY / diffX)
-    const { speedX, speedY } = calculateBulletSpeed(getPlayerAimAngle(), slope, diffY, diffX, 2)
-    const item = createAndAddClass('img', 'throwable-item')
-    item.src = `/assets/images/${equipped.name}.png`
+    const { speedX, speedY } = calculateBulletSpeed(deg, slope, diffY, diffX, 5)
+    const item = createAndAddClass('div', 'throwable-item')
+    const image = createAndAddClass('img', 'throwable-image')
+    image.src = `/assets/images/${equipped.name}.png`
     item.style.left = `${srcX}px`
     item.style.top = `${srcY}px`
+    item.append(image)
+    appendColliders(item)
     addAttribute(item, 'speed-x', speedX)
     addAttribute(item, 'speed-y', speedY)
+    addAttribute(item, 'distance', 0)
+    addAttribute(item, 'diff-x', diffX)
+    addAttribute(item, 'diff-y', diffY)
     getCurrentRoomThrowables().push(item)
     getCurrentRoom().append(item)
 }
@@ -234,4 +241,12 @@ const getDestinationCoordinates = () => {
     const destX = ( getPlayerX() - getRoomLeft() ) + diffX
     const destY = ( getPlayerY() - getRoomTop() ) + diffY
     return { destX, destY }
+}
+
+const appendColliders = (throwable) => {
+    const top = createAndAddClass('div', 'top-collider')
+    const left = createAndAddClass('div', 'left-collider')
+    const right = createAndAddClass('div', 'right-collider')
+    const bottom = createAndAddClass('div', 'bottom-collider')
+    appendAll(throwable, top, left, right, bottom)
 }
