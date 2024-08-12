@@ -1,7 +1,7 @@
 import { getPlayer } from './elements.js'
+import { equippedItem } from './inventory.js'
 import { getStat, getWeaponSpecs } from './weapon-specs.js'
 import { containsClass, createAndAddClass } from './util.js'
-import { equippedItem } from './inventory.js'
 
 export const renderWeapon = () => {
     const equippedWeapon = equippedItem()

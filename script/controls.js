@@ -1,15 +1,25 @@
 import { renderStash } from './stash.js'
-import { getStat, getWeaponSpecs } from './weapon-specs.js'
 import { dropLoot } from './loot-manager.js'
 import { centralizePlayer } from './startup.js'
 import { setupReload } from './weapon-actions.js'
 import { renderStore } from './vending-machine.js'
+import { getWeaponSpecs } from './weapon-specs.js'
 import { heal, damagePlayer } from './player-health.js'
+import { getThrowableSpecs } from './throwable-specs.js'
 import { removeWeapon, renderWeapon } from './weapon-loader.js'
+import { removeThrowable, renderThrowable } from './throwable-loader.js'
 import { renderUi, renderWeaponUi, quitPage } from './user-interface.js'
 import { getGrabBar, getPauseContainer, getPlayer, getUiEl } from './elements.js'
-import { addAttribute, addClass, angleOf2Points, getEquippedSpec, getProperty, isMoving, isThrowing, removeClass } from './util.js'
 import { equippedItem, pickupDrop, removeInventory, renderInventory } from './inventory.js'
+import { 
+    addAttribute,
+    addClass,
+    angleOf2Points,
+    getEquippedSpec,
+    getProperty,
+    isMoving,
+    isThrowing,
+    removeClass } from './util.js'
 import { 
     getAimMode,
     getDraggedItem,
@@ -38,8 +48,6 @@ import {
     setShootPressed,
     setSprintPressed,
     setUpPressed } from './variables.js'
-import { getThrowableSpec, getThrowableSpecs } from './throwable-specs.js'
-import { removeThrowable, renderThrowable } from './throwable-loader.js'
 
 export const control = () => {
     onkeydown = (e) => {

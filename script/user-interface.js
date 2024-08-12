@@ -1,9 +1,15 @@
 import { managePause } from './controls.js'
+import { getThrowableSpecs } from './throwable-specs.js'
 import { addClass, appendAll, createAndAddClass } from './util.js'
 import { getPauseContainer, getUiEl, setUiEl } from './elements.js'
 import { calculateThrowableAmount, calculateTotalAmmo, equippedItem } from './inventory.js'
-import { getDraggedItem, getEquippedWeapon, getHealth, getMaxHealth, getMaxStamina, getStamina } from './variables.js'
-import { getThrowableSpecs } from './throwable-specs.js'
+import { 
+    getDraggedItem,
+    getEquippedWeapon,
+    getHealth,
+    getMaxHealth,
+    getMaxStamina,
+    getStamina } from './variables.js'
 
 export const renderUi = () => {
     renderBackground()

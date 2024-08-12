@@ -2,6 +2,7 @@ import { renderQuit } from './user-interface.js'
 import { getPauseContainer } from './elements.js'
 import { getIntObj, setIntObj } from './variables.js'
 import { 
+    addAllAttributes,
     addAttribute,
     addClass,
     appendAll,
@@ -78,9 +79,12 @@ const addMoveEvent = (e) => {
 
 const createMoveComponent = (itemObj) => {
     const move = createAndAddClass('div', `move-${itemObj.type}`)
-    addAttribute(move, 'row', itemObj.row)
-    addAttribute(move, 'column', itemObj.column)
-    addAttribute(move, 'amount', itemObj.amount)
+    addAllAttributes(
+        move, 
+        'row', itemObj.row, 
+        'column', itemObj.column, 
+        'amount', itemObj.amount
+    )
     return move
 }
 

@@ -1,5 +1,5 @@
+import { isLowHealth, isMoving } from './util.js'
 import { getMapEl, getPlayer } from './elements.js'
-import { checkLowHealth, isMoving } from './util.js'
 import { 
     getAimMode,
     getAllowMove,
@@ -44,7 +44,7 @@ const normalizeSpeed = () => {
     let speed
     speed = getSprint() ? 2 * getPlayerSpeed() : getPlayerSpeed()
     speed = getAimMode() ? speed / 3 : speed
-    speed = !getAimMode() && checkLowHealth() ? speed / 1.25 : speed
+    speed = !getAimMode() && isLowHealth() ? speed / 1.25 : speed
     if ((getUpPressed() && getLeftPressed()) || (getUpPressed() && getRightPressed()) || 
         (getDownPressed() && getLeftPressed()) || (getDownPressed() && getRightPressed()) ) {
             speed /= 1.41

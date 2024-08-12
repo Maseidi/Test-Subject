@@ -1,3 +1,5 @@
+import { getStat } from './weapon-specs.js'
+import { getThrowableSpec, getThrowableSpecs } from './throwable-specs.js'
 import { 
     getDownPressed,
     getEntityId,
@@ -7,8 +9,6 @@ import {
     getThrowCounter,
     getUpPressed,
     setEntityId } from './variables.js'
-import { getStat } from './weapon-specs.js'
-import { getThrowableSpec, getThrowableSpecs } from './throwable-specs.js'
 
 export const collide = (first, second, offset) => {
     const firstBound = first.getBoundingClientRect()
@@ -52,6 +52,11 @@ export const addAttribute = (elem, name, value) => {
     elem.setAttributeNode(attr)
 }
 
+export const addAllAttributes = (...args) => {
+    const elem = args[0]
+    for ( let i = 1; i < args.length; i += 2 ) addAttribute(elem, args[i], args[i+1])
+}
+
 export const isNullOrUndefined = (input) => input === null || input === undefined
 
 export const objectToElement = (obj) => {
@@ -91,7 +96,7 @@ export const createAndAddClass = (type, ...classNames) => {
 
 export const distance = (x1, y1, x2, y2) =>  Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2))
 
-export const checkLowHealth = () => getHealth() <= 20
+export const isLowHealth = () => getHealth() <= 20
 
 export const ANGLE_STATE_MAP = new Map([
     [0, 0],

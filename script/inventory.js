@@ -1,10 +1,12 @@
-import { useAntidote, useBandage } from './player-health.js'
 import { renderStats } from './weapon-examine.js'
+import { getWeaponSpecs } from './weapon-specs.js'
 import { interactables } from './interactables.js'
 import { renderInteractable } from './room-loader.js'
-import { getWeaponSpecs } from './weapon-specs.js'
+import { getThrowableSpecs } from './throwable-specs.js'
+import { useAntidote, useBandage } from './player-health.js'
 import { removeWeapon, renderWeapon } from './weapon-loader.js'
 import { removeUi, renderQuit, renderUi } from './user-interface.js'
+import { removeThrowable, renderThrowable } from './throwable-loader.js'
 import { getCurrentRoom, getPauseContainer, getPlayer } from './elements.js'
 import { 
     addAttribute,
@@ -16,7 +18,8 @@ import {
     appendAll, 
     createAndAddClass,
     nextId, 
-    getEquippedSpec} from './util.js'
+    getEquippedSpec,
+    addAllAttributes} from './util.js'
 import { 
     getAimMode,
     getCurrentRoomId,
@@ -38,8 +41,6 @@ import {
     setShootCounter,
     getShooting, 
     getPause } from './variables.js'
-import { getThrowableSpecs } from './throwable-specs.js'
-import { removeThrowable, renderThrowable } from './throwable-loader.js'
 
 export const MAX_PACKSIZE = {
     bandage: 3,
@@ -66,7 +67,7 @@ let inventory = [
 
 export const getInventory = () => inventory
 
-export const pickupDrop = () => {
+export const pickupDrop = () => {    
     searchPack()
     searchEmpty()
     checkSpecialScenarios()
@@ -155,7 +156,8 @@ export const calculateThrowableAmount = (throwable) => countItem(throwable.name)
 
 export const calculateTotalCoins = () => countItem('coin')
 
-const countItem = (name) => inventory.flat().filter(item => item && item.name === name).reduce((a, b) => a + b.amount, 0)
+const countItem = (name) => 
+    inventory.flat().filter(item => item && item.name === name).reduce((a, b) => a + b.amount, 0)
 
 export const useInventoryResource = (name, reduce) => {
     for ( let i = inventory.length - 1; i >= 0; i-- )
@@ -567,8 +569,11 @@ const shortcut = (item) => {
     const weaponWheel = getPauseContainer().firstElementChild.children[1].firstElementChild
     Array.from(weaponWheel.children).forEach((slot, index) => {
         addClass(slot, 'selectable-slot')
-        addAttribute(slot, 'selected-weapon', item.id)
-        addAttribute(slot, 'slot-num', index)
+        addAllAttributes(
+            slot, 
+            'selected-weapon', item.id, 
+            'slot-num', index
+        )
         slot.addEventListener('click', selectAsSlot)
     })
 }
@@ -650,10 +655,12 @@ const renderWeaponWheel = () => {
         const image = document.createElement('img')
         const slotNum = document.createElement('p')
         let name = inventory.flat().find(item => item && item.id === getWeaponWheel()[4-slots])?.name
-        if ( !name ) name = getDraggedItem()?.getAttribute('id') === getWeaponWheel()[4 - slots] + '' ? 
+        if ( !name ) 
+            name = getDraggedItem()?.getAttribute('id') === getWeaponWheel()[4 - slots] + '' ? 
             getDraggedItem()?.getAttribute('name') : null
         slotNum.textContent = 
-            getEquippedWeapon() && 4 - slots === getWeaponWheel().findIndex(x => x === getEquippedWeapon()) ? 'E' : `${5 - slots}`
+            getEquippedWeapon() && 4 - slots === getWeaponWheel().findIndex(x => x === getEquippedWeapon()) ? 
+            'E' : `${5 - slots}`
         if ( name ) {
             image.src = `../assets/images/${name}.png`
             slot.append(image)

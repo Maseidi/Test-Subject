@@ -2,7 +2,7 @@ import { RangerShootingService } from '../ranger/shooting.js'
 import { getCurrentRoom, getCurrentRoomBullets } from '../../../elements.js'
 import { getPlayerX, getPlayerY, getRoomLeft, getRoomTop } from '../../../variables.js'
 import { 
-    addAttribute,
+    addAllAttributes,
     addFireEffect,
     angleOf2Points,
     calculateBulletSpeed,
@@ -44,9 +44,12 @@ export class ScorcherShootingService extends RangerShootingService {
         const slope = Math.abs(diffY / diffX)
         const { speedX, speedY } = calculateBulletSpeed(deg, slope, diffY, diffX, 10)
         const bullet = createAndAddClass('div', 'scorcher-bullet')
-        addAttribute(bullet, 'speed-x', speedX)
-        addAttribute(bullet, 'speed-y', speedY)
-        addAttribute(bullet, 'damage', this.enemy.damage)
+        addAllAttributes(
+            bullet, 
+            'speed-x', speedX, 
+            'speed-y', speedY, 
+            'damage', this.enemy.damage
+        )
         bullet.style.left = `${srcX}px`
         bullet.style.top = `${srcY}px`
         bullet.style.backgroundColor = `crimson`

@@ -3,7 +3,7 @@ import { getPlayer } from '../../../elements.js'
 import { dropLoot } from '../../../loot-manager.js'
 import { getCurrentRoomId } from '../../../variables.js'
 import { getWeaponSpec, getStat } from '../../../weapon-specs.js'
-import { addAttribute, addClass, removeClass } from '../../../util.js'
+import { addAllAttributes, addClass, removeClass } from '../../../util.js'
 
 export class AbstractInjuryService {
     constructor(enemy) {
@@ -18,8 +18,11 @@ export class AbstractInjuryService {
         const newHealth = enemyHealth - damage
         this.enemy.health = newHealth
         if ( newHealth <= 0 ) {
-            addAttribute(this.enemy.htmlTag, 'left', Number(this.enemy.htmlTag.style.left.replace('px', '')))
-            addAttribute(this.enemy.htmlTag, 'top', Number(this.enemy.htmlTag.style.top.replace('px', '')))
+            addAllAttributes(
+                this.enemy.htmlTag, 
+                'left', Number(this.enemy.htmlTag.style.left.replace('px', '')), 
+                'top', Number(this.enemy.htmlTag.style.top.replace('px', ''))
+            )
             dropLoot(this.enemy.htmlTag)
             const enemiesCopy = enemies.get(getCurrentRoomId())
             enemiesCopy[this.enemy.index].health = 0

@@ -3,7 +3,15 @@ import { loaders } from './loaders.js'
 import { loadCurrentRoom } from './room-loader.js'
 import { CHASE, NO_OFFENCE } from './enemy/util/enemy-constants.js'
 import { damagePlayer, poisonPlayer, setPlayer2Fire } from './player-health.js'
-import { addAttribute, collide, containsClass, getProperty, removeClass } from './util.js'
+import { 
+    addAllAttributes,
+    addAttribute,
+    calculateBulletSpeed,
+    collide,
+    containsClass,
+    elementToObject,
+    getProperty,
+    removeClass } from './util.js'
 import { 
     getCurrentRoom,
     getCurrentRoomEnemies,
@@ -17,7 +25,8 @@ import {
     setCurrentRoomBullets,
     setCurrentRoomFlames,
     setCurrentRoomPoisons,
-    getCurrentRoomThrowables} from './elements.js'
+    getCurrentRoomThrowables,
+    setCurrentRoomThrowables} from './elements.js'
 import {
     getCurrentRoomId,
     getGrabbed,
@@ -31,6 +40,7 @@ import {
     setNoOffenseCounter,
     setRoomLeft,
     setRoomTop} from './variables.js'
+import { equippedItem } from './inventory.js'
 
 export const manageEntities = () => {
     manageSolidObjects()
@@ -178,22 +188,68 @@ const manageItems = (getItems, setItems, time, harmPlayer) => {
 }
 
 const manageThrowables = () => {
+    const throwables2Remove = new Map([])
     for ( const throwable of getCurrentRoomThrowables() ) {
-        const x = getProperty(throwable, 'left', 'px')
-        const y = getProperty(throwable, 'top', 'px')
-        const speedX = Number(throwable.getAttribute('speed-x'))
-        const speedY = Number(throwable.getAttribute('speed-y'))
-        const diffX = Number(throwable.getAttribute('diff-x'))
-        const diffY = Number(throwable.getAttribute('diff-y'))
-        const distance = Number(throwable.getAttribute('distance'))
-        const displacement = Math.sqrt(Math.pow(speedX * diffY / diffX, 2) + Math.pow(speedY * diffX / diffY, 2))
-        const newDistance = distance + displacement
-        if ( newDistance >= 300 ) continue
-        addAttribute(throwable, 'distance', newDistance)
-        throwable.style.left = `${x + speedX}px`
-        throwable.style.top = `${y + speedY}px`
+        const throwableObj = elementToObject(throwable)
+        let { 
+            deg,
+            time,
+            name,
+            'base-speed': baseSpeed,
+            'speed-x': speedX,
+            'speed-y': speedY,
+            'diff-x': diffX,
+            'diff-y': diffY,
+            'acc-counter': accCounter } = throwableObj
+        rotateThrowable(throwable, baseSpeed)
+        handleInteractablility(throwable, time, name, throwables2Remove)
+        addAttribute(throwable, 'acc-counter', accCounter + 1)
+        if ( accCounter === 15 && baseSpeed - 2 >= 0 ) {
+            const newSpeed = calculateBulletSpeed(deg, diffY / diffX, diffX, diffY, baseSpeed - 2)
+            speedX = Math.sign(speedX) * Math.abs(newSpeed.speedX)
+            speedY = Math.sign(speedY) * Math.abs(newSpeed.speedY)
+            addAllAttributes(
+                throwable,
+                'acc-counter', 0, 
+                'speed-x', speedX, 
+                'speed-y', speedY, 
+                'base-speed', baseSpeed - 2
+            )
+        }
+        throwable.style.left = `${getProperty(throwable, 'left', 'px') + speedX}px`
+        throwable.style.top = `${getProperty(throwable, 'top', 'px') + speedY}px`
         wallIntersection(throwable, speedX, speedY)
     }
+    setCurrentRoomThrowables(getCurrentRoomThrowables().filter(throwable => !throwables2Remove.get(throwable)))
+}
+
+const rotateThrowable = (throwable, baseSpeed) => {
+    const angle = getProperty(throwable.firstElementChild, 'transform', 'rotateZ(', 'deg)') || 0
+    let newAngle = Number(angle) + ( Math.floor(Math.random() * baseSpeed * 10) )
+    if ( newAngle > 360 ) newAngle = 0
+    throwable.firstElementChild.style.transform = `rotateZ(${newAngle}deg)`
+}
+
+const explodeGrenade = () => {
+    console.log('explode grenade');
+}
+
+const blindEnemies = () => {
+    console.log('blind enemies');
+}
+
+const THROWABLE_FUNCTIONALITY = new Map([
+    ['grenade', explodeGrenade],
+    ['flashbang', blindEnemies]
+])
+
+const handleInteractablility = (throwable, time, name, throwables2Remove) => {
+    if ( time === 300 ) {
+        throwable.remove()
+        throwables2Remove.set(throwable, true)
+        THROWABLE_FUNCTIONALITY.get(name)()
+    }
+    addAttribute(throwable, 'time', time + 1)    
 }
 
 const wallIntersection = (throwable, speedX, speedY) => {
@@ -220,6 +276,12 @@ const wallIntersection = (throwable, speedX, speedY) => {
 }
 
 const updateSpeed = (throwable, wall, colliderX, colliderY, speedX, speedY) => {
-    if ( collide(colliderX, wall, 0) ) addAttribute(throwable, 'speed-x', -speedX)
-    else if ( collide(colliderY, wall, 0) ) addAttribute(throwable, 'speed-y', -speedY)
+    if ( collide(colliderX, wall, 0) ) {
+        addAttribute(throwable, 'speed-x', -speedX)
+        throwable.firstElementChild.style.transform = `scale(-1, 1)`
+    }
+    else if ( collide(colliderY, wall, 0) ) {
+        addAttribute(throwable, 'speed-y', -speedY)
+        throwable.firstElementChild.style.transform = `scale(1, -1)`
+    }
 }

@@ -1,19 +1,38 @@
-import { getStat, getWeaponSpecs } from './weapon-specs.js'
 import { dropLoot } from './loot-manager.js'
-import { addAttribute, angleOf2Points, appendAll, calculateBulletSpeed, collide, containsClass, createAndAddClass, getEquippedSpec, getProperty, isThrowing } from './util.js'
+import { removeThrowable } from './throwable-loader.js'
 import { removeUi, renderUi } from './user-interface.js'
+import { getThrowableSpecs } from './throwable-specs.js'
 import { TRACKER } from './enemy/util/enemy-constants.js'
-import { getCurrentRoom, getCurrentRoomEnemies, getCurrentRoomSolid, getCurrentRoomThrowables, getPlayer } from './elements.js'
+import { getStat, getWeaponSpecs } from './weapon-specs.js'
 import { 
     calculateTotalAmmo,
     equippedItem,
     updateInventoryWeaponMag,
     useInventoryResource } from './inventory.js'
 import { 
+    getCurrentRoom,
+    getCurrentRoomEnemies,
+    getCurrentRoomSolid,
+    getCurrentRoomThrowables,
+    getPlayer } from './elements.js'
+import { 
+    addAllAttributes,
+    addClass,
+    angleOf2Points,
+    appendAll,
+    calculateBulletSpeed,
+    collide,
+    containsClass,
+    createAndAddClass,
+    getEquippedSpec,
+    getProperty,
+    isMoving,
+    isThrowing,
+    removeClass } from './util.js'
+import { 
     getAimMode,
     getEquippedWeapon,
     getNoOffenseCounter,
-    getPlayerAimAngle,
     getPlayerX,
     getPlayerY,
     getReloading,
@@ -24,12 +43,15 @@ import {
     getShooting,
     getTarget,
     getThrowCounter,
+    getWeaponWheel,
+    setAimMode,
+    setEquippedWeapon,
     setReloading,
     setShootCounter,
     setShooting,
     setTarget, 
-    setThrowCounter} from './variables.js'
-import { getThrowableSpecs } from './throwable-specs.js'
+    setThrowCounter,
+    setWeaponWheel} from './variables.js'
 
 const EMPTY_WEAPON = new Audio('../assets/audio/empty-weapon.mp3')
 
@@ -200,7 +222,7 @@ const throwItem = () => {
     const diffX = destX - srcX
     const deg = angleOf2Points(srcX, srcY, destX, destY)
     const slope = Math.abs(diffY / diffX)
-    const { speedX, speedY } = calculateBulletSpeed(deg, slope, diffY, diffX, 5)
+    const { speedX, speedY } = calculateBulletSpeed(deg, slope, diffY, diffX, 8)
     const item = createAndAddClass('div', 'throwable-item')
     const image = createAndAddClass('img', 'throwable-image')
     image.src = `/assets/images/${equipped.name}.png`
@@ -208,11 +230,20 @@ const throwItem = () => {
     item.style.top = `${srcY}px`
     item.append(image)
     appendColliders(item)
-    addAttribute(item, 'speed-x', speedX)
-    addAttribute(item, 'speed-y', speedY)
-    addAttribute(item, 'distance', 0)
-    addAttribute(item, 'diff-x', diffX)
-    addAttribute(item, 'diff-y', diffY)
+    addAllAttributes(
+        item,
+        'name', equipped.name,
+        'speed-x', speedX,
+        'speed-y', speedY,
+        'distance', 0,
+        'diff-x', diffX,
+        'diff-y', diffY,
+        'deg', deg,
+        'base-speed', 8,
+        'acc-counter', 0,
+        'time', 0
+    )
+    updateInventoryItem()
     getCurrentRoomThrowables().push(item)
     getCurrentRoom().append(item)
 }
@@ -249,4 +280,26 @@ const appendColliders = (throwable) => {
     const right = createAndAddClass('div', 'right-collider')
     const bottom = createAndAddClass('div', 'bottom-collider')
     appendAll(throwable, top, left, right, bottom)
+}
+
+const updateInventoryItem = () => {
+    unequipThrowable()
+    useInventoryResource(equipped.name, 1)
+    removeUi()
+    renderUi()
+}
+
+const unequipThrowable = () => {
+    if ( equipped.amount !== 1 ) return
+    setAimMode(false)
+    removeThrowable()
+    setThrowCounter(0)
+    setShooting(false)
+    setEquippedWeapon(null)
+    removeClass(getPlayer(), 'throwable-aim')
+    if (isMoving()) addClass(getPlayer(), 'walk')
+    const rightHand = getPlayer().firstElementChild.firstElementChild.children[2]
+    rightHand.style.top = ''
+    rightHand.style.height = ''
+    setWeaponWheel(getWeaponWheel().map(weapon => weapon === equipped.id ? null : weapon))
 }

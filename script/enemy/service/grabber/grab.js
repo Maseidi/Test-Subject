@@ -2,7 +2,7 @@ import { damagePlayer } from '../../../player-health.js'
 import { removeWeapon } from '../../../weapon-loader.js'
 import { manageAimModeAngle } from '../../../player-angle.js'
 import { getCurrentRoomEnemies, getGrabBar, getPauseContainer, getPlayer, setGrabBar } from '../../../elements.js'
-import { addAttribute, addClass, appendAll, createAndAddClass, getProperty, isMoving, removeClass } from '../../../util.js'
+import { addAllAttributes, addAttribute, addClass, appendAll, createAndAddClass, getProperty, isMoving, removeClass } from '../../../util.js'
 import { GO_FOR_RANGED, GRAB, INVESTIGATE, NO_OFFENCE, RANGER, STAND_AND_WATCH, TRACKER } from '../../util/enemy-constants.js'
 import { 
     getPlayerAngle,
@@ -95,9 +95,12 @@ export class GrabberGrabService {
         button.textContent = 'f'
         appendAll(messageContainer, message, button)
         appendAll(grabBar, firstElem, secondElem, thirdElem, messageContainer, slider)
-        addAttribute(grabBar, 'first', first)
-        addAttribute(grabBar, 'second', second)
-        addAttribute(grabBar, 'third', third)
+        addAllAttributes(
+            grabBar, 
+            'first', first, 
+            'second', second, 
+            'third', third
+        )
         getPauseContainer().append(grabBar)
         setGrabBar(grabBar)
     }

@@ -57,7 +57,8 @@ export class Spiker extends AbstractEnemy {
     }
 
     handleRotation() {
-        const angle = getProperty(this.htmlTag.firstElementChild.firstElementChild, 'transform', 'rotateZ(', 'deg)') || 0
+        const angle = getProperty(this.htmlTag.firstElementChild.firstElementChild, 
+            'transform', 'rotateZ(', 'deg)') || 0
         let newAngle = Number(angle) + 5
         if ( newAngle > 360 ) newAngle = 0
         this.htmlTag.firstElementChild.firstElementChild.style.transform = `rotateZ(${newAngle}deg)`
