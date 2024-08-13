@@ -1,7 +1,7 @@
 import { rooms } from './rooms.js'
 import { loaders } from './loaders.js'
 import { loadCurrentRoom } from './room-loader.js'
-import { CHASE, NO_OFFENCE } from './enemy/util/enemy-constants.js'
+import { CHASE, GRAB, GUESS_SEARCH, LOST, NO_OFFENCE } from './enemy/util/enemy-constants.js'
 import { damagePlayer, poisonPlayer, setPlayer2Fire } from './player-health.js'
 import { 
     addAllAttributes,
@@ -9,6 +9,7 @@ import {
     calculateBulletSpeed,
     collide,
     containsClass,
+    createAndAddClass,
     elementToObject,
     getProperty,
     removeClass } from './util.js'
@@ -26,7 +27,8 @@ import {
     setCurrentRoomFlames,
     setCurrentRoomPoisons,
     getCurrentRoomThrowables,
-    setCurrentRoomThrowables} from './elements.js'
+    setCurrentRoomThrowables,
+    getMapEl} from './elements.js'
 import {
     getCurrentRoomId,
     getGrabbed,
@@ -40,7 +42,6 @@ import {
     setNoOffenseCounter,
     setRoomLeft,
     setRoomTop} from './variables.js'
-import { equippedItem } from './inventory.js'
 
 export const manageEntities = () => {
     manageSolidObjects()
@@ -124,15 +125,7 @@ const handleNoOffenceMode = () => {
 const handleEnemies = () => {
     Array.from(getCurrentRoomEnemies())
         .sort(() => Math.random() - 0.5)
-        .forEach((elem) => {
-            if ( elem.health > 0 ) {
-                elem.visionService.getWallInTheWay()
-                elem.visionService.vision2Player()
-                elem.injuryService.manageDamagedState()
-                elem.collisionService.manageCollision()
-                elem.behave()
-            }
-        })
+        .forEach(elem => elem.behave())
 }
 
 const manageBullets = () => {
@@ -235,7 +228,16 @@ const explodeGrenade = () => {
 }
 
 const blindEnemies = () => {
-    console.log('blind enemies');
+    getCurrentRoomEnemies().forEach(enemy => {
+        if ( enemy.state === GRAB ) enemy.grabService.releasePlayer()
+        enemy.destX = enemy.x
+        enemy.destY = enemy.y
+        enemy.state = GUESS_SEARCH
+        enemy.stunnedCounter = 1
+    })
+    const flashbang = createAndAddClass('div', 'flashbang')
+    getMapEl().append(flashbang)
+    setTimeout(() => flashbang.remove(), 1000)
 }
 
 const THROWABLE_FUNCTIONALITY = new Map([
@@ -244,12 +246,12 @@ const THROWABLE_FUNCTIONALITY = new Map([
 ])
 
 const handleInteractablility = (throwable, time, name, throwables2Remove) => {
-    if ( time === 300 ) {
+    if ( time === 180 ) {
         throwable.remove()
         throwables2Remove.set(throwable, true)
         THROWABLE_FUNCTIONALITY.get(name)()
     }
-    addAttribute(throwable, 'time', time + 1)    
+    addAttribute(throwable, 'time', time + 1)
 }
 
 const wallIntersection = (throwable, speedX, speedY) => {

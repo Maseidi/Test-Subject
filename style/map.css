@@ -107,3 +107,28 @@
   width: 60px;
   height: 50px;
 }
+
+@keyframes flash {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.flashbang {
+  top: 0;
+  left: 0;
+  z-index: 6;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  animation-name: flash;
+  animation-duration: 1s;
+  background-color: white;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+  animation-direction: alternate;
+  animation-timing-function: linear;
+}

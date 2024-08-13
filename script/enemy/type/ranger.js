@@ -32,7 +32,7 @@ export class Ranger extends AbstractEnemy {
         this.returnService = new NormalReturnService(this)
     }
 
-    behave() {
+    manageState() {
         this.shootingService.transferEnemy(false)
         switch ( this.state ) {
             case INVESTIGATE:

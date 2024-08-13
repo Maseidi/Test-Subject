@@ -32,6 +32,7 @@ export class AbstractInjuryService {
         this.knockEnemy(knockback)
         addClass(this.enemy.htmlTag.firstElementChild.firstElementChild, 'damaged')
         this.enemy.damagedCounter = 6
+        this.enemy.stunnedCounter = 0
     }
 
     knockEnemy(knockback) {

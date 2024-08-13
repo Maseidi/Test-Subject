@@ -34,7 +34,7 @@ export class Spiker extends AbstractEnemy {
         this.returnService = new NormalReturnService(this)
     }
 
-    behave() {
+    manageState() {
         this.handleRotation()
         switch ( this.state ) {
             case INVESTIGATE:

@@ -232,6 +232,7 @@ const defineEnemy = (elem) => {
     elem.pathFindingY = null
     elem.currentSpeed = elem.acceleration
     elem.accelerationCounter = 0
+    elem.stunnedCounter = 0
     enemy.style.left = `${elem.x}px`
     enemy.style.top = `${elem.y}px`
     return enemy

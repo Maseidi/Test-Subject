@@ -25,7 +25,7 @@ class NormalEnemy extends AbstractEnemy {
         this.returnService = new NormalReturnService(this)
     }
 
-    behave() {
+    manageState() {
         switch ( this.state ) {
             case INVESTIGATE:
                 this.investigationService.handleInvestigationState()

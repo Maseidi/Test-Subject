@@ -34,7 +34,7 @@ export class Stinger extends AbstractEnemy {
         this.grabService = new GrabberGrabService(this)
     }
 
-    behave() {
+    manageState() {
         this.shootingService.transferEnemy(false)
         switch ( this.state ) {
             case INVESTIGATE:

@@ -24,7 +24,7 @@ export class Tracker extends AbstractEnemy {
         this.guessSearchService = new TrackerGuessSearchService(this)
     }
 
-    behave() {
+    manageState() {
         switch ( this.state ) {
             case CHASE:
                 this.chaseService.handleChaseState()

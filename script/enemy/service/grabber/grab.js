@@ -1,9 +1,25 @@
 import { damagePlayer } from '../../../player-health.js'
 import { removeWeapon } from '../../../weapon-loader.js'
 import { manageAimModeAngle } from '../../../player-angle.js'
+import { removeThrowable } from '../../../throwable-loader.js'
 import { getCurrentRoomEnemies, getGrabBar, getPauseContainer, getPlayer, setGrabBar } from '../../../elements.js'
-import { addAllAttributes, addAttribute, addClass, appendAll, createAndAddClass, getProperty, isMoving, removeClass } from '../../../util.js'
-import { GO_FOR_RANGED, GRAB, INVESTIGATE, NO_OFFENCE, RANGER, STAND_AND_WATCH, TRACKER } from '../../util/enemy-constants.js'
+import { 
+    GO_FOR_RANGED,
+    GRAB,
+    INVESTIGATE,
+    NO_OFFENCE,
+    RANGER,
+    STAND_AND_WATCH,
+    TRACKER } from '../../util/enemy-constants.js'
+import { 
+    addAllAttributes,
+    addAttribute,
+    addClass,
+    appendAll,
+    createAndAddClass,
+    getProperty,
+    isMoving,
+    removeClass } from '../../../util.js'
 import { 
     getPlayerAngle,
     getSprintPressed,
@@ -12,7 +28,6 @@ import {
     setNoOffenseCounter,
     setPlayerAngle,
     setPlayerAngleState } from '../../../variables.js'
-import { removeThrowable } from '../../../throwable-loader.js'
 
 export class GrabberGrabService {
     constructor(enemy) {

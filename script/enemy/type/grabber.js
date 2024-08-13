@@ -31,7 +31,7 @@ export class Grabber extends AbstractEnemy {
         this.grabService = new GrabberGrabService(this)
     }
 
-    behave() {
+    manageState() {
         switch ( this.state ) {
             case INVESTIGATE:
                 this.investigationService.handleInvestigationState()

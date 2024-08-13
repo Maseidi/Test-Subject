@@ -330,7 +330,10 @@ const renderOptions = (item, options) => {
     let renderDropOption = true
     const itemObj = elementToObject(item)
     if ( itemObj.name === 'bandage' || itemObj.name === 'antidote' ) createOption(options, 'use')
-    if ( getThrowableSpecs().get(itemObj.name) ) createOption(options, 'equip')    
+    if ( getThrowableSpecs().get(itemObj.name) ) {
+        createOption(options, 'equip')
+        createOption(options, 'shortcut')
+    }
     if ( getWeaponSpecs().get(itemObj.name) ) {
         if ( getEquippedWeapon() && itemObj.name === equippedItem().name ) {
              if ( getReloading() || getShooting() ) renderDropOption = false
@@ -520,7 +523,7 @@ const use = (item) => {
     const itemObj = elementToObject(item)
     const row = itemObj.row
     const column = itemObj.column
-    const theItem = inventory[row][column]
+    let theItem = inventory[row][column]
     if ( theItem.name === 'bandage' ) useBandage(theItem)
     if ( theItem.name === 'antidote' ) useAntidote(theItem)    
     if ( theItem.amount === 0 ) {
