@@ -1,4 +1,4 @@
-import { getWeaponSpecs } from './weapon-specs.js'
+import { getWeaponDetails } from './weapon-details.js'
 
 class Interactable {
     constructor(width, left, top, name, heading, popup, solid, amount, space, description, price) {
@@ -119,19 +119,19 @@ export class WeaponDrop extends Drop {
             left,
             top,
             name,
-            getWeaponSpecs().get(name).heading,
+            getWeaponDetails().get(name).heading,
             'Pick up',
             1,
-            getWeaponSpecs().get(name).space,
-            getWeaponSpecs().get(name).description,
-            getWeaponSpecs().get(name).price)
+            getWeaponDetails().get(name).space,
+            getWeaponDetails().get(name).description,
+            getWeaponDetails().get(name).price)
         this.currmag = currmag
         this.damageLvl = damageLvl
         this.rangeLvl = rangeLvl
         this.reloadspeedLvl = reloadspeedLvl
         this.magazineLvl = magazineLvl
         this.fireratelvl = fireratelvl
-        this.ammotype = getWeaponSpecs().get(name).ammotype
+        this.ammotype = getWeaponDetails().get(name).ammotype
     }
 }
 

@@ -1,5 +1,5 @@
-import { getStat } from './weapon-specs.js'
-import { getThrowableSpec, getThrowableSpecs } from './throwable-specs.js'
+import { getWeaponStat } from './weapon-details.js'
+import { getThrowableDetail, getThrowableDetails } from './throwable-details.js'
 import { 
     getDownPressed,
     getEntityId,
@@ -52,9 +52,8 @@ export const addAttribute = (elem, name, value) => {
     elem.setAttributeNode(attr)
 }
 
-export const addAllAttributes = (...args) => {
-    const elem = args[0]
-    for ( let i = 1; i < args.length; i += 2 ) addAttribute(elem, args[i], args[i+1])
+export const addAllAttributes = (elem, ...attrs) => {
+    for ( let i = 0; i < attrs.length; i += 2 ) addAttribute(elem, attrs[i], attrs[i+1])
 }
 
 export const isNullOrUndefined = (input) => input === null || input === undefined
@@ -154,8 +153,8 @@ export const getProperty = (elem, property, ...toRemoveList) => {
 }
 
 export const getEquippedSpec = (equipped, spec) =>  
-    getThrowableSpecs().get(equipped?.name) ? 
-    getThrowableSpec(equipped.name, spec) : 
-    getStat(equipped.name, spec, equipped[spec+'lvl'])
+    getThrowableDetails().get(equipped?.name) ? 
+    getThrowableDetail(equipped.name, spec) : 
+    getWeaponStat(equipped.name, spec, equipped[spec+'lvl'])
 
 export const isThrowing = () => getThrowCounter() > 0

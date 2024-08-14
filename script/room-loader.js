@@ -4,7 +4,7 @@ import { loaders } from './loaders.js'
 import { getProgress } from './progress.js'
 import { enemies } from './enemy/util/enemies.js'
 import { interactables } from './interactables.js'
-import { getWeaponSpecs } from './weapon-specs.js'
+import { getWeaponDetails } from './weapon-details.js'
 import { getCurrentRoomId, getRoomLeft, getRoomTop } from './variables.js'
 import { 
     GO_FOR_RANGED,
@@ -166,7 +166,7 @@ const renderPopUp = (int, interactable) => {
 
 const renderHeading = (popup, interactable) => {
     const heading = document.createElement('p')
-    let content = interactable.amount && !getWeaponSpecs().get(interactable.name) ? 
+    let content = interactable.amount && !getWeaponDetails().get(interactable.name) ? 
     `${interactable.amount} ${interactable.heading}` : `${interactable.heading}`
     heading.textContent = content
     popup.append(heading)

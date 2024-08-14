@@ -1,4 +1,4 @@
-import { getWeaponSpecs } from './weapon-specs.js'
+import { getWeaponDetails } from './weapon-details.js'
 import { 
     Bandage,
     Drop,
@@ -63,7 +63,7 @@ class RifleAmmoShopItem extends ShopItem {
 
 class WeaponShopItem extends ShopItem {
     constructor(name, progress, sold) {
-        super(new WeaponDrop(null, null, name, 0, 1, 1, 1, 1, 1), 1, getWeaponSpecs().get(name).price, progress, sold)
+        super(new WeaponDrop(null, null, name, 0, 1, 1, 1, 1, 1), 1, getWeaponDetails().get(name).price, progress, sold)
     }
 }
 

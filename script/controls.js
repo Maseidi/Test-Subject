@@ -3,9 +3,9 @@ import { dropLoot } from './loot-manager.js'
 import { centralizePlayer } from './startup.js'
 import { setupReload } from './weapon-actions.js'
 import { renderStore } from './vending-machine.js'
-import { getWeaponSpecs } from './weapon-specs.js'
+import { getWeaponDetails } from './weapon-details.js'
 import { heal, damagePlayer } from './player-health.js'
-import { getThrowableSpecs } from './throwable-specs.js'
+import { getThrowableDetails } from './throwable-details.js'
 import { removeWeapon, renderWeapon } from './weapon-loader.js'
 import { removeThrowable, renderThrowable } from './throwable-loader.js'
 import { renderUi, renderWeaponUi, quitPage } from './user-interface.js'
@@ -160,8 +160,8 @@ const eDown = () => {
             removeClass(getPlayer(), 'walk')
             removeClass(getPlayer(), 'run')
             const equipped = equippedWeaponObj()
-            const isWeapon = getWeaponSpecs().get(equipped.name)
-            const isThrowable = getThrowableSpecs().get(equipped.name) 
+            const isWeapon = getWeaponDetails().get(equipped.name)
+            const isThrowable = getThrowableDetails().get(equipped.name) 
             if ( isWeapon ) {
                 addClass(getPlayer(), 'aim')
                 renderWeapon()
@@ -198,12 +198,12 @@ const weaponSlotDown = (key) => {
     if ( getEquippedWeaponId() ) setShootCounter(getEquippedSpec(equippedWeaponObj(), 'firerate') * 60)
     if ( getEquippedWeaponId() && getAimMode() ) {
         const equipped = equippedWeaponObj()
-        if ( getWeaponSpecs().get(equipped.name) ) {
+        if ( getWeaponDetails().get(equipped.name) ) {
             removeClass(getPlayer(), 'throwable-aim')
             addClass(getPlayer(), 'aim')
             renderWeapon()
         }
-        else if ( getThrowableSpecs().get(equipped.name) ) {
+        else if ( getThrowableDetails().get(equipped.name) ) {
             removeClass(getPlayer(), 'aim')
             addClass(getPlayer(), 'throwable-aim')
             renderThrowable()

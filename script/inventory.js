@@ -1,8 +1,8 @@
 import { renderStats } from './weapon-examine.js'
-import { getWeaponSpecs } from './weapon-specs.js'
+import { getWeaponDetails } from './weapon-details.js'
 import { interactables } from './interactables.js'
 import { renderInteractable } from './room-loader.js'
-import { getThrowableSpecs } from './throwable-specs.js'
+import { getThrowableDetails } from './throwable-details.js'
 import { useAntidote, useBandage } from './player-health.js'
 import { removeWeapon, renderWeapon } from './weapon-loader.js'
 import { removeUi, renderQuit, renderUi } from './user-interface.js'
@@ -104,7 +104,7 @@ const searchEmpty = () => {
                     if ( inventory[i][j+k] !== null ) skip = true
                 if ( skip ) continue   
                 let diff = Math.min(pack, drop.amount)
-                if ( getThrowableSpecs().get(drop.name) ) {
+                if ( getThrowableDetails().get(drop.name) ) {
                     const throwable = inventory.flat().find(item => item?.name === drop.name)
                     if ( throwable ) {
                         drop.id = throwable.id
@@ -124,8 +124,8 @@ const searchEmpty = () => {
 
 const checkSpecialScenarios = () => {
     const obj = element2Object(getIntObj())
-    if ( ( getThrowableSpecs().get(obj.name) && !getWeaponWheel().includes(obj.id) ) ||
-         ( getWeaponSpecs().get(obj.name) && obj.amount === 0 ) ) updateWeaponWheel()        
+    if ( ( getThrowableDetails().get(obj.name) && !getWeaponWheel().includes(obj.id) ) ||
+         ( getWeaponDetails().get(obj.name) && obj.amount === 0 ) ) updateWeaponWheel()        
     if ( getPause() ) return
     if ( obj.amount === 0 ) removeDrop(getIntObj())
     ammo4Equipped(obj)
@@ -139,15 +139,15 @@ const ammo4Equipped = (obj) => {
 }
 
 const ammo4EquippedWeapon = (equipped, obj) => {
-    if ( !getWeaponSpecs().get(equipped.name) ) return
-    if ( obj.name !== getWeaponSpecs().get(equipped.name).ammotype ) return
+    if ( !getWeaponDetails().get(equipped.name) ) return
+    if ( obj.name !== getWeaponDetails().get(equipped.name).ammotype ) return
     const ammoCount = getUiEl().children[2].children[1]
     const totalAmmo = ammoCount.children[1]
     totalAmmo.textContent = calculateTotalAmmo(equipped)
 }
 
 const ammo4EquippedThrowable = (equipped, obj) => {
-    if ( !getThrowableSpecs().get(equipped.name) ) return
+    if ( !getThrowableDetails().get(equipped.name) ) return
     if ( obj.name !== equipped.name ) return
     const ammoCount = getUiEl().children[2].children[1]
     ammoCount.firstElementChild.textContent = calculateThrowableAmount(equipped)
@@ -253,7 +253,7 @@ export const renderBlocks = () => {
                 theBlock.style.width = `${block.space * 25}%`
                 const amount = createAndAddClass('div', 'amount')
                 const amountText = document.createElement('p')
-                if ( getWeaponSpecs().get(block.name) === undefined ) amountText.textContent = `${block.amount}`
+                if ( getWeaponDetails().get(block.name) === undefined ) amountText.textContent = `${block.amount}`
                 else amountText.textContent = `${block.currmag}`
                 amount.append(amountText)
                 theBlock.append(amount)
@@ -334,11 +334,11 @@ const renderOptions = (item, options) => {
     let renderDropOption = true
     const itemObj = element2Object(item)
     if ( itemObj.name === 'bandage' || itemObj.name === 'antidote' ) createOption(options, 'use')
-    if ( getThrowableSpecs().get(itemObj.name) ) {
+    if ( getThrowableDetails().get(itemObj.name) ) {
         createOption(options, 'equip')
         createOption(options, 'shortcut')
     }
-    if ( getWeaponSpecs().get(itemObj.name) ) {
+    if ( getWeaponDetails().get(itemObj.name) ) {
         if ( getEquippedWeaponId() && itemObj.name === equippedWeaponObj().name ) {
              if ( getReloading() || getShooting() ) renderDropOption = false
         } else {
@@ -545,10 +545,10 @@ const equip = (item) => {
         removeThrowable()
         removeClass(getPlayer(), 'aim')
         removeClass(getPlayer(), 'throwable-aim')
-        if ( getWeaponSpecs().get(equipped.name) ) {
+        if ( getWeaponDetails().get(equipped.name) ) {
             addClass(getPlayer(), 'aim')
             renderWeapon()
-        } else if ( getThrowableSpecs().get(equipped.name) ) {
+        } else if ( getThrowableDetails().get(equipped.name) ) {
             addClass(getPlayer(), 'throwable-aim')
             renderThrowable()
         }
@@ -609,13 +609,13 @@ export const handleEquippableDrop = (itemObj) => {
 }
 
 const handleWeaponDrop = (itemObj) => {
-    if ( !getWeaponSpecs().has(itemObj.name) ) return
+    if ( !getWeaponDetails().has(itemObj.name) ) return
     dropFromWeaponWheel(itemObj)
 
 }
 
 const handleThrowableDrop = (itemObj) => {
-    if ( !getThrowableSpecs().has(itemObj.name) ) return
+    if ( !getThrowableDetails().has(itemObj.name) ) return
     if ( calculateThrowableAmount(itemObj) !== 0 ) return
     dropFromWeaponWheel(itemObj)
 }

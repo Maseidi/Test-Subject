@@ -1,9 +1,9 @@
 import { dropLoot } from './loot-manager.js'
 import { removeThrowable } from './throwable-loader.js'
 import { removeUi, renderUi } from './user-interface.js'
-import { getThrowableSpecs } from './throwable-specs.js'
+import { getThrowableDetails } from './throwable-details.js'
 import { TRACKER } from './enemy/util/enemy-constants.js'
-import { getStat, getWeaponSpecs } from './weapon-specs.js'
+import { getWeaponStat, getWeaponDetails } from './weapon-details.js'
 import { 
     calculateThrowableAmount,
     calculateTotalAmmo,
@@ -87,10 +87,10 @@ const manageAim = () => {
             return
         }
         for ( const solid of getCurrentRoomSolid() ) {
-            if ( ( getThrowableSpecs().get(equipped.name) &&
+            if ( ( getThrowableDetails().get(equipped.name) &&
                    !containsClass(solid, 'enemy-collider') &&
                    !containsClass(solid, 'tracker-component') ||
-                   getWeaponSpecs().get(equipped.name)
+                   getWeaponDetails().get(equipped.name)
                  ) &&
                 collide(elem, solid, 0) ) {
                 setTarget(solid)
@@ -101,8 +101,8 @@ const manageAim = () => {
 }
 
 export const setupReload = () => {    
-    if ( getThrowableSpecs().get(equipped.name) ) return
-    if ( equipped.currmag === getStat(equipped.name, 'magazine', equipped.magazinelvl) ) return
+    if ( getThrowableDetails().get(equipped.name) ) return
+    if ( equipped.currmag === getWeaponStat(equipped.name, 'magazine', equipped.magazinelvl) ) return
     if ( calculateTotalAmmo(equipped) === 0 ) return
     if ( getShooting() ) return
     setReloading(true)
@@ -110,10 +110,10 @@ export const setupReload = () => {
 
 let reloadCounter = 0
 const manageReload = () => {
-    if ( getThrowableSpecs().get(equipped?.name) ) return
+    if ( getThrowableDetails().get(equipped?.name) ) return
     if ( !getEquippedWeaponId() ) return
     if ( getReloading() ) reloadCounter++
-    if ( reloadCounter / 60 >= getStat(equipped.name, 'reloadspeed', equipped.reloadspeedlvl) ) {
+    if ( reloadCounter / 60 >= getWeaponStat(equipped.name, 'reloadspeed', equipped.reloadspeedlvl) ) {
         reload()
         setReloading(false)
         reloadCounter = 0
@@ -121,7 +121,7 @@ const manageReload = () => {
 }
 
 const reload = () => {    
-    const mag = getStat(equipped.name, 'magazine', equipped.magazinelvl)
+    const mag = getWeaponStat(equipped.name, 'magazine', equipped.magazinelvl)
     const currentMag = equipped.currmag
     const totalAmmo = calculateTotalAmmo(equipped)
     const need = mag - currentMag
@@ -145,7 +145,7 @@ const manageShoot = () => {
 }
 
 const shoot = () => {
-    if ( getThrowableSpecs().get(equipped.name) ) {
+    if ( getThrowableDetails().get(equipped.name) ) {
         setThrowCounter(1)
         return
     }

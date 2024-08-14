@@ -14,9 +14,9 @@ class Throwable {
     }
 }
 
-export const getThrowableSpec = (throwableName, statName) => throwables.get(throwableName)[statName]
+export const getThrowableDetail = (throwableName, statName) => throwableDetails.get(throwableName)[statName]
 
-const throwables = new Map([
+const throwableDetails = new Map([
     ['grenade', new Throwable(
         'grenade',
         3000,
@@ -31,4 +31,4 @@ const throwables = new Map([
     )]
 ])
 
-export const getThrowableSpecs = () => throwables
+export const getThrowableDetails = () => throwableDetails

@@ -4,7 +4,7 @@ import { renderQuit } from './user-interface.js'
 import { getPauseContainer } from './elements.js'
 import { renderStats } from './weapon-examine.js'
 import { getIntObj, setIntObj } from './variables.js'
-import { getStat, getWeaponSpecs } from './weapon-specs.js'
+import { getWeaponStat, getWeaponDetails } from './weapon-details.js'
 import { getShopItems, getShopItemsWithId } from './shop-item.js'
 import { 
     MAX_PACKSIZE,
@@ -134,7 +134,7 @@ const buyPopup = (e) => {
     const heading = createAndAddClass('h2', 'buy-popup-heading')
     const imageHeading = createAndAddClass('div', 'buy-heading-container')
     appendAll(imageHeading, image, heading)
-    if (getWeaponSpecs().get(itemObj.name) || itemObj.name === 'pouch') heading.textContent = `${itemObj.heading}`
+    if (getWeaponDetails().get(itemObj.name) || itemObj.name === 'pouch') heading.textContent = `${itemObj.heading}`
     else heading.textContent = `${itemObj.amount} ${itemObj.heading}`
     const description = createAndAddClass('p', 'buy-popup-description')
     description.textContent = `${itemObj.description}`
@@ -159,12 +159,12 @@ const createCancelBtn = () => {
 }
 
 const createExamineBtn = (itemObj, btnContainer) => {
-    if ( getWeaponSpecs().get(itemObj.name) ) {
+    if ( getWeaponDetails().get(itemObj.name) ) {
         const examine = createAndAddClass('button', 'popup-examine')
         examine.textContent = `examine`
         const weapon = getInventory().flat().find(item => item && item.name === itemObj.name)
         examine.addEventListener('click', () => renderStats( weapon || {
-            ...getWeaponSpecs().get(itemObj.name), 
+            ...getWeaponDetails().get(itemObj.name), 
             name: itemObj.name, damagelvl: 1, fireratelvl: 1, reloadspeedlvl: 1, magazinelvl:1, rangelvl: 1
         }))
         btnContainer.append(examine)
@@ -225,7 +225,7 @@ const manageBuy = (itemObj) => {
 }
 
 const handleNewWeapnPurchase = (purchasedItem, itemObj) => {
-    if ( !getWeaponSpecs().has(itemObj.name) ) return purchasedItem 
+    if ( !getWeaponDetails().has(itemObj.name) ) return purchasedItem 
     return {
         ...purchasedItem,
         id: nextId(),
@@ -235,7 +235,7 @@ const handleNewWeapnPurchase = (purchasedItem, itemObj) => {
         reloadspeedlvl: 1, 
         magazinelvl: 1, 
         fireratelvl: 1, 
-        ammotype: getWeaponSpecs().get(itemObj.name).ammotype
+        ammotype: getWeaponDetails().get(itemObj.name).ammotype
     }
 }
 
@@ -261,7 +261,7 @@ const renderUpgrade = () => {
 const renderUpgradeItems = () => {
     return getInventory()
     .flat()
-    .filter((block => getWeaponSpecs().has(block?.name)))
+    .filter((block => getWeaponDetails().has(block?.name)))
     .map((weapon) => {
         const weapon2Upgrade = object2Element(weapon)
         addClass(weapon2Upgrade, 'upgrade-item')
@@ -324,14 +324,14 @@ const createValueComponent = (weaponObj, name) => {
     const values = createAndAddClass('div', 'upgrade-stat-value')
     const currLvl = weaponObj[`${name.replace(' ', '')}lvl`]
     if ( currLvl === 5 ) 
-        values.textContent = `${getStat(weaponObj.name, name.replace(' ', ''), currLvl)}`
+        values.textContent = `${getWeaponStat(weaponObj.name, name.replace(' ', ''), currLvl)}`
     else {
         const current = document.createElement('p')
-        current.textContent = `${getStat(weaponObj.name, name.replace(' ', ''), currLvl)}`
+        current.textContent = `${getWeaponStat(weaponObj.name, name.replace(' ', ''), currLvl)}`
         const img = document.createElement('img')
         img.src = `../assets/images/upgrade.png`
         const next = document.createElement('p')
-        next.textContent = `${getStat(weaponObj.name, name.replace(' ', ''), currLvl + 1)}`
+        next.textContent = `${getWeaponStat(weaponObj.name, name.replace(' ', ''), currLvl + 1)}`
         appendAll(values, current, img, next)
     }
     return values
@@ -451,7 +451,7 @@ const sellPopup = (e) => {
     const heading = createAndAddClass('h2', 'sell-popup-heading')
     const imageHeading = createAndAddClass('div', 'sell-heading-container')
     appendAll(imageHeading, image, heading)
-    if (getWeaponSpecs().get(itemObj.name)) heading.textContent = `${itemObj.heading}`
+    if (getWeaponDetails().get(itemObj.name)) heading.textContent = `${itemObj.heading}`
     else heading.textContent = `${itemObj.amount} ${itemObj.heading}`
     const description = createAndAddClass('p', 'sell-popup-description')
     description.textContent = `${itemObj.description}`

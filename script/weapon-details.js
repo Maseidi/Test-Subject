@@ -31,11 +31,12 @@ class Weapon {
     }
 }
 
-export const getWeaponSpec = (weaponName, statName) => weapons.get(weaponName)[statName]
+export const getWeaponDetail = (weaponName, statName) => weaponDetails.get(weaponName)[statName]
 
-export const getStat = (weaponName, statName, statLvl) => weapons.get(weaponName)[statName][statLvl - 1]
+export const getWeaponStat = (weaponName, statName, statLvl) => 
+    weaponDetails.get(weaponName)[statName][statLvl - 1]
 
-const weapons = new Map([
+const weaponDetails = new Map([
     ['remington1858', new Weapon(
         'remington 1858',
         'magnumAmmo',
@@ -358,6 +359,4 @@ const weapons = new Map([
     )]
 ])
 
-export const getWeaponSpecs = () => {
-    return weapons
-}
+export const getWeaponDetails = () => weaponDetails

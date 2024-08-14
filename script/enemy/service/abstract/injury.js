@@ -2,7 +2,7 @@ import { enemies } from '../../util/enemies.js'
 import { getPlayer } from '../../../elements.js'
 import { dropLoot } from '../../../loot-manager.js'
 import { getCurrentRoomId } from '../../../variables.js'
-import { getWeaponSpec, getStat } from '../../../weapon-specs.js'
+import { getWeaponDetail, getWeaponStat } from '../../../weapon-details.js'
 import { addAllAttributes, addClass, removeClass } from '../../../util.js'
 
 export class AbstractInjuryService {
@@ -11,8 +11,8 @@ export class AbstractInjuryService {
     }
 
     damageEnemy(equipped) {
-        let damage = getStat(equipped.name, 'damage', equipped.damagelvl)
-        if ( this.enemy.virus === getWeaponSpec(equipped.name, 'antivirus') ) damage *= 1.2
+        let damage = getWeaponStat(equipped.name, 'damage', equipped.damagelvl)
+        if ( this.enemy.virus === getWeaponDetail(equipped.name, 'antivirus') ) damage *= 1.2
         if ( Math.random() < 0.01 ) damage *= (Math.random() + 1)
         const enemyHealth = this.enemy.health
         const newHealth = enemyHealth - damage
@@ -28,7 +28,7 @@ export class AbstractInjuryService {
             enemiesCopy[this.enemy.index].health = 0
             return
         }
-        const knockback = getWeaponSpec(equipped.name, 'knockback')
+        const knockback = getWeaponDetail(equipped.name, 'knockback')
         this.knockEnemy(knockback)
         addClass(this.enemy.htmlTag.firstElementChild.firstElementChild, 'damaged')
         this.enemy.damagedCounter = 6

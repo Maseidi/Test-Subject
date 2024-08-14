@@ -1,7 +1,7 @@
 import { getInventory } from './inventory.js'
 import { renderQuit } from './user-interface.js'
 import { getPauseContainer } from './elements.js'
-import { getStat, getWeaponSpecs } from './weapon-specs.js'
+import { getWeaponStat, getWeaponDetails } from './weapon-details.js'
 import { addClass, appendAll, createAndAddClass } from './util.js'
 
 export const renderStats = (itemObj) => {
@@ -13,7 +13,7 @@ export const renderStats = (itemObj) => {
     imgContainer.append(img)
     const weaponStatsName = createAndAddClass('div', 'weapon-stats-name')
     weaponStatsName.textContent = itemObj.heading
-    weaponStatsName.style.color = `${getWeaponSpecs().get(itemObj.name).antivirus}`
+    weaponStatsName.style.color = `${getWeaponDetails().get(itemObj.name).antivirus}`
     const weaponStatsDesc = createAndAddClass('div', 'weapon-stats-desc')
     weaponStatsDesc.textContent = itemObj.description
     const damage = createStat(itemObj, 'damage')
@@ -62,5 +62,5 @@ const getValue = (itemObj, name) => {
             magazinelvl: 1, 
             fireratelvl: 1
         }
-    return getStat(weapon.name, name.replace(' ', ''), weapon[name.replace(' ', '').concat('lvl')])
+    return getWeaponStat(weapon.name, name.replace(' ', ''), weapon[name.replace(' ', '').concat('lvl')])
 }
