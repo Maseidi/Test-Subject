@@ -7,7 +7,7 @@ import { useAntidote, useBandage } from './player-health.js'
 import { removeWeapon, renderWeapon } from './weapon-loader.js'
 import { removeUi, renderQuit, renderUi } from './user-interface.js'
 import { removeThrowable, renderThrowable } from './throwable-loader.js'
-import { getCurrentRoom, getPauseContainer, getPlayer } from './elements.js'
+import { getCurrentRoom, getPauseContainer, getPlayer, getUiEl } from './elements.js'
 import { 
     addAttribute,
     addClass,
@@ -132,18 +132,25 @@ const checkSpecialScenarios = () => {
 }
 
 const ammo4Equipped = (obj) => {
+    if ( !getEquippedWeaponId() ) return
     const equipped = equippedWeaponObj()
-    if ( getEquippedWeaponId() && 
-        ((
-            getWeaponSpecs().get(equipped.name) &&
-            obj.name === getWeaponSpecs().get(equipped.name).ammotype
-        ) || (
-            getThrowableSpecs().get(equipped.name) &&
-            obj.name === equipped.name
-        )) ) {
-        removeUi()
-        renderUi()
-    }
+    ammo4EquippedWeapon(equipped, obj)
+    ammo4EquippedThrowable(equipped, obj)
+}
+
+const ammo4EquippedWeapon = (equipped, obj) => {
+    if ( !getWeaponSpecs().get(equipped.name) ) return
+    if ( obj.name !== getWeaponSpecs().get(equipped.name).ammotype ) return
+    const ammoCount = getUiEl().children[2].children[1]
+    const totalAmmo = ammoCount.children[1]
+    totalAmmo.textContent = calculateTotalAmmo(equipped)
+}
+
+const ammo4EquippedThrowable = (equipped, obj) => {
+    if ( !getThrowableSpecs().get(equipped.name) ) return
+    if ( obj.name !== equipped.name ) return
+    const ammoCount = getUiEl().children[2].children[1]
+    ammoCount.firstElementChild.textContent = calculateThrowableAmount(equipped)
 }
 
 const inventoryFull = () => inventory.flat().every(item => item !== null)
@@ -178,10 +185,7 @@ export const useItemAtPosition = (row, column, reduce) => {
     return diff
 }
 
-export const updateInventoryWeaponMag = (newMag) => {
-    const weapon = equippedWeaponObj()
-    inventory[weapon.row][weapon.column].currmag = newMag
-}
+export const updateInventoryWeaponMag = (weapon, newMag) => inventory[weapon.row][weapon.column].currmag = newMag
 
 const updateAmount = (newValue) => {
     getIntObj().setAttribute('amount', newValue)

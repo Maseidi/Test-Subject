@@ -5,6 +5,7 @@ import { getThrowableSpecs } from './throwable-specs.js'
 import { TRACKER } from './enemy/util/enemy-constants.js'
 import { getStat, getWeaponSpecs } from './weapon-specs.js'
 import { 
+    calculateThrowableAmount,
     calculateTotalAmmo,
     equippedWeaponObj,
     updateInventoryWeaponMag,
@@ -14,7 +15,8 @@ import {
     getCurrentRoomEnemies,
     getCurrentRoomSolid,
     getCurrentRoomThrowables,
-    getPlayer } from './elements.js'
+    getPlayer, 
+    getUiEl} from './elements.js'
 import { 
     addAllAttributes,
     addClass,
@@ -124,7 +126,7 @@ const reload = () => {
     const totalAmmo = calculateTotalAmmo(equipped)
     const need = mag - currentMag
     const trade = need <= totalAmmo ? need : totalAmmo
-    updateInventory(equipped, currentMag + trade, trade)
+    useAmmoFromInventory(equipped, currentMag + trade, trade)
 }
 
 const manageShoot = () => {
@@ -159,7 +161,7 @@ const shoot = () => {
     currMag--
     notifyNearbyEnemies()
     manageInteractivity()
-    updateInventory(equipped, currMag, 0)
+    useAmmoFromInventory(equipped, currMag, 0)
 }
 
 const notifyNearbyEnemies = () => getCurrentRoomEnemies().forEach(elem => {
@@ -179,11 +181,14 @@ const manageInteractivity = () => {
     if ( getTarget()?.getAttribute('name') === 'crate' ) dropLoot(getTarget())
 }
 
-const updateInventory = (equipped, newMag, trade) => {
+const useAmmoFromInventory = (equipped, newMag, trade) => {
     useInventoryResource(equipped.ammotype, trade)
-    updateInventoryWeaponMag(newMag)
-    removeUi()
-    renderUi()
+    updateInventoryWeaponMag(equipped, newMag)
+    const ammoCount = getUiEl().children[2].children[1]
+    const mag = ammoCount.children[0]
+    const totalAmmo = ammoCount.children[1]
+    mag.textContent = newMag
+    totalAmmo.textContent = calculateTotalAmmo(equipped)
 }
 
 const manageThrow = () => {
@@ -243,7 +248,7 @@ const throwItem = () => {
         'acc-counter', 0,
         'time', 0
     )
-    updateInventoryItem()
+    useThrowableFromInventory()
     getCurrentRoomThrowables().push(item)
     getCurrentRoom().append(item)
 }
@@ -282,11 +287,13 @@ const appendColliders = (throwable) => {
     appendAll(throwable, top, left, right, bottom)
 }
 
-const updateInventoryItem = () => {
+const useThrowableFromInventory = () => {
     unequipThrowable()
     useInventoryResource(equipped.name, 1)
-    removeUi()
-    renderUi()
+    const ammoCount = getUiEl().children[2].children[1]
+    const totalAmmo = calculateThrowableAmount(equipped)
+    if ( totalAmmo === 0 ) ammoCount.parentElement.remove()
+    else ammoCount.firstElementChild.textContent = totalAmmo    
 }
 
 const unequipThrowable = () => {
