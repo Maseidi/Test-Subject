@@ -10,7 +10,7 @@ import { removeWeapon, renderWeapon } from './weapon-loader.js'
 import { removeThrowable, renderThrowable } from './throwable-loader.js'
 import { renderUi, renderWeaponUi, quitPage } from './user-interface.js'
 import { getGrabBar, getPauseContainer, getPlayer, getUiEl } from './elements.js'
-import { equippedItem, pickupDrop, removeInventory, renderInventory } from './inventory.js'
+import { equippedWeaponObj, pickupDrop, removeInventory, renderInventory } from './inventory.js'
 import { 
     addAttribute,
     addClass,
@@ -23,7 +23,7 @@ import {
 import { 
     getAimMode,
     getDraggedItem,
-    getEquippedWeapon,
+    getEquippedWeaponId,
     getGrabbed,
     getIntObj,
     getMouseX,
@@ -36,7 +36,7 @@ import {
     getWeaponWheel,
     setAimMode,
     setDownPressed,
-    setEquippedWeapon,
+    setEquippedWeaponId,
     setLeftPressed,
     setMouseX,
     setMouseY,
@@ -154,12 +154,12 @@ const enableDirection = (setPressed) => {
 
 const eDown = () => {
     if ( getPause() || getGrabbed() || isThrowing() ) return
-    if ( getEquippedWeapon() !== null  ) {
+    if ( getEquippedWeaponId() !== null  ) {
         setAimMode(!getAimMode())
         if ( getAimMode() ) {
             removeClass(getPlayer(), 'walk')
             removeClass(getPlayer(), 'run')
-            const equipped = equippedItem()
+            const equipped = equippedWeaponObj()
             const isWeapon = getWeaponSpecs().get(equipped.name)
             const isThrowable = getThrowableSpecs().get(equipped.name) 
             if ( isWeapon ) {
@@ -184,8 +184,8 @@ const weaponSlotDown = (key) => {
     if ( getPause() || getReloading() || getShooting() || getGrabbed() ) return
     removeWeapon()
     removeThrowable()
-    if ( getWeaponWheel()[Number(key) - 1] === getEquippedWeapon() ) {
-        setEquippedWeapon(null)
+    if ( getWeaponWheel()[Number(key) - 1] === getEquippedWeaponId() ) {
+        setEquippedWeaponId(null)
         setAimMode(false)
         removeClass(getPlayer(), 'aim')
         removeClass(getPlayer(), 'throwable-aim')
@@ -193,11 +193,11 @@ const weaponSlotDown = (key) => {
         if (isMoving()) addClass(getPlayer(), 'walk')
         return
     }
-    setEquippedWeapon(getWeaponWheel()[Number(key) - 1])
+    setEquippedWeaponId(getWeaponWheel()[Number(key) - 1])
     renderWeaponUi()
-    if ( getEquippedWeapon() ) setShootCounter(getEquippedSpec(equippedItem(), 'firerate') * 60)
-    if ( getEquippedWeapon() && getAimMode() ) {
-        const equipped = equippedItem()
+    if ( getEquippedWeaponId() ) setShootCounter(getEquippedSpec(equippedWeaponObj(), 'firerate') * 60)
+    if ( getEquippedWeaponId() && getAimMode() ) {
+        const equipped = equippedWeaponObj()
         if ( getWeaponSpecs().get(equipped.name) ) {
             removeClass(getPlayer(), 'throwable-aim')
             addClass(getPlayer(), 'aim')
@@ -304,7 +304,7 @@ export const managePause = () => {
 
 const rDown = () => {
     if ( getPause() || getGrabbed() ) return
-    if ( !getEquippedWeapon() ) return
+    if ( !getEquippedWeaponId() ) return
     setupReload()
 }
 

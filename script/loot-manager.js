@@ -1,7 +1,7 @@
 import { removeDrop } from './inventory.js'
 import { getCurrentRoom } from './elements.js'
 import { getCurrentRoomId } from './variables.js'
-import { elementToObject, nextId } from './util.js'
+import { element2Object, nextId } from './util.js'
 import { renderInteractable } from './room-loader.js'
 import { 
     Antidote,
@@ -16,7 +16,7 @@ import {
     SmgAmmo } from './interactables.js'
 
 export const dropLoot = (rootElem) => {
-    const root = elementToObject(rootElem)
+    const root = element2Object(rootElem)
     const {left, top} = root
     let loot
     loot = decideItemDrop(MagnumAmmo, 0.02, left, top, 1)

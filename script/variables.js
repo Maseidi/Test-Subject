@@ -148,11 +148,11 @@ export const setWeaponWheel = (val) => {
 }
 export const getWeaponWheel = () => weaponWheel
 
-let equippedWeapon = null
-export const setEquippedWeapon = (val) => {
-    equippedWeapon = val
+let equippedWeaponId = null
+export const setEquippedWeaponId = (val) => {
+    equippedWeaponId = val
 }
-export const getEquippedWeapon = () => equippedWeapon
+export const getEquippedWeaponId = () => equippedWeaponId
 
 let intObj
 export const setIntObj = (val) => {

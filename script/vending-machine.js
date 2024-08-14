@@ -10,7 +10,7 @@ import {
     MAX_PACKSIZE,
     calculateTotalCoins,
     getInventory,
-    handleWeaponDrop,
+    handleEquippableDrop,
     pickupDrop,
     upgradeInventory,
     upgradeWeaponStat,
@@ -20,9 +20,9 @@ import {
     addClass,
     appendAll,
     createAndAddClass,
-    elementToObject,
+    element2Object,
     nextId,
-    objectToElement } from './util.js'
+    object2Element } from './util.js'
 
 let page = 1
 export const renderStore = () => {
@@ -97,7 +97,7 @@ const renderBuyItems = () => {
     .filter(item => !item.sold)
     .filter(item => getProgress(item.progress))
     .map((item) => {
-        const buyItem = objectToElement(item)
+        const buyItem = object2Element(item)
         addClass(buyItem, 'buy-item')
         const wrapper = createAndAddClass('div', 'buy-wrapper')
         const img = createAndAddClass('img', 'buy-item-img')
@@ -124,7 +124,7 @@ const renderBuyItems = () => {
 }
 
 const buyPopup = (e) => {
-    const itemObj = elementToObject(e.currentTarget)
+    const itemObj = element2Object(e.currentTarget)
     const popupContainer = createAndAddClass('div', 'popup-container', 'ui-theme')
     const popup = createAndAddClass('div', 'buy-popup')
     const title = createAndAddClass('h2', 'buy-popup-title')
@@ -207,7 +207,7 @@ const manageBuy = (itemObj) => {
         return
     }
     const freeSpace = getInventory().flat().filter(item => item === null).length
-    setIntObj(objectToElement(new Coin(null, null, loss)))
+    setIntObj(object2Element(new Coin(null, null, loss)))
     pickupDrop()
     if ( freeSpace >= needSpace ) {
         useInventoryResource('coin', loss)
@@ -216,7 +216,7 @@ const manageBuy = (itemObj) => {
             chosenItem.width, chosenItem.left, chosenItem.top, chosenItem.name, chosenItem.heading, 
             chosenItem.popup, chosenItem.amount, chosenItem.space, chosenItem.description, chosenItem.price)
         purchasedItem = handleNewWeapnPurchase(purchasedItem, itemObj)
-        setIntObj(objectToElement(purchasedItem))
+        setIntObj(object2Element(purchasedItem))
         pickupDrop()
         submitPurchase(itemObj.id)
         return
@@ -263,22 +263,22 @@ const renderUpgradeItems = () => {
     .flat()
     .filter((block => getWeaponSpecs().has(block?.name)))
     .map((weapon) => {
-        const weaponToUpgrade = objectToElement(weapon)
-        addClass(weaponToUpgrade, 'upgrade-item')
+        const weapon2Upgrade = object2Element(weapon)
+        addClass(weapon2Upgrade, 'upgrade-item')
         const wrapper = createAndAddClass('div', 'upgrade-wrapper')
         const img = createAndAddClass('img', 'upgrade-item-img')
         img.src = `../assets/images/${weapon.name}.png` 
         const name = createAndAddClass('p', 'upgrade-item-name')
         name.textContent = `${weapon.heading}`
         appendAll(wrapper, img, name)
-        appendAll(weaponToUpgrade, wrapper)
-        weaponToUpgrade.addEventListener('click', renderWeaponStats)
-        return weaponToUpgrade
+        appendAll(weapon2Upgrade, wrapper)
+        weapon2Upgrade.addEventListener('click', renderWeaponStats)
+        return weapon2Upgrade
     })
 }
 
 const renderWeaponStats = (e) => {
-    const weaponObj = elementToObject(e.currentTarget)
+    const weaponObj = element2Object(e.currentTarget)
     const upgradeRight = document.querySelector('.upgrade-right')
     upgradeRight.innerHTML = ``
     const damage = createStatComponent(weaponObj, 'damage')
@@ -290,7 +290,7 @@ const renderWeaponStats = (e) => {
 }
 
 const createStatComponent = (weaponObj, name) => {
-    const upgradeStatComponent = objectToElement(weaponObj)
+    const upgradeStatComponent = object2Element(weaponObj)
     addClass(upgradeStatComponent, 'upgrade-stat-component')
     const title = createAndAddClass('p', 'upgrade-stat-title')
     title.textContent = `${name}`
@@ -351,7 +351,7 @@ const createPriceComponent = (weaponObj, name) => {
 }
 
 const upgradePopup = (e) => {
-    const itemObj = elementToObject(e.currentTarget)
+    const itemObj = element2Object(e.currentTarget)
     const popupContainer = createAndAddClass('div', 'popup-container', 'ui-theme')
     const popup = createAndAddClass('div', 'upgrade-popup')
     const title = createAndAddClass('h2', 'buy-popup-title')
@@ -399,7 +399,7 @@ const manageUpgrade = (itemObj) => {
     upgradeWeaponStat(itemObj.name, stat)
     removeStore()
     renderStore()
-    const newElem = objectToElement(itemObj)
+    const newElem = object2Element(itemObj)
     addAttribute(newElem, stat.concat('lvl'), itemObj[stat.concat('lvl')] + 1)
     const e = {currentTarget: newElem}
     renderWeaponStats(e)
@@ -413,7 +413,7 @@ const renderSell = () => {
         .filter(item => item && item.name !== 'coin'
         && item.amount === (MAX_PACKSIZE[item.name] ? MAX_PACKSIZE[item.name] : 1) )
         .forEach(item => {
-            const sellItem = objectToElement(item)
+            const sellItem = object2Element(item)
             addClass(sellItem, 'sell-item')
             const wrapper = createAndAddClass('div', 'sell-wrapper')
             const img = createAndAddClass('img', 'sell-item-img')
@@ -441,7 +441,7 @@ const renderSell = () => {
 }
 
 const sellPopup = (e) => {
-    const itemObj = elementToObject(e.currentTarget)
+    const itemObj = element2Object(e.currentTarget)
     const popupContainer = createAndAddClass('div', 'popup-container', 'ui-theme')
     const popup = createAndAddClass('div', 'sell-popup')
     const title = createAndAddClass('h2', 'sell-popup-title')
@@ -483,16 +483,16 @@ const confirmSellBtn = (itemObj) => {
 const manageSell = (itemObj) => {
     const gain = itemObj.price * itemObj.amount
     const gainSpace = itemObj.space
-    setIntObj(objectToElement(new Coin(null, null, gain)))
+    setIntObj(object2Element(new Coin(null, null, gain)))
     pickupDrop()
     let left = getIntObj().getAttribute('amount')
     useInventoryResource('coin', gain-left)
     left -= gainSpace * 10
     if ( left <= 0 ) {
         useInventoryResource(itemObj.name, itemObj.amount)
-        setIntObj(objectToElement(new Coin(null, null, gain)))
+        setIntObj(object2Element(new Coin(null, null, gain)))
         pickupDrop()
-        handleWeaponDrop(itemObj)
+        handleEquippableDrop(itemObj)
         removeStore()
         renderStore()
         return

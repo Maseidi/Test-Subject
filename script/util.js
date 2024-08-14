@@ -59,7 +59,7 @@ export const addAllAttributes = (...args) => {
 
 export const isNullOrUndefined = (input) => input === null || input === undefined
 
-export const objectToElement = (obj) => {
+export const object2Element = (obj) => {
     if ( isNullOrUndefined(obj) ) return document.createElement('div')
     const props = Object.getOwnPropertyNames(obj)
     const elem = document.createElement('div')
@@ -67,7 +67,7 @@ export const objectToElement = (obj) => {
     return elem
 }
 
-export const elementToObject = (elem) => {
+export const element2Object = (elem) => {
     const attrs = elem.attributes
     let obj = {}
     for (const attr of attrs) {

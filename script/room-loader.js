@@ -22,7 +22,7 @@ import {
     appendAll,
     createAndAddClass,
     nextId,
-    objectToElement,
+    object2Element,
     removeClass } from './util.js'
 import { 
     getCurrentRoomEnemies,
@@ -124,7 +124,7 @@ const renderInteractables = (room2Render) =>
         .forEach((interactable, index) => renderInteractable(room2Render, interactable, index))
 
 export const renderInteractable = (root, interactable, index) => {
-    const int = objectToElement(interactable)
+    const int = object2Element(interactable)
     addClass(int, 'interactable')
     setInteractableId(interactable, int, index)
     int.style.left = `${interactable.left}px`

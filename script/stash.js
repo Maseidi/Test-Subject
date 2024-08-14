@@ -8,11 +8,11 @@ import {
     appendAll,
     containsClass,
     createAndAddClass,
-    elementToObject,
-    objectToElement } from './util.js'
+    element2Object,
+    object2Element } from './util.js'
 import { 
     descriptionEvent,
-    handleWeaponDrop,
+    handleEquippableDrop,
     pickupDrop,
     removeDescriptionEvent,
     renderBlocks,
@@ -61,7 +61,7 @@ const addMoveEvent = (e) => {
     document.querySelector('.move-to-inventory')?.remove()
     const elem = containsClass(e.target, 'stash-item-selector') ? e.target.parentElement : e.target
     if ( containsClass(e.target, 'stash-item-selector') ) addAttribute(e.target.parentElement, 'type', 'to-inventory')
-    const itemObj = elementToObject(elem)
+    const itemObj = element2Object(elem)
     const move = createMoveComponent(itemObj)
     const number = createAndAddClass('div', 'number')
     const chevLeft = createChevLeft()
@@ -137,37 +137,37 @@ const createConfirm = () => {
 }
 
 const moveItem = (e) => {
-    const elemToMove = e.target.parentElement.parentElement.parentElement
-    const objectToMove = elementToObject(elemToMove)
+    const elem2Move = e.target.parentElement.parentElement.parentElement
+    const object2Move = element2Object(elem2Move)
     const reduce = Number(e.target.parentElement.parentElement.firstElementChild.children[1].textContent)
-    if ( objectToMove.type === 'to-stash' ) moveToStash(objectToMove, reduce)
-    else moveToInventory(objectToMove, reduce)
+    if ( object2Move.type === 'to-stash' ) move2Stash(object2Move, reduce)
+    else move2Inventory(object2Move, reduce)
 }
 
-const moveToStash = (objectToMove, reduce) => {
-    searchPack(objectToMove, reduce)
-    useItemAtPosition(objectToMove.row, objectToMove.column, reduce)
-    handleWeaponDrop(objectToMove)
+const move2Stash = (object2Move, reduce) => {
+    searchPack(object2Move, reduce)
+    useItemAtPosition(object2Move.row, object2Move.column, reduce)
+    handleEquippableDrop(object2Move)
     removeStash()
     renderStash()
 }
 
-const moveToInventory = (objectToMove, reduce) => {
-    const index = stash.findIndex(x => x.id === objectToMove.id)
+const move2Inventory = (object2Move, reduce) => {
+    const index = stash.findIndex(x => x.id === object2Move.id)
     const amount = stash[index].amount
-    setIntObj(objectToElement({...objectToMove, amount: reduce}))
+    setIntObj(object2Element({...object2Move, amount: reduce}))
     pickupDrop()
     const left = Number(getIntObj().getAttribute('amount'))
     if ( amount - reduce + left === 0 ) stash = stash.filter((item, idx) => idx !== index)
-    else stash[index] = {...objectToMove, amount: amount - reduce + left}   
+    else stash[index] = {...object2Move, amount: amount - reduce + left}   
     removeStash()
     renderStash()
 }
 
-const searchPack = (objectToMove, reduce) => {
-    let index = stash.findIndex(x => x.name === objectToMove.name)
-    if ( index === -1 ) stash.push({...objectToMove, amount: reduce})
-    else stash[index] = {...objectToMove, amount: stash[index].amount + reduce}    
+const searchPack = (object2Move, reduce) => {
+    let index = stash.findIndex(x => x.name === object2Move.name)
+    if ( index === -1 ) stash.push({...object2Move, amount: reduce})
+    else stash[index] = {...object2Move, amount: stash[index].amount + reduce}    
 }
 
 const biggerSteps = () => {
@@ -186,7 +186,7 @@ const renderStashItems = () => {
     const stashItemsContainer = createAndAddClass('div', 'stash-items-container')
     const stashItems = createAndAddClass('div', 'stash-items')
     stash.forEach((item) => {
-        const stashItem = objectToElement(item)
+        const stashItem = object2Element(item)
         addClass(stashItem, 'stash-item')
         const selector = createAndAddClass('div', 'stash-item-selector')
         stashItem.append(selector)

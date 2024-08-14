@@ -1,10 +1,10 @@
 import { getPlayer } from './elements.js'
-import { equippedItem } from './inventory.js'
+import { equippedWeaponObj } from './inventory.js'
 import { getThrowableSpec } from './throwable-specs.js'
 import { appendAll, containsClass, createAndAddClass } from './util.js'
 
 export const renderThrowable = () => {
-    const equippedThrowable = equippedItem()
+    const equippedThrowable = equippedWeaponObj()
     const throwable = createAndAddClass('div', 'throwable')
     const laser = createAndAddClass('div', 'throwable-laser')
     laser.style.height = `${getThrowableSpec(equippedThrowable.name, 'range')}px`

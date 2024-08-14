@@ -6,7 +6,7 @@ import { TRACKER } from './enemy/util/enemy-constants.js'
 import { getStat, getWeaponSpecs } from './weapon-specs.js'
 import { 
     calculateTotalAmmo,
-    equippedItem,
+    equippedWeaponObj,
     updateInventoryWeaponMag,
     useInventoryResource } from './inventory.js'
 import { 
@@ -31,7 +31,7 @@ import {
     removeClass } from './util.js'
 import { 
     getAimMode,
-    getEquippedWeapon,
+    getEquippedWeaponId,
     getNoOffenseCounter,
     getPlayerX,
     getPlayerY,
@@ -45,7 +45,7 @@ import {
     getThrowCounter,
     getWeaponWheel,
     setAimMode,
-    setEquippedWeapon,
+    setEquippedWeaponId,
     setReloading,
     setShootCounter,
     setShooting,
@@ -57,7 +57,7 @@ const EMPTY_WEAPON = new Audio('../assets/audio/empty-weapon.mp3')
 
 let equipped
 export const manageWeaponActions = () => {
-    equipped = equippedItem()
+    equipped = equippedWeaponObj()
     manageAim()
     manageReload()
     manageShoot()
@@ -109,7 +109,7 @@ export const setupReload = () => {
 let reloadCounter = 0
 const manageReload = () => {
     if ( getThrowableSpecs().get(equipped?.name) ) return
-    if ( !getEquippedWeapon() ) return
+    if ( !getEquippedWeaponId() ) return
     if ( getReloading() ) reloadCounter++
     if ( reloadCounter / 60 >= getStat(equipped.name, 'reloadspeed', equipped.reloadspeedlvl) ) {
         reload()
@@ -128,7 +128,7 @@ const reload = () => {
 }
 
 const manageShoot = () => {
-    if ( !getEquippedWeapon() ) return
+    if ( !getEquippedWeaponId() ) return
     const fireRate = getEquippedSpec(equipped, 'firerate')
     setShootCounter(getShootCounter() + 1)
     if ( getShootCounter() / 60 >= fireRate ) setShootCounter(getShootCounter() - 1)
@@ -295,7 +295,7 @@ const unequipThrowable = () => {
     removeThrowable()
     setThrowCounter(0)
     setShooting(false)
-    setEquippedWeapon(null)
+    setEquippedWeaponId(null)
     removeClass(getPlayer(), 'throwable-aim')
     if (isMoving()) addClass(getPlayer(), 'walk')
     const rightHand = getPlayer().firstElementChild.firstElementChild.children[2]

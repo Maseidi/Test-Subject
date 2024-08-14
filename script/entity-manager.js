@@ -10,7 +10,7 @@ import {
     collide,
     containsClass,
     createAndAddClass,
-    elementToObject,
+    element2Object,
     getProperty,
     removeClass } from './util.js'
 import { 
@@ -183,7 +183,7 @@ const manageItems = (getItems, setItems, time, harmPlayer) => {
 const manageThrowables = () => {
     const throwables2Remove = new Map([])
     for ( const throwable of getCurrentRoomThrowables() ) {
-        const throwableObj = elementToObject(throwable)
+        const throwableObj = element2Object(throwable)
         let { 
             deg,
             time,

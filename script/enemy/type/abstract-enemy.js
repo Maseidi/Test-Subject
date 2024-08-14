@@ -35,7 +35,7 @@ export class AbstractEnemy {
     
     behave() {
         this.handleStunnedState()
-        if ( this.stunnedCounter > 0 ) return
+        if ( this.stunnedCounter > 0 || this.health === 0 ) return
         this.visionService.getWallInTheWay()
         this.visionService.vision2Player()
         this.injuryService.manageDamagedState()
@@ -49,8 +49,6 @@ export class AbstractEnemy {
         if ( this.stunnedCounter === 600 ) this.stunnedCounter = 0
     }
     
-    manageState() {
-        // signature
-    }
+    manageState() { /*signature*/ }
 
 }

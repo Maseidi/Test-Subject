@@ -2,10 +2,10 @@ import { managePause } from './controls.js'
 import { getThrowableSpecs } from './throwable-specs.js'
 import { addClass, appendAll, createAndAddClass } from './util.js'
 import { getPauseContainer, getUiEl, setUiEl } from './elements.js'
-import { calculateThrowableAmount, calculateTotalAmmo, equippedItem } from './inventory.js'
+import { calculateThrowableAmount, calculateTotalAmmo, equippedWeaponObj } from './inventory.js'
 import { 
     getDraggedItem,
-    getEquippedWeapon,
+    getEquippedWeaponId,
     getHealth,
     getMaxHealth,
     getMaxStamina,
@@ -51,8 +51,8 @@ const abstractManager = (input, elem, max) => elem.style.width = `${input / max 
 
 export const renderWeaponUi = () => {
     if ( getUiEl().children[2] ) getUiEl().children[2].remove() 
-    if ( !getEquippedWeapon() ) return
-    const equippedWeapon = equippedItem()
+    if ( !getEquippedWeaponId() ) return
+    const equippedWeapon = equippedWeaponObj()
     const predicate = getThrowableSpecs().get(equippedWeapon.name) 
     const weaponContainer = createAndAddClass('div', 'weapon-container')
     const weaponIcon = createAndAddClass('img', 'weapon-icon')

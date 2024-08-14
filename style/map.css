@@ -11,6 +11,11 @@
   position: absolute;
 }
 
+/* TODO: uncomment later */
+/* .room-container > div {
+  overflow: hidden;
+} */
+
 .tl,
 .bl,
 .tr,
