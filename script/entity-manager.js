@@ -120,7 +120,7 @@ const handleNoOffenceMode = () => {
         .filter(elem => elem.state === NO_OFFENCE)
         .forEach(elem => {
             elem.state = CHASE
-            removeClass(elem.htmlTag.firstElementChild.firstElementChild.firstElementChild, 'attack')
+            removeClass(elem.sprite.firstElementChild.firstElementChild.firstElementChild, 'attack')
         })
     setNoOffenseCounter(0)
 }
@@ -136,11 +136,8 @@ const handleStunnedMode = () => {
     setStunnedCounter(0)
 }
 
-const handleEnemies = () => {
-    Array.from(getCurrentRoomEnemies())
-        .sort(() => Math.random() - 0.5)
-        .forEach(elem => elem.behave())
-}
+const handleEnemies = () => 
+    Array.from(getCurrentRoomEnemies()).sort(() => Math.random() - 0.5).forEach(elem => elem.behave())
 
 const manageBullets = () => {
     const bullets2Remove = new Map([])
@@ -241,7 +238,8 @@ const explodeGrenade = () => {
     console.log('explode grenade');
 }
 
-const blindEnemies = () => {
+const blindEnemies = (throwable) => {    
+    if ( !collide(getCurrentRoom(), throwable, 0) ) return
     getCurrentRoomEnemies().forEach(enemy => {
         if ( enemy.state === GRAB ) enemy.grabService.releasePlayer()
         setStunnedCounter(1)
@@ -259,9 +257,9 @@ const THROWABLE_FUNCTIONALITY = new Map([
 
 const handleInteractablility = (throwable, time, name, throwables2Remove) => {
     if ( time === 180 ) {
-        throwable.remove()
+        THROWABLE_FUNCTIONALITY.get(name)(throwable)
         throwables2Remove.set(throwable, true)
-        THROWABLE_FUNCTIONALITY.get(name)()
+        throwable.remove()
     }
     addAttribute(throwable, 'time', time + 1)
 }

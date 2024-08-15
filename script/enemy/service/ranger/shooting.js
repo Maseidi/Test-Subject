@@ -18,7 +18,7 @@ export class RangerShootingService {
     }
 
     transferEnemy(toggle) {
-        const body = this.enemy.htmlTag.firstElementChild.firstElementChild
+        const body = this.enemy.sprite.firstElementChild.firstElementChild
         if ( toggle ) addClass(body, 'no-transition')
         else removeClass(body, 'no-transition')
     }
@@ -46,8 +46,8 @@ export class RangerShootingService {
 
     updateAngle2Player() {
         manageAimModeAngle(
-            this.enemy.htmlTag, 
-            getProperty(this.enemy.htmlTag.firstElementChild.children[1], 'transform', 'rotateZ(', 'deg)'),
+            this.enemy.sprite, 
+            getProperty(this.enemy.sprite.firstElementChild.children[1], 'transform', 'rotateZ(', 'deg)'),
             () => this.enemy.angle,
             (val) => this.enemy.angle = val,
             (val) => this.enemy.angleState = val
@@ -63,13 +63,13 @@ export class RangerShootingService {
     rotateBody(predicate, amount) {
         if ( !predicate ) return
         this.enemy.angle = this.enemy.angle + amount
-        this.enemy.htmlTag.firstElementChild.firstElementChild.style.transform = `rotateZ(${this.enemy.angle}deg)`
+        this.enemy.sprite.firstElementChild.firstElementChild.style.transform = `rotateZ(${this.enemy.angle}deg)`
     }
 
     shoot() {
         const { x: srcX, y: srcY } = { 
-            x: getProperty(this.enemy.htmlTag, 'left', 'px') + 16, 
-            y: getProperty(this.enemy.htmlTag, 'top', 'px') + 16 
+            x: getProperty(this.enemy.sprite, 'left', 'px') + 16, 
+            y: getProperty(this.enemy.sprite, 'top', 'px') + 16 
         }
         const { x: destX, y: destY } = { x: getPlayerX() - getRoomLeft() + 17, y: getPlayerY() - getRoomTop() + 17 }
         const deg = angleOf2Points(srcX, srcY, destX, destY)

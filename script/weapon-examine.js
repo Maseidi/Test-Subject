@@ -1,7 +1,7 @@
 import { getInventory } from './inventory.js'
 import { renderQuit } from './user-interface.js'
 import { getPauseContainer } from './elements.js'
-import { getWeaponStat, getWeaponDetails } from './weapon-details.js'
+import { getWeaponUpgradableDetail, getWeaponDetails } from './weapon-details.js'
 import { addClass, appendAll, createAndAddClass } from './util.js'
 
 export const renderStats = (itemObj) => {
@@ -62,5 +62,5 @@ const getValue = (itemObj, name) => {
             magazinelvl: 1, 
             fireratelvl: 1
         }
-    return getWeaponStat(weapon.name, name.replace(' ', ''), weapon[name.replace(' ', '').concat('lvl')])
+    return getWeaponUpgradableDetail(weapon.name, name.replace(' ', ''), weapon[name.replace(' ', '').concat('lvl')])
 }

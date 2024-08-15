@@ -9,7 +9,7 @@ export class GrabberMovementService extends AbstractMovementService {
     }
 
     playerInRange() {
-        if ( ( this.enemy.state !== CHASE && this.enemy.state !== NO_OFFENCE ) || !collide(this.enemy.htmlTag, getPlayer(), 0) ) 
+        if ( ( this.enemy.state !== CHASE && this.enemy.state !== NO_OFFENCE ) || !collide(this.enemy.sprite, getPlayer(), 0) ) 
             return false
         if ( this.enemy.state === CHASE ) {
             const decision = Math.random()

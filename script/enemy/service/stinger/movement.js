@@ -31,7 +31,7 @@ export class StingerMovementService extends AbstractMovementService {
 
     playerInRange() {
         if ( ( this.enemy.state !== CHASE && this.enemy.state !== NO_OFFENCE ) || 
-             !collide(this.enemy.htmlTag, getPlayer(), 0) ) 
+             !collide(this.enemy.sprite, getPlayer(), 0) ) 
             return false
         if ( this.enemy.state === CHASE ) {
             const decision = Math.random()

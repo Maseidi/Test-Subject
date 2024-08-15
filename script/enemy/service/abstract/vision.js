@@ -23,7 +23,7 @@ export class AbstractVisionService {
         if ( this.enemy.wallCheckCounter !== 20 ) return
         const walls = Array.from(getCurrentRoomSolid())
             .filter(solid => !containsClass(solid, 'enemy-collider') && !containsClass(solid, 'tracker-component'))
-        const vision = this.enemy.htmlTag.firstElementChild.children[1]
+        const vision = this.enemy.sprite.firstElementChild.children[1]
         for ( const component of vision.children ) {
             if ( collide(component, getPlayer(), 0) ) {
                 this.enemy.wallInTheWay = false
@@ -39,14 +39,14 @@ export class AbstractVisionService {
     }
 
     vision2Player() {
-        const vision = this.enemy.htmlTag.firstElementChild.children[1]
+        const vision = this.enemy.sprite.firstElementChild.children[1]
         vision.style.transform = `rotateZ(${this.enemy.angleService.angle2Player()}deg)`
     }
 
     isPlayerVisible() {
         let result = false
         if ( this.enemy.wallInTheWay !== false ) return result
-        const angle = getProperty(this.enemy.htmlTag.firstElementChild.children[1], 'transform', 'rotateZ(', 'deg)')
+        const angle = getProperty(this.enemy.sprite.firstElementChild.children[1], 'transform', 'rotateZ(', 'deg)')
         const predicateRunner = this.predicate(this.enemy.angleState, angle)
         const runners = [
             predicateRunner(0, 80, -80, 0),

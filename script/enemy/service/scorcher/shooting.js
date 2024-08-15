@@ -19,14 +19,14 @@ export class ScorcherShootingService extends RangerShootingService {
         this.rotateHand(this.enemy.shootCounter < this.fireRate / 2, 2)
         this.rotateHand(this.enemy.shootCounter >= this.fireRate / 2 && this.enemy.shootCounter < this.fireRate - 1, -2)
         if ( this.enemy.shootCounter <= this.fireRate - 1 ) return
-        const arm = this.enemy.htmlTag.firstElementChild.firstElementChild.firstElementChild
+        const arm = this.enemy.sprite.firstElementChild.firstElementChild.firstElementChild
         arm.style.transform = `rotateZ(0deg)`
         arm.style.transformOrigin = 'center' 
     }
 
     rotateHand(predicate, amount) {
         if ( !predicate ) return
-        const arm = this.enemy.htmlTag.firstElementChild.firstElementChild.firstElementChild
+        const arm = this.enemy.sprite.firstElementChild.firstElementChild.firstElementChild
         const currAngle = getProperty(arm, 'transform', 'rotateZ(', 'deg)')
         arm.style.transformOrigin = 'top'
         arm.style.transform = `rotateZ(${currAngle + amount}deg)`
@@ -34,8 +34,8 @@ export class ScorcherShootingService extends RangerShootingService {
 
     shoot() {
         const { x: srcX, y: srcY } = { 
-            x: getProperty(this.enemy.htmlTag, 'left', 'px') + 18.5, 
-            y: getProperty(this.enemy.htmlTag, 'top', 'px') + 18.5 
+            x: getProperty(this.enemy.sprite, 'left', 'px') + 18.5, 
+            y: getProperty(this.enemy.sprite, 'top', 'px') + 18.5 
         }
         const { x: destX, y: destY } = { x: getPlayerX() - getRoomLeft() + 17, y: getPlayerY() - getRoomTop() + 17 }
         const deg = angleOf2Points(srcX, srcY, destX, destY)

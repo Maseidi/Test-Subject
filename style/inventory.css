@@ -78,7 +78,7 @@
 }
 
 .block > img {
-  width: 80%;
+  max-width: 90%;
   height: 80%;
 }
 

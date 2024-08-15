@@ -4,7 +4,7 @@ import { renderQuit } from './user-interface.js'
 import { getPauseContainer } from './elements.js'
 import { renderStats } from './weapon-examine.js'
 import { getIntObj, setIntObj } from './variables.js'
-import { getWeaponStat, getWeaponDetails } from './weapon-details.js'
+import { getWeaponUpgradableDetail, getWeaponDetails, isWeapon } from './weapon-details.js'
 import { getShopItems, getShopItemsWithId } from './shop-item.js'
 import { 
     MAX_PACKSIZE,
@@ -23,6 +23,7 @@ import {
     element2Object,
     nextId,
     object2Element } from './util.js'
+import { isThrowable } from './throwable-details.js'
 
 let page = 1
 export const renderStore = () => {
@@ -134,7 +135,7 @@ const buyPopup = (e) => {
     const heading = createAndAddClass('h2', 'buy-popup-heading')
     const imageHeading = createAndAddClass('div', 'buy-heading-container')
     appendAll(imageHeading, image, heading)
-    if (getWeaponDetails().get(itemObj.name) || itemObj.name === 'pouch') heading.textContent = `${itemObj.heading}`
+    if (isWeapon(itemObj.name) || itemObj.name === 'pouch') heading.textContent = `${itemObj.heading}`
     else heading.textContent = `${itemObj.amount} ${itemObj.heading}`
     const description = createAndAddClass('p', 'buy-popup-description')
     description.textContent = `${itemObj.description}`
@@ -159,7 +160,7 @@ const createCancelBtn = () => {
 }
 
 const createExamineBtn = (itemObj, btnContainer) => {
-    if ( getWeaponDetails().get(itemObj.name) ) {
+    if ( isWeapon(itemObj.name) ) {
         const examine = createAndAddClass('button', 'popup-examine')
         examine.textContent = `examine`
         const weapon = getInventory().flat().find(item => item && item.name === itemObj.name)
@@ -215,7 +216,8 @@ const manageBuy = (itemObj) => {
         let purchasedItem = new Drop(
             chosenItem.width, chosenItem.left, chosenItem.top, chosenItem.name, chosenItem.heading, 
             chosenItem.popup, chosenItem.amount, chosenItem.space, chosenItem.description, chosenItem.price)
-        purchasedItem = handleNewWeapnPurchase(purchasedItem, itemObj)
+        purchasedItem = handleNewWeapnPurchase(purchasedItem, itemObj.name)
+        purchasedItem = handleNewThrowablePurchase(purchasedItem, itemObj.name)
         setIntObj(object2Element(purchasedItem))
         pickupDrop()
         submitPurchase(itemObj.id)
@@ -224,8 +226,8 @@ const manageBuy = (itemObj) => {
     addMessage('No enough space')
 }
 
-const handleNewWeapnPurchase = (purchasedItem, itemObj) => {
-    if ( !getWeaponDetails().has(itemObj.name) ) return purchasedItem 
+const handleNewWeapnPurchase = (purchasedItem, name) => {
+    if ( !isWeapon(name) ) return purchasedItem 
     return {
         ...purchasedItem,
         id: nextId(),
@@ -235,8 +237,13 @@ const handleNewWeapnPurchase = (purchasedItem, itemObj) => {
         reloadspeedlvl: 1, 
         magazinelvl: 1, 
         fireratelvl: 1, 
-        ammotype: getWeaponDetails().get(itemObj.name).ammotype
+        ammotype: getWeaponDetails().get(name).ammotype
     }
+}
+
+const handleNewThrowablePurchase = (purchasedItem, name) => {
+    if ( !isThrowable(name) ) return purchasedItem
+    return { ...purchasedItem, id: nextId() }
 }
 
 const submitPurchase = (id) => {
@@ -261,7 +268,7 @@ const renderUpgrade = () => {
 const renderUpgradeItems = () => {
     return getInventory()
     .flat()
-    .filter((block => getWeaponDetails().has(block?.name)))
+    .filter((block => isWeapon(block?.name)))
     .map((weapon) => {
         const weapon2Upgrade = object2Element(weapon)
         addClass(weapon2Upgrade, 'upgrade-item')
@@ -324,14 +331,14 @@ const createValueComponent = (weaponObj, name) => {
     const values = createAndAddClass('div', 'upgrade-stat-value')
     const currLvl = weaponObj[`${name.replace(' ', '')}lvl`]
     if ( currLvl === 5 ) 
-        values.textContent = `${getWeaponStat(weaponObj.name, name.replace(' ', ''), currLvl)}`
+        values.textContent = `${getWeaponUpgradableDetail(weaponObj.name, name.replace(' ', ''), currLvl)}`
     else {
         const current = document.createElement('p')
-        current.textContent = `${getWeaponStat(weaponObj.name, name.replace(' ', ''), currLvl)}`
+        current.textContent = `${getWeaponUpgradableDetail(weaponObj.name, name.replace(' ', ''), currLvl)}`
         const img = document.createElement('img')
         img.src = `../assets/images/upgrade.png`
         const next = document.createElement('p')
-        next.textContent = `${getWeaponStat(weaponObj.name, name.replace(' ', ''), currLvl + 1)}`
+        next.textContent = `${getWeaponUpgradableDetail(weaponObj.name, name.replace(' ', ''), currLvl + 1)}`
         appendAll(values, current, img, next)
     }
     return values
@@ -451,7 +458,7 @@ const sellPopup = (e) => {
     const heading = createAndAddClass('h2', 'sell-popup-heading')
     const imageHeading = createAndAddClass('div', 'sell-heading-container')
     appendAll(imageHeading, image, heading)
-    if (getWeaponDetails().get(itemObj.name)) heading.textContent = `${itemObj.heading}`
+    if ( isWeapon(itemObj.name) ) heading.textContent = `${itemObj.heading}`
     else heading.textContent = `${itemObj.amount} ${itemObj.heading}`
     const description = createAndAddClass('p', 'sell-popup-description')
     description.textContent = `${itemObj.description}`

@@ -1,19 +1,20 @@
 import { getPlayer } from './elements.js'
 import { equippedWeaponObj } from './inventory.js'
-import { getWeaponStat, getWeaponDetails } from './weapon-details.js'
+import { getWeaponUpgradableDetail, getWeaponDetails } from './weapon-details.js'
 import { createAndAddClass, findAttachementsOnPlayer } from './util.js'
 
 export const renderWeapon = () => {
     const equippedWeapon = equippedWeaponObj()
     const weapon = createAndAddClass('div', 'weapon')
-    weapon.style.height = `${getWeaponDetails().get(equippedWeapon.name).height}px`
-    weapon.style.backgroundColor = `${getWeaponDetails().get(equippedWeapon.name).color}`
+    const details = getWeaponDetails().get(equippedWeapon.name)
+    weapon.style.height = `${details.height}px`
+    weapon.style.backgroundColor = `${details.color}`
     const laser = createAndAddClass('div', 'laser')
-    laser.style.height = `${getWeaponStat(equippedWeapon.name, 'range', equippedWeapon.rangelvl)}px`
+    laser.style.height = `${getWeaponUpgradableDetail(equippedWeapon.name, 'range', equippedWeapon.rangelvl)}px`
     for ( let i = 0; i < 100; i++ ) {
         const part = document.createElement('div')
         part.style.opacity = `${(100 - (0.9 * i))/100}`
-        part.style.backgroundColor = `${getWeaponDetails().get(equippedWeapon.name).antivirus}`
+        part.style.backgroundColor = `${details.antivirus}`
         laser.append(part)
     }
     weapon.append(laser)

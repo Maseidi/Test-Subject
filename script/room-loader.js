@@ -2,10 +2,10 @@ import { walls } from './walls.js'
 import { rooms } from './rooms.js'
 import { loaders } from './loaders.js'
 import { getProgress } from './progress.js'
+import { isWeapon } from './weapon-details.js'
 import { enemies } from './enemy/util/enemies.js'
 import { interactables } from './interactables.js'
-import { getWeaponDetails } from './weapon-details.js'
-import { getCurrentRoomId, getRoomLeft, getRoomTop } from './variables.js'
+import { getCurrentRoomId, getRoomLeft, getRoomTop, setStunnedCounter } from './variables.js'
 import { 
     GO_FOR_RANGED,
     LOST,
@@ -43,6 +43,7 @@ import {
 
 export const loadCurrentRoom = () => {
     const room = rooms.get(getCurrentRoomId())
+    setStunnedCounter(0)
     setCurrentRoomSolid([])
     setCurrentRoomLoaders([])
     setCurrentRoomInteractables([])
@@ -166,7 +167,7 @@ const renderPopUp = (int, interactable) => {
 
 const renderHeading = (popup, interactable) => {
     const heading = document.createElement('p')
-    let content = interactable.amount && !getWeaponDetails().get(interactable.name) ? 
+    let content = interactable.amount && !isWeapon(interactable.name) ? 
     `${interactable.amount} ${interactable.heading}` : `${interactable.heading}`
     heading.textContent = content
     popup.append(heading)
@@ -214,7 +215,7 @@ const spawnEnemies = (enemies, room2Render) => {
         appendAll(enemyCollider, enemyBody, vision, fwDetector)
         enemy.append(enemyCollider)
         room2Render.append(enemy)
-        elem.htmlTag = enemy
+        elem.sprite = enemy
         getCurrentRoomEnemies().push(elem)
         getCurrentRoomSolid().push(enemyCollider)
     })

@@ -24,8 +24,8 @@ export class AbstractCollisionService {
 
     findCollidingEnemy() {
         const collidingEnemy = Array.from(getCurrentRoomEnemies())
-            .find(e => e.htmlTag !== this.enemy.htmlTag 
-                  && collide(this.enemy.htmlTag.firstElementChild.children[2], e.htmlTag.firstElementChild, 0) 
+            .find(e => e.sprite !== this.enemy.sprite 
+                  && collide(this.enemy.sprite.firstElementChild.children[2], e.sprite.firstElementChild, 0) 
                   && e.type !== TRACKER && e.type !== SPIKER
                   && e.state !== INVESTIGATE && e.state !== GO_FOR_RANGED)
         this.enemy.collidingEnemy = null

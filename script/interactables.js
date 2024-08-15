@@ -108,7 +108,8 @@ export class Grenade extends Drop {
 
 export class Flashbang extends Drop {
     constructor(left, top, amount) {
-        super(20, left, top, 'flashbang', 'flashbang', 'Pick up', amount, 1, 'Blinding enemies can be a game changer in emergencies', 1/3)
+        super(20, left, top, 'flashbang', 'flashbang', 'Pick up', amount, 1, 
+              'Blinding enemies can be a game changer in many situations', 1/3)
     }
 }
 

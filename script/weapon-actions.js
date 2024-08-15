@@ -1,8 +1,8 @@
 import { dropLoot } from './loot-manager.js'
+import { isThrowable } from './throwable-details.js'
 import { removeThrowable } from './throwable-loader.js'
-import { getThrowableDetails } from './throwable-details.js'
 import { TRACKER } from './enemy/util/enemy-constants.js'
-import { getWeaponStat, getWeaponDetails } from './weapon-details.js'
+import { getWeaponUpgradableDetail, isWeapon } from './weapon-details.js'
 import { 
     calculateThrowableAmount,
     calculateTotalAmmo,
@@ -26,7 +26,7 @@ import {
     containsClass,
     createAndAddClass,
     findAttachementsOnPlayer,
-    getEquippedSpec,
+    getEquippedItemDetail,
     getProperty,
     isMoving,
     isThrowing,
@@ -75,7 +75,7 @@ const manageAim = () => {
         setTarget(null)
     } 
     if ( counter !== 0 ) return
-    const range = getEquippedSpec(equipped, 'range')
+    const range = getEquippedItemDetail(equipped, 'range')
     const laser = findAttachementsOnPlayer('throwable', 'weapon').firstElementChild
     laser.style.height = `${range}px`
     let found = false
@@ -86,10 +86,10 @@ const manageAim = () => {
             return
         }
         for ( const solid of getCurrentRoomSolid() ) {
-            if ( ( getThrowableDetails().get(equipped.name) &&
+            if ( ( isThrowable(equipped.name) &&
                    !containsClass(solid, 'enemy-collider') &&
                    !containsClass(solid, 'tracker-component') ||
-                   getWeaponDetails().get(equipped.name)
+                   isWeapon(equipped.name)
                  ) &&
                 collide(elem, solid, 0) ) {
                 setTarget(solid)
@@ -100,8 +100,8 @@ const manageAim = () => {
 }
 
 export const setupReload = () => {    
-    if ( getThrowableDetails().get(equipped.name) ) return
-    if ( equipped.currmag === getWeaponStat(equipped.name, 'magazine', equipped.magazinelvl) ) return
+    if ( isThrowable(equipped.name) ) return
+    if ( equipped.currmag === getWeaponUpgradableDetail(equipped.name, 'magazine', equipped.magazinelvl) ) return
     if ( calculateTotalAmmo(equipped) === 0 ) return
     if ( getShooting() ) return
     setReloading(true)
@@ -109,10 +109,10 @@ export const setupReload = () => {
 
 let reloadCounter = 0
 const manageReload = () => {
-    if ( getThrowableDetails().get(equipped?.name) ) return
+    if ( isThrowable(equipped?.name) ) return
     if ( !getEquippedWeaponId() ) return
     if ( getReloading() ) reloadCounter++
-    if ( reloadCounter / 60 >= getWeaponStat(equipped.name, 'reloadspeed', equipped.reloadspeedlvl) ) {
+    if ( reloadCounter / 60 >= getWeaponUpgradableDetail(equipped.name, 'reloadspeed', equipped.reloadspeedlvl) ) {
         reload()
         setReloading(false)
         reloadCounter = 0
@@ -120,7 +120,7 @@ const manageReload = () => {
 }
 
 const reload = () => {    
-    const mag = getWeaponStat(equipped.name, 'magazine', equipped.magazinelvl)
+    const mag = getWeaponUpgradableDetail(equipped.name, 'magazine', equipped.magazinelvl)
     const currentMag = equipped.currmag
     const totalAmmo = calculateTotalAmmo(equipped)
     const need = mag - currentMag
@@ -130,7 +130,7 @@ const reload = () => {
 
 const manageShoot = () => {
     if ( !getEquippedWeaponId() ) return
-    const fireRate = getEquippedSpec(equipped, 'firerate')
+    const fireRate = getEquippedItemDetail(equipped, 'firerate')
     setShootCounter(getShootCounter() + 1)
     if ( getShootCounter() / 60 >= fireRate ) setShootCounter(getShootCounter() - 1)
     if ( (getShootCounter() + 1) / 60 >= fireRate ) {
@@ -144,7 +144,7 @@ const manageShoot = () => {
 }
 
 const shoot = () => {
-    if ( getThrowableDetails().get(equipped.name) ) {
+    if ( isThrowable(equipped.name) ) {
         setThrowCounter(1)
         return
     }
@@ -164,7 +164,7 @@ const shoot = () => {
 }
 
 const notifyNearbyEnemies = () => getCurrentRoomEnemies().forEach(elem => {
-    if ( elem.htmlTag.type === TRACKER ) {
+    if ( elem.sprite.type === TRACKER ) {
         if ( getNoOffenseCounter() === 0 ) elem.notificationService.notifyEnemy(2000)
     }
     else elem.notificationService.notifyEnemy(800)
@@ -175,7 +175,7 @@ const manageInteractivity = () => {
     let element = getTarget().parentElement
     if ( containsClass(element, TRACKER) ) return
     if ( containsClass(getTarget(), 'weak-point') ) element = getTarget().parentElement.parentElement.parentElement
-    const enemy = getCurrentRoomEnemies().find(elem => elem.htmlTag === element)
+    const enemy = getCurrentRoomEnemies().find(elem => elem.sprite === element)
     if ( containsClass(element, 'enemy') && enemy.health > 0 ) enemy.injuryService.damageEnemy(equipped)
     if ( getTarget()?.getAttribute('name') === 'crate' ) dropLoot(getTarget())
 }
@@ -253,11 +253,9 @@ const throwItem = () => {
 }
 
 const getSourceCoordinates = () => {
-    const playerX = getPlayer().getBoundingClientRect().x
-    const playerY = getPlayer().getBoundingClientRect().y
+    const { x: playerX, y: playerY } = getPlayer().getBoundingClientRect()
     const throwable = findAttachementsOnPlayer('throwable').children[1]
-    const throwableX = throwable.getBoundingClientRect().x
-    const throwableY = throwable.getBoundingClientRect().y
+    const { x: throwableX, y: throwableY } = throwable.getBoundingClientRect()
     const diffX = throwableX - playerX
     const diffY = throwableY - playerY
     const srcX = ( getPlayerX() - getRoomLeft() ) + diffX
@@ -266,11 +264,9 @@ const getSourceCoordinates = () => {
 }
 
 const getDestinationCoordinates = () => {
-    const playerX = getPlayer().getBoundingClientRect().x
-    const playerY = getPlayer().getBoundingClientRect().y
+    const { x: playerX, y: playerY } = getPlayer().getBoundingClientRect()
     const target = findAttachementsOnPlayer('throwable').children[2]
-    const targetX = target.getBoundingClientRect().x
-    const targetY = target.getBoundingClientRect().y
+    const { x: targetX, y: targetY } = target.getBoundingClientRect()
     const diffX = targetX - playerX
     const diffY = targetY - playerY
     const destX = ( getPlayerX() - getRoomLeft() ) + diffX
@@ -278,13 +274,14 @@ const getDestinationCoordinates = () => {
     return { destX, destY }
 }
 
-const appendColliders = (throwable) => {
-    const top = createAndAddClass('div', 'top-collider')
-    const left = createAndAddClass('div', 'left-collider')
-    const right = createAndAddClass('div', 'right-collider')
-    const bottom = createAndAddClass('div', 'bottom-collider')
-    appendAll(throwable, top, left, right, bottom)
-}
+const appendColliders = (throwable) => 
+    appendAll(
+        throwable, 
+        createAndAddClass('div', 'top-collider'), 
+        createAndAddClass('div', 'left-collider'), 
+        createAndAddClass('div', 'right-collider'), 
+        createAndAddClass('div', 'bottom-collider')
+    )
 
 const useThrowableFromInventory = () => {
     unequipThrowable()

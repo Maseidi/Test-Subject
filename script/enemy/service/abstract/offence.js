@@ -10,7 +10,7 @@ export class AbstractOffenceService {
     }
 
     hitPlayer() {
-        addClass(this.enemy.htmlTag.firstElementChild.firstElementChild.firstElementChild, 'attack')
+        addClass(this.enemy.sprite.firstElementChild.firstElementChild.firstElementChild, 'attack')
         damagePlayer(this.enemy.damage)
         this.knockPlayer()
     }

@@ -9,7 +9,7 @@ export class TrackerMovemenetService extends AbstractMovementService {
     }
 
     playerInRange() {
-        if ( !collide(this.enemy.htmlTag, getPlayer(), 0) ) return false
+        if ( !collide(this.enemy.sprite, getPlayer(), 0) ) return false
         this.enemy.offenceService.hitPlayer()
         this.enemy.state = LOST
         return true

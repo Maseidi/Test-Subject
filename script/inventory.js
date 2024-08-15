@@ -1,11 +1,11 @@
+import { renderQuit } from './user-interface.js'
 import { renderStats } from './weapon-examine.js'
-import { getWeaponDetails } from './weapon-details.js'
 import { interactables } from './interactables.js'
+import { isThrowable } from './throwable-details.js'
 import { renderInteractable } from './room-loader.js'
-import { getThrowableDetails } from './throwable-details.js'
 import { useAntidote, useBandage } from './player-health.js'
 import { removeWeapon, renderWeapon } from './weapon-loader.js'
-import { removeUi, renderQuit, renderUi } from './user-interface.js'
+import { getWeaponDetails, isWeapon } from './weapon-details.js'
 import { removeThrowable, renderThrowable } from './throwable-loader.js'
 import { getCurrentRoom, getPauseContainer, getPlayer, getUiEl } from './elements.js'
 import { 
@@ -18,7 +18,7 @@ import {
     appendAll, 
     createAndAddClass,
     nextId, 
-    getEquippedSpec,
+    getEquippedItemDetail,
     addAllAttributes} from './util.js'
 import { 
     getAimMode,
@@ -104,7 +104,7 @@ const searchEmpty = () => {
                     if ( inventory[i][j+k] !== null ) skip = true
                 if ( skip ) continue   
                 let diff = Math.min(pack, drop.amount)
-                if ( getThrowableDetails().get(drop.name) ) {
+                if ( isThrowable(drop.name) ) {
                     const throwable = inventory.flat().find(item => item?.name === drop.name)
                     if ( throwable ) {
                         drop.id = throwable.id
@@ -124,8 +124,8 @@ const searchEmpty = () => {
 
 const checkSpecialScenarios = () => {
     const obj = element2Object(getIntObj())
-    if ( ( getThrowableDetails().get(obj.name) && !getWeaponWheel().includes(obj.id) ) ||
-         ( getWeaponDetails().get(obj.name) && obj.amount === 0 ) ) updateWeaponWheel()        
+    if ( ( isThrowable(obj.name) && !getWeaponWheel().includes(obj.id) ) ||
+         ( isWeapon(obj.name) && obj.amount === 0 ) ) updateWeaponWheel()        
     if ( getPause() ) return
     if ( obj.amount === 0 ) removeDrop(getIntObj())
     ammo4Equipped(obj)
@@ -139,7 +139,7 @@ const ammo4Equipped = (obj) => {
 }
 
 const ammo4EquippedWeapon = (equipped, obj) => {
-    if ( !getWeaponDetails().get(equipped.name) ) return
+    if ( !isWeapon(equipped.name) ) return
     if ( obj.name !== getWeaponDetails().get(equipped.name).ammotype ) return
     const ammoCount = getUiEl().children[2].children[1]
     const totalAmmo = ammoCount.children[1]
@@ -147,7 +147,7 @@ const ammo4EquippedWeapon = (equipped, obj) => {
 }
 
 const ammo4EquippedThrowable = (equipped, obj) => {
-    if ( !getThrowableDetails().get(equipped.name) ) return
+    if ( !isThrowable(equipped.name) ) return
     if ( obj.name !== equipped.name ) return
     const ammoCount = getUiEl().children[2].children[1]
     ammoCount.firstElementChild.textContent = calculateThrowableAmount(equipped)
@@ -253,7 +253,7 @@ export const renderBlocks = () => {
                 theBlock.style.width = `${block.space * 25}%`
                 const amount = createAndAddClass('div', 'amount')
                 const amountText = document.createElement('p')
-                if ( getWeaponDetails().get(block.name) === undefined ) amountText.textContent = `${block.amount}`
+                if ( !isWeapon(block.name) ) amountText.textContent = `${block.amount}`
                 else amountText.textContent = `${block.currmag}`
                 amount.append(amountText)
                 theBlock.append(amount)
@@ -334,11 +334,11 @@ const renderOptions = (item, options) => {
     let renderDropOption = true
     const itemObj = element2Object(item)
     if ( itemObj.name === 'bandage' || itemObj.name === 'antidote' ) createOption(options, 'use')
-    if ( getThrowableDetails().get(itemObj.name) ) {
+    if ( isThrowable(itemObj.name) ) {
         createOption(options, 'equip')
         createOption(options, 'shortcut')
     }
-    if ( getWeaponDetails().get(itemObj.name) ) {
+    if ( isWeapon(itemObj.name) ) {
         if ( getEquippedWeaponId() && itemObj.name === equippedWeaponObj().name ) {
              if ( getReloading() || getShooting() ) renderDropOption = false
         } else {
@@ -539,16 +539,16 @@ const equip = (item) => {
     const column = itemObj.column
     setEquippedWeaponId(inventory[row][column].id)
     const equipped = equippedWeaponObj()
-    setShootCounter(getEquippedSpec(equipped, 'firerate') * 60)
+    setShootCounter(getEquippedItemDetail(equipped, 'firerate') * 60)
     if ( getAimMode() ) {
         removeWeapon()
         removeThrowable()
         removeClass(getPlayer(), 'aim')
         removeClass(getPlayer(), 'throwable-aim')
-        if ( getWeaponDetails().get(equipped.name) ) {
+        if ( isWeapon(equipped.name) ) {
             addClass(getPlayer(), 'aim')
             renderWeapon()
-        } else if ( getThrowableDetails().get(equipped.name) ) {
+        } else if ( isThrowable(equipped.name) ) {
             addClass(getPlayer(), 'throwable-aim')
             renderThrowable()
         }
@@ -567,6 +567,7 @@ const shortcut = (item) => {
         )
         slot.addEventListener('click', selectAsSlot)
     })
+    item.children[2].remove()
 }
 
 const selectAsSlot = (e) => {
@@ -609,13 +610,12 @@ export const handleEquippableDrop = (itemObj) => {
 }
 
 const handleWeaponDrop = (itemObj) => {
-    if ( !getWeaponDetails().has(itemObj.name) ) return
+    if ( !isWeapon(itemObj.name) ) return
     dropFromWeaponWheel(itemObj)
-
 }
 
 const handleThrowableDrop = (itemObj) => {
-    if ( !getThrowableDetails().has(itemObj.name) ) return
+    if ( !isThrowable(itemObj.name) ) return
     if ( calculateThrowableAmount(itemObj) !== 0 ) return
     dropFromWeaponWheel(itemObj)
 }

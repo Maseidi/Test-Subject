@@ -11,8 +11,8 @@ export class StingerShootingService extends RangerShootingService {
 
     shoot() {
         const { x: srcX, y: srcY } = { 
-            x: getProperty(this.enemy.htmlTag, 'left', 'px') + 25, 
-            y: getProperty(this.enemy.htmlTag, 'top', 'px') + 25 
+            x: getProperty(this.enemy.sprite, 'left', 'px') + 25, 
+            y: getProperty(this.enemy.sprite, 'top', 'px') + 25 
         }
         const { x: destX, y: destY } = { x: getPlayerX() - getRoomLeft() + 17, y: getPlayerY() - getRoomTop() + 17 }
         const deg = angleOf2Points(srcX, srcY, destX, destY)

@@ -32,3 +32,5 @@ const throwableDetails = new Map([
 ])
 
 export const getThrowableDetails = () => throwableDetails
+
+export const isThrowable = (name) => throwableDetails.has(name)

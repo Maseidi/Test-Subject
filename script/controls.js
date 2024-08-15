@@ -1,11 +1,11 @@
 import { renderStash } from './stash.js'
 import { dropLoot } from './loot-manager.js'
+import { isWeapon } from './weapon-details.js'
 import { centralizePlayer } from './startup.js'
 import { setupReload } from './weapon-actions.js'
 import { renderStore } from './vending-machine.js'
-import { getWeaponDetails } from './weapon-details.js'
+import { isThrowable } from './throwable-details.js'
 import { heal, damagePlayer } from './player-health.js'
-import { getThrowableDetails } from './throwable-details.js'
 import { removeWeapon, renderWeapon } from './weapon-loader.js'
 import { removeThrowable, renderThrowable } from './throwable-loader.js'
 import { renderUi, renderWeaponUi, quitPage } from './user-interface.js'
@@ -15,7 +15,7 @@ import {
     addAttribute,
     addClass,
     angleOf2Points,
-    getEquippedSpec,
+    getEquippedItemDetail,
     getProperty,
     isMoving,
     isThrowing,
@@ -160,13 +160,11 @@ const eDown = () => {
             removeClass(getPlayer(), 'walk')
             removeClass(getPlayer(), 'run')
             const equipped = equippedWeaponObj()
-            const isWeapon = getWeaponDetails().get(equipped.name)
-            const isThrowable = getThrowableDetails().get(equipped.name) 
-            if ( isWeapon ) {
+            if ( isWeapon(equipped.name) ) {
                 addClass(getPlayer(), 'aim')
                 renderWeapon()
             }
-            else if ( isThrowable ) {
+            else if ( isThrowable(equipped.name) ) {
                 addClass(getPlayer(), 'throwable-aim')
                 renderThrowable()
             }
@@ -195,15 +193,15 @@ const weaponSlotDown = (key) => {
     }
     setEquippedWeaponId(getWeaponWheel()[Number(key) - 1])
     renderWeaponUi()
-    if ( getEquippedWeaponId() ) setShootCounter(getEquippedSpec(equippedWeaponObj(), 'firerate') * 60)
+    if ( getEquippedWeaponId() ) setShootCounter(getEquippedItemDetail(equippedWeaponObj(), 'firerate') * 60)
     if ( getEquippedWeaponId() && getAimMode() ) {
         const equipped = equippedWeaponObj()
-        if ( getWeaponDetails().get(equipped.name) ) {
+        if ( isWeapon(equipped.name) ) {
             removeClass(getPlayer(), 'throwable-aim')
             addClass(getPlayer(), 'aim')
             renderWeapon()
         }
-        else if ( getThrowableDetails().get(equipped.name) ) {
+        else if ( isThrowable(equipped.name) ) {
             removeClass(getPlayer(), 'aim')
             addClass(getPlayer(), 'throwable-aim')
             renderThrowable()

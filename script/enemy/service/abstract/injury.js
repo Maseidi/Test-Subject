@@ -1,10 +1,10 @@
 import { enemies } from '../../util/enemies.js'
 import { getPlayer } from '../../../elements.js'
 import { dropLoot } from '../../../loot-manager.js'
-import { getCurrentRoomId } from '../../../variables.js'
-import { getWeaponDetail, getWeaponStat } from '../../../weapon-details.js'
-import { addAllAttributes, addClass, removeClass } from '../../../util.js'
 import { CHASE } from '../../util/enemy-constants.js'
+import { getCurrentRoomId } from '../../../variables.js'
+import { addAllAttributes, addClass, removeClass } from '../../../util.js'
+import { getWeaponDetail, getWeaponUpgradableDetail } from '../../../weapon-details.js'
 
 export class AbstractInjuryService {
     constructor(enemy) {
@@ -12,7 +12,7 @@ export class AbstractInjuryService {
     }
 
     damageEnemy(equipped) {
-        let damage = getWeaponStat(equipped.name, 'damage', equipped.damagelvl)
+        let damage = getWeaponUpgradableDetail(equipped.name, 'damage', equipped.damagelvl)
         if ( this.enemy.virus === getWeaponDetail(equipped.name, 'antivirus') ) damage *= 1.2
         if ( Math.random() < 0.01 ) damage *= (Math.random() + 1)
         const enemyHealth = this.enemy.health
@@ -20,24 +20,23 @@ export class AbstractInjuryService {
         this.enemy.health = newHealth
         if ( newHealth <= 0 ) {
             addAllAttributes(
-                this.enemy.htmlTag, 
-                'left', Number(this.enemy.htmlTag.style.left.replace('px', '')), 
-                'top', Number(this.enemy.htmlTag.style.top.replace('px', ''))
+                this.enemy.sprite, 
+                'left', Number(this.enemy.sprite.style.left.replace('px', '')), 
+                'top', Number(this.enemy.sprite.style.top.replace('px', ''))
             )
-            dropLoot(this.enemy.htmlTag)
-            const enemiesCopy = enemies.get(getCurrentRoomId())
-            enemiesCopy[this.enemy.index].health = 0
+            dropLoot(this.enemy.sprite)
+            enemies.get(getCurrentRoomId())[this.enemy.index].health = 0
             return
         }
         const knockback = getWeaponDetail(equipped.name, 'knockback')
         this.knockEnemy(knockback)
-        addClass(this.enemy.htmlTag.firstElementChild.firstElementChild, 'damaged')
+        addClass(this.enemy.sprite.firstElementChild.firstElementChild, 'damaged')
         this.enemy.damagedCounter = 6
         this.enemy.state = CHASE
     }
 
     knockEnemy(knockback) {
-        const enemyBound = this.enemy.htmlTag.getBoundingClientRect()
+        const enemyBound = this.enemy.sprite.getBoundingClientRect()
         const playerBound = getPlayer().getBoundingClientRect()
         let xAxis, yAxis
         if ( enemyBound.left < playerBound.left ) xAxis = -1
@@ -48,13 +47,13 @@ export class AbstractInjuryService {
         else yAxis = 1
         this.enemy.x += (xAxis * knockback)
         this.enemy.y += (yAxis * knockback)
-        this.enemy.htmlTag.style.left = `${this.enemy.x}px`
-        this.enemy.htmlTag.style.top = `${this.enemy.y}px`
+        this.enemy.sprite.style.left = `${this.enemy.x}px`
+        this.enemy.sprite.style.top = `${this.enemy.y}px`
     }
 
     manageDamagedState() {
         if ( this.enemy.damagedCounter === 0 ) {
-            removeClass(this.enemy.htmlTag.firstElementChild.firstElementChild, 'damaged')
+            removeClass(this.enemy.sprite.firstElementChild.firstElementChild, 'damaged')
             return
         }
         this.enemy.damagedCounter -= 1

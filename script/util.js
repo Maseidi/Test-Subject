@@ -1,6 +1,6 @@
 import { getPlayer } from './elements.js'
-import { getWeaponStat } from './weapon-details.js'
-import { getThrowableDetail, getThrowableDetails } from './throwable-details.js'
+import { getWeaponUpgradableDetail } from './weapon-details.js'
+import { getThrowableDetail, isThrowable } from './throwable-details.js'
 import { 
     getDownPressed,
     getEntityId,
@@ -41,7 +41,7 @@ export const addClass = (elem, className) => elem.classList.add(className)
 
 export const removeClass = (elem, className) => elem.classList.remove(className)
 
-export const containsClass = (elem, className) => elem.classList.contains(className)
+export const containsClass = (elem, className) => elem?.classList?.contains(className)
 
 export const appendAll = (root, ...elems) => elems.forEach(elem => root.append(elem))
 
@@ -153,10 +153,10 @@ export const getProperty = (elem, property, ...toRemoveList) => {
     return Number(res)
 }
 
-export const getEquippedSpec = (equipped, spec) =>  
-    getThrowableDetails().get(equipped?.name) ? 
+export const getEquippedItemDetail = (equipped, spec) =>  
+    isThrowable(equipped?.name) ? 
     getThrowableDetail(equipped.name, spec) : 
-    getWeaponStat(equipped.name, spec, equipped[spec+'lvl'])
+    getWeaponUpgradableDetail(equipped.name, spec, equipped[spec+'lvl'])
 
 export const isThrowing = () => getThrowCounter() > 0
 
