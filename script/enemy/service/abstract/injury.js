@@ -4,6 +4,7 @@ import { dropLoot } from '../../../loot-manager.js'
 import { getCurrentRoomId } from '../../../variables.js'
 import { getWeaponDetail, getWeaponStat } from '../../../weapon-details.js'
 import { addAllAttributes, addClass, removeClass } from '../../../util.js'
+import { CHASE } from '../../util/enemy-constants.js'
 
 export class AbstractInjuryService {
     constructor(enemy) {
@@ -32,7 +33,7 @@ export class AbstractInjuryService {
         this.knockEnemy(knockback)
         addClass(this.enemy.htmlTag.firstElementChild.firstElementChild, 'damaged')
         this.enemy.damagedCounter = 6
-        this.enemy.stunnedCounter = 0
+        this.enemy.state = CHASE
     }
 
     knockEnemy(knockback) {

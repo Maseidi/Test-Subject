@@ -226,6 +226,12 @@ export const setNoOffenseCounter = (val) => {
 }
 export const getNoOffenseCounter = () => noOffenseCounter
 
+let stunnedCounter = 0
+export const setStunnedCounter = (val) => {
+    stunnedCounter = val
+}
+export const getStunnedCounter = () => stunnedCounter
+
 let entityId = 1
 export const setEntityId = (val) => {
     entityId = val

@@ -1,7 +1,7 @@
 import { getPlayer } from './elements.js'
 import { equippedWeaponObj } from './inventory.js'
 import { getWeaponStat, getWeaponDetails } from './weapon-details.js'
-import { containsClass, createAndAddClass } from './util.js'
+import { createAndAddClass, findAttachementsOnPlayer } from './util.js'
 
 export const renderWeapon = () => {
     const equippedWeapon = equippedWeaponObj()
@@ -20,6 +20,4 @@ export const renderWeapon = () => {
     getPlayer().children[0].children[0].append(weapon)
 }
 
-export const removeWeapon = () => 
-    Array.from(getPlayer().firstElementChild.firstElementChild.children)
-        .find(child => containsClass(child, 'weapon'))?.remove()
+export const removeWeapon = () => findAttachementsOnPlayer('weapon')?.remove()

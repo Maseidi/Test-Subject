@@ -1,7 +1,7 @@
 import { rooms } from './rooms.js'
 import { loaders } from './loaders.js'
 import { loadCurrentRoom } from './room-loader.js'
-import { CHASE, GRAB, GUESS_SEARCH, LOST, NO_OFFENCE } from './enemy/util/enemy-constants.js'
+import { CHASE, GO_FOR_RANGED, GRAB, LOST, NO_OFFENCE, RANGER, STUNNED } from './enemy/util/enemy-constants.js'
 import { damagePlayer, poisonPlayer, setPlayer2Fire } from './player-health.js'
 import { 
     addAllAttributes,
@@ -28,7 +28,7 @@ import {
     setCurrentRoomPoisons,
     getCurrentRoomThrowables,
     setCurrentRoomThrowables,
-    getMapEl} from './elements.js'
+    getMapEl } from './elements.js'
 import {
     getCurrentRoomId,
     getGrabbed,
@@ -36,12 +36,14 @@ import {
     getNoOffenseCounter,
     getRoomLeft,
     getRoomTop,
+    getStunnedCounter,
     setAllowMove,
     setCurrentRoomId,
     setIntObj,
     setNoOffenseCounter,
     setRoomLeft,
-    setRoomTop} from './variables.js'
+    setRoomTop, 
+    setStunnedCounter} from './variables.js'
 
 export const manageEntities = () => {
     manageSolidObjects()
@@ -107,6 +109,7 @@ const manageInteractables = () => {
 
 const manageEnemies = () => {
     handleNoOffenceMode()
+    handleStunnedMode()
     handleEnemies()
 }
 
@@ -120,6 +123,17 @@ const handleNoOffenceMode = () => {
             removeClass(elem.htmlTag.firstElementChild.firstElementChild.firstElementChild, 'attack')
         })
     setNoOffenseCounter(0)
+}
+
+const handleStunnedMode = () => {
+    if ( getStunnedCounter() > 0 ) setStunnedCounter(getStunnedCounter() + 1)
+    if ( getStunnedCounter() < 600 ) return
+    Array.from(getCurrentRoomEnemies())
+        .forEach(elem => {
+            elem.state = LOST
+            elem.lostCounter = 1
+        })
+    setStunnedCounter(0)
 }
 
 const handleEnemies = () => {
@@ -159,11 +173,11 @@ const manageBullets = () => {
     setCurrentRoomBullets(getCurrentRoomBullets().filter(bullet => !bullets2Remove.get(bullet)))    
 }
 
-const manageFlames = () => manageItems(getCurrentRoomFlames, setCurrentRoomFlames, 900, setPlayer2Fire)
+const manageFlames = () => handleObstacles(getCurrentRoomFlames, setCurrentRoomFlames, 900, setPlayer2Fire)
 
-const managePoisons = () => manageItems(getCurrentRoomPoisons, setCurrentRoomPoisons, 600, poisonPlayer)
+const managePoisons = () => handleObstacles(getCurrentRoomPoisons, setCurrentRoomPoisons, 600, poisonPlayer)
 
-const manageItems = (getItems, setItems, time, harmPlayer) => {
+const handleObstacles = (getItems, setItems, time, harmPlayer) => {
     const items2Remove = new Map([])
     getItems().forEach(item => {
         const theTime = Number(item.getAttribute('time'))
@@ -230,10 +244,8 @@ const explodeGrenade = () => {
 const blindEnemies = () => {
     getCurrentRoomEnemies().forEach(enemy => {
         if ( enemy.state === GRAB ) enemy.grabService.releasePlayer()
-        enemy.destX = enemy.x
-        enemy.destY = enemy.y
-        enemy.state = GUESS_SEARCH
-        enemy.stunnedCounter = 1
+        setStunnedCounter(1)
+        if ( enemy.state !== GO_FOR_RANGED ) enemy.state = STUNNED
     })
     const flashbang = createAndAddClass('div', 'flashbang')
     getMapEl().append(flashbang)

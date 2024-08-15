@@ -1,6 +1,6 @@
 import { distance, getProperty } from '../../../util.js'
 import { getCurrentRoomEnemies, getPlayer } from '../../../elements.js'
-import { CHASE, GO_FOR_RANGED, NO_OFFENCE, TRACKER } from '../../util/enemy-constants.js'
+import { CHASE, GO_FOR_RANGED, NO_OFFENCE, STUNNED, TRACKER } from '../../util/enemy-constants.js'
 import { getNoOffenseCounter, getPlayerX, getPlayerY, getRoomLeft, getRoomTop } from '../../../variables.js'
 
 export class AbstractNotificationService {
@@ -23,6 +23,7 @@ export class AbstractNotificationService {
     }
 
     notifyEnemy(dist) {
+        if ( this.enemy.state === STUNNED ) return
         const enemyBound = this.enemy.htmlTag.getBoundingClientRect()
         const playerBound = getPlayer().getBoundingClientRect()
         if ( distance(playerBound.x, playerBound.y, enemyBound.x, enemyBound.y) <= dist ) {

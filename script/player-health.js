@@ -2,7 +2,7 @@ import { healthManager } from './user-interface.js'
 import { CHASE, NO_OFFENCE } from './enemy/util/enemy-constants.js'
 import { getInventory, useInventoryResource } from './inventory.js'
 import { getCurrentRoomEnemies, getMapEl, getPlayer } from './elements.js'
-import { addClass, addFireEffect, isLowHealth, containsClass, removeClass } from './util.js'
+import { addClass, addFireEffect, isLowHealth, removeClass, findAttachementsOnPlayer } from './util.js'
 import { 
     getBurning,
     getHealth,
@@ -12,7 +12,7 @@ import {
     setBurning,
     setHealth,
     setNoOffenseCounter, 
-    setPoisoned} from './variables.js'
+    setPoisoned } from './variables.js'
 
 export const manageHealthStatus = () => {
     manageBurningState()
@@ -24,8 +24,7 @@ const manageBurningState = () => {
     setBurning(getBurning() + 1)
     if ( getBurning() === 900 ) {
         setBurning(0)
-        Array.from(getPlayer().firstElementChild.firstElementChild.children)
-            .find(child => containsClass(child, 'fire')).remove()
+        findAttachementsOnPlayer('fire').remove()
         return
     }
     let newHealth = getHealth() - 0.02

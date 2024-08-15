@@ -12,9 +12,9 @@ export class AbstractVisionService {
         return visible
     }
 
-    vision2Player() {
-        const vision = this.enemy.htmlTag.firstElementChild.children[1]
-        vision.style.transform = `rotateZ(${this.enemy.angleService.angle2Player()}deg)`
+    look4Player() {
+        this.getWallInTheWay()
+        this.vision2Player()
     }
 
     getWallInTheWay() {
@@ -36,6 +36,11 @@ export class AbstractVisionService {
                 }
         }
         this.enemy.wallInTheWay = 'out-of-range'
+    }
+
+    vision2Player() {
+        const vision = this.enemy.htmlTag.firstElementChild.children[1]
+        vision.style.transform = `rotateZ(${this.enemy.angleService.angle2Player()}deg)`
     }
 
     isPlayerVisible() {

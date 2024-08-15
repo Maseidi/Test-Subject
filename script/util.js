@@ -1,3 +1,4 @@
+import { getPlayer } from './elements.js'
 import { getWeaponStat } from './weapon-details.js'
 import { getThrowableDetail, getThrowableDetails } from './throwable-details.js'
 import { 
@@ -158,3 +159,7 @@ export const getEquippedSpec = (equipped, spec) =>
     getWeaponStat(equipped.name, spec, equipped[spec+'lvl'])
 
 export const isThrowing = () => getThrowCounter() > 0
+
+export const findAttachementsOnPlayer = (...attachments) => 
+    Array.from(getPlayer().firstElementChild.firstElementChild.children)
+        .find(child => attachments.reduce((a, b) => a || containsClass(child, b), false))

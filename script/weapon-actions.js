@@ -1,6 +1,5 @@
 import { dropLoot } from './loot-manager.js'
 import { removeThrowable } from './throwable-loader.js'
-import { removeUi, renderUi } from './user-interface.js'
 import { getThrowableDetails } from './throwable-details.js'
 import { TRACKER } from './enemy/util/enemy-constants.js'
 import { getWeaponStat, getWeaponDetails } from './weapon-details.js'
@@ -26,6 +25,7 @@ import {
     collide,
     containsClass,
     createAndAddClass,
+    findAttachementsOnPlayer,
     getEquippedSpec,
     getProperty,
     isMoving,
@@ -76,8 +76,7 @@ const manageAim = () => {
     } 
     if ( counter !== 0 ) return
     const range = getEquippedSpec(equipped, 'range')
-    const laser = Array.from(getPlayer().firstElementChild.firstElementChild.children)
-        .find(child => containsClass(child, 'weapon') || containsClass(child, 'throwable')).firstElementChild
+    const laser = findAttachementsOnPlayer('throwable', 'weapon').firstElementChild
     laser.style.height = `${range}px`
     let found = false
     Array.from(laser.children).forEach(elem => {
@@ -202,7 +201,7 @@ const throwAnimation = () => {
     const rightHand = getPlayer().firstElementChild.firstElementChild.children[2]
     const handHeight = getProperty(rightHand, 'height', 'px')
     const handTop = getProperty(rightHand, 'top', 'px')
-    const throwable = getPlayer().firstElementChild.firstElementChild.children[3].children[1]
+    const throwable = findAttachementsOnPlayer('throwable').children[1]
     const throwableTop = getProperty(throwable, 'top', 'px')
     animateThrow(rightHand, 1, 13, `${handHeight - 1}px`, `${handTop + 1}px`)
     animateThrow(rightHand, 14, 14, '2px', '0')
@@ -256,7 +255,7 @@ const throwItem = () => {
 const getSourceCoordinates = () => {
     const playerX = getPlayer().getBoundingClientRect().x
     const playerY = getPlayer().getBoundingClientRect().y
-    const throwable = getPlayer().firstElementChild.firstElementChild.children[3].children[1]
+    const throwable = findAttachementsOnPlayer('throwable').children[1]
     const throwableX = throwable.getBoundingClientRect().x
     const throwableY = throwable.getBoundingClientRect().y
     const diffX = throwableX - playerX
@@ -269,7 +268,7 @@ const getSourceCoordinates = () => {
 const getDestinationCoordinates = () => {
     const playerX = getPlayer().getBoundingClientRect().x
     const playerY = getPlayer().getBoundingClientRect().y
-    const target = getPlayer().firstElementChild.firstElementChild.children[3].children[2]
+    const target = findAttachementsOnPlayer('throwable').children[2]
     const targetX = target.getBoundingClientRect().x
     const targetY = target.getBoundingClientRect().y
     const diffX = targetX - playerX

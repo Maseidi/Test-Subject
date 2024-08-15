@@ -1,7 +1,7 @@
 import { manageAimModeAngle } from '../../../player-angle.js'
-import { CHASE, STAND_AND_WATCH } from '../../util/enemy-constants.js'
 import { getCurrentRoom, getCurrentRoomBullets } from '../../../elements.js'
-import { getGrabbed, getPlayerX, getPlayerY, getRoomLeft, getRoomTop } from '../../../variables.js'
+import { CHASE, STAND_AND_WATCH, STUNNED } from '../../util/enemy-constants.js'
+import { getGrabbed, getPlayerX, getPlayerY, getRoomLeft, getRoomTop, getStunnedCounter } from '../../../variables.js'
 import { 
     addAllAttributes,
     addClass,
@@ -27,16 +27,17 @@ export class RangerShootingService {
         this.transferEnemy(true)
         let shootCounter = this.enemy.shootCounter || 0
         shootCounter++
-        if ( shootCounter === 3 * this.fireRate ) {
+        if ( shootCounter === 3 * this.fireRate ) {            
             const d = this.enemy.movementService.distance2Player()
             if ( getGrabbed() ) this.enemy.state = STAND_AND_WATCH
+            else if ( getStunnedCounter() > 0 ) this.enemy.state = STUNNED
             else if ( d > this.enemy.vision || d < 200 ||
                  this.enemy.wallInTheWay !== false || 
                  Math.random() < 0.2 ) this.enemy.state = CHASE
             this.enemy.shootCounter = -1
             return
         }
-        if ( shootCounter > this.fireRate - 1 ) this.updateAngle2Player()
+        if ( shootCounter > this.fireRate - 1 && getStunnedCounter() === 0 ) this.updateAngle2Player()
         this.enemy.shootCounter = shootCounter
         this.shootAnimation()
         if ( shootCounter !== this.fireRate / 2 ) return

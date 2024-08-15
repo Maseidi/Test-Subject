@@ -34,19 +34,11 @@ export class AbstractEnemy {
 
     
     behave() {
-        this.handleStunnedState()
-        if ( this.stunnedCounter > 0 || this.health === 0 ) return
-        this.visionService.getWallInTheWay()
-        this.visionService.vision2Player()
+        if ( this.health === 0 ) return
+        this.visionService.look4Player()
         this.injuryService.manageDamagedState()
         this.collisionService.manageCollision()
         this.manageState()
-    }
-
-    handleStunnedState() {
-        if ( this.stunnedCounter === 0 ) return
-        this.stunnedCounter++
-        if ( this.stunnedCounter === 600 ) this.stunnedCounter = 0
     }
     
     manageState() { /*signature*/ }
