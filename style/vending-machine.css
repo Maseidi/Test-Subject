@@ -85,44 +85,44 @@
 .buy-item,
 .sell-item,
 .upgrade-item,
-.upgrade-stat-component {
+.upgrade-detail-component {
   padding: 15px;
   width: 100%;
   color: wheat;
 }
 
-.upgrade-stat-title {
+.upgrade-detail-title {
   text-transform: capitalize;
 }
 
-.upgrade-stat-component {
+.upgrade-detail-component {
   border: 1px solid rgb(255, 192, 203, 0.5);
 }
 
 .buy-item:hover,
 .sell-item:hover,
 .upgrade-item:hover,
-.upgrade-stat-component:hover {
+.upgrade-detail-component:hover {
   background-color: rgba(255, 255, 255, 0.1);
 }
 
-.upgrade-stat-lower {
+.upgrade-detail-lower {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   margin-top: 10px;
 }
 
-.upgrade-stat-level,
-.upgrade-stat-value,
-.upgrade-stat-price {
+.upgrade-detail-level,
+.upgrade-detail-value,
+.upgrade-detail-price {
   display: flex;
   flex-direction: row;
   align-items: center;
   gap: 10px;
 }
 
-.upgrade-stat-price > img {
+.upgrade-detail-price > img {
   width: 30px;
 }
 

@@ -34,8 +34,10 @@ export class AbstractEnemy {
 
     
     behave() {
+        if ( this.health === 0 ) return
         this.visionService.look4Player()
-        this.injuryService.manageDamagedState()
+        this.injuryService.manageDamagedMode()
+        this.injuryService.manageExplosionMode()
         this.collisionService.manageCollision()
         this.manageState()
     }

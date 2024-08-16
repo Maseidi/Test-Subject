@@ -1,11 +1,13 @@
 import { rooms } from './rooms.js'
 import { loaders } from './loaders.js'
 import { loadCurrentRoom } from './room-loader.js'
-import { CHASE, GO_FOR_RANGED, GRAB, LOST, NO_OFFENCE, RANGER, STUNNED } from './enemy/util/enemy-constants.js'
+import { getThrowableDetails } from './throwable-details.js'
 import { damagePlayer, poisonPlayer, setPlayer2Fire } from './player-health.js'
+import { CHASE, GO_FOR_RANGED, GRAB, LOST, NO_OFFENCE, STUNNED } from './enemy/util/enemy-constants.js'
 import { 
     addAllAttributes,
     addAttribute,
+    addExplosion,
     calculateBulletSpeed,
     collide,
     containsClass,
@@ -28,22 +30,28 @@ import {
     setCurrentRoomPoisons,
     getCurrentRoomThrowables,
     setCurrentRoomThrowables,
-    getMapEl } from './elements.js'
+    getMapEl, 
+    getCurrentRoomExplosions,
+    setCurrentRoomExplosions} from './elements.js'
 import {
     getCurrentRoomId,
+    getExplosionDamageCounter,
     getGrabbed,
     getIntObj,
+    getMaxHealth,
     getNoOffenseCounter,
     getRoomLeft,
     getRoomTop,
     getStunnedCounter,
     setAllowMove,
     setCurrentRoomId,
+    setExplosionDamageCounter,
     setIntObj,
     setNoOffenseCounter,
     setRoomLeft,
     setRoomTop, 
     setStunnedCounter} from './variables.js'
+import { dropLoot } from './loot-manager.js'
 
 export const manageEntities = () => {
     manageSolidObjects()
@@ -54,13 +62,13 @@ export const manageEntities = () => {
     manageFlames()
     managePoisons()
     manageThrowables()
+    manageExplosions()
 }
 
 const manageSolidObjects = () => {
     setAllowMove(true)
-    const solid = getCurrentRoomSolid().find(solid => collide(getPlayer().firstElementChild.children[1], solid, 12))
-    if ( solid ) setAllowMove(false)
-    if ( solid && solid.enemy ) solid.notifyEnemy(100)    
+    if ( getCurrentRoomSolid().find(solid => collide(getPlayer().firstElementChild.children[1], solid, 12)) ) 
+        setAllowMove(false)
 }
 
 let prevRoomId
@@ -234,8 +242,10 @@ const rotateThrowable = (throwable, baseSpeed) => {
     throwable.firstElementChild.style.transform = `rotateZ(${newAngle}deg)`
 }
 
-const explodeGrenade = () => {
-    console.log('explode grenade');
+const explodeGrenade = (throwable) => {
+    const left = getProperty(throwable, 'left', 'px')
+    const top = getProperty(throwable, 'top', 'px')
+    addExplosion(left, top)
 }
 
 const blindEnemies = (throwable) => {    
@@ -295,5 +305,51 @@ const updateSpeed = (throwable, wall, colliderX, colliderY, speedX, speedY) => {
     else if ( collide(colliderY, wall, 0) ) {
         addAttribute(throwable, 'speed-y', -speedY)
         throwable.firstElementChild.style.transform = `scale(1, -1)`
+    }
+}
+
+const manageExplosions = () => {
+    const explosions2Remove = new Map([])
+    getCurrentRoomExplosions().forEach(explosion => {
+        explodePlayer(explosion)
+        explodeEnemies(explosion)
+        explodeCrates(explosion)
+        const time = Number(explosion.getAttribute('time'))
+        const scale = getProperty(explosion, 'transform', 'scale(', ')')
+        if ( time < 10 ) explosion.style.transform = `scale(${scale + 2})`
+        else if ( time < 20 ) explosion.style.transform = `scale(${scale - 2})`
+        if ( time === 30 ) {
+            explosion.remove()
+            explosions2Remove.set(explosion, true)
+        }
+        addAttribute(explosion, 'time', time + 1)
+    })
+    setCurrentRoomExplosions(getCurrentRoomExplosions().filter(explosion => !explosions2Remove.get(explosion)))
+}
+
+const explodePlayer = (explosion) => {
+    if ( getExplosionDamageCounter() !== 0 ) return
+    if ( !collide(getPlayer(), explosion, 0) ) return
+    damagePlayer(80 * getMaxHealth() / 100)
+    setExplosionDamageCounter(1)
+    setNoOffenseCounter(1)
+}
+
+const explodeEnemies = (explosion) => {
+    for ( const enemy of getCurrentRoomEnemies() ) {
+        if ( enemy.explosionCounter !== 0 ) continue
+        if ( !collide(enemy.sprite, explosion, 0) ) continue
+        enemy.injuryService.damageEnemy(getThrowableDetails().get('grenade'))
+        enemy.explosionCounter = 1
+        enemy.state = LOST
+        enemy.lostCounter = 1
+    }
+}
+
+const explodeCrates = (explosion) => {
+    for ( const int of getCurrentRoomInteractables() ) {
+        if ( int.getAttribute('name') !== 'crate' ) continue
+        if ( !collide(explosion, int, 0) ) continue
+        dropLoot(int)
     }
 }

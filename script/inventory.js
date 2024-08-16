@@ -45,7 +45,7 @@ import {
 export const MAX_PACKSIZE = {
     bandage: 3,
     antidote: 3,
-    coin: 10,
+    coin: 50,
     hardDrive: 2,
     smgAmmo: 90,
     pistolAmmo: 30,
@@ -198,7 +198,7 @@ const updateAmount = (newValue) => {
             ...int,
             amount: newValue
         } : int
-    })) 
+    }))
 }
 
 export const removeDrop = (element) => {

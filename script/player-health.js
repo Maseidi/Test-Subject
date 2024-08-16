@@ -5,11 +5,13 @@ import { getCurrentRoomEnemies, getMapEl, getPlayer } from './elements.js'
 import { addClass, addFireEffect, isLowHealth, removeClass, findAttachementsOnPlayer } from './util.js'
 import { 
     getBurning,
+    getExplosionDamageCounter,
     getHealth,
     getMaxHealth,
     getNoOffenseCounter,
     getPoisoned,
     setBurning,
+    setExplosionDamageCounter,
     setHealth,
     setNoOffenseCounter, 
     setPoisoned } from './variables.js'
@@ -17,6 +19,7 @@ import {
 export const manageHealthStatus = () => {
     manageBurningState()
     managePoisonedState()
+    manageExplosionDamagedState()
 }
 
 const manageBurningState = () => {
@@ -105,4 +108,10 @@ export const setPlayer2Fire = () => {
 export const poisonPlayer = () => {
     setPoisoned(true)
     addClass(getMapEl(), 'poisoned')
+}
+
+const manageExplosionDamagedState = () => {
+    if ( getExplosionDamageCounter() === 0 ) return
+    setExplosionDamageCounter(getExplosionDamageCounter() + 1)
+    if ( getExplosionDamageCounter() === 100 ) setExplosionDamageCounter(0)
 }

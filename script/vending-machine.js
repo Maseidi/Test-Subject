@@ -3,9 +3,10 @@ import { Coin, Drop } from './interactables.js'
 import { renderQuit } from './user-interface.js'
 import { getPauseContainer } from './elements.js'
 import { renderStats } from './weapon-examine.js'
+import { isThrowable } from './throwable-details.js'
 import { getIntObj, setIntObj } from './variables.js'
-import { getWeaponUpgradableDetail, getWeaponDetails, isWeapon } from './weapon-details.js'
 import { getShopItems, getShopItemsWithId } from './shop-item.js'
+import { getWeaponUpgradableDetail, getWeaponDetails, isWeapon } from './weapon-details.js'
 import { 
     MAX_PACKSIZE,
     calculateTotalCoins,
@@ -23,7 +24,6 @@ import {
     element2Object,
     nextId,
     object2Element } from './util.js'
-import { isThrowable } from './throwable-details.js'
 
 let page = 1
 export const renderStore = () => {
@@ -140,10 +140,10 @@ const buyPopup = (e) => {
     const description = createAndAddClass('p', 'buy-popup-description')
     description.textContent = `${itemObj.description}`
     const btnContainer = createAndAddClass('div', 'buy-popup-btn-container')
-    const cancel = createCancelBtn(itemObj)
+    const cancel = renderCancelBtn(itemObj)
     btnContainer.append(cancel)
-    createExamineBtn(itemObj, btnContainer)
-    const confirm = createConfirmBtn(itemObj)
+    renderExamineBtn(itemObj, btnContainer)
+    const confirm = renderConfirmBtn(itemObj)
     btnContainer.append(confirm)
     const message = createAndAddClass('p', 'message')
     appendAll(popup, title, imageHeading, description, btnContainer, message)
@@ -152,14 +152,14 @@ const buyPopup = (e) => {
 }
 
 
-const createCancelBtn = () => {
+const renderCancelBtn = () => {
     const cancel = createAndAddClass('button', 'popup-cancel')
     cancel.textContent = `cancel`
     cancel.addEventListener('click', (e) => e.target.parentElement.parentElement.parentElement.remove())
     return cancel
 }
 
-const createExamineBtn = (itemObj, btnContainer) => {
+const renderExamineBtn = (itemObj, btnContainer) => {
     if ( isWeapon(itemObj.name) ) {
         const examine = createAndAddClass('button', 'popup-examine')
         examine.textContent = `examine`
@@ -172,7 +172,7 @@ const createExamineBtn = (itemObj, btnContainer) => {
     }
 }
 
-const createConfirmBtn = (itemObj) => {
+const renderConfirmBtn = (itemObj) => {
     const confirm = createAndAddClass('button', 'popup-confirm')
     const img = document.createElement('img')
     img.src = `../assets/images/coin.png`
@@ -279,40 +279,40 @@ const renderUpgradeItems = () => {
         name.textContent = `${weapon.heading}`
         appendAll(wrapper, img, name)
         appendAll(weapon2Upgrade, wrapper)
-        weapon2Upgrade.addEventListener('click', renderWeaponStats)
+        weapon2Upgrade.addEventListener('click', renderWeaponDetails)
         return weapon2Upgrade
     })
 }
 
-const renderWeaponStats = (e) => {
+const renderWeaponDetails = (e) => {
     const weaponObj = element2Object(e.currentTarget)
     const upgradeRight = document.querySelector('.upgrade-right')
     upgradeRight.innerHTML = ``
-    const damage = createStatComponent(weaponObj, 'damage')
-    const range = createStatComponent(weaponObj, 'range')
-    const reload = createStatComponent(weaponObj, 'reload speed')
-    const magazine = createStatComponent(weaponObj, 'magazine')
-    const firerate = createStatComponent(weaponObj, 'fire rate')
+    const damage = renderDetail(weaponObj, 'damage')
+    const range = renderDetail(weaponObj, 'range')
+    const reload = renderDetail(weaponObj, 'reload speed')
+    const magazine = renderDetail(weaponObj, 'magazine')
+    const firerate = renderDetail(weaponObj, 'fire rate')
     appendAll(upgradeRight, damage, range, reload, magazine, firerate)
 }
 
-const createStatComponent = (weaponObj, name) => {
-    const upgradeStatComponent = object2Element(weaponObj)
-    addClass(upgradeStatComponent, 'upgrade-stat-component')
-    const title = createAndAddClass('p', 'upgrade-stat-title')
+const renderDetail = (weaponObj, name) => {
+    const upgradeDetailComponent = object2Element(weaponObj)
+    addClass(upgradeDetailComponent, 'upgrade-detail-component')
+    const title = createAndAddClass('p', 'upgrade-detail-title')
     title.textContent = `${name}`
-    const lower = createAndAddClass('div', 'upgrade-stat-lower')
-    const levels = createLevelComponent(weaponObj, name)
-    const values = createValueComponent(weaponObj, name)
-    const price = createPriceComponent(weaponObj, name)
+    const lower = createAndAddClass('div', 'upgrade-detail-lower')
+    const levels = renderLevel(weaponObj, name)
+    const values = renderValue(weaponObj, name)
+    const price = renderPrice(weaponObj, name)
     appendAll(lower, levels, values, price)
-    appendAll(upgradeStatComponent, title, lower)
-    if ( weaponObj[`${name.replace(' ', '')}lvl`] !== 5 ) upgradeStatComponent.addEventListener('click', upgradePopup)
-    return upgradeStatComponent
+    appendAll(upgradeDetailComponent, title, lower)
+    if ( weaponObj[`${name.replace(' ', '')}lvl`] !== 5 ) upgradeDetailComponent.addEventListener('click', upgradePopup)
+    return upgradeDetailComponent
 }
 
-const createLevelComponent = (weaponObj, name) => {
-    const levels = createAndAddClass('div', 'upgrade-stat-level')
+const renderLevel = (weaponObj, name) => {
+    const levels = createAndAddClass('div', 'upgrade-detail-level')
     const currLvl = weaponObj[`${name.replace(' ', '')}lvl`]
     if ( currLvl === 5 ) levels.textContent = `Max Lvl.`
     else {
@@ -327,8 +327,8 @@ const createLevelComponent = (weaponObj, name) => {
     return levels
 }
 
-const createValueComponent = (weaponObj, name) => {
-    const values = createAndAddClass('div', 'upgrade-stat-value')
+const renderValue = (weaponObj, name) => {
+    const values = createAndAddClass('div', 'upgrade-detail-value')
     const currLvl = weaponObj[`${name.replace(' ', '')}lvl`]
     if ( currLvl === 5 ) 
         values.textContent = `${getWeaponUpgradableDetail(weaponObj.name, name.replace(' ', ''), currLvl)}`
@@ -344,8 +344,8 @@ const createValueComponent = (weaponObj, name) => {
     return values
 }
 
-const createPriceComponent = (weaponObj, name) => {
-    const price = createAndAddClass('div', 'upgrade-stat-price')
+const renderPrice = (weaponObj, name) => {
+    const price = createAndAddClass('div', 'upgrade-detail-price')
     const currLvl = weaponObj[`${name.replace(' ', '')}lvl`]        
     if ( currLvl !== 5 ) {
         const img = document.createElement('img')
@@ -364,9 +364,9 @@ const upgradePopup = (e) => {
     const title = createAndAddClass('h2', 'buy-popup-title')
     title.textContent = `Purchase upgrade?`
     const btnContainer = createAndAddClass('div', 'upgrade-popup-btn-container')
-    const cancel = createCancelBtn(itemObj)
+    const cancel = renderCancelBtn(itemObj)
     btnContainer.append(cancel)
-    const confirm = createUpgradeConfirmBtn({
+    const confirm = renderUpgradeConfirmBtn({
         ...itemObj, 
         cost: e.currentTarget.children[1].children[2].children[1].textContent,
         stat: e.currentTarget.children[0].textContent
@@ -386,7 +386,7 @@ const upgradePopup = (e) => {
     getPauseContainer().firstElementChild.append(popupContainer)
 }
 
-const createUpgradeConfirmBtn = (itemObj) => {
+const renderUpgradeConfirmBtn = (itemObj) => {
     const confirm = createAndAddClass('button', 'popup-confirm')
     const img = document.createElement('img')
     img.src = `../assets/images/coin.png`
@@ -409,7 +409,7 @@ const manageUpgrade = (itemObj) => {
     const newElem = object2Element(itemObj)
     addAttribute(newElem, stat.concat('lvl'), itemObj[stat.concat('lvl')] + 1)
     const e = {currentTarget: newElem}
-    renderWeaponStats(e)
+    renderWeaponDetails(e)
 }
 
 const renderSell = () => {
@@ -463,10 +463,10 @@ const sellPopup = (e) => {
     const description = createAndAddClass('p', 'sell-popup-description')
     description.textContent = `${itemObj.description}`
     const btnContainer = createAndAddClass('div', 'sell-popup-btn-container')
-    const cancel = createCancelBtn(itemObj)
+    const cancel = renderCancelBtn(itemObj)
     btnContainer.append(cancel)
-    createExamineBtn(itemObj, btnContainer)
-    const confirm = confirmSellBtn(itemObj)
+    renderExamineBtn(itemObj, btnContainer)
+    const confirm = renderConfirmSellBtn(itemObj)
     btnContainer.append(confirm)
     const message = createAndAddClass('p', 'message')
     appendAll(popup, title, imageHeading, description, btnContainer, message)
@@ -474,7 +474,7 @@ const sellPopup = (e) => {
     getPauseContainer().firstElementChild.append(popupContainer)
 }
 
-const confirmSellBtn = (itemObj) => {
+const renderConfirmSellBtn = (itemObj) => {
     const confirm = createAndAddClass('button', 'popup-confirm')
     const img = document.createElement('img')
     img.src = `../assets/images/coin.png`
@@ -494,7 +494,7 @@ const manageSell = (itemObj) => {
     pickupDrop()
     let left = getIntObj().getAttribute('amount')
     useInventoryResource('coin', gain-left)
-    left -= gainSpace * 10
+    left -= gainSpace * 50
     if ( left <= 0 ) {
         useInventoryResource(itemObj.name, itemObj.amount)
         setIntObj(object2Element(new Coin(null, null, gain)))

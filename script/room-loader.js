@@ -39,6 +39,7 @@ import {
     setCurrentRoomSolid,
     setCurrentRoomPoisons,
     setCurrentRoomThrowables,
+    setCurrentRoomExplosions,
     } from './elements.js'
 
 export const loadCurrentRoom = () => {
@@ -52,6 +53,7 @@ export const loadCurrentRoom = () => {
     setCurrentRoomFlames([])
     setCurrentRoomPoisons([])
     setCurrentRoomThrowables([])
+    setCurrentRoomExplosions([])
     const room2Render = createAndAddClass('div', `${getCurrentRoomId()}`)
     room2Render.style.width = `${room.width}px`
     room2Render.style.height = `${room.height}px`

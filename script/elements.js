@@ -76,6 +76,12 @@ export const setCurrentRoomThrowables = (val) => {
 }
 export const getCurrentRoomThrowables = () => currentRoomThrowables
 
+let currentRoomExplosions
+export const setCurrentRoomExplosions = (val) => {
+    currentRoomExplosions = val
+}
+export const getCurrentRoomExplosions = () => currentRoomExplosions
+
 let player
 export const setPlayer = (val) => {
     player = val
@@ -87,3 +93,9 @@ export const setGrabBar = (val) => {
     grabBar = val
 }
 export const getGrabBar = () => grabBar
+
+let buffer
+export const setBuffer = (val) => {
+    buffer = val
+}
+export const getBuffer = () => buffer

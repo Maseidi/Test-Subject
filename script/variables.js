@@ -261,3 +261,15 @@ export const setThrowCounter = (val) => {
     throwCounter = val
 }
 export const getThrowCounter = () => throwCounter
+
+let explosionDamageCounter = 0
+export const setExplosionDamageCounter = (val) => {
+    explosionDamageCounter = val
+}
+export const getExplosionDamageCounter = () => explosionDamageCounter
+
+let criticalChance = 0.01
+export const setCriticalChance = (val) => {
+    criticalChance = val
+}
+export const getCriticalChance = () => criticalChance

@@ -1,16 +1,15 @@
 class Throwable {
     constructor(
-        heading,
+        name,
         damage, 
-        price,
-        knockback) {
-        this.heading = heading
+        price) {
+        this.name = name    
+        this.heading = name
         this.space = 1
         this.damage = damage
         this.range = 300
         this.firerate = 1
         this.price = price
-        this.knockback = knockback
     }
 }
 
@@ -21,13 +20,11 @@ const throwableDetails = new Map([
         'grenade',
         3000,
         1/2,
-        100
     )],
     ['flashbang', new Throwable(
         'flashbang',
         0,
         1/3,
-        0
     )]
 ])
 

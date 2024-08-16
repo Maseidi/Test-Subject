@@ -1,5 +1,5 @@
-import { getPlayer } from './elements.js'
-import { getWeaponUpgradableDetail } from './weapon-details.js'
+import { getCurrentRoom, getCurrentRoomExplosions, getMapEl, getPlayer } from './elements.js'
+import { getWeaponDetail, getWeaponUpgradableDetail } from './weapon-details.js'
 import { getThrowableDetail, isThrowable } from './throwable-details.js'
 import { 
     getDownPressed,
@@ -153,13 +153,29 @@ export const getProperty = (elem, property, ...toRemoveList) => {
     return Number(res)
 }
 
-export const getEquippedItemDetail = (equipped, spec) =>  
+export const getEquippedItemDetail = (equipped, detail) =>  
     isThrowable(equipped?.name) ? 
-    getThrowableDetail(equipped.name, spec) : 
-    getWeaponUpgradableDetail(equipped.name, spec, equipped[spec+'lvl'])
+    getThrowableDetail(equipped.name, detail) : 
+    ['damage', 'range', 'firerate', 'reloadspeed', 'magazine'].includes(detail) ?
+    getWeaponUpgradableDetail(equipped.name, detail, equipped[detail+'lvl']) :
+    getWeaponDetail(equipped?.name, detail)
 
 export const isThrowing = () => getThrowCounter() > 0
 
 export const findAttachementsOnPlayer = (...attachments) => 
     Array.from(getPlayer().firstElementChild.firstElementChild.children)
         .find(child => attachments.reduce((a, b) => a || containsClass(child, b), false))
+        
+export const addExplosion = (left, top) => {
+    const explosion = createAndAddClass('div', 'explosion')
+    const explosionImage = createAndAddClass('img', 'explosion-img')
+    explosionImage.src = `/assets/images/explosion.png`
+    explosion.style.left = `${left}px`
+    explosion.style.top = `${top}px`
+    addAttribute(explosion, 'time', 0)
+    explosion.append(explosionImage)
+    getCurrentRoom().append(explosion)
+    addClass(getMapEl(), 'explosion-shake')
+    setTimeout(() => removeClass(getMapEl(), 'explosion-shake'), 300)
+    getCurrentRoomExplosions().push(explosion)
+}
