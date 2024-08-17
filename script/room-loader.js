@@ -236,6 +236,7 @@ const defineEnemy = (elem) => {
     elem.accelerationCounter = 0
     enemy.style.left = `${elem.x}px`
     enemy.style.top = `${elem.y}px`
+    enemy.setAttribute('loot', elem.loot)
     return enemy
 }
 

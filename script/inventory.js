@@ -7,7 +7,7 @@ import { useAntidote, useBandage } from './player-health.js'
 import { removeWeapon, renderWeapon } from './weapon-loader.js'
 import { getWeaponDetails, isWeapon } from './weapon-details.js'
 import { removeThrowable, renderThrowable } from './throwable-loader.js'
-import { getCurrentRoom, getPauseContainer, getPlayer, getUiEl } from './elements.js'
+import { getCurrentRoom, getCurrentRoomInteractables, getPauseContainer, getPlayer, getUiEl } from './elements.js'
 import { 
     addClass,
     containsClass,
@@ -66,7 +66,7 @@ let inventory = [
 
 export const getInventory = () => inventory
 
-export const pickupDrop = () => {    
+export const pickupDrop = () => {
     searchPack()
     searchEmpty()
     checkSpecialScenarios()
@@ -106,8 +106,10 @@ const searchEmpty = () => {
                 if ( isThrowable(drop.name) ) {
                     const throwable = inventory.flat().find(item => item?.name === drop.name)
                     if ( throwable ) {
+                        const interactable = Array.from(getCurrentRoomInteractables()).find(int => int.id === drop.id)
                         drop.id = throwable.id
                         getIntObj().setAttribute('id', throwable.id)
+                        if ( interactable ) interactable.id = throwable.id
                     }
                 }
                 inventory[i][j] = {...drop, amount: diff, row: i, column: j}
@@ -334,7 +336,8 @@ const renderOptions = (item, options) => {
     const itemObj = element2Object(item)
     if ( itemObj.name === 'bandage' || itemObj.name === 'antidote' ) createOption(options, 'use')
     if ( isThrowable(itemObj.name) ) {
-        createOption(options, 'equip')
+        if ( !getReloading() ) createOption(options, 'equip')
+        if ( isThrowing() ) renderDropOption = false    
         createOption(options, 'shortcut')
     }
     if ( isWeapon(itemObj.name) ) {
@@ -355,8 +358,9 @@ const renderOptions = (item, options) => {
 const replace = (item) => {
     const itemObj = element2Object(item)
     setDraggedItem(item)
-    if ( itemObj.remove !== 1 ) for ( let k = 0; k < itemObj.space; k++ ) inventory[itemObj.row][itemObj.column + k] = null
-    removeInventory() 
+    if ( itemObj.remove !== 1 ) 
+        for ( let k = 0; k < itemObj.space; k++ ) inventory[itemObj.row][itemObj.column + k] = null
+    removeInventory()
     renderInventory()
     if ( itemObj.amount !== 0 ) {
         const blocks = getPauseContainer().firstElementChild.firstElementChild.firstElementChild

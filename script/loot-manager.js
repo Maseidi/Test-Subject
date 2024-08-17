@@ -7,6 +7,8 @@ import {
     Antidote,
     Bandage,
     Coin,
+    Flashbang,
+    Grenade,
     HardDrive,
     interactables,
     MagnumAmmo,
@@ -14,12 +16,26 @@ import {
     RifleAmmo,
     ShotgunShells,
     SmgAmmo } from './interactables.js'
+import { ANTIDOTE_LOOT, BANDAGE_LOOT, COIN_LOOT, FLASHBANG_LOOT, GRENADE_LOOT, HARDDRIVE_LOOT, MAGNUM_AMMO_LOOT, PISOTL_AMMO_LOOT, RANDOM, RIFLE_AMMO_LOOT, SHOTGUN_SHELLS_LOOT, SMG_AMMO_LOOT } from './loots-list.js'
 
 export const dropLoot = (rootElem) => {
     const root = element2Object(rootElem)
-    const {left, top} = root
+    const {left, top, loot: decision} = root
     let loot
-    loot = decideItemDrop(MagnumAmmo, 0.02, left, top, 1)
+    if ( decision === RANDOM ) loot = dropRandomLoot(loot, left, top)
+    else if ( !decision ) loot = undefined
+    else loot = dropDeterminedLoot(decision, left, top)
+    removeDrop(rootElem)
+    if ( !loot ) return
+    const interactable = {...loot, left: left, top: top, id: nextId()}
+    interactables.get(getCurrentRoomId()).push(interactable)
+    renderInteractable(getCurrentRoom(), interactable)
+}
+
+const dropRandomLoot = (loot, left, top) => {
+    if ( !loot ) loot = decideItemDrop(Grenade, 0.01, left, top, 1)
+    if ( !loot ) loot = decideItemDrop(Flashbang, 0.01, left, top, 1)
+    if ( !loot ) loot = decideItemDrop(MagnumAmmo, 0.02, left, top, 1)
     if ( !loot ) loot = decideItemDrop(HardDrive, 0.04, left, top, 1)
     if ( !loot ) loot = decideItemDrop(Bandage, 0.1, left, top, 1)
     if ( !loot ) loot = decideItemDrop(Antidote, 0.1, left, top, 1)
@@ -28,11 +44,34 @@ export const dropLoot = (rootElem) => {
     if ( !loot ) loot = decideItemDrop(SmgAmmo, 0.3, left, top, 20)
     if ( !loot ) loot = decideItemDrop(Coin, 0.4, left, top, 1)
     if ( !loot ) loot = decideItemDrop(PistolAmmo, 0.6, left, top, 10)
-    removeDrop(rootElem)
-    if ( !loot ) return
-    const interactable = {...loot, left: left, top: top, id: nextId()}
-    interactables.get(getCurrentRoomId()).push(interactable)
-    renderInteractable(getCurrentRoom(), interactable)
+    return loot    
+}
+
+const dropDeterminedLoot = (decision, left, top) => {    
+    switch ( decision ) {
+        case GRENADE_LOOT:
+            return decideItemDrop(Grenade, 1, left, top, 1)
+        case FLASHBANG_LOOT:
+            return decideItemDrop(Flashbang, 1, left, top, 1)    
+        case MAGNUM_AMMO_LOOT:
+            return decideItemDrop(MagnumAmmo, 1, left, top, 1)
+        case HARDDRIVE_LOOT:
+            return decideItemDrop(HardDrive, 1, left, top, 1)
+        case BANDAGE_LOOT:
+            return decideItemDrop(Bandage, 1, left, top, 1)
+        case ANTIDOTE_LOOT:
+            return decideItemDrop(Antidote, 1, left, top, 1)
+        case RIFLE_AMMO_LOOT:
+            return decideItemDrop(RifleAmmo, 1, left, top, 2)
+        case SHOTGUN_SHELLS_LOOT:
+            return decideItemDrop(ShotgunShells, 1, left, top, 5)                   
+        case SMG_AMMO_LOOT:
+            return decideItemDrop(SmgAmmo, 1, left, top, 20)
+        case COIN_LOOT:
+            return decideItemDrop(Coin, 1, left, top, 1)
+        case PISOTL_AMMO_LOOT:
+            return decideItemDrop(PistolAmmo, 1, left, top, 10)        
+    }
 }
 
 const decideItemDrop = (drop, chance, left, top, amount) => {

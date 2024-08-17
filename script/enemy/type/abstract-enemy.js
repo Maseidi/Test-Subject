@@ -8,7 +8,7 @@ import { AbstractPathFindingService } from '../service/abstract/path-finding.js'
 import { AbstractNotificationService } from '../service/abstract/notification.js'
 
 export class AbstractEnemy {
-    constructor(type, components, waypoint, health, damage, knock, maxSpeed, progress, vision, acceleration) {
+    constructor(type, components, waypoint, health, damage, knock, maxSpeed, progress, vision, acceleration, loot) {
         this.type = type
         this.components = components
         this.waypoint = waypoint
@@ -20,6 +20,7 @@ export class AbstractEnemy {
         this.virus = ['red', 'green', 'yellow', 'blue', 'purple'][Math.floor(Math.random() * 5)]
         this.vision = vision
         this.acceleration = acceleration
+        this.loot = loot
         this.x = waypoint.points[0].x
         this.y = waypoint.points[0].y
         this.angleService = new AbstractAngleService(this)
