@@ -15,7 +15,6 @@ import {
     SPIKER,
     TRACKER } from './enemy/util/enemy-constants.js'
 import { 
-    addAttribute,
     addClass,
     addFireEffect,
     ANGLE_STATE_MAP,
@@ -81,8 +80,8 @@ const renderWalls = (room2Render) => {
         else if ( elem.bottom !== undefined ) wall.style.bottom = `${elem.bottom}px`
         if ( !elem.side ) {
             createTrackers(wall, elem)
-            addAttribute(wall, 'side', false)  
-        } else addAttribute(wall, 'side', true)    
+            wall.setAttribute('side', false)  
+        } else wall.setAttribute('side', true)    
         room2Render.append(wall)
         getCurrentRoomSolid().push(wall)
     })

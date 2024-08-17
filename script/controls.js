@@ -12,7 +12,6 @@ import { renderUi, renderWeaponUi, quitPage } from './user-interface.js'
 import { getGrabBar, getPauseContainer, getPlayer, getUiEl } from './elements.js'
 import { equippedWeaponObj, pickupDrop, removeInventory, renderInventory } from './inventory.js'
 import { 
-    addAttribute,
     addClass,
     angleOf2Points,
     getEquippedItemDetail,
@@ -255,7 +254,7 @@ const breakFree = () => {
 
 const processPart = (predicate, className) => {
     if ( getGrabBar().getAttribute(predicate) === 'true' ) return
-    addAttribute(getGrabBar(), predicate, true)
+    getGrabBar().setAttribute(predicate, true)
     addClass(getGrabBar(), className)
 }
 

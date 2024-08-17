@@ -1,7 +1,7 @@
 import { setPlayer2Fire } from '../../../player-health.js'
+import { addClass, collide, isThrowing } from '../../../util.js'
 import { CHASE, NO_OFFENCE } from '../../util/enemy-constants.js'
 import { AbstractMovementService } from '../abstract/movement.js'
-import { addAttribute, addClass, collide, isThrowing } from '../../../util.js'
 import { getCurrentRoom, getCurrentRoomFlames, getPlayer } from '../../../elements.js'
 
 export class ScorcherMovementService extends AbstractMovementService {
@@ -23,7 +23,7 @@ export class ScorcherMovementService extends AbstractMovementService {
         flame.src = `../assets/images/fire.gif`
         flame.style.left = `${this.enemy.x}px` 
         flame.style.top = `${this.enemy.y}px`
-        addAttribute(flame, 'time', 0) 
+        flame.setAttribute('time', 0) 
         getCurrentRoom().append(flame)
         getCurrentRoomFlames().push(flame)
         this.enemy.flameCounter = 0

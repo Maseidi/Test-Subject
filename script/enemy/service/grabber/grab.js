@@ -13,7 +13,6 @@ import {
     TRACKER } from '../../util/enemy-constants.js'
 import { 
     addAllAttributes,
-    addAttribute,
     addClass,
     appendAll,
     createAndAddClass,
@@ -50,7 +49,7 @@ export class GrabberGrabService {
         if ( current > Number(getGrabBar().getAttribute(part)) + 100 && getGrabBar().getAttribute(`${part}-done`) !== 'true' ) {
             addClass(getGrabBar(), `${part}-fail`)
             damagePlayer(this.enemy.damage / 6)
-            addAttribute(getGrabBar(), `${part}-done`, true)
+            getGrabBar().setAttribute(`${part}-done`, true)
         }
     }
 

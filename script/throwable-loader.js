@@ -1,7 +1,7 @@
 import { getPlayer } from './elements.js'
 import { equippedWeaponObj } from './inventory.js'
 import { getThrowableDetail } from './throwable-details.js'
-import { appendAll, createAndAddClass, findAttachementsOnPlayer } from './util.js'
+import { appendAll, createAndAddClass, findAttachmentsOnPlayer } from './util.js'
 
 export const renderThrowable = () => {
     const equippedThrowable = equippedWeaponObj()
@@ -19,4 +19,4 @@ export const renderThrowable = () => {
     getPlayer().children[0].children[0].append(throwable)
 }
 
-export const removeThrowable = () => findAttachementsOnPlayer('throwable')?.remove()
+export const removeThrowable = () => findAttachmentsOnPlayer('throwable')?.remove()

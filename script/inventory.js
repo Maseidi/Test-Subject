@@ -9,7 +9,6 @@ import { getWeaponDetails, isWeapon } from './weapon-details.js'
 import { removeThrowable, renderThrowable } from './throwable-loader.js'
 import { getCurrentRoom, getPauseContainer, getPlayer, getUiEl } from './elements.js'
 import { 
-    addAttribute,
     addClass,
     containsClass,
     element2Object,
@@ -108,7 +107,7 @@ const searchEmpty = () => {
                     const throwable = inventory.flat().find(item => item?.name === drop.name)
                     if ( throwable ) {
                         drop.id = throwable.id
-                        addAttribute(getIntObj(), 'id', throwable.id)
+                        getIntObj().setAttribute('id', throwable.id)
                     }
                 }
                 inventory[i][j] = {...drop, amount: diff, row: i, column: j}
@@ -159,7 +158,7 @@ export const equippedWeaponObj = () => inventory.flat().find(item => item && ite
 
 export const calculateTotalAmmo = (equippedWeapon) => countItem(equippedWeapon.ammotype)
 
-export const calculateThrowableAmount = (throwable) => countItem(throwable.name)
+export const calculateThrowableAmount = (equippedThrowable) => countItem(equippedThrowable.name)
 
 export const calculateTotalCoins = () => countItem('coin')
 
@@ -397,11 +396,11 @@ const checkReplace = (e) => {
     const item = inventory[destObj.row][destObj.column]  
     if ( item === undefined ) return
     const srcObj = element2Object(getDraggedItem())
-    let state = checkPossiblity(item, destObj, srcObj)
+    let state = checkPossibility(item, destObj, srcObj)
     if (state !== -1) REPLACE_STATES.get(state)(destObj, srcObj)
 }
 
-const checkPossiblity = (item, destObj, srcObj) => {
+const checkPossibility = (item, destObj, srcObj) => {
     if ( item !== null && item !== 'taken' ) {
         let possible = true
         for ( let k = destObj.column + 1; k < destObj.column + srcObj.space; k++ )

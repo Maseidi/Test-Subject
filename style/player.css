@@ -198,9 +198,17 @@
 }
 
 .top-collider, .right-collider, .left-collider, .bottom-collider {
-  width: 2px;
-  height: 2px;
   position: absolute;
+}
+
+.top-collider, .bottom-collider {
+  width: 1px;
+  height: 5px;
+}
+
+.left-collider, .right-collider {
+  width: 5px;
+  height: 1px;
 }
 
 .top-collider {

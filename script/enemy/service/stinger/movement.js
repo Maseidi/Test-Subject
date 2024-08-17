@@ -1,7 +1,7 @@
 import { poisonPlayer } from '../../../player-health.js'
+import { addClass, collide, isThrowing } from '../../../util.js'
 import { CHASE, NO_OFFENCE } from '../../util/enemy-constants.js'
 import { AbstractMovementService } from '../abstract/movement.js'
-import { addAttribute, addClass, collide, isThrowing } from '../../../util.js'
 import { getCurrentRoom, getCurrentRoomPoisons, getPlayer } from '../../../elements.js'
 
 export class StingerMovementService extends AbstractMovementService {
@@ -18,14 +18,14 @@ export class StingerMovementService extends AbstractMovementService {
     }
 
     addPoison() {
-        const posion = document.createElement('img')
-        addClass(posion, 'poison')
-        posion.src = `../assets/images/poison.png`
-        posion.style.left = `${this.enemy.x}px`
-        posion.style.top = `${this.enemy.y}px`
-        addAttribute(posion, 'time', 0) 
-        getCurrentRoom().append(posion)
-        getCurrentRoomPoisons().push(posion)
+        const poison = document.createElement('img')
+        addClass(poison, 'poison')
+        poison.src = `../assets/images/poison.png`
+        poison.style.left = `${this.enemy.x}px`
+        poison.style.top = `${this.enemy.y}px`
+        poison.setAttribute('time', 0)
+        getCurrentRoom().append(poison)
+        getCurrentRoomPoisons().push(poison)
         this.enemy.poisonCounter = 0
     }
 

@@ -3,7 +3,6 @@ import { getPauseContainer } from './elements.js'
 import { getIntObj, setIntObj } from './variables.js'
 import { 
     addAllAttributes,
-    addAttribute,
     addClass,
     appendAll,
     containsClass,
@@ -51,7 +50,7 @@ const inventoryEvents = () => {
 }
 
 const moveEvent = (item, type) => {
-    addAttribute(item, 'type', type)
+    item.setAttribute('type', type)
     item.addEventListener('click', addMoveEvent)
 }
 
@@ -60,7 +59,7 @@ const addMoveEvent = (e) => {
     document.querySelector('.move-to-stash')?.remove()
     document.querySelector('.move-to-inventory')?.remove()
     const elem = containsClass(e.target, 'stash-item-selector') ? e.target.parentElement : e.target
-    if ( containsClass(e.target, 'stash-item-selector') ) addAttribute(e.target.parentElement, 'type', 'to-inventory')
+    if ( containsClass(e.target, 'stash-item-selector') ) e.target.parentElement.setAttribute('type', 'to-inventory')
     const itemObj = element2Object(elem)
     const move = createMoveComponent(itemObj)
     const number = createAndAddClass('div', 'number')

@@ -1,12 +1,12 @@
 import { rooms } from './rooms.js'
 import { loaders } from './loaders.js'
+import { dropLoot } from './loot-manager.js'
 import { loadCurrentRoom } from './room-loader.js'
 import { getThrowableDetails } from './throwable-details.js'
 import { damagePlayer, poisonPlayer, setPlayer2Fire } from './player-health.js'
 import { CHASE, GO_FOR_RANGED, GRAB, LOST, NO_OFFENCE, STUNNED } from './enemy/util/enemy-constants.js'
 import { 
     addAllAttributes,
-    addAttribute,
     addExplosion,
     calculateBulletSpeed,
     collide,
@@ -51,7 +51,6 @@ import {
     setRoomLeft,
     setRoomTop, 
     setStunnedCounter} from './variables.js'
-import { dropLoot } from './loot-manager.js'
 
 export const manageEntities = () => {
     manageSolidObjects()
@@ -190,7 +189,7 @@ const handleObstacles = (getItems, setItems, time, harmPlayer) => {
             item.remove()
             items2Remove.set(item, true)
         }
-        addAttribute(item, 'time', theTime + 1)
+        item.setAttribute('time', theTime + 1)
         if ( collide(item, getPlayer(), 0) ) {
             harmPlayer()
             items2Remove.set(item, true)
@@ -214,8 +213,8 @@ const manageThrowables = () => {
             'diff-y': diffY,
             'acc-counter': accCounter } = throwableObj
         rotateThrowable(throwable, baseSpeed)
-        handleInteractablility(throwable, time, name, throwables2Remove)
-        addAttribute(throwable, 'acc-counter', accCounter + 1)
+        handleInteractability(throwable, time, name, throwables2Remove)
+        throwable.setAttribute('acc-counter', accCounter + 1)
         if ( accCounter === 15 && baseSpeed - 2 >= 0 ) {
             const newSpeed = calculateBulletSpeed(deg, diffY / diffX, diffX, diffY, baseSpeed - 2)
             speedX = Math.sign(speedX) * Math.abs(newSpeed.speedX)
@@ -265,13 +264,13 @@ const THROWABLE_FUNCTIONALITY = new Map([
     ['flashbang', blindEnemies]
 ])
 
-const handleInteractablility = (throwable, time, name, throwables2Remove) => {
+const handleInteractability = (throwable, time, name, throwables2Remove) => {
     if ( time === 180 ) {
         THROWABLE_FUNCTIONALITY.get(name)(throwable)
         throwables2Remove.set(throwable, true)
         throwable.remove()
     }
-    addAttribute(throwable, 'time', time + 1)
+    throwable.setAttribute('time', time + 1)
 }
 
 const wallIntersection = (throwable, speedX, speedY) => {
@@ -299,11 +298,11 @@ const wallIntersection = (throwable, speedX, speedY) => {
 
 const updateSpeed = (throwable, wall, colliderX, colliderY, speedX, speedY) => {
     if ( collide(colliderX, wall, 0) ) {
-        addAttribute(throwable, 'speed-x', -speedX)
+        throwable.setAttribute('speed-x', -speedX)
         throwable.firstElementChild.style.transform = `scale(-1, 1)`
     }
     else if ( collide(colliderY, wall, 0) ) {
-        addAttribute(throwable, 'speed-y', -speedY)
+        throwable.setAttribute('speed-y', -speedY)
         throwable.firstElementChild.style.transform = `scale(1, -1)`
     }
 }
@@ -322,7 +321,7 @@ const manageExplosions = () => {
             explosion.remove()
             explosions2Remove.set(explosion, true)
         }
-        addAttribute(explosion, 'time', time + 1)
+        explosion.setAttribute('time', time + 1)
     })
     setCurrentRoomExplosions(getCurrentRoomExplosions().filter(explosion => !explosions2Remove.get(explosion)))
 }

@@ -17,7 +17,6 @@ import {
     upgradeWeaponStat,
     useInventoryResource } from './inventory.js'
 import { 
-    addAttribute,
     addClass,
     appendAll,
     createAndAddClass,
@@ -57,17 +56,17 @@ const renderPagination = () => {
     const buy = createAndAddClass('div', 'buy-page')
     if ( page === 1 ) addClass(buy, 'active-page')
     buy.textContent = `buy`
-    addAttribute(buy, 'page', 1)
+    buy.setAttribute('page', 1)
     buy.addEventListener('click', changePage)
     const upgrade = createAndAddClass('div', 'upgrade-page')
     if ( page === 2 ) addClass(upgrade, 'active-page')
     upgrade.textContent = `upgrade`
-    addAttribute(upgrade, 'page', 2)
+    upgrade.setAttribute('page', 2)
     upgrade.addEventListener('click', changePage)
     const sell = createAndAddClass('div', 'sell-page')
     if ( page === 3 ) addClass(sell, 'active-page')
     sell.textContent = `sell`
-    addAttribute(sell, 'page', 3)
+    sell.setAttribute('page', 3)
     sell.addEventListener('click', changePage)
     appendAll(paginationContainer, buy, upgrade, sell)
     getPauseContainer().firstElementChild.append(paginationContainer)
@@ -407,7 +406,7 @@ const manageUpgrade = (itemObj) => {
     removeStore()
     renderStore()
     const newElem = object2Element(itemObj)
-    addAttribute(newElem, stat.concat('lvl'), itemObj[stat.concat('lvl')] + 1)
+    newElem.setAttribute(stat.concat('lvl'), itemObj[stat.concat('lvl')] + 1)
     const e = {currentTarget: newElem}
     renderWeaponDetails(e)
 }

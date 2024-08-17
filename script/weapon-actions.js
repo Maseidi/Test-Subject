@@ -25,7 +25,7 @@ import {
     collide,
     containsClass,
     createAndAddClass,
-    findAttachementsOnPlayer,
+    findAttachmentsOnPlayer,
     getEquippedItemDetail,
     getProperty,
     isMoving,
@@ -76,7 +76,7 @@ const manageAim = () => {
     } 
     if ( counter !== 0 ) return
     const range = getEquippedItemDetail(equipped, 'range')
-    const laser = findAttachementsOnPlayer('throwable', 'weapon').firstElementChild
+    const laser = findAttachmentsOnPlayer('throwable', 'weapon').firstElementChild
     laser.style.height = `${range}px`
     let found = false
     Array.from(laser.children).forEach(elem => {
@@ -201,7 +201,7 @@ const throwAnimation = () => {
     const rightHand = getPlayer().firstElementChild.firstElementChild.children[2]
     const handHeight = getProperty(rightHand, 'height', 'px')
     const handTop = getProperty(rightHand, 'top', 'px')
-    const throwable = findAttachementsOnPlayer('throwable').children[1]
+    const throwable = findAttachmentsOnPlayer('throwable').children[1]
     const throwableTop = getProperty(throwable, 'top', 'px')
     animateThrow(rightHand, 1, 13, `${handHeight - 1}px`, `${handTop + 1}px`)
     animateThrow(rightHand, 14, 14, '2px', '0')
@@ -254,7 +254,7 @@ const throwItem = () => {
 
 const getSourceCoordinates = () => {
     const { x: playerX, y: playerY } = getPlayer().getBoundingClientRect()
-    const throwable = findAttachementsOnPlayer('throwable').children[1]
+    const throwable = findAttachmentsOnPlayer('throwable').children[1]
     const { x: throwableX, y: throwableY } = throwable.getBoundingClientRect()
     const diffX = throwableX - playerX
     const diffY = throwableY - playerY
@@ -265,7 +265,7 @@ const getSourceCoordinates = () => {
 
 const getDestinationCoordinates = () => {
     const { x: playerX, y: playerY } = getPlayer().getBoundingClientRect()
-    const target = findAttachementsOnPlayer('throwable').children[2]
+    const target = findAttachmentsOnPlayer('throwable').children[2]
     const { x: targetX, y: targetY } = target.getBoundingClientRect()
     const diffX = targetX - playerX
     const diffY = targetY - playerY
@@ -284,15 +284,15 @@ const appendColliders = (throwable) =>
     )
 
 const useThrowableFromInventory = () => {
-    unequipThrowable()
+    unEquipThrowable()
     useInventoryResource(equipped.name, 1)
     const ammoCount = getUiEl().children[2].children[1]
     const totalAmmo = calculateThrowableAmount(equipped)
     if ( totalAmmo === 0 ) ammoCount.parentElement.remove()
-    else ammoCount.firstElementChild.textContent = totalAmmo    
+    else ammoCount.firstElementChild.textContent = totalAmmo
 }
 
-const unequipThrowable = () => {
+const unEquipThrowable = () => {
     if ( equipped.amount !== 1 ) return
     setAimMode(false)
     removeThrowable()

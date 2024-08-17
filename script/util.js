@@ -47,14 +47,8 @@ export const appendAll = (root, ...elems) => elems.forEach(elem => root.append(e
 
 export const isMoving = () => getUpPressed() || getDownPressed() || getLeftPressed() || getRightPressed()
 
-export const addAttribute = (elem, name, value) => {
-    const attr = document.createAttribute(name)
-    attr.value = value
-    elem.setAttributeNode(attr)
-}
-
 export const addAllAttributes = (elem, ...attrs) => {
-    for ( let i = 0; i < attrs.length; i += 2 ) addAttribute(elem, attrs[i], attrs[i+1])
+    for ( let i = 0; i < attrs.length; i += 2 ) elem.setAttribute(attrs[i], attrs[i+1])
 }
 
 export const isNullOrUndefined = (input) => input === null || input === undefined
@@ -63,7 +57,7 @@ export const object2Element = (obj) => {
     if ( isNullOrUndefined(obj) ) return document.createElement('div')
     const props = Object.getOwnPropertyNames(obj)
     const elem = document.createElement('div')
-    props.filter(prop => !isNullOrUndefined(obj[prop])).forEach(prop => addAttribute(elem, prop, obj[prop]))
+    props.filter(prop => !isNullOrUndefined(obj[prop])).forEach(prop => elem.setAttribute(prop, obj[prop]))
     return elem
 }
 
@@ -162,7 +156,7 @@ export const getEquippedItemDetail = (equipped, detail) =>
 
 export const isThrowing = () => getThrowCounter() > 0
 
-export const findAttachementsOnPlayer = (...attachments) => 
+export const findAttachmentsOnPlayer = (...attachments) => 
     Array.from(getPlayer().firstElementChild.firstElementChild.children)
         .find(child => attachments.reduce((a, b) => a || containsClass(child, b), false))
         
@@ -172,7 +166,7 @@ export const addExplosion = (left, top) => {
     explosionImage.src = `/assets/images/explosion.png`
     explosion.style.left = `${left}px`
     explosion.style.top = `${top}px`
-    addAttribute(explosion, 'time', 0)
+    explosion.setAttribute('time', 0)
     explosion.append(explosionImage)
     getCurrentRoom().append(explosion)
     addClass(getMapEl(), 'explosion-shake')
