@@ -293,7 +293,7 @@ const useThrowableFromInventory = () => {
 }
 
 const unEquipThrowable = () => {
-    if ( equipped.amount !== 1 ) return
+    if ( calculateThrowableAmount(equipped) !== 1 ) return
     setAimMode(false)
     removeThrowable()
     setThrowCounter(0)

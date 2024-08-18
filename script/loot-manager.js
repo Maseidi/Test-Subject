@@ -15,17 +15,30 @@ import {
     PistolAmmo,
     RifleAmmo,
     ShotgunShells,
-    SmgAmmo } from './interactables.js'
-import { ANTIDOTE_LOOT, BANDAGE_LOOT, COIN_LOOT, FLASHBANG_LOOT, GRENADE_LOOT, HARDDRIVE_LOOT, MAGNUM_AMMO_LOOT, PISOTL_AMMO_LOOT, RANDOM, RIFLE_AMMO_LOOT, SHOTGUN_SHELLS_LOOT, SMG_AMMO_LOOT } from './loots-list.js'
+    SmgAmmo, 
+    WeaponDrop} from './interactables.js'
+import { 
+    ANTIDOTE_LOOT,
+    BANDAGE_LOOT,
+    COIN_LOOT,
+    FLASHBANG_LOOT,
+    GRENADE_LOOT,
+    HARDDRIVE_LOOT,
+    MAGNUM_AMMO_LOOT,
+    PISOTL_AMMO_LOOT,
+    RANDOM,
+    RIFLE_AMMO_LOOT,
+    SHOTGUN_SHELLS_LOOT,
+    SMG_AMMO_LOOT } from './loot.js'
 
 export const dropLoot = (rootElem) => {
     const root = element2Object(rootElem)
-    const {left, top, loot: decision} = root
+    const {left, top, loot: decision, 'loot-amount': amount} = root
     let loot
     if ( decision === RANDOM ) loot = dropRandomLoot(loot, left, top)
     else if ( !decision ) loot = undefined
-    else loot = dropDeterminedLoot(decision, left, top)
-    removeDrop(rootElem)
+    else loot = dropDeterminedLoot(decision, left, top, amount)
+    removeDrop(rootElem)    
     if ( !loot ) return
     const interactable = {...loot, left: left, top: top, id: nextId()}
     interactables.get(getCurrentRoomId()).push(interactable)
@@ -47,34 +60,38 @@ const dropRandomLoot = (loot, left, top) => {
     return loot    
 }
 
-const dropDeterminedLoot = (decision, left, top) => {    
+const dropDeterminedLoot = (decision, left, top, amount) => {
     switch ( decision ) {
         case GRENADE_LOOT:
-            return decideItemDrop(Grenade, 1, left, top, 1)
+            return decideItemDrop(Grenade, 1, left, top, amount)
         case FLASHBANG_LOOT:
-            return decideItemDrop(Flashbang, 1, left, top, 1)    
+            return decideItemDrop(Flashbang, 1, left, top, amount)    
         case MAGNUM_AMMO_LOOT:
-            return decideItemDrop(MagnumAmmo, 1, left, top, 1)
+            return decideItemDrop(MagnumAmmo, 1, left, top, amount)
         case HARDDRIVE_LOOT:
-            return decideItemDrop(HardDrive, 1, left, top, 1)
+            return decideItemDrop(HardDrive, 1, left, top, amount)
         case BANDAGE_LOOT:
-            return decideItemDrop(Bandage, 1, left, top, 1)
+            return decideItemDrop(Bandage, 1, left, top, amount)
         case ANTIDOTE_LOOT:
-            return decideItemDrop(Antidote, 1, left, top, 1)
+            return decideItemDrop(Antidote, 1, left, top, amount)
         case RIFLE_AMMO_LOOT:
-            return decideItemDrop(RifleAmmo, 1, left, top, 2)
+            return decideItemDrop(RifleAmmo, 1, left, top, amount)
         case SHOTGUN_SHELLS_LOOT:
-            return decideItemDrop(ShotgunShells, 1, left, top, 5)                   
+            return decideItemDrop(ShotgunShells, 1, left, top, amount)                   
         case SMG_AMMO_LOOT:
-            return decideItemDrop(SmgAmmo, 1, left, top, 20)
+            return decideItemDrop(SmgAmmo, 1, left, top, amount)
         case COIN_LOOT:
-            return decideItemDrop(Coin, 1, left, top, 1)
+            return decideItemDrop(Coin, 1, left, top, amount)
         case PISOTL_AMMO_LOOT:
-            return decideItemDrop(PistolAmmo, 1, left, top, 10)        
+            return decideItemDrop(PistolAmmo, 1, left, top, amount)
+        default:
+            return dropWeaponLoot(left, top, decision)    
     }
 }
 
 const decideItemDrop = (drop, chance, left, top, amount) => {
-    if ( Math.random() < chance ) var result = new drop(left, top, amount)
+    if ( Math.random() < chance ) var result = new drop(left, top, amount)        
     return result
 }
+
+const dropWeaponLoot = (left, top, name) => new WeaponDrop(left, top, name, 0, 1, 1, 1, 1, 1)

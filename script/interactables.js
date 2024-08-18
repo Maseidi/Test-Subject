@@ -1,5 +1,14 @@
-import { BANDAGE_LOOT, FLASHBANG_LOOT, GRENADE_LOOT, MAGNUM_AMMO_LOOT, RIFLE_AMMO_LOOT, SHOTGUN_SHELLS_LOOT } from './loots-list.js'
 import { getWeaponDetails } from './weapon-details.js'
+import { 
+    BANDAGE_LOOT,
+    FLASHBANG_LOOT,
+    GRENADE_LOOT,
+    Loot,
+    MAGNUM_AMMO_LOOT,
+    P90,
+    RIFLE_AMMO_LOOT,
+    SHOTGUN_SHELLS_LOOT, 
+    SingleLoot} from './loot.js'
 
 class Interactable {
     constructor(width, left, top, name, heading, popup, solid, amount, space, description, price) {
@@ -38,7 +47,8 @@ class VendingMachine extends Interactable {
 class Crate extends Interactable {
     constructor(left, top, loot) {
         super(35, left, top, 'crate', 'crate', 'Break', true, undefined, undefined, undefined, undefined)
-        this.loot = loot
+        this.loot = loot.name
+        this['loot-amount'] = loot.amount
     }
 }
 
@@ -156,12 +166,12 @@ export const interactables = new Map([
         new MagnumAmmo(500, 100, 1),
         new RifleAmmo(400, 100, 2),
         new VendingMachine(900, 100),
-        new Crate(900, 300, GRENADE_LOOT),
-        new Crate(900, 400, FLASHBANG_LOOT),
-        new Crate(900, 500, MAGNUM_AMMO_LOOT),
-        new Crate(900, 600, RIFLE_AMMO_LOOT),
-        new Crate(900, 700, SHOTGUN_SHELLS_LOOT),
-        new Crate(900, 800, BANDAGE_LOOT),
+        new Crate(900, 300, new Loot(GRENADE_LOOT, 1)),
+        new Crate(900, 400, new Loot(FLASHBANG_LOOT, 2)),
+        new Crate(900, 500, new Loot(MAGNUM_AMMO_LOOT, 3)),
+        new Crate(900, 600, new Loot(RIFLE_AMMO_LOOT, 4)),
+        new Crate(900, 700, new Loot(SHOTGUN_SHELLS_LOOT, 5)),
+        new Crate(900, 800, new SingleLoot(P90)),
         ]
     ], [2, 
         []

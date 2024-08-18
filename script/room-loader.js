@@ -10,7 +10,6 @@ import {
     GO_FOR_RANGED,
     LOST,
     MOVE_TO_POSITION,
-    RANGER,
     SCORCHER,
     SPIKER,
     TRACKER } from './enemy/util/enemy-constants.js'
@@ -138,7 +137,7 @@ export const renderInteractable = (root, interactable, index) => {
     if ( interactable.solid ) {
         getCurrentRoomSolid().push(int)
         createTrackers(int, interactable)
-    }    
+    }
     getCurrentRoomInteractables().push(int)
 }
 
@@ -224,8 +223,8 @@ const spawnEnemies = (enemies, room2Render) => {
 
 const defineEnemy = (elem) => {
     const enemy = createAndAddClass('div', `${elem.type}`, 'enemy')
-    elem.angle = elem.type === RANGER && elem.state === GO_FOR_RANGED ? Math.ceil(Math.random() * 7) : elem.angle
-    elem.angleState = elem.type === RANGER && elem.state === GO_FOR_RANGED ? ANGLE_STATE_MAP.get(elem.angle) : elem.angleState
+    elem.angle = elem.state === GO_FOR_RANGED ? Math.ceil(Math.random() * 7) : elem.angle
+    elem.angleState = elem.state === GO_FOR_RANGED ? ANGLE_STATE_MAP.get(elem.angle) : elem.angleState
     elem.state = elem.type === TRACKER ? LOST : MOVE_TO_POSITION
     elem.investigationCounter = 0
     elem.path = `path-${elem.index}`
@@ -236,7 +235,9 @@ const defineEnemy = (elem) => {
     elem.accelerationCounter = 0
     enemy.style.left = `${elem.x}px`
     enemy.style.top = `${elem.y}px`
-    enemy.setAttribute('loot', elem.loot)
+    if ( !elem.loot ) return enemy
+    enemy.setAttribute('loot', elem.loot.name)
+    enemy.setAttribute('loot-amount', elem.loot.amount)
     return enemy
 }
 

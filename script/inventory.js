@@ -18,7 +18,8 @@ import {
     createAndAddClass,
     nextId, 
     getEquippedItemDetail,
-    addAllAttributes} from './util.js'
+    addAllAttributes,
+    isThrowing} from './util.js'
 import { 
     getAimMode,
     getCurrentRoomId,
@@ -619,7 +620,7 @@ const handleWeaponDrop = (itemObj) => {
 
 const handleThrowableDrop = (itemObj) => {
     if ( !isThrowable(itemObj.name) ) return
-    if ( calculateThrowableAmount(itemObj) !== 0 ) return
+    if ( calculateThrowableAmount(itemObj) !== 0 ) return    
     dropFromWeaponWheel(itemObj)
 }
 
