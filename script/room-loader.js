@@ -86,21 +86,6 @@ const renderWalls = (room2Render) => {
     })
 }
 
-const renderLoaders = (room2Render) => {
-    loaders.get(getCurrentRoomId()).forEach((elem) => {
-        const loader = createAndAddClass('div', elem.className, 'loader')
-        loader.style.width = `${elem.width}px`
-        loader.style.height = `${elem.height}px`
-        loader.style.backgroundColor = `blue`
-        if ( elem.left !== undefined ) loader.style.left = `${elem.left}px`
-        else if ( elem.right !== undefined ) loader.style.right = `${elem.right}px`
-        if ( elem.top !== undefined ) loader.style.top = `${elem.top}px`
-        else if ( elem.bottom !== undefined ) loader.style.bottom = `${elem.bottom}px`
-        room2Render.append(loader)
-        getCurrentRoomLoaders().push(loader)
-    })
-}
-
 const createTrackers = (solid, elem) => {
     let left = true
     let top = true
@@ -118,6 +103,50 @@ const createTrackers = (solid, elem) => {
     if ( left && bottom ) solid.append(bottomLeft)
     if ( right && top ) solid.append(topRight)
     if ( right && bottom ) solid.append(bottomRight)
+}
+
+const renderLoaders = (room2Render) => {
+    loaders.get(getCurrentRoomId()).forEach((elem) => {
+        const loader = createAndAddClass('div', elem.className, 'loader')
+        loader.style.width = `${elem.width}px`
+        loader.style.height = `${elem.height}px`
+        loader.style.backgroundColor = `blue`
+        if ( elem.left !== undefined ) loader.style.left = `${elem.left}px`
+        else if ( elem.right !== undefined ) loader.style.right = `${elem.right}px`
+        if ( elem.top !== undefined ) loader.style.top = `${elem.top}px`
+        else if ( elem.bottom !== undefined ) loader.style.bottom = `${elem.bottom}px`  
+        if ( elem.door ) renderDoor(elem, room2Render)
+        room2Render.append(loader)
+        getCurrentRoomLoaders().push(loader)
+    })
+}
+
+const renderDoor = (loader, room2Render) => {    
+    const { door: doorObj, width, height, left, top, right, bottom } = loader
+    if ( !getProgress(doorObj.progress) ) return
+    const doorElem = object2Element(doorObj)
+    addClass(doorElem, 'door')
+    addClass(doorElem, 'interactable')
+    doorElem.style.backgroundColor = doorObj.color
+    doorElem.style.width = `${width}px`
+    doorElem.style.height = `${height}px`
+    addPosition(doorElem, left, 'left')
+    addPosition(doorElem, right, 'right')
+    addPosition(doorElem, top, 'top')
+    addPosition(doorElem, bottom, 'bottom')
+    doorObj.isDoor = true
+    renderPopUp(doorElem, doorObj)
+    getCurrentRoomSolid().push(doorElem)
+    getCurrentRoomInteractables().push(doorElem)
+    room2Render.append(doorElem)
+}
+
+const addPosition = (root, input, direction) => {
+    const output = (() => {
+        if ( input === 26 || input === -26 ) return 0
+        else if ( input !== undefined ) return input
+    })()
+    root.style[direction] = `${output}px`
 }
 
 const renderInteractables = (room2Render) => 
@@ -180,11 +209,14 @@ const renderLine = (popup) => {
 
 const renderDescription = (popup, interactable) => {
     const descContainer = document.createElement('div')
-    const fButton = document.createElement('p')
+    const appendList = []
+    const fButton = createAndAddClass('p', 'interact-btn')
     fButton.textContent = 'F'
+    if ( !interactable.isDoor ) appendList.push(fButton)
     const descText = document.createElement('p')
     descText.textContent = `${interactable.popup}`
-    appendAll(descContainer, fButton, descText)
+    appendList.push(descText)
+    appendAll(descContainer, ...appendList)
     popup.append(descContainer)
 }
 

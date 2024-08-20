@@ -1,5 +1,7 @@
+import { Door } from "./door.js"
+
 class Loader {
-    constructor(className, width, height, left, top, right, bottom) {
+    constructor(className, width, height, left, top, right, bottom, door) {
         this.className = className
         this.width = width
         this.height = height
@@ -7,54 +9,55 @@ class Loader {
         this.top = top
         this.right = right
         this.bottom = bottom
+        this.door = door
     }
 }
 
 class LeftLoader_FromTop extends Loader {
-    constructor(className, height, top) {
-        super(className, 5, height, -26, top, undefined, undefined)
+    constructor(className, height, top, door) {
+        super(className, 5, height, -26, top, undefined, undefined, door)
     }
 }
 
 class LeftLoader_FromBottom extends Loader {
-    constructor(className, height, bottom) {
-        super(className, 5, height, -26, undefined, undefined, bottom)
+    constructor(className, height, bottom, door) {
+        super(className, 5, height, -26, undefined, undefined, bottom, door)
     }
 }
 
 class RightLoader_FromTop extends Loader {
-    constructor(className, height, top) {
-        super(className, 5, height, undefined, top, -26, undefined)
+    constructor(className, height, top, door) {
+        super(className, 5, height, undefined, top, -26, undefined, door)
     }
 }
 
 class RightLoader_FromBottom extends Loader {
-    constructor(className, height, bottom) {
-        super(className, 5, height, undefined, undefined, -26, bottom)
+    constructor(className, height, bottom, door) {
+        super(className, 5, height, undefined, undefined, -26, bottom, door)
     }
 }
 
 class TopLoader_FromLeft extends Loader {
-    constructor(className, width, left) {
-        super(className, width, 5, left, -26, undefined, undefined)
+    constructor(className, width, left, door) {
+        super(className, width, 5, left, -26, undefined, undefined, door)
     }
 }
 
 class TopLoader_FromRight extends Loader {
-    constructor(className, width, right) {
-        super(className, width, 5, undefined, -26, right, undefined)
+    constructor(className, width, right, door) {
+        super(className, width, 5, undefined, -26, right, undefined, door)
     }
 }
 
 class BottomLoader_FromLeft extends Loader {
-    constructor(className, width, left) {
-        super(className, width, 5, left, undefined, undefined, -26)
+    constructor(className, width, left, door) {
+        super(className, width, 5, left, undefined, undefined, -26, door)
     }
 }
 
 class BottomLoader_FromRight extends Loader {
-    constructor(className, width, right) {
-        super(className, width, 5, undefined, undefined, right, -26)
+    constructor(className, width, right, door) {
+        super(className, width, 5, undefined, undefined, right, -26, door)
     }
 }
 
@@ -118,7 +121,7 @@ export const loaders = new Map([
         ]
     ],
     [16, [
-        new BottomLoader_FromLeft(9, 100, 100),
+        new BottomLoader_FromLeft(9, 100, 100, new Door('red', '3', 'doorway to heaven', 'prioritize others prioritize others prioritize others prioritize others')),
         new LeftLoader_FromTop(37, 100, 400),
         new TopLoader_FromLeft(38, 250, 475),
         new RightLoader_FromTop(39, 300, 300)

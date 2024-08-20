@@ -6,6 +6,7 @@ import { getMapX, getMapY, getPlayerX, getPlayerY } from './variables.js'
 import { getMapEl, setMapEl, setPauseContainer, setPlayer, setRoomContainer } from './elements.js'
 
 export const startUp = () => {
+    activateProgress('3')
     renderPauseContainer()
     renderUi()
     renderMap()
@@ -13,7 +14,6 @@ export const startUp = () => {
     renderCurrentRoom()
     renderPlayer()
     centralizePlayer()
-    activateProgress('3')
 }
 
 const renderPauseContainer = () => {

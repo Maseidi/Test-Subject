@@ -25,7 +25,7 @@ import {
     GRENADE_LOOT,
     HARDDRIVE_LOOT,
     MAGNUM_AMMO_LOOT,
-    PISOTL_AMMO_LOOT,
+    PISTOL_AMMO_LOOT,
     RANDOM,
     RIFLE_AMMO_LOOT,
     SHOTGUN_SHELLS_LOOT,
@@ -82,7 +82,7 @@ const dropDeterminedLoot = (decision, left, top, amount) => {
             return decideItemDrop(SmgAmmo, 1, left, top, amount)
         case COIN_LOOT:
             return decideItemDrop(Coin, 1, left, top, amount)
-        case PISOTL_AMMO_LOOT:
+        case PISTOL_AMMO_LOOT:
             return decideItemDrop(PistolAmmo, 1, left, top, amount)
         default:
             return dropWeaponLoot(left, top, decision)    

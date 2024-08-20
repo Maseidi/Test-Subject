@@ -102,11 +102,11 @@ const calculateNewRoomLeftAndTop = (prevLoader) => {
 const manageInteractables = () => {
     setIntObj(undefined)
     Array.from(getCurrentRoomInteractables()).forEach((int) => {
-        const popup = int.children[1]
+        const popup = int.children[1] ?? int.children[0]
         if ( collide(getPlayer().firstElementChild, int, 20) && !getIntObj() ) {
             popup.style.bottom = `calc(100% + 20px)`
             popup.style.opacity = `1`
-            setIntObj(int)
+            setIntObj(int)            
             return
         }
         popup.style.bottom = `calc(100% - 20px)`

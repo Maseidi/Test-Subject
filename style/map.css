@@ -174,3 +174,7 @@
   animation-direction: alternate;
   filter: blur(1px);
 }
+
+.door {
+  position: absolute;
+}

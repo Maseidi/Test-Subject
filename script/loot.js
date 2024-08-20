@@ -7,7 +7,7 @@ export const ANTIDOTE_LOOT = 'antidote'
 export const HARDDRIVE_LOOT = 'harddrive'    
 export const FLASHBANG_LOOT = 'flashbang'  
 export const RIFLE_AMMO_LOOT = 'rifleammo'    
-export const PISOTL_AMMO_LOOT = 'pistolammo'    
+export const PISTOL_AMMO_LOOT = 'pistolammo'    
 export const MAGNUM_AMMO_LOOT = 'magnumammo'
 export const SHOTGUN_SHELLS_LOOT = 'shotgunshells'
 
