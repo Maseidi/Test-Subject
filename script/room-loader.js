@@ -223,7 +223,7 @@ const renderLine = (popup) => {
 const renderDescription = (popup, interactable) => {
     const descContainer = document.createElement('div')
     const appendList = []
-    const fButton = createAndAddClass('p', 'interact-btn')
+    const fButton = createAndAddClass('p', 'interactable-btn')
     fButton.textContent = 'F'
     if ( !interactable.isDoor ) appendList.push(fButton)
     const descText = document.createElement('p')

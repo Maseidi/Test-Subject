@@ -10,10 +10,10 @@ import { HorDoublePointPath, Path, Point, SinglePointPath, SquarePath, VerDouble
 
 export const enemies = new Map([
     [9, [
-        new Torturer(1, new SinglePointPath(100, 100), '1', new Loot(SHOTGUN_SHELLS_LOOT, 3)),
-        new Torturer(1, new SinglePointPath(300, 300), '2', new Loot(SHOTGUN_SHELLS_LOOT, 2)),
-        new Torturer(1, new SinglePointPath(500, 500), '3', new Loot(SHOTGUN_SHELLS_LOOT, 1)),
-    ]]
+        new Torturer(1, new SinglePointPath(100, 100), '3', new Loot(SHOTGUN_SHELLS_LOOT, 3)),
+        new Torturer(1, new SinglePointPath(200, 200), '3', new Loot(SHOTGUN_SHELLS_LOOT, 2)),
+        new Torturer(1, new SinglePointPath(300, 300), '3', new Loot(MAGNUM_AMMO_LOOT, 1)),
+    ]],
     [37, [
         // new Torturer(1, new SquarePath(650, 240, 300), '1'),
         // new Torturer(1, new VerDoublePointPath(800, 100, 300), '2'),

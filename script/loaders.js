@@ -107,7 +107,7 @@ export const loaders = new Map([
         ]
     ],
     [9, [
-        new BottomLoader_FromLeft(2, 100, 450, new Door('pink', )),
+        new BottomLoader_FromLeft(2, 100, 450),
         new LeftLoader_FromBottom(15, 100, 200),
         new TopLoader_FromLeft(16, 100, 450),
         new RightLoader_FromBottom(17, 100, 200),

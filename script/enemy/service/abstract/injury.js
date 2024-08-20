@@ -1,7 +1,6 @@
 import { enemies } from '../../util/enemies.js'
 import { dropLoot } from '../../../loot-manager.js'
 import { activateProgress } from '../../../progress.js'
-import { updateKillAllDoorStates } from '../../../door.js'
 import { CHASE, STUNNED } from '../../util/enemy-constants.js'
 import { getWeaponDetail, isWeapon } from '../../../weapon-details.js'
 import { getCriticalChance, getCurrentRoomId } from '../../../variables.js'
@@ -31,7 +30,6 @@ export class AbstractInjuryService {
             dropLoot(this.enemy.sprite)
             enemies.get(getCurrentRoomId())[this.enemy.index].health = 0
             activateProgress(this.enemy.activeProgress)
-            updateKillAllDoorStates(this.enemy.activeProgress)
             return
         }
         addClass(this.enemy.sprite.firstElementChild.firstElementChild, 'damaged')
