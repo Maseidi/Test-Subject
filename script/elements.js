@@ -82,6 +82,12 @@ export const setCurrentRoomExplosions = (val) => {
 }
 export const getCurrentRoomExplosions = () => currentRoomExplosions
 
+let currentRoomDoors
+export const setCurrentRoomDoors = (val) => {
+    currentRoomDoors = val
+}
+export const getCurrentRoomDoors = () => currentRoomDoors
+
 let player
 export const setPlayer = (val) => {
     player = val

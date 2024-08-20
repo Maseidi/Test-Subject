@@ -94,13 +94,9 @@ const createChevLeft = () => {
     return chevLeft
 }
 
-const addNumber = (e) => {
-    setParams(e.target, 1)
-}
+const addNumber = (e) => setParams(e.target, 1)
 
-const reduceNumber = (e) => {
-    setParams(e.target, -1)
-}
+const reduceNumber = (e) => setParams(e.target, -1)
 
 const setParams = (elem, multiply) => {
     let numberElem = elem.parentElement.children[1]
@@ -206,6 +202,4 @@ const renderStashItems = () => {
     getPauseContainer().firstElementChild.append(stashItemsContainer)
 }
 
-export const removeStash = () => {
-    getPauseContainer().firstElementChild.remove()
-}
+export const removeStash = () => getPauseContainer().firstElementChild.remove()

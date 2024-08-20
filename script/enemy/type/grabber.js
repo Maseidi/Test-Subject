@@ -17,11 +17,11 @@ import {
     NO_OFFENCE } from '../util/enemy-constants.js'
 
 export class Grabber extends AbstractEnemy {
-    constructor(level, path, progress, loot) {
+    constructor(level, path, progress, loot, activeProgress) {
         const health = Math.floor(level * 100 + Math.random() * 50)
         const damage = Math.floor(level * 20 + Math.random() * 10)
         const maxSpeed = 3 + Math.random()
-        super(GRABBER, 4, path, health, damage, 100, maxSpeed, progress, 400, 1.4, loot)
+        super(GRABBER, 4, path, health, damage, 100, maxSpeed, progress, 400, 1.4, loot, activeProgress)
         this.movementService = new GrabberMovementService(this)
         this.investigationService = new NormalInvestigationService(this)
         this.chaseService = new NormalChaseService(this)

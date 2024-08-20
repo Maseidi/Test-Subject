@@ -1,12 +1,10 @@
 import { renderUi } from './user-interface.js'
-import { activateProgress } from './progress.js'
 import { loadCurrentRoom } from './room-loader.js'
 import { appendAll, createAndAddClass } from './util.js'
 import { getMapX, getMapY, getPlayerX, getPlayerY } from './variables.js'
 import { getMapEl, setMapEl, setPauseContainer, setPlayer, setRoomContainer } from './elements.js'
 
 export const startUp = () => {
-    activateProgress('3')
     renderPauseContainer()
     renderUi()
     renderMap()

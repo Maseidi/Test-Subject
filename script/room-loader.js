@@ -38,11 +38,23 @@ import {
     setCurrentRoomPoisons,
     setCurrentRoomThrowables,
     setCurrentRoomExplosions,
+    setCurrentRoomDoors,
+    getCurrentRoomDoors,
     } from './elements.js'
 
 export const loadCurrentRoom = () => {
-    const room = rooms.get(getCurrentRoomId())
     setStunnedCounter(0)
+    initElements()
+    const room2Render = renderRoom()
+    renderWalls(room2Render)
+    renderLoaders(room2Render)
+    renderInteractables(room2Render)
+    renderEnemies(room2Render)
+    setCurrentRoom(room2Render)
+    getRoomContainer().append(room2Render)
+}
+
+const initElements = () => {
     setCurrentRoomSolid([])
     setCurrentRoomLoaders([])
     setCurrentRoomInteractables([])
@@ -52,18 +64,18 @@ export const loadCurrentRoom = () => {
     setCurrentRoomPoisons([])
     setCurrentRoomThrowables([])
     setCurrentRoomExplosions([])
+    setCurrentRoomDoors([])
+}
+
+const renderRoom = () => {
+    const room = rooms.get(getCurrentRoomId())
     const room2Render = createAndAddClass('div', `${getCurrentRoomId()}`)
     room2Render.style.width = `${room.width}px`
     room2Render.style.height = `${room.height}px`
     room2Render.style.left = `${getRoomLeft()}px`
     room2Render.style.top = `${getRoomTop()}px`
     room2Render.style.backgroundColor = `lightgray`
-    renderWalls(room2Render)
-    renderLoaders(room2Render)
-    renderInteractables(room2Render)
-    renderEnemies(room2Render)
-    setCurrentRoom(room2Render)
-    getRoomContainer().append(room2Render)
+    return room2Render
 }
 
 const renderWalls = (room2Render) => {
@@ -115,15 +127,15 @@ const renderLoaders = (room2Render) => {
         else if ( elem.right !== undefined ) loader.style.right = `${elem.right}px`
         if ( elem.top !== undefined ) loader.style.top = `${elem.top}px`
         else if ( elem.bottom !== undefined ) loader.style.bottom = `${elem.bottom}px`  
-        if ( elem.door ) renderDoor(elem, room2Render)
+        if ( elem.door ) renderDoors(elem, room2Render)
         room2Render.append(loader)
         getCurrentRoomLoaders().push(loader)
     })
 }
 
-const renderDoor = (loader, room2Render) => {    
+const renderDoors = (loader, room2Render) => {    
     const { door: doorObj, width, height, left, top, right, bottom } = loader
-    if ( !getProgress(doorObj.progress) ) return
+    if ( getProgress(doorObj.progress) ) return
     const doorElem = object2Element(doorObj)
     addClass(doorElem, 'door')
     addClass(doorElem, 'interactable')
@@ -138,6 +150,7 @@ const renderDoor = (loader, room2Render) => {
     renderPopUp(doorElem, doorObj)
     getCurrentRoomSolid().push(doorElem)
     getCurrentRoomInteractables().push(doorElem)
+    getCurrentRoomDoors().push(doorElem)
     room2Render.append(doorElem)
 }
 

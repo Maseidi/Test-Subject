@@ -16,8 +16,8 @@ import {
     TORTURER} from '../util/enemy-constants.js'
 
 class NormalEnemy extends AbstractEnemy {
-    constructor(type, level, waypoint, health, damage, knock, maxSpeed, progress, vision, acceleration, loot) {
-        super(type, level, waypoint, health, damage, knock, maxSpeed, progress, vision, acceleration, loot)
+    constructor(type, level, waypoint, health, damage, knock, maxSpeed, progress, vision, acceleration, loot, activeProgress) {
+        super(type, level, waypoint, health, damage, knock, maxSpeed, progress, vision, acceleration, loot, activeProgress)
         this.investigationService = new NormalInvestigationService(this)
         this.chaseService = new NormalChaseService(this)
         this.guessSearchService = new NormalGuessSearchService(this)
@@ -49,28 +49,28 @@ class NormalEnemy extends AbstractEnemy {
 }
 
 export class Torturer extends NormalEnemy {
-    constructor(level, waypoint, progress, loot) {
+    constructor(level, waypoint, progress, loot, activeProgress) {
         const health = Math.floor(level * 180 + Math.random() * 20)
         const damage = Math.floor(level * 20 + Math.random() * 10)
         const maxSpeed = 3.5 + Math.random()
-        super(TORTURER, 4, waypoint, health, damage, 100, maxSpeed, progress, 600, 1.5, loot)
+        super(TORTURER, 4, waypoint, health, damage, 100, maxSpeed, progress, 600, 1.5, loot, activeProgress)
     }
 }
 
 export class SoulDrinker extends NormalEnemy {
-    constructor(level, waypoint, progress, loot) {
+    constructor(level, waypoint, progress, loot, activeProgress) {
         const health = Math.floor(level * 90 + Math.random() * 15)
         const damage = Math.floor(level * 10 + Math.random() * 5)
         const maxSpeed = 4.5 + Math.random()
-        super(SOUL_DRINKER, 4, waypoint, health, damage, 50, maxSpeed, progress, 400, 0.9, loot)
+        super(SOUL_DRINKER, 4, waypoint, health, damage, 50, maxSpeed, progress, 400, 0.9, loot, activeProgress)
     }
 }
 
 export class RockCrusher extends NormalEnemy {
-    constructor(level, waypoint, progress, loot) {
+    constructor(level, waypoint, progress, loot, activeProgress) {
         const health = Math.floor(level * 360 + Math.random() * 45)
         const damage = Math.floor(level * 40 + Math.random() * 20)
         const maxSpeed = 2.5 + Math.random()
-        super(ROCK_CRUSHER, 4, waypoint, health, damage, 200, maxSpeed, progress, 800, 1.8, loot)
+        super(ROCK_CRUSHER, 4, waypoint, health, damage, 200, maxSpeed, progress, 800, 1.8, loot, activeProgress)
     }
 }

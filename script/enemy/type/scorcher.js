@@ -19,11 +19,11 @@ import {
     SCORCHER } from '../util/enemy-constants.js'
 
 export class Scorcher extends AbstractEnemy {
-    constructor(level, waypoint, progress, loot) {
+    constructor(level, waypoint, progress, loot, activeProgress) {
         const health = Math.floor(level * 135 + Math.random() * 15)
         const damage = Math.floor(level * 15 + Math.random() * 10)
         const maxSpeed = 2.5 + Math.random()
-        super(SCORCHER, 5, waypoint, health, damage, 100, maxSpeed, progress, 600, 1.1, loot)
+        super(SCORCHER, 5, waypoint, health, damage, 100, maxSpeed, progress, 600, 1.1, loot, activeProgress)
         this.movementService = new ScorcherMovementService(this)
         this.investigationService = new NormalInvestigationService(this)
         this.chaseService = new NormalChaseService(this)
