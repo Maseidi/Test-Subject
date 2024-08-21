@@ -122,8 +122,7 @@ export const loaders = new Map([
     ],
     [16, [
         new BottomLoader_FromLeft(9, 100, 100, 
-            new Door('red', '3', 'doorway to heaven', 
-                'prioritize others prioritize others prioritize others prioritize others')),
+            new Door('red', '3', 'doorway to heaven', 'dignity')),
         new LeftLoader_FromTop(37, 100, 400),
         new TopLoader_FromLeft(38, 250, 475),
         new RightLoader_FromTop(39, 300, 300)
@@ -222,11 +221,11 @@ export const loaders = new Map([
         ]
     ],
     [37, [
-        new RightLoader_FromTop(16, 100, 350, new Door('green', '4', 'door 1', 'sacrifice')),
-        new TopLoader_FromLeft(62, 100, 240, new Door('gold', '5', 'door 2', 'generosity')),
-        new TopLoader_FromLeft(63, 100, 580, new Door('green', '6', 'door 3', 'kindness')),
-        new TopLoader_FromRight(64, 100, 240, new Door('purple', '7', 'door 4', 'chivalry')),
-        new TopLoader_FromRight(65, 100, 580, new Door('brown', '8', 'door 5', 'honesty'))
+        new RightLoader_FromTop(16, 100, 350),
+        new TopLoader_FromLeft(62, 100, 240),
+        new TopLoader_FromLeft(63, 100, 580),
+        new TopLoader_FromRight(64, 100, 240, new Door('green', undefined, 'Door 1', 'Sacrifice', '4', '3')),
+        new TopLoader_FromRight(65, 100, 580, new Door('yellow', '4', 'Door 2', 'Chivalry'))
         ]
     ],
     [38, [        new BottomLoader_FromLeft(16, 250, 375),

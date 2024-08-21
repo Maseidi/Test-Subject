@@ -1,7 +1,9 @@
 import { updateDoorStates } from './door.js'
 
 let progress = {
-    '3' : true
+    '1' : true,
+    '2' : true,
+    '3' : true,
 }
 
 export const getProgress = (name) => progress[name]

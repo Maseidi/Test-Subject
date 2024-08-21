@@ -174,8 +174,6 @@ const manageInteractivity = () => {
     if ( !getTarget() ) return
     let element = getTarget().parentElement
     if ( containsClass(element, TRACKER) ) return
-    console.log(getTarget());
-    
     if ( containsClass(getTarget(), 'weak-point') ) element = getTarget().parentElement.parentElement.parentElement
     const enemy = getCurrentRoomEnemies().find(elem => elem.sprite === element)
     if ( containsClass(element, 'enemy') && enemy.health > 0 ) enemy.injuryService.damageEnemy(equipped)
