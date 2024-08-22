@@ -6,9 +6,12 @@ let progress = {
     '3' : true,
 }
 
-export const getProgress = (name) => progress[name]
+export const getProgress = () => progress
+
+export const findProgressByName = (name) => progress[name]
 
 export const activateProgress = (name) => {
+    if ( !name ) return
     progress = {
         ...progress,
         [name]: true

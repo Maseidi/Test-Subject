@@ -1,25 +1,25 @@
 import { renderQuit } from './user-interface.js'
 import { renderStats } from './weapon-examine.js'
+import { renderWeapon } from './weapon-loader.js'
 import { interactables } from './interactables.js'
 import { isThrowable } from './throwable-details.js'
 import { renderInteractable } from './room-loader.js'
+import { renderThrowable } from './throwable-loader.js'
 import { useAntidote, useBandage } from './player-health.js'
-import { removeWeapon, renderWeapon } from './weapon-loader.js'
 import { getWeaponDetails, isWeapon } from './weapon-details.js'
-import { removeThrowable, renderThrowable } from './throwable-loader.js'
 import { getCurrentRoom, getCurrentRoomInteractables, getPauseContainer, getPlayer, getUiEl } from './elements.js'
 import { 
     addClass,
     containsClass,
     element2Object,
     object2Element,
-    removeClass,
     appendAll, 
     createAndAddClass,
     nextId, 
     getEquippedItemDetail,
     addAllAttributes,
-    isThrowing} from './util.js'
+    isThrowing,
+    exitAimMode} from './util.js'
 import { 
     getAimMode,
     getCurrentRoomId,
@@ -545,10 +545,7 @@ const equip = (item) => {
     const equipped = equippedWeaponObj()
     setShootCounter(getEquippedItemDetail(equipped, 'firerate') * 60)
     if ( getAimMode() ) {
-        removeWeapon()
-        removeThrowable()
-        removeClass(getPlayer(), 'aim')
-        removeClass(getPlayer(), 'throwable-aim')
+        exitAimModeAnimation()
         if ( isWeapon(equipped.name) ) {
             addClass(getPlayer(), 'aim')
             renderWeapon()
@@ -627,11 +624,8 @@ const handleThrowableDrop = (itemObj) => {
 const dropFromWeaponWheel = (itemObj) => {
     if ( getEquippedWeaponId() === itemObj.id ) {
         setEquippedWeaponId(null)
-        removeClass(getPlayer(), 'aim')
-        removeClass(getPlayer(), 'throwable-aim')
+        exitAimModeAnimation()
         setAimMode(false)
-        removeWeapon()
-        removeThrowable()
     }
     setWeaponWheel(getWeaponWheel().map(weapon => weapon === itemObj.id ? null : weapon))
 }

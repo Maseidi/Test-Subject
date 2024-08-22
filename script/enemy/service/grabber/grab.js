@@ -1,7 +1,5 @@
 import { damagePlayer } from '../../../player-health.js'
-import { removeWeapon } from '../../../weapon-loader.js'
 import { manageAimModeAngle } from '../../../player-angle.js'
-import { removeThrowable } from '../../../throwable-loader.js'
 import { getCurrentRoomEnemies, getGrabBar, getPauseContainer, getPlayer, setGrabBar } from '../../../elements.js'
 import { 
     GO_FOR_RANGED,
@@ -16,6 +14,7 @@ import {
     addClass,
     appendAll,
     createAndAddClass,
+    exitAimMode,
     getProperty,
     isMoving,
     removeClass } from '../../../util.js'
@@ -55,10 +54,7 @@ export class GrabberGrabService {
 
     grabPlayer() {
         setAimMode(false)
-        removeClass(getPlayer(), 'aim')
-        removeClass(getPlayer(), 'throwable-aim')
-        removeWeapon()
-        removeThrowable()
+        exitAimModeAnimation()
         damagePlayer(this.enemy.damage / 2)
         if ( getSprintPressed() ) removeClass(getPlayer(), 'run')
         if ( isMoving() ) removeClass(getPlayer(), 'walk')

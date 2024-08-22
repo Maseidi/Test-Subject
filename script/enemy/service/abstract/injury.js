@@ -30,7 +30,7 @@ export class AbstractInjuryService {
             )
             dropLoot(this.enemy.sprite)
             enemies.get(getCurrentRoomId())[this.enemy.index].health = 0
-            activateProgress(this.enemy.activeProgress)
+            activateProgress(this.enemy.progress2Active)
             updateKillAllDoorStates()
             return
         }

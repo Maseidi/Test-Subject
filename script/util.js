@@ -10,6 +10,8 @@ import {
     getThrowCounter,
     getUpPressed,
     setEntityId } from './variables.js'
+import { removeWeapon } from './weapon-loader.js'
+import { removeThrowable } from './throwable-loader.js'
 
 export const collide = (first, second, offset) => {
     const firstBound = first.getBoundingClientRect()
@@ -172,4 +174,15 @@ export const addExplosion = (left, top) => {
     addClass(getMapEl(), 'explosion-shake')
     setTimeout(() => removeClass(getMapEl(), 'explosion-shake'), 300)
     getCurrentRoomExplosions().push(explosion)
+}
+
+export const exitAimMode = () => {
+    removeClass(getPlayer(), 'aim')
+    removeClass(getPlayer(), 'throwable-aim')
+    removeEquipped()
+}
+
+export const removeEquipped = () => {
+    removeWeapon()
+    removeThrowable()
 }

@@ -1,8 +1,8 @@
-import { getProgress } from './progress.js'
 import { Coin, Drop } from './interactables.js'
 import { renderQuit } from './user-interface.js'
 import { getPauseContainer } from './elements.js'
 import { renderStats } from './weapon-examine.js'
+import { findProgressByName } from './progress.js'
 import { isThrowable } from './throwable-details.js'
 import { getIntObj, setIntObj } from './variables.js'
 import { getShopItems, getShopItemsWithId } from './shop-item.js'
@@ -95,7 +95,7 @@ const renderBuy = () => {
 const renderBuyItems = () => {
     return getShopItemsWithId()
     .filter(item => !item.sold)
-    .filter(item => getProgress(item.progress))
+    .filter(item => findProgressByName(item.progress))
     .map((item) => {
         const buyItem = object2Element(item)
         addClass(buyItem, 'buy-item')

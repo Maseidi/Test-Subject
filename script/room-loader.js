@@ -1,7 +1,7 @@
 import { walls } from './walls.js'
 import { rooms } from './rooms.js'
 import { loaders } from './loaders.js'
-import { getProgress } from './progress.js'
+import { findProgressByName } from './progress.js'
 import { isWeapon } from './weapon-details.js'
 import { enemies } from './enemy/util/enemies.js'
 import { interactables } from './interactables.js'
@@ -135,7 +135,8 @@ const renderLoaders = (room2Render) => {
 
 const renderDoors = (loader, room2Render) => {    
     const { door: doorObj, width, height, left, top, right, bottom } = loader
-    if ( getProgress(doorObj.progress) ) return
+    if ( findProgressByName(doorObj.progress) ) return
+    if ( enemiesLeft4Door2Open(doorObj) ) return 
     const doorElem = object2Element(doorObj)
     addClass(doorElem, 'door')
     addClass(doorElem, 'interactable')
@@ -152,6 +153,12 @@ const renderDoors = (loader, room2Render) => {
     getCurrentRoomInteractables().push(doorElem)
     getCurrentRoomDoors().push(doorElem)
     room2Render.append(doorElem)
+}
+
+const enemiesLeft4Door2Open = (door) => {
+    const killAll = door.killAll
+    if ( !killAll ) return false
+    return enemies.get(getCurrentRoomId()).find(enemy => enemy.health !== 0 && enemy.progress <= killAll) ? false : true
 }
 
 const addPosition = (root, input, direction) => {
@@ -243,7 +250,7 @@ const renderEnemies = (room2Render) => {
 
 const indexEnemies = (enemies) => enemies.forEach((enemy, index) => enemy.index = index)
 
-const filterEnemies = (enemies) => enemies.filter(enemy => enemy.health !== 0 && getProgress(enemy.progress))
+const filterEnemies = (enemies) => enemies.filter(enemy => enemy.health !== 0 && findProgressByName(enemy.progress))
 
 const spawnEnemies = (enemies, room2Render) => {
     enemies.forEach(elem => {

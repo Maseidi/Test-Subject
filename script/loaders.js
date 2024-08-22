@@ -228,7 +228,8 @@ export const loaders = new Map([
         new TopLoader_FromRight(65, 100, 580, new Door('yellow', '4', 'Door 2', 'Chivalry'))
         ]
     ],
-    [38, [        new BottomLoader_FromLeft(16, 250, 375),
+    [38, [ 
+        new BottomLoader_FromLeft(16, 250, 375),
         new TopLoader_FromLeft(40, 200, 400)
         ]
     ],

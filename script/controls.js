@@ -3,22 +3,24 @@ import { dropLoot } from './loot-manager.js'
 import { isWeapon } from './weapon-details.js'
 import { centralizePlayer } from './startup.js'
 import { setupReload } from './weapon-actions.js'
+import { renderWeapon } from './weapon-loader.js'
 import { renderStore } from './vending-machine.js'
 import { isThrowable } from './throwable-details.js'
 import { heal, damagePlayer } from './player-health.js'
-import { removeWeapon, renderWeapon } from './weapon-loader.js'
-import { removeThrowable, renderThrowable } from './throwable-loader.js'
+import { renderThrowable } from './throwable-loader.js'
 import { renderUi, renderWeaponUi, quitPage } from './user-interface.js'
 import { getGrabBar, getPauseContainer, getPlayer, getUiEl } from './elements.js'
 import { equippedWeaponObj, pickupDrop, removeInventory, renderInventory } from './inventory.js'
 import { 
     addClass,
     angleOf2Points,
+    exitAimMode,
     getEquippedItemDetail,
     getProperty,
     isMoving,
     isThrowing,
-    removeClass } from './util.js'
+    removeClass, 
+    removeEquipped} from './util.js'
 import { 
     getAimMode,
     getDraggedItem,
@@ -87,7 +89,7 @@ export const control = () => {
                     fDown()
                     break   
                 case 'Tab':
-                    openInventory()
+                    tabDown()
                     break
                 case 'R':
                 case 'r':
@@ -123,17 +125,14 @@ export const control = () => {
                 dUp()
                 break
             case 'Shift':
-                ShiftUp()
+                shiftUp()
                 break                      
             }
     }
 
     onmousemove = (e) => aimAngle(e)
-
     onmousedown = (e) => clickDown(e)
-    
     onmouseup = (e) => clickUp(e)
-
     onresize = () => centralizePlayer()
 
 }
@@ -169,23 +168,18 @@ const eDown = () => {
             }
             return
         }
-        removeClass(getPlayer(), 'aim')
-        removeClass(getPlayer(), 'throwable-aim')
-        removeWeapon()
-        removeThrowable()
+        exitAimModeAnimation()
         if ( isMoving() ) addClass(getPlayer(), 'walk')
     }
 }
 
 const weaponSlotDown = (key) => {
     if ( getPause() || getReloading() || getShooting() || getGrabbed() ) return
-    removeWeapon()
-    removeThrowable()
+    removeEquipped()
     if ( getWeaponWheel()[Number(key) - 1] === getEquippedWeaponId() ) {
         setEquippedWeaponId(null)
         setAimMode(false)
-        removeClass(getPlayer(), 'aim')
-        removeClass(getPlayer(), 'throwable-aim')
+        exitAimModeAnimation()
         renderWeaponUi()
         if (isMoving()) addClass(getPlayer(), 'walk')
         return
@@ -201,14 +195,12 @@ const weaponSlotDown = (key) => {
             renderWeapon()
         }
         else if ( isThrowable(equipped.name) ) {
-            removeClass(getPlayer(), 'aim')
-            addClass(getPlayer(), 'throwable-aim')
+            exitAimModeAnimation()
             renderThrowable()
         }  
         return
     }
-    removeClass(getPlayer(), 'aim')
-    removeClass(getPlayer(), 'throwable-aim')
+    exitAimModeAnimation()
     if (isMoving()) addClass(getPlayer(), 'walk')
     setAimMode(false)
 }
@@ -221,10 +213,7 @@ const shiftDown = () => {
 const startSprint = () => {
     if ( !isMoving() || getPause() || getGrabbed() || isThrowing() ) return
     setAimMode(false)
-    removeClass(getPlayer(), 'aim')
-    removeClass(getPlayer(), 'throwable-aim')
-    removeWeapon()
-    removeThrowable()
+    exitAimModeAnimation()
 }
 
 const fDown = () => {
@@ -270,7 +259,7 @@ const openPause = (cause, func) => {
     func()
 }
 
-const openInventory = () => {
+const tabDown = () => {
     if ( getGrabbed() ) return
     if ( getPause() && getPauseCause() !== 'inventory' ) return
     if ( getPause() && getPauseCause() === 'inventory' && getDraggedItem() ) return
@@ -328,7 +317,7 @@ const disableDirection = (setPressed) => {
     stopWalkingAnimation()
 }
 
-const ShiftUp = () => {
+const shiftUp = () => {
     setSprintPressed(false)
     stopWalkingAnimation()
     if ( isMoving() && !getAimMode() && !getGrabbed() ) addClass(getPlayer(), 'walk')
