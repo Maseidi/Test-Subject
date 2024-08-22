@@ -19,7 +19,7 @@ import {
     getEquippedItemDetail,
     addAllAttributes,
     isThrowing,
-    exitAimMode} from './util.js'
+    exitAimModeAnimation } from './util.js'
 import { 
     getAimMode,
     getCurrentRoomId,

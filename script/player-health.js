@@ -5,16 +5,24 @@ import { getCurrentRoomEnemies, getMapEl, getPlayer } from './elements.js'
 import { addClass, addFireEffect, isLowHealth, removeClass, findAttachmentsOnPlayer } from './util.js'
 import { 
     getBurning,
+    getDownPressed,
     getExplosionDamageCounter,
     getHealth,
+    getLeftPressed,
     getMaxHealth,
     getNoOffenseCounter,
     getPoisoned,
+    getRightPressed,
+    getUpPressed,
     setBurning,
+    setDownPressed,
     setExplosionDamageCounter,
     setHealth,
+    setLeftPressed,
     setNoOffenseCounter, 
-    setPoisoned } from './variables.js'
+    setPoisoned, 
+    setRightPressed,
+    setUpPressed} from './variables.js'
 
 export const manageHealthStatus = () => {
     manageBurningState()
@@ -67,6 +75,19 @@ export const useAntidote = (antidote) => {
     antidote.amount -= 1
     setPoisoned(false)
     removeClass(getMapEl(), 'poisoned')
+    manageDizziness()
+}
+
+const manageDizziness = () => {
+    if ( getLeftPressed() ) negateDirection(setRightPressed, setLeftPressed)
+    else if ( getRightPressed() ) negateDirection(setLeftPressed, setRightPressed)
+    if ( getDownPressed() ) negateDirection(setUpPressed, setDownPressed)
+    else if ( getUpPressed() ) negateDirection(setDownPressed, setUpPressed)
+}
+
+const negateDirection = (setOppositeDir, setDir) => {
+    setOppositeDir(true)
+    setDir(false)
 }
 
 export const damagePlayer = (damage) => {
@@ -108,6 +129,7 @@ export const setPlayer2Fire = () => {
 export const poisonPlayer = () => {
     setPoisoned(true)
     addClass(getMapEl(), 'poisoned')
+    manageDizziness()
 }
 
 const manageExplosionDamagedState = () => {

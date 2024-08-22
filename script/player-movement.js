@@ -32,7 +32,7 @@ const move = () => {
     getMapEl().style.left = `${getMapX()}px`
     getMapEl().style.top = `${getMapY()}px`
     getPlayer().style.left = `${getPlayerX()}px`
-    getPlayer().style.top = `${getPlayerY()}px`        
+    getPlayer().style.top = `${getPlayerY()}px`
 }
 
 const changePosition = (setMap, getMap, setPlayer, getPlayer, speed) => {

@@ -14,7 +14,7 @@ import { equippedWeaponObj, pickupDrop, removeInventory, renderInventory } from 
 import { 
     addClass,
     angleOf2Points,
-    exitAimMode,
+    exitAimModeAnimation,
     getEquippedItemDetail,
     getProperty,
     isMoving,
@@ -31,6 +31,7 @@ import {
     getMouseY,
     getPause,
     getPauseCause,
+    getPoisoned,
     getReloading,
     getShooting,
     getSprintPressed,
@@ -137,16 +138,17 @@ export const control = () => {
 
 }
 
-const wDown = () => enableDirection(setUpPressed)
+const wDown = () => enableDirection(setUpPressed, setDownPressed)
 
-const aDown = () => enableDirection(setLeftPressed)
+const aDown = () => enableDirection(setLeftPressed, setRightPressed)
 
-const sDown = () => enableDirection(setDownPressed)
+const sDown = () => enableDirection(setDownPressed, setUpPressed)
 
-const dDown = () => enableDirection(setRightPressed)
+const dDown = () => enableDirection(setRightPressed, setLeftPressed)
 
-const enableDirection = (setPressed) => {
-    setPressed(true)
+const enableDirection = (setPressed, setOppositePressed) => {
+    if ( getPoisoned() ) setOppositePressed(true)
+    else setPressed(true)
     if ( !getAimMode() && !getPause() && !getGrabbed() ) addClass(getPlayer(), 'walk')
 }
 
@@ -169,6 +171,7 @@ const eDown = () => {
             return
         }
         exitAimModeAnimation()
+        removeEquipped()
         if ( isMoving() ) addClass(getPlayer(), 'walk')
     }
 }
@@ -195,7 +198,8 @@ const weaponSlotDown = (key) => {
             renderWeapon()
         }
         else if ( isThrowable(equipped.name) ) {
-            exitAimModeAnimation()
+            removeClass(getPlayer(), 'aim')
+            addClass(getPlayer(), 'throwable-aim')
             renderThrowable()
         }  
         return
@@ -214,6 +218,7 @@ const startSprint = () => {
     if ( !isMoving() || getPause() || getGrabbed() || isThrowing() ) return
     setAimMode(false)
     exitAimModeAnimation()
+    removeEquipped()
 }
 
 const fDown = () => {
@@ -304,16 +309,17 @@ const hDown = () => {
     heal()
 }
 
-const wUp = () => disableDirection(setUpPressed)
+const wUp = () => disableDirection(setUpPressed, setDownPressed)
 
-const aUp = () => disableDirection(setLeftPressed)
+const aUp = () => disableDirection(setLeftPressed, setRightPressed)
 
-const sUp = () => disableDirection(setDownPressed)
+const sUp = () => disableDirection(setDownPressed, setUpPressed)
 
-const dUp = () => disableDirection(setRightPressed)
+const dUp = () => disableDirection(setRightPressed, setLeftPressed)
 
-const disableDirection = (setPressed) => {
-    setPressed(false)
+const disableDirection = (setPressed, setOppositePressed) => {
+    if ( getPoisoned() ) setOppositePressed(false) 
+    else setPressed(false)
     stopWalkingAnimation()
 }
 

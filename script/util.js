@@ -176,10 +176,9 @@ export const addExplosion = (left, top) => {
     getCurrentRoomExplosions().push(explosion)
 }
 
-export const exitAimMode = () => {
+export const exitAimModeAnimation = () => {
     removeClass(getPlayer(), 'aim')
     removeClass(getPlayer(), 'throwable-aim')
-    removeEquipped()
 }
 
 export const removeEquipped = () => {

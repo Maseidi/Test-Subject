@@ -14,10 +14,11 @@ import {
     addClass,
     appendAll,
     createAndAddClass,
-    exitAimMode,
+    exitAimModeAnimation,
     getProperty,
     isMoving,
-    removeClass } from '../../../util.js'
+    removeClass, 
+    removeEquipped} from '../../../util.js'
 import { 
     getPlayerAngle,
     getSprintPressed,
@@ -55,6 +56,7 @@ export class GrabberGrabService {
     grabPlayer() {
         setAimMode(false)
         exitAimModeAnimation()
+        removeEquipped()
         damagePlayer(this.enemy.damage / 2)
         if ( getSprintPressed() ) removeClass(getPlayer(), 'run')
         if ( isMoving() ) removeClass(getPlayer(), 'walk')

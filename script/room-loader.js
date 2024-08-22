@@ -1,10 +1,10 @@
 import { walls } from './walls.js'
 import { rooms } from './rooms.js'
 import { loaders } from './loaders.js'
-import { findProgressByName } from './progress.js'
 import { isWeapon } from './weapon-details.js'
 import { enemies } from './enemy/util/enemies.js'
 import { interactables } from './interactables.js'
+import { findProgressByName } from './progress.js'
 import { getCurrentRoomId, getRoomLeft, getRoomTop, setStunnedCounter } from './variables.js'
 import { 
     GO_FOR_RANGED,
@@ -127,16 +127,15 @@ const renderLoaders = (room2Render) => {
         else if ( elem.right !== undefined ) loader.style.right = `${elem.right}px`
         if ( elem.top !== undefined ) loader.style.top = `${elem.top}px`
         else if ( elem.bottom !== undefined ) loader.style.bottom = `${elem.bottom}px`  
-        if ( elem.door ) renderDoors(elem, room2Render)
+        const door = elem.door
+        if ( door && (!findProgressByName(door.progress) && !enemiesLeft4Door2Open(door)) ) renderDoor(elem, room2Render)
         room2Render.append(loader)
         getCurrentRoomLoaders().push(loader)
     })
 }
 
-const renderDoors = (loader, room2Render) => {    
+const renderDoor = (loader, room2Render) => {    
     const { door: doorObj, width, height, left, top, right, bottom } = loader
-    if ( findProgressByName(doorObj.progress) ) return
-    if ( enemiesLeft4Door2Open(doorObj) ) return 
     const doorElem = object2Element(doorObj)
     addClass(doorElem, 'door')
     addClass(doorElem, 'interactable')
