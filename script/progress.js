@@ -1,9 +1,12 @@
-import { updateDoorStates } from './door.js'
+import { spawnEnemy } from './room-loader.js'
+import { getCurrentRoomId } from './variables.js'
+import { enemies } from './enemy/util/enemies.js'
+import { getCurrentRoom, getCurrentRoomDoors } from './elements.js'
 
 let progress = {
+    '0' : true,
     '1' : true,
     '2' : true,
-    '3' : true,
 }
 
 export const getProgress = () => progress
@@ -16,5 +19,32 @@ export const activateProgress = (name) => {
         ...progress,
         [name]: true
     }
-    updateDoorStates(name)
+    updateDoors(name)
+    updateEnemies(name)
 }
+
+const updateDoors = (progress) => 
+    Array.from(getCurrentRoomDoors())
+        .filter(door => door.getAttribute('progress') === progress )
+        .forEach(door => openDoor(door))
+
+const openDoor = (door) => {
+    door.remove()
+    const progress2Active = door.getAttribute('progress2Active') 
+    if ( progress2Active ) activateProgress(progress2Active)   
+}     
+
+export const updateKillAllDoors = () => {
+    const aliveEnemies = enemies.get(getCurrentRoomId()).filter(enemy => enemy.health !== 0)
+    for ( const door of getCurrentRoomDoors() ) {
+        const killAll = door.getAttribute('killAll') 
+        if ( !killAll ) continue 
+        const needed2beKilled = aliveEnemies.find(enemy => enemy.progress <= killAll)
+        if ( !needed2beKilled ) openDoor(door)
+    }
+}
+
+const updateEnemies = (progress) => 
+    enemies.get(getCurrentRoomId())
+        .filter(enemy => enemy.progress === progress && enemy.health !== 0 )
+        .forEach(enemy => spawnEnemy(enemy, getCurrentRoom()))

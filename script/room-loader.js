@@ -251,25 +251,25 @@ const indexEnemies = (enemies) => enemies.forEach((enemy, index) => enemy.index 
 
 const filterEnemies = (enemies) => enemies.filter(enemy => enemy.health !== 0 && findProgressByName(enemy.progress))
 
-const spawnEnemies = (enemies, room2Render) => {
-    enemies.forEach(elem => {
-        const enemy = defineEnemy(elem)
-        createPath(elem, elem.index, room2Render)
-        const enemyCollider = createAndAddClass('div', 'enemy-collider', `${elem.type}-collider`)
-        const enemyBody = createAndAddClass('div', 'enemy-body', `${elem.type}-body`, 'body-transition')
-        enemyBody.style.transform = `rotateZ(${elem.angle}deg)`
-        if ( elem.type === SPIKER ) removeClass(enemyBody, 'body-transition')
-        enemyBody.style.backgroundColor = `${elem.virus}`
-        defineComponents(elem, enemyBody)
-        const vision = elem.type === TRACKER ? createAndAddClass('div', 'vision') : defineVision(elem)
-        const fwDetector = defineForwardDetector(elem)
-        appendAll(enemyCollider, enemyBody, vision, fwDetector)
-        enemy.append(enemyCollider)
-        room2Render.append(enemy)
-        elem.sprite = enemy
-        getCurrentRoomEnemies().push(elem)
-        getCurrentRoomSolid().push(enemyCollider)
-    })
+const spawnEnemies = (enemies, room2Render) => enemies.forEach(elem => spawnEnemy(elem, room2Render))
+
+export const spawnEnemy = (elem, room2Render) => {
+    const enemy = defineEnemy(elem)
+    createPath(elem, elem.index, room2Render)
+    const enemyCollider = createAndAddClass('div', 'enemy-collider', `${elem.type}-collider`)
+    const enemyBody = createAndAddClass('div', 'enemy-body', `${elem.type}-body`, 'body-transition')
+    enemyBody.style.transform = `rotateZ(${elem.angle}deg)`
+    if ( elem.type === SPIKER ) removeClass(enemyBody, 'body-transition')
+    enemyBody.style.backgroundColor = `${elem.virus}`
+    defineComponents(elem, enemyBody)
+    const vision = elem.type === TRACKER ? createAndAddClass('div', 'vision') : defineVision(elem)
+    const fwDetector = defineForwardDetector(elem)
+    appendAll(enemyCollider, enemyBody, vision, fwDetector)
+    enemy.append(enemyCollider)
+    room2Render.append(enemy)
+    elem.sprite = enemy
+    getCurrentRoomEnemies().push(elem)
+    getCurrentRoomSolid().push(enemyCollider)
 }
 
 const defineEnemy = (elem) => {

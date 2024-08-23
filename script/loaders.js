@@ -1,5 +1,3 @@
-import { Door } from "./door.js"
-
 class Loader {
     constructor(className, width, height, left, top, right, bottom, door) {
         this.className = className
@@ -58,6 +56,17 @@ class BottomLoader_FromLeft extends Loader {
 class BottomLoader_FromRight extends Loader {
     constructor(className, width, right, door) {
         super(className, width, 5, undefined, undefined, right, -26, door)
+    }
+}
+
+class Door {
+    constructor(color, progress, heading, popup, progress2Active, killAll) {
+        this.color = color
+        this.progress = progress
+        this.heading = heading
+        this.popup = popup
+        this.progress2Active = progress2Active
+        this.killAll = killAll
     }
 }
 
@@ -122,7 +131,7 @@ export const loaders = new Map([
     ],
     [16, [
         new BottomLoader_FromLeft(9, 100, 100, 
-            new Door('red', '3', 'doorway to heaven', 'dignity')),
+            new Door('red', '13', 'doorway to heaven', 'dignity')),
         new LeftLoader_FromTop(37, 100, 400),
         new TopLoader_FromLeft(38, 250, 475),
         new RightLoader_FromTop(39, 300, 300)
@@ -224,8 +233,8 @@ export const loaders = new Map([
         new RightLoader_FromTop(16, 100, 350),
         new TopLoader_FromLeft(62, 100, 240),
         new TopLoader_FromLeft(63, 100, 580),
-        new TopLoader_FromRight(64, 100, 240, new Door('green', undefined, 'Door 1', 'Sacrifice', '4', '3')),
-        new TopLoader_FromRight(65, 100, 580, new Door('yellow', '4', 'Door 2', 'Chivalry'))
+        new TopLoader_FromRight(64, 100, 240, new Door('green', undefined, 'Door 1', 'Sacrifice', '13', '3')),
+        new TopLoader_FromRight(65, 100, 580, new Door('yellow', '13', 'Door 2', 'Chivalry'))
         ]
     ],
     [38, [ 
