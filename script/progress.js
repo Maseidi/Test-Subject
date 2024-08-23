@@ -1,7 +1,8 @@
-import { spawnEnemy } from './room-loader.js'
+import { renderInteractable, spawnEnemy } from './room-loader.js'
 import { getCurrentRoomId } from './variables.js'
 import { enemies } from './enemy/util/enemies.js'
 import { getCurrentRoom, getCurrentRoomDoors } from './elements.js'
+import { interactables } from './interactables.js'
 
 let progress = {
     '0' : true,
@@ -21,6 +22,7 @@ export const activateProgress = (name) => {
     }
     updateDoors(name)
     updateEnemies(name)
+    updateInteractables(name)
 }
 
 const updateDoors = (progress) => 
@@ -48,3 +50,9 @@ const updateEnemies = (progress) =>
     enemies.get(getCurrentRoomId())
         .filter(enemy => enemy.progress === progress && enemy.health !== 0 )
         .forEach(enemy => spawnEnemy(enemy, getCurrentRoom()))
+
+const updateInteractables = (progress) =>
+    interactables.get(getCurrentRoomId())
+        .map((int, index) => ({...int, index }))
+        .filter(int => int.progress === progress)
+        .forEach(int => renderInteractable(getCurrentRoom(), int, int.index))

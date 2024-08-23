@@ -214,7 +214,7 @@ const manageBuy = (itemObj) => {
         let chosenItem = getShopItems()[itemObj.id]
         let purchasedItem = new Drop(
             chosenItem.width, chosenItem.left, chosenItem.top, chosenItem.name, chosenItem.heading, 
-            chosenItem.popup, chosenItem.amount, chosenItem.space, chosenItem.description, chosenItem.price)
+            chosenItem.popup, chosenItem.amount, chosenItem.space, chosenItem.description, chosenItem.price, '0')
         purchasedItem = handleNewWeapnPurchase(purchasedItem, itemObj.name)
         purchasedItem = handleNewThrowablePurchase(purchasedItem, itemObj.name)
         setIntObj(object2Element(purchasedItem))

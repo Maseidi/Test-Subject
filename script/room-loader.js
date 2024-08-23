@@ -173,6 +173,7 @@ const renderInteractables = (room2Render) =>
         .forEach((interactable, index) => renderInteractable(room2Render, interactable, index))
 
 export const renderInteractable = (root, interactable, index) => {
+    if ( !findProgressByName(interactable.progress) ) return
     const int = object2Element(interactable)
     addClass(int, 'interactable')
     setInteractableId(interactable, int, index)

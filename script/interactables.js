@@ -6,12 +6,13 @@ import {
     Loot,
     MAGNUM_AMMO_LOOT,
     P90,
+    PISTOL4,
     RIFLE_AMMO_LOOT,
     SHOTGUN_SHELLS_LOOT, 
-    SingleLoot} from './loot.js'
+    SingleLoot } from './loot.js'
 
 class Interactable {
-    constructor(width, left, top, name, heading, popup, solid, amount, space, description, price) {
+    constructor(width, left, top, name, heading, popup, solid, amount, space, description, price, progress) {
         this.width = width
         this.left = left
         this.top = top
@@ -23,110 +24,116 @@ class Interactable {
         this.space = space
         this.description = description
         this.price = price
+        this.progress = progress ?? '0'
     }
 }
 
 class PC extends Interactable {
     constructor(left, top) {
-        super(50, left, top, 'computer', 'computer', 'Save game', true, undefined, undefined, undefined, undefined)
+        super(50, left, top, 'computer', 'computer', 'Save game', true, undefined, undefined, undefined, undefined, '0')
     }
 }
 
 class Stash extends Interactable {
     constructor(left, top) {
-        super(80, left, top, 'stash', 'stash', 'Open stash', true, undefined, undefined, undefined, undefined)
+        super(80, left, top, 'stash', 'stash', 'Open stash', true, undefined, undefined, undefined, undefined, '0')
     }
 }
 
 class VendingMachine extends Interactable {
     constructor(left, top) {
-        super(35, left, top, 'vendingMachine', 'vending machine', 'Trade', true, undefined, undefined, undefined, undefined)
+        super(35, left, top, 'vendingMachine', 'vending machine', 'Trade', true, undefined, undefined, undefined, undefined, '0')
     }
 }
 
 class Crate extends Interactable {
-    constructor(left, top, loot) {
-        super(35, left, top, 'crate', 'crate', 'Break', true, undefined, undefined, undefined, undefined)
+    constructor(left, top, loot, progress) {
+        super(35, left, top, 'crate', 'crate', 'Break', true, undefined, undefined, undefined, undefined, progress)
         this.loot = loot.name
         this['loot-amount'] = loot.amount
     }
 }
 
 export class Drop extends Interactable {
-    constructor(width, left, top, name, heading, popup, amount, space, description, price) {
-        super(width, left, top, name, heading, popup, false, amount, space, description, price)
+    constructor(width, left, top, name, heading, popup, amount, space, description, price, progress) {
+        super(width, left, top, name, heading, popup, false, amount, space, description, price, progress)
     }
 }
 
 export class Bandage extends Drop {
-    constructor(left, top, amount) {
-        super(50, left, top, 'bandage', 'bandage', 'Pick up', amount, 1, 'Might come in handy in case of injuries', 1/3)
+    constructor(left, top, amount, progress) {
+        super(50, left, top, 'bandage', 'bandage', 'Pick up', amount, 1, 'Might come in handy in case of injuries', 1/3, progress)
     }
 }
 
 export class Coin extends Drop {
-    constructor(left, top, amount) {
-        super(25, left, top, 'coin', 'coin', 'Pick up', amount, 1, 'A neccesity when trading with the vending machine', undefined)
+    constructor(left, top, amount, progress) {
+        super(25, left, top, 'coin', 'coin', 'Pick up', amount, 1, 
+            'A neccesity when trading with the vending machine', undefined, progress)
     }
 }
 
 export class HardDrive extends Drop {
-    constructor(left, top, amount) {
-        super(30, left, top, 'hardDrive', 'hard drive', 'Pick up', amount, 1, 'PC needs one of these to save your progress', 1/2)
+    constructor(left, top, amount, progress) {
+        super(30, left, top, 'hardDrive', 'hard drive', 'Pick up', amount, 1, 
+            'PC needs one of these to save your progress', 1/2, progress)
     }
 }
 
 export class PistolAmmo extends Drop {
-    constructor(left, top, amount) {
-        super(50, left, top, 'pistolAmmo', 'pistol ammo', 'Pick up', amount, 1, 'Ammo for all sorts of handguns', 1/30)
+    constructor(left, top, amount, progress) {
+        super(50, left, top, 'pistolAmmo', 'pistol ammo', 'Pick up', amount, 1, 'Ammo for all sorts of handguns', 1/30, progress)
     }
 }
 
 export class ShotgunShells extends Drop {
-    constructor(left, top, amount) {
-        super(40, left, top, 'shotgunShells', 'shotgun shells', 'Pick up', amount, 1, 'Shells for all sorts of shotguns', 1/20)
+    constructor(left, top, amount, progress) {
+        super(40, left, top, 'shotgunShells', 'shotgun shells', 'Pick up', amount, 1, 
+            'Shells for all sorts of shotguns', 1/20, progress)
     }
 }
 
 export class MagnumAmmo extends Drop {
-    constructor(left, top, amount) {
-        super(40, left, top, 'magnumAmmo', 'magnum ammo', 'Pick up', amount, 1, 'Ammo for all sorts of magnums', 1/5)
+    constructor(left, top, amount, progress) {
+        super(40, left, top, 'magnumAmmo', 'magnum ammo', 'Pick up', amount, 1, 
+            'Ammo for all sorts of magnums', 1/5, progress)
     }
 }
 
 export class SmgAmmo extends Drop {
-    constructor(left, top, amount) {
-        super(40, left, top, 'smgAmmo', 'smg ammo', 'Pick up', amount, 1, 'Ammo for all sorts of sub-machine guns', 1/90)
+    constructor(left, top, amount, progress) {
+        super(40, left, top, 'smgAmmo', 'smg ammo', 'Pick up', amount, 1, 'Ammo for all sorts of sub-machine guns', 1/90, progress)
     }
 }
 
 export class RifleAmmo extends Drop {
-    constructor(left, top, amount) {
-        super(30, left, top, 'rifleAmmo', 'rifle ammo', 'Pick up', amount, 1, 'Ammo for all sorts of rifles', 1/10)
+    constructor(left, top, amount, progress) {
+        super(30, left, top, 'rifleAmmo', 'rifle ammo', 'Pick up', amount, 1, 'Ammo for all sorts of rifles', 1/10, progress)
     }
 }
 
 export class Antidote extends Drop {
-    constructor(left, top, amount) {
-        super(30, left, top, 'antidote', 'antidote', 'Pick up', amount, 1, 'An emergency when poison is all over the place', 1/3)
+    constructor(left, top, amount, progress) {
+        super(30, left, top, 'antidote', 'antidote', 'Pick up', amount, 1, 
+            'An emergency when poison is all over the place', 1/3, progress)
     }
 }
 
 export class Grenade extends Drop {
-    constructor(left, top, amount) {
-        super(20, left, top, 'grenade', 'grenade', 'Pick up', amount, 1, 'Toss one to witness your foes fly high!', 1/2)
+    constructor(left, top, amount, progress) {
+        super(20, left, top, 'grenade', 'grenade', 'Pick up', amount, 1, 'Toss one to witness your foes fly high!', 1/2, progress)
     }
 }
 
 export class Flashbang extends Drop {
-    constructor(left, top, amount) {
+    constructor(left, top, amount, progress) {
         super(20, left, top, 'flashbang', 'flashbang', 'Pick up', amount, 1, 
-              'Blinding enemies can be a game changer in many situations', 1/3)
+              'Blinding enemies can be a game changer in many situations', 1/3, progress)
     }
 }
 
 export class WeaponDrop extends Drop {
-    constructor(left, top, name, currmag, damageLvl, rangeLvl, reloadspeedLvl, magazineLvl, fireratelvl) {
+    constructor(left, top, name, currmag, damageLvl, rangeLvl, reloadspeedLvl, magazineLvl, fireratelvl, progress) {
         super(
             70,
             left,
@@ -137,7 +144,8 @@ export class WeaponDrop extends Drop {
             1,
             getWeaponDetails().get(name).space,
             getWeaponDetails().get(name).description,
-            getWeaponDetails().get(name).price)
+            getWeaponDetails().get(name).price,
+            progress)
         this.currmag = currmag
         this.damageLvl = damageLvl
         this.rangeLvl = rangeLvl
@@ -208,7 +216,7 @@ export const interactables = new Map([
         new Bandage(600, 700, 5),
         new Antidote(600, 600, 5),
         new Grenade(500, 800, 3),
-        new Flashbang(600, 800, 5),
+        new Flashbang(600, 800, 5, '13'),
         new Flashbang(700, 800, 2),
         ]
     ],[17, 
@@ -252,7 +260,14 @@ export const interactables = new Map([
     ],[36, 
         []
     ],[37, 
-        []
+        [
+        new PistolAmmo(100, 100, 10, '5'),
+        new ShotgunShells(200, 100, 11, '6'),
+        new SmgAmmo(300, 100, 100, '7'),
+        new MagnumAmmo(400, 100, 1, '8'),
+        new RifleAmmo(500, 100, 2, '9'),
+        new Crate(600, 100, new SingleLoot(PISTOL4), '10')
+        ]
     ],[38, 
         []
     ],[39, 

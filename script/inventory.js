@@ -19,7 +19,8 @@ import {
     getEquippedItemDetail,
     addAllAttributes,
     isThrowing,
-    exitAimModeAnimation } from './util.js'
+    exitAimModeAnimation, 
+    removeEquipped} from './util.js'
 import { 
     getAimMode,
     getCurrentRoomId,
@@ -625,6 +626,7 @@ const dropFromWeaponWheel = (itemObj) => {
     if ( getEquippedWeaponId() === itemObj.id ) {
         setEquippedWeaponId(null)
         exitAimModeAnimation()
+        removeEquipped()
         setAimMode(false)
     }
     setWeaponWheel(getWeaponWheel().map(weapon => weapon === itemObj.id ? null : weapon))
