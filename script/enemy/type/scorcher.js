@@ -3,6 +3,7 @@ import { NormalLostService } from '../service/normal/lost.js'
 import { GrabberGrabService } from '../service/grabber/grab.js'
 import { NormalChaseService } from '../service/normal/chase.js'
 import { NormalReturnService } from '../service/normal/return.js'
+import { GrabberInjuryService } from '../service/grabber/injury.js'
 import { ScorcherMovementService } from '../service/scorcher/movement.js'
 import { ScorcherShootingService } from '../service/scorcher/shooting.js'
 import { NormalGuessSearchService } from '../service/normal/guess-search.js'
@@ -24,6 +25,7 @@ export class Scorcher extends AbstractEnemy {
         const damage = Math.floor(level * 15 + Math.random() * 10)
         const maxSpeed = 2.5 + Math.random()
         super(SCORCHER, 5, waypoint, health, damage, 100, maxSpeed, progress, 600, 1.1, loot, progress2Active)
+        this.injuryService = new GrabberInjuryService(this)
         this.movementService = new ScorcherMovementService(this)
         this.investigationService = new NormalInvestigationService(this)
         this.chaseService = new NormalChaseService(this)

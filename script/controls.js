@@ -23,18 +23,22 @@ import {
     removeEquipped} from './util.js'
 import { 
     getAimMode,
+    getDownPressed,
     getDraggedItem,
     getEquippedWeaponId,
     getGrabbed,
     getIntObj,
+    getLeftPressed,
     getMouseX,
     getMouseY,
     getPause,
     getPauseCause,
     getPoisoned,
     getReloading,
+    getRightPressed,
     getShooting,
     getSprintPressed,
+    getUpPressed,
     getWeaponWheel,
     setAimMode,
     setDownPressed,
@@ -138,15 +142,17 @@ export const control = () => {
 
 }
 
-const wDown = () => enableDirection(setUpPressed, setDownPressed)
+const wDown = () => enableDirection(getUpPressed, getDownPressed, setUpPressed, setDownPressed)
 
-const aDown = () => enableDirection(setLeftPressed, setRightPressed)
+const aDown = () => enableDirection(getLeftPressed, getRightPressed, setLeftPressed, setRightPressed)
 
-const sDown = () => enableDirection(setDownPressed, setUpPressed)
+const sDown = () => enableDirection(getDownPressed, getUpPressed, setDownPressed, setUpPressed)
 
-const dDown = () => enableDirection(setRightPressed, setLeftPressed)
+const dDown = () => enableDirection(getRightPressed, getLeftPressed, setRightPressed, setLeftPressed)
 
-const enableDirection = (setPressed, setOppositePressed) => {
+const enableDirection = (getPressed, getOppositePressed, setPressed, setOppositePressed) => {
+    if ( getPoisoned() && getPressed() ) return
+    if ( getOppositePressed() ) return 
     if ( getPoisoned() ) setOppositePressed(true)
     else setPressed(true)
     if ( !getAimMode() && !getPause() && !getGrabbed() ) addClass(getPlayer(), 'walk')

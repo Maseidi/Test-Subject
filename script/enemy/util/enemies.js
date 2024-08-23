@@ -17,9 +17,6 @@ import {
 
 export const enemies = new Map([
     [37, [
-        // new Torturer(1, new SquarePath(650, 240, 300), '1'),
-        // new Torturer(1, new VerDoublePointPath(800, 200, 300), '2'),
-        // new Torturer(1, new VerDoublePointPath(800, 100, 300), '3'),
         new Torturer(1, new SquarePath(650, 240, 300), '2', undefined, '0'),
         new SoulDrinker(1, new SinglePointPath(650, 140), '2', undefined, '1'),
         new RockCrusher(1, new SinglePointPath(850, 140), '3'),

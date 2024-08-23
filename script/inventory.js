@@ -83,6 +83,7 @@ const searchPack = () => {
             const item = inventory[i][j]
             if ( item && item.name === drop.name && item.amount !== pack && !found ) {
                 let diff = Math.min(pack, item.amount + drop.amount) - item.amount
+                handleThrowablePickup(drop)
                 item.amount += diff
                 updateAmount(drop.amount - diff)
                 found = true
@@ -105,15 +106,7 @@ const searchEmpty = () => {
                     if ( inventory[i][j+k] !== null ) skip = true
                 if ( skip ) continue   
                 let diff = Math.min(pack, drop.amount)
-                if ( isThrowable(drop.name) ) {
-                    const throwable = inventory.flat().find(item => item?.name === drop.name)
-                    if ( throwable ) {
-                        const interactable = Array.from(getCurrentRoomInteractables()).find(int => int.id === drop.id)
-                        drop.id = throwable.id
-                        getIntObj().setAttribute('id', throwable.id)
-                        if ( interactable ) interactable.id = throwable.id
-                    }
-                }
+                handleThrowablePickup(drop)
                 inventory[i][j] = {...drop, amount: diff, row: i, column: j}
                 for ( let k = 1; k < drop.space; k++ ) inventory[i][j+k] = 'taken'
                 updateAmount(drop.amount - diff)
@@ -123,6 +116,16 @@ const searchEmpty = () => {
             }
         }
     }
+}
+
+const handleThrowablePickup = (drop) => {
+    if ( !isThrowable(drop.name) ) return
+    const throwable = inventory.flat().find(item => item?.name === drop.name)
+    if ( !throwable ) return
+    const interactable = Array.from(getCurrentRoomInteractables()).find(int => int.id === drop.id)
+    drop.id = throwable.id
+    getIntObj().setAttribute('id', throwable.id)
+    if ( interactable ) interactable.id = throwable.id
 }
 
 const checkSpecialScenarios = () => {
@@ -618,7 +621,7 @@ const handleWeaponDrop = (itemObj) => {
 
 const handleThrowableDrop = (itemObj) => {
     if ( !isThrowable(itemObj.name) ) return
-    if ( calculateThrowableAmount(itemObj) !== 0 ) return    
+    if ( calculateThrowableAmount(itemObj) !== 0 ) return
     dropFromWeaponWheel(itemObj)
 }
 

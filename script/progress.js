@@ -1,8 +1,8 @@
-import { renderInteractable, spawnEnemy } from './room-loader.js'
 import { getCurrentRoomId } from './variables.js'
 import { enemies } from './enemy/util/enemies.js'
-import { getCurrentRoom, getCurrentRoomDoors } from './elements.js'
 import { interactables } from './interactables.js'
+import { renderInteractable, spawnEnemy } from './room-loader.js'
+import { getCurrentRoom, getCurrentRoomDoors } from './elements.js'
 
 let progress = {
     '0' : true,
@@ -16,6 +16,7 @@ export const findProgressByName = (name) => progress[name]
 
 export const activateProgress = (name) => {
     if ( !name ) return
+    if ( progress[name] ) return
     progress = {
         ...progress,
         [name]: true

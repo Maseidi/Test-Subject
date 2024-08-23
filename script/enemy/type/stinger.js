@@ -3,6 +3,7 @@ import { NormalLostService } from '../service/normal/lost.js'
 import { GrabberGrabService } from '../service/grabber/grab.js'
 import { NormalChaseService } from '../service/normal/chase.js'
 import { NormalReturnService } from '../service/normal/return.js'
+import { GrabberInjuryService } from '../service/grabber/injury.js'
 import { StingerMovementService } from '../service/stinger/movement.js'
 import { StingerShootingService } from '../service/stinger/shooting.js'
 import { NormalGuessSearchService } from '../service/normal/guess-search.js'
@@ -24,6 +25,7 @@ export class Stinger extends AbstractEnemy {
         const damage = Math.floor(level * 25 + Math.random() * 15)
         const maxSpeed = 2.75 + Math.random()
         super(STINGER, 5, waypoint, health, damage, 60, maxSpeed, progress, 700, 1.3, loot, progress2Active)
+        this.injuryService = new GrabberInjuryService(this)
         this.movementService = new StingerMovementService(this)
         this.investigationService = new NormalInvestigationService(this)
         this.chaseService = new NormalChaseService(this)

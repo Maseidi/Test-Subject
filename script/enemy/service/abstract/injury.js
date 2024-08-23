@@ -21,21 +21,24 @@ export class AbstractInjuryService {
         const enemyHealth = this.enemy.health
         const newHealth = enemyHealth - damage
         this.enemy.health = newHealth
-        if ( newHealth <= 0 ) {
-            addAllAttributes(
-                this.enemy.sprite, 
-                'left', Number(this.enemy.sprite.style.left.replace('px', '')), 
-                'top', Number(this.enemy.sprite.style.top.replace('px', ''))
-            )
-            dropLoot(this.enemy.sprite)
-            enemies.get(getCurrentRoomId())[this.enemy.index].health = 0
-            activateProgress(this.enemy.progress2Active)
-            updateKillAllDoors()
-            return
+        if ( newHealth <= 0 ) this.killEnemy()
+        else {
+            addClass(this.enemy.sprite.firstElementChild.firstElementChild, 'damaged')
+            this.enemy.damagedCounter = 1
+            if ( this.enemy.state === STUNNED ) this.enemy.state = CHASE
         }
-        addClass(this.enemy.sprite.firstElementChild.firstElementChild, 'damaged')
-        this.enemy.damagedCounter = 1
-        if ( this.enemy.state === STUNNED ) this.enemy.state = CHASE
+    }
+
+    killEnemy() {
+        addAllAttributes(
+            this.enemy.sprite, 
+            'left', Number(this.enemy.sprite.style.left.replace('px', '')), 
+            'top', Number(this.enemy.sprite.style.top.replace('px', ''))
+        )
+        dropLoot(this.enemy.sprite)
+        enemies.get(getCurrentRoomId())[this.enemy.index].health = 0
+        activateProgress(this.enemy.progress2Active)
+        updateKillAllDoors()
     }
 
     manageDamagedMode() {

@@ -25,6 +25,8 @@ export class RangerShootingService {
 
     handleRangedAttackState() {
         this.transferEnemy(true)
+        if ( this.enemy.visionService.isPlayerVisible() ) 
+            this.enemy.notificationService.notifyEnemy(Number.MAX_SAFE_INTEGER)
         let shootCounter = this.enemy.shootCounter || 0
         shootCounter++
         if ( shootCounter === 3 * this.fireRate ) {            

@@ -30,19 +30,19 @@ class Interactable {
 
 class PC extends Interactable {
     constructor(left, top) {
-        super(50, left, top, 'computer', 'computer', 'Save game', true, undefined, undefined, undefined, undefined, '0')
+        super(50, left, top, 'computer', 'computer', 'Save game', true, undefined, undefined, undefined, undefined)
     }
 }
 
 class Stash extends Interactable {
     constructor(left, top) {
-        super(80, left, top, 'stash', 'stash', 'Open stash', true, undefined, undefined, undefined, undefined, '0')
+        super(80, left, top, 'stash', 'stash', 'Open stash', true, undefined, undefined, undefined, undefined)
     }
 }
 
 class VendingMachine extends Interactable {
     constructor(left, top) {
-        super(35, left, top, 'vendingMachine', 'vending machine', 'Trade', true, undefined, undefined, undefined, undefined, '0')
+        super(35, left, top, 'vendingMachine', 'vending machine', 'Trade', true, undefined, undefined, undefined, undefined)
     }
 }
 
