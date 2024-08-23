@@ -132,38 +132,6 @@ export class Flashbang extends Drop {
     }
 }
 
-class ThrowableDrop extends Drop {
-    constructor(left, top, name, amount) {
-        super(
-            20,
-            left,
-            top,
-            name,
-            name,
-            'Pick up',
-            amount,
-            1,
-            getThrowableSpecs().get(name).description, 
-            getThrowableSpecs().get(name).price
-        )
-        this.damage = getThrowableSpecs().get(name).damage
-        this.firerate = getThrowableSpecs().get(name).firerate
-        this.range = getThrowableSpecs().get(name).range
-    }
-}
-
-export class Grenade extends ThrowableDrop {
-    constructor(left, top, amount) {
-        super(left, top, 'grenade', amount)
-    }
-}
-
-export class Flashbang extends ThrowableDrop {
-    constructor(left, top, amount) {
-        super(left, top, 'flashbang', amount)
-    }
-}
-
 export class WeaponDrop extends Drop {
     constructor(left, top, name, currmag, damageLvl, rangeLvl, reloadspeedLvl, magazineLvl, fireratelvl, progress) {
         super(
