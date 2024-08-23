@@ -1,9 +1,24 @@
 import { damagePlayer } from '../../../player-health.js'
-import { removeWeapon } from '../../../weapon-loader.js'
 import { manageAimModeAngle } from '../../../player-angle.js'
 import { getCurrentRoomEnemies, getGrabBar, getPauseContainer, getPlayer, setGrabBar } from '../../../elements.js'
-import { addAttribute, addClass, appendAll, createAndAddClass, getProperty, isMoving, removeClass } from '../../../util.js'
-import { GO_FOR_RANGED, GRAB, INVESTIGATE, NO_OFFENCE, RANGER, STAND_AND_WATCH, TRACKER } from '../../util/enemy-constants.js'
+import { 
+    GO_FOR_RANGED,
+    GRAB,
+    INVESTIGATE,
+    NO_OFFENCE,
+    RANGER,
+    STAND_AND_WATCH,
+    TRACKER } from '../../util/enemy-constants.js'
+import { 
+    addAllAttributes,
+    addClass,
+    appendAll,
+    createAndAddClass,
+    exitAimModeAnimation,
+    getProperty,
+    isMoving,
+    removeClass, 
+    removeEquipped} from '../../../util.js'
 import { 
     getPlayerAngle,
     getSprintPressed,
@@ -34,23 +49,23 @@ export class GrabberGrabService {
         if ( current > Number(getGrabBar().getAttribute(part)) + 100 && getGrabBar().getAttribute(`${part}-done`) !== 'true' ) {
             addClass(getGrabBar(), `${part}-fail`)
             damagePlayer(this.enemy.damage / 6)
-            addAttribute(getGrabBar(), `${part}-done`, true)
+            getGrabBar().setAttribute(`${part}-done`, true)
         }
     }
 
     grabPlayer() {
         setAimMode(false)
-        removeClass(getPlayer(), 'aim')
-        removeWeapon()
+        exitAimModeAnimation()
+        removeEquipped()
         damagePlayer(this.enemy.damage / 2)
         if ( getSprintPressed() ) removeClass(getPlayer(), 'run')
         if ( isMoving() ) removeClass(getPlayer(), 'walk')
-        addClass(this.enemy.htmlTag.firstElementChild.firstElementChild, 'no-transition')
+        addClass(this.enemy.sprite.firstElementChild.firstElementChild, 'no-transition')
         addClass(getPlayer().firstElementChild.firstElementChild, 'no-transition')
 
         const angle2Player = this.enemy.angleService.angle2Player()
         manageAimModeAngle(
-            this.enemy.htmlTag, 
+            this.enemy.sprite, 
             angle2Player, 
             () => this.enemy.angle, 
             (val) => this.enemy.angle = val, 
@@ -62,7 +77,7 @@ export class GrabberGrabService {
             getPlayer(), angle2Enemy, getPlayerAngle, setPlayerAngle, setPlayerAngleState 
         )
 
-        addClass(this.enemy.htmlTag, 'grab')
+        addClass(this.enemy.sprite, 'grab')
         setGrabbed(true)
         getCurrentRoomEnemies().forEach(elem => {
             if ( elem.type === RANGER && elem.state === GO_FOR_RANGED ) return
@@ -92,9 +107,12 @@ export class GrabberGrabService {
         button.textContent = 'f'
         appendAll(messageContainer, message, button)
         appendAll(grabBar, firstElem, secondElem, thirdElem, messageContainer, slider)
-        addAttribute(grabBar, 'first', first)
-        addAttribute(grabBar, 'second', second)
-        addAttribute(grabBar, 'third', third)
+        addAllAttributes(
+            grabBar, 
+            'first', first, 
+            'second', second, 
+            'third', third
+        )
         getPauseContainer().append(grabBar)
         setGrabBar(grabBar)
     }
@@ -102,9 +120,9 @@ export class GrabberGrabService {
     releasePlayer() {
         if ( getSprintPressed() ) addClass(getPlayer(), 'run')
         if ( isMoving() ) addClass(getPlayer(), 'walk')    
-        removeClass(this.enemy.htmlTag.firstElementChild.firstElementChild, 'no-transition')
+        removeClass(this.enemy.sprite.firstElementChild.firstElementChild, 'no-transition')
         removeClass(getPlayer().firstElementChild.firstElementChild, 'no-transition')
-        removeClass(this.enemy.htmlTag, 'grab')
+        removeClass(this.enemy.sprite, 'grab')
         setGrabbed(false)
         getCurrentRoomEnemies().forEach(elem => elem.state = elem.type === TRACKER ? INVESTIGATE : NO_OFFENCE)
         setNoOffenseCounter(1)

@@ -9,7 +9,7 @@ export class AbstractPathFindingService {
     findPath() {
         const wall = this.#findWall()
         if ( !wall ) return
-        const enemyWidth = getProperty(this.enemy.htmlTag, 'width', 'px')
+        const enemyWidth = getProperty(this.enemy.sprite, 'width', 'px')
         const { wallX, wallY, wallW, wallH } = this.#getWallCoordinates(wall)
         let enemyState = this.#getPositionState(this.enemy.x, this.enemy.y, enemyWidth, wallX, wallY, wallW, wallH)
         let destState = 
@@ -24,8 +24,8 @@ export class AbstractPathFindingService {
         for ( const solid of getCurrentRoomSolid() ) {
             if ( containsClass(solid.parentElement, 'enemy') ) continue
             if ( solid.getAttribute('side') === 'true' ) continue
-            if ( solid === this.enemy.htmlTag.firstElementChild ) continue
-            if ( !collide(this.enemy.htmlTag, solid, 50) ) continue
+            if ( solid === this.enemy.sprite.firstElementChild ) continue
+            if ( !collide(this.enemy.sprite, solid, 50) ) continue
             wall = solid
             break
         }

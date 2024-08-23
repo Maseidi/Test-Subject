@@ -1,5 +1,5 @@
 import { getPlayer } from '../../../elements.js'
-import { angleOfTwoPoints } from '../../../util.js'
+import { angleOf2Points } from '../../../util.js'
 
 export class AbstractAngleService {
     constructor(enemy) {
@@ -25,11 +25,11 @@ export class AbstractAngleService {
         const newAngle = currAngle + diff * 45    
         this.enemy.angle = newAngle
         this.enemy.angleState = newState
-        this.enemy.htmlTag.firstElementChild.firstElementChild.style.transform = `rotateZ(${this.enemy.angle}deg)`
+        this.enemy.sprite.firstElementChild.firstElementChild.style.transform = `rotateZ(${this.enemy.angle}deg)`
     }
 
     changeEnemyAngleState(state, translateX, translateY) {
-        const forwardDetector = this.enemy.htmlTag.firstElementChild.children[2]
+        const forwardDetector = this.enemy.sprite.firstElementChild.children[2]
         forwardDetector.style.left = '50%'
         forwardDetector.style.top = '50%'
         forwardDetector.style.transform = `translateX(${translateX}) translateY(${translateY})`
@@ -41,9 +41,9 @@ export class AbstractAngleService {
     }
 
     angle2Target(target) {
-        const enemyBound = this.enemy.htmlTag.getBoundingClientRect()
+        const enemyBound = this.enemy.sprite.getBoundingClientRect()
         const targetBound = target.getBoundingClientRect()
-        return angleOfTwoPoints(enemyBound.x + enemyBound.width / 2, enemyBound.y + enemyBound.height / 2, 
+        return angleOf2Points(enemyBound.x + enemyBound.width / 2, enemyBound.y + enemyBound.height / 2, 
                                 targetBound.x + targetBound.width / 2, targetBound.y + targetBound.height / 2)
     }
 

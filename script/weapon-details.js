@@ -12,8 +12,7 @@ class Weapon {
         magazine, 
         firerate,
         description,
-        price,
-        knockback) {
+        price) {
         this.heading = heading    
         this.ammotype = ammotype
         this.height = height
@@ -27,15 +26,15 @@ class Weapon {
         this.firerate = firerate
         this.description = description
         this.price = price
-        this.knockback = knockback
     }
 }
 
-export const getSpecification = (weaponName, statName) => weapons.get(weaponName)[statName]
+export const getWeaponDetail = (weaponName, detail) => weaponDetails.get(weaponName)[detail]
 
-export const getStat = (weaponName, statName, statLvl) => weapons.get(weaponName)[statName][statLvl - 1]
+export const getWeaponUpgradableDetail = (weaponName, detail, detailLevel) => 
+    weaponDetails.get(weaponName)[detail][detailLevel - 1]
 
-const weapons = new Map([
+const weaponDetails = new Map([
     ['remington1858', new Weapon(
         'remington 1858',
         'magnumAmmo',
@@ -50,7 +49,6 @@ const weapons = new Map([
         [2, 1.9, 1.8, 1.7, 1.6],
         'A powerful magnum handy in very special scenarios',
         100,
-        50
     )],
     ['revolver', new Weapon(
         'revolver',
@@ -66,7 +64,6 @@ const weapons = new Map([
         [2.2, 2.1, 2, 1.9, 1.8],
         'A magnum capable of tearing through every living creature',
         90,
-        30
     )],
     ['mauser', new Weapon(
         'mauser',
@@ -82,7 +79,6 @@ const weapons = new Map([
         [2, 1.75, 1.5, 1.25, 1],
         'A high damage handgun making it a nice choice for every avid gun collector',
         15,
-        10
     )],
     ['pistol', new Weapon(
         'pistol',
@@ -98,7 +94,6 @@ const weapons = new Map([
         [1.3, 1.2, 1.1, 1, 0.9],
         'Small and fast paced pistol with a pretty decent range',
         14,
-        10
     )],
     ['pistol2', new Weapon(
         'pistol 2',
@@ -114,7 +109,6 @@ const weapons = new Map([
         [1.2, 1.1, 1, 0.9, 0.8],
         'A handgun with a clip capacity that barely makes you think of reloading',
         13,
-        10
     )],
     ['pistol3', new Weapon(
         'pistol 3',
@@ -130,7 +124,6 @@ const weapons = new Map([
         [1.4, 1.2, 1, 0.8, 0.6],
         'A pistol that every tiny bit of upgrade is definately a profitable move',
         12,
-        10
     )],
     ['pistol4', new Weapon(
         'pistol 4',
@@ -146,7 +139,6 @@ const weapons = new Map([
         [1.6, 1.5, 1.4, 1.3, 1.2],
         'The handgun every single person never thinks of upgrading its damage',
         11,
-        10
     )],
     ['famas', new Weapon(
         'famas',
@@ -162,7 +154,6 @@ const weapons = new Map([
         [0.2, 0.19, 0.18, 0.17, 0.16],
         'Sub-machine gun purely focused on dealing the most possible damage',
         25,
-        5
     )],
     ['mp5k', new Weapon(
         'mp5k',
@@ -178,7 +169,6 @@ const weapons = new Map([
         [0.14, 0.13, 0.12, 0.11, 0.1],
         'Pretty balanced SMG useful for most cases',
         24,
-        5
     )],
     ['p90', new Weapon(
         'p90',
@@ -194,7 +184,6 @@ const weapons = new Map([
         [0.15, 0.14, 0.13, 0.12, 0.11],
         "Decent damage and magazine capacity are this weapon's points of shine",
         23,
-        5
     )],
     ['ppsh', new Weapon(
         'ppsh',
@@ -210,7 +199,6 @@ const weapons = new Map([
         [0.13, 0.12, 0.11, 0.1, 0.09],
         'Decent range, fast reload and fire rate are the greatest highlights of this weapon',
         22,
-        5
     )],
     ['uzi', new Weapon(
         'uzi',
@@ -226,7 +214,6 @@ const weapons = new Map([
         [0.13, 0.11, 0.09, 0.07, 0.05],
         'The insane fire rate and reload speed make up for its low damage',
         21,
-        5
     )],
     ['shotgun', new Weapon(
         'shotgon',
@@ -242,7 +229,6 @@ const weapons = new Map([
         [2.5, 2.3, 2.1, 1.9, 1.7],
         'Long range shotgun suitable for dealing high damage from afar',
         35,
-        40
     )],
     ['shotgun2', new Weapon(
         'shotgun 2',
@@ -258,7 +244,6 @@ const weapons = new Map([
         [2.3, 2.1, 1.9, 1.7, 1.5],
         'Balanced shotgun for everyday use',
         40,
-        30
     )],
     ['shotgun3', new Weapon(
         'shotgun 3',
@@ -274,7 +259,6 @@ const weapons = new Map([
         [1.7, 1.6, 1.5, 1.4, 1.3],
         "This shotgun's decent damage and range is enough to make your lucky day",
         45,
-        30
     )],
     ['riotgun', new Weapon(
         'riotgun',
@@ -290,7 +274,6 @@ const weapons = new Map([
         [1.2, 1.1, 1, 0.9, 0.8],
         'A real boomstick ideal for shredding everything on its way',
         70,
-        20
     )],
     ['spas', new Weapon(
         'spas',
@@ -306,7 +289,6 @@ const weapons = new Map([
         [0.9, 0.8, 0.7, 0.6, 0.5],
         'An automatic shotgun with an insane fire rate and magazine capacity',
         50,
-        30
     )],
     ['sniper', new Weapon(
         'sniper',
@@ -322,7 +304,6 @@ const weapons = new Map([
         [2.4, 2.2, 2, 1.8, 1.6],
         'Slow paced sniper rifle focused primarily on dealing damage',
         65,
-        20
     )],
     ['sniper2', new Weapon(
         'sniper 2',
@@ -338,7 +319,6 @@ const weapons = new Map([
         [1.2, 1, 0.8, 0.6, 0.4],
         'A sniper rifle with incredibly fast fire rate making it one of a kind',
         75,
-        30
     )],
     ['sniper3', new Weapon(
         'sniper 3',
@@ -354,10 +334,9 @@ const weapons = new Map([
         [1.8, 1.6, 1.5, 1.4, 1.2],
         'Sniper rifle with the most balanced stats possible',
         70,
-        40
     )]
 ])
 
-export const getWeaponSpecs = () => {
-    return weapons
-}
+export const getWeaponDetails = () => weaponDetails
+
+export const isWeapon = (name) => weaponDetails.has(name)

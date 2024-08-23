@@ -1,4 +1,4 @@
-import { getGrabbed } from '../../../variables.js'
+import { getGrabbed, getStunnedCounter } from '../../../variables.js'
 import { GO_FOR_RANGED } from '../../util/enemy-constants.js'
 import { AbstractCollisionService } from '../abstract/collision.js'
 
@@ -7,11 +7,12 @@ export class RangerCollisionService extends AbstractCollisionService {
         super(enemy)
     }
 
-    checkCollision() {
+    manageCollision() {
         const collidingEnemy = this.findCollidingEnemy()
         if ( !collidingEnemy ) return
-        if ( this.enemy.wallInTheWay === false && !getGrabbed() ) this.enemy.state = GO_FOR_RANGED
-        this.handleCollision(collidingEnemy)
+        if ( this.enemy.wallInTheWay === false && !getGrabbed() && getStunnedCounter() === 0 ) 
+            this.enemy.state = GO_FOR_RANGED
+        this.react2Collision(collidingEnemy)
     }
 
 }

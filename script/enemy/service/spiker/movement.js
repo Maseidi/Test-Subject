@@ -8,8 +8,8 @@ export class SpikerMovementService extends AbstractMovementService {
     }
 
     move2Destination() {
-        if ( this.collidePlayer() ) return
-        const enemyWidth = getProperty(this.enemy.htmlTag, 'width', 'px')
+        if ( this.playerInRange() ) return
+        const enemyWidth = getProperty(this.enemy.sprite, 'width', 'px')
         const { destX, destY, destWidth } = this.destinationCoordinates()
         const { xMultiplier, yMultiplier } = this.decideDirection(enemyWidth, destX, destY, destWidth)
         if ( xMultiplier === undefined && xMultiplier !== this.xMultiplier && this.enemy.axis === 1 ) {
@@ -24,8 +24,8 @@ export class SpikerMovementService extends AbstractMovementService {
         if ( !xMultiplier && !yMultiplier ) this.reachedDestination()  
         this.enemy.x += this.enemy.axis === 2 ? 0 : (xMultiplier ? (speed * xMultiplier) : 0)
         this.enemy.y += this.enemy.axis === 1 ? 0 : (yMultiplier ? (speed * yMultiplier) : 0)
-        this.enemy.htmlTag.style.left = `${this.enemy.x}px`
-        this.enemy.htmlTag.style.top = `${this.enemy.y}px`
+        this.enemy.sprite.style.left = `${this.enemy.x}px`
+        this.enemy.sprite.style.top = `${this.enemy.y}px`
     }
 
     calculateSpeed() {

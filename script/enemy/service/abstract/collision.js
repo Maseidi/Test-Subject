@@ -16,23 +16,23 @@ export class AbstractCollisionService {
         this.enemy = enemy
     }
 
-    checkCollision() {
+    manageCollision() {
         const collidingEnemy = this.findCollidingEnemy()
         if ( !collidingEnemy ) return
-        this.handleCollision(collidingEnemy)
+        this.react2Collision(collidingEnemy)
     }
 
     findCollidingEnemy() {
         const collidingEnemy = Array.from(getCurrentRoomEnemies())
-            .find(e => e.htmlTag !== this.enemy.htmlTag 
-                  && collide(this.enemy.htmlTag.firstElementChild.children[2], e.htmlTag.firstElementChild, 0) 
+            .find(e => e.sprite !== this.enemy.sprite 
+                  && collide(this.enemy.sprite.firstElementChild.children[2], e.sprite.firstElementChild, 0) 
                   && e.type !== TRACKER && e.type !== SPIKER
                   && e.state !== INVESTIGATE && e.state !== GO_FOR_RANGED)
         this.enemy.collidingEnemy = null
         return collidingEnemy
     }
 
-    handleCollision(collidingEnemy) {
+    react2Collision(collidingEnemy) {
         this.enemy.collidingEnemy = collidingEnemy.index
         if ( collidingEnemy.state === LOST && 
            ( this.enemy.state === CHASE || this.enemy.state === NO_OFFENCE || this.enemy.state === GUESS_SEARCH ) ) {

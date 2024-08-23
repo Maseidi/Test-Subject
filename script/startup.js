@@ -1,7 +1,6 @@
 import { renderUi } from './user-interface.js'
-import { activateProgress } from './progress.js'
 import { loadCurrentRoom } from './room-loader.js'
-import { addAttribute, appendAll, createAndAddClass } from './util.js'
+import { appendAll, createAndAddClass } from './util.js'
 import { getMapX, getMapY, getPlayerX, getPlayerY } from './variables.js'
 import { getMapEl, setMapEl, setPauseContainer, setPlayer, setRoomContainer } from './elements.js'
 
@@ -13,7 +12,6 @@ export const startUp = () => {
     renderCurrentRoom()
     renderPlayer()
     centralizePlayer()
-    activateProgress('3')
 }
 
 const renderPauseContainer = () => {
@@ -51,11 +49,13 @@ const renderPlayer = () => {
     player.append(playerCollider)
     const playerBody = createAndAddClass('div', 'player-body')
     playerBody.style.transform = `rotateZ(0deg)`
-    addAttribute(player, 'angle', 0)
+    player.setAttribute('angle', 0)
     const forwardDetector = createAndAddClass('div', 'forward-detector')
     appendAll(playerCollider, playerBody, forwardDetector)
+    const leftHand = createAndAddClass('div', 'player-left-hand')
     const playerHead = createAndAddClass('div', 'player-head')
-    playerBody.append(playerHead)
+    const rightHand = createAndAddClass('div', 'player-right-hand')
+    playerBody.append(leftHand, playerHead, rightHand)
     setPlayer(player)
     getMapEl().append(player)
 }

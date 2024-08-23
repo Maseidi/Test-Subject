@@ -553,7 +553,7 @@
 .damaged,
 .damaged > div {
   background-color: white !important;
-  filter: brightness(300%);
+  filter: brightness(1000%);
 }
 
 .no-transition {
@@ -567,4 +567,12 @@
   height: 200%;
   left: 50%;
   transform: translateX(-50%);
+}
+
+.buffer {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
 }

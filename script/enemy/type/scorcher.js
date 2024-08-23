@@ -1,8 +1,9 @@
 import { AbstractEnemy } from './abstract-enemy.js'
 import { NormalLostService } from '../service/normal/lost.js'
 import { GrabberGrabService } from '../service/grabber/grab.js'
+import { NormalChaseService } from '../service/normal/chase.js'
 import { NormalReturnService } from '../service/normal/return.js'
-import { ScorcherChaseService } from '../service/scorcher/chase.js'
+import { GrabberInjuryService } from '../service/grabber/injury.js'
 import { ScorcherMovementService } from '../service/scorcher/movement.js'
 import { ScorcherShootingService } from '../service/scorcher/shooting.js'
 import { NormalGuessSearchService } from '../service/normal/guess-search.js'
@@ -19,14 +20,15 @@ import {
     SCORCHER } from '../util/enemy-constants.js'
 
 export class Scorcher extends AbstractEnemy {
-    constructor(level, waypoint, progress) {
+    constructor(level, waypoint, progress, loot, progress2Active) {
         const health = Math.floor(level * 135 + Math.random() * 15)
         const damage = Math.floor(level * 15 + Math.random() * 10)
         const maxSpeed = 2.5 + Math.random()
-        super(SCORCHER, 5, waypoint, health, damage, 100, maxSpeed, progress, 600, 1.1)
+        super(SCORCHER, 5, waypoint, health, damage, 100, maxSpeed, progress, 600, 1.1, loot, progress2Active)
+        this.injuryService = new GrabberInjuryService(this)
         this.movementService = new ScorcherMovementService(this)
         this.investigationService = new NormalInvestigationService(this)
-        this.chaseService = new ScorcherChaseService(this)
+        this.chaseService = new NormalChaseService(this)
         this.shootingService = new ScorcherShootingService(this)
         this.guessSearchService = new NormalGuessSearchService(this)
         this.lostService = new NormalLostService(this)
@@ -34,7 +36,7 @@ export class Scorcher extends AbstractEnemy {
         this.grabService = new GrabberGrabService(this)
     }
 
-    behave() {
+    manageState() {
         this.shootingService.transferEnemy(false)
         switch ( this.state ) {
             case INVESTIGATE:

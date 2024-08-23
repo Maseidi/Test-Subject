@@ -148,11 +148,11 @@ export const setWeaponWheel = (val) => {
 }
 export const getWeaponWheel = () => weaponWheel
 
-let equippedWeapon = null
-export const setEquippedWeapon = (val) => {
-    equippedWeapon = val
+let equippedWeaponId = null
+export const setEquippedWeaponId = (val) => {
+    equippedWeaponId = val
 }
-export const getEquippedWeapon = () => equippedWeapon
+export const getEquippedWeaponId = () => equippedWeaponId
 
 let intObj
 export const setIntObj = (val) => {
@@ -226,6 +226,12 @@ export const setNoOffenseCounter = (val) => {
 }
 export const getNoOffenseCounter = () => noOffenseCounter
 
+let stunnedCounter = 0
+export const setStunnedCounter = (val) => {
+    stunnedCounter = val
+}
+export const getStunnedCounter = () => stunnedCounter
+
 let entityId = 1
 export const setEntityId = (val) => {
     entityId = val
@@ -249,3 +255,21 @@ export const setPoisoned = (val) => {
     poisoned = val
 }
 export const getPoisoned = () => poisoned
+
+let throwCounter = 0
+export const setThrowCounter = (val) => {
+    throwCounter = val
+}
+export const getThrowCounter = () => throwCounter
+
+let explosionDamageCounter = 0
+export const setExplosionDamageCounter = (val) => {
+    explosionDamageCounter = val
+}
+export const getExplosionDamageCounter = () => explosionDamageCounter
+
+let criticalChance = 0.01
+export const setCriticalChance = (val) => {
+    criticalChance = val
+}
+export const getCriticalChance = () => criticalChance

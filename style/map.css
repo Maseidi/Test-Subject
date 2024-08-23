@@ -11,6 +11,11 @@
   position: absolute;
 }
 
+/* TODO: uncomment later */
+/* .room-container > div {
+  overflow: hidden;
+} */
+
 .tl,
 .bl,
 .tr,
@@ -42,13 +47,13 @@
 
 @keyframes camera {
   33% {
-    transform: translateX(20px);
+    transform: translateX(40px);
   }
   66% {
-    transform: translateY(20px);
+    transform: translateY(40px);
   }
   100% {
-    transform: translateX(0) translateY(0);
+    transform: translateX(20px) translateY(20px);
   }
 }
 
@@ -69,30 +74,31 @@
     opacity: 0;
   }
   100% {
-    opacity: 0.1;
+    opacity: 0.2;
   }
 }
 
-.low-health::after, .poisoned::after {
+.low-health::after, .poisoned::before {
   content: "";
   width: 100%;
   height: 100%;
   position: fixed;
-  left: 0;
-  top: 0;
+  left: 50%;
+  top: 50%;
   animation-name: alert;
   animation-duration: 1000ms;
   animation-timing-function: linear;
   animation-iteration-count: infinite;
   animation-direction: alternate;
   animation-fill-mode: both;
+  transform: translateX(-50%) translateY(-50%);
 }
 
 .low-health::after {
   background-color: red;
 }
 
-.poisoned::after {
+.poisoned::before {
   background-color: green;
 }
 
@@ -106,4 +112,71 @@
   position: absolute;
   width: 60px;
   height: 50px;
+}
+
+@keyframes flash {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.flashbang {
+  top: 0;
+  left: 0;
+  z-index: 6;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  animation-name: flash;
+  animation-duration: 1s;
+  background-color: white;
+  animation-iteration-count: 1;
+  animation-fill-mode: forwards;
+  animation-direction: alternate;
+  animation-timing-function: linear;
+}
+
+.explosion {
+  position: absolute;
+  width: 10px;
+  z-index: 5;
+}
+
+.explosion > img {
+  width: 100%;
+}
+
+@keyframes camera-explosion {
+  20% {
+    transform: translateX(80px) translateY(-20px);
+  }
+  40% {
+    transform: translateX(-40px) translateY(20px);
+  }
+  60% {
+    transform: translateX(40px) translateY(-40px);
+  }
+  80% {
+    transform: translateX(-20px) translateY(40px);
+  }
+  100% {
+    transform: translateX(20px) translateY(-80px);
+  }
+}
+
+.explosion-shake {
+  animation-name: camera-explosion;
+  animation-duration: 200ms;
+  animation-timing-function: linear;
+  animation-iteration-count: 1;
+  animation-direction: alternate;
+  filter: blur(1px);
+}
+
+.door {
+  position: absolute;
+  border: 1px solid black;
 }

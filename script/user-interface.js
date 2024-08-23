@@ -1,14 +1,21 @@
 import { managePause } from './controls.js'
+import { isThrowable } from './throwable-details.js'
 import { addClass, appendAll, createAndAddClass } from './util.js'
 import { getPauseContainer, getUiEl, setUiEl } from './elements.js'
-import { calculateTotalAmmo, equippedWeaponFromInventory } from './inventory.js'
-import { getDraggedItem, getEquippedWeapon, getHealth, getMaxHealth, getMaxStamina, getStamina } from './variables.js'
+import { calculateThrowableAmount, calculateTotalAmmo, equippedWeaponObj } from './inventory.js'
+import { 
+    getDraggedItem,
+    getEquippedWeaponId,
+    getHealth,
+    getMaxHealth,
+    getMaxStamina,
+    getStamina } from './variables.js'
 
 export const renderUi = () => {
     renderBackground()
     renderHealthBar()
     renderStaminaBar()
-    renderEquippedWeapon()
+    renderWeaponUi()
 }
 
 const renderBackground = () => {
@@ -42,20 +49,24 @@ export const staminaManager = (inputStamina) =>
 
 const abstractManager = (input, elem, max) => elem.style.width = `${input / max * 100}%`
 
-export const renderEquippedWeapon = () => {
+export const renderWeaponUi = () => {
     if ( getUiEl().children[2] ) getUiEl().children[2].remove() 
-    if ( !getEquippedWeapon() ) return    
+    if ( !getEquippedWeaponId() ) return
+    const equippedWeapon = equippedWeaponObj()
+    const predicate = isThrowable(equippedWeapon.name) 
     const weaponContainer = createAndAddClass('div', 'weapon-container')
     const weaponIcon = createAndAddClass('img', 'weapon-icon')
-    const equippedWeapon = equippedWeaponFromInventory()
     weaponIcon.src = `../assets/images/${equippedWeapon.name}.png`
     addClass(weaponIcon, 'weapon-icon')
     const ammoCount = createAndAddClass('div', 'ammo-count')
-    const mag = document.createElement('p')
-    mag.textContent = `${equippedWeapon.currmag}`
+    if ( !predicate ) {
+        var mag = document.createElement('p')
+        mag.textContent = `${equippedWeapon.currmag}`
+    }
     const total = document.createElement('p')
-    total.textContent = calculateTotalAmmo(equippedWeapon)
-    appendAll(ammoCount, mag, total)
+    total.textContent = predicate ? calculateThrowableAmount(equippedWeapon) : calculateTotalAmmo(equippedWeapon)
+    if ( !predicate )  ammoCount.append(mag)
+    ammoCount.append(total)
     appendAll(weaponContainer, weaponIcon, ammoCount)
     getUiEl().append(weaponContainer)
 }

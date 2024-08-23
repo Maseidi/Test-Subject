@@ -3,6 +3,7 @@ import { NormalLostService } from '../service/normal/lost.js'
 import { GrabberGrabService } from '../service/grabber/grab.js'
 import { NormalChaseService } from '../service/normal/chase.js'
 import { NormalReturnService } from '../service/normal/return.js'
+import { GrabberInjuryService } from '../service/grabber/injury.js'
 import { GrabberMovementService } from '../service/grabber/movement.js'
 import { NormalGuessSearchService } from '../service/normal/guess-search.js'
 import { NormalInvestigationService } from '../service/normal/investigate.js'
@@ -17,11 +18,12 @@ import {
     NO_OFFENCE } from '../util/enemy-constants.js'
 
 export class Grabber extends AbstractEnemy {
-    constructor(level, path, progress) {
+    constructor(level, path, progress, loot, progress2Active) {
         const health = Math.floor(level * 100 + Math.random() * 50)
         const damage = Math.floor(level * 20 + Math.random() * 10)
         const maxSpeed = 3 + Math.random()
-        super(GRABBER, 4, path, health, damage, 100, maxSpeed, progress, 400, 1.4)
+        super(GRABBER, 4, path, health, damage, 100, maxSpeed, progress, 400, 1.4, loot, progress2Active)
+        this.injuryService = new GrabberInjuryService(this)
         this.movementService = new GrabberMovementService(this)
         this.investigationService = new NormalInvestigationService(this)
         this.chaseService = new NormalChaseService(this)
@@ -31,7 +33,7 @@ export class Grabber extends AbstractEnemy {
         this.grabService = new GrabberGrabService(this)
     }
 
-    behave() {
+    manageState() {
         switch ( this.state ) {
             case INVESTIGATE:
                 this.investigationService.handleInvestigationState()

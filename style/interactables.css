@@ -11,9 +11,10 @@
   border-radius: 5px;
   color: wheat;
   position: absolute;
-  z-index: 40;
+  z-index: 5;
   padding: 10px;
   width: max-content;
+  max-width: 300px;
   text-align: center;
   left: 50%;
   transform: translateX(-50%);
@@ -41,7 +42,7 @@
   gap: 10px;
 }
 
-.interactable > div > div:nth-of-type(2) > p:nth-of-type(1) {
+.interactable > div > div:nth-of-type(2) > .interactable-btn {
   border: 1px solid wheat;
   padding: 2px 7px;
 }

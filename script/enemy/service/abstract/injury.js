@@ -1,58 +1,58 @@
 import { enemies } from '../../util/enemies.js'
-import { getPlayer } from '../../../elements.js'
 import { dropLoot } from '../../../loot-manager.js'
-import { getCurrentRoomId } from '../../../variables.js'
-import { getSpecification, getStat } from '../../../weapon-specs.js'
-import { addAttribute, addClass, removeClass } from '../../../util.js'
+import { CHASE, STUNNED } from '../../util/enemy-constants.js'
+import { getWeaponDetail, isWeapon } from '../../../weapon-details.js'
+import { getCriticalChance, getCurrentRoomId } from '../../../variables.js'
+import { activateProgress, updateKillAllDoors } from '../../../progress.js'
+import { addAllAttributes, addClass, getEquippedItemDetail, removeClass } from '../../../util.js'
 
 export class AbstractInjuryService {
     constructor(enemy) {
         this.enemy = enemy
+        this.enemy.explosionCounter = 0
+        this.enemy.damagedCounter = 0
     }
 
-    damageEnemy(equipped) {
-        let damage = getStat(equipped.name, 'damage', equipped.damagelvl)
-        if ( this.enemy.virus === getSpecification(equipped.name, 'antivirus') ) damage *= 1.2
-        if ( Math.random() < 0.01 ) damage *= (Math.random() + 1)
+    damageEnemy(equipped) {        
+        const name = equipped.name
+        let damage = getEquippedItemDetail(equipped, 'damage')
+        if ( isWeapon(name) && this.enemy.virus === getWeaponDetail(name, 'antivirus') ) damage *= 1.2
+        if ( Math.random() <= getCriticalChance() ) damage *= 2
         const enemyHealth = this.enemy.health
         const newHealth = enemyHealth - damage
         this.enemy.health = newHealth
-        if ( newHealth <= 0 ) {
-            addAttribute(this.enemy.htmlTag, 'left', Number(this.enemy.htmlTag.style.left.replace('px', '')))
-            addAttribute(this.enemy.htmlTag, 'top', Number(this.enemy.htmlTag.style.top.replace('px', '')))
-            dropLoot(this.enemy.htmlTag)
-            const enemiesCopy = enemies.get(getCurrentRoomId())
-            enemiesCopy[this.enemy.index].health = 0
-            return
+        if ( newHealth <= 0 ) this.killEnemy()
+        else {
+            addClass(this.enemy.sprite.firstElementChild.firstElementChild, 'damaged')
+            this.enemy.damagedCounter = 1
+            if ( this.enemy.state === STUNNED ) this.enemy.state = CHASE
         }
-        const knockback = getSpecification(equipped.name, 'knockback')
-        this.knockEnemy(knockback)
-        addClass(this.enemy.htmlTag.firstElementChild.firstElementChild, 'damaged')
-        this.enemy.damagedCounter = 6
     }
 
-    knockEnemy(knockback) {
-        const enemyBound = this.enemy.htmlTag.getBoundingClientRect()
-        const playerBound = getPlayer().getBoundingClientRect()
-        let xAxis, yAxis
-        if ( enemyBound.left < playerBound.left ) xAxis = -1
-        else if ( enemyBound.left >= playerBound.left && enemyBound.right <= playerBound.right ) xAxis = 0
-        else xAxis = 1
-        if ( enemyBound.bottom < playerBound.top ) yAxis = -1
-        else if ( enemyBound.bottom >= playerBound.top && enemyBound.top <= playerBound.bottom ) yAxis = 0
-        else yAxis = 1
-        this.enemy.x += (xAxis * knockback)
-        this.enemy.y += (yAxis * knockback)
-        this.enemy.htmlTag.style.left = `${this.enemy.x}px`
-        this.enemy.htmlTag.style.top = `${this.enemy.y}px`
+    killEnemy() {
+        addAllAttributes(
+            this.enemy.sprite, 
+            'left', Number(this.enemy.sprite.style.left.replace('px', '')), 
+            'top', Number(this.enemy.sprite.style.top.replace('px', ''))
+        )
+        dropLoot(this.enemy.sprite)
+        enemies.get(getCurrentRoomId())[this.enemy.index].health = 0
+        activateProgress(this.enemy.progress2Active)
+        updateKillAllDoors()
     }
 
-    manageDamagedState() {
-        if ( this.enemy.damagedCounter === 0 ) {
-            removeClass(this.enemy.htmlTag.firstElementChild.firstElementChild, 'damaged')
-            return
-        }
-        this.enemy.damagedCounter -= 1
+    manageDamagedMode() {
+        if ( this.enemy.damagedCounter === 0 ) return
+        this.enemy.damagedCounter += 1
+        if ( this.enemy.damagedCounter !== 6 ) return
+        removeClass(this.enemy.sprite.firstElementChild.firstElementChild, 'damaged')
+        this.enemy.damagedCounter = 0
+    }
+
+    manageExplosionMode() {
+        if ( this.enemy.explosionCounter === 0 ) return
+        this.enemy.explosionCounter += 1
+        if ( this.enemy.explosionCounter === 100 ) this.enemy.explosionCounter = 0
     }
 
 }

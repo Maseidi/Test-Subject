@@ -2,21 +2,32 @@ import { healthManager } from './user-interface.js'
 import { CHASE, NO_OFFENCE } from './enemy/util/enemy-constants.js'
 import { getInventory, useInventoryResource } from './inventory.js'
 import { getCurrentRoomEnemies, getMapEl, getPlayer } from './elements.js'
-import { addClass, addFireEffect, checkLowHealth, containsClass, removeClass } from './util.js'
+import { addClass, addFireEffect, isLowHealth, removeClass, findAttachmentsOnPlayer } from './util.js'
 import { 
     getBurning,
+    getDownPressed,
+    getExplosionDamageCounter,
     getHealth,
+    getLeftPressed,
     getMaxHealth,
     getNoOffenseCounter,
     getPoisoned,
+    getRightPressed,
+    getUpPressed,
     setBurning,
+    setDownPressed,
+    setExplosionDamageCounter,
     setHealth,
+    setLeftPressed,
     setNoOffenseCounter, 
-    setPoisoned} from './variables.js'
+    setPoisoned, 
+    setRightPressed,
+    setUpPressed} from './variables.js'
 
 export const manageHealthStatus = () => {
     manageBurningState()
     managePoisonedState()
+    manageExplosionDamagedState()
 }
 
 const manageBurningState = () => {
@@ -24,14 +35,13 @@ const manageBurningState = () => {
     setBurning(getBurning() + 1)
     if ( getBurning() === 900 ) {
         setBurning(0)
-        Array.from(getPlayer().firstElementChild.firstElementChild.children)
-            .find(child => containsClass(child, 'fire')).remove()
+        findAttachmentsOnPlayer('fire').remove()
         return
     }
     let newHealth = getHealth() - 0.02
     newHealth = newHealth < 0 ? 0 : newHealth
     modifyHealth(newHealth)
-    if ( checkLowHealth() ) decideLowHealth(addClass)
+    if ( isLowHealth() ) decideLowHealth(addClass)
 }
 
 const managePoisonedState = () => {
@@ -39,7 +49,7 @@ const managePoisonedState = () => {
     let newHealth = getHealth() - 0.01
     newHealth = newHealth < 0 ? 0 : newHealth
     modifyHealth(newHealth)
-    if ( checkLowHealth() ) decideLowHealth(addClass)
+    if ( isLowHealth() ) decideLowHealth(addClass)
 }
 
 export const heal = () => {
@@ -49,7 +59,7 @@ export const heal = () => {
     let newHealth = Math.min(getHealth() + 20, getMaxHealth())
     useInventoryResource('bandage', 1)
     modifyHealth(newHealth)
-    if ( !checkLowHealth() ) decideLowHealth(removeClass)
+    if ( !isLowHealth() ) decideLowHealth(removeClass)
 }
 
 export const useBandage = (bandage) => {
@@ -57,7 +67,7 @@ export const useBandage = (bandage) => {
     let newHealth = Math.min(getHealth() + 20, getMaxHealth())
     bandage.amount -= 1
     modifyHealth(newHealth)
-    if ( !checkLowHealth() ) decideLowHealth(removeClass)
+    if ( !isLowHealth() ) decideLowHealth(removeClass)
 }
 
 export const useAntidote = (antidote) => {
@@ -65,6 +75,19 @@ export const useAntidote = (antidote) => {
     antidote.amount -= 1
     setPoisoned(false)
     removeClass(getMapEl(), 'poisoned')
+    manageDizziness()
+}
+
+const manageDizziness = () => {
+    if ( getLeftPressed() ) negateDirection(setRightPressed, setLeftPressed)
+    else if ( getRightPressed() ) negateDirection(setLeftPressed, setRightPressed)
+    if ( getDownPressed() ) negateDirection(setUpPressed, setDownPressed)
+    else if ( getUpPressed() ) negateDirection(setDownPressed, setUpPressed)
+}
+
+const negateDirection = (setOppositeDir, setDir) => {
+    setOppositeDir(true)
+    setDir(false)
 }
 
 export const damagePlayer = (damage) => {
@@ -74,7 +97,7 @@ export const damagePlayer = (damage) => {
     let newHealth = getHealth() - damage
     newHealth = newHealth < 0 ? 0 : newHealth
     modifyHealth(newHealth)
-    if ( checkLowHealth() ) decideLowHealth(addClass)
+    if ( isLowHealth() ) decideLowHealth(addClass)
     noOffenceAllEnemies()
 }
 
@@ -106,4 +129,11 @@ export const setPlayer2Fire = () => {
 export const poisonPlayer = () => {
     setPoisoned(true)
     addClass(getMapEl(), 'poisoned')
+    manageDizziness()
+}
+
+const manageExplosionDamagedState = () => {
+    if ( getExplosionDamageCounter() === 0 ) return
+    setExplosionDamageCounter(getExplosionDamageCounter() + 1)
+    if ( getExplosionDamageCounter() === 100 ) setExplosionDamageCounter(0)
 }

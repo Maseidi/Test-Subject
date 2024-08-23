@@ -13,6 +13,8 @@ export const play = () => {
     control()
 
     window.setInterval(() => {
+        
+        
         if ( !getPause() ) {
             manageSprint()
             managePlayerAngle()

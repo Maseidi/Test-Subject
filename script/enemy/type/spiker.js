@@ -18,11 +18,11 @@ import {
     SPIKER } from '../util/enemy-constants.js'
 
 export class Spiker extends AbstractEnemy {
-    constructor(level, waypoint, progress) {
+    constructor(level, waypoint, progress, loot, progress2Active) {
         const health = Math.floor(level * 25 + Math.random() * 5)
         const damage = Math.floor(level * 15 + Math.random() * 5)
         const maxSpeed = 6 + Math.random()
-        super(SPIKER, 6, waypoint, health, damage, 75, maxSpeed, progress, 400, maxSpeed)
+        super(SPIKER, 6, waypoint, health, damage, 75, maxSpeed, progress, 400, maxSpeed, loot, progress2Active)
         this.axis = Math.random() < 0.5 ? 1 : 2
         this.visionService = new SpikerVisionService(this)
         this.movementService = new SpikerMovementService(this)
@@ -34,7 +34,7 @@ export class Spiker extends AbstractEnemy {
         this.returnService = new NormalReturnService(this)
     }
 
-    behave() {
+    manageState() {
         this.handleRotation()
         switch ( this.state ) {
             case INVESTIGATE:
@@ -57,10 +57,11 @@ export class Spiker extends AbstractEnemy {
     }
 
     handleRotation() {
-        const angle = getProperty(this.htmlTag.firstElementChild.firstElementChild, 'transform', 'rotateZ(', 'deg)') || 0
+        const angle = getProperty(this.sprite.firstElementChild.firstElementChild, 
+            'transform', 'rotateZ(', 'deg)') || 0
         let newAngle = Number(angle) + 5
         if ( newAngle > 360 ) newAngle = 0
-        this.htmlTag.firstElementChild.firstElementChild.style.transform = `rotateZ(${newAngle}deg)`
+        this.sprite.firstElementChild.firstElementChild.style.transform = `rotateZ(${newAngle}deg)`
     }
 
 }
