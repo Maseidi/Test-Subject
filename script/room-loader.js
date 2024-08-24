@@ -128,10 +128,16 @@ const renderLoaders = (room2Render) => {
         if ( elem.top !== undefined ) loader.style.top = `${elem.top}px`
         else if ( elem.bottom !== undefined ) loader.style.bottom = `${elem.bottom}px`  
         const door = elem.door
-        if ( door && (!findProgressByName(door.progress) && !enemiesLeft4Door2Open(door)) ) renderDoor(elem, room2Render)
+        if ( door && (!findProgressByName(door.progress) && enemiesLeft(door)) ) renderDoor(elem, room2Render)
         room2Render.append(loader)
         getCurrentRoomLoaders().push(loader)
     })
+}
+
+const enemiesLeft = (object) => {
+    const killAll = object.killAll
+    if ( !killAll ) return false
+    return enemies.get(getCurrentRoomId()).find(enemy => enemy.health !== 0 && enemy.progress <= killAll) ? true : false
 }
 
 const renderDoor = (loader, room2Render) => {    
@@ -154,12 +160,6 @@ const renderDoor = (loader, room2Render) => {
     room2Render.append(doorElem)
 }
 
-const enemiesLeft4Door2Open = (door) => {
-    const killAll = door.killAll
-    if ( !killAll ) return false
-    return enemies.get(getCurrentRoomId()).find(enemy => enemy.health !== 0 && enemy.progress <= killAll) ? false : true
-}
-
 const addPosition = (root, input, direction) => {
     const output = (() => {
         if ( input === 26 || input === -26 ) return 0
@@ -174,6 +174,7 @@ const renderInteractables = (room2Render) =>
 
 export const renderInteractable = (root, interactable, index) => {
     if ( !findProgressByName(interactable.progress) ) return
+    if ( enemiesLeft(interactable) ) return
     const int = object2Element(interactable)
     addClass(int, 'interactable')
     setInteractableId(interactable, int, index)

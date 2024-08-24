@@ -43,6 +43,7 @@ import {
     getShooting, 
     getPause, 
     getEquippedWeaponObject} from './variables.js'
+import { activateProgress } from './progress.js'
 
 export const MAX_PACKSIZE = {
     bandage: 3,
@@ -72,6 +73,7 @@ export const getInventory = () => inventory
 export const pickupDrop = () => {
     searchPack()
     searchEmpty()
+    if ( getIntObj().getAttribute('amount') === 0 ) activateProgress(getIntObj().getAttribute('activateprogress'))
     checkSpecialScenarios()
 }
 

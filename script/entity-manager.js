@@ -13,8 +13,7 @@ import {
     containsClass,
     createAndAddClass,
     element2Object,
-    getProperty,
-    removeClass } from './util.js'
+    getProperty } from './util.js'
 import { 
     getCurrentRoom,
     getCurrentRoomEnemies,

@@ -57,3 +57,13 @@ const updateInteractables = (progress) =>
         .map((int, index) => ({...int, index }))
         .filter(int => int.progress === progress)
         .forEach(int => renderInteractable(getCurrentRoom(), int, int.index))
+
+export const updateKillAllInteractables = () => {
+    const aliveEnemies = enemies.get(getCurrentRoomId()).filter(enemy => enemy.health !== 0)
+    interactables.get(getCurrentRoomId()).forEach((int, index) => {
+        const killAll = int.killAll
+        if ( !killAll ) return
+        const needed2beKilled = aliveEnemies.find(enemy => enemy.progress <= killAll)
+        if ( !needed2beKilled ) renderInteractable(getCurrentRoom(), int, index)
+    })
+}
