@@ -41,7 +41,8 @@ import {
     getReloading,
     setShootCounter,
     getShooting, 
-    getPause } from './variables.js'
+    getPause, 
+    getEquippedWeaponObject} from './variables.js'
 
 export const MAX_PACKSIZE = {
     bandage: 3,
@@ -139,7 +140,7 @@ const checkSpecialScenarios = () => {
 
 const ammo4Equipped = (obj) => {
     if ( !getEquippedWeaponId() ) return
-    const equipped = equippedWeaponObj()
+    const equipped = getEquippedWeaponObject()
     ammo4EquippedWeapon(equipped, obj)
     ammo4EquippedThrowable(equipped, obj)
 }
@@ -161,7 +162,7 @@ const ammo4EquippedThrowable = (equipped, obj) => {
 
 const inventoryFull = () => inventory.flat().every(item => item !== null)
 
-export const equippedWeaponObj = () => inventory.flat().find(item => item && item.id === getEquippedWeaponId())
+export const findEquippedWeaponById = () => inventory.flat().find(item => item && item.id === getEquippedWeaponId())
 
 export const calculateTotalAmmo = (equippedWeapon) => countItem(equippedWeapon.ammotype)
 
@@ -346,7 +347,7 @@ const renderOptions = (item, options) => {
         createOption(options, 'shortcut')
     }
     if ( isWeapon(itemObj.name) ) {
-        if ( getEquippedWeaponId() && itemObj.name === equippedWeaponObj().name ) {
+        if ( getEquippedWeaponId() && itemObj.name === getEquippedWeaponObject().name ) {
              if ( getReloading() || getShooting() ) renderDropOption = false
         } else {
             if ( !getReloading() && !getShooting() ) createOption(options, 'equip')
@@ -355,7 +356,7 @@ const renderOptions = (item, options) => {
         createOption(options, 'examine')
     }
     if ( getReloading() ) 
-        if ( itemObj.name === equippedWeaponObj().ammotype ) renderDropOption = false
+        if ( itemObj.name === getEquippedWeaponObject().ammotype ) renderDropOption = false
     createOption(options, 'replace')
     if (renderDropOption) createOption(options, 'drop')
 }
@@ -546,7 +547,7 @@ const equip = (item) => {
     const row = itemObj.row
     const column = itemObj.column
     setEquippedWeaponId(inventory[row][column].id)
-    const equipped = equippedWeaponObj()
+    const equipped = getEquippedWeaponObject()
     setShootCounter(getEquippedItemDetail(equipped, 'firerate') * 60)
     if ( getAimMode() ) {
         exitAimModeAnimation()

@@ -154,6 +154,12 @@ export const setEquippedWeaponId = (val) => {
 }
 export const getEquippedWeaponId = () => equippedWeaponId
 
+let EquippedWeaponObject = null
+export const setEquippedWeaponObject = (val) => {
+    EquippedWeaponObject = val
+}
+export const getEquippedWeaponObject = () => EquippedWeaponObject
+
 let intObj
 export const setIntObj = (val) => {
     intObj = val

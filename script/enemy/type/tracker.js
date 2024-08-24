@@ -11,10 +11,10 @@ import { CHASE, GUESS_SEARCH, LOST, TRACKER } from '../util/enemy-constants.js'
 
 export class Tracker extends AbstractEnemy {
     constructor(level, x, y, progress, loot, progress2Active) {
-        const health = Math.floor(level * 135 + Math.random() * 15)
+        const health = Math.floor(level * 270 + Math.random() * 15)
         const damage = Math.floor(level * 30 + Math.random() * 15)
         const maxSpeed = 8 + Math.random()
-        super(TRACKER, 8, new SinglePointPath(x, y), health, damage, 50, maxSpeed, progress, 500, maxSpeed * 0.8, loot, progress2Active)
+        super(TRACKER, 4, new SinglePointPath(x, y), health, damage, 50, maxSpeed, progress, 500, maxSpeed * 0.8, loot, progress2Active)
         this.notificationService = new TrackerNotificationService(this)
         this.lostService = new TrackerLostService(this)
         this.visionService = new TrackerVisionService(this)

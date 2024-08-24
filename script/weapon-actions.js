@@ -6,7 +6,6 @@ import { getWeaponUpgradableDetail, isWeapon } from './weapon-details.js'
 import { 
     calculateThrowableAmount,
     calculateTotalAmmo,
-    equippedWeaponObj,
     updateInventoryWeaponMag,
     useInventoryResource } from './inventory.js'
 import { 
@@ -15,7 +14,7 @@ import {
     getCurrentRoomSolid,
     getCurrentRoomThrowables,
     getPlayer, 
-    getUiEl} from './elements.js'
+    getUiEl } from './elements.js'
 import { 
     addAllAttributes,
     addClass,
@@ -34,6 +33,7 @@ import {
 import { 
     getAimMode,
     getEquippedWeaponId,
+    getEquippedWeaponObject,
     getNoOffenseCounter,
     getPlayerX,
     getPlayerY,
@@ -53,13 +53,13 @@ import {
     setShooting,
     setTarget, 
     setThrowCounter,
-    setWeaponWheel} from './variables.js'
+    setWeaponWheel } from './variables.js'
 
 const EMPTY_WEAPON = new Audio('../assets/audio/empty-weapon.mp3')
 
 let equipped
 export const manageWeaponActions = () => {
-    equipped = equippedWeaponObj()
+    equipped = getEquippedWeaponObject()
     manageAim()
     manageReload()
     manageShoot()
@@ -87,8 +87,7 @@ const manageAim = () => {
         }
         for ( const solid of getCurrentRoomSolid() ) {
             if ( ( isThrowable(equipped.name) &&
-                   !containsClass(solid, 'enemy-collider') &&
-                   !containsClass(solid, 'tracker-component') ||
+                   !containsClass(solid, 'enemy-collider')  ||
                    isWeapon(equipped.name)
                  ) &&
                 collide(elem, solid, 0) ) {
@@ -173,8 +172,6 @@ const notifyNearbyEnemies = () => getCurrentRoomEnemies().forEach(elem => {
 const manageInteractivity = () => {
     if ( !getTarget() ) return
     let element = getTarget().parentElement
-    if ( containsClass(element, TRACKER) ) return
-    if ( containsClass(getTarget(), 'weak-point') ) element = getTarget().parentElement.parentElement.parentElement
     const enemy = getCurrentRoomEnemies().find(elem => elem.sprite === element)
     if ( containsClass(element, 'enemy') && enemy.health > 0 ) enemy.injuryService.damageEnemy(equipped)
     if ( getTarget()?.getAttribute('name') === 'crate' ) dropLoot(getTarget())

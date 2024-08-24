@@ -17,9 +17,9 @@ import {
 
 export const enemies = new Map([
     [37, [
-        new Torturer(1, new SquarePath(650, 240, 300), '2', undefined, '0'),
-        new SoulDrinker(1, new SinglePointPath(650, 140), '2', undefined, '1'),
-        new RockCrusher(1, new SinglePointPath(850, 140), '3'),
+        // new Torturer(1, new SquarePath(650, 240, 300), '2', undefined, '0'),
+        // new SoulDrinker(1, new SinglePointPath(650, 140), '2', undefined, '1'),
+        // new RockCrusher(1, new SinglePointPath(850, 140), '3'),
         new Tracker(1, 1000, 140, '2', new Loot(GRENADE_LOOT, 1), '3'),
         new Tracker(1, 1000, 240, '2', new Loot(FLASHBANG_LOOT, 2), '4'),
         new Tracker(1, 1000, 340, '3', new SingleLoot(SPAS), '5'),

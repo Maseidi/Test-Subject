@@ -125,10 +125,7 @@ const handleNoOffenceMode = () => {
     if ( getNoOffenseCounter() < 180 ) return
     Array.from(getCurrentRoomEnemies())
         .filter(elem => elem.state === NO_OFFENCE)
-        .forEach(elem => {
-            elem.state = CHASE
-            removeClass(elem.sprite.firstElementChild.firstElementChild.firstElementChild, 'attack')
-        })
+        .forEach(elem => elem.state = CHASE)
     setNoOffenseCounter(0)
 }
 
@@ -167,7 +164,6 @@ const manageBullets = () => {
         }
         for ( const solid of getCurrentRoomSolid() )
             if ((!containsClass(solid, 'enemy-collider') && 
-                 !containsClass(solid, 'tracker-component') && 
                  collide(bullet, solid, 0)) || 
                  !collide(bullet, getCurrentRoom(), 0) ) {
                 bullet.remove()
@@ -275,7 +271,7 @@ const handleInteractability = (throwable, time, name, throwables2Remove) => {
 
 const wallIntersection = (throwable, speedX, speedY) => {
     const walls = Array.from(getCurrentRoomSolid())
-        .filter(solid => !containsClass(solid, 'enemy-collider') && !containsClass(solid, 'tracker-component'))
+        .filter(solid => !containsClass(solid, 'enemy-collider') )
     for ( const wall of walls ) {
         const stateX = speedX < 0 ? 10 : 20
         const stateY = speedY < 0 ? 1 : 2  

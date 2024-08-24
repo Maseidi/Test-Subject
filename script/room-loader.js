@@ -311,19 +311,7 @@ const defineComponents = (element, enemyBody) => {
         const component = predicate ? addFireEffect() : document.createElement('div')
         if (!predicate) component.style.backgroundColor = `${element.virus}`
         addClass(component, `${element.type}-component`)
-        manageEnemyCriticalPoints(element, component, componentNum)
         enemyBody.append(component)
-    }
-}
-
-const manageEnemyCriticalPoints = (element, component, componentNum) => {
-    if ( element.type === TRACKER ) addEnemyCriticalPoints(component, componentNum, 4, [7])
-}
-
-const addEnemyCriticalPoints = (component, componentNum, offset, weakpoints) => {
-    if ( componentNum >= offset ) {
-        getCurrentRoomSolid().push(component)
-        if ( weakpoints.includes(componentNum) ) addClass(component, 'weak-point')
     }
 }
 
