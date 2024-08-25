@@ -13,6 +13,7 @@ import {
     MAGNUM_AMMO_LOOT,
     SHOTGUN_SHELLS_LOOT,
     SingleLoot,
+    SNIPER2,
     SPAS } from '../../loot.js'
 
 export const enemies = new Map([
@@ -36,5 +37,8 @@ export const enemies = new Map([
             new Point(500, 500),
             new Point(700, 700)
         ]), '13', undefined, '14')
+    ]],
+    [16, [
+        new Scorcher(2, new SinglePointPath(100, 100), '16', new SingleLoot(SNIPER2))
     ]]
 ])

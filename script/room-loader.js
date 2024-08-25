@@ -39,8 +39,7 @@ import {
     setCurrentRoomThrowables,
     setCurrentRoomExplosions,
     setCurrentRoomDoors,
-    getCurrentRoomDoors,
-    } from './elements.js'
+    getCurrentRoomDoors } from './elements.js'
 
 export const loadCurrentRoom = () => {
     setStunnedCounter(0)
@@ -128,7 +127,7 @@ const renderLoaders = (room2Render) => {
         if ( elem.top !== undefined ) loader.style.top = `${elem.top}px`
         else if ( elem.bottom !== undefined ) loader.style.bottom = `${elem.bottom}px`  
         const door = elem.door
-        if ( door && (!findProgressByName(door.progress) && enemiesLeft(door)) ) renderDoor(elem, room2Render)
+        if ( door && (!findProgressByName(door.progress) || enemiesLeft(door)) ) renderDoor(elem, room2Render)
         room2Render.append(loader)
         getCurrentRoomLoaders().push(loader)
     })
@@ -137,7 +136,8 @@ const renderLoaders = (room2Render) => {
 const enemiesLeft = (object) => {
     const killAll = object.killAll
     if ( !killAll ) return false
-    return enemies.get(getCurrentRoomId()).find(enemy => enemy.health !== 0 && enemy.progress <= killAll) ? true : false
+    return enemies.get(getCurrentRoomId())
+        .find(enemy => enemy.health !== 0 && enemy.progress <= killAll) ? true : false
 }
 
 const renderDoor = (loader, room2Render) => {    
@@ -172,7 +172,7 @@ const renderInteractables = (room2Render) =>
     interactables.get(getCurrentRoomId())
         .forEach((interactable, index) => renderInteractable(room2Render, interactable, index))
 
-export const renderInteractable = (root, interactable, index) => {
+export const renderInteractable = (root, interactable, index) => {    
     if ( !findProgressByName(interactable.progress) ) return
     if ( enemiesLeft(interactable) ) return
     const int = object2Element(interactable)
@@ -217,7 +217,7 @@ const renderPopUp = (int, interactable) => {
 
 const renderHeading = (popup, interactable) => {
     const heading = document.createElement('p')
-    let content = interactable.amount && !isWeapon(interactable.name) ? 
+    let content = interactable.amount && !isWeapon(interactable.name) && !interactable.name.includes('key') ? 
     `${interactable.amount} ${interactable.heading}` : `${interactable.heading}`
     heading.textContent = content
     popup.append(heading)

@@ -90,7 +90,7 @@ const negateDirection = (setOppositeDir, setDir) => {
     setDir(false)
 }
 
-export const damagePlayer = (damage) => {
+export const damagePlayer = (damage) => {    
     if ( getNoOffenseCounter() !== 0 ) return
     addClass(getMapEl(), 'camera-shake')
     setTimeout(() => removeClass(getMapEl(), 'camera-shake'), 300)
@@ -102,7 +102,7 @@ export const damagePlayer = (damage) => {
 }
 
 const noOffenceAllEnemies = () => {
-    Array.from(getCurrentRoomEnemies())
+    getCurrentRoomEnemies()
         .filter(elem => elem.state === CHASE )
         .forEach(elem => elem.state = NO_OFFENCE)
     setNoOffenseCounter(1)

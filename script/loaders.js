@@ -131,9 +131,9 @@ export const loaders = new Map([
     ],
     [16, [
         new BottomLoader_FromLeft(9, 100, 100, 
-            new Door('red', '15', 'doorway to heaven', 'dignity')),
+            new Door('red', '15', 'Door 4', 'Dignity')),
         new LeftLoader_FromTop(37, 100, 400),
-        new TopLoader_FromLeft(38, 250, 475),
+        new TopLoader_FromLeft(38, 250, 475, new Door('crimson', '17', 'Door 5', 'Anger')),
         new RightLoader_FromTop(39, 300, 300)
         ]
     ],
@@ -232,7 +232,7 @@ export const loaders = new Map([
     [37, [
         new RightLoader_FromTop(16, 100, 350),
         new TopLoader_FromLeft(62, 100, 240),
-        new TopLoader_FromLeft(63, 100, 580),
+        new TopLoader_FromLeft(63, 100, 580, new Door('purple', '16', 'Door 3', 'Wisdom')),
         new TopLoader_FromRight(64, 100, 240, new Door('green', undefined, 'Door 1', 'Sacrifice', '15', '3')),
         new TopLoader_FromRight(65, 100, 580, new Door('yellow', '13', 'Door 2', 'Chivalry'))
         ]

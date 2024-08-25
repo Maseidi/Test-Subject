@@ -21,7 +21,7 @@ export class AbstractVisionService {
         this.enemy.wallCheckCounter = this.enemy.wallCheckCounter ?? 1
         this.enemy.wallCheckCounter = this.enemy.wallCheckCounter + 1 === 21 ? 0 : this.enemy.wallCheckCounter + 1
         if ( this.enemy.wallCheckCounter !== 20 ) return
-        const walls = Array.from(getCurrentRoomSolid()).filter(solid => !containsClass(solid, 'enemy-collider') )
+        const walls = getCurrentRoomSolid().filter(solid => !containsClass(solid, 'enemy-collider') )
         const vision = this.enemy.sprite.firstElementChild.children[1]
         for ( const component of vision.children ) {
             if ( collide(component, getPlayer(), 0) ) {

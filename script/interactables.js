@@ -12,7 +12,7 @@ import {
     SingleLoot } from './loot.js'
 
 class Interactable {
-    constructor(width, left, top, name, heading, popup, solid, amount, space, description, price, progress, killAll) {
+    constructor(width, left, top, name, heading, popup, solid, amount, space, description, price, progress, killAll, progress2Active) {
         this.width = width
         this.left = left
         this.top = top
@@ -26,6 +26,7 @@ class Interactable {
         this.price = price
         this.progress = progress ?? '0'
         this.killAll= killAll
+        this.progress2Active = progress2Active
     }
 }
 
@@ -166,6 +167,12 @@ export class WeaponDrop extends Drop {
     }
 }
 
+export class KeyDrop extends Drop {
+    constructor(left, top, code, heading, progress, killAll, progress2Active) {
+        super(20, left, top, `key-${code}`, heading, 'Pick up', 1, 1, heading, undefined, progress, killAll, progress2Active)
+    }
+}
+
 export const interactables = new Map([
     [1 ,
         [
@@ -221,13 +228,14 @@ export const interactables = new Map([
         []
     ],[16, 
         [
-        new WeaponDrop(500, 600, 'famas', 50, 5, 5, 5, 5, 5),
+        new WeaponDrop(500, 600, 'famas', 50, 5, 5, 5, 5, 5, undefined, undefined, '17'),
         new SmgAmmo(500, 700, 300),
         new Bandage(600, 700, 5),
         new Antidote(600, 600, 5),
-        new Grenade(500, 800, 3),
+        new Grenade(500, 800, 3, undefined, undefined, '16'),
         new Flashbang(600, 800, 5, '13'),
         new Flashbang(700, 800, 2),
+        new KeyDrop(800, 800, 1, 'The key of sacrifice'),
         ]
     ],[17, 
         []
@@ -275,7 +283,7 @@ export const interactables = new Map([
         new ShotgunShells(200, 100, 11, '4'),
         new SmgAmmo(300, 100, 100, '5'),
         new MagnumAmmo(400, 100, 1, '6'),
-        new RifleAmmo(500, 100, 2, '7'),
+        new RifleAmmo(500, 100, 2, undefined, '12'),
         new Crate(600, 100, new SingleLoot(PISTOL4), undefined, '12')
         ]
     ],[38, 

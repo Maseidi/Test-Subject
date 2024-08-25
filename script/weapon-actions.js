@@ -48,6 +48,7 @@ import {
     getWeaponWheel,
     setAimMode,
     setEquippedWeaponId,
+    setEquippedWeaponObject,
     setReloading,
     setShootCounter,
     setShooting,
@@ -296,6 +297,7 @@ const unEquipThrowable = () => {
     setThrowCounter(0)
     setShooting(false)
     setEquippedWeaponId(null)
+    setEquippedWeaponObject(null)
     removeClass(getPlayer(), 'throwable-aim')
     if (isMoving()) addClass(getPlayer(), 'walk')
     const rightHand = getPlayer().firstElementChild.firstElementChild.children[2]

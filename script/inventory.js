@@ -42,7 +42,8 @@ import {
     setShootCounter,
     getShooting, 
     getPause, 
-    getEquippedWeaponObject} from './variables.js'
+    getEquippedWeaponObject,
+    setEquippedWeaponObject} from './variables.js'
 import { activateProgress } from './progress.js'
 
 export const MAX_PACKSIZE = {
@@ -73,7 +74,6 @@ export const getInventory = () => inventory
 export const pickupDrop = () => {
     searchPack()
     searchEmpty()
-    if ( getIntObj().getAttribute('amount') === 0 ) activateProgress(getIntObj().getAttribute('activateprogress'))
     checkSpecialScenarios()
 }
 
@@ -125,7 +125,7 @@ const handleThrowablePickup = (drop) => {
     if ( !isThrowable(drop.name) ) return
     const throwable = inventory.flat().find(item => item?.name === drop.name)
     if ( !throwable ) return
-    const interactable = Array.from(getCurrentRoomInteractables()).find(int => int.id === drop.id)
+    const interactable = getCurrentRoomInteractables().find(int => int.id === drop.id)
     drop.id = throwable.id
     getIntObj().setAttribute('id', throwable.id)
     if ( interactable ) interactable.id = throwable.id
@@ -133,6 +133,7 @@ const handleThrowablePickup = (drop) => {
 
 const checkSpecialScenarios = () => {
     const obj = element2Object(getIntObj())
+    if ( obj.amount === 0 ) activateProgress(obj.progress2active + '')
     if ( ( isThrowable(obj.name) && !getWeaponWheel().includes(obj.id) ) ||
          ( isWeapon(obj.name) && obj.amount === 0 ) ) updateWeaponWheel()        
     if ( getPause() ) return
@@ -342,7 +343,8 @@ const addOptionsEvent = (e) => {
 const renderOptions = (item, options) => {
     let renderDropOption = true
     const itemObj = element2Object(item)
-    if ( itemObj.name === 'bandage' || itemObj.name === 'antidote' ) createOption(options, 'use')
+    if ( itemObj.name === 'bandage' || itemObj.name === 'antidote' || itemObj.name.includes('key') ) 
+        createOption(options, 'use')
     if ( isThrowable(itemObj.name) ) {
         if ( !getReloading() ) createOption(options, 'equip')
         if ( isThrowing() ) renderDropOption = false    
@@ -549,10 +551,12 @@ const equip = (item) => {
     const row = itemObj.row
     const column = itemObj.column
     setEquippedWeaponId(inventory[row][column].id)
+    setEquippedWeaponObject(findEquippedWeaponById())
     const equipped = getEquippedWeaponObject()
     setShootCounter(getEquippedItemDetail(equipped, 'firerate') * 60)
     if ( getAimMode() ) {
         exitAimModeAnimation()
+        removeEquipped()
         if ( isWeapon(equipped.name) ) {
             addClass(getPlayer(), 'aim')
             renderWeapon()
@@ -631,6 +635,7 @@ const handleThrowableDrop = (itemObj) => {
 const dropFromWeaponWheel = (itemObj) => {
     if ( getEquippedWeaponId() === itemObj.id ) {
         setEquippedWeaponId(null)
+        setEquippedWeaponObject(null)
         exitAimModeAnimation()
         removeEquipped()
         setAimMode(false)
