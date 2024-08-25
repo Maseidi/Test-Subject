@@ -60,11 +60,12 @@ class BottomLoader_FromRight extends Loader {
 }
 
 class Door {
-    constructor(color, progress, heading, popup, progress2Active, killAll) {
+    constructor(color, progress, heading, popup, key, progress2Active, killAll) {
         this.color = color
         this.progress = progress
         this.heading = heading
         this.popup = popup
+        this.key = key
         this.progress2Active = progress2Active
         this.killAll = killAll
     }
@@ -130,11 +131,13 @@ export const loaders = new Map([
         ]
     ],
     [16, [
-        new BottomLoader_FromLeft(9, 100, 100, 
-            new Door('red', '15', 'Door 4', 'Dignity')),
-        new LeftLoader_FromTop(37, 100, 400),
-        new TopLoader_FromLeft(38, 250, 475, new Door('crimson', '17', 'Door 5', 'Anger')),
-        new RightLoader_FromTop(39, 300, 300)
+        new BottomLoader_FromLeft(9, 100, 100),
+        new LeftLoader_FromTop(37, 100, 400, 
+            new Door('#2b2b2b', '22', 'Test door 2', 'Door 2 for testing')),
+        new TopLoader_FromLeft(38, 250, 475, 
+            new Door('crimson', '17', 'Door 5', 'Anger')),
+        new RightLoader_FromTop(39, 300, 300, 
+            new Door('lightblue', undefined, 'Test door', 'Door for testing', 'test', '21'))
         ]
     ],
     [18, [

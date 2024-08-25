@@ -33,14 +33,15 @@ export const REVOLVER = 'revolver'
 export const REMINGTON_1858 = 'remington1858'
 
 export class Loot {
-    constructor(name, amount) {
+    constructor(name, amount, progress2Active) {
         this.name = name
         this.amount = amount
+        this.progress2Active = progress2Active
     }
 }
 
 export class SingleLoot extends Loot {
-    constructor(name) {
-        super(name, 1)
+    constructor(name, progress2Active) {
+        super(name, 1, progress2Active)
     }
 }

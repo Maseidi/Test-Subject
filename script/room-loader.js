@@ -172,7 +172,7 @@ const renderInteractables = (room2Render) =>
     interactables.get(getCurrentRoomId())
         .forEach((interactable, index) => renderInteractable(room2Render, interactable, index))
 
-export const renderInteractable = (root, interactable, index) => {    
+export const renderInteractable = (root, interactable, index) => {
     if ( !findProgressByName(interactable.progress) ) return
     if ( enemiesLeft(interactable) ) return
     const int = object2Element(interactable)
@@ -291,6 +291,7 @@ const defineEnemy = (elem) => {
     if ( !elem.loot ) return enemy
     enemy.setAttribute('loot', elem.loot.name)
     enemy.setAttribute('loot-amount', elem.loot.amount)
+    enemy.setAttribute('loot-progress', elem.loot.progress2Active)
     return enemy
 }
 

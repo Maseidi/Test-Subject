@@ -44,7 +44,7 @@ import {
     getPause, 
     getEquippedWeaponObject,
     setEquippedWeaponObject} from './variables.js'
-import { activateProgress } from './progress.js'
+import { activateProgress, openDoor } from './progress.js'
 
 export const MAX_PACKSIZE = {
     bandage: 3,
@@ -541,8 +541,16 @@ const use = (item) => {
     let theItem = inventory[itemObj.row][itemObj.column]
     if ( theItem.name === 'bandage' ) useBandage(theItem)
     if ( theItem.name === 'antidote' ) useAntidote(theItem)
+    if ( theItem.name.includes('key') ) useKey(theItem)    
     if ( theItem.amount === 0 ) inventory[itemObj.row][itemObj.column] = null
     renderInventory()
+}
+
+const useKey = (itemObj) => {
+    const neededKey = getIntObj()?.getAttribute('key')
+    if ( !neededKey ) return
+    if ( itemObj.unlocks !== neededKey ) return
+    openDoor(getIntObj())
 }
 
 const equip = (item) => {

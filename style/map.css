@@ -45,7 +45,7 @@
   right: -50px;
 }
 
-@keyframes camera {
+@keyframes camshake {
   33% {
     transform: translateX(40px);
   }
@@ -58,7 +58,7 @@
 }
 
 .camera-shake {
-  animation-name: camera;
+  animation-name: camshake;
   animation-duration: 200ms;
   animation-timing-function: linear;
   animation-iteration-count: 1;

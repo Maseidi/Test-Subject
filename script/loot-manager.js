@@ -33,14 +33,15 @@ import {
 
 export const dropLoot = (rootElem) => {
     const root = element2Object(rootElem)
-    const {left, top, loot: decision, 'loot-amount': amount} = root
+    const {left, top, loot: decision, 'loot-amount': amount, 'loot-progress': progress2Active } = root
     let loot
     if ( decision === RANDOM ) loot = dropRandomLoot(loot, left, top)
     else if ( !decision ) loot = undefined
     else loot = dropDeterminedLoot(decision, left, top, amount)
-    removeDrop(rootElem)    
+    removeDrop(rootElem)
     if ( !loot ) return
-    const interactable = {...loot, left: left, top: top, id: nextId()}
+    let interactable = {...loot, left: left, top: top, id: nextId()}
+    if ( progress2Active !== 'undefined' ) interactable = {...interactable, progress2Active}
     interactables.get(getCurrentRoomId()).push(interactable)
     renderInteractable(getCurrentRoom(), interactable)
 }

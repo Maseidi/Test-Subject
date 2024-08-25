@@ -31,11 +31,11 @@ const updateDoors = (progress) =>
         .filter(door => door.getAttribute('progress') === progress )
         .forEach(door => openDoor(door))
 
-const openDoor = (door) => {
+export const openDoor = (door) => {
     door.remove()
     const progress2Active = door.getAttribute('progress2Active') 
     if ( progress2Active ) activateProgress(progress2Active)   
-}     
+}
 
 export const updateKillAllDoors = () => {
     const aliveEnemies = enemies.get(getCurrentRoomId()).filter(enemy => enemy.health !== 0)
@@ -61,9 +61,8 @@ const updateInteractables = (progress) =>
 export const updateKillAllInteractables = () => {
     const aliveEnemies = enemies.get(getCurrentRoomId()).filter(enemy => enemy.health !== 0)
     interactables.get(getCurrentRoomId()).forEach((int, index) => {
-        const killAll = int.killAll
-        if ( !killAll ) return
-        const needed2beKilled = aliveEnemies.find(enemy => enemy.progress <= killAll)
-        if ( !needed2beKilled && !int.id ) renderInteractable(getCurrentRoom(), int, index)
+        if ( !int.killAll || aliveEnemies.find(enemy => enemy.progress <= int.killAll) ) return
+        int.killAll = undefined
+        renderInteractable(getCurrentRoom(), int, index)
     })
 }

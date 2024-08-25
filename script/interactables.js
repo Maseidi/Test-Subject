@@ -53,6 +53,7 @@ class Crate extends Interactable {
         super(35, left, top, 'crate', 'crate', 'Break', true, undefined, undefined, undefined, undefined, progress, killAll)
         this.loot = loot.name
         this['loot-amount'] = loot.amount
+        this['loot-progress'] = loot.progress2Active
     }
 }
 
@@ -168,8 +169,9 @@ export class WeaponDrop extends Drop {
 }
 
 export class KeyDrop extends Drop {
-    constructor(left, top, code, heading, progress, killAll, progress2Active) {
+    constructor(left, top, code, heading, unlocks, progress, killAll, progress2Active) {
         super(20, left, top, `key-${code}`, heading, 'Pick up', 1, 1, heading, undefined, progress, killAll, progress2Active)
+        this.unlocks = unlocks
     }
 }
 
@@ -229,13 +231,14 @@ export const interactables = new Map([
     ],[16, 
         [
         new WeaponDrop(500, 600, 'famas', 50, 5, 5, 5, 5, 5, undefined, undefined, '17'),
-        new SmgAmmo(500, 700, 300),
+        new SmgAmmo(500, 700, 90),
         new Bandage(600, 700, 5),
         new Antidote(600, 600, 5),
         new Grenade(500, 800, 3, undefined, undefined, '16'),
         new Flashbang(600, 800, 5, '13'),
         new Flashbang(700, 800, 2),
-        new KeyDrop(800, 800, 1, 'The key of sacrifice'),
+        new KeyDrop(800, 800, 1, 'The key of sacrifice', 'test', undefined, '17', '19'),
+        new WeaponDrop(900, 800, 'ppsh', 30, 1, 1, 1, 1, 1, '21', undefined, '22')
         ]
     ],[17, 
         []

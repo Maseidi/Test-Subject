@@ -10,7 +10,7 @@ import {
     FLASHBANG_LOOT,
     GRENADE_LOOT,
     Loot,
-    MAGNUM_AMMO_LOOT,
+    RIFLE_AMMO_LOOT,
     SHOTGUN_SHELLS_LOOT,
     SingleLoot,
     SNIPER2,
@@ -39,6 +39,9 @@ export const enemies = new Map([
         ]), '13', undefined, '14')
     ]],
     [16, [
-        new Scorcher(2, new SinglePointPath(100, 100), '16', new SingleLoot(SNIPER2))
+        new Scorcher(2, new SinglePointPath(100, 100), '16', new SingleLoot(SNIPER2)),
+        new Stinger(2, new SinglePointPath(400, 400), '19', new Loot(RIFLE_AMMO_LOOT, 20, '20')),
+        new Torturer(2, new SinglePointPath(400, 400), '20', new Loot(SHOTGUN_SHELLS_LOOT, 10)),
+        new RockCrusher(2, new SinglePointPath(500, 400), '21')
     ]]
 ])
