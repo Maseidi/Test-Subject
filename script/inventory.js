@@ -7,6 +7,7 @@ import { renderInteractable } from './room-loader.js'
 import { renderThrowable } from './throwable-loader.js'
 import { useAntidote, useBandage } from './player-health.js'
 import { getWeaponDetails, isWeapon } from './weapon-details.js'
+import { activateProgress, openDoor } from './progress-manager.js'
 import { getCurrentRoom, getCurrentRoomInteractables, getPauseContainer, getPlayer, getUiEl } from './elements.js'
 import { 
     addClass,
@@ -44,7 +45,6 @@ import {
     getPause, 
     getEquippedWeaponObject,
     setEquippedWeaponObject} from './variables.js'
-import { activateProgress, openDoor } from './progress.js'
 
 export const MAX_PACKSIZE = {
     bandage: 3,

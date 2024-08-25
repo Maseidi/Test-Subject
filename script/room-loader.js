@@ -4,7 +4,7 @@ import { loaders } from './loaders.js'
 import { isWeapon } from './weapon-details.js'
 import { enemies } from './enemy/util/enemies.js'
 import { interactables } from './interactables.js'
-import { findProgressByName } from './progress.js'
+import { findProgressByName } from './progress-manager.js'
 import { getCurrentRoomId, getRoomLeft, getRoomTop, setStunnedCounter } from './variables.js'
 import { 
     GO_FOR_RANGED,
@@ -127,7 +127,7 @@ const renderLoaders = (room2Render) => {
         if ( elem.top !== undefined ) loader.style.top = `${elem.top}px`
         else if ( elem.bottom !== undefined ) loader.style.bottom = `${elem.bottom}px`  
         const door = elem.door
-        if ( door && (!findProgressByName(door.progress) || enemiesLeft(door)) ) renderDoor(elem, room2Render)
+        if ( door && (!findProgressByName(door.removeProgress) || enemiesLeft(door)) ) renderDoor(elem, room2Render)
         room2Render.append(loader)
         getCurrentRoomLoaders().push(loader)
     })
@@ -137,7 +137,7 @@ const enemiesLeft = (object) => {
     const killAll = object.killAll
     if ( !killAll ) return false
     return enemies.get(getCurrentRoomId())
-        .find(enemy => enemy.health !== 0 && enemy.progress <= killAll) ? true : false
+        .find(enemy => enemy.health !== 0 && enemy.renderProgress <= killAll) ? true : false
 }
 
 const renderDoor = (loader, room2Render) => {    
@@ -173,7 +173,7 @@ const renderInteractables = (room2Render) =>
         .forEach((interactable, index) => renderInteractable(room2Render, interactable, index))
 
 export const renderInteractable = (root, interactable, index) => {
-    if ( !findProgressByName(interactable.progress) ) return
+    if ( !findProgressByName(interactable.renderProgress) ) return
     if ( enemiesLeft(interactable) ) return
     const int = object2Element(interactable)
     addClass(int, 'interactable')
@@ -251,7 +251,7 @@ const renderEnemies = (room2Render) => {
 
 const indexEnemies = (enemies) => enemies.forEach((enemy, index) => enemy.index = index)
 
-const filterEnemies = (enemies) => enemies.filter(enemy => enemy.health !== 0 && findProgressByName(enemy.progress))
+const filterEnemies = (enemies) => enemies.filter(enemy => enemy.health !== 0 && findProgressByName(enemy?.renderProgress))
 
 const spawnEnemies = (enemies, room2Render) => enemies.forEach(elem => spawnEnemy(elem, room2Render))
 

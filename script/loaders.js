@@ -60,14 +60,14 @@ class BottomLoader_FromRight extends Loader {
 }
 
 class Door {
-    constructor(color, progress, heading, popup, key, progress2Active, killAll) {
+    constructor(color, heading, popup, key, progress) {
         this.color = color
-        this.progress = progress
         this.heading = heading
         this.popup = popup
         this.key = key
-        this.progress2Active = progress2Active
-        this.killAll = killAll
+        this.removeProgress = progress?.removeProgress
+        this.progress2Active = progress?.progress2Active
+        this.killAll = progress?.killAll
     }
 }
 
@@ -132,12 +132,9 @@ export const loaders = new Map([
     ],
     [16, [
         new BottomLoader_FromLeft(9, 100, 100),
-        new LeftLoader_FromTop(37, 100, 400, 
-            new Door('#2b2b2b', '22', 'Test door 2', 'Door 2 for testing')),
-        new TopLoader_FromLeft(38, 250, 475, 
-            new Door('crimson', '17', 'Door 5', 'Anger')),
-        new RightLoader_FromTop(39, 300, 300, 
-            new Door('lightblue', undefined, 'Test door', 'Door for testing', 'test', '21'))
+        new LeftLoader_FromTop(37, 100, 400),
+        new TopLoader_FromLeft(38, 250, 475),
+        new RightLoader_FromTop(39, 300, 300)
         ]
     ],
     [18, [
@@ -235,9 +232,9 @@ export const loaders = new Map([
     [37, [
         new RightLoader_FromTop(16, 100, 350),
         new TopLoader_FromLeft(62, 100, 240),
-        new TopLoader_FromLeft(63, 100, 580, new Door('purple', '16', 'Door 3', 'Wisdom')),
-        new TopLoader_FromRight(64, 100, 240, new Door('green', undefined, 'Door 1', 'Sacrifice', '15', '3')),
-        new TopLoader_FromRight(65, 100, 580, new Door('yellow', '13', 'Door 2', 'Chivalry'))
+        new TopLoader_FromLeft(63, 100, 580),
+        new TopLoader_FromRight(64, 100, 240),
+        new TopLoader_FromRight(65, 100, 580)
         ]
     ],
     [38, [ 

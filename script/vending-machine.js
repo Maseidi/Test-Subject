@@ -2,9 +2,9 @@ import { Coin, Drop } from './interactables.js'
 import { renderQuit } from './user-interface.js'
 import { getPauseContainer } from './elements.js'
 import { renderStats } from './weapon-examine.js'
-import { findProgressByName } from './progress.js'
 import { isThrowable } from './throwable-details.js'
 import { getIntObj, setIntObj } from './variables.js'
+import { findProgressByName } from './progress-manager.js'
 import { getShopItems, getShopItemsWithId } from './shop-item.js'
 import { getWeaponUpgradableDetail, getWeaponDetails, isWeapon } from './weapon-details.js'
 import { 
@@ -95,7 +95,7 @@ const renderBuy = () => {
 const renderBuyItems = () => {
     return getShopItemsWithId()
     .filter(item => !item.sold)
-    .filter(item => findProgressByName(item.progress))
+    .filter(item => findProgressByName(item.renderProgress))
     .map((item) => {
         const buyItem = object2Element(item)
         addClass(buyItem, 'buy-item')

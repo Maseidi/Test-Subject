@@ -3,8 +3,8 @@ import { dropLoot } from '../../../loot-manager.js'
 import { CHASE, STUNNED } from '../../util/enemy-constants.js'
 import { getWeaponDetail, isWeapon } from '../../../weapon-details.js'
 import { getCriticalChance, getCurrentRoomId } from '../../../variables.js'
-import { activateProgress, updateKillAllDoors, updateKillAllInteractables } from '../../../progress.js'
 import { addAllAttributes, addClass, getEquippedItemDetail, removeClass } from '../../../util.js'
+import { activateProgress, updateKillAllDoors, updateKillAllEnemies, updateKillAllInteractables } from '../../../progress-manager.js'
 
 export class AbstractInjuryService {
     constructor(enemy) {
@@ -40,6 +40,7 @@ export class AbstractInjuryService {
         activateProgress(this.enemy.progress2Active)
         updateKillAllDoors()
         updateKillAllInteractables()
+        updateKillAllEnemies()
     }
 
     manageDamagedMode() {
