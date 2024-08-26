@@ -6,6 +6,7 @@ import { getWeaponUpgradableDetail, isWeapon } from './weapon-details.js'
 import { 
     calculateThrowableAmount,
     calculateTotalAmmo,
+    getInventory,
     updateInventoryWeaponMag,
     useInventoryResource } from './inventory.js'
 import { 
@@ -32,6 +33,7 @@ import {
     removeClass } from './util.js'
 import { 
     getAimMode,
+    getCriticalChance,
     getEquippedWeaponId,
     getEquippedWeaponObject,
     getNoOffenseCounter,
@@ -47,6 +49,7 @@ import {
     getThrowCounter,
     getWeaponWheel,
     setAimMode,
+    setCriticalChance,
     setEquippedWeaponId,
     setEquippedWeaponObject,
     setReloading,
@@ -304,4 +307,10 @@ const unEquipThrowable = () => {
     rightHand.style.top = ''
     rightHand.style.height = ''
     setWeaponWheel(getWeaponWheel().map(weapon => weapon === equipped.id ? null : weapon))
+}
+
+export const useLuckPills = (item) => {
+    if ( getCriticalChance() === 20 ) return
+    setCriticalChance(getCriticalChance() + 0.019 >= 0.19 ? 0.2 : getCriticalChance() + 0.019)
+    getInventory()[item.row][item.column] = null
 }

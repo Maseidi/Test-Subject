@@ -1,4 +1,4 @@
-import { manageAimModeAngle } from '../../../player-angle.js'
+import { manageAimModeAngle } from '../../../angle-manager.js'
 import { getCurrentRoom, getCurrentRoomBullets } from '../../../elements.js'
 import { CHASE, STAND_AND_WATCH, STUNNED } from '../../util/enemy-constants.js'
 import { getGrabbed, getPlayerX, getPlayerY, getRoomLeft, getRoomTop, getStunnedCounter } from '../../../variables.js'

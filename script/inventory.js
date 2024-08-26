@@ -2,10 +2,13 @@ import { renderQuit } from './user-interface.js'
 import { renderStats } from './weapon-examine.js'
 import { renderWeapon } from './weapon-loader.js'
 import { interactables } from './interactables.js'
+import { useLuckPills } from './weapon-actions.js'
+import { useEnergyDrink } from './player-sprint.js'
 import { isThrowable } from './throwable-details.js'
+import { useAdrenaline } from './player-movement.js'
 import { renderInteractable } from './room-loader.js'
 import { renderThrowable } from './throwable-loader.js'
-import { useAntidote, useBandage } from './player-health.js'
+import { useAntidote, useBandage, useHealthPotion } from './player-health.js'
 import { getWeaponDetails, isWeapon } from './weapon-details.js'
 import { activateProgress, openDoor } from './progress-manager.js'
 import { getCurrentRoom, getCurrentRoomInteractables, getPauseContainer, getPlayer, getUiEl } from './elements.js'
@@ -57,7 +60,11 @@ export const MAX_PACKSIZE = {
     rifleAmmo: 10,
     magnumAmmo: 5,
     grenade: 2,
-    flashbang: 3
+    flashbang: 3,
+    adrenaline: 1,
+    healthpotion: 1,
+    luckpills: 1,
+    energydrink: 1
 }
 
 let inventory = [
@@ -342,14 +349,18 @@ const addOptionsEvent = (e) => {
 
 const renderOptions = (item, options) => {
     let renderDropOption = true
+
     const itemObj = element2Object(item)
-    if ( itemObj.name === 'bandage' || itemObj.name === 'antidote' || itemObj.name.includes('key') ) 
-        createOption(options, 'use')
+
+    if ( ['bandage', 'antidote', 'adrenaline', 'healthpotion', 'luckpills', 'energydrink'].includes(itemObj.name) || 
+         itemObj.name.includes('key') ) createOption(options, 'use')
+
     if ( isThrowable(itemObj.name) ) {
         if ( !getReloading() ) createOption(options, 'equip')
         if ( isThrowing() ) renderDropOption = false    
         createOption(options, 'shortcut')
     }
+
     if ( isWeapon(itemObj.name) ) {
         if ( getEquippedWeaponId() && itemObj.name === getEquippedWeaponObject().name ) {
              if ( getReloading() || getShooting() ) renderDropOption = false
@@ -359,9 +370,12 @@ const renderOptions = (item, options) => {
         createOption(options, 'shortcut')
         createOption(options, 'examine')
     }
+
     if ( getReloading() ) 
         if ( itemObj.name === getEquippedWeaponObject().ammotype ) renderDropOption = false
+
     createOption(options, 'replace')
+
     if (renderDropOption) createOption(options, 'drop')
 }
 
@@ -539,9 +553,13 @@ const use = (item) => {
     getPauseContainer().firstElementChild.remove()
     const itemObj = element2Object(item)
     let theItem = inventory[itemObj.row][itemObj.column]
-    if ( theItem.name === 'bandage' )   useBandage(theItem)
-    if ( theItem.name === 'antidote' )  useAntidote(theItem)
-    if ( theItem.name.includes('key') ) useKey(theItem)
+    if ( theItem.name === 'bandage' )      useBandage(theItem)
+    if ( theItem.name === 'antidote' )     useAntidote(theItem)
+    if ( theItem.name === 'adrenaline' )   useAdrenaline(theItem)
+    if ( theItem.name === 'energydrink' )  useEnergyDrink(theItem)
+    if ( theItem.name === 'luckpills' )    useLuckPills(theItem)
+    if ( theItem.name === 'healthpotion' ) useHealthPotion(theItem)
+    if ( theItem.name.includes('key') )    useKey(theItem)
     if ( theItem.amount === 0 ) inventory[itemObj.row][itemObj.column] = null
     renderInventory()
 }

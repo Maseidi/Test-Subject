@@ -1,3 +1,4 @@
+import { getInventory } from './inventory.js'
 import { staminaManager } from './user-interface.js'
 import { TRACKER } from './enemy/util/enemy-constants.js'
 import { addClass, isMoving, removeClass } from './util.js'
@@ -6,11 +7,13 @@ import {
     getAimMode,
     getAllowMove,
     getGrabbed,
+    getMaxStamina,
     getNoOffenseCounter,
     getRefillStamina,
     getSprint,
     getSprintPressed,
     getStamina,
+    setMaxStamina,
     setRefillStamina,
     setSprint,
     setStamina } from './variables.js'
@@ -23,11 +26,11 @@ export const manageSprint = () => {
             return
         }
         handleSprintAndStamina(false, removeClass, 1, getRefillStamina())
-        if ( getStamina() >= 600 ) handleSprintAndStamina(getSprint(), null, 600 - getStamina(), false)    
+        if ( getStamina() >= getMaxStamina() ) handleSprintAndStamina(getSprint(), null, getMaxStamina() - getStamina(), false)    
         return
     } 
     handleSprintAndStamina(false, removeClass, 1, getRefillStamina())
-    if ( getStamina() >= 600 ) handleSprintAndStamina(getSprint(), null, 600 - getStamina(), getRefillStamina())
+    if ( getStamina() >= getMaxStamina() ) handleSprintAndStamina(getSprint(), null, getMaxStamina() - getStamina(), getRefillStamina())
 }
 
 const handleSprintAndStamina = (sprint, animator, stamina, refill) => {
@@ -43,4 +46,11 @@ const handleSprintAndStamina = (sprint, animator, stamina, refill) => {
             }
             else elem.notificationService.notifyEnemy(400)
         })
+}
+
+export const useEnergyDrink = (item) => {
+    if ( getMaxStamina() === 1200 ) return
+    setMaxStamina(getMaxStamina() + 60)
+    setStamina(getMaxStamina())
+    getInventory()[item.row][item.column] = null
 }

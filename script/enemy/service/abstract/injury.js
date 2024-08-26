@@ -13,7 +13,9 @@ export class AbstractInjuryService {
         this.enemy.damagedCounter = 0
     }
 
-    damageEnemy(equipped) {        
+    damageEnemy(equipped) {
+        console.log(getCriticalChance());
+        
         const name = equipped.name
         let damage = getEquippedItemDetail(equipped, 'damage')
         if ( isWeapon(name) && this.enemy.virus === getWeaponDetail(name, 'antivirus') ) damage *= 1.2

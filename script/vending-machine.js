@@ -23,6 +23,7 @@ import {
     element2Object,
     nextId,
     object2Element } from './util.js'
+import { Progress } from './progress.js'
 
 let page = 1
 export const renderStore = () => {
@@ -213,8 +214,8 @@ const manageBuy = (itemObj) => {
         useInventoryResource('coin', loss)
         let chosenItem = getShopItems()[itemObj.id]
         let purchasedItem = new Drop(
-            chosenItem.width, chosenItem.left, chosenItem.top, chosenItem.name, chosenItem.heading, 
-            chosenItem.popup, chosenItem.amount, chosenItem.space, chosenItem.description, chosenItem.price, '0')
+            chosenItem.width, chosenItem.left, chosenItem.top, chosenItem.name, chosenItem.heading, chosenItem.amount, 
+            chosenItem.space, chosenItem.description, chosenItem.price, Progress.builder().setRenderProgress('0'))
         purchasedItem = handleNewWeapnPurchase(purchasedItem, itemObj.name)
         purchasedItem = handleNewThrowablePurchase(purchasedItem, itemObj.name)
         setIntObj(object2Element(purchasedItem))

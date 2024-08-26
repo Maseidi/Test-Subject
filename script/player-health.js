@@ -19,6 +19,7 @@ import {
     setExplosionDamageCounter,
     setHealth,
     setLeftPressed,
+    setMaxHealth,
     setNoOffenseCounter, 
     setPoisoned, 
     setRightPressed,
@@ -136,4 +137,11 @@ const manageExplosionDamagedState = () => {
     if ( getExplosionDamageCounter() === 0 ) return
     setExplosionDamageCounter(getExplosionDamageCounter() + 1)
     if ( getExplosionDamageCounter() === 100 ) setExplosionDamageCounter(0)
+}
+
+export const useHealthPotion = (item) => {
+    if ( getMaxHealth() === 200 ) return
+    setMaxHealth(getMaxHealth() + 10)
+    setHealth(getMaxHealth())
+    getInventory()[item.row][item.column] = null
 }

@@ -59,84 +59,84 @@ class Crate extends Interactable {
 }
 
 export class Drop extends Interactable {
-    constructor(width, left, top, name, heading, popup, amount, space, description, price, progress) {
-        super(width, left, top, name, heading, popup, false, amount, space, description, price, progress)
+    constructor(width, left, top, name, heading, amount, space, description, price, progress) {
+        super(width, left, top, name, heading, 'Pick ip', false, amount, space, description, price, progress)
     }
 }
 
 export class Bandage extends Drop {
     constructor(left, top, amount, progress) {
-        super(50, left, top, 'bandage', 'bandage', 'Pick up', amount, 1, 
+        super(50, left, top, 'bandage', 'bandage', amount, 1, 
             'Might come in handy in case of injuries', 1/3, progress)
     }
 }
 
 export class Coin extends Drop {
     constructor(left, top, amount, progress) {
-        super(25, left, top, 'coin', 'coin', 'Pick up', amount, 1, 
+        super(25, left, top, 'coin', 'coin', amount, 1, 
             'A neccesity when trading with the vending machine', undefined, progress)
     }
 }
 
 export class HardDrive extends Drop {
     constructor(left, top, amount, progress) {
-        super(30, left, top, 'hardDrive', 'hard drive', 'Pick up', amount, 1, 
+        super(30, left, top, 'hardDrive', 'hard drive', amount, 1, 
             'PC needs one of these to save your progress', 1/2, progress)
     }
 }
 
 export class PistolAmmo extends Drop {
     constructor(left, top, amount, progress) {
-        super(50, left, top, 'pistolAmmo', 'pistol ammo', 'Pick up', amount, 1, 
+        super(50, left, top, 'pistolAmmo', 'pistol ammo', amount, 1, 
             'Ammo for all sorts of handguns', 1/30, progress)
     }
 }
 
 export class ShotgunShells extends Drop {
     constructor(left, top, amount, progress) {
-        super(40, left, top, 'shotgunShells', 'shotgun shells', 'Pick up', amount, 1, 
+        super(40, left, top, 'shotgunShells', 'shotgun shells', amount, 1, 
             'Shells for all sorts of shotguns', 1/20, progress)
     }
 }
 
 export class MagnumAmmo extends Drop {
     constructor(left, top, amount, progress) {
-        super(40, left, top, 'magnumAmmo', 'magnum ammo', 'Pick up', amount, 1, 
+        super(40, left, top, 'magnumAmmo', 'magnum ammo', amount, 1, 
             'Ammo for all sorts of magnums', 1/5, progress)
     }
 }
 
 export class SmgAmmo extends Drop {
     constructor(left, top, amount, progress) {
-        super(40, left, top, 'smgAmmo', 'smg ammo', 'Pick up', amount, 1, 
+        super(40, left, top, 'smgAmmo', 'smg ammo', amount, 1, 
             'Ammo for all sorts of sub-machine guns', 1/90, progress)
     }
 }
 
 export class RifleAmmo extends Drop {
     constructor(left, top, amount, progress) {
-        super(30, left, top, 'rifleAmmo', 'rifle ammo', 'Pick up', amount, 1, 
+        super(30, left, top, 'rifleAmmo', 'rifle ammo', amount, 1, 
             'Ammo for all sorts of rifles', 1/10, progress)
     }
 }
 
 export class Antidote extends Drop {
     constructor(left, top, amount, progress) {
-        super(30, left, top, 'antidote', 'antidote', 'Pick up', amount, 1, 
+        super(30, left, top, 'antidote', 'antidote', amount, 1, 
             'An emergency when poison is all over the place', 1/3, progress)
     }
 }
 
 export class Grenade extends Drop {
     constructor(left, top, amount, progress) {
-        super(20, left, top, 'grenade', 'grenade', 'Pick up', amount, 1, 
+        super(20, left, top, 'grenade', 'grenade', amount, 1, 
             'Toss one to witness your foes fly high!', 1/2, progress)
     }
 }
 
 export class Flashbang extends Drop {
     constructor(left, top, amount, progress) {
-        super(20, left, top, 'flashbang', 'flashbang', 'Pick up', amount, 1, 
+        super(20, left, top, 'flashbang', 'flashbang', amount, 1, 
               'Blinding enemies can be a game changer in many situations', 1/3, progress)
     }
 }
@@ -150,7 +150,6 @@ export class WeaponDrop extends Drop {
             top,
             name,
             getWeaponDetails().get(name).heading,
-            'Pick up',
             1,
             getWeaponDetails().get(name).space,
             getWeaponDetails().get(name).description,
@@ -169,8 +168,36 @@ export class WeaponDrop extends Drop {
 
 export class KeyDrop extends Drop {
     constructor(left, top, code, heading, unlocks, progress) {
-        super(20, left, top, `key-${code}`, heading, 'Pick up', 1, 1, heading, undefined, progress)
+        super(20, left, top, `key-${code}`, heading, 1, 1, heading, undefined, progress)
         this.unlocks = unlocks
+    }
+}
+
+export class AdrenalineDrop extends Drop {
+    constructor(left, top, amount, progress) {
+        super(20, left, top, 'adrenaline', 'adrenaline', amount, 1, 
+            'Increases max speed by 0.1 units. (Default speed is 5 units)', 10, progress)
+    }
+}
+
+export class HealthPotionDrop extends Drop {
+    constructor(left, top, amount, progress) {
+        super(10, left, top, 'healthpotion', 'health potion', amount, 1, 
+            'Refills health completely and increases max health by 10 units. (Default health is 100 units)', 10, progress)
+    }
+}
+
+export class LuckPillsDrop extends Drop {
+    constructor(left, top, amount, progress) {
+        super(30, left, top, 'luckpills', 'luck pills', amount, 1, 
+            'Increases critical chance by 1.9%. (Default critical chance is 1%)', 10, progress)
+    }
+}
+
+export class EnergyDrink extends Drop {
+    constructor(left, top, amount, progress) {
+        super(12, left, top, 'energydrink', 'energy drink', amount, 1, 
+            'Refills stamina completely and increases max stamina by 60 units. (Default stamina is 600 units)', 10, progress)
     }
 }
 
@@ -236,6 +263,10 @@ export const interactables = new Map([
         new Grenade(500, 800, 3),
         new Flashbang(600, 800, 5),
         new Flashbang(700, 800, 2),
+        new AdrenalineDrop(500, 500, 10),
+        new HealthPotionDrop(600, 500, 10),
+        new LuckPillsDrop(700, 500, 10),
+        new EnergyDrink(800, 500, 10)
         ]
     ],[17, 
         []
