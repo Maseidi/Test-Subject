@@ -3,7 +3,7 @@ import {
     AdrenalineDrop,
     Bandage,
     Drop,
-    EnergyDrink,
+    EnergyDrinkDrop,
     Flashbang,
     Grenade,
     HardDrive,
@@ -122,7 +122,7 @@ class LuckPillsShopItem extends ShopItem {
 
 class EnergyDrinkShopItem extends ShopItem {
     constructor(renderProgress) {
-        super(new EnergyDrink(null, null, null, Progress.builder().setRenderProgress(renderProgress)), 1, 10)
+        super(new EnergyDrinkDrop(null, null, null, Progress.builder().setRenderProgress(renderProgress)), 1, 10)
     }
 }
 
@@ -139,10 +139,7 @@ let shopItems = [
     new Pouch('9'),
     new GrenadeShopItem('10'),
     new FlashbangShopItem('11'),
-    new AdrenalineShopItem(),
-    new HealthPotionShopItem('0'),
-    new LuckPillsShopItem('1'),
-    new EnergyDrinkShopItem('2')
+    new EnergyDrinkShopItem('0'),
 ]
 
 export const setShopItems = (val) => {

@@ -3,7 +3,7 @@ import { renderQuit } from './user-interface.js'
 import { getPauseContainer } from './elements.js'
 import { renderStats } from './weapon-examine.js'
 import { isThrowable } from './throwable-details.js'
-import { getIntObj, setIntObj } from './variables.js'
+import { getAdrenalinesDropped, getEnergyDrinksDropped, getHealthPotionsDropped, getIntObj, getLuckPillsDropped, setAdrenalinesDropped, setEnergyDrinksDropped, setHealthPotionsDropped, setIntObj, setLuckPillsDropped } from './variables.js'
 import { findProgressByName } from './progress-manager.js'
 import { getShopItems, getShopItemsWithId } from './shop-item.js'
 import { getWeaponUpgradableDetail, getWeaponDetails, isWeapon } from './weapon-details.js'
@@ -21,9 +21,11 @@ import {
     appendAll,
     createAndAddClass,
     element2Object,
+    isStatUpgrader,
     nextId,
     object2Element } from './util.js'
 import { Progress } from './progress.js'
+import { ADRENALINE, ENERGY_DRINK, HEALTH_POTION, LUCK_PILLS } from './loot.js'
 
 let page = 1
 export const renderStore = () => {
@@ -94,34 +96,61 @@ const renderBuy = () => {
 }
 
 const renderBuyItems = () => {
+    const statUpgraderLimitRunner = statUpgraderOffLimit()
     return getShopItemsWithId()
-    .filter(item => !item.sold)
-    .filter(item => findProgressByName(item.renderProgress))
-    .map((item) => {
-        const buyItem = object2Element(item)
-        addClass(buyItem, 'buy-item')
-        const wrapper = createAndAddClass('div', 'buy-wrapper')
-        const img = createAndAddClass('img', 'buy-item-img')
-        img.src = `../assets/images/${item.name}.png` 
-        const name = createAndAddClass('p', 'buy-item-name')
-        name.textContent = `${item.heading}`
-        const amount = createAndAddClass('p', 'buy-item-amount')
-        amount.textContent = `${item.amount}`
-        const price = createAndAddClass('p', 'buy-item-price')
-        price.textContent = `${item.price}`
-        const buyItemCoin = createAndAddClass('img', 'buy-item-coin')
-        buyItemCoin.src = `../assets/images/coin.png` 
-        const info = createAndAddClass('div', 'info')
-        const left = createAndAddClass('div', 'left')
-        const right = createAndAddClass('div', 'right')
-        buyItem.addEventListener('click', buyPopup)
-        appendAll(left, name, amount)
-        appendAll(right, price, buyItemCoin)
-        appendAll(info, left, right)
-        appendAll(wrapper, img, info)
-        appendAll(buyItem, wrapper)
-        return buyItem
+        .filter(item => !item.sold)
+        .filter(item => findProgressByName(item.renderProgress))
+        .filter(item => statUpgraderLimitRunner(item))
+        .map((item) => {
+            const buyItem = object2Element(item)
+            addClass(buyItem, 'buy-item')
+            const wrapper = createAndAddClass('div', 'buy-wrapper')
+            const img = createAndAddClass('img', 'buy-item-img')
+            img.src = `../assets/images/${item.name}.png` 
+            const name = createAndAddClass('p', 'buy-item-name')
+            name.textContent = `${item.heading}`
+            const amount = createAndAddClass('p', 'buy-item-amount')
+            amount.textContent = `${item.amount}`
+            const price = createAndAddClass('p', 'buy-item-price')
+            price.textContent = `${item.price}`
+            const buyItemCoin = createAndAddClass('img', 'buy-item-coin')
+            buyItemCoin.src = `../assets/images/coin.png` 
+            const info = createAndAddClass('div', 'info')
+            const left = createAndAddClass('div', 'left')
+            const right = createAndAddClass('div', 'right')
+            buyItem.addEventListener('click', buyPopup)
+            appendAll(left, name, amount)
+            appendAll(right, price, buyItemCoin)
+            appendAll(info, left, right)
+            appendAll(wrapper, img, info)
+            appendAll(buyItem, wrapper)
+            return buyItem
     })
+}
+
+const statUpgraderOffLimit = () => {
+    let adrenalineCounter = 0
+    let healthCounter = 0
+    let energyCounter = 0
+    let luckCounter = 0
+    return (item) => {
+        if ( !isStatUpgrader(item) ) {
+            return true
+        } else if ( item.name === ADRENALINE && adrenalineCounter < 10 - getAdrenalinesDropped() ) {
+            adrenalineCounter++
+            return true
+        } else if ( item.name === HEALTH_POTION && healthCounter < 10 - getHealthPotionsDropped() ) {
+            healthCounter++
+            return true
+        } else if ( item.name === ENERGY_DRINK && energyCounter < 10 - getEnergyDrinksDropped() ) {
+            energyCounter++
+            return true
+        } else if ( item.name === LUCK_PILLS && luckCounter < 10 - getLuckPillsDropped() ) {
+            luckCounter++
+            return true
+        }
+        return false
+    }
 }
 
 const buyPopup = (e) => {
@@ -204,7 +233,7 @@ const manageBuy = (itemObj) => {
     useInventoryResource('coin', loss)
     if ( itemObj.name === 'pouch' ) {
         upgradeInventory()
-        submitPurchase(itemObj.id)
+        submitPurchase(itemObj)
         return
     }
     const freeSpace = getInventory().flat().filter(item => item === null).length
@@ -213,6 +242,8 @@ const manageBuy = (itemObj) => {
     if ( freeSpace >= needSpace ) {
         useInventoryResource('coin', loss)
         let chosenItem = getShopItems()[itemObj.id]
+        if ( isStatUpgrader(itemObj) ) chosenItem.price = 20
+        
         let purchasedItem = new Drop(
             chosenItem.width, chosenItem.left, chosenItem.top, chosenItem.name, chosenItem.heading, chosenItem.amount, 
             chosenItem.space, chosenItem.description, chosenItem.price, Progress.builder().setRenderProgress('0'))
@@ -220,7 +251,7 @@ const manageBuy = (itemObj) => {
         purchasedItem = handleNewThrowablePurchase(purchasedItem, itemObj.name)
         setIntObj(object2Element(purchasedItem))
         pickupDrop()
-        submitPurchase(itemObj.id)
+        submitPurchase(itemObj)
         return
     }
     addMessage('No enough space')
@@ -246,10 +277,18 @@ const handleNewThrowablePurchase = (purchasedItem, name) => {
     return { ...purchasedItem, id: nextId() }
 }
 
-const submitPurchase = (id) => {
-    getShopItems()[id].sold = true
+const submitPurchase = (itemObj) => {
+    getShopItems()[itemObj.id].sold = true
+    handleStatUpgrader(itemObj)
     removeStore()
     renderStore()
+}
+
+const handleStatUpgrader = (itemObj) => {
+    if ( itemObj.name === ADRENALINE )         setAdrenalinesDropped(getAdrenalinesDropped()     + 1)    
+    else if ( itemObj.name === HEALTH_POTION ) setHealthPotionsDropped(getHealthPotionsDropped() + 1)    
+    else if ( itemObj.name === ENERGY_DRINK )  setEnergyDrinksDropped(getEnergyDrinksDropped()   + 1)    
+    else if ( itemObj.name === LUCK_PILLS )    setLuckPillsDropped(getLuckPillsDropped()         + 1)
 }
 
 const renderUpgrade = () => {
@@ -417,7 +456,7 @@ const renderSell = () => {
     const sell = createAndAddClass('div', 'sell')
     getInventory()
         .flat()
-        .filter(item => item && item.name !== 'coin' && !item.name.includes('key')
+        .filter(item => item && item.name !== 'coin' && !item.name?.includes('key')
         && item.amount === (MAX_PACKSIZE[item.name] ? MAX_PACKSIZE[item.name] : 1) )
         .forEach(item => {
             const sellItem = object2Element(item)

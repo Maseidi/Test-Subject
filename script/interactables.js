@@ -194,9 +194,9 @@ export class LuckPillsDrop extends Drop {
     }
 }
 
-export class EnergyDrink extends Drop {
+export class EnergyDrinkDrop extends Drop {
     constructor(left, top, amount, progress) {
-        super(12, left, top, 'energydrink', 'energy drink', amount, 1, 
+        super(10, left, top, 'energydrink', 'energy drink', amount, 1, 
             'Refills stamina completely and increases max stamina by 60 units. (Default stamina is 600 units)', 20, progress)
     }
 }
@@ -263,10 +263,6 @@ export const interactables = new Map([
         new Grenade(500, 800, 3),
         new Flashbang(600, 800, 5),
         new Flashbang(700, 800, 2),
-        new AdrenalineDrop(500, 500, 1),
-        new HealthPotionDrop(600, 500, 1),
-        new LuckPillsDrop(700, 500, 1),
-        new EnergyDrink(800, 500, 1)
         ]
     ],[17, 
         []

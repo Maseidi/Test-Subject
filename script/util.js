@@ -12,6 +12,7 @@ import {
     setEntityId } from './variables.js'
 import { removeWeapon } from './weapon-loader.js'
 import { removeThrowable } from './throwable-loader.js'
+import { ADRENALINE, ENERGY_DRINK, HEALTH_POTION, LUCK_PILLS } from './loot.js'
 
 export const collide = (first, second, offset) => {
     const firstBound = first.getBoundingClientRect()
@@ -185,3 +186,5 @@ export const removeEquipped = () => {
     removeWeapon()
     removeThrowable()
 }
+
+export const isStatUpgrader = (item) => [ADRENALINE, HEALTH_POTION, ENERGY_DRINK, LUCK_PILLS].includes(item.name)

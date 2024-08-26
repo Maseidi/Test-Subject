@@ -279,3 +279,27 @@ export const setCriticalChance = (val) => {
     criticalChance = val
 }
 export const getCriticalChance = () => criticalChance
+
+let adrenalinesDropped = 0
+export const setAdrenalinesDropped = (val) => {
+    adrenalinesDropped = val
+}
+export const getAdrenalinesDropped = () => adrenalinesDropped
+
+let healthPotionsDropped = 0
+export const setHealthPotionsDropped = (val) => {
+    healthPotionsDropped = val
+}
+export const getHealthPotionsDropped = () => healthPotionsDropped
+
+let luckPillsDropped = 0
+export const setLuckPillsDropped = (val) => {
+    luckPillsDropped = val
+}
+export const getLuckPillsDropped = () => luckPillsDropped
+
+let energyDrinksDropped = 0
+export const setEnergyDrinksDropped = (val) => {
+    energyDrinksDropped = val
+}
+export const getEnergyDrinksDropped = () => energyDrinksDropped

@@ -28,6 +28,7 @@ const renderBackground = () => {
 
 const renderHealthBar = () => {
     const healthBarEl = createAndAddClass('div', 'health-bar')
+    healthBarEl.style.width = `${getMaxHealth() * 390 / 100}px`
     const healthEl = createAndAddClass('div', 'health')
     healthBarEl.append(healthEl)
     getUiEl().append(healthBarEl)
@@ -39,6 +40,7 @@ export const healthManager = (inputHealth) =>
 
 const renderStaminaBar = () => {
     const staminaBarEl = createAndAddClass('div', 'stamina-bar')
+    staminaBarEl.style.width = `${getMaxStamina() * 390 / 600}px`
     const staminaEl = createAndAddClass('div', 'stamina')
     staminaBarEl.append(staminaEl)
     getUiEl().append(staminaBarEl)
