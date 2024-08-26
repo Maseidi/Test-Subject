@@ -176,28 +176,28 @@ export class KeyDrop extends Drop {
 export class AdrenalineDrop extends Drop {
     constructor(left, top, amount, progress) {
         super(20, left, top, 'adrenaline', 'adrenaline', amount, 1, 
-            'Increases max speed by 0.1 units. (Default speed is 5 units)', 10, progress)
+            'Increases max speed by 0.1 units. (Default speed is 5 units)', 20, progress)
     }
 }
 
 export class HealthPotionDrop extends Drop {
     constructor(left, top, amount, progress) {
         super(10, left, top, 'healthpotion', 'health potion', amount, 1, 
-            'Refills health completely and increases max health by 10 units. (Default health is 100 units)', 10, progress)
+            'Refills health completely and increases max health by 10 units. (Default health is 100 units)', 20, progress)
     }
 }
 
 export class LuckPillsDrop extends Drop {
     constructor(left, top, amount, progress) {
         super(30, left, top, 'luckpills', 'luck pills', amount, 1, 
-            'Increases critical chance by 1.9%. (Default critical chance is 1%)', 10, progress)
+            'Increases critical chance by 1.9%. (Default critical chance is 1%)', 20, progress)
     }
 }
 
 export class EnergyDrink extends Drop {
     constructor(left, top, amount, progress) {
         super(12, left, top, 'energydrink', 'energy drink', amount, 1, 
-            'Refills stamina completely and increases max stamina by 60 units. (Default stamina is 600 units)', 10, progress)
+            'Refills stamina completely and increases max stamina by 60 units. (Default stamina is 600 units)', 20, progress)
     }
 }
 
@@ -263,10 +263,10 @@ export const interactables = new Map([
         new Grenade(500, 800, 3),
         new Flashbang(600, 800, 5),
         new Flashbang(700, 800, 2),
-        new AdrenalineDrop(500, 500, 10),
-        new HealthPotionDrop(600, 500, 10),
-        new LuckPillsDrop(700, 500, 10),
-        new EnergyDrink(800, 500, 10)
+        new AdrenalineDrop(500, 500, 1),
+        new HealthPotionDrop(600, 500, 1),
+        new LuckPillsDrop(700, 500, 1),
+        new EnergyDrink(800, 500, 1)
         ]
     ],[17, 
         []

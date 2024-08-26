@@ -362,7 +362,7 @@ const renderOptions = (item, options) => {
     }
 
     if ( isWeapon(itemObj.name) ) {
-        if ( getEquippedWeaponId() && itemObj.name === getEquippedWeaponObject().name ) {
+        if ( getEquippedWeaponId() && itemObj.name === getEquippedWeaponObject()?.name ) {
              if ( getReloading() || getShooting() ) renderDropOption = false
         } else {
             if ( !getReloading() && !getShooting() ) createOption(options, 'equip')

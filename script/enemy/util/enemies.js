@@ -9,6 +9,7 @@ import { HorDoublePointPath, Path, Point, SinglePointPath, SquarePath, VerDouble
 import { 
     FLASHBANG_LOOT,
     GRENADE_LOOT,
+    HEALTH_POTION,
     Loot,
     SingleLoot,
     SPAS } from '../../loot.js'
@@ -18,7 +19,7 @@ export const enemies = new Map([
         new Tracker(1, 1000, 140, new Loot(GRENADE_LOOT, 1), Progress.builder().setRenderProgress('2').setProgress2Active('3')),
         new Tracker(1, 1000, 240, new Loot(FLASHBANG_LOOT, 2), Progress.builder().setRenderProgress('3').setProgress2Active('4')),
         new Tracker(1, 1000, 340, new SingleLoot(SPAS, '5'), Progress.builder().setRenderProgress('4')),
-        new Ranger(1, new SquarePath(1000, 100, 300), undefined, Progress.builder().setKillAll('4').setProgress2Active('6')),
+        new Ranger(1, new SquarePath(1000, 100, 300), new SingleLoot(HEALTH_POTION), Progress.builder().setKillAll('4').setProgress2Active('6')),
         new Ranger(1, new SquarePath(1100, 100, 300), undefined, Progress.builder().setRenderProgress('5')),
         new Ranger(1, new SquarePath(1200, 100, 300), undefined, Progress.builder().setRenderProgress('6')),
         new Spiker(1, new SquarePath(600, 600, 100), undefined, Progress.builder().setKillAll('6').setProgress2Active('7')),
