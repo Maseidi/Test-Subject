@@ -24,7 +24,7 @@ export class Stinger extends AbstractEnemy {
         const health = Math.floor(level * 85 + Math.random() * 5)
         const damage = Math.floor(level * 25 + Math.random() * 15)
         const maxSpeed = 2.75 + Math.random()
-        super(STINGER, 5, waypoint, health, damage, 60, maxSpeed, 700, 1.3, loot, progress)
+        super(STINGER, 5, waypoint, health, damage, maxSpeed, 700, 1.3, loot, progress)
         this.injuryService = new GrabberInjuryService(this)
         this.movementService = new StingerMovementService(this)
         this.investigationService = new NormalInvestigationService(this)

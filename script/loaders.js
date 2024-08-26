@@ -1,3 +1,5 @@
+import { Progress } from './progress.js'
+
 class Loader {
     constructor(className, width, height, left, top, right, bottom, door) {
         this.className = className
@@ -65,7 +67,7 @@ class Door {
         this.heading = heading
         this.popup = popup
         this.key = key
-        this.removeProgress = progress?.removeProgress
+        this.removeProgress = progress?.removeProgress ?? progress?.progress2Active
         this.progress2Active = progress?.progress2Active
         this.killAll = progress?.killAll
     }
@@ -233,9 +235,15 @@ export const loaders = new Map([
         new RightLoader_FromTop(16, 100, 350),
         new TopLoader_FromLeft(62, 100, 240),
         new TopLoader_FromLeft(63, 100, 580),
-        new TopLoader_FromRight(64, 100, 240),
-        new TopLoader_FromRight(65, 100, 580)
-        ]
+        new TopLoader_FromRight(64, 100, 240, 
+            new Door('green', 'Test door 1', 'Door for testing', undefined, 
+                Progress.builder().setRemoveProgress('7').setProgress2Active('8')
+            )
+        ),
+        new TopLoader_FromRight(65, 100, 580, 
+            new Door('yellow', 'Test door 2', 'Door 2 for testing', 'test', Progress.builder().setProgress2Active('10'))
+        )
+    ]
     ],
     [38, [ 
         new BottomLoader_FromLeft(16, 250, 375),

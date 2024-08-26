@@ -22,7 +22,7 @@ export class Grabber extends AbstractEnemy {
         const health = Math.floor(level * 100 + Math.random() * 50)
         const damage = Math.floor(level * 20 + Math.random() * 10)
         const maxSpeed = 3 + Math.random()
-        super(GRABBER, 4, path, health, damage, 100, maxSpeed, 400, 1.4, loot, progress)
+        super(GRABBER, 4, path, health, damage, maxSpeed, 400, 1.4, loot, progress)
         this.injuryService = new GrabberInjuryService(this)
         this.movementService = new GrabberMovementService(this)
         this.investigationService = new NormalInvestigationService(this)

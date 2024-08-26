@@ -14,7 +14,7 @@ export class Tracker extends AbstractEnemy {
         const health = Math.floor(level * 270 + Math.random() * 15)
         const damage = Math.floor(level * 30 + Math.random() * 15)
         const maxSpeed = 8 + Math.random()
-        super(TRACKER, 4, new SinglePointPath(x, y), health, damage, 50, maxSpeed, 500, maxSpeed * 0.8, loot, progress)
+        super(TRACKER, 4, new SinglePointPath(x, y), health, damage, maxSpeed, 500, maxSpeed * 0.8, loot, progress)
         this.notificationService = new TrackerNotificationService(this)
         this.lostService = new TrackerLostService(this)
         this.visionService = new TrackerVisionService(this)

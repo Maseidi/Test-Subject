@@ -1,3 +1,4 @@
+import { Progress } from './progress.js'
 import { getWeaponDetails } from './weapon-details.js'
 import { 
     BANDAGE_LOOT,
@@ -10,7 +11,6 @@ import {
     RIFLE_AMMO_LOOT,
     SHOTGUN_SHELLS_LOOT, 
     SingleLoot } from './loot.js'
-import { Progress } from './progress.js'
 
 class Interactable {
     constructor(width, left, top, name, heading, popup, solid, amount, space, description, price, progress) {
@@ -236,8 +236,6 @@ export const interactables = new Map([
         new Grenade(500, 800, 3),
         new Flashbang(600, 800, 5),
         new Flashbang(700, 800, 2),
-        new KeyDrop(800, 800, 1, 'The key of sacrifice', 'test'),
-        new WeaponDrop(900, 800, 'ppsh', 30, 1, 1, 1, 1, 1)
         ]
     ],[17, 
         []
@@ -281,12 +279,13 @@ export const interactables = new Map([
         []
     ],[37, 
         [
-        new PistolAmmo(100, 100, 10, Progress.builder().setRenderProgress('3').setProgress2Active('15')),
-        new ShotgunShells(200, 100, 11, Progress.builder().setRenderProgress('15').setProgress2Active('16')),
-        new SmgAmmo(300, 100, 100, Progress.builder().setKillAll('5')),
+        new PistolAmmo(100, 100, 10),
+        new ShotgunShells(200, 100, 11),
+        new SmgAmmo(300, 100, 100),
         new MagnumAmmo(400, 100, 1),
-        new RifleAmmo(500, 100, 2),
-        new Crate(600, 100, new SingleLoot(PISTOL4))
+        new RifleAmmo(500, 100, 2, Progress.builder().setRenderProgress('10').setProgress2Active('11')),
+        new Crate(600, 100, new SingleLoot(PISTOL4)),
+        new KeyDrop(700, 100, 1, 'Test key', 'test', Progress.builder().setKillAll('8').setProgress2Active('9'))
         ]
     ],[38, 
         []

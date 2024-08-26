@@ -539,9 +539,9 @@ const use = (item) => {
     getPauseContainer().firstElementChild.remove()
     const itemObj = element2Object(item)
     let theItem = inventory[itemObj.row][itemObj.column]
-    if ( theItem.name === 'bandage' ) useBandage(theItem)
-    if ( theItem.name === 'antidote' ) useAntidote(theItem)
-    if ( theItem.name.includes('key') ) useKey(theItem)    
+    if ( theItem.name === 'bandage' )   useBandage(theItem)
+    if ( theItem.name === 'antidote' )  useAntidote(theItem)
+    if ( theItem.name.includes('key') ) useKey(theItem)
     if ( theItem.amount === 0 ) inventory[itemObj.row][itemObj.column] = null
     renderInventory()
 }
@@ -605,7 +605,7 @@ const drop = (item) => {
     const itemObj = element2Object(item)
     const left = Math.floor(getPlayerX() - getRoomLeft())
     const top = Math.floor(getPlayerY() - getRoomTop())
-    let interactable = {...itemObj, left: left, top: top}
+    let interactable = {...itemObj, renderProgress: '0', left: left, top: top}
     if ( interactables.get(getCurrentRoomId()).find(elem => elem.id === interactable.id) ) 
         interactable = {...interactable, id: nextId()}
     getPauseContainer().firstElementChild.remove()

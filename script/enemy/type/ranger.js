@@ -22,7 +22,7 @@ export class Ranger extends AbstractEnemy {
         const damage = Math.floor(level * 25 + Math.random() * 5)
         const maxSpeed = 4 + Math.random()
         const vision = Math.floor(500 + Math.random() * 300)
-        super(RANGER, 6, waypoint, health, damage, 75, maxSpeed, vision, 2, loot, progress)
+        super(RANGER, 6, waypoint, health, damage, maxSpeed, vision, 2, loot, progress)
         this.collisionService = new RangerCollisionService(this)
         this.investigationService = new NormalInvestigationService(this)
         this.chaseService = new NormalChaseService(this)
