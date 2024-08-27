@@ -58,6 +58,12 @@ class Crate extends Interactable {
     }
 }
 
+export class Lever extends Interactable {
+    constructor(left, top, progress) {
+        super(20, left, top, 'lever', 'lever', 'toggle', true, undefined, undefined, undefined, undefined, progress)
+    }
+}
+
 export class Drop extends Interactable {
     constructor(width, left, top, name, heading, amount, space, description, price, progress) {
         super(width, left, top, name, heading, 'Pick ip', false, amount, space, description, price, progress)
@@ -263,6 +269,10 @@ export const interactables = new Map([
         new Grenade(500, 800, 3),
         new Flashbang(600, 800, 5),
         new Flashbang(700, 800, 2),
+        new Lever(1000, 700, 
+            Progress.builder().setRenderProgress('2').setProgress2Active('100')
+        ),
+        new Coin(200, 200, 10, Progress.builder().setRenderProgress('100'))
         ]
     ],[17, 
         []

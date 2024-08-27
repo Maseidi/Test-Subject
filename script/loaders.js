@@ -134,7 +134,11 @@ export const loaders = new Map([
     ],
     [16, [
         new BottomLoader_FromLeft(9, 100, 100),
-        new LeftLoader_FromTop(37, 100, 400),
+        new LeftLoader_FromTop(37, 100, 400, 
+            new Door('red', 'Test door 1', 'Door for testing', undefined, 
+                Progress.builder().setRemoveProgress('100')
+            )
+        ),
         new TopLoader_FromLeft(38, 250, 475),
         new RightLoader_FromTop(39, 300, 300)
         ]
@@ -234,7 +238,11 @@ export const loaders = new Map([
     [37, [
         new RightLoader_FromTop(16, 100, 350),
         new TopLoader_FromLeft(62, 100, 240),
-        new TopLoader_FromLeft(63, 100, 580),
+        new TopLoader_FromLeft(63, 100, 580, 
+            new Door('red', 'Test door 3', 'Door for testing 3', undefined, 
+                Progress.builder().setKillAll('10').setProgress2Active('20')
+            )
+        ),
         new TopLoader_FromRight(64, 100, 240, 
             new Door('green', 'Test door 1', 'Door for testing', undefined, 
                 Progress.builder().setRemoveProgress('7').setProgress2Active('8')

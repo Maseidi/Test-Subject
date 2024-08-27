@@ -16,8 +16,12 @@ import {
     LUCK_PILLS,
     SingleLoot,
     SPAS } from '../../loot.js'
+import { Torturer } from '../type/normal-enemy.js'
 
 export const enemies = new Map([
+    [16, [
+        new Torturer(1, new SinglePointPath(400, 400), undefined, Progress.builder().setRenderProgress('100'))
+    ]],
     [37, [
         new Tracker(1, 1000, 140, new SingleLoot(HEALTH_POTION), 
             Progress.builder().setRenderProgress('2').setProgress2Active('3')

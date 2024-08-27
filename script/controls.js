@@ -56,6 +56,7 @@ import {
     setShootPressed,
     setSprintPressed,
     setUpPressed } from './variables.js'
+import { activateProgress, deactiveProgress, getProgress } from './progress-manager.js'
 
 export const control = () => {
     onkeydown = (e) => {
@@ -241,7 +242,8 @@ const fDown = () => {
     if ( getShooting() || getReloading() ) return    
     if ( getIntObj().getAttribute('name') === 'stash' ) openStash()    
     if ( getIntObj().getAttribute('name') === 'vendingMachine' ) openVendingMachine()    
-    if ( getIntObj().getAttribute('name') === 'crate' ) breakCrate()    
+    if ( getIntObj().getAttribute('name') === 'crate' ) breakCrate()
+    if ( getIntObj().getAttribute('name') === 'lever' ) toggleLever()      
 }
 
 const breakFree = () => {
@@ -272,6 +274,19 @@ const openPause = (cause, func) => {
     setPauseCause(cause)
     managePause()
     func()
+}
+
+const toggleLever = () => {
+    const progress2Active = getIntObj().getAttribute('progress2Active')
+    const value = getProgress()[progress2Active]
+    if ( !value ) {
+        activateProgress(progress2Active)
+        getIntObj().firstElementChild.style.transform = `scale(-1, 1)`
+    }
+    else {
+        deactiveProgress(progress2Active)
+        getIntObj().firstElementChild.style.transform = `scale(1, 1)`
+    }
 }
 
 const tabDown = () => {

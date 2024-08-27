@@ -140,7 +140,7 @@ const enemiesLeft = (object) => {
         .find(enemy => enemy.health !== 0 && enemy.renderProgress <= killAll) ? true : false
 }
 
-const renderDoor = (loader, room2Render) => {    
+export const renderDoor = (loader, room2Render) => {    
     const { door: doorObj, width, height, left, top, right, bottom } = loader
     const doorElem = object2Element(doorObj)
     addClass(doorElem, 'door')
@@ -202,7 +202,14 @@ const setInteractableId = (interactable, int, index) => {
 const renderImage = (int, interactable) => {
     const image = document.createElement('img')
     image.src = `../assets/images/${interactable.name}.png`
+    handleLever(interactable, image)
     int.append(image)
+}
+
+const handleLever = (interactable, image) => {
+    if ( interactable.name !== 'lever' ) return
+    const progress2Active = interactable.progress2Active
+    if ( findProgressByName(progress2Active) ) image.style.transform = `scale(-1, 1)` 
 }
 
 const renderPopUp = (int, interactable) => {
