@@ -57,7 +57,7 @@ export const heal = () => {
     if ( getHealth() === getMaxHealth() ) return
     const bandage = getInventory().flat().find(x => x && x.name === 'bandage')
     if ( !bandage ) return
-    let newHealth = Math.min(getHealth() + 20, getMaxHealth())
+    let newHealth = Math.min(getHealth() + getMaxHealth() / 5, getMaxHealth())
     useInventoryResource('bandage', 1)
     modifyHealth(newHealth)
     if ( !isLowHealth() ) decideLowHealth(removeClass)
@@ -65,7 +65,7 @@ export const heal = () => {
 
 export const useBandage = (bandage) => {
     if ( getHealth() === getMaxHealth() ) return
-    let newHealth = Math.min(getHealth() + 20, getMaxHealth())
+    let newHealth = Math.min(getHealth() + getMaxHealth() / 5, getMaxHealth())
     bandage.amount -= 1
     modifyHealth(newHealth)
     if ( !isLowHealth() ) decideLowHealth(removeClass)
@@ -95,6 +95,7 @@ export const damagePlayer = (damage) => {
     if ( getNoOffenseCounter() !== 0 ) return
     addClass(getMapEl(), 'camera-shake')
     setTimeout(() => removeClass(getMapEl(), 'camera-shake'), 300)
+    if ( getInventory().flat().find(item => item && item.name === 'armor') ) damage /= 2
     let newHealth = getHealth() - damage
     newHealth = newHealth < 0 ? 0 : newHealth
     modifyHealth(newHealth)
@@ -145,4 +146,6 @@ export const useHealthPotion = (item) => {
     modifyHealth(getMaxHealth())
     if ( !isLowHealth() ) decideLowHealth(removeClass)
     getInventory()[item.row][item.column] = null
+    console.log(getMaxHealth());
+    
 }

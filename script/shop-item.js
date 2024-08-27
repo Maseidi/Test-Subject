@@ -2,6 +2,7 @@ import { getWeaponDetails } from './weapon-details.js'
 import { 
     AdrenalineDrop,
     Bandage,
+    BodyArmor,
     Drop,
     EnergyDrinkDrop,
     Flashbang,
@@ -126,6 +127,12 @@ class EnergyDrinkShopItem extends ShopItem {
     }
 }
 
+class ArmorShopItem extends ShopItem {
+    constructor(renderProgress) {
+        super(new BodyArmor(null, null, null, Progress.builder().setRenderProgress(renderProgress)), 1, 100)
+    }
+}
+
 let shopItems = [
     new BandageShopItem(),
     new HardDriveShopItem('1'),
@@ -140,6 +147,7 @@ let shopItems = [
     new GrenadeShopItem('10'),
     new FlashbangShopItem('11'),
     new EnergyDrinkShopItem('0'),
+    new ArmorShopItem('2')
 ]
 
 export const setShopItems = (val) => {

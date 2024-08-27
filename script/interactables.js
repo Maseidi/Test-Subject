@@ -209,6 +209,12 @@ export class EnergyDrinkDrop extends Drop {
     }
 }
 
+export class BodyArmor extends Drop {
+    constructor(left, top, progress) {
+        super(30, left, top, 'armor', 'body armor', 1, 1, 'Equipping this will reduce damage taken by 50%', 50, progress)
+    }
+}
+
 export const interactables = new Map([
     [1 ,
         [
@@ -274,7 +280,7 @@ export const interactables = new Map([
         new Lever(1000, 700, 
             Progress.builder().setRenderProgress('2'), '100', '200'
         ),
-        new Coin(200, 200, 10, Progress.builder().setRenderProgress('100'))
+        new Coin(200, 200, 10, Progress.builder().setRenderProgress('100')),
         ]
     ],[17, 
         []

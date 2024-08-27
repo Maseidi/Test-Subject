@@ -243,6 +243,7 @@ const manageBuy = (itemObj) => {
         useInventoryResource('coin', loss)
         let chosenItem = getShopItems()[itemObj.id]
         if ( isStatUpgrader(itemObj) ) chosenItem.price = 20
+        if ( itemObj.name === 'armor' ) chosenItem.price = 50
         
         let purchasedItem = new Drop(
             chosenItem.width, chosenItem.left, chosenItem.top, chosenItem.name, chosenItem.heading, chosenItem.amount, 

@@ -11,7 +11,7 @@ export class AbstractOffenceService {
         const arm = this.enemy.sprite.firstElementChild.firstElementChild.firstElementChild
         if ( getNoOffenseCounter() === 0 ) addClass(arm, 'attack')
         damagePlayer(this.enemy.damage)
-        setTimeout(() => removeClass(arm, 'attack'), 3000)
+        setTimeout(() => removeClass(arm, 'attack'), 2000)
     }
 
 }
