@@ -133,7 +133,11 @@ export const loaders = new Map([
         ]
     ],
     [16, [
-        new BottomLoader_FromLeft(9, 100, 100),
+        new BottomLoader_FromLeft(9, 100, 100, 
+            new Door('green', 'Test door 2', 'Door for testing', undefined, 
+                Progress.builder().setRemoveProgress('200')
+            )
+        ),
         new LeftLoader_FromTop(37, 100, 400, 
             new Door('red', 'Test door 1', 'Door for testing', undefined, 
                 Progress.builder().setRemoveProgress('100')

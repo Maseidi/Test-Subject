@@ -277,14 +277,17 @@ const openPause = (cause, func) => {
 }
 
 const toggleLever = () => {
-    const progress2Active = getIntObj().getAttribute('progress2Active')
-    const value = getProgress()[progress2Active]
+    const toggle1 = getIntObj().getAttribute('toggle1')
+    const toggle2 = getIntObj().getAttribute('toggle2')
+    const value = getProgress()[toggle1]
     if ( !value ) {
-        activateProgress(progress2Active)
+        activateProgress(toggle1)
+        deactiveProgress(toggle2)
         getIntObj().firstElementChild.style.transform = `scale(-1, 1)`
     }
     else {
-        deactiveProgress(progress2Active)
+        activateProgress(toggle2)
+        deactiveProgress(toggle1)
         getIntObj().firstElementChild.style.transform = `scale(1, 1)`
     }
 }

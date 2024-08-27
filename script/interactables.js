@@ -59,8 +59,10 @@ class Crate extends Interactable {
 }
 
 export class Lever extends Interactable {
-    constructor(left, top, progress) {
-        super(20, left, top, 'lever', 'lever', 'toggle', true, undefined, undefined, undefined, undefined, progress)
+    constructor(left, top, progress, toggle1, toggle2) {
+        super(30, left, top, 'lever', 'lever', 'Toggle', true, undefined, undefined, undefined, undefined, progress)
+        this.toggle1 = toggle1
+        this.toggle2 = toggle2
     }
 }
 
@@ -270,7 +272,7 @@ export const interactables = new Map([
         new Flashbang(600, 800, 5),
         new Flashbang(700, 800, 2),
         new Lever(1000, 700, 
-            Progress.builder().setRenderProgress('2').setProgress2Active('100')
+            Progress.builder().setRenderProgress('2'), '100', '200'
         ),
         new Coin(200, 200, 10, Progress.builder().setRenderProgress('100'))
         ]

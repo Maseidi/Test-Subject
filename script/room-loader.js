@@ -208,8 +208,8 @@ const renderImage = (int, interactable) => {
 
 const handleLever = (interactable, image) => {
     if ( interactable.name !== 'lever' ) return
-    const progress2Active = interactable.progress2Active
-    if ( findProgressByName(progress2Active) ) image.style.transform = `scale(-1, 1)` 
+    const toggle1 = interactable.toggle1
+    if ( findProgressByName(toggle1) ) image.style.transform = `scale(-1, 1)` 
 }
 
 const renderPopUp = (int, interactable) => {

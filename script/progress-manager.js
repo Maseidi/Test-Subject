@@ -9,6 +9,7 @@ let progress = {
     '0' : true,
     '1' : true,
     '2' : true,
+    '200': true
 }
 
 export const getProgress = () => progress
