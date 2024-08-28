@@ -1,7 +1,7 @@
 import { removeDrop } from './inventory.js'
-import { getCurrentRoom } from './elements.js'
-import { element2Object, nextId } from './util.js'
 import { renderInteractable } from './room-loader.js'
+import { addClass, element2Object, nextId } from './util.js'
+import { getCurrentRoom, getCurrentRoomSolid, setCurrentRoomSolid } from './elements.js'
 import { 
     getAdrenalinesDropped,
     getCurrentRoomId,
@@ -48,14 +48,15 @@ import {
     SHOTGUN_SHELLS_LOOT,
     SMG_AMMO_LOOT } from './loot.js'
 
-export const dropLoot = (rootElem) => {
+export const dropLoot = (rootElem, isEnemy) => {
     const root = element2Object(rootElem)
     const {left, top, loot: decision, 'loot-amount': amount, 'loot-progress': progress2Active } = root
     let loot
     if ( decision === RANDOM ) loot = dropRandomLoot(loot, left, top)
     else if ( !decision ) loot = undefined
     else loot = dropDeterminedLoot(decision, left, top, amount)
-    removeDrop(rootElem)
+    if ( !isEnemy ) removeDrop(rootElem)
+    else setCurrentRoomSolid(getCurrentRoomSolid().filter(solid => solid !== rootElem.firstElementChild))
     if ( !loot ) return
     let interactable = {...loot, left: left, top: top, id: nextId()}
     if ( progress2Active !== 'undefined' ) interactable = {...interactable, progress2Active}

@@ -547,3 +547,144 @@
   left: 0;
   top: 0;
 }
+
+.enemy-damage-container {
+  top: 0;
+  left: 50%;
+  color: black;
+  font-weight: bold;
+  position: absolute;
+  transform: translateX(-50%);
+  text-shadow: -1px 1px 0 #FFF, 1px 1px 0 #FFF, 1px -1px 0 #FFF, -1px -1px 0 #FFF;
+}
+
+.critical {
+  font-size: 28px;
+}
+
+.yellow {
+  text-shadow: -1px 1px 0 #000, 1px 1px 0 #000, 1px -1px 0 #000, -1px -1px 0 #000;
+}
+
+@keyframes container-1 {
+  20% {
+    transform: translateX(calc(-50% + 5px)) translateY(-10px);
+  }
+  40% {
+    transform: translateX(calc(-50% + 10px)) translateY(-20px);
+  }
+  50% {
+    transform: translateX(calc(-50% + 15px)) translateY(-25px);
+  }
+  60% {
+    transform: translateX(calc(-50% + 20px)) translateY(-25px);
+  }
+  80% {
+    transform: translateX(calc(-50% + 25px)) translateY(-20px);
+  }
+  100% {
+    transform: translateX(calc(-50% + 30px)) translateY(-10px);
+    opacity: 0;
+  }
+}
+
+@keyframes container-2 {
+  20% {
+    transform: translateX(calc(-50% + 2.5px)) translateY(-20px);
+  }
+  40% {
+    transform: translateX(calc(-50% + 5px)) translateY(-40px);
+  }
+  50% {
+    transform: translateX(calc(-50% + 7.5px)) translateY(-50px);
+  }
+  60% {
+    transform: translateX(calc(-50% + 10px)) translateY(-50px);
+  }
+  80% {
+    transform: translateX(calc(-50% + 12.5px)) translateY(-40px);
+  }
+  100% {
+    transform: translateX(calc(-50% + 15px)) translateY(-20px);
+    opacity: 0;
+  }
+}
+
+@keyframes container-3 {
+  20% {
+    transform: translateX(calc(-50% - 2.5px)) translateY(-20px);
+  }
+  40% {
+    transform: translateX(calc(-50% - 5px)) translateY(-40px);
+  }
+  50% {
+    transform: translateX(calc(-50% - 7.5px)) translateY(-50px);
+  }
+  60% {
+    transform: translateX(calc(-50% - 10px)) translateY(-50px);
+  }
+  80% {
+    transform: translateX(calc(-50% - 12.5px)) translateY(-40px);
+  }
+  100% {
+    transform: translateX(calc(-50% - 15px)) translateY(-20px);
+    opacity: 0;
+  }
+}
+
+@keyframes container-4 {
+  20% {
+    transform: translateX(calc(-50% - 5px)) translateY(-10px);
+  }
+  40% {
+    transform: translateX(calc(-50% - 10px)) translateY(-20px);
+  }
+  50% {
+    transform: translateX(calc(-50% - 15px)) translateY(-25px);
+  }
+  60% {
+    transform: translateX(calc(-50% - 20px)) translateY(-25px);
+  }
+  80% {
+    transform: translateX(calc(-50% - 25px)) translateY(-20px);
+  }
+  100% {
+    transform: translateX(calc(-50% - 30px)) translateY(-10px);
+    opacity: 0;
+  }
+}
+
+.enemy-damage-container-1,
+.enemy-damage-container-2, 
+.enemy-damage-container-3, 
+.enemy-damage-container-4 {
+  animation-duration: 1s;
+  animation-fill-mode: forwards;
+  animation-direction: alternate;
+}
+
+.enemy-damage-container-1 {
+  animation-name: container-1;
+}
+
+.enemy-damage-container-2 {
+  animation-name: container-2;
+}
+
+.enemy-damage-container-3 {
+  animation-name: container-3;
+}
+
+.enemy-damage-container-4 {
+  animation-name: container-4;
+}
+
+.dead {
+  z-index: 0;
+  opacity: 0.3;
+}
+
+.dead > div:nth-of-type(1) > div:nth-of-type(1), 
+.dead > div:nth-of-type(1) > div:nth-of-type(1) > div {
+  transition: 1s;
+}

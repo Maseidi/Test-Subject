@@ -270,7 +270,7 @@ export const interactables = new Map([
         []
     ],[16, 
         [
-        new WeaponDrop(500, 600, 'famas', 50, 5, 5, 5, 5, 5),
+        new WeaponDrop(500, 600, 'famas', 50, 1, 1, 1, 1, 1),
         new SmgAmmo(500, 700, 90),
         new Bandage(600, 700, 5),
         new Antidote(600, 600, 5),

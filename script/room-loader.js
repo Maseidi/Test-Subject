@@ -283,8 +283,8 @@ export const spawnEnemy = (elem, room2Render) => {
 
 const defineEnemy = (elem) => {
     const enemy = createAndAddClass('div', `${elem.type}`, 'enemy')
-    elem.angle = elem.state === GO_FOR_RANGED ? Math.ceil(Math.random() * 7) : elem.angle
-    elem.angleState = elem.state === GO_FOR_RANGED ? ANGLE_STATE_MAP.get(elem.angle) : elem.angleState
+    elem.angle = Math.ceil(Math.random() * 8) * 45 - 180
+    elem.angleState = ANGLE_STATE_MAP.get(elem.angle)
     elem.state = elem.type === TRACKER ? LOST : MOVE_TO_POSITION
     elem.investigationCounter = 0
     elem.path = `path-${elem.index}`
@@ -293,6 +293,7 @@ const defineEnemy = (elem) => {
     elem.pathFindingY = null
     elem.currentSpeed = elem.acceleration
     elem.accelerationCounter = 0
+    elem.counterLimit = Math.ceil(Math.random() * 5) * 60
     enemy.style.left = `${elem.x}px`
     enemy.style.top = `${elem.y}px`
     if ( !elem.loot ) return enemy
