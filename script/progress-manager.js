@@ -4,6 +4,7 @@ import { interactables } from './interactables.js'
 import { renderDoor, renderInteractable, spawnEnemy } from './room-loader.js'
 import { getCurrentRoom, getCurrentRoomDoors } from './elements.js'
 import { loaders } from './loaders.js'
+import { addClass, removeClass } from './util.js'
 
 let progress = {
     '0' : true,
@@ -41,18 +42,15 @@ const openDoors = (name) =>
         .forEach(door => openDoor(door))
 
 export const openDoor = (door) => {
-    door.remove()
+    addClass(door, 'open')
     const progress2Active = door.getAttribute('progress2Active')
     if ( progress2Active ) activateProgress(progress2Active)
 }
 
-const closeDoors = (name) => {
-    loaders.get(getCurrentRoomId())
-        .filter(loader => loader.door && loader.door.removeProgress === name)
-        .forEach(loader => closeDoor(loader))
-}
-
-const closeDoor = (loader) => renderDoor(loader, getCurrentRoom())
+const closeDoors = (name) => 
+    getCurrentRoomDoors()
+        .filter(door => door.getAttribute('removeProgress') === name)
+        .forEach(door => removeClass(door, 'open'))
 
 export const updateKillAllDoors = () => {
     const aliveEnemies = enemies.get(getCurrentRoomId()).filter(enemy => enemy.health !== 0)

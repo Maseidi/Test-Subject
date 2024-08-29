@@ -568,6 +568,28 @@
 
 @keyframes container-1 {
   20% {
+    transform: translateX(calc(-50% + 10px)) translateY(-5px);
+  }
+  40% {
+    transform: translateX(calc(-50% + 20px)) translateY(-10px);
+  }
+  50% {
+    transform: translateX(calc(-50% + 30px)) translateY(-12.5px);
+  }
+  60% {
+    transform: translateX(calc(-50% + 40px)) translateY(-12.5px);
+  }
+  80% {
+    transform: translateX(calc(-50% + 50px)) translateY(-10px);
+  }
+  100% {
+    transform: translateX(calc(-50% + 60px)) translateY(-5px);
+    opacity: 0;
+  }
+}
+
+@keyframes container-2 {
+  20% {
     transform: translateX(calc(-50% + 5px)) translateY(-10px);
   }
   40% {
@@ -588,7 +610,7 @@
   }
 }
 
-@keyframes container-2 {
+@keyframes container-3 {
   20% {
     transform: translateX(calc(-50% + 2.5px)) translateY(-20px);
   }
@@ -610,7 +632,7 @@
   }
 }
 
-@keyframes container-3 {
+@keyframes container-4 {
   20% {
     transform: translateX(calc(-50% - 2.5px)) translateY(-20px);
   }
@@ -632,7 +654,7 @@
   }
 }
 
-@keyframes container-4 {
+@keyframes container-5 {
   20% {
     transform: translateX(calc(-50% - 5px)) translateY(-10px);
   }
@@ -654,10 +676,34 @@
   }
 }
 
+@keyframes container-6 {
+  20% {
+    transform: translateX(calc(-50% - 10px)) translateY(-5px);
+  }
+  40% {
+    transform: translateX(calc(-50% - 20px)) translateY(-10px);
+  }
+  50% {
+    transform: translateX(calc(-50% - 30px)) translateY(-12.5px);
+  }
+  60% {
+    transform: translateX(calc(-50% - 40px)) translateY(-12.5px);
+  }
+  80% {
+    transform: translateX(calc(-50% - 50px)) translateY(-10px);
+  }
+  100% {
+    transform: translateX(calc(-50% - 60px)) translateY(-5px);
+    opacity: 0;
+  }
+}
+
 .enemy-damage-container-1,
 .enemy-damage-container-2, 
 .enemy-damage-container-3, 
-.enemy-damage-container-4 {
+.enemy-damage-container-4,
+.enemy-damage-container-5,
+.enemy-damage-container-6 {
   animation-duration: 1s;
   animation-fill-mode: forwards;
   animation-direction: alternate;
@@ -677,6 +723,14 @@
 
 .enemy-damage-container-4 {
   animation-name: container-4;
+}
+
+.enemy-damage-container-5 {
+  animation-name: container-5;
+}
+
+.enemy-damage-container-6 {
+  animation-name: container-6;
 }
 
 .dead {

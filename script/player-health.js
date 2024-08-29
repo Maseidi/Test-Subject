@@ -146,6 +146,4 @@ export const useHealthPotion = (item) => {
     modifyHealth(getMaxHealth())
     if ( !isLowHealth() ) decideLowHealth(removeClass)
     getInventory()[item.row][item.column] = null
-    console.log(getMaxHealth());
-    
 }

@@ -70,6 +70,7 @@ class Door {
         this.removeProgress = progress?.removeProgress ?? progress?.progress2Active
         this.progress2Active = progress?.progress2Active
         this.killAll = progress?.killAll
+        this.type = Math.random() < 0.5 ? 1 : 2
     }
 }
 

@@ -42,7 +42,7 @@ export class AbstractInjuryService {
         if ( virus ) damageEl.style.color = virus
         if ( virus === 'yellow' ) addClass(damageEl, 'yellow')
         damageEl.textContent = damage
-        addClass(damageEl, `enemy-damage-container-${Math.ceil(Math.random() * 4)}`)
+        addClass(damageEl, `enemy-damage-container-${Math.ceil(Math.random() * 6)}`)
         this.enemy.sprite.append(damageEl)
         setTimeout(() => damageEl.remove(), 1000)
     }
@@ -66,13 +66,14 @@ export class AbstractInjuryService {
         addClass(this.enemy.sprite, 'dead')
         const body = this.enemy.sprite.firstElementChild.firstElementChild
         removeClass(body, 'body-transition')
-        body.style.transform = `rotateZ(${(Math.random() * 5) - 10}deg)`
+        this.enemy.sprite.style.transform = `rotateZ(${(Math.random() * 5) - 15}deg)`
         Array.from(body.children).forEach(limb => {
-            if ( Math.random() < 0.5 || containsClass(limb, 'fire') ) limb.style.opacity = 0    
+            if ( containsClass(limb, 'fire') ) limb.style.opacity = 0
+            limb.style.transformOrigin = 'top'
             limb.style.transform = `
-                translateX(${(Math.random() * 5) - 10}px) 
-                translateY(${(Math.random() * 5) - 10}px) 
-                rotateZ(${(Math.random() * 5) - 10}deg)
+                translateX(${Math.floor(Math.random() * 5) - 15}px)
+                translateY(${Math.floor(Math.random() * 5) - 15}px)
+                rotateZ(${Math.floor(Math.random() * 90) - 270}deg)
                 `
         })
     }

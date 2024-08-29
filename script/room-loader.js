@@ -121,13 +121,16 @@ const renderLoaders = (room2Render) => {
         const loader = createAndAddClass('div', elem.className, 'loader')
         loader.style.width = `${elem.width}px`
         loader.style.height = `${elem.height}px`
-        loader.style.backgroundColor = `blue`
         if ( elem.left !== undefined ) loader.style.left = `${elem.left}px`
         else if ( elem.right !== undefined ) loader.style.right = `${elem.right}px`
         if ( elem.top !== undefined ) loader.style.top = `${elem.top}px`
         else if ( elem.bottom !== undefined ) loader.style.bottom = `${elem.bottom}px`  
         const door = elem.door
-        if ( door && (!findProgressByName(door.removeProgress) || enemiesLeft(door)) ) renderDoor(elem, room2Render)
+        if ( door ) {
+            if ( !findProgressByName(door.removeProgress) || enemiesLeft(door) ) var open = false
+            else var open = true
+            renderDoor(elem, room2Render, open)
+            }
         room2Render.append(loader)
         getCurrentRoomLoaders().push(loader)
     })
@@ -140,18 +143,19 @@ const enemiesLeft = (object) => {
         .find(enemy => enemy.health !== 0 && enemy.renderProgress <= killAll) ? true : false
 }
 
-export const renderDoor = (loader, room2Render) => {    
+export const renderDoor = (loader, room2Render, open) => {    
     const { door: doorObj, width, height, left, top, right, bottom } = loader
     const doorElem = object2Element(doorObj)
     addClass(doorElem, 'door')
     addClass(doorElem, 'interactable')
+    if ( open ) addClass(doorElem, 'open')
     doorElem.style.backgroundColor = doorObj.color
     doorElem.style.width = `${width}px`
     doorElem.style.height = `${height}px`
-    addPosition(doorElem, left, 'left')
-    addPosition(doorElem, right, 'right')
-    addPosition(doorElem, top, 'top')
-    addPosition(doorElem, bottom, 'bottom')
+    addPosition(doorElem, left, 'left', 'hor', doorObj.type)
+    addPosition(doorElem, right, 'right', 'hor', doorObj.type)
+    addPosition(doorElem, top, 'top', 'ver', doorObj.type)
+    addPosition(doorElem, bottom, 'bottom', 'ver', doorObj.type)
     doorObj.isDoor = true
     renderPopUp(doorElem, doorObj)
     getCurrentRoomSolid().push(doorElem)
@@ -160,11 +164,12 @@ export const renderDoor = (loader, room2Render) => {
     room2Render.append(doorElem)
 }
 
-const addPosition = (root, input, direction) => {
+const addPosition = (root, input, direction, className, type) => {
     const output = (() => {
         if ( input === 26 || input === -26 ) return 0
         else if ( input !== undefined ) return input
     })()
+    if ( output ) addClass(root, `${className}-${type}`)
     root.style[direction] = `${output}px`
 }
 

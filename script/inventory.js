@@ -1,4 +1,3 @@
-import { renderQuit } from './user-interface.js'
 import { renderStats } from './weapon-examine.js'
 import { renderWeapon } from './weapon-loader.js'
 import { interactables } from './interactables.js'
@@ -8,9 +7,10 @@ import { isThrowable } from './throwable-details.js'
 import { useAdrenaline } from './player-movement.js'
 import { renderInteractable } from './room-loader.js'
 import { renderThrowable } from './throwable-loader.js'
-import { useAntidote, useBandage, useHealthPotion } from './player-health.js'
+import { quitPage, renderQuit } from './user-interface.js'
 import { getWeaponDetails, isWeapon } from './weapon-details.js'
 import { activateProgress, openDoor } from './progress-manager.js'
+import { useAntidote, useBandage, useHealthPotion } from './player-health.js'
 import { getCurrentRoom, getCurrentRoomInteractables, getPauseContainer, getPlayer, getUiEl } from './elements.js'
 import { 
     addClass,
@@ -550,24 +550,24 @@ const REPLACE_STATES = new Map([
 ])
 
 const use = (item) => {
-    getPauseContainer().firstElementChild.remove()
     const itemObj = element2Object(item)
     let theItem = inventory[itemObj.row][itemObj.column]
+    if ( theItem.name.includes('key') )    useKey(theItem)
+    getPauseContainer().firstElementChild.remove()
     if ( theItem.name === 'bandage' )      useBandage(theItem)
     if ( theItem.name === 'antidote' )     useAntidote(theItem)
+    if ( theItem.name === 'luckpills' )    useLuckPills(theItem)
     if ( theItem.name === 'adrenaline' )   useAdrenaline(theItem)
     if ( theItem.name === 'energydrink' )  useEnergyDrink(theItem)
-    if ( theItem.name === 'luckpills' )    useLuckPills(theItem)
     if ( theItem.name === 'healthpotion' ) useHealthPotion(theItem)
-    if ( theItem.name.includes('key') )    useKey(theItem)
     if ( theItem.amount === 0 ) inventory[itemObj.row][itemObj.column] = null
     renderInventory()
 }
 
 const useKey = (itemObj) => {
     const neededKey = getIntObj()?.getAttribute('key')
-    if ( !neededKey ) return
-    if ( itemObj.unlocks !== neededKey ) return
+    if ( !neededKey || itemObj.unlocks !== neededKey ) return
+    quitPage()
     openDoor(getIntObj())
 }
 
