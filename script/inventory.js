@@ -552,23 +552,25 @@ const REPLACE_STATES = new Map([
 const use = (item) => {
     const itemObj = element2Object(item)
     let theItem = inventory[itemObj.row][itemObj.column]
-    if ( theItem.name.includes('key') )    useKey(theItem)
+    if ( useKey(theItem) ) return
     getPauseContainer().firstElementChild.remove()
-    if ( theItem.name === 'bandage' )      useBandage(theItem)
-    if ( theItem.name === 'antidote' )     useAntidote(theItem)
-    if ( theItem.name === 'luckpills' )    useLuckPills(theItem)
-    if ( theItem.name === 'adrenaline' )   useAdrenaline(theItem)
-    if ( theItem.name === 'energydrink' )  useEnergyDrink(theItem)
-    if ( theItem.name === 'healthpotion' ) useHealthPotion(theItem)
-    if ( theItem.amount === 0 ) inventory[itemObj.row][itemObj.column] = null
+    if ( theItem.name === 'bandage' )           useBandage(theItem)
+    else if ( theItem.name === 'antidote' )     useAntidote(theItem)
+    else if ( theItem.name === 'luckpills' )    useLuckPills(theItem)
+    else if ( theItem.name === 'adrenaline' )   useAdrenaline(theItem)
+    else if ( theItem.name === 'energydrink' )  useEnergyDrink(theItem)
+    else if ( theItem.name === 'healthpotion' ) useHealthPotion(theItem)
+    else if ( theItem.amount === 0 ) inventory[itemObj.row][itemObj.column] = null
     renderInventory()
 }
 
 const useKey = (itemObj) => {
+    if ( !itemObj.name.includes('key') ) return false
     const neededKey = getIntObj()?.getAttribute('key')
-    if ( !neededKey || itemObj.unlocks !== neededKey ) return
+    if ( !neededKey || itemObj.unlocks !== neededKey ) return false
     quitPage()
     openDoor(getIntObj())
+    return true
 }
 
 const equip = (item) => {

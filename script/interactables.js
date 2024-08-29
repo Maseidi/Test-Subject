@@ -68,7 +68,7 @@ export class Lever extends Interactable {
 
 export class Drop extends Interactable {
     constructor(width, left, top, name, heading, amount, space, description, price, progress) {
-        super(width, left, top, name, heading, 'Pick ip', false, amount, space, description, price, progress)
+        super(width, left, top, name, heading, 'Pick up', false, amount, space, description, price, progress)
     }
 }
 

@@ -80,10 +80,10 @@ export const useAntidote = (antidote) => {
 }
 
 const manageDizziness = () => {
-    if ( getLeftPressed() ) negateDirection(setRightPressed, setLeftPressed)
-    else if ( getRightPressed() ) negateDirection(setLeftPressed, setRightPressed)
-    if ( getDownPressed() ) negateDirection(setUpPressed, setDownPressed)
-    else if ( getUpPressed() ) negateDirection(setDownPressed, setUpPressed)
+    if ( getLeftPressed() )       negateDirection(setRightPressed, setLeftPressed)
+    else if ( getRightPressed() ) negateDirection(setLeftPressed,  setRightPressed)
+    if ( getDownPressed() )       negateDirection(setUpPressed,    setDownPressed)
+    else if ( getUpPressed() )    negateDirection(setDownPressed,  setUpPressed)
 }
 
 const negateDirection = (setOppositeDir, setDir) => {
