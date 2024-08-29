@@ -159,3 +159,57 @@
   border: 1px solid white;
   padding: 1px 5px 0 5px;
 }
+
+@keyframes popup-animation {
+  0% {
+    opacity: 0;
+    transform: translateX(-50%) translateY(50px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+.progress-popup {
+  left: 50%;
+  gap: 20px;
+  top: 170px;
+  padding: 20px;
+  display: flex;
+  max-width: 700px;
+  border-radius: 5px;
+  text-align: justify;
+  flex-direction: column;
+  text-justify: inter-word;
+  animation-duration: 300ms;
+  transform: translateX(-50%);
+  animation-direction: alternate;
+  animation-name: popup-animation;
+  box-shadow: 5px 5px 25px rgba(0, 0, 0, 0.9);
+}
+
+.progress-popup > p {
+  color: wheat;
+}
+
+.fade-out {
+  opacity: 0;
+  transition: 1s;
+}
+
+.progress-popup > span {
+  align-self: end;
+  text-transform: capitalize;
+  color: white;
+  border-bottom: 1px solid white;
+  width: max-content;
+  padding: 5px;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  transition: 300ms;
+}
+
+.progress-popup > span:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}

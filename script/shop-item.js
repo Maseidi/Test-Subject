@@ -1,9 +1,9 @@
+import { Progress } from './progress.js'
 import { getWeaponDetails } from './weapon-details.js'
 import { 
     AdrenalineDrop,
     Bandage,
     BodyArmor,
-    Drop,
     EnergyDrinkDrop,
     Flashbang,
     Grenade,
@@ -16,7 +16,6 @@ import {
     ShotgunShells,
     SmgAmmo,
     WeaponDrop } from './interactables.js'
-import { Progress } from './progress.js'
 
 class ShopItem {
     constructor(drop, amount, price) {

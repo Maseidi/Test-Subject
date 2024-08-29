@@ -1,12 +1,24 @@
+import { Progress } from './progress.js'
 import { Coin, Drop } from './interactables.js'
 import { renderQuit } from './user-interface.js'
 import { getPauseContainer } from './elements.js'
 import { renderStats } from './weapon-examine.js'
 import { isThrowable } from './throwable-details.js'
-import { getAdrenalinesDropped, getEnergyDrinksDropped, getHealthPotionsDropped, getIntObj, getLuckPillsDropped, setAdrenalinesDropped, setEnergyDrinksDropped, setHealthPotionsDropped, setIntObj, setLuckPillsDropped } from './variables.js'
 import { findProgressByName } from './progress-manager.js'
 import { getShopItems, getShopItemsWithId } from './shop-item.js'
+import { ADRENALINE, ENERGY_DRINK, HEALTH_POTION, LUCK_PILLS } from './loot.js'
 import { getWeaponUpgradableDetail, getWeaponDetails, isWeapon } from './weapon-details.js'
+import { 
+    getAdrenalinesDropped,
+    getEnergyDrinksDropped,
+    getHealthPotionsDropped,
+    getIntObj,
+    getLuckPillsDropped,
+    setAdrenalinesDropped,
+    setEnergyDrinksDropped,
+    setHealthPotionsDropped,
+    setIntObj,
+    setLuckPillsDropped } from './variables.js'
 import { 
     MAX_PACKSIZE,
     calculateTotalCoins,
@@ -24,8 +36,6 @@ import {
     isStatUpgrader,
     nextId,
     object2Element } from './util.js'
-import { Progress } from './progress.js'
-import { ADRENALINE, ENERGY_DRINK, HEALTH_POTION, LUCK_PILLS } from './loot.js'
 
 let page = 1
 export const renderStore = () => {
@@ -98,9 +108,7 @@ const renderBuy = () => {
 const renderBuyItems = () => {
     const statUpgraderLimitRunner = statUpgraderOffLimit()
     return getShopItemsWithId()
-        .filter(item => !item.sold)
-        .filter(item => findProgressByName(item.renderProgress))
-        .filter(item => statUpgraderLimitRunner(item))
+        .filter(item => !item.sold && findProgressByName(item.renderProgress) && statUpgraderLimitRunner(item))
         .map((item) => {
             const buyItem = object2Element(item)
             addClass(buyItem, 'buy-item')
@@ -242,12 +250,13 @@ const manageBuy = (itemObj) => {
     if ( freeSpace >= needSpace ) {
         useInventoryResource('coin', loss)
         let chosenItem = getShopItems()[itemObj.id]
-        if ( isStatUpgrader(itemObj) ) chosenItem.price = 20
+        if ( isStatUpgrader(itemObj) ) chosenItem.price = 30
         if ( itemObj.name === 'armor' ) chosenItem.price = 50
         
         let purchasedItem = new Drop(
             chosenItem.width, chosenItem.left, chosenItem.top, chosenItem.name, chosenItem.heading, chosenItem.amount, 
-            chosenItem.space, chosenItem.description, chosenItem.price, Progress.builder().setRenderProgress('0'))
+            chosenItem.space, chosenItem.description, chosenItem.price / chosenItem.amount, 
+            Progress.builder().setRenderProgress('0'))
         purchasedItem = handleNewWeapnPurchase(purchasedItem, itemObj.name)
         purchasedItem = handleNewThrowablePurchase(purchasedItem, itemObj.name)
         setIntObj(object2Element(purchasedItem))
@@ -457,8 +466,8 @@ const renderSell = () => {
     const sell = createAndAddClass('div', 'sell')
     getInventory()
         .flat()
-        .filter(item => item && item.name !== 'coin' && !item.name?.includes('key')
-        && item.amount === (MAX_PACKSIZE[item.name] ? MAX_PACKSIZE[item.name] : 1) )
+        .filter(item => item && item.name !== 'coin' && !item.name?.includes('key') && 
+                        item.amount === (MAX_PACKSIZE[item.name] ?? 1) )
         .forEach(item => {
             const sellItem = object2Element(item)
             addClass(sellItem, 'sell-item')

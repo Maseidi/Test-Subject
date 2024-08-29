@@ -1,10 +1,10 @@
+import { renderPopup } from './popup-manager.js'
 import { getCurrentRoomId } from './variables.js'
 import { enemies } from './enemy/util/enemies.js'
-import { interactables } from './interactables.js'
-import { renderDoor, renderInteractable, spawnEnemy } from './room-loader.js'
-import { getCurrentRoom, getCurrentRoomDoors } from './elements.js'
-import { loaders } from './loaders.js'
 import { addClass, removeClass } from './util.js'
+import { interactables } from './interactables.js'
+import { renderInteractable, spawnEnemy } from './room-loader.js'
+import { getCurrentRoom, getCurrentRoomDoors } from './elements.js'
 
 let progress = {
     '0' : true,
@@ -23,6 +23,7 @@ export const activateProgress = (name) => {
         ...progress,
         [name]: true
     }
+    renderPopup(name)
     openDoors(name)
     updateEnemies(name)
     updateInteractables(name)
