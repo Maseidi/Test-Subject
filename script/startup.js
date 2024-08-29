@@ -2,10 +2,11 @@ import { renderUi } from './user-interface.js'
 import { loadCurrentRoom } from './room-loader.js'
 import { appendAll, createAndAddClass } from './util.js'
 import { getMapX, getMapY, getPlayerX, getPlayerY } from './variables.js'
-import { getMapEl, setMapEl, setPauseContainer, setPlayer, setRoomContainer } from './elements.js'
+import { getMapEl, setMapEl, setPauseContainer, setPlayer, setPopupContainer, setRoomContainer } from './elements.js'
 
 export const startUp = () => {
     renderPauseContainer()
+    renderPopupContainer()
     renderUi()
     renderMap()
     renderRoomContainer()
@@ -19,6 +20,13 @@ const renderPauseContainer = () => {
     const pauseContainer = createAndAddClass('div', 'pause-container')
     setPauseContainer(pauseContainer)
     root.append(pauseContainer)
+}
+
+const renderPopupContainer = () => {
+    const root = document.getElementById('root')
+    const popupContainer = createAndAddClass('div', 'popup-container')
+    setPopupContainer(popupContainer)
+    root.append(popupContainer)
 }
 
 const renderMap = () => {

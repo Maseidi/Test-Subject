@@ -10,7 +10,7 @@ import { heal, damagePlayer } from './player-health.js'
 import { renderThrowable } from './throwable-loader.js'
 import { renderUi, renderWeaponUi, quitPage } from './user-interface.js'
 import { getGrabBar, getPauseContainer, getPlayer, getUiEl } from './elements.js'
-import { equippedWeaponObj, pickupDrop, removeInventory, renderInventory } from './inventory.js'
+import { findEquippedWeaponById, pickupDrop, removeInventory, renderInventory } from './inventory.js'
 import { 
     addClass,
     angleOf2Points,
@@ -26,6 +26,7 @@ import {
     getDownPressed,
     getDraggedItem,
     getEquippedWeaponId,
+    getEquippedWeaponObject,
     getGrabbed,
     getIntObj,
     getLeftPressed,
@@ -43,6 +44,7 @@ import {
     setAimMode,
     setDownPressed,
     setEquippedWeaponId,
+    setEquippedWeaponObject,
     setLeftPressed,
     setMouseX,
     setMouseY,
@@ -54,6 +56,7 @@ import {
     setShootPressed,
     setSprintPressed,
     setUpPressed } from './variables.js'
+import { activateProgress, deactiveProgress, getProgress } from './progress-manager.js'
 
 export const control = () => {
     onkeydown = (e) => {
@@ -165,7 +168,7 @@ const eDown = () => {
         if ( getAimMode() ) {
             removeClass(getPlayer(), 'walk')
             removeClass(getPlayer(), 'run')
-            const equipped = equippedWeaponObj()
+            const equipped = findEquippedWeaponById()
             if ( isWeapon(equipped.name) ) {
                 addClass(getPlayer(), 'aim')
                 renderWeapon()
@@ -187,6 +190,7 @@ const weaponSlotDown = (key) => {
     removeEquipped()
     if ( getWeaponWheel()[Number(key) - 1] === getEquippedWeaponId() ) {
         setEquippedWeaponId(null)
+        setEquippedWeaponObject(null)
         setAimMode(false)
         exitAimModeAnimation()
         renderWeaponUi()
@@ -194,10 +198,11 @@ const weaponSlotDown = (key) => {
         return
     }
     setEquippedWeaponId(getWeaponWheel()[Number(key) - 1])
+    setEquippedWeaponObject(findEquippedWeaponById())
     renderWeaponUi()
-    if ( getEquippedWeaponId() ) setShootCounter(getEquippedItemDetail(equippedWeaponObj(), 'firerate') * 60)
+    if ( getEquippedWeaponId() ) setShootCounter(getEquippedItemDetail(getEquippedWeaponObject(), 'firerate') * 60)
     if ( getEquippedWeaponId() && getAimMode() ) {
-        const equipped = equippedWeaponObj()
+        const equipped = getEquippedWeaponObject()
         if ( isWeapon(equipped.name) ) {
             removeClass(getPlayer(), 'throwable-aim')
             addClass(getPlayer(), 'aim')
@@ -237,7 +242,8 @@ const fDown = () => {
     if ( getShooting() || getReloading() ) return    
     if ( getIntObj().getAttribute('name') === 'stash' ) openStash()    
     if ( getIntObj().getAttribute('name') === 'vendingMachine' ) openVendingMachine()    
-    if ( getIntObj().getAttribute('name') === 'crate' ) breakCrate()    
+    if ( getIntObj().getAttribute('name') === 'crate' ) breakCrate()
+    if ( getIntObj().getAttribute('name') === 'lever' ) toggleLever()      
 }
 
 const breakFree = () => {
@@ -268,6 +274,22 @@ const openPause = (cause, func) => {
     setPauseCause(cause)
     managePause()
     func()
+}
+
+const toggleLever = () => {
+    const toggle1 = getIntObj().getAttribute('toggle1')
+    const toggle2 = getIntObj().getAttribute('toggle2')
+    const value = getProgress()[toggle1]
+    if ( !value ) {
+        activateProgress(toggle1)
+        deactiveProgress(toggle2)
+        getIntObj().firstElementChild.style.transform = `scale(-1, 1)`
+    }
+    else {
+        activateProgress(toggle2)
+        deactiveProgress(toggle1)
+        getIntObj().firstElementChild.style.transform = `scale(1, 1)`
+    }
 }
 
 const tabDown = () => {

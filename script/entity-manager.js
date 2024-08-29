@@ -13,8 +13,7 @@ import {
     containsClass,
     createAndAddClass,
     element2Object,
-    getProperty,
-    removeClass } from './util.js'
+    getProperty } from './util.js'
 import { 
     getCurrentRoom,
     getCurrentRoomEnemies,
@@ -101,7 +100,7 @@ const calculateNewRoomLeftAndTop = (prevLoader) => {
 
 const manageInteractables = () => {
     setIntObj(undefined)
-    Array.from(getCurrentRoomInteractables()).forEach((int) => {
+    getCurrentRoomInteractables().forEach((int) => {
         const popup = int.children[1] ?? int.children[0]
         if ( collide(getPlayer().firstElementChild, int, 20) && !getIntObj() ) {
             popup.style.bottom = `calc(100% + 20px)`
@@ -123,19 +122,16 @@ const manageEnemies = () => {
 const handleNoOffenceMode = () => {
     if ( getNoOffenseCounter() > 0 ) setNoOffenseCounter(getNoOffenseCounter() + 1)
     if ( getNoOffenseCounter() < 180 ) return
-    Array.from(getCurrentRoomEnemies())
+    getCurrentRoomEnemies()
         .filter(elem => elem.state === NO_OFFENCE)
-        .forEach(elem => {
-            elem.state = CHASE
-            removeClass(elem.sprite.firstElementChild.firstElementChild.firstElementChild, 'attack')
-        })
+        .forEach(elem => elem.state = CHASE)
     setNoOffenseCounter(0)
 }
 
 const handleStunnedMode = () => {
     if ( getStunnedCounter() > 0 ) setStunnedCounter(getStunnedCounter() + 1)
     if ( getStunnedCounter() < 600 ) return
-    Array.from(getCurrentRoomEnemies())
+    getCurrentRoomEnemies()
         .forEach(elem => {
             elem.state = LOST
             elem.lostCounter = 1
@@ -144,7 +140,7 @@ const handleStunnedMode = () => {
 }
 
 const handleEnemies = () => 
-    Array.from(getCurrentRoomEnemies()).sort(() => Math.random() - 0.5).forEach(elem => elem.behave())
+    getCurrentRoomEnemies().sort(() => Math.random() - 0.5).forEach(elem => elem.behave())
 
 const manageBullets = () => {
     const bullets2Remove = new Map([])
@@ -167,7 +163,6 @@ const manageBullets = () => {
         }
         for ( const solid of getCurrentRoomSolid() )
             if ((!containsClass(solid, 'enemy-collider') && 
-                 !containsClass(solid, 'tracker-component') && 
                  collide(bullet, solid, 0)) || 
                  !collide(bullet, getCurrentRoom(), 0) ) {
                 bullet.remove()
@@ -274,29 +269,29 @@ const handleInteractability = (throwable, time, name, throwables2Remove) => {
 }
 
 const wallIntersection = (throwable, speedX, speedY) => {
-    const walls = Array.from(getCurrentRoomSolid())
-        .filter(solid => !containsClass(solid, 'enemy-collider') && !containsClass(solid, 'tracker-component'))
+    const walls = getCurrentRoomSolid()
+        .filter(solid => !containsClass(solid, 'enemy-collider') )
     for ( const wall of walls ) {
         const stateX = speedX < 0 ? 10 : 20
         const stateY = speedY < 0 ? 1 : 2  
         switch( stateX + stateY ) {
             case 11: 
-                updateSpeed(throwable, wall, throwable.children[2], throwable.children[1], speedX, speedY)
+                updateThrowableSpeed(throwable, wall, throwable.children[2], throwable.children[1], speedX, speedY)
                 break
             case 12:
-                updateSpeed(throwable, wall, throwable.children[2], throwable.children[4], speedX, speedY)
+                updateThrowableSpeed(throwable, wall, throwable.children[2], throwable.children[4], speedX, speedY)
                 break
             case 21:
-                updateSpeed(throwable, wall, throwable.children[3], throwable.children[1], speedX, speedY)
+                updateThrowableSpeed(throwable, wall, throwable.children[3], throwable.children[1], speedX, speedY)
                 break
             case 22:
-                updateSpeed(throwable, wall, throwable.children[3], throwable.children[4], speedX, speedY)
+                updateThrowableSpeed(throwable, wall, throwable.children[3], throwable.children[4], speedX, speedY)
                 break
         }
     }    
 }
 
-const updateSpeed = (throwable, wall, colliderX, colliderY, speedX, speedY) => {
+const updateThrowableSpeed = (throwable, wall, colliderX, colliderY, speedX, speedY) => {
     if ( collide(colliderX, wall, 0) ) {
         throwable.setAttribute('speed-x', -speedX)
         throwable.firstElementChild.style.transform = `scale(-1, 1)`

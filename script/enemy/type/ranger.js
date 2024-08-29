@@ -17,12 +17,12 @@ import {
     RANGER } from '../util/enemy-constants.js'
 
 export class Ranger extends AbstractEnemy {
-    constructor(level, waypoint, progress, loot, progress2Active) {
+    constructor(level, waypoint, loot, progress, virus) {
         const health = Math.floor(level * 112 + Math.random() * 17)
         const damage = Math.floor(level * 25 + Math.random() * 5)
         const maxSpeed = 4 + Math.random()
         const vision = Math.floor(500 + Math.random() * 300)
-        super(RANGER, 6, waypoint, health, damage, 75, maxSpeed, progress, vision, 2, loot, progress2Active)
+        super(RANGER, 6, waypoint, health, damage, maxSpeed, vision, 2, loot, progress, virus)
         this.collisionService = new RangerCollisionService(this)
         this.investigationService = new NormalInvestigationService(this)
         this.chaseService = new NormalChaseService(this)

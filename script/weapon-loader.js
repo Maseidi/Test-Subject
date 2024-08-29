@@ -1,10 +1,10 @@
 import { getPlayer } from './elements.js'
-import { equippedWeaponObj } from './inventory.js'
+import { getEquippedWeaponObject } from './variables.js'
 import { getWeaponUpgradableDetail, getWeaponDetails } from './weapon-details.js'
 import { createAndAddClass, findAttachmentsOnPlayer } from './util.js'
 
 export const renderWeapon = () => {
-    const equippedWeapon = equippedWeaponObj()
+    const equippedWeapon = getEquippedWeaponObject()
     const weapon = createAndAddClass('div', 'weapon')
     const details = getWeaponDetails().get(equippedWeapon.name)
     weapon.style.height = `${details.height}px`

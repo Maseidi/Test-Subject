@@ -1,5 +1,5 @@
 import { damagePlayer } from '../../../player-health.js'
-import { manageAimModeAngle } from '../../../player-angle.js'
+import { manageAimModeAngle } from '../../../angle-manager.js'
 import { getCurrentRoomEnemies, getGrabBar, getPauseContainer, getPlayer, setGrabBar } from '../../../elements.js'
 import { 
     GO_FOR_RANGED,

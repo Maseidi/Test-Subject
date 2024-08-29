@@ -11,7 +11,8 @@ export class NormalLostService {
             this.enemy.state = MOVE_TO_POSITION
             return
         }
-        if ( this.enemy.lostCounter % 120 === 0 ) this.enemy.angleService.checkSurroundings()
+        if ( this.enemy.lostCounter % 120 === 0 && this.enemy.lostCounter !== 0 ) 
+            this.enemy.angleService.checkSurroundings()
         this.enemy.lostCounter += 1
     }
 

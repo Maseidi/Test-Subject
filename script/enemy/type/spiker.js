@@ -18,11 +18,11 @@ import {
     SPIKER } from '../util/enemy-constants.js'
 
 export class Spiker extends AbstractEnemy {
-    constructor(level, waypoint, progress, loot, progress2Active) {
+    constructor(level, waypoint, loot, progress, virus) {
         const health = Math.floor(level * 25 + Math.random() * 5)
         const damage = Math.floor(level * 15 + Math.random() * 5)
         const maxSpeed = 6 + Math.random()
-        super(SPIKER, 6, waypoint, health, damage, 75, maxSpeed, progress, 400, maxSpeed, loot, progress2Active)
+        super(SPIKER, 6, waypoint, health, damage, maxSpeed, 400, maxSpeed, loot, progress, virus)
         this.axis = Math.random() < 0.5 ? 1 : 2
         this.visionService = new SpikerVisionService(this)
         this.movementService = new SpikerMovementService(this)

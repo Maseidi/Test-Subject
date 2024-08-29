@@ -4,7 +4,7 @@ import { loaders } from './loaders.js'
 import { isWeapon } from './weapon-details.js'
 import { enemies } from './enemy/util/enemies.js'
 import { interactables } from './interactables.js'
-import { findProgressByName } from './progress.js'
+import { findProgressByName } from './progress-manager.js'
 import { getCurrentRoomId, getRoomLeft, getRoomTop, setStunnedCounter } from './variables.js'
 import { 
     GO_FOR_RANGED,
@@ -39,8 +39,7 @@ import {
     setCurrentRoomThrowables,
     setCurrentRoomExplosions,
     setCurrentRoomDoors,
-    getCurrentRoomDoors,
-    } from './elements.js'
+    getCurrentRoomDoors } from './elements.js'
 
 export const loadCurrentRoom = () => {
     setStunnedCounter(0)
@@ -122,30 +121,41 @@ const renderLoaders = (room2Render) => {
         const loader = createAndAddClass('div', elem.className, 'loader')
         loader.style.width = `${elem.width}px`
         loader.style.height = `${elem.height}px`
-        loader.style.backgroundColor = `blue`
         if ( elem.left !== undefined ) loader.style.left = `${elem.left}px`
         else if ( elem.right !== undefined ) loader.style.right = `${elem.right}px`
         if ( elem.top !== undefined ) loader.style.top = `${elem.top}px`
         else if ( elem.bottom !== undefined ) loader.style.bottom = `${elem.bottom}px`  
         const door = elem.door
-        if ( door && (!findProgressByName(door.progress) && !enemiesLeft4Door2Open(door)) ) renderDoor(elem, room2Render)
+        if ( door ) {
+            if ( !findProgressByName(door.removeProgress) || enemiesLeft(door) ) var open = false
+            else var open = true
+            renderDoor(elem, room2Render, open)
+            }
         room2Render.append(loader)
         getCurrentRoomLoaders().push(loader)
     })
 }
 
-const renderDoor = (loader, room2Render) => {    
+const enemiesLeft = (object) => {
+    const killAll = object.killAll
+    if ( !killAll ) return false
+    return enemies.get(getCurrentRoomId())
+        .find(enemy => enemy.health !== 0 && enemy.renderProgress <= killAll) ? true : false
+}
+
+export const renderDoor = (loader, room2Render, open) => {    
     const { door: doorObj, width, height, left, top, right, bottom } = loader
     const doorElem = object2Element(doorObj)
     addClass(doorElem, 'door')
     addClass(doorElem, 'interactable')
+    if ( open ) addClass(doorElem, 'open')
     doorElem.style.backgroundColor = doorObj.color
     doorElem.style.width = `${width}px`
     doorElem.style.height = `${height}px`
-    addPosition(doorElem, left, 'left')
-    addPosition(doorElem, right, 'right')
-    addPosition(doorElem, top, 'top')
-    addPosition(doorElem, bottom, 'bottom')
+    addPosition(doorElem, left, 'left', 'hor', doorObj.type)
+    addPosition(doorElem, right, 'right', 'hor', doorObj.type)
+    addPosition(doorElem, top, 'top', 'ver', doorObj.type)
+    addPosition(doorElem, bottom, 'bottom', 'ver', doorObj.type)
     doorObj.isDoor = true
     renderPopUp(doorElem, doorObj)
     getCurrentRoomSolid().push(doorElem)
@@ -154,17 +164,12 @@ const renderDoor = (loader, room2Render) => {
     room2Render.append(doorElem)
 }
 
-const enemiesLeft4Door2Open = (door) => {
-    const killAll = door.killAll
-    if ( !killAll ) return false
-    return enemies.get(getCurrentRoomId()).find(enemy => enemy.health !== 0 && enemy.progress <= killAll) ? false : true
-}
-
-const addPosition = (root, input, direction) => {
+const addPosition = (root, input, direction, className, type) => {
     const output = (() => {
         if ( input === 26 || input === -26 ) return 0
         else if ( input !== undefined ) return input
     })()
+    if ( output ) addClass(root, `${className}-${type}`)
     root.style[direction] = `${output}px`
 }
 
@@ -173,7 +178,8 @@ const renderInteractables = (room2Render) =>
         .forEach((interactable, index) => renderInteractable(room2Render, interactable, index))
 
 export const renderInteractable = (root, interactable, index) => {
-    if ( !findProgressByName(interactable.progress) ) return
+    if ( !findProgressByName(interactable.renderProgress) ) return
+    if ( enemiesLeft(interactable) ) return
     const int = object2Element(interactable)
     addClass(int, 'interactable')
     setInteractableId(interactable, int, index)
@@ -201,7 +207,14 @@ const setInteractableId = (interactable, int, index) => {
 const renderImage = (int, interactable) => {
     const image = document.createElement('img')
     image.src = `../assets/images/${interactable.name}.png`
+    handleLever(interactable, image)
     int.append(image)
+}
+
+const handleLever = (interactable, image) => {
+    if ( interactable.name !== 'lever' ) return
+    const toggle1 = interactable.toggle1
+    if ( findProgressByName(toggle1) ) image.style.transform = `scale(-1, 1)` 
 }
 
 const renderPopUp = (int, interactable) => {
@@ -216,7 +229,7 @@ const renderPopUp = (int, interactable) => {
 
 const renderHeading = (popup, interactable) => {
     const heading = document.createElement('p')
-    let content = interactable.amount && !isWeapon(interactable.name) ? 
+    let content = interactable.amount && !isWeapon(interactable.name) && !interactable.name.includes('key') ? 
     `${interactable.amount} ${interactable.heading}` : `${interactable.heading}`
     heading.textContent = content
     popup.append(heading)
@@ -250,7 +263,7 @@ const renderEnemies = (room2Render) => {
 
 const indexEnemies = (enemies) => enemies.forEach((enemy, index) => enemy.index = index)
 
-const filterEnemies = (enemies) => enemies.filter(enemy => enemy.health !== 0 && findProgressByName(enemy.progress))
+const filterEnemies = (enemies) => enemies.filter(enemy => enemy.health !== 0 && findProgressByName(enemy?.renderProgress))
 
 const spawnEnemies = (enemies, room2Render) => enemies.forEach(elem => spawnEnemy(elem, room2Render))
 
@@ -275,8 +288,8 @@ export const spawnEnemy = (elem, room2Render) => {
 
 const defineEnemy = (elem) => {
     const enemy = createAndAddClass('div', `${elem.type}`, 'enemy')
-    elem.angle = elem.state === GO_FOR_RANGED ? Math.ceil(Math.random() * 7) : elem.angle
-    elem.angleState = elem.state === GO_FOR_RANGED ? ANGLE_STATE_MAP.get(elem.angle) : elem.angleState
+    elem.angle = Math.ceil(Math.random() * 8) * 45 - 180
+    elem.angleState = ANGLE_STATE_MAP.get(elem.angle)
     elem.state = elem.type === TRACKER ? LOST : MOVE_TO_POSITION
     elem.investigationCounter = 0
     elem.path = `path-${elem.index}`
@@ -285,11 +298,13 @@ const defineEnemy = (elem) => {
     elem.pathFindingY = null
     elem.currentSpeed = elem.acceleration
     elem.accelerationCounter = 0
+    elem.counterLimit = Math.ceil(Math.random() * 5) * 60
     enemy.style.left = `${elem.x}px`
     enemy.style.top = `${elem.y}px`
     if ( !elem.loot ) return enemy
     enemy.setAttribute('loot', elem.loot.name)
     enemy.setAttribute('loot-amount', elem.loot.amount)
+    enemy.setAttribute('loot-progress', elem.loot.progress2Active)
     return enemy
 }
 
@@ -311,19 +326,7 @@ const defineComponents = (element, enemyBody) => {
         const component = predicate ? addFireEffect() : document.createElement('div')
         if (!predicate) component.style.backgroundColor = `${element.virus}`
         addClass(component, `${element.type}-component`)
-        manageEnemyCriticalPoints(element, component, componentNum)
         enemyBody.append(component)
-    }
-}
-
-const manageEnemyCriticalPoints = (element, component, componentNum) => {
-    if ( element.type === TRACKER ) addEnemyCriticalPoints(component, componentNum, 4, [7])
-}
-
-const addEnemyCriticalPoints = (component, componentNum, offset, weakpoints) => {
-    if ( componentNum >= offset ) {
-        getCurrentRoomSolid().push(component)
-        if ( weakpoints.includes(componentNum) ) addClass(component, 'weak-point')
     }
 }
 

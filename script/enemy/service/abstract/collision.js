@@ -23,8 +23,10 @@ export class AbstractCollisionService {
     }
 
     findCollidingEnemy() {
-        const collidingEnemy = Array.from(getCurrentRoomEnemies())
-            .find(e => e.sprite !== this.enemy.sprite 
+        const collidingEnemy = getCurrentRoomEnemies()
+            .find(e =>
+                  e.health !== 0 && 
+                  e.sprite !== this.enemy.sprite 
                   && collide(this.enemy.sprite.firstElementChild.children[2], e.sprite.firstElementChild, 0) 
                   && e.type !== TRACKER && e.type !== SPIKER
                   && e.state !== INVESTIGATE && e.state !== GO_FOR_RANGED)

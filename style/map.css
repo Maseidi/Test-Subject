@@ -4,17 +4,16 @@
   background-color: #2b2b2b;
 }
 
+.solid {
+  z-index: 5;
+}
+
 .loader,
 .solid,
 .map,
 .room-container > div {
   position: absolute;
 }
-
-/* TODO: uncomment later */
-/* .room-container > div {
-  overflow: hidden;
-} */
 
 .tl,
 .bl,
@@ -45,7 +44,7 @@
   right: -50px;
 }
 
-@keyframes camera {
+@keyframes camshake {
   33% {
     transform: translateX(40px);
   }
@@ -58,7 +57,7 @@
 }
 
 .camera-shake {
-  animation-name: camera;
+  animation-name: camshake;
   animation-duration: 200ms;
   animation-timing-function: linear;
   animation-iteration-count: 1;
@@ -179,4 +178,28 @@
 .door {
   position: absolute;
   border: 1px solid black;
+  transition: 600ms;
+}
+
+.ver-1.open {
+  transform: translateY(-100%);
+}
+
+.ver-2.open {
+  transform: translateY(100%);
+}
+
+.hor-1.open {
+  transform: translateX(-100%);
+}
+
+.hor-2.open {
+  transform: translateX(100%);
+}
+
+.ver-1.open > div, .ver-2.open > div, 
+.ver-3.open > div, .ver-4.open > div, 
+.hor-1.open > div, .hor-2.open > div, 
+.hor-3.open > div, .hor-4.open > div {
+  display: none;
 }

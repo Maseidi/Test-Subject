@@ -2,11 +2,15 @@ export const RANDOM = 'random'
 export const COIN_LOOT = 'coin'
 export const GRENADE_LOOT = 'grenade'
 export const BANDAGE_LOOT = 'bandage'    
+export const LUCK_PILLS = 'luckpills'
 export const SMG_AMMO_LOOT = 'smgammo'    
+export const ADRENALINE = 'adrenaline'
 export const ANTIDOTE_LOOT = 'antidote'    
 export const HARDDRIVE_LOOT = 'harddrive'    
 export const FLASHBANG_LOOT = 'flashbang'  
+export const ENERGY_DRINK = 'energydrink'
 export const RIFLE_AMMO_LOOT = 'rifleammo'    
+export const HEALTH_POTION = 'healthpotion'
 export const PISTOL_AMMO_LOOT = 'pistolammo'    
 export const MAGNUM_AMMO_LOOT = 'magnumammo'
 export const SHOTGUN_SHELLS_LOOT = 'shotgunshells'
@@ -33,14 +37,15 @@ export const REVOLVER = 'revolver'
 export const REMINGTON_1858 = 'remington1858'
 
 export class Loot {
-    constructor(name, amount) {
+    constructor(name, amount, progress2Active) {
         this.name = name
         this.amount = amount
+        this.progress2Active = progress2Active
     }
 }
 
 export class SingleLoot extends Loot {
-    constructor(name) {
-        super(name, 1)
+    constructor(name, progress2Active) {
+        super(name, 1, progress2Active)
     }
 }

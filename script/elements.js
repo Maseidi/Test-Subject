@@ -105,3 +105,10 @@ export const setBuffer = (val) => {
     buffer = val
 }
 export const getBuffer = () => buffer
+
+let popupContainer
+export const setPopupContainer = (val) => {
+    popupContainer = val
+}
+
+export const getPopupContainer = () => popupContainer

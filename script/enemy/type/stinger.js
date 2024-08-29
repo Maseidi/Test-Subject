@@ -20,11 +20,11 @@ import {
     STINGER } from '../util/enemy-constants.js'
 
 export class Stinger extends AbstractEnemy {
-    constructor(level, waypoint, progress, loot, progress2Active) {
+    constructor(level, waypoint, loot, progress, virus) {
         const health = Math.floor(level * 85 + Math.random() * 5)
         const damage = Math.floor(level * 25 + Math.random() * 15)
         const maxSpeed = 2.75 + Math.random()
-        super(STINGER, 5, waypoint, health, damage, 60, maxSpeed, progress, 700, 1.3, loot, progress2Active)
+        super(STINGER, 5, waypoint, health, damage, maxSpeed, 700, 1.3, loot, progress, virus)
         this.injuryService = new GrabberInjuryService(this)
         this.movementService = new StingerMovementService(this)
         this.investigationService = new NormalInvestigationService(this)

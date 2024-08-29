@@ -3,8 +3,8 @@ import { dropLoot } from '../../../loot-manager.js'
 import { CHASE, STUNNED } from '../../util/enemy-constants.js'
 import { getWeaponDetail, isWeapon } from '../../../weapon-details.js'
 import { getCriticalChance, getCurrentRoomId } from '../../../variables.js'
-import { activateProgress, updateKillAllDoors } from '../../../progress.js'
-import { addAllAttributes, addClass, getEquippedItemDetail, removeClass } from '../../../util.js'
+import { addAllAttributes, addClass, containsClass, createAndAddClass, getEquippedItemDetail, removeClass } from '../../../util.js'
+import { activateProgress, updateKillAllDoors, updateKillAllEnemies, updateKillAllInteractables } from '../../../progress-manager.js'
 
 export class AbstractInjuryService {
     constructor(enemy) {
@@ -13,11 +13,18 @@ export class AbstractInjuryService {
         this.enemy.damagedCounter = 0
     }
 
-    damageEnemy(equipped) {        
+    damageEnemy(equipped) {
         const name = equipped.name
         let damage = getEquippedItemDetail(equipped, 'damage')
-        if ( isWeapon(name) && this.enemy.virus === getWeaponDetail(name, 'antivirus') ) damage *= 1.2
-        if ( Math.random() <= getCriticalChance() ) damage *= 2
+        if ( isWeapon(name) && this.enemy.virus === getWeaponDetail(name, 'antivirus') ) {
+            damage *= 1.2
+            var sameVirus = this.enemy.virus
+        }
+        if ( Math.random() <= getCriticalChance() ) {
+            damage *= 2
+            var critical = true
+        }
+        this.addDamagePopup(damage, critical, sameVirus)
         const enemyHealth = this.enemy.health
         const newHealth = enemyHealth - damage
         this.enemy.health = newHealth
@@ -29,16 +36,46 @@ export class AbstractInjuryService {
         }
     }
 
+    addDamagePopup(damage, critical, virus) {
+        const damageEl = createAndAddClass('p', 'enemy-damage-container')
+        if ( critical ) addClass(damageEl, 'critical')
+        if ( virus ) damageEl.style.color = virus
+        if ( virus === 'yellow' ) addClass(damageEl, 'yellow')
+        damageEl.textContent = damage
+        addClass(damageEl, `enemy-damage-container-${Math.ceil(Math.random() * 6)}`)
+        this.enemy.sprite.append(damageEl)
+        setTimeout(() => damageEl.remove(), 1000)
+    }
+
     killEnemy() {
         addAllAttributes(
             this.enemy.sprite, 
             'left', Number(this.enemy.sprite.style.left.replace('px', '')), 
             'top', Number(this.enemy.sprite.style.top.replace('px', ''))
         )
-        dropLoot(this.enemy.sprite)
+        dropLoot(this.enemy.sprite, true)
+        this.deathAnimation()
         enemies.get(getCurrentRoomId())[this.enemy.index].health = 0
         activateProgress(this.enemy.progress2Active)
         updateKillAllDoors()
+        updateKillAllInteractables()
+        updateKillAllEnemies()
+    }
+
+    deathAnimation() {
+        addClass(this.enemy.sprite, 'dead')
+        const body = this.enemy.sprite.firstElementChild.firstElementChild
+        removeClass(body, 'body-transition')
+        this.enemy.sprite.style.transform = `rotateZ(${(Math.random() * 5) - 15}deg)`
+        Array.from(body.children).forEach(limb => {
+            if ( containsClass(limb, 'fire') ) limb.style.opacity = 0
+            limb.style.transformOrigin = 'top'
+            limb.style.transform = `
+                translateX(${Math.floor(Math.random() * 5) - 15}px)
+                translateY(${Math.floor(Math.random() * 5) - 15}px)
+                rotateZ(${Math.floor(Math.random() * 90) - 270}deg)
+                `
+        })
     }
 
     manageDamagedMode() {

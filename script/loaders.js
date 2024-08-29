@@ -1,3 +1,5 @@
+import { Progress } from './progress.js'
+
 class Loader {
     constructor(className, width, height, left, top, right, bottom, door) {
         this.className = className
@@ -60,13 +62,15 @@ class BottomLoader_FromRight extends Loader {
 }
 
 class Door {
-    constructor(color, progress, heading, popup, progress2Active, killAll) {
+    constructor(color, heading, popup, key, progress) {
         this.color = color
-        this.progress = progress
         this.heading = heading
         this.popup = popup
-        this.progress2Active = progress2Active
-        this.killAll = killAll
+        this.key = key
+        this.removeProgress = progress?.removeProgress ?? progress?.progress2Active
+        this.progress2Active = progress?.progress2Active
+        this.killAll = progress?.killAll
+        this.type = Math.random() < 0.5 ? 1 : 2
     }
 }
 
@@ -131,8 +135,15 @@ export const loaders = new Map([
     ],
     [16, [
         new BottomLoader_FromLeft(9, 100, 100, 
-            new Door('red', '13', 'doorway to heaven', 'dignity')),
-        new LeftLoader_FromTop(37, 100, 400),
+            new Door('green', 'Test door 2', 'Door for testing', undefined, 
+                Progress.builder().setRemoveProgress('200')
+            )
+        ),
+        new LeftLoader_FromTop(37, 100, 400, 
+            new Door('red', 'Test door 1', 'Door for testing', undefined, 
+                Progress.builder().setRemoveProgress('100')
+            )
+        ),
         new TopLoader_FromLeft(38, 250, 475),
         new RightLoader_FromTop(39, 300, 300)
         ]
@@ -232,10 +243,20 @@ export const loaders = new Map([
     [37, [
         new RightLoader_FromTop(16, 100, 350),
         new TopLoader_FromLeft(62, 100, 240),
-        new TopLoader_FromLeft(63, 100, 580),
-        new TopLoader_FromRight(64, 100, 240, new Door('green', undefined, 'Door 1', 'Sacrifice', '13', '3')),
-        new TopLoader_FromRight(65, 100, 580, new Door('yellow', '13', 'Door 2', 'Chivalry'))
-        ]
+        new TopLoader_FromLeft(63, 100, 580, 
+            new Door('red', 'Test door 3', 'Door for testing 3', undefined, 
+                Progress.builder().setKillAll('10').setProgress2Active('20')
+            )
+        ),
+        new TopLoader_FromRight(64, 100, 240, 
+            new Door('green', 'Test door 1', 'Door for testing', undefined, 
+                Progress.builder().setRemoveProgress('7').setProgress2Active('8')
+            )
+        ),
+        new TopLoader_FromRight(65, 100, 580, 
+            new Door('yellow', 'Test door 2', 'Door 2 for testing', 'test', Progress.builder().setProgress2Active('10'))
+        )
+    ]
     ],
     [38, [ 
         new BottomLoader_FromLeft(16, 250, 375),

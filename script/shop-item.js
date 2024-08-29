@@ -1,10 +1,15 @@
+import { Progress } from './progress.js'
 import { getWeaponDetails } from './weapon-details.js'
 import { 
+    AdrenalineDrop,
     Bandage,
-    Drop,
+    BodyArmor,
+    EnergyDrinkDrop,
     Flashbang,
     Grenade,
     HardDrive,
+    HealthPotionDrop,
+    LuckPillsDrop,
     MagnumAmmo,
     PistolAmmo,
     RifleAmmo,
@@ -22,7 +27,7 @@ class ShopItem {
         this.popup = drop.popup
         this.space = drop.space
         this.description = drop.description
-        this.progress = drop.progress
+        this.renderProgress = drop.renderProgress
         this.amount = amount
         this.price = price
         this.sold = false
@@ -30,68 +35,100 @@ class ShopItem {
 }
 
 class BandageShopItem extends ShopItem {
-    constructor(progress) {
-        super(new Bandage(null, null, null, progress), 3, 1, false)
+    constructor(renderProgress) {
+        super(new Bandage(null, null, null, Progress.builder().setRenderProgress(renderProgress)), 3, 1)
     }
 }
 
 class HardDriveShopItem extends ShopItem {
-    constructor(progress) {
-        super(new HardDrive(null, null, null, progress), 2, 1, false)
+    constructor(renderProgress) {
+        super(new HardDrive(null, null, null, Progress.builder().setRenderProgress(renderProgress)), 2, 1)
     }
 }
 
 class PistolAmmoShopItem extends ShopItem {
-    constructor(progress) {
-        super(new PistolAmmo(null, null, null, progress), 30, 1, false)
+    constructor(renderProgress) {
+        super(new PistolAmmo(null, null, null, Progress.builder().setRenderProgress(renderProgress)), 30, 1)
     }
 }
 
 class ShotgunShellsShopItem extends ShopItem {
-    constructor(progress) {
-        super(new ShotgunShells(null, null, null, progress), 20, 1, false)
+    constructor(renderProgress) {
+        super(new ShotgunShells(null, null, null, Progress.builder().setRenderProgress(renderProgress)), 20, 1)
     }
 }
 
 class MagnumAmmoShopItem extends ShopItem {
-    constructor(progress) {
-        super(new MagnumAmmo(null, null, null, progress), 5, 1, false)
+    constructor(renderProgress) {
+        super(new MagnumAmmo(null, null, null, Progress.builder().setRenderProgress(renderProgress)), 5, 1)
     }
 }
 
 class SmgAmmoShopItem extends ShopItem {
-    constructor(progress) {
-        super(new SmgAmmo(null, null, null, progress), 90, 1,false)
+    constructor(renderProgress) {
+        super(new SmgAmmo(null, null, null, Progress.builder().setRenderProgress(renderProgress)), 90, 1,false)
     }
 }
 
 class RifleAmmoShopItem extends ShopItem {
-    constructor(progress) {
-        super(new RifleAmmo(null, null, null, progress), 10, 1, false)
+    constructor(renderProgress) {
+        super(new RifleAmmo(null, null, null, Progress.builder().setRenderProgress(renderProgress)), 10, 1)
     }
 }
 
 class WeaponShopItem extends ShopItem {
-    constructor(name, progress) {
-        super(new WeaponDrop(null, null, name, 0, 1, 1, 1, 1, 1, progress), 1, getWeaponDetails().get(name).price, false)
+    constructor(name, renderProgress) {
+        super(new WeaponDrop(null, null, name, 0, 1, 1, 1, 1, 1, 
+            Progress.builder().setRenderProgress(renderProgress)), 1, getWeaponDetails().get(name).price)
     }
 }
 
 class GrenadeShopItem extends ShopItem {
-    constructor(progress) {
-        super(new Grenade(null, null, null, progress), 2, 1, false)
+    constructor(renderProgress) {
+        super(new Grenade(null, null, null, Progress.builder().setRenderProgress(renderProgress)), 2, 1)
     }
 }
 
 class FlashbangShopItem extends ShopItem {
-    constructor(progress) {
-        super(new Flashbang(null, null, null, progress), 3, 1, false)
+    constructor(renderProgress) {
+        super(new Flashbang(null, null, null, Progress.builder().setRenderProgress(renderProgress)), 3, 1)
     }
 }
 
 class Pouch extends ShopItem {
-    constructor(progress) {
-        super({name: 'pouch', heading: 'pouch', description: 'Increases your carry capacity by 2 slots', progress}, 1, 5, false)
+    constructor(renderProgress) {
+        super({name: 'pouch', heading: 'pouch', description: 'Increases your carry capacity by 2 slots', 
+            renderprogress: Progress.builder().setRenderProgress(renderProgress)}, 1, 5)
+    }
+}
+
+class AdrenalineShopItem extends ShopItem {
+    constructor(renderProgress) {
+        super(new AdrenalineDrop(null, null, null, Progress.builder().setRenderProgress(renderProgress)), 1, 10)
+    }
+}
+
+class HealthPotionShopItem extends ShopItem {
+    constructor(renderProgress) {
+        super(new HealthPotionDrop(null, null, null, Progress.builder().setRenderProgress(renderProgress)), 1, 10)
+    }
+}
+
+class LuckPillsShopItem extends ShopItem {
+    constructor(renderProgress) {
+        super(new LuckPillsDrop(null, null, null, Progress.builder().setRenderProgress(renderProgress)), 1, 10)
+    }
+}
+
+class EnergyDrinkShopItem extends ShopItem {
+    constructor(renderProgress) {
+        super(new EnergyDrinkDrop(null, null, null, Progress.builder().setRenderProgress(renderProgress)), 1, 10)
+    }
+}
+
+class ArmorShopItem extends ShopItem {
+    constructor(renderProgress) {
+        super(new BodyArmor(null, null, null, Progress.builder().setRenderProgress(renderProgress)), 1, 100)
     }
 }
 
@@ -107,7 +144,9 @@ let shopItems = [
     new WeaponShopItem('mp5k', '8'),
     new Pouch('9'),
     new GrenadeShopItem('10'),
-    new FlashbangShopItem('11')
+    new FlashbangShopItem('11'),
+    new EnergyDrinkShopItem('0'),
+    new ArmorShopItem('2')
 ]
 
 export const setShopItems = (val) => {

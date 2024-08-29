@@ -2,10 +2,11 @@ import { managePause } from './controls.js'
 import { isThrowable } from './throwable-details.js'
 import { addClass, appendAll, createAndAddClass } from './util.js'
 import { getPauseContainer, getUiEl, setUiEl } from './elements.js'
-import { calculateThrowableAmount, calculateTotalAmmo, equippedWeaponObj } from './inventory.js'
+import { calculateThrowableAmount, calculateTotalAmmo } from './inventory.js'
 import { 
     getDraggedItem,
     getEquippedWeaponId,
+    getEquippedWeaponObject,
     getHealth,
     getMaxHealth,
     getMaxStamina,
@@ -27,6 +28,7 @@ const renderBackground = () => {
 
 const renderHealthBar = () => {
     const healthBarEl = createAndAddClass('div', 'health-bar')
+    healthBarEl.style.width = `${getMaxHealth() * 390 / 100}px`
     const healthEl = createAndAddClass('div', 'health')
     healthBarEl.append(healthEl)
     getUiEl().append(healthBarEl)
@@ -38,6 +40,7 @@ export const healthManager = (inputHealth) =>
 
 const renderStaminaBar = () => {
     const staminaBarEl = createAndAddClass('div', 'stamina-bar')
+    staminaBarEl.style.width = `${getMaxStamina() * 390 / 600}px`
     const staminaEl = createAndAddClass('div', 'stamina')
     staminaBarEl.append(staminaEl)
     getUiEl().append(staminaBarEl)
@@ -52,7 +55,7 @@ const abstractManager = (input, elem, max) => elem.style.width = `${input / max 
 export const renderWeaponUi = () => {
     if ( getUiEl().children[2] ) getUiEl().children[2].remove() 
     if ( !getEquippedWeaponId() ) return
-    const equippedWeapon = equippedWeaponObj()
+    const equippedWeapon = getEquippedWeaponObject()
     const predicate = isThrowable(equippedWeapon.name) 
     const weaponContainer = createAndAddClass('div', 'weapon-container')
     const weaponIcon = createAndAddClass('img', 'weapon-icon')

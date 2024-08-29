@@ -19,6 +19,7 @@ import {
     setExplosionDamageCounter,
     setHealth,
     setLeftPressed,
+    setMaxHealth,
     setNoOffenseCounter, 
     setPoisoned, 
     setRightPressed,
@@ -56,7 +57,7 @@ export const heal = () => {
     if ( getHealth() === getMaxHealth() ) return
     const bandage = getInventory().flat().find(x => x && x.name === 'bandage')
     if ( !bandage ) return
-    let newHealth = Math.min(getHealth() + 20, getMaxHealth())
+    let newHealth = Math.min(getHealth() + getMaxHealth() / 5, getMaxHealth())
     useInventoryResource('bandage', 1)
     modifyHealth(newHealth)
     if ( !isLowHealth() ) decideLowHealth(removeClass)
@@ -64,7 +65,7 @@ export const heal = () => {
 
 export const useBandage = (bandage) => {
     if ( getHealth() === getMaxHealth() ) return
-    let newHealth = Math.min(getHealth() + 20, getMaxHealth())
+    let newHealth = Math.min(getHealth() + getMaxHealth() / 5, getMaxHealth())
     bandage.amount -= 1
     modifyHealth(newHealth)
     if ( !isLowHealth() ) decideLowHealth(removeClass)
@@ -79,10 +80,10 @@ export const useAntidote = (antidote) => {
 }
 
 const manageDizziness = () => {
-    if ( getLeftPressed() ) negateDirection(setRightPressed, setLeftPressed)
-    else if ( getRightPressed() ) negateDirection(setLeftPressed, setRightPressed)
-    if ( getDownPressed() ) negateDirection(setUpPressed, setDownPressed)
-    else if ( getUpPressed() ) negateDirection(setDownPressed, setUpPressed)
+    if ( getLeftPressed() )       negateDirection(setRightPressed, setLeftPressed)
+    else if ( getRightPressed() ) negateDirection(setLeftPressed,  setRightPressed)
+    if ( getDownPressed() )       negateDirection(setUpPressed,    setDownPressed)
+    else if ( getUpPressed() )    negateDirection(setDownPressed,  setUpPressed)
 }
 
 const negateDirection = (setOppositeDir, setDir) => {
@@ -90,10 +91,11 @@ const negateDirection = (setOppositeDir, setDir) => {
     setDir(false)
 }
 
-export const damagePlayer = (damage) => {
+export const damagePlayer = (damage) => {    
     if ( getNoOffenseCounter() !== 0 ) return
     addClass(getMapEl(), 'camera-shake')
     setTimeout(() => removeClass(getMapEl(), 'camera-shake'), 300)
+    if ( getInventory().flat().find(item => item && item.name === 'armor') ) damage /= 2
     let newHealth = getHealth() - damage
     newHealth = newHealth < 0 ? 0 : newHealth
     modifyHealth(newHealth)
@@ -102,7 +104,7 @@ export const damagePlayer = (damage) => {
 }
 
 const noOffenceAllEnemies = () => {
-    Array.from(getCurrentRoomEnemies())
+    getCurrentRoomEnemies()
         .filter(elem => elem.state === CHASE )
         .forEach(elem => elem.state = NO_OFFENCE)
     setNoOffenseCounter(1)
@@ -136,4 +138,12 @@ const manageExplosionDamagedState = () => {
     if ( getExplosionDamageCounter() === 0 ) return
     setExplosionDamageCounter(getExplosionDamageCounter() + 1)
     if ( getExplosionDamageCounter() === 100 ) setExplosionDamageCounter(0)
+}
+
+export const useHealthPotion = (item) => {
+    if ( getMaxHealth() === 200 ) return
+    setMaxHealth(getMaxHealth() + 10)
+    modifyHealth(getMaxHealth())
+    if ( !isLowHealth() ) decideLowHealth(removeClass)
+    getInventory()[item.row][item.column] = null
 }

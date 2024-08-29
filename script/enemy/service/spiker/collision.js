@@ -16,10 +16,12 @@ export class SpikerCollisionService extends AbstractCollisionService {
     }
 
     findCollidingEnemy() {
-        const collidingEnemy = Array.from(getCurrentRoomEnemies())
-            .find(e => e.sprite !== this.enemy.sprite 
-            && collide(this.enemy.sprite.firstElementChild.children[2], e.sprite.firstElementChild, 0) 
-            && e.type !== TRACKER && e.type !== INVESTIGATE && e.type !== GO_FOR_RANGED)
+        const collidingEnemy = getCurrentRoomEnemies()
+            .find(e => 
+                e.health !== 0 &&
+                e.sprite !== this.enemy.sprite 
+                && collide(this.enemy.sprite.firstElementChild.children[2], e.sprite.firstElementChild, 0) 
+                && e.type !== TRACKER && e.type !== INVESTIGATE && e.type !== GO_FOR_RANGED)
         this.collidingEnemy = null
         return collidingEnemy
     }
