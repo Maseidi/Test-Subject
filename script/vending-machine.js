@@ -466,8 +466,8 @@ const renderSell = () => {
     const sell = createAndAddClass('div', 'sell')
     getInventory()
         .flat()
-        .filter(item => item && item.name !== 'coin' && !item.name?.includes('key') && 
-                        item.amount === (MAX_PACKSIZE[item.name] ?? 1) )
+        .filter(item => item && !['coin', 'note'].includes(item.name) && 
+                        !item.name?.includes('key') && item.amount === (MAX_PACKSIZE[item.name] ?? 1) )
         .forEach(item => {
             const sellItem = object2Element(item)
             addClass(sellItem, 'sell-item')

@@ -6,6 +6,7 @@ import {
     GRENADE_LOOT,
     Loot,
     MAGNUM_AMMO_LOOT,
+    NoteLoot,
     P90,
     PISTOL4,
     RIFLE_AMMO_LOOT,
@@ -53,6 +54,7 @@ class Crate extends Interactable {
     constructor(left, top, loot, progress) {
         super(35, left, top, 'crate', 'crate', 'Break', true, undefined, undefined, undefined, undefined, progress)
         this.loot = loot.name
+        this.data = loot.data
         this['loot-amount'] = loot.amount
         this['loot-progress'] = loot.progress2Active
     }
@@ -215,6 +217,14 @@ export class BodyArmor extends Drop {
     }
 }
 
+export class Note extends Drop {
+    constructor(left, top, heading, description, data, progress) {
+        super(15, left, top, 'note', heading, 1, 1, description, undefined, progress)
+        this.data = data
+        this.examined = false
+    }
+}
+
 export const interactables = new Map([
     [1 ,
         [
@@ -257,6 +267,10 @@ export const interactables = new Map([
             Progress.builder().setRenderProgress('2'), '100', '200'
         ),
         new Coin(200, 200, 10, Progress.builder().setRenderProgress('100')),
+        new Note(500, 500, 'Main hall code', 
+            'A small letter containing the code for the main hall', 
+            'Main hall door code: 4127'
+        ),
         ]
     ],[37, 
         [

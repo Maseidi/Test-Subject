@@ -25,6 +25,7 @@ import {
     interactables,
     LuckPillsDrop,
     MagnumAmmo,
+    Note,
     PistolAmmo,
     RifleAmmo,
     ShotgunShells,
@@ -42,6 +43,7 @@ import {
     HEALTH_POTION,
     LUCK_PILLS,
     MAGNUM_AMMO_LOOT,
+    NOTE,
     PISTOL_AMMO_LOOT,
     RANDOM,
     RIFLE_AMMO_LOOT,
@@ -50,11 +52,11 @@ import {
 
 export const dropLoot = (rootElem, isEnemy) => {
     const root = element2Object(rootElem)
-    const {left, top, loot: decision, 'loot-amount': amount, 'loot-progress': progress2Active } = root
+    const {left, top, loot: decision, 'loot-amount': amount, 'loot-progress': progress2Active, data } = root
     let loot
     if ( decision === RANDOM ) loot = dropRandomLoot(loot, left, top)
     else if ( !decision ) loot = undefined
-    else loot = dropDeterminedLoot(decision, left, top, amount)
+    else loot = dropDeterminedLoot(decision, left, top, amount, data)
     if ( !isEnemy ) removeDrop(rootElem)
     else setCurrentRoomSolid(getCurrentRoomSolid().filter(solid => solid !== rootElem.firstElementChild))
     if ( !loot ) return
@@ -83,7 +85,7 @@ const dropRandomLoot = (loot, left, top) => {
     return loot
 }
 
-const dropDeterminedLoot = (decision, left, top, amount) => {
+const dropDeterminedLoot = (decision, left, top, amount, data) => {
     switch ( decision ) {
         case GRENADE_LOOT:
             return decideItemDrop(Grenade,       1, left, top, amount)
@@ -118,9 +120,11 @@ const dropDeterminedLoot = (decision, left, top, amount) => {
             break    
         case LUCK_PILLS:
             if ( getLuckPillsDropped()     < 10 ) return decideItemDrop(LuckPillsDrop,    1, left, top, 1)
-            break       
+            break 
+        case NOTE:
+            return new Note(left, top, data)
         default:
-            return dropWeaponLoot(left, top, decision)    
+            return dropWeaponLoot(left, top, decision)
     }
 }
 

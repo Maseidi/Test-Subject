@@ -1,3 +1,4 @@
+export const NOTE = 'note'
 export const RANDOM = 'random'    
 export const COIN_LOOT = 'coin'
 export const GRENADE_LOOT = 'grenade'
@@ -47,5 +48,12 @@ export class Loot {
 export class SingleLoot extends Loot {
     constructor(name, progress2Active) {
         super(name, 1, progress2Active)
+    }
+}
+
+export class NoteLoot extends SingleLoot {
+    constructor(data, progress2Active) {
+        super(NOTE, progress2Active)
+        this.data = data
     }
 }

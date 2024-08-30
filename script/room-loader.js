@@ -232,8 +232,10 @@ const renderPopUp = (int, interactable) => {
 
 const renderHeading = (popup, interactable) => {
     const heading = document.createElement('p')
-    let content = interactable.amount && !isWeapon(interactable.name) && !interactable.name.includes('key') ? 
-    `${interactable.amount} ${interactable.heading}` : `${interactable.heading}`
+    let content = interactable.amount && !isWeapon(interactable.name) && 
+        !interactable.name.includes('key') && interactable.name !== 'note'  ? 
+        `${interactable.amount} ${interactable.heading}` : `${interactable.heading}`
+    if ( interactable.name === 'note' && !interactable.examined ) content = 'Note'     
     heading.textContent = content
     popup.append(heading)
 }
@@ -308,6 +310,7 @@ const defineEnemy = (elem) => {
     enemy.setAttribute('loot', elem.loot.name)
     enemy.setAttribute('loot-amount', elem.loot.amount)
     enemy.setAttribute('loot-progress', elem.loot.progress2Active)
+    enemy.setAttribute('data', elem.loot.data)
     return enemy
 }
 

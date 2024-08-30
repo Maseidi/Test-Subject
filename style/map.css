@@ -4,10 +4,6 @@
   background-color: #2b2b2b;
 }
 
-.solid {
-  z-index: 5;
-}
-
 .loader,
 .solid,
 .map,

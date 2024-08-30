@@ -46,7 +46,8 @@ import {
     setShootCounter,
     getShooting, 
     getPause, 
-    getEquippedWeaponObject } from './variables.js'
+    getEquippedWeaponObject, 
+    setEquippedWeaponObject } from './variables.js'
 
 export const MAX_PACKSIZE = {
     bandage: 3,
@@ -313,14 +314,20 @@ const inventoryEvents = () => {
 export const descriptionEvent = (item) => {
     const itemObj = element2Object(item)
     item.addEventListener('mousemove', addDescEvent, true)
-    item.h = `${itemObj.heading}`
-    item.d = `${itemObj.description}`
+    item.heading = `${itemObj.heading}`
+    item.description = `${itemObj.description}`
+    item.isNote = itemObj.name === 'note'
+    item.isExamined = itemObj.examined
 }
 
 const addDescEvent = (e) => {
     const desc = document.querySelector('.description')
-    if (e.target.h) desc.children[0].textContent = `${e.target.h}`
-    if (e.target.d) desc.children[1].textContent = `${e.target.d}`
+    const heading = e.target.heading
+    const description = e.target.description
+    const isNote = e.target.isNote
+    const isExamined = e.target.isExamined
+    if (e.target.heading) desc.children[0].textContent = isNote && !isExamined ? 'Note' : heading
+    if (e.target.description) desc.children[1].textContent = isNote && !isExamined ? '????' : description
 }
 
 export const removeDescriptionEvent = (item) => {
@@ -369,6 +376,8 @@ const renderOptions = (item, options) => {
         createOption(options, 'shortcut')
         createOption(options, 'examine')
     }
+
+    if ( itemObj.name === 'note' ) createOption(options, 'examine')
 
     if ( getReloading() ) 
         if ( itemObj.name === getEquippedWeaponObject().ammotype ) renderDropOption = false
@@ -670,7 +679,25 @@ const dropFromWeaponWheel = (itemObj) => {
     setWeaponWheel(getWeaponWheel().map(weapon => weapon === itemObj.id ? null : weapon))
 }
 
-const examine = (item) => renderStats(element2Object(item))
+const examine = (item) => {  
+    const itemObj = element2Object(item)  
+    if ( isWeapon(itemObj.name) ) renderStats(itemObj)
+    else if ( itemObj.name === 'note' ) renderNote(item, itemObj)
+}
+
+const renderNote = (item, itemObj) => {
+    const noteContainer = createAndAddClass('div', 'note-container', 'ui-theme')
+    const note = createAndAddClass('div', 'note')
+    const data = createAndAddClass('p', 'note-data')
+    data.textContent = itemObj.data
+    note.append(data)
+    noteContainer.append(note)
+    getPauseContainer().append(noteContainer)
+    renderQuit()
+    inventory[itemObj.row][itemObj.column].examined = true
+    item.setAttribute('examined', 'true')
+    inventoryEvents()
+}
 
 const OPTIONS = new Map([
     ['replace', replace],

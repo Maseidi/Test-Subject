@@ -10,6 +10,7 @@ import { Path, Point, SinglePointPath, SquarePath, VerDoublePointPath } from '..
 import { 
     ENERGY_DRINK,
     HEALTH_POTION,
+    NoteLoot,
     SingleLoot } from '../../loot.js'
 
 export const enemies = new Map([
