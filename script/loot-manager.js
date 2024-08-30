@@ -1,6 +1,6 @@
 import { removeDrop } from './inventory.js'
+import { element2Object, nextId } from './util.js'
 import { renderInteractable } from './room-loader.js'
-import { addClass, element2Object, nextId } from './util.js'
 import { getCurrentRoom, getCurrentRoomSolid, setCurrentRoomSolid } from './elements.js'
 import { 
     getAdrenalinesDropped,

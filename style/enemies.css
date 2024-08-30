@@ -734,8 +734,9 @@
 }
 
 .dead {
+  transition: 1s;
   z-index: 0;
-  opacity: 0.3;
+  opacity: 0.1;
 }
 
 .dead > div:nth-of-type(1) > div:nth-of-type(1), 

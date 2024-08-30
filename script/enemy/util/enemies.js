@@ -5,22 +5,20 @@ import { Progress } from '../../progress.js'
 import { Stinger } from '../type/stinger.js'
 import { Tracker } from '../type/tracker.js'
 import { Scorcher } from '../type/scorcher.js'
+import { RockCrusher, Torturer } from '../type/normal-enemy.js'
 import { Path, Point, SinglePointPath, SquarePath, VerDoublePointPath } from '../../path.js'
 import { 
-    ADRENALINE,
     ENERGY_DRINK,
-    FLASHBANG_LOOT,
-    GRENADE_LOOT,
     HEALTH_POTION,
-    Loot,
-    LUCK_PILLS,
-    SingleLoot,
-    SPAS } from '../../loot.js'
-import { Torturer } from '../type/normal-enemy.js'
+    SingleLoot } from '../../loot.js'
 
 export const enemies = new Map([
+    [1, []],
+    [2, []],
+    [9, []],
     [16, [
-        new Torturer(1, new SinglePointPath(400, 400), undefined, Progress.builder().setRenderProgress('100'))
+        new Torturer(1, new SinglePointPath(400, 400), undefined, Progress.builder().setRenderProgress('100')),
+        new RockCrusher(1, new SinglePointPath(500, 400), undefined, Progress.builder().setRenderProgress('400')),
     ]],
     [37, [
         new Tracker(1, 1000, 140, new SingleLoot(HEALTH_POTION), 

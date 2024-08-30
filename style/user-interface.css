@@ -193,7 +193,7 @@
   color: wheat;
 }
 
-.fade-out {
+.popup-fade-out {
   opacity: 0;
   transition: 1s;
 }
@@ -212,4 +212,55 @@
 
 .progress-popup > span:hover {
   background-color: rgba(255, 255, 255, 0.1);
+}
+
+@keyframes room-name-popup {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.room-name-animation {
+  animation-name: room-name-popup;
+  animation-direction: alternate;
+  animation-duration: 500ms;
+}
+
+.room-name-popup {
+  left: 100%;
+  bottom: 50px;
+  transform: translateX(-100%);
+  width: max-content;
+  color: wheat;
+  padding: 20px;
+  box-shadow: 5px 5px 25px rgba(0, 0, 0, 0.9);
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+}
+
+@keyframes room-name-character {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.room-name-popup > span {
+  opacity: 0;
+  margin-left: 2px;
+  margin-right: 2px;
+  animation-name: room-name-character;
+  animation-direction: alternate;
+  animation-fill-mode: forwards;
+  animation-duration: 300ms;
+}
+
+.room-name-fade-out {
+  opacity: 0;
+  transition: 5s;
 }

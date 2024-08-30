@@ -112,3 +112,10 @@ export const setPopupContainer = (val) => {
 }
 
 export const getPopupContainer = () => popupContainer
+
+let roomNameContainer
+export const setRoomNameContainer = (val) => {
+    roomNameContainer = val
+}
+
+export const getRoomNameContainer = () => roomNameContainer

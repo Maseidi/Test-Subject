@@ -39,7 +39,7 @@ class PC extends Interactable {
 
 class Stash extends Interactable {
     constructor(left, top) {
-        super(80, left, top, 'stash', 'stash', 'Open stash', true)
+        super(50, left, top, 'stash', 'stash', 'Open stash', true)
     }
 }
 
@@ -74,77 +74,77 @@ export class Drop extends Interactable {
 
 export class Bandage extends Drop {
     constructor(left, top, amount, progress) {
-        super(50, left, top, 'bandage', 'bandage', amount, 1, 
+        super(25, left, top, 'bandage', 'bandage', amount, 1, 
             'Might come in handy in case of injuries', 1/3, progress)
     }
 }
 
 export class Coin extends Drop {
     constructor(left, top, amount, progress) {
-        super(25, left, top, 'coin', 'coin', amount, 1, 
+        super(12, left, top, 'coin', 'coin', amount, 1, 
             'A neccesity when trading with the vending machine', undefined, progress)
     }
 }
 
 export class HardDrive extends Drop {
     constructor(left, top, amount, progress) {
-        super(30, left, top, 'hardDrive', 'hard drive', amount, 1, 
+        super(15, left, top, 'hardDrive', 'hard drive', amount, 1, 
             'PC needs one of these to save your progress', 1/2, progress)
     }
 }
 
 export class PistolAmmo extends Drop {
     constructor(left, top, amount, progress) {
-        super(50, left, top, 'pistolAmmo', 'pistol ammo', amount, 1, 
+        super(25, left, top, 'pistolAmmo', 'pistol ammo', amount, 1, 
             'Ammo for all sorts of handguns', 1/30, progress)
     }
 }
 
 export class ShotgunShells extends Drop {
     constructor(left, top, amount, progress) {
-        super(40, left, top, 'shotgunShells', 'shotgun shells', amount, 1, 
+        super(20, left, top, 'shotgunShells', 'shotgun shells', amount, 1, 
             'Shells for all sorts of shotguns', 1/20, progress)
     }
 }
 
 export class MagnumAmmo extends Drop {
     constructor(left, top, amount, progress) {
-        super(40, left, top, 'magnumAmmo', 'magnum ammo', amount, 1, 
+        super(20, left, top, 'magnumAmmo', 'magnum ammo', amount, 1, 
             'Ammo for all sorts of magnums', 1/5, progress)
     }
 }
 
 export class SmgAmmo extends Drop {
     constructor(left, top, amount, progress) {
-        super(40, left, top, 'smgAmmo', 'smg ammo', amount, 1, 
+        super(20, left, top, 'smgAmmo', 'smg ammo', amount, 1, 
             'Ammo for all sorts of sub-machine guns', 1/90, progress)
     }
 }
 
 export class RifleAmmo extends Drop {
     constructor(left, top, amount, progress) {
-        super(30, left, top, 'rifleAmmo', 'rifle ammo', amount, 1, 
+        super(15, left, top, 'rifleAmmo', 'rifle ammo', amount, 1, 
             'Ammo for all sorts of rifles', 1/10, progress)
     }
 }
 
 export class Antidote extends Drop {
     constructor(left, top, amount, progress) {
-        super(30, left, top, 'antidote', 'antidote', amount, 1, 
+        super(15, left, top, 'antidote', 'antidote', amount, 1, 
             'An emergency when poison is all over the place', 1/3, progress)
     }
 }
 
 export class Grenade extends Drop {
     constructor(left, top, amount, progress) {
-        super(20, left, top, 'grenade', 'grenade', amount, 1, 
+        super(10, left, top, 'grenade', 'grenade', amount, 1, 
             'Toss one to witness your foes fly high!', 1/2, progress)
     }
 }
 
 export class Flashbang extends Drop {
     constructor(left, top, amount, progress) {
-        super(20, left, top, 'flashbang', 'flashbang', amount, 1, 
+        super(10, left, top, 'flashbang', 'flashbang', amount, 1, 
               'Blinding enemies can be a game changer in many situations', 1/3, progress)
     }
 }
@@ -153,7 +153,7 @@ export class WeaponDrop extends Drop {
     constructor(left, top, name, currmag, damageLvl, rangeLvl, 
         reloadspeedLvl, magazineLvl, fireratelvl, progress) {
         super(
-            70,
+            35,
             left,
             top,
             name,
@@ -176,42 +176,42 @@ export class WeaponDrop extends Drop {
 
 export class KeyDrop extends Drop {
     constructor(left, top, code, heading, unlocks, progress) {
-        super(20, left, top, `key-${code}`, heading, 1, 1, heading, undefined, progress)
+        super(10, left, top, `key-${code}`, heading, 1, 1, heading, undefined, progress)
         this.unlocks = unlocks
     }
 }
 
 export class AdrenalineDrop extends Drop {
     constructor(left, top, amount, progress) {
-        super(20, left, top, 'adrenaline', 'adrenaline', amount, 1, 
+        super(10, left, top, 'adrenaline', 'adrenaline', amount, 1, 
             'Increases max speed by 0.1 units. (Default speed is 5 units)', 20, progress)
     }
 }
 
 export class HealthPotionDrop extends Drop {
     constructor(left, top, amount, progress) {
-        super(10, left, top, 'healthpotion', 'health potion', amount, 1, 
+        super(5, left, top, 'healthpotion', 'health potion', amount, 1, 
             'Refills health completely and increases max health by 10 units. (Default health is 100 units)', 20, progress)
     }
 }
 
 export class LuckPillsDrop extends Drop {
     constructor(left, top, amount, progress) {
-        super(30, left, top, 'luckpills', 'luck pills', amount, 1, 
+        super(15, left, top, 'luckpills', 'luck pills', amount, 1, 
             'Increases critical chance by 1.9%. (Default critical chance is 1%)', 20, progress)
     }
 }
 
 export class EnergyDrinkDrop extends Drop {
     constructor(left, top, amount, progress) {
-        super(10, left, top, 'energydrink', 'energy drink', amount, 1, 
+        super(5, left, top, 'energydrink', 'energy drink', amount, 1, 
             'Refills stamina completely and increases max stamina by 60 units. (Default stamina is 600 units)', 20, progress)
     }
 }
 
 export class BodyArmor extends Drop {
     constructor(left, top, progress) {
-        super(30, left, top, 'armor', 'body armor', 1, 1, 'Equipping this will reduce damage taken by 50%', 50, progress)
+        super(15, left, top, 'armor', 'body armor', 1, 1, 'Equipping this will reduce damage taken by 50%', 50, progress)
     }
 }
 
@@ -242,31 +242,7 @@ export const interactables = new Map([
         ]
     ], [2, 
         []
-    ],[3, 
-        []
-    ],[4, 
-        []
-    ],[5, 
-        []
-    ],[6, 
-        []
-    ],[7, 
-        []
-    ],[8, 
-        []
     ],[9, 
-        []
-    ],[10, 
-        []
-    ],[11, 
-        []
-    ],[12, 
-        []
-    ],[13, 
-        []
-    ],[14, 
-        []
-    ],[15, 
         []
     ],[16, 
         [
@@ -282,46 +258,6 @@ export const interactables = new Map([
         ),
         new Coin(200, 200, 10, Progress.builder().setRenderProgress('100')),
         ]
-    ],[17, 
-        []
-    ],[18, 
-        []
-    ],[19, 
-        []
-    ],[20, 
-        []
-    ],[21, 
-        []
-    ],[22, 
-        []
-    ],[23, 
-        []
-    ],[24, 
-        []
-    ],[25, 
-        []
-    ],[26, 
-        []
-    ],[27, 
-        []
-    ],[28, 
-        []
-    ],[29, 
-        []
-    ],[30, 
-        []
-    ],[31, 
-        []
-    ],[32, 
-        []
-    ],[33, 
-        []
-    ],[34, 
-        []
-    ],[35, 
-        []
-    ],[36, 
-        []
     ],[37, 
         [
         new PistolAmmo(100, 100, 10),
@@ -332,101 +268,5 @@ export const interactables = new Map([
         new Crate(600, 100, new SingleLoot(PISTOL4)),
         new KeyDrop(700, 100, 1, 'Test key', 'test', Progress.builder().setKillAll('8').setProgress2Active('9'))
         ]
-    ],[38, 
-        []
-    ],[39, 
-        []
-    ],[40, 
-        []
-    ],[41, 
-        []
-    ],[42, 
-        []
-    ],[43, 
-        []
-    ],[44, 
-        []
-    ],[45, 
-        []
-    ],[46, 
-        []
-    ],[47, 
-        []
-    ],[48, 
-        []
-    ],[49, 
-        []
-    ],[50, 
-        []
-    ],[51, 
-        []
-    ],[52, 
-        []
-    ],[53, 
-        []
-    ],[54, 
-        []
-    ],[55, 
-        []
-    ],[56, 
-        []
-    ],[57, 
-        []
-    ],[58, 
-        []
-    ],[59, 
-        []
-    ],[60, 
-        []
-    ],[61, 
-        []
-    ],[62, 
-        []
-    ],[63, 
-        []
-    ],[64, 
-        []
-    ],[65, 
-        []
-    ],[66, 
-        []
-    ],[67, 
-        []
-    ],[68, 
-        []
-    ],[69, 
-        []
-    ],[70, 
-        []
-    ],[71, 
-        []
-    ],[72, 
-        []
-    ],[73, 
-        []
-    ],[74, 
-        []
-    ],[75, 
-        []
-    ],[76, 
-        []
-    ],[77, 
-        []
-    ],[78, 
-        []
-    ],[78, 
-        []
-    ],[79, 
-        []
-    ],[80, 
-        []
-    ],[81, 
-        []
-    ],[82, 
-        []
-    ],[83, 
-        []
-    ],[84, 
-        []
     ]
 ])

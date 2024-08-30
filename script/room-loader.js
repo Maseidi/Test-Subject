@@ -4,7 +4,7 @@ import { loaders } from './loaders.js'
 import { isWeapon } from './weapon-details.js'
 import { enemies } from './enemy/util/enemies.js'
 import { interactables } from './interactables.js'
-import { findProgressByName } from './progress-manager.js'
+import { activateProgress, findProgressByName } from './progress-manager.js'
 import { getCurrentRoomId, getRoomLeft, getRoomTop, setStunnedCounter } from './variables.js'
 import { 
     GO_FOR_RANGED,
@@ -40,6 +40,7 @@ import {
     setCurrentRoomExplosions,
     setCurrentRoomDoors,
     getCurrentRoomDoors } from './elements.js'
+import { renderRoomName } from './popup-manager.js'
 
 export const loadCurrentRoom = () => {
     setStunnedCounter(0)
@@ -74,6 +75,8 @@ const renderRoom = () => {
     room2Render.style.left = `${getRoomLeft()}px`
     room2Render.style.top = `${getRoomTop()}px`
     room2Render.style.backgroundColor = `lightgray`
+    activateProgress(room.progress2Active)
+    renderRoomName(room.label)
     return room2Render
 }
 

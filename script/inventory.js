@@ -45,7 +45,8 @@ import {
     getReloading,
     setShootCounter,
     getShooting, 
-    getPause } from './variables.js'
+    getPause, 
+    getEquippedWeaponObject } from './variables.js'
 
 export const MAX_PACKSIZE = {
     bandage: 3,

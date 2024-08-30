@@ -31,7 +31,7 @@ import {
     setCurrentRoomThrowables,
     getMapEl, 
     getCurrentRoomExplosions,
-    setCurrentRoomExplosions} from './elements.js'
+    setCurrentRoomExplosions } from './elements.js'
 import {
     getCurrentRoomId,
     getExplosionDamageCounter,
