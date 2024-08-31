@@ -210,11 +210,11 @@ const setInteractableId = (interactable, int, index) => {
 const renderImage = (int, interactable) => {
     const image = document.createElement('img')
     image.src = `../assets/images/${interactable.name}.png`
-    handleLever(interactable, image)
+    handleLeverImage(interactable, image)
     int.append(image)
 }
 
-const handleLever = (interactable, image) => {
+const handleLeverImage = (interactable, image) => {
     if ( interactable.name !== 'lever' ) return
     const toggle1 = interactable.toggle1
     if ( findProgressByName(toggle1) ) image.style.transform = `scale(-1, 1)` 
@@ -232,12 +232,15 @@ const renderPopUp = (int, interactable) => {
 
 const renderHeading = (popup, interactable) => {
     const heading = document.createElement('p')
-    let content = interactable.amount && !isWeapon(interactable.name) && 
-        !interactable.name.includes('key') && interactable.name !== 'note'  ? 
-        `${interactable.amount} ${interactable.heading}` : `${interactable.heading}`
-    if ( interactable.name === 'note' && !interactable.examined ) content = 'Note'     
+    let content = handleHeadingContent(interactable)
     heading.textContent = content
     popup.append(heading)
+}
+
+const handleHeadingContent = (interactable) => {
+    const {name, amount, examined, heading} = interactable
+    if ( name === 'note' && !examined ) return 'Note'
+    return amount && !isWeapon(name) && !name.includes('key') && name !== 'note'  ? `${amount} ${heading}` : `${heading}`
 }
 
 const renderLine = (popup) => {
@@ -281,7 +284,7 @@ export const spawnEnemy = (elem, room2Render) => {
     if ( elem.type === SPIKER ) removeClass(enemyBody, 'body-transition')
     enemyBody.style.backgroundColor = `${elem.virus}`
     defineComponents(elem, enemyBody)
-    const vision = elem.type === TRACKER ? createAndAddClass('div', 'vision') : defineVision(elem)
+    const vision = defineVision(elem)
     const fwDetector = defineForwardDetector(elem)
     appendAll(enemyCollider, enemyBody, vision, fwDetector)
     enemy.append(enemyCollider)
@@ -293,25 +296,33 @@ export const spawnEnemy = (elem, room2Render) => {
 
 const defineEnemy = (elem) => {
     const enemy = createAndAddClass('div', `${elem.type}`, 'enemy')
-    elem.angle = Math.ceil(Math.random() * 8) * 45 - 180
-    elem.angleState = ANGLE_STATE_MAP.get(elem.angle)
-    elem.state = elem.type === TRACKER ? LOST : MOVE_TO_POSITION
-    elem.investigationCounter = 0
-    elem.path = `path-${elem.index}`
-    elem.pathPoint = 0
-    elem.pathFindingX = null
-    elem.pathFindingY = null
-    elem.currentSpeed = elem.acceleration
-    elem.accelerationCounter = 0
-    elem.counterLimit = Math.ceil(Math.random() * 5) * 60
+    initEnemyStats(elem)
     enemy.style.left = `${elem.x}px`
     enemy.style.top = `${elem.y}px`
-    if ( !elem.loot ) return enemy
-    enemy.setAttribute('loot', elem.loot.name)
-    enemy.setAttribute('loot-amount', elem.loot.amount)
-    enemy.setAttribute('loot-progress', elem.loot.progress2Active)
-    enemy.setAttribute('data', elem.loot.data)
+    handleEnemyLoot(elem, enemy)
     return enemy
+}
+
+const initEnemyStats = (element) => {
+    element.angle = Math.ceil(Math.random() * 8) * 45 - 180
+    element.angleState = ANGLE_STATE_MAP.get(element.angle)
+    element.state = element.type === TRACKER ? LOST : MOVE_TO_POSITION
+    element.investigationCounter = 0
+    element.path = `path-${element.index}`
+    element.pathPoint = 0
+    element.pathFindingX = null
+    element.pathFindingY = null
+    element.currentSpeed = element.acceleration
+    element.accelerationCounter = 0
+    element.counterLimit = Math.ceil(Math.random() * 5) * 60
+}
+
+const handleEnemyLoot = (element, enemy) => {
+    if ( !element.loot ) return
+    enemy.setAttribute('loot', element.loot.name)
+    enemy.setAttribute('loot-amount', element.loot.amount)
+    enemy.setAttribute('loot-progress', element.loot.progress2Active)
+    enemy.setAttribute('data', element.loot.data)
 }
 
 const createPath = (elem, index, room2Render) => {
@@ -337,6 +348,7 @@ const defineComponents = (element, enemyBody) => {
 }
 
 const defineVision = (element) => {
+    if ( element.type === TRACKER ) return createAndAddClass('div', 'vision')
     const vision = createAndAddClass('div', 'vision')
     vision.style.height = `${element.vision}px`
     for ( let i = 0; i < 100; i++ ) {

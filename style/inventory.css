@@ -60,13 +60,27 @@
   justify-content: center;
 }
 
+@keyframes options-animation {
+  0% {
+    visibility: 0;
+    top: 40%;
+  }
+  100% {
+    visibility: 1;
+    top: 50%;
+  }
+}
+
 .options {
   width: 100px;
   position: absolute;
-  left: 50%;
+  left: 100%;
   top: 50%;
   z-index: 3;
   text-transform: capitalize;
+  animation-name: options-animation;
+  animation-duration: 200ms;
+  animation-direction: alternate;
 }
 
 .options > div {
