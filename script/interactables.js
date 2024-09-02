@@ -218,10 +218,11 @@ export class BodyArmor extends Drop {
 }
 
 export class Note extends Drop {
-    constructor(left, top, heading, description, data, progress) {
+    constructor(left, top, heading, description, data, progress, code) {
         super(15, left, top, 'note', heading, 1, 1, description, undefined, progress)
         this.data = data
         this.examined = false
+        this.code = code
     }
 }
 
@@ -268,8 +269,8 @@ export const interactables = new Map([
         ),
         new Coin(200, 200, 10, Progress.builder().setRenderProgress('100')),
         new Note(500, 500, 'Main hall code', 
-            'A small letter containing the code for the main hall', 
-            'Main hall door code: 4127'
+            'A small letter containing the code for the main hall',
+            'Main hall door code: PLACE_PASS_HERE', undefined, 'main-hall'
         ),
         ]
     ],[37, 

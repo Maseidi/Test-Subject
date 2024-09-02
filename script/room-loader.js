@@ -253,9 +253,10 @@ const renderDescription = (popup, interactable) => {
     const appendList = []
     const fButton = createAndAddClass('p', 'interactable-btn')
     fButton.textContent = 'F'
-    if ( !interactable.isDoor ) appendList.push(fButton)
+    const needCodeDoor = interactable.isDoor && interactable.code
+    if ( !interactable.isDoor || needCodeDoor ) appendList.push(fButton)
     const descText = document.createElement('p')
-    descText.textContent = `${interactable.popup}`
+    descText.textContent = `${needCodeDoor ? 'Enter code' : interactable.popup}`
     appendList.push(descText)
     appendAll(descContainer, ...appendList)
     popup.append(descContainer)

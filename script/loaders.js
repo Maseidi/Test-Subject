@@ -1,3 +1,4 @@
+import { getPasswords } from './password-manager.js'
 import { Progress } from './progress.js'
 
 class Loader {
@@ -62,7 +63,8 @@ class BottomLoader_FromRight extends Loader {
 }
 
 class Door {
-    constructor(color, heading, popup, key, progress) {
+    constructor(color, heading, popup, key, progress, code) {
+        this.name = 'door'
         this.color = color
         this.heading = heading
         this.popup = popup
@@ -71,6 +73,12 @@ class Door {
         this.progress2Active = progress?.progress2Active
         this.killAll = progress?.killAll
         this.type = Math.random() < 0.5 ? 1 : 2
+        this.code = code
+        this.value = code ? (() => {
+            let result = ""
+            for ( let i = 0; i < getPasswords().get(code).toString().length; i++ ) result += "8"
+            return result
+        })() : ''
     }
 }
 
@@ -108,7 +116,12 @@ export const loaders = new Map([
                 Progress.builder().setRemoveProgress('100')
             )
         ),
-        new TopLoader_FromLeft(38, 250, 475),
+        new TopLoader_FromLeft(38, 250, 475, 
+            new Door('purple', 'Test door 3', 'Door for testing', undefined, 
+                Progress.builder().setProgress2Active('1000'), 
+                'main-hall'
+            )
+        ),
         new RightLoader_FromTop(39, 300, 300)
         ]
     ],

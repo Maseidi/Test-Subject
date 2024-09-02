@@ -57,6 +57,7 @@ import {
     setSprintPressed,
     setUpPressed } from './variables.js'
 import { activateProgress, deactiveProgress, getProgress } from './progress-manager.js'
+import { renderPasswordInput } from './password-manager.js'
 
 export const control = () => {
     onkeydown = (e) => {
@@ -243,7 +244,8 @@ const fDown = () => {
     if ( getIntObj().getAttribute('name') === 'stash' ) openStash()    
     if ( getIntObj().getAttribute('name') === 'vendingMachine' ) openVendingMachine()    
     if ( getIntObj().getAttribute('name') === 'crate' ) breakCrate()
-    if ( getIntObj().getAttribute('name') === 'lever' ) toggleLever()      
+    if ( getIntObj().getAttribute('name') === 'lever' ) toggleLever()
+    if ( getIntObj().getAttribute('name') === 'door' ) renderPasswordInput()
 }
 
 const breakFree = () => {

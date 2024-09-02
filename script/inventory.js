@@ -48,6 +48,7 @@ import {
     getPause, 
     getEquippedWeaponObject, 
     setEquippedWeaponObject } from './variables.js'
+import { getPasswords } from './password-manager.js'
 
 export const MAX_PACKSIZE = {
     bandage: 3,
@@ -568,7 +569,7 @@ const use = (item) => {
     else if ( theItem.name === 'adrenaline' )   useAdrenaline(theItem)
     else if ( theItem.name === 'energydrink' )  useEnergyDrink(theItem)
     else if ( theItem.name === 'healthpotion' ) useHealthPotion(theItem)
-    else if ( theItem.amount === 0 ) inventory[itemObj.row][itemObj.column] = null
+    if ( theItem.amount === 0 ) inventory[itemObj.row][itemObj.column] = null
     renderInventory()
 }
 
@@ -689,7 +690,7 @@ const renderNote = (item, itemObj) => {
     const noteContainer = createAndAddClass('div', 'note-container', 'ui-theme')
     const note = createAndAddClass('div', 'note')
     const data = createAndAddClass('p', 'note-data')
-    data.textContent = itemObj.data
+    data.textContent = itemObj.data.replace('PLACE_PASS_HERE', getPasswords().get(itemObj.code))
     note.append(data)
     noteContainer.append(note)
     getPauseContainer().append(noteContainer)

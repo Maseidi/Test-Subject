@@ -20,6 +20,7 @@ export const enemies = new Map([
     [16, [
         new Torturer(1, new SinglePointPath(400, 400), undefined, Progress.builder().setRenderProgress('100')),
         new RockCrusher(1, new SinglePointPath(500, 400), undefined, Progress.builder().setRenderProgress('400')),
+        new Stinger(1, new SinglePointPath(600, 400), undefined, Progress.builder().setRenderProgress('1000')),
     ]],
     [37, [
         new Tracker(1, 1000, 140, new SingleLoot(HEALTH_POTION), 

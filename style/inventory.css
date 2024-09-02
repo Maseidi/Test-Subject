@@ -62,11 +62,11 @@
 
 @keyframes options-animation {
   0% {
-    visibility: 0;
+    opacity: 0;
     top: 40%;
   }
   100% {
-    visibility: 1;
+    opacity: 1;
     top: 50%;
   }
 }
@@ -79,7 +79,7 @@
   z-index: 3;
   text-transform: capitalize;
   animation-name: options-animation;
-  animation-duration: 200ms;
+  animation-duration: 100ms;
   animation-direction: alternate;
 }
 
