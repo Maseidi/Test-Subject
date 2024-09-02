@@ -1,6 +1,6 @@
 import { Progress } from './progress.js'
-import { getPopupContainer, getRoomNameContainer } from './elements.js'
 import { activateProgress } from './progress-manager.js'
+import { getPopupContainer, getRoomNameContainer } from './elements.js'
 import { addClass, appendAll, createAndAddClass, object2Element, removeClass } from './util.js'
 
 class Popup {

@@ -1,6 +1,9 @@
-import { getCurrentRoom, getCurrentRoomExplosions, getMapEl, getPlayer } from './elements.js'
-import { getWeaponDetail, getWeaponUpgradableDetail } from './weapon-details.js'
+import { removeWeapon } from './weapon-loader.js'
+import { removeThrowable } from './throwable-loader.js'
 import { getThrowableDetail, isThrowable } from './throwable-details.js'
+import { ADRENALINE, ENERGY_DRINK, HEALTH_POTION, LUCK_PILLS } from './loot.js'
+import { getWeaponDetail, getWeaponUpgradableDetail } from './weapon-details.js'
+import { getCurrentRoom, getCurrentRoomExplosions, getMapEl, getPlayer } from './elements.js'
 import { 
     getDownPressed,
     getEntityId,
@@ -10,9 +13,6 @@ import {
     getThrowCounter,
     getUpPressed,
     setEntityId } from './variables.js'
-import { removeWeapon } from './weapon-loader.js'
-import { removeThrowable } from './throwable-loader.js'
-import { ADRENALINE, ENERGY_DRINK, HEALTH_POTION, LUCK_PILLS } from './loot.js'
 
 export const collide = (first, second, offset) => {
     const firstBound = first.getBoundingClientRect()

@@ -235,7 +235,9 @@
   gap: 100px;
 }
 
-.popup-cancel:hover, .popup-confirm:hover {
+.popup-cancel:hover,
+.popup-confirm:hover,
+.popup-examine:hover {
   box-shadow: 5px 5px 25px white;
   color: white;
   filter: brightness(110%);
@@ -272,7 +274,10 @@
 
 .popup-examine {
   background-color: black;
-  color: white;
+  border: 1px solid grey;
+}
+
+.popup-examine:hover {
   border: 1px solid white;
 }
 
@@ -288,15 +293,6 @@
 
 .popup-confirm > img {
   width: 25px;
-}
-
-@keyframes message {
-  0% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
 }
 
 .message {

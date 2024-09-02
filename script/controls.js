@@ -8,8 +8,10 @@ import { renderStore } from './vending-machine.js'
 import { isThrowable } from './throwable-details.js'
 import { heal, damagePlayer } from './player-health.js'
 import { renderThrowable } from './throwable-loader.js'
+import { renderPasswordInput } from './password-manager.js'
 import { renderUi, renderWeaponUi, quitPage } from './user-interface.js'
 import { getGrabBar, getPauseContainer, getPlayer, getUiEl } from './elements.js'
+import { activateProgress, deactiveProgress, getProgress } from './progress-manager.js'
 import { findEquippedWeaponById, pickupDrop, removeInventory, renderInventory } from './inventory.js'
 import { 
     addClass,
@@ -56,8 +58,6 @@ import {
     setShootPressed,
     setSprintPressed,
     setUpPressed } from './variables.js'
-import { activateProgress, deactiveProgress, getProgress } from './progress-manager.js'
-import { renderPasswordInput } from './password-manager.js'
 
 export const control = () => {
     onkeydown = (e) => {

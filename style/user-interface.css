@@ -115,12 +115,24 @@
   background: linear-gradient(to right, rgb(255, 165, 0), rgb(255, 203, 107));
 }
 
-.first-ok > div:nth-of-type(1), .second-ok > div:nth-of-type(2), .third-ok > div:nth-of-type(3) {
-  background: linear-gradient(to right, rgb(34, 139, 34), rgb(45, 183, 45)) !important;
+.first-ok > div:nth-of-type(1),
+.second-ok > div:nth-of-type(2),
+.third-ok > div:nth-of-type(3) {
+  background: linear-gradient(
+    to right,
+    rgb(34, 139, 34),
+    rgb(45, 183, 45)
+  ) !important;
 }
 
-.first-fail > div:nth-of-type(1), .second-fail > div:nth-of-type(2), .third-fail > div:nth-of-type(3) {
-  background: linear-gradient(to right, rgb(220, 20, 60), rgb(220, 68, 99)) !important;
+.first-fail > div:nth-of-type(1),
+.second-fail > div:nth-of-type(2),
+.third-fail > div:nth-of-type(3) {
+  background: linear-gradient(
+    to right,
+    rgb(220, 20, 60),
+    rgb(220, 68, 99)
+  ) !important;
 }
 
 .grab-bar > .slider {
@@ -130,15 +142,6 @@
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-}
-
-@keyframes grabBarMessage {
-  0% {
-    transform: scale(1) skewX(40deg);
-  }
-  100% {
-    transform: scale(1.2) skewX(40deg);
-  }
 }
 
 .grab-bar-message-container {
@@ -158,17 +161,6 @@
 .grab-bar-btn {
   border: 1px solid white;
   padding: 1px 5px 0 5px;
-}
-
-@keyframes popup-animation {
-  0% {
-    opacity: 0;
-    transform: translateX(calc(-100% - 10px)) translateY(50px);
-  }
-  100% {
-    opacity: 1;
-    transform: translateX(calc(-100% - 10px)) translateY(0);
-  }
 }
 
 .progress-popup {
@@ -213,15 +205,6 @@
   background-color: rgba(255, 255, 255, 0.1);
 }
 
-@keyframes room-name-popup {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-100%);
-  }
-}
-
 .room-name-animation {
   animation-name: room-name-popup;
   animation-direction: alternate;
@@ -238,15 +221,6 @@
   box-shadow: 5px 5px 25px rgba(0, 0, 0, 0.9);
   border-top-left-radius: 5px;
   border-bottom-left-radius: 5px;
-}
-
-@keyframes room-name-character {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
 }
 
 .room-name-popup > span {

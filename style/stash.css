@@ -99,16 +99,20 @@
   padding: 10px;
   gap: 10px;
   opacity: 0.9;
+  animation-duration: 200ms;
+  animation-direction: alternate;
 }
 
 .move-to-stash {
   top: 80%;
+  animation-name: move-to-stash-popup-animation;
 }
 
 .move-to-inventory {
   top: 0;
   left: 50%;
   transform: translateX(-50%);
+  animation-name: move-to-inventory-popup-animation;
 }
 
 .number {

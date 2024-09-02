@@ -1,7 +1,7 @@
 import { getPlayer } from './elements.js'
 import { getEquippedWeaponObject } from './variables.js'
-import { getWeaponUpgradableDetail, getWeaponDetails } from './weapon-details.js'
 import { createAndAddClass, findAttachmentsOnPlayer } from './util.js'
+import { getWeaponUpgradableDetail, getWeaponDetails } from './weapon-details.js'
 
 export const renderWeapon = () => {
     const equippedWeapon = getEquippedWeaponObject()

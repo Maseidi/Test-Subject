@@ -22,7 +22,7 @@ export const setPlayerY = (val) => {
 }
 export const getPlayerY = () => playerY
 
-let currentRoomId = 16
+let currentRoomId = 1
 export const setCurrentRoomId = (val) => {
     currentRoomId = val
 }

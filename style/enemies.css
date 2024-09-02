@@ -9,7 +9,9 @@
   align-items: center;
 }
 
-.torturer-collider, .grabber-collider, .scorcher-collider {
+.torturer-collider,
+.grabber-collider,
+.scorcher-collider {
   height: 37px;
   width: 37px;
 }
@@ -72,8 +74,8 @@
   position: absolute;
 }
 
-.torturer-collider > div:nth-of-type(1), 
-.grabber-collider > div:nth-of-type(1), 
+.torturer-collider > div:nth-of-type(1),
+.grabber-collider > div:nth-of-type(1),
 .scorcher-collider > div:nth-of-type(1) {
   width: 25px;
   height: 14px;
@@ -217,7 +219,7 @@
   border-top-left-radius: 50%;
 }
 
-.stinger-collider > div:nth-of-type(1) > div:nth-of-type(1)::after, 
+.stinger-collider > div:nth-of-type(1) > div:nth-of-type(1)::after,
 .stinger-collider > div:nth-of-type(1) > div:nth-of-type(2)::after {
   content: "";
   display: block;
@@ -384,7 +386,9 @@
   border: 1px solid black;
 }
 
-.ranger-bullet, .scorcher-bullet, .stinger-bullet {
+.ranger-bullet,
+.scorcher-bullet,
+.stinger-bullet {
   position: absolute;
   width: 8px;
   height: 8px;
@@ -419,63 +423,7 @@
   transition: 300ms;
 }
 
-@keyframes normalAttack {
-  50% {
-    transform: rotateZ(40deg);
-    top: 10px;
-    left: 60%;
-  }
-  100% {
-    transform: rotateZ(0deg);
-    top: 2px;
-    left: 100%;
-  }
-}
-
-@keyframes leftGrabAttack {
-  100% {
-    transform: rotateZ(20deg);
-    top: 5px;
-    left: 80%;
-  }
-}
-
-@keyframes rightGrabAttack {
-  100% {
-    transform: rotateZ(-20deg);
-    top: 5px;
-    right: 80%;
-  }
-}
-
-@keyframes stingerAttack {
-  50% {
-    transform: rotateZ(0deg);
-    top: 10px;
-    left: 60%;
-  }
-  100% {
-    transform: rotateZ(-60deg);
-    top: 2px;
-    left: 100%;
-  }
-}
-
-@keyframes stingerLeftGrabAttack {
-  100% {
-    transform: rotateZ(-40deg);
-    top: 10px;
-  }
-}
-
-@keyframes stingerRightGrabAttack {
-  100% {
-    transform: rotateZ(40deg);
-    top: 10px;
-  }
-}
-
-.torturer-collider > div:nth-of-type(1) > .attack ,
+.torturer-collider > div:nth-of-type(1) > .attack,
 .soul-drinker-collider > div:nth-of-type(1) > .attack,
 .rock-crusher-collider > div:nth-of-type(1) > .attack,
 .tracker-collider > div:nth-of-type(1) > .attack,
@@ -555,7 +503,8 @@
   font-weight: bold;
   position: absolute;
   transform: translateX(-50%);
-  text-shadow: -1px 1px 0 #FFF, 1px 1px 0 #FFF, 1px -1px 0 #FFF, -1px -1px 0 #FFF;
+  text-shadow: -1px 1px 0 #fff, 1px 1px 0 #fff, 1px -1px 0 #fff,
+    -1px -1px 0 #fff;
 }
 
 .critical {
@@ -563,144 +512,13 @@
 }
 
 .yellow {
-  text-shadow: -1px 1px 0 #000, 1px 1px 0 #000, 1px -1px 0 #000, -1px -1px 0 #000;
-}
-
-@keyframes container-1 {
-  20% {
-    transform: translateX(calc(-50% + 10px)) translateY(-5px);
-  }
-  40% {
-    transform: translateX(calc(-50% + 20px)) translateY(-10px);
-  }
-  50% {
-    transform: translateX(calc(-50% + 30px)) translateY(-12.5px);
-  }
-  60% {
-    transform: translateX(calc(-50% + 40px)) translateY(-12.5px);
-  }
-  80% {
-    transform: translateX(calc(-50% + 50px)) translateY(-10px);
-  }
-  100% {
-    transform: translateX(calc(-50% + 60px)) translateY(-5px);
-    opacity: 0;
-  }
-}
-
-@keyframes container-2 {
-  20% {
-    transform: translateX(calc(-50% + 5px)) translateY(-10px);
-  }
-  40% {
-    transform: translateX(calc(-50% + 10px)) translateY(-20px);
-  }
-  50% {
-    transform: translateX(calc(-50% + 15px)) translateY(-25px);
-  }
-  60% {
-    transform: translateX(calc(-50% + 20px)) translateY(-25px);
-  }
-  80% {
-    transform: translateX(calc(-50% + 25px)) translateY(-20px);
-  }
-  100% {
-    transform: translateX(calc(-50% + 30px)) translateY(-10px);
-    opacity: 0;
-  }
-}
-
-@keyframes container-3 {
-  20% {
-    transform: translateX(calc(-50% + 2.5px)) translateY(-20px);
-  }
-  40% {
-    transform: translateX(calc(-50% + 5px)) translateY(-40px);
-  }
-  50% {
-    transform: translateX(calc(-50% + 7.5px)) translateY(-50px);
-  }
-  60% {
-    transform: translateX(calc(-50% + 10px)) translateY(-50px);
-  }
-  80% {
-    transform: translateX(calc(-50% + 12.5px)) translateY(-40px);
-  }
-  100% {
-    transform: translateX(calc(-50% + 15px)) translateY(-20px);
-    opacity: 0;
-  }
-}
-
-@keyframes container-4 {
-  20% {
-    transform: translateX(calc(-50% - 2.5px)) translateY(-20px);
-  }
-  40% {
-    transform: translateX(calc(-50% - 5px)) translateY(-40px);
-  }
-  50% {
-    transform: translateX(calc(-50% - 7.5px)) translateY(-50px);
-  }
-  60% {
-    transform: translateX(calc(-50% - 10px)) translateY(-50px);
-  }
-  80% {
-    transform: translateX(calc(-50% - 12.5px)) translateY(-40px);
-  }
-  100% {
-    transform: translateX(calc(-50% - 15px)) translateY(-20px);
-    opacity: 0;
-  }
-}
-
-@keyframes container-5 {
-  20% {
-    transform: translateX(calc(-50% - 5px)) translateY(-10px);
-  }
-  40% {
-    transform: translateX(calc(-50% - 10px)) translateY(-20px);
-  }
-  50% {
-    transform: translateX(calc(-50% - 15px)) translateY(-25px);
-  }
-  60% {
-    transform: translateX(calc(-50% - 20px)) translateY(-25px);
-  }
-  80% {
-    transform: translateX(calc(-50% - 25px)) translateY(-20px);
-  }
-  100% {
-    transform: translateX(calc(-50% - 30px)) translateY(-10px);
-    opacity: 0;
-  }
-}
-
-@keyframes container-6 {
-  20% {
-    transform: translateX(calc(-50% - 10px)) translateY(-5px);
-  }
-  40% {
-    transform: translateX(calc(-50% - 20px)) translateY(-10px);
-  }
-  50% {
-    transform: translateX(calc(-50% - 30px)) translateY(-12.5px);
-  }
-  60% {
-    transform: translateX(calc(-50% - 40px)) translateY(-12.5px);
-  }
-  80% {
-    transform: translateX(calc(-50% - 50px)) translateY(-10px);
-  }
-  100% {
-    transform: translateX(calc(-50% - 60px)) translateY(-5px);
-    opacity: 0;
-  }
+  text-shadow: -1px 1px 0 #000, 1px 1px 0 #000, 1px -1px 0 #000,
+    -1px -1px 0 #000;
 }
 
 .enemy-damage-container-1,
-.enemy-damage-container-2, 
-.enemy-damage-container-3, 
+.enemy-damage-container-2,
+.enemy-damage-container-3,
 .enemy-damage-container-4,
 .enemy-damage-container-5,
 .enemy-damage-container-6 {
@@ -739,7 +557,7 @@
   opacity: 0.1;
 }
 
-.dead > div:nth-of-type(1) > div:nth-of-type(1), 
+.dead > div:nth-of-type(1) > div:nth-of-type(1),
 .dead > div:nth-of-type(1) > div:nth-of-type(1) > div {
   transition: 1s;
 }

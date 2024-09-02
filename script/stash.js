@@ -10,7 +10,7 @@ import {
     element2Object,
     object2Element } from './util.js'
 import { 
-    descriptionEvent,
+    renderDescriptionEvent,
     handleEquippableDrop,
     pickupDrop,
     removeDescriptionEvent,
@@ -43,40 +43,46 @@ const inventoryEvents = () => {
     Array.from(background.firstElementChild.firstElementChild.children)
         .filter((block) => block.getAttribute('heading') && block.getAttribute('description'))
         .forEach((item) => {
-            descriptionEvent(item)
+            renderDescriptionEvent(item)
             removeDescriptionEvent(item)
-            moveEvent(item, 'to-stash')
+            addMoveItemEvent(item, 'to-stash')
+            removeMove2StashPopupEvent(item)
         })
 }
 
-const moveEvent = (item, type) => {
+const addMoveItemEvent = (item, type) => {    
     item.setAttribute('type', type)
-    item.addEventListener('click', addMoveEvent)
+    item.addEventListener('click', applyItemMovement)
 }
 
-const addMoveEvent = (e) => {
-    if ( !containsClass(e.target, 'block') && !containsClass(e.target, 'stash-item-selector') ) return
-    document.querySelector('.move-to-stash')?.remove()
-    document.querySelector('.move-to-inventory')?.remove()
-    const elem = containsClass(e.target, 'stash-item-selector') ? e.target.parentElement : e.target
-    if ( containsClass(e.target, 'stash-item-selector') ) e.target.parentElement.setAttribute('type', 'to-inventory')
+const applyItemMovement = (e) => {
+    const target = e.target
+    const targetParent = target.parentElement
+    if ( !containsClass(target, 'block') && !containsClass(target, 'stash-item-selector') ) return
+    const elem = containsClass(target, 'stash-item-selector') ? targetParent : target
+    if ( containsClass(target, 'stash-item-selector') ) {
+        targetParent.setAttribute('type', 'to-inventory')
+        targetParent.children[3]?.remove()
+    }
     const itemObj = element2Object(elem)
-    const move = createMoveComponent(itemObj)
+    const move = renderMoveComponent(itemObj)
     const number = createAndAddClass('div', 'number')
-    const chevLeft = createChevLeft()
+    const chevLeft = renderChevLeft()
     const amount = document.createElement('p')
     amount.textContent = `${Math.ceil(itemObj.amount / 2)}`
-    const chevRight = createChevRight()
+    const chevRight = renderChevRight()
     appendAll(number, chevLeft, amount, chevRight)
     const concan = createAndAddClass('div', 'confirm-bigger')
-    const confirm = createConfirm()
-    const cancel = biggerSteps()
-    appendAll(concan, confirm, cancel)
+    const confirm = renderConfirm()
+    const bigger = renderBiggerSteps()
+    appendAll(concan, confirm, bigger)
     appendAll(move, number, concan)
     elem.append(move)
 }
 
-const createMoveComponent = (itemObj) => {
+const removeMove2StashPopupEvent = (item) => item.addEventListener('mouseleave', (e) => e.target.children[2]?.remove())  
+
+const renderMoveComponent = (itemObj) => {
     const move = createAndAddClass('div', `move-${itemObj.type}`)
     addAllAttributes(
         move, 
@@ -87,7 +93,7 @@ const createMoveComponent = (itemObj) => {
     return move
 }
 
-const createChevLeft = () => {
+const renderChevLeft = () => {
     const chevLeft = document.createElement('img')
     chevLeft.src = '../assets/images/chev-left.png'
     chevLeft.addEventListener('click', reduceNumber)
@@ -117,14 +123,14 @@ const applyNewValue = (elem, diff, max) => {
     else elem.textContent = newValue
 }
 
-const createChevRight = () => {
+const renderChevRight = () => {
     const chevRight = document.createElement('img')
     chevRight.src = '../assets/images/chev-right.png'
     chevRight.addEventListener('click', addNumber)
     return chevRight
 }
 
-const createConfirm = () => {
+const renderConfirm = () => {
     const confirm = createAndAddClass('p', 'confirm')
     confirm.textContent = 'confirm'
     confirm.addEventListener('click', moveItem)
@@ -165,7 +171,7 @@ const searchPack = (object2Move, reduce) => {
     else stash[index] = {...object2Move, amount: stash[index].amount + reduce}    
 }
 
-const biggerSteps = () => {
+const renderBiggerSteps = () => {
     const bigger = createAndAddClass('div', 'bigger')
     const reduce = document.createElement('div')
     reduce.addEventListener('click', reduceNumber)
@@ -195,11 +201,16 @@ const renderStashItems = () => {
         else amount.textContent = `${item.amount}`
         appendAll(specs, title, amount)
         appendAll(stashItem, img, specs)
-        moveEvent(selector, 'to-inventory')
+        addMoveItemEvent(selector, 'to-inventory')        
+        removeMove2InventoryPopupEvent(stashItem)
         stashItems.append(stashItem)
     })
     stashItemsContainer.append(stashItems)
     getPauseContainer().firstElementChild.append(stashItemsContainer)
+}
+
+const removeMove2InventoryPopupEvent = (item) => {
+    item.addEventListener('mouseleave', (e) => e.target.children[3]?.remove())
 }
 
 export const removeStash = () => getPauseContainer().firstElementChild.remove()

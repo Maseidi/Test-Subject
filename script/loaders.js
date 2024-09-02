@@ -1,5 +1,5 @@
-import { getPasswords } from './password-manager.js'
 import { Progress } from './progress.js'
+import { getPasswords } from './password-manager.js'
 
 class Loader {
     constructor(className, width, height, left, top, right, bottom, door) {

@@ -3,6 +3,7 @@ import { renderWeapon } from './weapon-loader.js'
 import { interactables } from './interactables.js'
 import { useLuckPills } from './weapon-actions.js'
 import { useEnergyDrink } from './player-sprint.js'
+import { getPasswords } from './password-manager.js'
 import { isThrowable } from './throwable-details.js'
 import { useAdrenaline } from './player-movement.js'
 import { renderInteractable } from './room-loader.js'
@@ -48,7 +49,6 @@ import {
     getPause, 
     getEquippedWeaponObject, 
     setEquippedWeaponObject } from './variables.js'
-import { getPasswords } from './password-manager.js'
 
 export const MAX_PACKSIZE = {
     bandage: 3,
@@ -306,23 +306,23 @@ const inventoryEvents = () => {
     Array.from(background.firstElementChild.firstElementChild.children)
         .filter((block) => block.getAttribute('heading') && block.getAttribute('description'))
         .forEach((item) => {
-            descriptionEvent(item)
+            renderDescriptionEvent(item)
             removeDescriptionEvent(item)
-            optionsEvent(item)
+            optionsEvents(item)
         })
 }
 
-export const descriptionEvent = (item) => {
+export const renderDescriptionEvent = (item) => {
     const itemObj = element2Object(item)
-    item.addEventListener('mousemove', addDescEvent, true)
+    item.addEventListener('mousemove', renderDescriptionContent, true)
     item.heading = `${itemObj.heading}`
     item.description = `${itemObj.description}`
     item.isNote = itemObj.name === 'note'
     item.isExamined = itemObj.examined
 }
 
-const addDescEvent = (e) => {
-    const desc = document.querySelector('.description')
+const renderDescriptionContent = (e) => {
+    const desc = getPauseContainer().firstElementChild.firstElementChild.children[1]
     const heading = e.target.heading
     const description = e.target.description
     const isNote = e.target.isNote
@@ -332,29 +332,29 @@ const addDescEvent = (e) => {
 }
 
 export const removeDescriptionEvent = (item) => {
-    item.addEventListener('mouseleave', removeDescEvent, true)
+    item.addEventListener('mouseleave', removeDescriptionContent, true)
 }
 
-const removeDescEvent = () => {
-    const desc = document.querySelector('.description')
+const removeDescriptionContent = () => {
+    const desc = getPauseContainer().firstElementChild.firstElementChild.children[1]
     desc.children[0].textContent = ``
     desc.children[1].textContent = ``
 }
 
-const optionsEvent = (item) => {
-    item.addEventListener('click', addOptionsEvent, true)
-}
+const optionsEvents = (item) => item.addEventListener('click', addOptionsEvent, true)
 
-const addOptionsEvent = (e) => {
-    if ( !containsClass(e.target, 'block') ) return
-    document.querySelectorAll('.options').forEach((elem) => elem.remove())
+const addOptionsEvent = (e) => {    
+    const target = !containsClass(e.target, 'block') ? !containsClass(e.target.parentElement, 'block') ? 
+                   e.target.parentElement.parentElement : e.target.parentElement : e.target
+
     const options = createAndAddClass('div', 'options')
-    renderOptions(e.target, options)
-    options.addEventListener('mouseleave', () => options.remove())
-    e.target.append(options)
+    renderOptions(target, options)
+    target.addEventListener('mouseleave', () => options.remove())
+    target.append(options)
 }
 
 const renderOptions = (item, options) => {
+    if ( item.children[2] ) return
     let renderDropOption = true
 
     const itemObj = element2Object(item)
@@ -433,11 +433,11 @@ const checkReplace = (e) => {
     const item = inventory[destObj.row][destObj.column]  
     if ( item === undefined ) return
     const srcObj = element2Object(getDraggedItem())
-    let state = checkPossibility(item, destObj, srcObj)
+    let state = getReplacementState(item, destObj, srcObj)
     if (state !== -1) REPLACE_STATES.get(state)(destObj, srcObj)
 }
 
-const checkPossibility = (item, destObj, srcObj) => {
+const getReplacementState = (item, destObj, srcObj) => {
     if ( item !== null && item !== 'taken' ) {
         let possible = true
         for ( let k = destObj.column + 1; k < destObj.column + srcObj.space; k++ )
@@ -709,7 +709,7 @@ const OPTIONS = new Map([
     ['examine', examine],
 ])
 
-const createOption = (options, text) => {
+const createOption = (options, text) => {    
     const elem = document.createElement('div')
     elem.textContent = `${text}`
     elem.addEventListener('click', () => {
@@ -725,19 +725,9 @@ const renderWeaponWheel = () => {
     let slots = 4
     while (slots) {
         const slot = document.createElement('div')
-        const image = document.createElement('img')
         const slotNum = document.createElement('p')
-        let name = inventory.flat().find(item => item && item.id === getWeaponWheel()[4-slots])?.name
-        if ( !name ) 
-            name = getDraggedItem()?.getAttribute('id') === getWeaponWheel()[4 - slots] + '' ? 
-            getDraggedItem()?.getAttribute('name') : null
-        slotNum.textContent = 
-            getEquippedWeaponId() && 4 - slots === getWeaponWheel().findIndex(x => x === getEquippedWeaponId()) ? 
-            'E' : `${5 - slots}`
-        if ( name ) {
-            image.src = `../assets/images/${name}.png`
-            slot.append(image)
-        } else slot.style.width = `70px`
+        slotNum.textContent = addText2WeaponWheelOption(slots)
+        renderWeaponWheelImage(slot, slots)
         slot.append(slotNum)
         weaponWheel.append(slot)
         slots--
@@ -746,6 +736,23 @@ const renderWeaponWheel = () => {
     background.append(weaponWheelContainer)
 }
 
-export const removeInventory = () => {
-    getPauseContainer().firstElementChild.remove()
+const renderWeaponWheelImage = (slot, slots) => {
+    const weaponName = findWeaponName(slots)
+    if ( weaponName ) {
+        const image = document.createElement('img')
+        image.src = `../assets/images/${weaponName}.png`
+        slot.append(image)
+    } else slot.style.width = `70px`
 }
+
+const findWeaponName = (slots) => 
+    inventory.flat().find(item => item && item.id === getWeaponWheel()[4-slots])?.name ?? 
+    ( getDraggedItem()?.getAttribute('id') === getWeaponWheel()[4 - slots] + '' 
+    ? getDraggedItem()?.getAttribute('name') : null )
+
+const addText2WeaponWheelOption = (slots) =>
+    getEquippedWeaponId() && 
+    4 - slots === getWeaponWheel().findIndex(x => x === getEquippedWeaponId()) ? 
+    'E' : `${5 - slots}`
+
+export const removeInventory = () => getPauseContainer().firstElementChild.remove()

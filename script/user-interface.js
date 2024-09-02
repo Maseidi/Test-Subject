@@ -1,8 +1,8 @@
 import { managePause } from './controls.js'
 import { isThrowable } from './throwable-details.js'
-import { addClass, appendAll, createAndAddClass } from './util.js'
 import { getPauseContainer, getUiEl, setUiEl } from './elements.js'
 import { calculateThrowableAmount, calculateTotalAmmo } from './inventory.js'
+import { addClass, appendAll, containsClass, createAndAddClass } from './util.js'
 import { 
     getDraggedItem,
     getEquippedWeaponId,
@@ -89,6 +89,8 @@ export const renderQuit = () => {
 
 export const quitPage = () => {
     if ( getDraggedItem() ) return
-    getPauseContainer().lastElementChild.remove()
+    const last = getPauseContainer().lastElementChild 
+    if ( Array.from(last.children).find(child => containsClass(child, 'popup-container')) ) return
+    last.remove()
     if ( getPauseContainer().children.length === 0 ) managePause()
 }
