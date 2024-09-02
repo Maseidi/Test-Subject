@@ -235,9 +235,18 @@
   gap: 100px;
 }
 
-.buy-popup-btn-container > button:hover,
-.sell-popup-btn-container > button:hover {
-  filter: brightness(120%);
+.popup-cancel:hover, .popup-confirm:hover {
+  box-shadow: 5px 5px 25px white;
+  color: white;
+  filter: brightness(110%);
+}
+
+.popup-confirm:hover {
+  background-color: forestgreen;
+}
+
+.popup-cancel:hover {
+  background-color: crimson;
 }
 
 .buy-popup-img,
@@ -257,7 +266,8 @@
 }
 
 .popup-cancel {
-  background-color: crimson;
+  background-color: darkred;
+  color: lightgrey;
 }
 
 .popup-examine {
@@ -267,7 +277,8 @@
 }
 
 .popup-confirm {
-  background-color: forestgreen;
+  background-color: darkgreen;
+  color: lightgrey;
   display: flex;
   flex-direction: row;
   justify-content: space-between;

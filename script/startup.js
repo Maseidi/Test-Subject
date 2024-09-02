@@ -27,7 +27,7 @@ const renderRoomNameContainer = () => renderContainer('room-name-container', set
 
 const renderPauseContainer = () => renderContainer('pause-container', setPauseContainer)
 
-const renderPopupContainer = () => renderContainer('popup-container', setPopupContainer)
+const renderPopupContainer = () => renderContainer('popupover-container', setPopupContainer)
 
 const renderContainer = (className, setter) => {
     const root = document.getElementById('root')

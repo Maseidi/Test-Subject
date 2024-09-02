@@ -1,10 +1,10 @@
-import { managePause } from './controls.js'
-import { createAndAddClass, getProperty } from './util.js'
-import { quitPage, renderQuit } from './user-interface.js'
-import { getPauseContainer } from './elements.js'
-import { getCurrentRoomId, getIntObj, setPauseCause } from './variables.js'
 import { loaders } from './loaders.js'
+import { managePause } from './controls.js'
 import { openDoor } from './progress-manager.js'
+import { getPauseContainer } from './elements.js'
+import { quitPage, renderQuit } from './user-interface.js'
+import { createAndAddClass, getProperty } from './util.js'
+import { getCurrentRoomId, getIntObj, setPauseCause } from './variables.js'
 
 const passwords = new Map([
     ['main-hall', Math.floor(Math.random() * 99900) + 100]
@@ -133,7 +133,7 @@ const decreaseDigit = (e) => {
 const updateDoorCodeValue = (digit, bar) => {
     const doorValue = getIntObj().getAttribute('value')
     let newValue = ""
-    for ( let i = 0; i < doorValue.length; i++ ) 
+    for ( let i = 0; i < doorValue.length; i++ )
         newValue += ( i === digit ? bar.children[5].textContent : doorValue.charAt(i) ) 
     getIntObj().setAttribute('value', newValue)
     const loaderElem = getIntObj().nextSibling

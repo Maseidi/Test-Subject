@@ -206,7 +206,7 @@ export class LuckPillsDrop extends Drop {
 
 export class EnergyDrinkDrop extends Drop {
     constructor(left, top, amount, progress) {
-        super(5, left, top, 'energydrink', 'energy drink', amount, 1, 
+        super(15, left, top, 'energydrink', 'energy drink', amount, 1, 
             'Refills stamina completely and increases max stamina by 60 units. (Default stamina is 600 units)', 20, progress)
     }
 }

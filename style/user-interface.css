@@ -163,29 +163,28 @@
 @keyframes popup-animation {
   0% {
     opacity: 0;
-    transform: translateX(-50%) translateY(50px);
+    transform: translateX(calc(-100% - 10px)) translateY(50px);
   }
   100% {
     opacity: 1;
-    transform: translateX(-50%) translateY(0);
+    transform: translateX(calc(-100% - 10px)) translateY(0);
   }
 }
 
 .progress-popup {
-  left: 50%;
-  gap: 20px;
-  top: 170px;
+  left: 100%;
+  gap: 10px;
+  top: 10px;
+  width: 500px;
   padding: 20px;
   display: flex;
-  max-width: 700px;
   border-radius: 5px;
   text-align: justify;
   flex-direction: column;
-  text-justify: inter-word;
   animation-duration: 300ms;
-  transform: translateX(-50%);
   animation-direction: alternate;
   animation-name: popup-animation;
+  transform: translateX(calc(-100% - 10px));
   box-shadow: 5px 5px 25px rgba(0, 0, 0, 0.9);
 }
 
@@ -231,7 +230,7 @@
 
 .room-name-popup {
   left: 100%;
-  bottom: 50px;
+  bottom: 10px;
   transform: translateX(-100%);
   width: max-content;
   color: wheat;
