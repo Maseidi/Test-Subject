@@ -1,10 +1,14 @@
 import { enemies } from '../../util/enemies.js'
 import { dropLoot } from '../../../loot-manager.js'
+import { isWeapon } from '../../../weapon-details.js'
 import { CHASE, STUNNED } from '../../util/enemy-constants.js'
-import { getWeaponDetail, isWeapon } from '../../../weapon-details.js'
 import { getCriticalChance, getCurrentRoomId } from '../../../variables.js'
-import { addAllAttributes, addClass, containsClass, createAndAddClass, getEquippedItemDetail, removeClass } from '../../../util.js'
-import { activateProgress, updateKillAllDoors, updateKillAllEnemies, updateKillAllInteractables } from '../../../progress-manager.js'
+import { addAllAttributes, addClass, containsClass, createAndAddClass, removeClass } from '../../../util.js'
+import { 
+    activateProgress,
+    updateKillAllDoors,
+    updateKillAllEnemies,
+    updateKillAllInteractables } from '../../../progress-manager.js'
 
 export class AbstractInjuryService {
     constructor(enemy) {
@@ -13,10 +17,8 @@ export class AbstractInjuryService {
         this.enemy.damagedCounter = 0
     }
 
-    damageEnemy(equipped) {
-        const name = equipped.name
-        let damage = getEquippedItemDetail(equipped, 'damage')
-        if ( isWeapon(name) && this.enemy.virus === getWeaponDetail(name, 'antivirus') ) {
+    damageEnemy(name, damage, antivirus) {
+        if ( isWeapon(name) && this.enemy.virus === antivirus ) {
             damage *= 1.2
             var sameVirus = this.enemy.virus
         }

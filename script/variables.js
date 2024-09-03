@@ -22,7 +22,7 @@ export const setPlayerY = (val) => {
 }
 export const getPlayerY = () => playerY
 
-let currentRoomId = 1
+let currentRoomId = 16
 export const setCurrentRoomId = (val) => {
     currentRoomId = val
 }
@@ -166,11 +166,11 @@ export const setIntObj = (val) => {
 }
 export const getIntObj = () => intObj
 
-let target
-export const setTarget = (val) => {
-    target = val
+let targets
+export const setTargets = (val) => {
+    targets = val
 }
-export const getTarget = () => target
+export const getTargets = () => targets
 
 let pause = false
 export const setPause = (val) => {

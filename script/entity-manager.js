@@ -2,7 +2,7 @@ import { rooms } from './rooms.js'
 import { loaders } from './loaders.js'
 import { dropLoot } from './loot-manager.js'
 import { loadCurrentRoom } from './room-loader.js'
-import { getThrowableDetails } from './throwable-details.js'
+import { getThrowableDetail, getThrowableDetails } from './throwable-details.js'
 import { damagePlayer, poisonPlayer, setPlayer2Fire } from './player-health.js'
 import { CHASE, GO_FOR_RANGED, GRAB, LOST, NO_OFFENCE, STUNNED } from './enemy/util/enemy-constants.js'
 import { 
@@ -333,7 +333,7 @@ const explodeEnemies = (explosion) => {
     for ( const enemy of getCurrentRoomEnemies() ) {
         if ( enemy.explosionCounter !== 0 ) continue
         if ( !collide(enemy.sprite, explosion, 0) ) continue
-        enemy.injuryService.damageEnemy(getThrowableDetails().get('grenade'))
+        enemy.injuryService.damageEnemy('grenade', getThrowableDetail('grenade', 'damage'))
         enemy.explosionCounter = 1
         enemy.state = LOST
         enemy.lostCounter = 1

@@ -3,7 +3,7 @@ import { isThrowable } from './throwable-details.js'
 import { removeThrowable } from './throwable-loader.js'
 import { manageAimModeAngle } from './angle-manager.js'
 import { TRACKER } from './enemy/util/enemy-constants.js'
-import { getWeaponUpgradableDetail, isWeapon } from './weapon-details.js'
+import { getWeaponDetail, getWeaponUpgradableDetail, isWeapon } from './weapon-details.js'
 import { 
     calculateThrowableAmount,
     calculateTotalAmmo,
@@ -48,7 +48,7 @@ import {
     getShootCounter,
     getShootPressed,
     getShooting,
-    getTarget,
+    getTargets,
     getThrowCounter,
     getWeaponWheel,
     setAimMode,
@@ -61,7 +61,7 @@ import {
     setReloading,
     setShootCounter,
     setShooting,
-    setTarget, 
+    setTargets, 
     setThrowCounter,
     setWeaponWheel } from './variables.js'
 
@@ -81,30 +81,26 @@ let counter = 0
 const manageAim = () => {
     if ( !getAimMode() ) return
     counter++
-    if ( counter === 6 ) {
+    if ( counter === 10 ) {
         counter = 0
-        setTarget(null)
+        setTargets([])
     } 
     if ( counter !== 0 ) return
     const range = getEquippedItemDetail(equipped, 'range')
     const laser = findAttachmentsOnPlayer('throwable', 'weapon').firstElementChild
     laser.style.height = `${range}px`
     let found = false
+    let intersectedWithWall = false
     Array.from(laser.children).forEach(elem => {
-        elem.style.display = 'block'
-        if ( found ) {
-            elem.style.display = 'none'
-            return
-        }
+        elem.style.visibility = found ? 'hidden' : 'visible'
+        if ( intersectedWithWall ) return
         for ( const solid of getCurrentRoomSolid() ) {
-            if ( ( isThrowable(equipped.name) &&
-                   !containsClass(solid, 'enemy-collider')  ||
-                   isWeapon(equipped.name)
-                 ) &&
-                collide(elem, solid, 0) ) {
-                setTarget(solid)
-                found = true
-            }
+            if ( ( isThrowable(equipped.name) && !containsClass(solid, 'enemy-collider')  || isWeapon(equipped.name)) &&
+                 collide(elem, solid, 0) ) {
+                    if ( !getTargets().includes(solid) ) getTargets().push(solid)
+                    intersectedWithWall = !containsClass(solid, 'enemy-collider') && solid.getAttribute('name') !== 'crate'
+                    found = true
+                }
         }
     }) 
 }
@@ -199,11 +195,21 @@ const notifyNearbyEnemies = () => getCurrentRoomEnemies().forEach(elem => {
 })
 
 const manageInteractivity = () => {
-    if ( !getTarget() ) return
-    let element = getTarget().parentElement
-    const enemy = getCurrentRoomEnemies().find(elem => elem.sprite === element)
-    if ( containsClass(element, 'enemy') && enemy.health > 0 ) enemy.injuryService.damageEnemy(equipped)
-    if ( getTarget()?.getAttribute('name') === 'crate' ) dropLoot(getTarget())
+    if ( getTargets().length === 0 ) return
+    for ( let i = 0; i < getTargets().length; i++ ) {
+        const target = getTargets()[i]
+        let element = target.parentElement
+        const enemy = getCurrentRoomEnemies().find(elem => elem.sprite === element)
+        const absoluteDamage = getEquippedItemDetail(equipped, 'damage') / Math.pow(2, i)
+        if ( containsClass(element, 'enemy') && enemy.health > 0 && absoluteDamage >= 10 ) {
+            enemy.injuryService.damageEnemy(
+                equipped.name, 
+                absoluteDamage, 
+                getWeaponDetail(equipped.name, 'antivirus')
+            )
+        } 
+        if ( target?.getAttribute('name') === 'crate' && absoluteDamage >= 10 ) dropLoot(target)
+    }
 }
 
 const useAmmoFromInventory = (equipped, newMag, trade) => {
@@ -218,6 +224,7 @@ const useAmmoFromInventory = (equipped, newMag, trade) => {
 
 const manageFireAnimation = () => {
     if ( !getAimMode() ) return
+    // TODO: There's a bug when scorcher sets you on fire
     const weaponFire = getPlayer().firstElementChild.firstElementChild.lastElementChild.lastElementChild
     const time = Number(weaponFire.getAttribute('time'))
     if ( time === 0 ) return
