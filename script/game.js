@@ -5,7 +5,7 @@ import { manageEntities } from './entity-manager.js'
 import { managePlayerAngle } from './angle-manager.js'
 import { manageHealthStatus } from './player-health.js'
 import { getPause, getPauseCause } from './variables.js'
-import { manageWeaponActions } from './weapon-actions.js'
+import { manageWeaponActions } from './weapon-manager.js'
 import { managePlayerMovement } from './player-movement.js'
 import { managePopup, manageRoomName } from './popup-manager.js'
 

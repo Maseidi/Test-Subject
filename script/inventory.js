@@ -1,7 +1,7 @@
 import { renderStats } from './weapon-examine.js'
 import { renderWeapon } from './weapon-loader.js'
 import { interactables } from './interactables.js'
-import { useLuckPills } from './weapon-actions.js'
+import { useLuckPills } from './weapon-manager.js'
 import { useEnergyDrink } from './player-sprint.js'
 import { getPasswords } from './password-manager.js'
 import { isThrowable } from './throwable-details.js'

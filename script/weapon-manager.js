@@ -1,6 +1,7 @@
 import { dropLoot } from './loot-manager.js'
 import { isThrowable } from './throwable-details.js'
 import { removeThrowable } from './throwable-loader.js'
+import { manageAimModeAngle } from './angle-manager.js'
 import { TRACKER } from './enemy/util/enemy-constants.js'
 import { getWeaponUpgradableDetail, isWeapon } from './weapon-details.js'
 import { 
@@ -37,6 +38,8 @@ import {
     getEquippedWeaponId,
     getEquippedWeaponObject,
     getNoOffenseCounter,
+    getPlayerAimAngle,
+    getPlayerAngle,
     getPlayerX,
     getPlayerY,
     getReloading,
@@ -52,6 +55,9 @@ import {
     setCriticalChance,
     setEquippedWeaponId,
     setEquippedWeaponObject,
+    setPlayerAimAngle,
+    setPlayerAngle,
+    setPlayerAngleState,
     setReloading,
     setShootCounter,
     setShooting,
@@ -67,6 +73,7 @@ export const manageWeaponActions = () => {
     manageAim()
     manageReload()
     manageShoot()
+    manageFireAnimation()
     manageThrow()
 }
 
@@ -161,9 +168,27 @@ const shoot = () => {
         return
     }
     currMag--
+    applyRecoil()
+    addFireAnimation()
     notifyNearbyEnemies()
     manageInteractivity()
     useAmmoFromInventory(equipped, currMag, 0)
+}
+
+const applyRecoil = () => {
+    const currAngle = getProperty(getPlayer().firstElementChild.firstElementChild, 'transform', 'rotateZ(', 'deg)')
+    let newAngle = currAngle + (Math.ceil(Math.random() * 7.5) - 3.75)
+    if ( newAngle > 180 ) newAngle -= 360
+    else if ( newAngle < -180 ) newAngle += 360
+    setPlayerAimAngle(newAngle)
+    manageAimModeAngle(getPlayer(), getPlayerAimAngle(), getPlayerAngle, setPlayerAngle, setPlayerAngleState)
+}
+
+const addFireAnimation = () => {
+    const weaponFire = getPlayer().firstElementChild.firstElementChild.lastElementChild.lastElementChild
+    if ( !Number(weaponFire.getAttribute('time')) === 0 ) return
+    weaponFire.style.display = 'block'
+    weaponFire.setAttribute('time', 1)
 }
 
 const notifyNearbyEnemies = () => getCurrentRoomEnemies().forEach(elem => {
@@ -189,6 +214,18 @@ const useAmmoFromInventory = (equipped, newMag, trade) => {
     const totalAmmo = ammoCount.children[1]
     mag.textContent = newMag
     totalAmmo.textContent = calculateTotalAmmo(equipped)
+}
+
+const manageFireAnimation = () => {
+    if ( !getAimMode() ) return
+    const weaponFire = getPlayer().firstElementChild.firstElementChild.lastElementChild.lastElementChild
+    const time = Number(weaponFire.getAttribute('time'))
+    if ( time === 0 ) return
+    if ( time === 6 ) {
+        weaponFire.setAttribute('time', 0)
+        weaponFire.style.display = 'none'
+    } 
+    else weaponFire.setAttribute('time', time + 1)
 }
 
 const manageThrow = () => {
