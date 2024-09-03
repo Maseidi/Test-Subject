@@ -29,11 +29,19 @@ export class AbstractAngleService {
     }
 
     changeEnemyAngleState(state, translateX, translateY) {
-        const forwardDetector = this.enemy.sprite.firstElementChild.children[2]
-        forwardDetector.style.left = '50%'
-        forwardDetector.style.top = '50%'
-        forwardDetector.style.transform = `translateX(${translateX}) translateY(${translateY})`
+        this.updateForwardDetector(translateX, translateY)
+        this.updateBackwardDetector(translateX, translateY)
         return state
+    }
+
+    updateForwardDetector(translateX, translateY) {
+        const forwardDetector = this.enemy.sprite.firstElementChild.children[2]
+        forwardDetector.style.transform = `translateX(${translateX}) translateY(${translateY})`
+    }
+
+    updateBackwardDetector(translateX, translateY) {
+        const backwardDetector = this.enemy.sprite.firstElementChild.children[3]
+        // TODO : implement later
     }
 
     angle2Player() {

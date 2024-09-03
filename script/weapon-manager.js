@@ -181,7 +181,7 @@ const applyRecoil = () => {
 }
 
 const addFireAnimation = () => {
-    const weaponFire = getPlayer().firstElementChild.firstElementChild.lastElementChild.lastElementChild
+    const weaponFire = findAttachmentsOnPlayer('weapon').lastElementChild
     if ( !Number(weaponFire.getAttribute('time')) === 0 ) return
     weaponFire.style.display = 'block'
     weaponFire.setAttribute('time', 1)
@@ -223,9 +223,8 @@ const useAmmoFromInventory = (equipped, newMag, trade) => {
 }
 
 const manageFireAnimation = () => {
-    if ( !getAimMode() ) return
-    // TODO: There's a bug when scorcher sets you on fire
-    const weaponFire = getPlayer().firstElementChild.firstElementChild.lastElementChild.lastElementChild
+    if ( !getAimMode() || isThrowable(getEquippedWeaponObject().name) ) return
+    const weaponFire = findAttachmentsOnPlayer('weapon').lastElementChild
     const time = Number(weaponFire.getAttribute('time'))
     if ( time === 0 ) return
     if ( time === 6 ) {

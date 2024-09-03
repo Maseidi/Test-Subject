@@ -285,8 +285,11 @@ export const spawnEnemy = (elem, room2Render) => {
     enemyBody.style.backgroundColor = `${elem.virus}`
     defineComponents(elem, enemyBody)
     const vision = defineVision(elem)
-    const fwDetector = defineForwardDetector(elem)
-    appendAll(enemyCollider, enemyBody, vision, fwDetector)
+    appendAll(
+        enemyCollider, enemyBody, vision, 
+        createAndAddClass('div', `enemy-forward-detector`), 
+        createAndAddClass('div', `enemy-backward-detector`)
+    )
     enemy.append(enemyCollider)
     room2Render.append(enemy)
     elem.sprite = enemy
@@ -356,10 +359,4 @@ const defineVision = (element) => {
         vision.append(visionComponent)
     }
     return vision
-}
-
-const defineForwardDetector = () => {
-    const forwardDetector = createAndAddClass('div', 'enemy-forward-detector')
-    forwardDetector.style.top = '50%'
-    return forwardDetector
 }

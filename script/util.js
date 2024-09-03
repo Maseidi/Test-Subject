@@ -136,6 +136,7 @@ export const addFireEffect = () => {
     const fire = document.createElement('img')
     addClass(fire, 'fire')
     fire.src = `../assets/images/fire.gif`
+    fire.setAttribute('draggable', false)
     return fire
 }
 

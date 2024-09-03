@@ -10,7 +10,7 @@ export const renderWeapon = () => {
     weapon.style.height = `${details.height}px`
     weapon.style.backgroundColor = `${details.color}`
     const laser = renderLaser(equippedWeapon.name, equippedWeapon.rangelvl, details.antivirus)
-    const fire = renderWeaponFire(details.antivirus)
+    const fire = renderWeaponFire()
     appendAll(weapon, laser, fire)
     getPlayer().children[0].children[0].append(weapon)
 }
@@ -27,10 +27,10 @@ const renderLaser = (name, rangeLevel, color) => {
     return laser
 }
 
-const renderWeaponFire = (color) => {
-    const weaponFire = createAndAddClass('div', 'weapon-fire')
+const renderWeaponFire = () => {
+    const weaponFire = createAndAddClass('img', 'weapon-fire')
     weaponFire.setAttribute('time', 0)
-    weaponFire.style.backgroundColor = color === 'yellow' ? 'orange' : 'yellow'
+    weaponFire.src = '/assets/images/weapon-fire.png'
     weaponFire.style.display = 'none'
     return weaponFire
 }
