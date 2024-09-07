@@ -6,6 +6,7 @@ import { getCriticalChance, getCurrentRoomId } from '../../../variables.js'
 import { addAllAttributes, addClass, containsClass, createAndAddClass, removeClass } from '../../../util.js'
 import { 
     activateProgress,
+    deactivateProgress,
     updateKillAllDoors,
     updateKillAllEnemies,
     updateKillAllInteractables } from '../../../progress-manager.js'
@@ -59,6 +60,7 @@ export class AbstractInjuryService {
         this.deathAnimation()
         enemies.get(getCurrentRoomId())[this.enemy.index].health = 0
         activateProgress(this.enemy.progress2Active)
+        deactivateProgress(this.enemy.progress2Deactive)
         updateKillAllDoors()
         updateKillAllInteractables()
         updateKillAllEnemies()

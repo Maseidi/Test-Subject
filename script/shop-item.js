@@ -145,8 +145,11 @@ let shopItems = [
     new Pouch('9'),
     new GrenadeShopItem('10'),
     new FlashbangShopItem('11'),
-    new EnergyDrinkShopItem('0'),
-    new ArmorShopItem('2')
+    new ArmorShopItem('2'),
+    new LuckPillsShopItem(),
+    new HealthPotionShopItem(),
+    new EnergyDrinkShopItem(),
+    new AdrenalineShopItem()
 ]
 
 export const setShopItems = (val) => {

@@ -7,6 +7,7 @@ class Room {
         this.height = height
         this.label = label
         this.progress2Active = progress?.progress2Active
+        this.progress2Deactive = progress?.progress2Deactive
     }
 }
 

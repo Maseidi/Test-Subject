@@ -5,7 +5,7 @@ import { isWeapon } from './weapon-details.js'
 import { enemies } from './enemy/util/enemies.js'
 import { interactables } from './interactables.js'
 import { renderRoomName } from './popup-manager.js'
-import { activateProgress, findProgressByName } from './progress-manager.js'
+import { activateProgress, deactivateProgress, findProgressByName } from './progress-manager.js'
 import { getCurrentRoomId, getRoomLeft, getRoomTop, setStunnedCounter } from './variables.js'
 import { 
     LOST,
@@ -75,6 +75,7 @@ const renderRoom = () => {
     room2Render.style.top = `${getRoomTop()}px`
     room2Render.style.backgroundColor = `lightgray`
     activateProgress(room.progress2Active)
+    deactivateProgress(room.progress2Deactive)
     renderRoomName(room.label)
     return room2Render
 }
@@ -182,7 +183,7 @@ const renderInteractables = (room2Render) =>
 export const renderInteractable = (root, interactable, index) => {
     if ( !findProgressByName(interactable.renderProgress) ) return
     if ( enemiesLeft(interactable) ) return
-    const int = object2Element(interactable)
+    const int = object2Element(interactable)    
     addClass(int, 'interactable')
     setInteractableId(interactable, int, index)
     int.style.left = `${interactable.left}px`
@@ -215,7 +216,7 @@ const renderImage = (int, interactable) => {
 
 const handleLeverImage = (interactable, image) => {
     if ( interactable.name !== 'lever' ) return
-    const toggle1 = interactable.toggle1
+    const toggle1 = interactable.progress2Active
     if ( findProgressByName(toggle1) ) image.style.transform = `scale(-1, 1)` 
 }
 

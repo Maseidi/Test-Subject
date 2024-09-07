@@ -9,7 +9,7 @@ import { AbstractNotificationService } from '../service/abstract/notification.js
 
 export class AbstractEnemy {
     constructor(type, components, waypoint, health, damage, 
-        maxSpeed, vision, acceleration, loot, progress, virus) {
+        maxSpeed, vision, acceleration, loot, progress, virus) {    
         this.type = type
         this.components = components
         this.waypoint = waypoint
@@ -22,6 +22,7 @@ export class AbstractEnemy {
         this.loot = loot
         this.renderProgress = progress?.renderProgress
         this.progress2Active = progress?.progress2Active
+        this.progress2Deactive = progress?.progress2Deactive
         this.killAll = progress?.killAll
         this.x = waypoint.points[0].x
         this.y = waypoint.points[0].y
@@ -36,6 +37,7 @@ export class AbstractEnemy {
     }
 
     behave() {
+        
         if ( this.health === 0 ) return
         this.visionService.look4Player()
         this.injuryService.manageDamagedMode()

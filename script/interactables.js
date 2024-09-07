@@ -29,6 +29,7 @@ class Interactable {
         this.renderProgress = progress?.renderProgress ?? '0'
         this.killAll= progress?.killAll
         this.progress2Active = progress?.progress2Active
+        this.progress2Deactive = progress?.progress2Deactive
     }
 }
 
@@ -57,14 +58,13 @@ class Crate extends Interactable {
         this.data = loot.data
         this['loot-amount'] = loot.amount
         this['loot-progress'] = loot.progress2Active
+        this['loot-deactive'] = loot.progress2Deactive
     }
 }
 
 export class Lever extends Interactable {
-    constructor(left, top, progress, toggle1, toggle2) {
+    constructor(left, top, progress) {
         super(30, left, top, 'lever', 'lever', 'Toggle', true, undefined, undefined, undefined, undefined, progress)
-        this.toggle1 = toggle1
-        this.toggle2 = toggle2
     }
 }
 
@@ -257,7 +257,7 @@ export const interactables = new Map([
         []
     ],[16, 
         [
-        new WeaponDrop(500, 600, 'famas', 50, 1, 1, 1, 1, 1),
+        new WeaponDrop(500, 600, 'famas', 20, 1, 1, 1, 1, 1),
         new SmgAmmo(500, 700, 90),
         new Bandage(600, 700, 5),
         new Antidote(600, 600, 5),
@@ -265,9 +265,9 @@ export const interactables = new Map([
         new Flashbang(600, 800, 5),
         new Flashbang(700, 800, 2),
         new Lever(1000, 700, 
-            Progress.builder().setRenderProgress('2'), '100', '200'
+            Progress.builder().setRenderProgress('2').setProgress2Active('100').setProgress2Deactive('200')
         ),
-        new Coin(200, 200, 10, Progress.builder().setRenderProgress('100')),
+        new Coin(200, 200, 10, Progress.builder().setRenderProgress('100').setProgress2Deactive('1000')),
         ]
     ],[37, 
         [

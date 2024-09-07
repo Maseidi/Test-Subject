@@ -105,7 +105,7 @@ const dropDeterminedLoot = (decision, left, top, amount) => {
             {name: HEALTH_POTION, obj: HealthPotion, predicate: getHealthPotionsDropped},
             {name: ENERGY_DRINK,  obj: EnergyDrink,  predicate: getEnergyDrinksDropped},
             {name: LUCK_PILLS,    obj: LuckPills,    predicate: getLuckPillsDropped}
-        ].find((elem) => elem.name === decision && elem.predicate < 10)
+        ].find((elem) => elem.name === decision && elem.predicate() < 10)
         return decideItemDrop(result.obj, 1, left, top, 1)
     } else if ( lootMap.get(decision) ) {
         const drop = lootMap.get(decision)
@@ -115,12 +115,12 @@ const dropDeterminedLoot = (decision, left, top, amount) => {
 
 const decideItemDrop = (drop, chance, left, top, amount) => {
     if ( Math.random() < chance ) var result = new drop(left, top, amount)
-    [
+    Array.from([
         {expected: ADRENALINE,    setter: setAdrenalinesDropped,   getter: getAdrenalinesDropped},
         {expected: HEALTH_POTION, setter: setHealthPotionsDropped, getter: getHealthPotionsDropped},
         {expected: ENERGY_DRINK,  setter: setEnergyDrinksDropped,  getter: getEnergyDrinksDropped},
         {expected: LUCK_PILLS,    setter: setLuckPillsDropped,     getter: getLuckPillsDropped}
-    ].forEach(elem => handleStatUpgraderDrop(result?.name, elem.expected, elem.setter, elem.getter))
+    ]).forEach(elem => handleStatUpgraderDrop(result?.name, elem.expected, elem.setter, elem.getter))
     return result
 }
 

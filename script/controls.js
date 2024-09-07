@@ -11,7 +11,7 @@ import { renderThrowable } from './throwable-loader.js'
 import { renderPasswordInput } from './password-manager.js'
 import { renderUi, renderWeaponUi, quitPage } from './user-interface.js'
 import { getGrabBar, getPauseContainer, getPlayer, getUiEl } from './elements.js'
-import { activateProgress, deactiveProgress, getProgress } from './progress-manager.js'
+import { activateProgress, deactivateProgress, getProgress } from './progress-manager.js'
 import { findEquippedWeaponById, pickupDrop, removeInventory, renderInventory } from './inventory.js'
 import { 
     addClass,
@@ -279,17 +279,17 @@ const openPause = (cause, func) => {
 }
 
 const toggleLever = () => {
-    const toggle1 = getIntObj().getAttribute('toggle1')
-    const toggle2 = getIntObj().getAttribute('toggle2')
+    const toggle1 = getIntObj().getAttribute('progress2Active')
+    const toggle2 = getIntObj().getAttribute('progress2Deactive')
     const value = getProgress()[toggle1]
     if ( !value ) {
         activateProgress(toggle1)
-        deactiveProgress(toggle2)
+        deactivateProgress(toggle2)
         getIntObj().firstElementChild.style.transform = `scale(-1, 1)`
     }
     else {
         activateProgress(toggle2)
-        deactiveProgress(toggle1)
+        deactivateProgress(toggle1)
         getIntObj().firstElementChild.style.transform = `scale(1, 1)`
     }
 }

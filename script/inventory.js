@@ -10,7 +10,7 @@ import { renderInteractable } from './room-loader.js'
 import { renderThrowable } from './throwable-loader.js'
 import { quitPage, renderQuit } from './user-interface.js'
 import { getWeaponDetails, isWeapon } from './weapon-details.js'
-import { activateProgress, openDoor } from './progress-manager.js'
+import { activateProgress, deactivateProgress, openDoor } from './progress-manager.js'
 import { useAntidote, useBandage, useHealthPotion } from './player-health.js'
 import { getCurrentRoom, getCurrentRoomInteractables, getPauseContainer, getPlayer, getUiEl } from './elements.js'
 import { 
@@ -141,7 +141,10 @@ const handleThrowablePickup = (drop) => {
 
 const checkSpecialScenarios = () => {
     const obj = element2Object(getIntObj())
-    if ( obj.amount === 0 ) activateProgress(obj.progress2active + '')
+    if ( obj.amount === 0 ) {
+        activateProgress(obj.progress2active + '')
+        deactivateProgress(obj.progress2deactive + '')
+    }
     if ( ( isThrowable(obj.name) && !getWeaponWheel().includes(obj.id) ) ||
          ( isWeapon(obj.name) && obj.amount === 0 ) ) updateWeaponWheel()        
     if ( getPause() ) return

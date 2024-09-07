@@ -29,12 +29,13 @@ export const activateProgress = (name) => {
     updateInteractables(name)
 }
 
-export const deactiveProgress = (name) => {
+export const deactivateProgress = (name) => {
+    if ( !name || name === 'undefined' || !progress[name] ) return
     progress = {
         ...progress,
         [name] : false
     }
-    closeDoors(name)
+    closeDoors(name)    
 }
 
 const openDoors = (name) => 
@@ -45,7 +46,9 @@ const openDoors = (name) =>
 export const openDoor = (door) => {
     addClass(door, 'open')
     const progress2Active = door.getAttribute('progress2Active')
+    const progress2Deactive = door.getAttribute('progress2Deactive')
     if ( progress2Active ) activateProgress(progress2Active)
+    if ( progress2Deactive ) deactivateProgress(progress2Deactive)
 }
 
 const closeDoors = (name) => 

@@ -75,6 +75,7 @@
 
 .poisoned::before {
   background-color: green;
+  z-index: 100;
 }
 
 .flame {
