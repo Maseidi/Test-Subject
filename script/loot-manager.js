@@ -52,8 +52,9 @@ import {
 
 export const dropLoot = (rootElem, isEnemy) => {
     const root = element2Object(rootElem)
-    const {left, top, loot: decision, 'loot-amount': amount, 'loot-progress': progress2Active } = root
-    const {'loot-data': data, 'loot-heading': heading, 'loot-description': description, 'loot-code': code} = root
+    const {
+        left, top, loot: decision, 'loot-amount': amount, 'loot-active': progress2Active, 'loot-deactive': progress2Deactive,
+        'loot-data': data, 'loot-heading': heading, 'loot-description': description, 'loot-code': code } = root
     let loot
     if ( decision === RANDOM ) loot = dropRandomLoot(left, top)
     else if ( !decision ) loot = undefined
@@ -64,6 +65,7 @@ export const dropLoot = (rootElem, isEnemy) => {
     if ( !loot ) return
     let interactable = {...loot, left: left, top: top, id: nextId()}
     if ( progress2Active !== 'undefined' ) interactable = {...interactable, progress2Active}
+    if ( progress2Deactive !== 'undefined' ) interactable = {...interactable, progress2Deactive}
     interactables.get(getCurrentRoomId()).push(interactable)
     renderInteractable(getCurrentRoom(), interactable)
 }

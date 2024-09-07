@@ -325,7 +325,8 @@ const handleEnemyLoot = (element, enemy) => {
     if ( !element.loot ) return
     enemy.setAttribute('loot', element.loot.name)
     enemy.setAttribute('loot-amount', element.loot.amount)
-    enemy.setAttribute('loot-progress', element.loot.progress2Active)
+    enemy.setAttribute('loot-active', element.loot.progress2Active)
+    enemy.setAttribute('loot-deactive', element.loot.progress2Deactive)
     enemy.setAttribute('loot-data', element.loot.data)
     enemy.setAttribute('loot-code', element.loot.code)
     enemy.setAttribute('loot-heading', element.loot.heading)
