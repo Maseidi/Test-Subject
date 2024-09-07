@@ -10,6 +10,7 @@ import { Path, Point, SinglePointPath, SquarePath, VerDoublePointPath } from '..
 import { 
     ENERGY_DRINK,
     HEALTH_POTION,
+    NoteLoot,
     SingleLoot } from '../../loot.js'
 
 export const enemies = new Map([
@@ -20,7 +21,15 @@ export const enemies = new Map([
         new Torturer(1, new SinglePointPath(400, 400), undefined, Progress.builder().setRenderProgress('100')),
         new RockCrusher(1, new SinglePointPath(500, 400), undefined, Progress.builder().setRenderProgress('400')),
         new Stinger(1, new SinglePointPath(600, 400), undefined, Progress.builder().setRenderProgress('1000')),
-        new Torturer(1, new SinglePointPath(600, 100), undefined, Progress.builder().setRenderProgress('0'), 'purple')
+        new Torturer(1, new SinglePointPath(600, 100), 
+        new NoteLoot(
+            'Main hall code', 
+            'A small letter containing the code for the main hall', 
+            'Main hall door code: PLACE_CODE_HERE', 
+            'main-hall'
+        ), 
+            Progress.builder().setRenderProgress('0'), 'purple'
+        )
     ]],
     [37, [
         new Tracker(1, 1000, 140, new SingleLoot(HEALTH_POTION), 

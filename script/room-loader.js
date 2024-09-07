@@ -325,7 +325,10 @@ const handleEnemyLoot = (element, enemy) => {
     enemy.setAttribute('loot', element.loot.name)
     enemy.setAttribute('loot-amount', element.loot.amount)
     enemy.setAttribute('loot-progress', element.loot.progress2Active)
-    enemy.setAttribute('data', element.loot.data)
+    enemy.setAttribute('loot-data', element.loot.data)
+    enemy.setAttribute('loot-code', element.loot.code)
+    enemy.setAttribute('loot-heading', element.loot.heading)
+    enemy.setAttribute('loot-description', element.loot.description)
 }
 
 const createPath = (elem, index, room2Render) => {

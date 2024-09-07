@@ -1,6 +1,6 @@
 import { removeDrop } from './inventory.js'
-import { element2Object, nextId } from './util.js'
 import { renderInteractable } from './room-loader.js'
+import { element2Object, isStatUpgrader, nextId } from './util.js'
 import { getCurrentRoom, getCurrentRoomSolid, setCurrentRoomSolid } from './elements.js'
 import { 
     getAdrenalinesDropped,
@@ -13,17 +13,17 @@ import {
     setHealthPotionsDropped,
     setLuckPillsDropped } from './variables.js'
 import { 
-    AdrenalineDrop,
+    Adrenaline,
     Antidote,
     Bandage,
     Coin,
-    EnergyDrinkDrop,
+    EnergyDrink,
     Flashbang,
     Grenade,
     HardDrive,
-    HealthPotionDrop,
+    HealthPotion,
     interactables,
-    LuckPillsDrop,
+    LuckPills,
     MagnumAmmo,
     Note,
     PistolAmmo,
@@ -52,10 +52,12 @@ import {
 
 export const dropLoot = (rootElem, isEnemy) => {
     const root = element2Object(rootElem)
-    const {left, top, loot: decision, 'loot-amount': amount, 'loot-progress': progress2Active, data } = root
+    const {left, top, loot: decision, 'loot-amount': amount, 'loot-progress': progress2Active } = root
+    const {'loot-data': data, 'loot-heading': heading, 'loot-description': description, 'loot-code': code} = root
     let loot
-    if ( decision === RANDOM ) loot = dropRandomLoot(loot, left, top)
+    if ( decision === RANDOM ) loot = dropRandomLoot(left, top)
     else if ( !decision ) loot = undefined
+    else if ( decision === NOTE ) loot = new Note(left, top, heading, description, data, undefined, code)
     else loot = dropDeterminedLoot(decision, left, top, amount, data)
     if ( !isEnemy ) removeDrop(rootElem)
     else setCurrentRoomSolid(getCurrentRoomSolid().filter(solid => solid !== rootElem.firstElementChild))
@@ -66,75 +68,64 @@ export const dropLoot = (rootElem, isEnemy) => {
     renderInteractable(getCurrentRoom(), interactable)
 }
 
-const dropRandomLoot = (loot, left, top) => {
-    if ( !loot ) loot = decideItemDrop(Grenade,       0.01, left, top, 1)
-    if ( !loot ) loot = decideItemDrop(Flashbang,     0.01, left, top, 1)
-    if ( !loot ) loot = decideItemDrop(MagnumAmmo,    0.02, left, top, 1)
-    if ( !loot ) loot = decideItemDrop(HardDrive,     0.04, left, top, 1)
-    if ( !loot ) loot = decideItemDrop(Bandage,        0.1, left, top, 1)
-    if ( !loot ) loot = decideItemDrop(Antidote,       0.1, left, top, 1)
-    if ( !loot ) loot = decideItemDrop(RifleAmmo,      0.1, left, top, 2)
-    if ( !loot ) loot = decideItemDrop(ShotgunShells,  0.2, left, top, 5)
-    if ( !loot ) loot = decideItemDrop(SmgAmmo,        0.3, left, top, 20)
-    if ( !loot ) loot = decideItemDrop(Coin,           0.4, left, top, 1)
-    if ( !loot ) loot = decideItemDrop(PistolAmmo,     0.6, left, top, 10)
-    if ( !loot && getAdrenalinesDropped()   < 10 ) loot = decideItemDrop(AdrenalineDrop,   0.0001, left, top, 1)    
-    if ( !loot && getHealthPotionsDropped() < 10 ) loot = decideItemDrop(HealthPotionDrop, 0.0001, left, top, 1)    
-    if ( !loot && getEnergyDrinksDropped()  < 10 ) loot = decideItemDrop(EnergyDrinkDrop,      0.0001, left, top, 1)    
-    if ( !loot && getLuckPillsDropped()     < 10 ) loot = decideItemDrop(LuckPillsDrop,    0.0001, left, top, 1)    
-    return loot
+const dropRandomLoot = (left, top) => {
+    return [
+        {obj: Grenade, chance: 0.01},        {obj: Flashbang, chance: 0.01},
+        {obj: MagnumAmmo, chance: 0.02},     {obj: HardDrive, chance: 0.04},
+        {obj: Bandage, chance: 0.1},         {obj: Antidote, chance: 0.1},
+        {obj: RifleAmmo, chance: 0.1},       {obj: ShotgunShells, chance: 0.2},
+        {obj: SmgAmmo, chance: 0.3},         {obj: Coin, chance: 0.4},
+        {obj: PistolAmmo, chance: 0.6},
+        {obj: Adrenaline, chance: 0.0001,    predicate: getAdrenalinesDropped},
+        {obj: HealthPotion, chance: 0.0001,  predicate: getHealthPotionsDropped}, 
+        {obj: EnergyDrink, chance: 0.0001,   predicate: getEnergyDrinksDropped},
+        {obj: LuckPills, chance: 0.0001,     predicate: getLuckPillsDropped},
+    ]
+    .sort(() => Math.random() - 0.5)
+    .filter((item) => item.predicate === undefined || predicate() < 10)
+    .map((item) => new decideItemDrop(item.obj, item.chance, left, top, amount))
+    .find(drop => drop)
 }
 
-const dropDeterminedLoot = (decision, left, top, amount, data) => {
-    switch ( decision ) {
-        case GRENADE_LOOT:
-            return decideItemDrop(Grenade,       1, left, top, amount)
-        case FLASHBANG_LOOT:
-            return decideItemDrop(Flashbang,     1, left, top, amount)    
-        case MAGNUM_AMMO_LOOT:
-            return decideItemDrop(MagnumAmmo,    1, left, top, amount)
-        case HARDDRIVE_LOOT:
-            return decideItemDrop(HardDrive,     1, left, top, amount)
-        case BANDAGE_LOOT:
-            return decideItemDrop(Bandage,       1, left, top, amount)
-        case ANTIDOTE_LOOT:
-            return decideItemDrop(Antidote,      1, left, top, amount)
-        case RIFLE_AMMO_LOOT:
-            return decideItemDrop(RifleAmmo,     1, left, top, amount)
-        case SHOTGUN_SHELLS_LOOT:
-            return decideItemDrop(ShotgunShells, 1, left, top, amount)                   
-        case SMG_AMMO_LOOT:
-            return decideItemDrop(SmgAmmo,       1, left, top, amount)
-        case COIN_LOOT:
-            return decideItemDrop(Coin,          1, left, top, amount)
-        case PISTOL_AMMO_LOOT:
-            return decideItemDrop(PistolAmmo,    1, left, top, amount)
-        case ADRENALINE:
-            if ( getAdrenalinesDropped()   < 10 ) return decideItemDrop(AdrenalineDrop,   1, left, top, 1)
-            break    
-        case HEALTH_POTION:
-            if ( getHealthPotionsDropped() < 10 ) return decideItemDrop(HealthPotionDrop, 1, left, top, 1)
-            break    
-        case ENERGY_DRINK:
-            if ( getEnergyDrinksDropped()  < 10 ) return decideItemDrop(EnergyDrinkDrop,      1, left, top, 1)
-            break    
-        case LUCK_PILLS:
-            if ( getLuckPillsDropped()     < 10 ) return decideItemDrop(LuckPillsDrop,    1, left, top, 1)
-            break 
-        case NOTE:
-            return new Note(left, top, data)
-        default:
-            return dropWeaponLoot(left, top, decision)
-    }
+const lootMap = new Map([
+    [GRENADE_LOOT, Grenade],        [FLASHBANG_LOOT, Flashbang],
+    [MAGNUM_AMMO_LOOT, MagnumAmmo], [HARDDRIVE_LOOT, HardDrive],
+    [BANDAGE_LOOT, Bandage],        [ANTIDOTE_LOOT, Antidote],
+    [RIFLE_AMMO_LOOT, RifleAmmo],   [SHOTGUN_SHELLS_LOOT, ShotgunShells],
+    [SMG_AMMO_LOOT, SmgAmmo],       [COIN_LOOT, Coin],
+    [PISTOL_AMMO_LOOT, PistolAmmo], [ADRENALINE, Grenade],
+    [HEALTH_POTION, Grenade],       [ENERGY_DRINK, Grenade],
+    [LUCK_PILLS, Grenade],
+])
+
+const dropDeterminedLoot = (decision, left, top, amount) => {
+    if ( isStatUpgrader({name: decision}) ) {
+        const result = [
+            {name: ADRENALINE,    obj: Adrenaline,   predicate: getAdrenalinesDropped}, 
+            {name: HEALTH_POTION, obj: HealthPotion, predicate: getHealthPotionsDropped},
+            {name: ENERGY_DRINK,  obj: EnergyDrink,  predicate: getEnergyDrinksDropped},
+            {name: LUCK_PILLS,    obj: LuckPills,    predicate: getLuckPillsDropped}
+        ].find((elem) => elem.name === decision && elem.predicate < 10)
+        return decideItemDrop(result.obj, 1, left, top, 1)
+    } else if ( lootMap.get(decision) ) {
+        const drop = lootMap.get(decision)
+        return decideItemDrop(drop, 1, left, top, amount)
+    } else return dropWeaponLoot(left, top, decision)
 }
 
 const decideItemDrop = (drop, chance, left, top, amount) => {
     if ( Math.random() < chance ) var result = new drop(left, top, amount)
-    if ( result && result.name === ADRENALINE )    setAdrenalinesDropped(getAdrenalinesDropped()     + 1)            
-    if ( result && result.name === HEALTH_POTION ) setHealthPotionsDropped(getHealthPotionsDropped() + 1)            
-    if ( result && result.name === ENERGY_DRINK )  setEnergyDrinksDropped(getEnergyDrinksDropped()   + 1)            
-    if ( result && result.name === LUCK_PILLS )    setLuckPillsDropped(getLuckPillsDropped()         + 1)            
+    [
+        {expected: ADRENALINE,    setter: setAdrenalinesDropped,   getter: getAdrenalinesDropped},
+        {expected: HEALTH_POTION, setter: setHealthPotionsDropped, getter: getHealthPotionsDropped},
+        {expected: ENERGY_DRINK,  setter: setEnergyDrinksDropped,  getter: getEnergyDrinksDropped},
+        {expected: LUCK_PILLS,    setter: setLuckPillsDropped,     getter: getLuckPillsDropped}
+    ].forEach(elem => handleStatUpgraderDrop(result?.name, elem.expected, elem.setter, elem.getter))
     return result
+}
+
+const handleStatUpgraderDrop = (name, expected, setter, getter) => {
+    if ( name === expected ) setter(getter() + 1)
 }
 
 const dropWeaponLoot = (left, top, name) => new WeaponDrop(left, top, name, 0, 1, 1, 1, 1, 1)

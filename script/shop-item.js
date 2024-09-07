@@ -1,15 +1,15 @@
 import { Progress } from './progress.js'
 import { getWeaponDetails } from './weapon-details.js'
 import { 
-    AdrenalineDrop,
+    Adrenaline,
     Bandage,
     BodyArmor,
-    EnergyDrinkDrop,
+    EnergyDrink,
     Flashbang,
     Grenade,
     HardDrive,
-    HealthPotionDrop,
-    LuckPillsDrop,
+    HealthPotion,
+    LuckPills,
     MagnumAmmo,
     PistolAmmo,
     RifleAmmo,
@@ -104,25 +104,25 @@ class Pouch extends ShopItem {
 
 class AdrenalineShopItem extends ShopItem {
     constructor(renderProgress) {
-        super(new AdrenalineDrop(null, null, null, Progress.builder().setRenderProgress(renderProgress)), 1, 10)
+        super(new Adrenaline(null, null, null, Progress.builder().setRenderProgress(renderProgress)), 1, 10)
     }
 }
 
 class HealthPotionShopItem extends ShopItem {
     constructor(renderProgress) {
-        super(new HealthPotionDrop(null, null, null, Progress.builder().setRenderProgress(renderProgress)), 1, 10)
+        super(new HealthPotion(null, null, null, Progress.builder().setRenderProgress(renderProgress)), 1, 10)
     }
 }
 
 class LuckPillsShopItem extends ShopItem {
     constructor(renderProgress) {
-        super(new LuckPillsDrop(null, null, null, Progress.builder().setRenderProgress(renderProgress)), 1, 10)
+        super(new LuckPills(null, null, null, Progress.builder().setRenderProgress(renderProgress)), 1, 10)
     }
 }
 
 class EnergyDrinkShopItem extends ShopItem {
     constructor(renderProgress) {
-        super(new EnergyDrinkDrop(null, null, null, Progress.builder().setRenderProgress(renderProgress)), 1, 10)
+        super(new EnergyDrink(null, null, null, Progress.builder().setRenderProgress(renderProgress)), 1, 10)
     }
 }
 

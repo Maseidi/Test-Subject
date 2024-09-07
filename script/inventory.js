@@ -690,7 +690,7 @@ const renderNote = (item, itemObj) => {
     const noteContainer = createAndAddClass('div', 'note-container', 'ui-theme')
     const note = createAndAddClass('div', 'note')
     const data = createAndAddClass('p', 'note-data')
-    data.textContent = itemObj.data.replace('PLACE_PASS_HERE', getPasswords().get(itemObj.code))
+    data.textContent = itemObj.data.replace('PLACE_CODE_HERE', getPasswords().get(itemObj.code))
     note.append(data)
     noteContainer.append(note)
     getPauseContainer().append(noteContainer)

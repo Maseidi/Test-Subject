@@ -52,8 +52,11 @@ export class SingleLoot extends Loot {
 }
 
 export class NoteLoot extends SingleLoot {
-    constructor(data, progress2Active) {
+    constructor(heading, description, data, code, progress2Active) {
         super(NOTE, progress2Active)
+        this.heading = heading
+        this.description = description
+        this.code = code
         this.data = data
     }
 }

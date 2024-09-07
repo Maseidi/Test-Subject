@@ -292,11 +292,11 @@ export const setHealthPotionsDropped = (val) => {
 }
 export const getHealthPotionsDropped = () => healthPotionsDropped
 
-let luckPillsDropped = 0
+let LuckPillsped = 0
 export const setLuckPillsDropped = (val) => {
-    luckPillsDropped = val
+    LuckPillsped = val
 }
-export const getLuckPillsDropped = () => luckPillsDropped
+export const getLuckPillsDropped = () => LuckPillsped
 
 let energyDrinksDropped = 0
 export const setEnergyDrinksDropped = (val) => {
