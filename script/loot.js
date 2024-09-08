@@ -16,6 +16,12 @@ export const PISTOL_AMMO_LOOT = 'pistolammo'
 export const MAGNUM_AMMO_LOOT = 'magnumammo'
 export const SHOTGUN_SHELLS_LOOT = 'shotgunshells'
 
+export const RED_VACCINE = 'redvaccine'
+export const BLUE_VACCINE = 'bluevaccine'
+export const GREEN_VACCINE = 'greenvaccine'
+export const PURPLE_VACCINE = 'purplevaccine'
+export const YELLOW_VACCINE = 'yellowvaccine'
+
 export const UZI = 'uzi'
 export const P90 = 'p90'
 export const PPSH = 'ppsh'

@@ -53,7 +53,7 @@ import {
 export const dropLoot = (rootElem, isEnemy) => {
     const root = element2Object(rootElem)
     const {
-        left, top, loot: decision, 'loot-amount': amount, 'loot-active': progress2Active, 'loot-deactive': progress2Deactive,
+        left, top, 'loot-name': decision, 'loot-amount': amount, 'loot-active': progress2Active, 'loot-deactive': progress2Deactive,
         'loot-data': data, 'loot-heading': heading, 'loot-description': description, 'loot-code': code } = root
     let loot
     if ( decision === RANDOM ) loot = dropRandomLoot(left, top)

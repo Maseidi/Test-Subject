@@ -122,7 +122,9 @@ export const loaders = new Map([
                 'main-hall'
             )
         ),
-        new RightLoader_FromTop(39, 300, 300)
+        new RightLoader_FromTop(39, 300, 300,
+            new Door('violet', 'Silver gate', 'Silver door for testing', undefined, undefined, 'silver-gate')
+        )
         ]
     ],
     [37, [

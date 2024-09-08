@@ -140,7 +140,7 @@ const renderLoaders = (room2Render) => {
 }
 
 const enemiesLeft = (object) => {
-    const killAll = object.killAll
+    const killAll = object.killAll    
     if ( !killAll ) return false
     return enemies.get(getCurrentRoomId())
         .find(enemy => enemy.health !== 0 && enemy.renderProgress <= killAll) ? true : false
@@ -323,7 +323,7 @@ const initEnemyStats = (element) => {
 
 const handleEnemyLoot = (element, enemy) => {
     if ( !element.loot ) return
-    enemy.setAttribute('loot', element.loot.name)
+    enemy.setAttribute('loot-name', element.loot.name)
     enemy.setAttribute('loot-amount', element.loot.amount)
     enemy.setAttribute('loot-active', element.loot.progress2Active)
     enemy.setAttribute('loot-deactive', element.loot.progress2Deactive)

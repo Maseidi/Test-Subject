@@ -100,6 +100,8 @@ export const updateKillAllInteractables = () => {
     const aliveEnemies = enemies.get(getCurrentRoomId()).filter(enemy => enemy.health !== 0)
     interactables.get(getCurrentRoomId()).forEach((int, index) => {
         if ( !int.killAll || aliveEnemies.find(enemy => Number(enemy.renderProgress) <= Number(int.killAll)) ) return
+        console.log(int);
+        
         int.killAll = undefined
         int.renderProgress = '0'
         renderInteractable(getCurrentRoom(), int, index)

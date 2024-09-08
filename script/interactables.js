@@ -1,7 +1,6 @@
 import { Progress } from './progress.js'
 import { getWeaponDetails } from './weapon-details.js'
 import { 
-    BANDAGE_LOOT,
     FLASHBANG_LOOT,
     GRENADE_LOOT,
     Loot,
@@ -52,14 +51,22 @@ class VendingMachine extends Interactable {
 }
 
 class Crate extends Interactable {
-    constructor(left, top, loot, progress) {
-        super(35, left, top, 'crate', 'crate', 'Break', true, undefined, undefined, undefined, undefined, progress)
-        this.loot = loot.name
-        this.data = loot.data
-        this['loot-amount'] = loot.amount
-        this['loot-progress'] = loot.progress2Active
-        this['loot-deactive'] = loot.progress2Deactive
+    constructor(left, top, loot) {
+        super(35, left, top, 'crate', 'crate', 'Break', true)
+        if ( loot ) this.#initLootValues(loot)
     }
+
+    #initLootValues(loot) {
+        this['loot-name'] = loot.name
+        this['loot-amount'] = loot.amount
+        this['loot-active'] = loot.progress2Deactive
+        this['loot-deactive'] = loot.progress2Deactive
+        this['loot-data'] = loot.data
+        this['loot-code'] = loot.code
+        this['loot-heading'] = loot.heading
+        this['loot-description'] = loot.description
+    }
+
 }
 
 export class Lever extends Interactable {
@@ -226,6 +233,43 @@ export class Note extends Drop {
     }
 }
 
+class Vaccine extends Drop {
+    constructor(left, top, color, amount, progress) {
+        super(15, left, top, `${color}vaccine`, `${color} vaccine`, amount, 1, 
+            `Vaccine used for defusing virus ${color}`, 1/3, progress)
+    }
+}
+
+export class RedVaccine extends Vaccine {
+    constructor(left, top, amount, progress) {
+        super(left, top, 'red', amount, progress)
+    }
+}
+
+export class GreenVaccine extends Vaccine {
+    constructor(left, top, amount, progress) {
+        super(left, top, 'green', amount, progress)
+    }
+}
+
+export class YellowVaccine extends Vaccine {
+    constructor(left, top, amount, progress) {
+        super(left, top, 'yellow', amount, progress)
+    }
+}
+
+export class PurpleVaccine extends Vaccine {
+    constructor(left, top, amount, progress) {
+        super(left, top, 'purple', amount, progress)
+    }
+}
+
+export class BlueVaccine extends Vaccine {
+    constructor(left, top, amount, progress) {
+        super(left, top, 'blue', amount, progress)
+    }
+}
+
 export const interactables = new Map([
     [1 ,
         [
@@ -268,6 +312,11 @@ export const interactables = new Map([
             Progress.builder().setRenderProgress('2').setProgress2Active('100').setProgress2Deactive('200')
         ),
         new Coin(200, 200, 10, Progress.builder().setRenderProgress('100').setProgress2Deactive('1000')),
+        new Crate(900, 100, 
+            new NoteLoot('silver gate code', 'Note containing the gate code', 'Gate code PLACE_CODE_HERE', 'silver-gate')
+        ),
+        // fix kill all bug
+        new RedVaccine(100, 100, 2, Progress.builder().setKillAll('1000'))
         ]
     ],[37, 
         [

@@ -65,7 +65,12 @@ export const MAX_PACKSIZE = {
     adrenaline: 1,
     healthpotion: 1,
     luckpills: 1,
-    energydrink: 1
+    energydrink: 1,
+    redvaccine: 3,
+    bluevaccine: 3,
+    greenvaccine: 3,
+    yellowvaccine: 3,
+    purplevaccine: 3,
 }
 
 let inventory = [

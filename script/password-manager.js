@@ -7,7 +7,8 @@ import { createAndAddClass, getProperty } from './util.js'
 import { getCurrentRoomId, getIntObj, setPauseCause } from './variables.js'
 
 const passwords = new Map([
-    ['main-hall', Math.floor(Math.random() * 99900) + 100]
+    ['main-hall', Math.floor(Math.random() * 99900) + 100],
+    ['silver-gate', Math.floor(Math.random() * 99900) + 100],
 ])
 
 export const getPasswords = () => new Map(passwords)
