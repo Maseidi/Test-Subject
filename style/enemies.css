@@ -68,10 +68,6 @@
   position: absolute;
 }
 
-.enemy-backward-detector {
-  /* background-color: green; */
-}
-
 .enemy-collider > div:nth-of-type(1) {
   border: 1px solid black;
   position: absolute;

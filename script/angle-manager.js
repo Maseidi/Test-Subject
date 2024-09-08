@@ -54,14 +54,14 @@ const manageNonAimModeAngle = () => {
     setPlayerAngleState(newState)
 }
 
-const changeState = (state, left, translateX, top, translateY) => {
-    replaceForwardDetector(left, top, translateX, translateY)
+const changeState = (state, left, x, top, y) => {
+    replaceForwardDetector(left, top, x, y)
     return getAimMode() ? Number(getPlayer().getAttribute('angle-state')) : state
 }
 
-const replaceForwardDetector = (left, top, translateX, translateY) => {
+const replaceForwardDetector = (left, top, x, y) => {
     const forwardDetector = getPlayer().firstElementChild.children[1]
     forwardDetector.style.left = left
     forwardDetector.style.top = top
-    forwardDetector.style.transform = `translateX(${translateX}) translateY(${translateY})`
+    forwardDetector.style.transform = `translateX(${x}) translateY(${y})`
 }

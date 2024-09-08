@@ -6,42 +6,61 @@ export class AbstractAngleService {
         this.enemy = enemy
     }
 
+    DETECTOR_MAP = new Map([
+        [0, {fwX: '-50%',  fwY: '0'    }],
+        [1, {fwX: '-100%', fwY: '0'    }],
+        [2, {fwX: '-100%', fwY: '-50%' }],
+        [3, {fwX: '-100%', fwY: '-100%'}],
+        [4, {fwX: '-50%',  fwY: '-100%'}],
+        [5, {fwX: '0',     fwY: '-100%'}],
+        [6, {fwX: '0',     fwY: '-50%' }],
+        [7, {fwX: '0',     fwY: '0'    }],
+    ])
+
     calculateAngle = (x, y) => {
         const currState = this.enemy.angleState || 0
         const currAngle = this.enemy.angle || 0
-        let newState = currState
-        if ( x === 1 && y === 1 )        newState = this.changeEnemyAngleState(7, '0', '0')
-        else if ( x === 1 && y === -1 )  newState = this.changeEnemyAngleState(5, '0', '-100%')
-        else if ( x === -1 && y === 1 )  newState = this.changeEnemyAngleState(1, '-100%', '0')    
-        else if ( x === -1 && y === -1 ) newState = this.changeEnemyAngleState(3, '-100%', '-100%')
-        else if ( x === 1 && !y )        newState = this.changeEnemyAngleState(6, '0', '-50%')
-        else if ( x === -1 && !y )       newState = this.changeEnemyAngleState(2, '-100%', '-50%')
-        else if ( !x && y === 1 )        newState = this.changeEnemyAngleState(0, '-50%', '0')
-        else if ( !x && y === -1 )       newState = this.changeEnemyAngleState(4, '-50%', '-100%')
+        let newState = (() => {
+            let result;
+            if ( x === 1 && y === 1 )        result = 7
+            else if ( x === 1 && y === -1 )  result = 5
+            else if ( x === -1 && y === 1 )  result = 1
+            else if ( x === -1 && y === -1 ) result = 3
+            else if ( x === 1 && !y )        result = 6
+            else if ( x === -1 && !y )       result = 2
+            else if ( !x && y === 1 )        result = 0
+            else if ( !x && y === -1 )       result = 4
+            else result = currState
+            return result
+        })()
         if ( newState === currState ) return
+        this.updateDetectors(newState)
         let diff = newState - currState
         if (Math.abs(diff) > 4 && diff >= 0) diff = -(8 - diff)
         else if (Math.abs(diff) > 4 && diff < 0) diff = 8 - Math.abs(diff) 
-        const newAngle = currAngle + diff * 45    
+        const newAngle = currAngle + diff * 45
         this.enemy.angle = newAngle
         this.enemy.angleState = newState
         this.enemy.sprite.firstElementChild.firstElementChild.style.transform = `rotateZ(${this.enemy.angle}deg)`
     }
 
-    changeEnemyAngleState(state, translateX, translateY) {
-        this.updateForwardDetector(translateX, translateY)
-        this.updateBackwardDetector(translateX, translateY)
-        return state
+    updateDetectors(state) {
+        const {fwX, fwY} = this.DETECTOR_MAP.get(state)
+        const {fwX: bwX, fwY: bwY} = this.DETECTOR_MAP.get((state + 4) % 8)
+        this.updateForwardDetector(fwX, fwY)
+        this.updateBackwardDetector(bwX, bwY)
     }
 
-    updateForwardDetector(translateX, translateY) {
-        const forwardDetector = this.enemy.sprite.firstElementChild.children[2]
-        forwardDetector.style.transform = `translateX(${translateX}) translateY(${translateY})`
+    updateForwardDetector(x, y) {
+        this.applyDetectorUpdate(this.enemy.sprite.firstElementChild.children[2], x, y)
     }
 
-    updateBackwardDetector(translateX, translateY) {
-        const backwardDetector = this.enemy.sprite.firstElementChild.children[3]
-        // TODO : implement later
+    updateBackwardDetector(x, y) {
+        this.applyDetectorUpdate(this.enemy.sprite.firstElementChild.children[3], x, y)
+    }
+
+    applyDetectorUpdate(detector, x, y) {
+        detector.style.transform = `translateX(${x}) translateY(${y})`
     }
 
     angle2Player() {

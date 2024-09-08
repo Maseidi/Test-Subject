@@ -42,7 +42,7 @@ export const enemies = new Map([
         new Tracker(1, 1000, 240, new SingleLoot(HEALTH_POTION), 
             Progress.builder().setRenderProgress('3').setProgress2Active('4')
         ),
-        new Tracker(1, 1000, 340, new SingleLoot(ENERGY_DRINK, '5'), 
+        new Tracker(1, 1000, 340, new SingleLoot(ENERGY_DRINK, Progress.builder().setProgress2Active('5')), 
             Progress.builder().setRenderProgress('4')
         ),
         new Ranger(1, new SquarePath(1000, 100, 300), new SingleLoot(HEALTH_POTION), 
