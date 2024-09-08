@@ -151,12 +151,15 @@ export const getProperty = (elem, property, ...toRemoveList) => {
     return Number(res)
 }
 
-export const getEquippedItemDetail = (equipped, detail) =>  
-    isThrowable(equipped?.name) ? 
-    getThrowableDetail(equipped.name, detail) : 
-    ['damage', 'range', 'firerate', 'reloadspeed', 'magazine'].includes(detail) ?
-    getWeaponUpgradableDetail(equipped.name, detail, equipped[detail+'lvl']) :
-    getWeaponDetail(equipped?.name, detail)
+export const getEquippedItemDetail = (equipped, detail) => {
+    if ( isThrowable(equipped?.name) )
+        return getThrowableDetail(equipped.name, detail)
+
+    if ( ['damage', 'range', 'firerate', 'reloadspeed', 'magazine'].includes(detail) )
+        return getWeaponUpgradableDetail(equipped.name, detail, equipped[detail+'lvl'])
+
+    return getWeaponDetail(equipped?.name, detail)
+}
 
 export const isThrowing = () => getThrowCounter() > 0
 

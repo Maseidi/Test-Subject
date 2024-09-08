@@ -83,16 +83,16 @@ const manageLoaders = () => {
 const calculateNewRoomLeftAndTop = (prevLoader) => {
     const newRoom = rooms.get(getCurrentRoomId())
     const loader = loaders.get(getCurrentRoomId()).find(loader => loader.className === prevRoomId)
-    let left, top
-    if ( loader.bottom !== undefined )
+    let left, top    
+    if ( loader.bottom !== null )
         top = loader.bottom === -26 ? newRoom.height - loader.height - loader.bottom - 52 : 
         newRoom.height - loader.height - loader.bottom
-    if ( loader.right !== undefined )
+    if ( loader.right !== null )
         left = loader.right === -26 ? newRoom.width - loader.width - loader.right - 52 : 
         newRoom.width - loader.width - loader.right
-    if ( loader.top !== undefined )
+    if ( loader.top !== null )
         top = loader.top === -26 ? loader.top + 52 : loader.top
-    if ( loader.left !== undefined )
+    if ( loader.left !== null )
         left = loader.left === -26 ? loader.left + 52 : loader.left
     setRoomLeft(getRoomLeft() - left + getProperty(prevLoader, 'left', 'px'))
     setRoomTop(getRoomTop() - top + getProperty(prevLoader, 'top', 'px'))

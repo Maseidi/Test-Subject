@@ -9,6 +9,7 @@ import { RockCrusher, Torturer } from '../type/normal-enemy.js'
 import { Path, Point, SinglePointPath, SquarePath, VerDoublePointPath } from '../../path.js'
 import { 
     ADRENALINE,
+    BANDAGE_LOOT,
     ENERGY_DRINK,
     HEALTH_POTION,
     LUCK_PILLS,
@@ -20,7 +21,7 @@ export const enemies = new Map([
     [2, []],
     [9, []],
     [16, [
-        new Torturer(1, new SinglePointPath(400, 400), undefined, Progress.builder().setRenderProgress('100')),
+        new Torturer(1, new SinglePointPath(400, 400), new SingleLoot(BANDAGE_LOOT), Progress.builder().setRenderProgress('100')),
         new RockCrusher(1, new SinglePointPath(500, 400), undefined, Progress.builder().setRenderProgress('400')),
         new Stinger(1, new SinglePointPath(600, 400), undefined, 
             Progress.builder().setRenderProgress('1000').setProgress2Deactive('1000')

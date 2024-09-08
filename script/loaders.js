@@ -16,49 +16,49 @@ class Loader {
 
 class LeftLoader_FromTop extends Loader {
     constructor(className, height, top, door) {
-        super(className, 5, height, -26, top, undefined, undefined, door)
+        super(className, 5, height, -26, top, null, null, door)
     }
 }
 
 class LeftLoader_FromBottom extends Loader {
     constructor(className, height, bottom, door) {
-        super(className, 5, height, -26, undefined, undefined, bottom, door)
+        super(className, 5, height, -26, null, null, bottom, door)
     }
 }
 
 class RightLoader_FromTop extends Loader {
     constructor(className, height, top, door) {
-        super(className, 5, height, undefined, top, -26, undefined, door)
+        super(className, 5, height, null, top, -26, null, door)
     }
 }
 
 class RightLoader_FromBottom extends Loader {
     constructor(className, height, bottom, door) {
-        super(className, 5, height, undefined, undefined, -26, bottom, door)
+        super(className, 5, height, null, null, -26, bottom, door)
     }
 }
 
 class TopLoader_FromLeft extends Loader {
     constructor(className, width, left, door) {
-        super(className, width, 5, left, -26, undefined, undefined, door)
+        super(className, width, 5, left, -26, null, null, door)
     }
 }
 
 class TopLoader_FromRight extends Loader {
     constructor(className, width, right, door) {
-        super(className, width, 5, undefined, -26, right, undefined, door)
+        super(className, width, 5, null, -26, right, null, door)
     }
 }
 
 class BottomLoader_FromLeft extends Loader {
     constructor(className, width, left, door) {
-        super(className, width, 5, left, undefined, undefined, -26, door)
+        super(className, width, 5, left, null, null, -26, door)
     }
 }
 
 class BottomLoader_FromRight extends Loader {
     constructor(className, width, right, door) {
-        super(className, width, 5, undefined, undefined, right, -26, door)
+        super(className, width, 5, null, null, right, -26, door)
     }
 }
 

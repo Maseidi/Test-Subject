@@ -25,7 +25,8 @@ import {
     addAllAttributes,
     isThrowing,
     exitAimModeAnimation, 
-    removeEquipped} from './util.js'
+    removeEquipped,
+    isStatUpgrader} from './util.js'
 import { 
     getAimMode,
     getCurrentRoomId,
@@ -169,7 +170,7 @@ const ammo4EquippedWeapon = (equipped, obj) => {
     if ( obj.name !== getWeaponDetails().get(equipped.name).ammotype ) return
     const ammoCount = getUiEl().children[2].children[1]
     const totalAmmo = ammoCount.children[1]
-    totalAmmo.textContent = calculateTotalAmmo(equipped)
+    totalAmmo.textContent = calculateTotalAmmo()
 }
 
 const ammo4EquippedThrowable = (equipped, obj) => {
@@ -183,9 +184,9 @@ const inventoryFull = () => inventory.flat().every(item => item !== null)
 
 export const findEquippedWeaponById = () => inventory.flat().find(item => item && item.id === getEquippedWeaponId())
 
-export const calculateTotalAmmo = (equippedWeapon) => countItem(equippedWeapon.ammotype)
+export const calculateTotalAmmo = () => countItem(getEquippedWeaponObject().ammotype)
 
-export const calculateThrowableAmount = (equippedThrowable) => countItem(equippedThrowable.name)
+export const calculateThrowableAmount = () => countItem(getEquippedWeaponObject().name)
 
 export const calculateTotalCoins = () => countItem('coin')
 
@@ -211,7 +212,7 @@ export const useItemAtPosition = (row, column, reduce) => {
     return diff
 }
 
-export const updateInventoryWeaponMag = (weapon, newMag) => inventory[weapon.row][weapon.column].currmag = newMag
+export const updateInventoryWeaponMag = (newMag) => getEquippedWeaponObject().currmag = newMag
 
 const updateAmount = (newValue) => {
     getIntObj().setAttribute('amount', newValue)
@@ -330,13 +331,10 @@ export const renderDescriptionEvent = (item) => {
 }
 
 const renderDescriptionContent = (e) => {
-    const desc = getPauseContainer().firstElementChild.firstElementChild.children[1]
-    const heading = e.target.heading
-    const description = e.target.description
-    const isNote = e.target.isNote
-    const isExamined = e.target.isExamined
-    if (e.target.heading) desc.children[0].textContent = isNote && !isExamined ? 'Note' : heading
-    if (e.target.description) desc.children[1].textContent = isNote && !isExamined ? '????' : description
+    const descContainer = getPauseContainer().firstElementChild.firstElementChild.children[1]
+    const { heading, description, isNote, isExamined } = e.target
+    if ( heading )     descContainer.children[0].textContent = isNote && !isExamined ? 'Note' : heading
+    if ( description ) descContainer.children[1].textContent = isNote && !isExamined ? '????' : description
 }
 
 export const removeDescriptionEvent = (item) => {
@@ -344,9 +342,9 @@ export const removeDescriptionEvent = (item) => {
 }
 
 const removeDescriptionContent = () => {
-    const desc = getPauseContainer().firstElementChild.firstElementChild.children[1]
-    desc.children[0].textContent = ``
-    desc.children[1].textContent = ``
+    const descContainer = getPauseContainer().firstElementChild.firstElementChild.children[1]
+    descContainer.children[0].textContent = ``
+    descContainer.children[1].textContent = ``
 }
 
 const optionsEvents = (item) => item.addEventListener('click', addOptionsEvent, true)
@@ -367,8 +365,8 @@ const renderOptions = (item, options) => {
 
     const itemObj = element2Object(item)
 
-    if ( ['bandage', 'antidote', 'adrenaline', 'healthpotion', 'luckpills', 'energydrink'].includes(itemObj.name) || 
-         itemObj.name.includes('key') ) createOption(options, 'use')
+    if ( ['bandage', 'antidote'].includes(itemObj.name) || isStatUpgrader(itemObj) ||itemObj.name.includes('key') ) 
+        createOption(options, 'use')
 
     if ( isThrowable(itemObj.name) ) {
         if ( !getReloading() ) createOption(options, 'equip')

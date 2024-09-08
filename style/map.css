@@ -11,6 +11,10 @@
   position: absolute;
 }
 
+.loader {
+  background-color: red;
+}
+
 .tl,
 .bl,
 .tr,

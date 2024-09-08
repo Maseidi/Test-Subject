@@ -67,7 +67,7 @@ export const renderWeaponUi = () => {
         mag.textContent = `${equippedWeapon.currmag}`
     }
     const total = document.createElement('p')
-    total.textContent = predicate ? calculateThrowableAmount(equippedWeapon) : calculateTotalAmmo(equippedWeapon)
+    total.textContent = predicate ? calculateThrowableAmount() : calculateTotalAmmo()
     if ( !predicate )  ammoCount.append(mag)
     ammoCount.append(total)
     appendAll(weaponContainer, weaponIcon, ammoCount)

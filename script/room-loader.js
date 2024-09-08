@@ -14,6 +14,7 @@ import {
     SPIKER,
     TRACKER } from './enemy/util/enemy-constants.js'
 import { 
+    addAllAttributes,
     addClass,
     addFireEffect,
     ANGLE_STATE_MAP,
@@ -40,6 +41,7 @@ import {
     setCurrentRoomExplosions,
     setCurrentRoomDoors,
     getCurrentRoomDoors } from './elements.js'
+import { NOTE } from './loot.js'
 
 export const loadCurrentRoom = () => {
     setStunnedCounter(0)
@@ -124,10 +126,10 @@ const renderLoaders = (room2Render) => {
         const loader = createAndAddClass('div', elem.className, 'loader')
         loader.style.width = `${elem.width}px`
         loader.style.height = `${elem.height}px`
-        if ( elem.left !== undefined ) loader.style.left = `${elem.left}px`
-        else if ( elem.right !== undefined ) loader.style.right = `${elem.right}px`
-        if ( elem.top !== undefined ) loader.style.top = `${elem.top}px`
-        else if ( elem.bottom !== undefined ) loader.style.bottom = `${elem.bottom}px`  
+        if ( elem.left !== null ) loader.style.left = `${elem.left}px`
+        else if ( elem.right !== null ) loader.style.right = `${elem.right}px`
+        if ( elem.top !== null ) loader.style.top = `${elem.top}px`
+        else if ( elem.bottom !== null ) loader.style.bottom = `${elem.bottom}px`  
         const door = elem.door
         if ( door ) {
             if ( !findProgressByName(door.removeProgress) || enemiesLeft(door) ) var open = false
@@ -323,14 +325,23 @@ const initEnemyStats = (element) => {
 
 const handleEnemyLoot = (element, enemy) => {
     if ( !element.loot ) return
-    enemy.setAttribute('loot-name', element.loot.name)
-    enemy.setAttribute('loot-amount', element.loot.amount)
-    enemy.setAttribute('loot-active', element.loot.progress2Active)
-    enemy.setAttribute('loot-deactive', element.loot.progress2Deactive)
-    enemy.setAttribute('loot-data', element.loot.data)
-    enemy.setAttribute('loot-code', element.loot.code)
-    enemy.setAttribute('loot-heading', element.loot.heading)
-    enemy.setAttribute('loot-description', element.loot.description)
+    const { name, amount, progress2Active, progress2Deactive, data, code, heading, description } = element.loot
+    addAllAttributes(
+        enemy,
+        'loot-name',        name,
+        'loot-amount',      amount,
+        'loot-active',      progress2Active,
+        'loot-deactive',    progress2Deactive,
+    )
+    
+    if ( name !== NOTE ) return
+    addAllAttributes(
+        enemy,
+        'loot-data',        data,
+        'loot-code',        code,
+        'loot-heading',     heading,
+        'loot-description', description
+    )
 }
 
 const createPath = (elem, index, room2Render) => {

@@ -32,17 +32,21 @@ const handleBreakpoints = (aimAngle, getAngle, setAngle, setAngleState) => {
     setAngleState(ANGLE_STATE_MAP.get(getAngle()))
 }
 
+const DETECTOR_MAP = new Map([
+    [0, {left: '50%',   top: '100%', x: '-50%',  y: '0'     }],
+    [1, {left: '0',     top: '100%', x: '-100%', y: '0'     }],
+    [2, {left: '0',     top: '50%',  x: '-100%', y: '-50%'  }],
+    [3, {left: '0',     top: '0'  ,  x: '-100%', y: '-100%' }],
+    [4, {left: '50%',   top: '0'  ,  x: '-50%',  y: '-100%' }],
+    [5, {left: '100%',  top: '0'  ,  x: '0',     y: '-100%' }],
+    [6, {left: '100%',  top: '50%' , x: '0',     y: '-50%'  }],
+    [7, {left: '100%',  top: '100%', x: '0',     y: '0'     }],
+])
+
 const manageNonAimModeAngle = () => {
     if ( !isMoving() ) return
-    let newState
-    if (getUpPressed() && getRightPressed())        newState = changeState(5, '100%', '0', '0', '-100%')     
-    else if (getUpPressed() && getLeftPressed())    newState = changeState(3, '0', '-100%', '0', '-100%')
-    else if (getDownPressed() && getRightPressed()) newState = changeState(7, '100%', '0', '100%', '0')
-    else if (getDownPressed() && getLeftPressed())  newState = changeState(1, '0', '-100%', '100%', '0') 
-    else if (getDownPressed())                      newState = changeState(0, '50%', '-50%', '100%', '0')
-    else if (getLeftPressed())                      newState = changeState(2, '0', '-100%', '50%', '-50%')
-    else if (getUpPressed())                        newState = changeState(4, '50%', '-50%', '0', '-100%')
-    else if (getRightPressed())                     newState = changeState(6, '100%', '0', '50%', '-50%')
+    const newState = getNewState()
+    replaceForwardDetector(newState)
     if ( getAimMode() ) return
     const angleState = getPlayerAngleState()
     const angle = getPlayerAngle()
@@ -54,12 +58,22 @@ const manageNonAimModeAngle = () => {
     setPlayerAngleState(newState)
 }
 
-const changeState = (state, left, x, top, y) => {
-    replaceForwardDetector(left, top, x, y)
-    return getAimMode() ? Number(getPlayer().getAttribute('angle-state')) : state
+const getNewState = () => {
+    let result
+    if ( getUpPressed() && getRightPressed() )        result = 5
+    else if ( getUpPressed() && getLeftPressed() )    result = 3
+    else if ( getDownPressed() && getRightPressed() ) result = 7
+    else if ( getDownPressed() && getLeftPressed() )  result = 1
+    else if ( getDownPressed() )                      result = 0
+    else if ( getLeftPressed() )                      result = 2
+    else if ( getUpPressed() )                        result = 4
+    else if ( getRightPressed() )                     result = 6
+    else if ( getAimMode() )                          result = Number(getPlayer().getAttribute('angle-state'))
+    return result
 }
 
-const replaceForwardDetector = (left, top, x, y) => {
+const replaceForwardDetector = (state) => {
+    const { left, top, x, y } = DETECTOR_MAP.get(state)
     const forwardDetector = getPlayer().firstElementChild.children[1]
     forwardDetector.style.left = left
     forwardDetector.style.top = top

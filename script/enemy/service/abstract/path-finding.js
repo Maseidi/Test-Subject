@@ -22,10 +22,10 @@ export class AbstractPathFindingService {
     #findWall() {
         let wall
         for ( const solid of getCurrentRoomSolid() ) {
-            if ( containsClass(solid.parentElement, 'enemy') ) continue
-            if ( solid.getAttribute('side') === 'true' ) continue
+            if ( containsClass(solid.parentElement, 'enemy') )   continue
+            if ( solid.getAttribute('side') === 'true' )         continue
             if ( solid === this.enemy.sprite.firstElementChild ) continue
-            if ( !collide(this.enemy.sprite, solid, 50) ) continue
+            if ( !collide(this.enemy.sprite, solid, 50) )        continue
             wall = solid
             break
         }

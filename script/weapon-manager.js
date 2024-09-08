@@ -108,7 +108,7 @@ const manageAim = () => {
 export const setupReload = () => {    
     if ( isThrowable(equipped.name) ) return
     if ( equipped.currmag === getWeaponUpgradableDetail(equipped.name, 'magazine', equipped.magazinelvl) ) return
-    if ( calculateTotalAmmo(equipped) === 0 ) return
+    if ( calculateTotalAmmo() === 0 ) return
     if ( getShooting() ) return
     setReloading(true)
 }
@@ -128,10 +128,10 @@ const manageReload = () => {
 const reload = () => {    
     const mag = getWeaponUpgradableDetail(equipped.name, 'magazine', equipped.magazinelvl)
     const currentMag = equipped.currmag
-    const totalAmmo = calculateTotalAmmo(equipped)
+    const totalAmmo = calculateTotalAmmo()
     const need = mag - currentMag
     const trade = need <= totalAmmo ? need : totalAmmo
-    useAmmoFromInventory(equipped, currentMag + trade, trade)
+    useAmmoFromInventory(currentMag + trade, trade)
 }
 
 const manageShoot = () => {
@@ -154,7 +154,7 @@ const shoot = () => {
         setThrowCounter(1)
         return
     }
-    const totalAmmo = calculateTotalAmmo(equipped)
+    const totalAmmo = calculateTotalAmmo()
     let currMag = equipped.currmag
     if ( currMag === 0 ) {
         EMPTY_WEAPON.play()
@@ -168,7 +168,7 @@ const shoot = () => {
     addFireAnimation()
     notifyNearbyEnemies()
     manageInteractivity()
-    useAmmoFromInventory(equipped, currMag, 0)
+    useAmmoFromInventory(currMag, 0)
 }
 
 const applyRecoil = () => {
@@ -212,14 +212,14 @@ const manageInteractivity = () => {
     }
 }
 
-const useAmmoFromInventory = (equipped, newMag, trade) => {
+const useAmmoFromInventory = (newMag, trade) => {
     useInventoryResource(equipped.ammotype, trade)
-    updateInventoryWeaponMag(equipped, newMag)
+    updateInventoryWeaponMag(newMag)
     const ammoCount = getUiEl().children[2].children[1]
     const mag = ammoCount.children[0]
     const totalAmmo = ammoCount.children[1]
     mag.textContent = newMag
-    totalAmmo.textContent = calculateTotalAmmo(equipped)
+    totalAmmo.textContent = calculateTotalAmmo()
 }
 
 const manageFireAnimation = () => {
@@ -331,13 +331,13 @@ const useThrowableFromInventory = () => {
     unEquipThrowable()
     useInventoryResource(equipped.name, 1)
     const ammoCount = getUiEl().children[2].children[1]
-    const totalAmmo = calculateThrowableAmount(equipped)
+    const totalAmmo = calculateThrowableAmount()
     if ( totalAmmo === 0 ) ammoCount.parentElement.remove()
     else ammoCount.firstElementChild.textContent = totalAmmo
 }
 
 const unEquipThrowable = () => {
-    if ( calculateThrowableAmount(equipped) !== 1 ) return
+    if ( calculateThrowableAmount() !== 1 ) return
     setAimMode(false)
     removeThrowable()
     setThrowCounter(0)
