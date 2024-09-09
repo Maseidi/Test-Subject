@@ -16,6 +16,7 @@ import { findEquippedWeaponById, pickupDrop, removeInventory, renderInventory } 
 import { 
     addClass,
     angleOf2Points,
+    element2Object,
     exitAimModeAnimation,
     getEquippedItemDetail,
     getProperty,
@@ -30,7 +31,7 @@ import {
     getEquippedWeaponId,
     getEquippedWeaponObject,
     getGrabbed,
-    getIntObj,
+    getElementInteractedWith,
     getLeftPressed,
     getMouseX,
     getMouseY,
@@ -238,14 +239,15 @@ const fDown = () => {
         breakFree()
         return
     }
-    if ( getPause() || !getIntObj() ) return
-    if ( getIntObj().getAttribute('amount') ) pickupDrop()
+    const { name, amount } = element2Object(getElementInteractedWith())
+    if ( getPause() || !getElementInteractedWith() ) return
+    if ( amount ) pickupDrop(getElementInteractedWith())
     if ( getShooting() || getReloading() ) return    
-    if ( getIntObj().getAttribute('name') === 'stash' ) openStash()    
-    if ( getIntObj().getAttribute('name') === 'vendingMachine' ) openVendingMachine()    
-    if ( getIntObj().getAttribute('name') === 'crate' ) breakCrate()
-    if ( getIntObj().getAttribute('name') === 'lever' ) toggleLever()
-    if ( getIntObj().getAttribute('name') === 'door' ) renderPasswordInput()
+    if ( name === 'stash' ) openStash()    
+    if ( name === 'crate' ) breakCrate()
+    if ( name === 'lever' ) toggleLever()
+    if ( name === 'door' ) renderPasswordInput()
+    if ( name === 'vendingMachine' ) openVendingMachine()
 }
 
 const breakFree = () => {
@@ -270,7 +272,7 @@ const openStash = () => openPause('stash', renderStash)
 
 const openVendingMachine = () => openPause('store', renderStore)
 
-const breakCrate = () => dropLoot(getIntObj())
+const breakCrate = () => dropLoot(getElementInteractedWith())
 
 const openPause = (cause, func) => {
     setPauseCause(cause)
@@ -279,18 +281,18 @@ const openPause = (cause, func) => {
 }
 
 const toggleLever = () => {
-    const toggle1 = getIntObj().getAttribute('progress2Active')
-    const toggle2 = getIntObj().getAttribute('progress2Deactive')
+    const toggle1 = getElementInteractedWith().getAttribute('progress2Active')
+    const toggle2 = getElementInteractedWith().getAttribute('progress2Deactive')
     const value = getProgress()[toggle1]
     if ( !value ) {
         activateProgress(toggle1)
         deactivateProgress(toggle2)
-        getIntObj().firstElementChild.style.transform = `scale(-1, 1)`
+        getElementInteractedWith().firstElementChild.style.transform = `scale(-1, 1)`
     }
     else {
         activateProgress(toggle2)
         deactivateProgress(toggle1)
-        getIntObj().firstElementChild.style.transform = `scale(1, 1)`
+        getElementInteractedWith().firstElementChild.style.transform = `scale(1, 1)`
     }
 }
 

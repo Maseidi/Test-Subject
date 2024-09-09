@@ -328,16 +328,17 @@ const appendColliders = (throwable) =>
     )
 
 const useThrowableFromInventory = () => {
-    unEquipThrowable()
     useInventoryResource(equipped.name, 1)
     const ammoCount = getUiEl().children[2].children[1]
     const totalAmmo = calculateThrowableAmount()
-    if ( totalAmmo === 0 ) ammoCount.parentElement.remove()
+    if ( totalAmmo === 0 ) {
+        ammoCount.parentElement.remove()
+        unEquipThrowable()
+    }
     else ammoCount.firstElementChild.textContent = totalAmmo
 }
 
 const unEquipThrowable = () => {
-    if ( calculateThrowableAmount() !== 1 ) return
     setAimMode(false)
     removeThrowable()
     setThrowCounter(0)

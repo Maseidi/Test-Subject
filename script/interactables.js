@@ -314,15 +314,7 @@ export const interactables = new Map([
         new Grenade(500, 800, 3),
         new Flashbang(600, 800, 5),
         new Flashbang(700, 800, 2),
-        new Lever(1000, 700, 
-            Progress.builder().setRenderProgress('2').setProgress2Active('100').setProgress2Deactive('200')
-        ),
-        new Coin(200, 200, 10, Progress.builder().setRenderProgress('100').setProgress2Deactive('1000')),
-        new Crate(900, 100, 
-            new NoteLoot('silver gate code', 'Note containing the gate code', 'Gate code PLACE_CODE_HERE', 'silver-gate')
-        ),
-        // fix kill all bug
-        new RedVaccine(100, 100, 2, Progress.builder().setKillAll('1000'))
+        new RedVaccine(100, 100, 2)
         ]
     ],[37, 
         [
@@ -330,9 +322,8 @@ export const interactables = new Map([
         new ShotgunShells(200, 100, 11),
         new SmgAmmo(300, 100, 100),
         new MagnumAmmo(400, 100, 1),
-        new RifleAmmo(500, 100, 2, Progress.builder().setRenderProgress('10').setProgress2Active('11')),
+        new RifleAmmo(500, 100, 2),
         new Crate(600, 100, new SingleLoot(PISTOL4)),
-        new KeyDrop(700, 100, 1, 'Test key', 'test', Progress.builder().setKillAll('8').setProgress2Active('9'))
         ]
     ]
 ])

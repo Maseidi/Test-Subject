@@ -22,7 +22,7 @@ export const setPlayerY = (val) => {
 }
 export const getPlayerY = () => playerY
 
-let currentRoomId = 16
+let currentRoomId = 1
 export const setCurrentRoomId = (val) => {
     currentRoomId = val
 }
@@ -161,10 +161,10 @@ export const setEquippedWeaponObject = (val) => {
 export const getEquippedWeaponObject = () => EquippedWeaponObject
 
 let intObj = null
-export const setIntObj = (val) => {
+export const setElementInteractedWith = (val) => {
     intObj = val
 }
-export const getIntObj = () => intObj
+export const getElementInteractedWith = () => intObj
 
 let targets = []
 export const setTargets = (val) => {

@@ -1,4 +1,3 @@
-import { Progress } from './progress.js'
 import { activateProgress } from './progress-manager.js'
 import { getPopupContainer, getRoomNameContainer } from './elements.js'
 import { addClass, appendAll, createAndAddClass, object2Element, removeClass } from './util.js'
@@ -12,11 +11,7 @@ class Popup {
     }
 }
 
-const popups = [
-    new Popup('Use lever to toggle doors', Progress.builder().setRenderProgress('100').setProgress2Active('300')),
-    new Popup('Use bandages to heal your wounds', Progress.builder().setRenderProgress('300')),
-    new Popup('Each room has its own unique feel', Progress.builder().setRenderProgress('400'), 120),
-]
+const popups = []
 
 export const managePopup = () => {
     const popup = getPopupContainer().firstElementChild

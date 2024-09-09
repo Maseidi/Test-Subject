@@ -12,12 +12,12 @@ import {
     getAdrenalinesDropped,
     getEnergyDrinksDropped,
     getHealthPotionsDropped,
-    getIntObj,
+    getElementInteractedWith,
     getLuckPillsDropped,
     setAdrenalinesDropped,
     setEnergyDrinksDropped,
     setHealthPotionsDropped,
-    setIntObj,
+    setElementInteractedWith,
     setLuckPillsDropped } from './variables.js'
 import { 
     MAX_PACKSIZE,
@@ -245,8 +245,7 @@ const manageBuy = (itemObj) => {
         return
     }
     const freeSpace = getInventory().flat().filter(item => item === null).length
-    setIntObj(object2Element(new Coin(null, null, loss)))
-    pickupDrop()
+    pickupDrop(object2Element(new Coin(null, null, loss)))
     if ( freeSpace >= needSpace ) {
         useInventoryResource('coin', loss)
         let chosenItem = getShopItems()[itemObj.id]
@@ -259,8 +258,7 @@ const manageBuy = (itemObj) => {
             Progress.builder().setRenderProgress('0'))
         purchasedItem = handleNewWeapnPurchase(purchasedItem, itemObj.name)
         purchasedItem = handleNewThrowablePurchase(purchasedItem, itemObj.name)
-        setIntObj(object2Element(purchasedItem))
-        pickupDrop()
+        pickupDrop(object2Element(purchasedItem))
         submitPurchase(itemObj)
         return
     }
@@ -539,15 +537,13 @@ const renderConfirmSellBtn = (itemObj) => {
 const manageSell = (itemObj) => {
     const gain = itemObj.price * itemObj.amount
     const gainSpace = itemObj.space
-    setIntObj(object2Element(new Coin(null, null, gain)))
-    pickupDrop()
-    let left = getIntObj().getAttribute('amount')
+    pickupDrop(object2Element(new Coin(null, null, gain)))
+    let left = getElementInteractedWith().getAttribute('amount')
     useInventoryResource('coin', gain-left)
     left -= gainSpace * 50
     if ( left <= 0 ) {
         useInventoryResource(itemObj.name, itemObj.amount)
-        setIntObj(object2Element(new Coin(null, null, gain)))
-        pickupDrop()
+        pickupDrop(object2Element(new Coin(null, null, gain)))
         handleEquippableDrop(itemObj)
         removeStore()
         renderStore()

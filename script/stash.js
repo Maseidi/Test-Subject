@@ -1,6 +1,6 @@
 import { renderQuit } from './user-interface.js'
 import { getPauseContainer } from './elements.js'
-import { getIntObj, setIntObj } from './variables.js'
+import { getElementInteractedWith, setElementInteractedWith } from './variables.js'
 import { 
     addAllAttributes,
     addClass,
@@ -41,7 +41,7 @@ const renderBackground = () => {
 const inventoryEvents = () => {
     const background = getPauseContainer().firstElementChild
     Array.from(background.firstElementChild.firstElementChild.children)
-        .filter((block) => block.getAttribute('heading') && block.getAttribute('description'))
+        .filter((block) => block.firstElementChild)
         .forEach((item) => {
             renderDescriptionEvent(item)
             removeDescriptionEvent(item)
@@ -156,9 +156,8 @@ const move2Stash = (object2Move, reduce) => {
 const move2Inventory = (object2Move, reduce) => {
     const index = stash.findIndex(x => x.id === object2Move.id)
     const amount = stash[index].amount
-    setIntObj(object2Element({...object2Move, amount: reduce}))
-    pickupDrop()
-    const left = Number(getIntObj().getAttribute('amount'))
+    pickupDrop(object2Element({...object2Move, amount: reduce}))
+    const left = Number(getElementInteractedWith().getAttribute('amount'))
     if ( amount - reduce + left === 0 ) stash = stash.filter((item, idx) => idx !== index)
     else stash[index] = {...object2Move, amount: amount - reduce + left}   
     removeStash()

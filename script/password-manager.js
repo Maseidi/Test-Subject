@@ -4,18 +4,23 @@ import { openDoor } from './progress-manager.js'
 import { getPauseContainer } from './elements.js'
 import { quitPage, renderQuit } from './user-interface.js'
 import { createAndAddClass, getProperty } from './util.js'
-import { getCurrentRoomId, getIntObj, setPauseCause } from './variables.js'
+import { getCurrentRoomId, getElementInteractedWith, setPauseCause } from './variables.js'
 
-const passwords = new Map([
-    ['main-hall', Math.floor(Math.random() * 99900) + 100],
-    ['silver-gate', Math.floor(Math.random() * 99900) + 100],
-])
+const passwordNames = [
+    'main-hall',
+    'silver-gate'
+]
+
+const passwords = new Map([])
+
+export const initPasswords = () => 
+    passwordNames.forEach(name => passwords.set(name, Math.floor(Math.random() * 99900) + 100))
 
 export const getPasswords = () => new Map(passwords)
 
 export const renderPasswordInput = () => {
-    const code = getIntObj().getAttribute('code')
-    const value = getIntObj().getAttribute('value')
+    const code = getElementInteractedWith().getAttribute('code')
+    const value = getElementInteractedWith().getAttribute('value')
     const digits = passwords.get(code).toString().length
     managePause()
     setPauseCause('password')
@@ -132,12 +137,12 @@ const decreaseDigit = (e) => {
 }
 
 const updateDoorCodeValue = (digit, bar) => {
-    const doorValue = getIntObj().getAttribute('value')
+    const doorValue = getElementInteractedWith().getAttribute('value')
     let newValue = ""
     for ( let i = 0; i < doorValue.length; i++ )
         newValue += ( i === digit ? bar.children[5].textContent : doorValue.charAt(i) ) 
-    getIntObj().setAttribute('value', newValue)
-    const loaderElem = getIntObj().nextSibling
+    getElementInteractedWith().setAttribute('value', newValue)
+    const loaderElem = getElementInteractedWith().nextSibling
     const loaderClass = Number(loaderElem.classList[0])
     const loaderObj = loaders.get(getCurrentRoomId()).find(loader => loader.className === loaderClass)
     loaderObj.door.value = newValue
@@ -147,13 +152,13 @@ const renderCheckBtn = () => {
     const button = createAndAddClass('button', 'check-password-btn')
     button.textContent = 'check'
     button.addEventListener('click', () => {
-        const targetValue = passwords.get(getIntObj().getAttribute('code'))
+        const targetValue = passwords.get(getElementInteractedWith().getAttribute('code'))
         const valueMap = Array.from(button.previousSibling.children)
             .map(elem => elem.firstElementChild.firstElementChild.children[5].textContent)
         const value2check = Number(valueMap.join(""))
         if ( targetValue !== value2check ) return
         quitPage()
-        openDoor(getIntObj()) 
+        openDoor(getElementInteractedWith()) 
     })
     return button
 }

@@ -43,13 +43,14 @@ import {
     setDraggedItem,
     setEquippedWeaponId,
     setWeaponWheel, 
-    getIntObj, 
+    getElementInteractedWith, 
     getReloading,
     setShootCounter,
     getShooting, 
     getPause, 
     getEquippedWeaponObject, 
     setEquippedWeaponObject } from './variables.js'
+import { NOTE } from './loot.js'
 
 export const MAX_PACKSIZE = {
     bandage: 3,
@@ -85,49 +86,51 @@ let inventory = [
 
 export const getInventory = () => inventory
 
-export const pickupDrop = () => {
+let dropElem
+let dropObject
+export const pickupDrop = (drop) => {
+    dropElem = drop
+    dropObject = element2Object(dropElem)
     searchPack()
     searchEmpty()
     checkSpecialScenarios()
 }
 
 const searchPack = () => {
-    const drop = element2Object(getIntObj())
-    const pack = MAX_PACKSIZE[drop.name] || 1
+    const pack = MAX_PACKSIZE[dropObject.name] || 1
     let found = false
     for (let i = 0; i < inventory.length; i++) {
         for ( let j = 0; j < inventory[i].length; j++ ) {
             const item = inventory[i][j]
-            if ( item && item.name === drop.name && item.amount !== pack && !found ) {
-                let diff = Math.min(pack, item.amount + drop.amount) - item.amount
-                handleThrowablePickup(drop)
+            if ( item && item.name === dropObject.name && item.amount !== pack && !found ) {
+                let diff = Math.min(pack, item.amount + dropObject.amount) - item.amount
+                handleThrowablePickup()
                 item.amount += diff
-                updateAmount(drop.amount - diff)
+                updateAmount(dropObject.amount - diff)
                 found = true
             }
         }
     }
-    if ( found && drop.amount !== 0 ) searchPack()
+    if ( found && dropObject.amount !== 0 ) searchPack()
 }
 
 const searchEmpty = () => {
-    const drop = element2Object(getIntObj())
-    if ( drop.amount === 0 ) return
-    const pack = MAX_PACKSIZE[drop.name] || 1
+    if ( dropObject.amount === 0 ) return
+    const pack = MAX_PACKSIZE[dropObject.name] || 1
     for (let i = 0; i < inventory.length; i++) {
         for ( let j = 0; j < inventory[i].length; j++ ) {
             const item = inventory[i][j]
-            if ( item === null && j + drop.space <= 4 ) {
+            if ( item === null && j + dropObject.space <= 4 ) {
                 let skip = false
-                for ( let k = 1; k < drop.space; k++ )
+                for ( let k = 1; k < dropObject.space; k++ )
                     if ( inventory[i][j+k] !== null ) skip = true
                 if ( skip ) continue   
-                let diff = Math.min(pack, drop.amount)
-                handleThrowablePickup(drop)
-                inventory[i][j] = {...drop, amount: diff, row: i, column: j}
-                for ( let k = 1; k < drop.space; k++ ) inventory[i][j+k] = 'taken'
-                updateAmount(drop.amount - diff)
-                if ( drop.amount > 0 && inventoryFull() ) return
+                let diff = Math.min(pack, dropObject.amount)
+                handleThrowablePickup()
+                inventory[i][j] = {...dropObject, amount: diff, row: i, column: j}
+                for ( let k = 1; k < dropObject.space; k++ ) inventory[i][j+k] = 'taken'
+                updateAmount(dropObject.amount - diff)
+                if ( dropObject.amount > 0 && inventoryFull() ) return
                 searchEmpty()
                 return
             }
@@ -135,47 +138,47 @@ const searchEmpty = () => {
     }
 }
 
-const handleThrowablePickup = (drop) => {
-    if ( !isThrowable(drop.name) ) return
-    const throwable = inventory.flat().find(item => item?.name === drop.name)
+const handleThrowablePickup = () => {
+    if ( !isThrowable(dropObject.name) ) return
+    const throwable = inventory.flat().find(item => item?.name === dropObject.name)
     if ( !throwable ) return
-    const interactable = getCurrentRoomInteractables().find(int => int.id === drop.id)
-    drop.id = throwable.id
-    getIntObj().setAttribute('id', throwable.id)
+    const interactable = getCurrentRoomInteractables().find(int => int.id === dropObject.id)
+    dropObject.id = throwable.id
+    dropElem.setAttribute('id', throwable.id)
     if ( interactable ) interactable.id = throwable.id
 }
 
 const checkSpecialScenarios = () => {
-    const obj = element2Object(getIntObj())
-    if ( obj.amount === 0 ) {
-        activateProgress(obj.progress2active + '')
-        deactivateProgress(obj.progress2deactive + '')
+    const { amount, progress2active, progress2deactive, id, name } = dropObject
+    if ( amount === 0 ) {
+        activateProgress(progress2active + '')
+        deactivateProgress(progress2deactive + '')
     }
-    if ( ( isThrowable(obj.name) && !getWeaponWheel().includes(obj.id) ) ||
-         ( isWeapon(obj.name) && obj.amount === 0 ) ) updateWeaponWheel()        
+    if ( ( isThrowable(name) && !getWeaponWheel().includes(id) ) ||
+         ( isWeapon(name) && amount === 0 ) ) updateWeaponWheel()        
     if ( getPause() ) return
-    if ( obj.amount === 0 ) removeDrop(getIntObj())
-    ammo4Equipped(obj)
+    if ( amount === 0 ) removeDrop(dropElem)
+    ammo4Equipped()
 }
 
-const ammo4Equipped = (obj) => {
+const ammo4Equipped = () => {
     if ( !getEquippedWeaponId() ) return
     const equipped = getEquippedWeaponObject()
-    ammo4EquippedWeapon(equipped, obj)
-    ammo4EquippedThrowable(equipped, obj)
+    ammo4EquippedWeapon(equipped)
+    ammo4EquippedThrowable(equipped)
 }
 
-const ammo4EquippedWeapon = (equipped, obj) => {
+const ammo4EquippedWeapon = (equipped) => {
     if ( !isWeapon(equipped.name) ) return
-    if ( obj.name !== getWeaponDetails().get(equipped.name).ammotype ) return
+    if ( dropObject.name !== getWeaponDetails().get(equipped.name).ammotype ) return
     const ammoCount = getUiEl().children[2].children[1]
     const totalAmmo = ammoCount.children[1]
     totalAmmo.textContent = calculateTotalAmmo()
 }
 
-const ammo4EquippedThrowable = (equipped, obj) => {
+const ammo4EquippedThrowable = (equipped) => {
     if ( !isThrowable(equipped.name) ) return
-    if ( obj.name !== equipped.name ) return
+    if ( dropObject.name !== equipped.name ) return
     const ammoCount = getUiEl().children[2].children[1]
     ammoCount.firstElementChild.textContent = calculateThrowableAmount(equipped)
 }
@@ -215,12 +218,13 @@ export const useItemAtPosition = (row, column, reduce) => {
 export const updateInventoryWeaponMag = (newMag) => getEquippedWeaponObject().currmag = newMag
 
 const updateAmount = (newValue) => {
-    getIntObj().setAttribute('amount', newValue)
-    if ( getIntObj().children.length === 0 ) return
-    getIntObj().children[1].children[0].textContent = `${newValue} ${getIntObj().getAttribute('heading')}`
+    dropElem.setAttribute('amount', newValue)
+    dropObject.amount = newValue
+    if ( dropElem.children.length === 0 ) return
+    dropElem.children[1].children[0].textContent = `${newValue} ${dropElem.getAttribute('heading')}`
     interactables.set(getCurrentRoomId(), 
     interactables.get(getCurrentRoomId()).map(int => {
-        return int.id === +getIntObj().getAttribute('id') ? 
+        return int.id === Number(dropElem.getAttribute('id')) ? 
         {
             ...int,
             amount: newValue
@@ -228,14 +232,14 @@ const updateAmount = (newValue) => {
     }))
 }
 
-export const removeDrop = (element) => {
-    element.remove()
-    interactables.set(getCurrentRoomId(), interactables.get(getCurrentRoomId()).filter(elem => elem.id !== Number(element.id)))
+export const removeDrop = (drop) => {
+    drop.remove()
+    interactables.set(getCurrentRoomId(), interactables.get(getCurrentRoomId()).filter(elem => elem.id !== Number(drop.id)))
 }
 
 const updateWeaponWheel = () => {
     const index = getWeaponWheel().findIndex(item => item === null)
-    getWeaponWheel()[index] = Number(getIntObj().getAttribute('id'))
+    getWeaponWheel()[index] = dropObject.id
 }
 
 export const upgradeInventory = () => {
@@ -326,7 +330,7 @@ export const renderDescriptionEvent = (item) => {
     item.addEventListener('mousemove', renderDescriptionContent, true)
     item.heading = `${itemObj.heading}`
     item.description = `${itemObj.description}`
-    item.isNote = itemObj.name === 'note'
+    item.isNote = itemObj.name === NOTE
     item.isExamined = itemObj.examined
 }
 
@@ -581,10 +585,10 @@ const use = (item) => {
 
 const useKey = (itemObj) => {
     if ( !itemObj.name.includes('key') ) return false
-    const neededKey = getIntObj()?.getAttribute('key')
+    const neededKey = getElementInteractedWith()?.getAttribute('key')
     if ( !neededKey || itemObj.unlocks !== neededKey ) return false
     quitPage()
-    openDoor(getIntObj())
+    openDoor(getElementInteractedWith())
     return true
 }
 
