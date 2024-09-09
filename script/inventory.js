@@ -151,8 +151,8 @@ const handleThrowablePickup = () => {
 const checkSpecialScenarios = () => {
     const { amount, progress2active, progress2deactive, id, name } = dropObject
     if ( amount === 0 ) {
-        activateProgress(progress2active + '')
-        deactivateProgress(progress2deactive + '')
+        if ( progress2active ) activateProgress(progress2active + '')
+        if ( progress2deactive ) deactivateProgress(progress2deactive + '')
     }
     if ( ( isThrowable(name) && !getWeaponWheel().includes(id) ) ||
          ( isWeapon(name) && amount === 0 ) ) updateWeaponWheel()        

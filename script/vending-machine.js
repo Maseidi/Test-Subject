@@ -17,7 +17,6 @@ import {
     setAdrenalinesDropped,
     setEnergyDrinksDropped,
     setHealthPotionsDropped,
-    setElementInteractedWith,
     setLuckPillsDropped } from './variables.js'
 import { 
     MAX_PACKSIZE,
@@ -251,11 +250,11 @@ const manageBuy = (itemObj) => {
         let chosenItem = getShopItems()[itemObj.id]
         if ( isStatUpgrader(itemObj) ) chosenItem.price = 30
         if ( itemObj.name === 'armor' ) chosenItem.price = 50
-        
-        let purchasedItem = new Drop(
-            chosenItem.width, chosenItem.left, chosenItem.top, chosenItem.name, chosenItem.heading, chosenItem.amount, 
-            chosenItem.space, chosenItem.description, chosenItem.price / chosenItem.amount, 
-            Progress.builder().setRenderProgress('0'))
+        const { width, left, top, name, heading, amount, space, description, price } = chosenItem
+
+        const purchasedItem = new Drop(width, left, top, name, heading, amount, 
+                                     space, description, price / amount, Progress.builder().setRenderProgress('0'))
+                                     
         purchasedItem = handleNewWeapnPurchase(purchasedItem, itemObj.name)
         purchasedItem = handleNewThrowablePurchase(purchasedItem, itemObj.name)
         pickupDrop(object2Element(purchasedItem))

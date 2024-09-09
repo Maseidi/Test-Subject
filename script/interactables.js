@@ -1,4 +1,3 @@
-import { Progress } from './progress.js'
 import { getWeaponDetails } from './weapon-details.js'
 import { 
     FLASHBANG_LOOT,
@@ -6,12 +5,12 @@ import {
     Loot,
     MAGNUM_AMMO_LOOT,
     NOTE,
-    NoteLoot,
     P90,
     PISTOL4,
     RIFLE_AMMO_LOOT,
     SHOTGUN_SHELLS_LOOT, 
     SingleLoot } from './loot.js'
+import { Progress } from './progress.js'
 
 class Interactable {
     constructor(width, left, top, name, heading, popup, solid, amount, space, description, price, progress) {
@@ -241,7 +240,7 @@ export class Note extends Drop {
 
 class Vaccine extends Drop {
     constructor(left, top, color, amount, progress) {
-        super(15, left, top, `${color}vaccine`, `${color} vaccine`, amount, 1, 
+        super(20, left, top, `${color}vaccine`, `${color} vaccine`, amount, 1, 
             `Vaccine used for defusing virus ${color}`, 1/3, progress)
     }
 }
@@ -307,14 +306,14 @@ export const interactables = new Map([
         []
     ],[16, 
         [
-        new WeaponDrop(500, 600, 'famas', 20, 1, 1, 1, 1, 1),
+        new WeaponDrop(500, 600, 'famas', 50, 5, 5, 5, 5, 5),
         new SmgAmmo(500, 700, 90),
         new Bandage(600, 700, 5),
         new Antidote(600, 600, 5),
         new Grenade(500, 800, 3),
         new Flashbang(600, 800, 5),
-        new Flashbang(700, 800, 2),
-        new RedVaccine(100, 100, 2)
+        new Flashbang(700, 800, 2, Progress.builder().setKillAll('5').setProgress2Active('6')),
+        new RedVaccine(100, 100, 2, Progress.builder().setRenderProgress('1'))
         ]
     ],[37, 
         [

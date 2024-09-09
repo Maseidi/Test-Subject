@@ -274,7 +274,9 @@ const renderEnemies = (room2Render) => {
 
 const indexEnemies = (enemies) => enemies.forEach((enemy, index) => enemy.index = index)
 
-const filterEnemies = (enemies) => enemies.filter(enemy => enemy.health !== 0 && findProgressByName(enemy?.renderProgress))
+const filterEnemies = (enemies) => enemies.filter(enemy => 
+    enemy.health !== 0 && findProgressByName(enemy?.renderProgress) && !enemiesLeft(enemy)
+)
 
 const spawnEnemies = (enemies, room2Render) => enemies.forEach(elem => spawnEnemy(elem, room2Render))
 

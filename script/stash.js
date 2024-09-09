@@ -1,6 +1,6 @@
 import { renderQuit } from './user-interface.js'
 import { getPauseContainer } from './elements.js'
-import { getElementInteractedWith, setElementInteractedWith } from './variables.js'
+import { getElementInteractedWith } from './variables.js'
 import { 
     addAllAttributes,
     addClass,

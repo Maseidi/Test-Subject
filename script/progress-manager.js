@@ -8,9 +8,7 @@ import { getCurrentRoom, getCurrentRoomDoors } from './elements.js'
 
 let progress = {
     '0' : true,
-    '1' : true,
-    '2' : true,
-    '200': true
+    '100' : true
 }
 
 export const getProgress = () => progress
@@ -35,7 +33,7 @@ export const deactivateProgress = (name) => {
         ...progress,
         [name] : false
     }
-    closeDoors(name)    
+    closeDoors(name)
 }
 
 const openDoors = (name) => 
@@ -68,7 +66,7 @@ export const updateKillAllDoors = () => {
 
 const updateEnemies = (name) =>
     enemies.get(getCurrentRoomId())
-        .filter(enemy => enemy.renderProgress === name && enemy.health !== 0 )
+        .filter(enemy => enemy.renderProgress === name && enemy.health !== 0 && !enemy.killAll )
         .forEach(enemy => {
             enemy.killAll = null
             enemy.renderProgress = '0'
@@ -76,10 +74,15 @@ const updateEnemies = (name) =>
         })
 
 export const updateKillAllEnemies = () => {
-    const aliveEnemies = enemies.get(getCurrentRoomId()).filter(enemy => enemy.health !== 0)
-    enemies.get(getCurrentRoomId()).forEach(enemy => {
-        if ( enemy.health === 0 || !enemy.killAll || 
-             aliveEnemies.find(elem => Number(elem.renderProgress) <= Number(enemy.killAll)) ) return
+    const aliveEnemies = enemies.get(getCurrentRoomId())
+        .map((enemy, index) => ({...enemy, index}))
+        .filter(enemy => enemy.health !== 0)
+
+    enemies.get(getCurrentRoomId()).forEach((enemy, index) => {
+        if ( enemy.health === 0 ) return
+        if ( !enemy.killAll === 0 ) return
+        if ( aliveEnemies.find(elem => index !== elem.index && Number(elem.renderProgress) <= Number(enemy.killAll)) )
+            return
         enemy.killAll = null
         enemy.renderProgress = '0'
         spawnEnemy(enemy, getCurrentRoom())
