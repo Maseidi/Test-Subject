@@ -89,10 +89,10 @@ const renderWalls = (room2Render) => {
         wall.style.backgroundColor = `darkgray`
         wall.style.width = `${elem.width}px`
         wall.style.height = `${elem.height}px`
-        if ( elem.left !== undefined ) wall.style.left = `${elem.left}px`
-        else if ( elem.right !== undefined ) wall.style.right = `${elem.right}px`
-        if ( elem.top !== undefined ) wall.style.top = `${elem.top}px`
-        else if ( elem.bottom !== undefined ) wall.style.bottom = `${elem.bottom}px`
+        if ( elem.left !== null )        wall.style.left = `${elem.left}px`
+        else if ( elem.right !== null )  wall.style.right = `${elem.right}px`
+        if ( elem.top !== null )         wall.style.top = `${elem.top}px`
+        else if ( elem.bottom !== null ) wall.style.bottom = `${elem.bottom}px`
         if ( !elem.side ) {
             createTrackers(wall, elem)
             wall.setAttribute('side', false)  

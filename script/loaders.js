@@ -3,14 +3,14 @@ import { getPasswords } from './password-manager.js'
 
 class Loader {
     constructor(className, width, height, left, top, right, bottom, door) {
-        this.className = className
-        this.width = width
-        this.height = height
-        this.left = left
-        this.top = top
-        this.right = right
-        this.bottom = bottom
-        this.door = door
+        this.className = className ?? null
+        this.width =     width ?? 0
+        this.height =    height ?? 0
+        this.left =      left ?? null
+        this.top =       top ?? null
+        this.right =     right ?? null
+        this.bottom =    bottom ?? null
+        this.door =      door ?? null
     }
 }
 
@@ -107,23 +107,23 @@ export const loaders = new Map([
     ],
     [16, [
         new BottomLoader_FromLeft(9, 100, 100, 
-            new Door('green', 'Test door 2', 'Door for testing', undefined, 
+            new Door('green', 'Test door 2', 'Door for testing', null, 
                 Progress.builder().setRemoveProgress('200')
             )
         ),
         new LeftLoader_FromTop(37, 100, 400, 
-            new Door('red', 'Test door 1', 'Door for testing', undefined, 
+            new Door('red', 'Test door 1', 'Door for testing', null, 
                 Progress.builder().setRemoveProgress('100')
             )
         ),
         new TopLoader_FromLeft(38, 250, 475, 
-            new Door('purple', 'Test door 3', 'Door for testing', undefined, 
+            new Door('purple', 'Test door 3', 'Door for testing', null, 
                 Progress.builder().setProgress2Active('1000'), 
                 'main-hall'
             )
         ),
         new RightLoader_FromTop(39, 300, 300,
-            new Door('violet', 'Silver gate', 'Silver door for testing', undefined, undefined, 'silver-gate')
+            new Door('violet', 'Silver gate', 'Silver door for testing', null, null, 'silver-gate')
         )
         ]
     ],
@@ -131,12 +131,12 @@ export const loaders = new Map([
         new RightLoader_FromTop(16, 100, 350),
         new TopLoader_FromLeft(62, 100, 240),
         new TopLoader_FromLeft(63, 100, 580, 
-            new Door('red', 'Test door 3', 'Door for testing 3', undefined, 
+            new Door('red', 'Test door 3', 'Door for testing 3', null, 
                 Progress.builder().setKillAll('10').setProgress2Active('20')
             )
         ),
         new TopLoader_FromRight(64, 100, 240, 
-            new Door('green', 'Test door 1', 'Door for testing', undefined, 
+            new Door('green', 'Test door 1', 'Door for testing', null, 
                 Progress.builder().setRemoveProgress('7').setProgress2Active('8')
             )
         ),

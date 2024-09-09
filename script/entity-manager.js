@@ -99,7 +99,7 @@ const calculateNewRoomLeftAndTop = (prevLoader) => {
 }
 
 const manageInteractables = () => {
-    setIntObj(undefined)
+    setIntObj(null)
     getCurrentRoomInteractables().forEach((int) => {
         const popup = int.children[1] ?? int.children[0]
         if ( collide(getPlayer().firstElementChild, int, 20) && !getIntObj() ) {

@@ -1,12 +1,12 @@
 class AbstractWall {
     constructor(width, height, left, right, top, bottom, side) {
-        this.width = width
-        this.height = height
-        this.left = left
-        this.right = right
-        this.top = top
-        this.bottom = bottom
-        this.side = side
+        this.width =  width  ?? 0
+        this.height = height ?? 0
+        this.left =   left   ?? null
+        this.right =  right  ?? null
+        this.top =    top    ?? null
+        this.bottom = bottom ?? null
+        this.side =   side   ?? false
     }
 }
 

@@ -13,19 +13,19 @@ class Weapon {
         firerate,
         description,
         price) {
-        this.heading = heading    
-        this.ammotype = ammotype
-        this.height = height
-        this.color = color
-        this.antivirus = antivirus
-        this.space = space
-        this.damage = damage
-        this.range = range
+        this.heading =     heading
+        this.ammotype =    ammotype
+        this.height =      height
+        this.color =       color
+        this.antivirus =   antivirus
+        this.space =       space
+        this.damage =      damage
+        this.range =       range
         this.reloadspeed = reloadspeed
-        this.magazine = magazine
-        this.firerate = firerate
+        this.magazine =    magazine
+        this.firerate =    firerate
         this.description = description
-        this.price = price
+        this.price =       price
     }
 }
 
