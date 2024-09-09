@@ -45,10 +45,10 @@ export const REMINGTON_1858 = 'remington1858'
 
 export class Loot {
     constructor(name, amount, progress) {
-        this.name = name
-        this.amount = amount
-        this.progress2Active = progress?.progress2Active
-        this.progress2Deactive = progress?.progress2Deactive
+        this.name =              name ?? null
+        this.amount =            amount ?? 0
+        this.progress2Active =   progress?.progress2Active ?? null
+        this.progress2Deactive = progress?.progress2Deactive ?? null
     }
 }
 

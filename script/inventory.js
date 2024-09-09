@@ -77,10 +77,10 @@ export const MAX_PACKSIZE = {
 let inventory = [
     [null, null, null, null],
     [null, null, null, null],
-    [undefined, undefined, undefined, undefined],
-    [undefined, undefined, undefined, undefined],
-    [undefined, undefined, undefined, undefined],
-    [undefined, undefined, undefined, undefined],
+    ['locked', 'locked', 'locked', 'locked'],
+    ['locked', 'locked', 'locked', 'locked'],
+    ['locked', 'locked', 'locked', 'locked'],
+    ['locked', 'locked', 'locked', 'locked'],
 ]
 
 export const getInventory = () => inventory
@@ -239,7 +239,7 @@ const updateWeaponWheel = () => {
 }
 
 export const upgradeInventory = () => {
-    const index = inventory.flat().findIndex(block => block === undefined)
+    const index = inventory.flat().findIndex(block => block === 'locked')
     const row = Math.floor(index / 4)
     const column = index % 4
     inventory[row][column] = null
@@ -271,11 +271,11 @@ export const renderBlocks = () => {
     const inventoryEl = createAndAddClass('div', 'inventory')
     inventory.forEach((row) => {
         row.forEach((block) => {
-            const theBlock = block === 'taken' ? document.createElement('div') : object2Element(block)
+            const theBlock = ['taken', 'locked'].includes(block) ? document.createElement('div') : object2Element(block)
             addClass(theBlock, 'block')
             let skip = false
             if ( block === 'taken' ) skip = true
-            else if (block === null || block === undefined) theBlock.style.width = `25%`
+            else if (block === null || block === 'locked') theBlock.style.width = `25%`
             else {
                 theBlock.style.width = `${block.space * 25}%`
                 const amount = createAndAddClass('div', 'amount')
@@ -286,8 +286,8 @@ export const renderBlocks = () => {
                 theBlock.append(amount)
             }
             if ( !skip ) {                
-                if ( block === undefined ) theBlock.style.backgroundColor = `rgba(255, 0, 0, 0.1)`
-                if ( block === null || block === undefined ) skip = true   
+                if ( block === 'locked' ) theBlock.style.backgroundColor = `rgba(255, 0, 0, 0.1)`
+                if ( block === null || block === 'locked' ) skip = true   
                 if ( !skip ) {
                     const image = document.createElement('img')
                     image.src = `../assets/images/${block.name}.png`
@@ -437,7 +437,7 @@ const renderGrid = () => {
 const checkReplace = (e) => {
     const destObj = element2Object(e.target)
     const item = inventory[destObj.row][destObj.column]  
-    if ( item === undefined ) return
+    if ( item === 'locked' ) return
     const srcObj = element2Object(getDraggedItem())
     let state = getReplacementState(item, destObj, srcObj)
     if (state !== -1) REPLACE_STATES.get(state)(destObj, srcObj)

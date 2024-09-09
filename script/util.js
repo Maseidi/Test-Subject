@@ -54,13 +54,11 @@ export const addAllAttributes = (elem, ...attrs) => {
     for ( let i = 0; i < attrs.length; i += 2 ) elem.setAttribute(attrs[i], attrs[i+1])
 }
 
-export const isNullOrUndefined = (input) => input === null || input === undefined
-
 export const object2Element = (obj) => {
-    if ( isNullOrUndefined(obj) ) return document.createElement('div')
+    if ( obj == null ) return document.createElement('div')
     const props = Object.getOwnPropertyNames(obj)
     const elem = document.createElement('div')
-    props.filter(prop => !isNullOrUndefined(obj[prop])).forEach(prop => elem.setAttribute(prop, obj[prop]))
+    props.filter(prop => obj[prop] != null).forEach(prop => elem.setAttribute(prop, obj[prop]))
     return elem
 }
 

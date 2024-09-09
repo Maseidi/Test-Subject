@@ -160,13 +160,13 @@ export const setEquippedWeaponObject = (val) => {
 }
 export const getEquippedWeaponObject = () => EquippedWeaponObject
 
-let intObj
+let intObj = null
 export const setIntObj = (val) => {
     intObj = val
 }
 export const getIntObj = () => intObj
 
-let targets
+let targets = []
 export const setTargets = (val) => {
     targets = val
 }
@@ -178,25 +178,25 @@ export const setPause = (val) => {
 }
 export const getPause = () => pause
 
-let pauseCause
+let pauseCause = null
 export const setPauseCause = (val) => {
     pauseCause = val
 }
 export const getPauseCause = () => pauseCause
 
-let draggedItem
+let draggedItem = null
 export const setDraggedItem = (val) => {
     draggedItem = val
 }
 export const getDraggedItem = () => draggedItem
 
-let mouseX
+let mouseX = null
 export const setMouseX = (val) => {
     mouseX = val
 }
 export const getMouseX = () => mouseX
 
-let mouseY
+let mouseY = null
 export const setMouseY = (val) => {
     mouseY = val
 }
@@ -220,7 +220,7 @@ export const setShooting = (val) => {
 }
 export const getShooting = () => shooting
 
-let shootCounter
+let shootCounter = 0
 export const setShootCounter = (val) => {
     shootCounter = val
 }
@@ -244,7 +244,7 @@ export const setEntityId = (val) => {
 }
 export const getEntityId = () => entityId
 
-let grabbed
+let grabbed = false
 export const setGrabbed = (val) => {
     grabbed = val
 }

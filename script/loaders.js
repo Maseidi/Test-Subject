@@ -4,13 +4,13 @@ import { getPasswords } from './password-manager.js'
 class Loader {
     constructor(className, width, height, left, top, right, bottom, door) {
         this.className = className ?? null
-        this.width =     width ?? 0
-        this.height =    height ?? 0
-        this.left =      left ?? null
-        this.top =       top ?? null
-        this.right =     right ?? null
-        this.bottom =    bottom ?? null
-        this.door =      door ?? null
+        this.width =     width     ?? 0
+        this.height =    height    ?? 0
+        this.left =      left      ?? null
+        this.top =       top       ?? null
+        this.right =     right     ?? null
+        this.bottom =    bottom    ?? null
+        this.door =      door      ?? null
     }
 }
 

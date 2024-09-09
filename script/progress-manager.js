@@ -18,7 +18,7 @@ export const getProgress = () => progress
 export const findProgressByName = (name) => progress[name]
 
 export const activateProgress = (name) => {
-    if ( !name || name === 'undefined' || progress[name] ) return
+    if ( !name || progress[name] ) return
     progress = {
         ...progress,
         [name]: true
@@ -30,7 +30,7 @@ export const activateProgress = (name) => {
 }
 
 export const deactivateProgress = (name) => {
-    if ( !name || name === 'undefined' || !progress[name] ) return
+    if ( !name || !progress[name] ) return
     progress = {
         ...progress,
         [name] : false
@@ -70,7 +70,7 @@ const updateEnemies = (name) =>
     enemies.get(getCurrentRoomId())
         .filter(enemy => enemy.renderProgress === name && enemy.health !== 0 )
         .forEach(enemy => {
-            enemy.killAll = undefined
+            enemy.killAll = null
             enemy.renderProgress = '0'
             spawnEnemy(enemy, getCurrentRoom())
         })
@@ -80,7 +80,7 @@ export const updateKillAllEnemies = () => {
     enemies.get(getCurrentRoomId()).forEach(enemy => {
         if ( enemy.health === 0 || !enemy.killAll || 
              aliveEnemies.find(elem => Number(elem.renderProgress) <= Number(enemy.killAll)) ) return
-        enemy.killAll = undefined
+        enemy.killAll = null
         enemy.renderProgress = '0'
         spawnEnemy(enemy, getCurrentRoom())
     })
@@ -91,7 +91,7 @@ const updateInteractables = (name) =>
         .map((int, index) => ({...int, index }))
         .filter(int => int.renderProgress === name)
         .forEach(int => {
-            int.killAll = undefined
+            int.killAll = null
             int.renderProgress = '0'
             renderInteractable(getCurrentRoom(), int, int.index)
         })
@@ -100,9 +100,7 @@ export const updateKillAllInteractables = () => {
     const aliveEnemies = enemies.get(getCurrentRoomId()).filter(enemy => enemy.health !== 0)
     interactables.get(getCurrentRoomId()).forEach((int, index) => {
         if ( !int.killAll || aliveEnemies.find(enemy => Number(enemy.renderProgress) <= Number(int.killAll)) ) return
-        console.log(int);
-        
-        int.killAll = undefined
+        int.killAll = null
         int.renderProgress = '0'
         renderInteractable(getCurrentRoom(), int, index)
     })

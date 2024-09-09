@@ -19,18 +19,16 @@ import {
 
 class ShopItem {
     constructor(drop, amount, price) {
-        this.width = drop.width
-        this.left = drop.left
-        this.top = drop.top
-        this.name = drop.name
-        this.heading = drop.heading
-        this.popup = drop.popup
-        this.space = drop.space
-        this.description = drop.description
-        this.renderProgress = drop.renderProgress
-        this.amount = amount
-        this.price = price
-        this.sold = false
+        this.width =          drop.width          ?? 0
+        this.name =           drop.name           ?? null
+        this.heading =        drop.heading        ?? null
+        this.popup =          drop.popup          ?? null
+        this.space =          drop.space          ?? null
+        this.description =    drop.description    ?? null
+        this.renderProgress = drop.renderProgress ?? null
+        this.amount =         amount              ?? 0
+        this.price =          price               ?? 0
+        this.sold =           false
     }
 }
 

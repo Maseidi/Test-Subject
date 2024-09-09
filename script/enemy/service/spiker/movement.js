@@ -12,9 +12,9 @@ export class SpikerMovementService extends AbstractMovementService {
         const enemyWidth = getProperty(this.enemy.sprite, 'width', 'px')
         const { destX, destY, destWidth } = this.destinationCoordinates()
         const { xMultiplier, yMultiplier } = this.decideDirection(enemyWidth, destX, destY, destWidth)
-        if ( xMultiplier === undefined && xMultiplier !== this.xMultiplier && this.enemy.axis === 1 ) {
+        if ( xMultiplier === null && xMultiplier !== this.xMultiplier && this.enemy.axis === 1 ) {
             this.enemy.axis = 2
-        } else if ( yMultiplier === undefined && yMultiplier !== this.yMultiplier && this.enemy.axis === 2 ) {
+        } else if ( yMultiplier === null && yMultiplier !== this.yMultiplier && this.enemy.axis === 2 ) {
             this.enemy.axis = 1
         }
         this.xMultiplier = xMultiplier

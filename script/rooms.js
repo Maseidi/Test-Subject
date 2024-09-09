@@ -2,12 +2,12 @@ import { Progress } from './progress.js'
 
 class Room {
     constructor(id, width, height, label, progress) {
-        this.id = id
-        this.width = width
-        this.height = height
-        this.label = label
-        this.progress2Active = progress?.progress2Active
-        this.progress2Deactive = progress?.progress2Deactive
+        this.id =                id                          ?? 0
+        this.width =             width                       ?? 0
+        this.height =            height                      ?? 0
+        this.label =             label                       ?? null
+        this.progress2Active =   progress?.progress2Active   ?? null
+        this.progress2Deactive = progress?.progress2Deactive ?? null
     }
 }
 

@@ -1,5 +1,13 @@
 export class Progress {
 
+    constructor() {
+        this.renderProgress =    null
+        this.removeProgress =    null
+        this.progress2Active =   null
+        this.progress2Deactive = null
+        this.killAll =           null
+    }
+
     static builder() {
         return new Progress()
     }

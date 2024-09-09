@@ -22,8 +22,8 @@ export const enemies = new Map([
     [9, []],
     [16, [
         new Torturer(1, new SinglePointPath(400, 400), new SingleLoot(BANDAGE_LOOT), Progress.builder().setRenderProgress('100')),
-        new RockCrusher(1, new SinglePointPath(500, 400), undefined, Progress.builder().setRenderProgress('400')),
-        new Stinger(1, new SinglePointPath(600, 400), undefined, 
+        new RockCrusher(1, new SinglePointPath(500, 400), null, Progress.builder().setRenderProgress('400')),
+        new Stinger(1, new SinglePointPath(600, 400), null, 
             Progress.builder().setRenderProgress('1000').setProgress2Deactive('1000')
         ),
         new Torturer(1, new SinglePointPath(600, 100), 
@@ -61,16 +61,16 @@ export const enemies = new Map([
         new Spiker(1, new SquarePath(700, 600, 100), new SingleLoot(LUCK_PILLS), 
             Progress.builder().setRenderProgress('8')
         ),
-        new Spiker(1, new SquarePath(800, 600, 100), undefined, 
+        new Spiker(1, new SquarePath(800, 600, 100), null, 
             Progress.builder().setRenderProgress('8')
         ),
-        new Grabber(1, new VerDoublePointPath(1400, 100, 600), undefined, 
+        new Grabber(1, new VerDoublePointPath(1400, 100, 600), null, 
             Progress.builder().setRenderProgress('9')
         ),
-        new Scorcher(1, new Path([new Point(100, 100), new Point(500, 500), new Point(700, 700)]), undefined, 
+        new Scorcher(1, new Path([new Point(100, 100), new Point(500, 500), new Point(700, 700)]), null, 
             Progress.builder().setRenderProgress('10')
         ),
-        new Stinger(1, new SinglePointPath(100, 100), undefined, 
+        new Stinger(1, new SinglePointPath(100, 100), null, 
             Progress.builder().setRenderProgress('11')
         )
     ]]

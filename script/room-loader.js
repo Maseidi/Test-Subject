@@ -1,3 +1,4 @@
+import { NOTE } from './loot.js'
 import { walls } from './walls.js'
 import { rooms } from './rooms.js'
 import { loaders } from './loaders.js'
@@ -5,8 +6,8 @@ import { isWeapon } from './weapon-details.js'
 import { enemies } from './enemy/util/enemies.js'
 import { interactables } from './interactables.js'
 import { renderRoomName } from './popup-manager.js'
-import { activateProgress, deactivateProgress, findProgressByName } from './progress-manager.js'
 import { getCurrentRoomId, getRoomLeft, getRoomTop, setStunnedCounter } from './variables.js'
+import { activateProgress, deactivateProgress, findProgressByName } from './progress-manager.js'
 import { 
     LOST,
     MOVE_TO_POSITION,
@@ -41,7 +42,6 @@ import {
     setCurrentRoomExplosions,
     setCurrentRoomDoors,
     getCurrentRoomDoors } from './elements.js'
-import { NOTE } from './loot.js'
 
 export const loadCurrentRoom = () => {
     setStunnedCounter(0)
@@ -172,7 +172,7 @@ export const renderDoor = (loader, room2Render, open) => {
 const addPosition = (root, input, direction, className, type) => {
     const output = (() => {
         if ( input === 26 || input === -26 ) return 0
-        else if ( input !== undefined ) return input
+        else if ( input !== null ) return input
     })()
     if ( output ) addClass(root, `${className}-${type}`)
     root.style[direction] = `${output}px`

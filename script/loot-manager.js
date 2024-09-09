@@ -57,15 +57,16 @@ export const dropLoot = (rootElem, isEnemy) => {
         'loot-data': data, 'loot-heading': heading, 'loot-description': description, 'loot-code': code } = root
     let loot
     if ( decision === RANDOM ) loot = dropRandomLoot(left, top)
-    else if ( !decision ) loot = undefined
-    else if ( decision === NOTE ) loot = new Note(left, top, heading, description, data, undefined, code)
+    else if ( !decision ) loot = null
+    else if ( decision === NOTE ) loot = new Note(left, top, heading, description, data, null, code)
     else loot = dropDeterminedLoot(decision, left, top, amount, data)
     if ( !isEnemy ) removeDrop(rootElem)
     else setCurrentRoomSolid(getCurrentRoomSolid().filter(solid => solid !== rootElem.firstElementChild))
     if ( !loot ) return
     let interactable = {...loot, left: left, top: top, id: nextId()}
-    if ( progress2Active !== 'undefined' ) interactable = {...interactable, progress2Active}
-    if ( progress2Deactive !== 'undefined' ) interactable = {...interactable, progress2Deactive}
+    //TODO: bug potential
+    if ( progress2Active !== 'null' ) interactable = {...interactable, progress2Active}
+    if ( progress2Deactive !== 'null' ) interactable = {...interactable, progress2Deactive}
     interactables.get(getCurrentRoomId()).push(interactable)
     renderInteractable(getCurrentRoom(), interactable)
 }
@@ -84,7 +85,7 @@ const dropRandomLoot = (left, top) => {
         {obj: LuckPills, chance: 0.0001,     predicate: getLuckPillsDropped},
     ]
     .sort(() => Math.random() - 0.5)
-    .filter((item) => item.predicate === undefined || predicate() < 10)
+    .filter((item) => !item.predicate || predicate() < 10)
     .map((item) => new decideItemDrop(item.obj, item.chance, left, top, amount))
     .find(drop => drop)
 }

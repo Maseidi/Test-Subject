@@ -130,7 +130,7 @@ export const walls = new Map([
         new Hor_BR_Wall(300, 0)
         ]
     ], [2, [
-        new AbstractWall(900, 900, 0, undefined, 0, undefined),
+        new AbstractWall(900, 900, 0, null, 0, null),
         new Hor_BL_Wall(1000, 0),
         new Ver_TR_Wall(1000, 0)
         ] 
@@ -154,10 +154,10 @@ export const walls = new Map([
         new Ver_BR_Wall(300, 0),
         new Hor_TL_Wall(475, 0),
         new Hor_TR_Wall(475, 0),
-        new AbstractWall(75, 75, 275, undefined, 275, undefined),
-        new AbstractWall(75, 75, undefined, 275, 275, undefined),
-        new AbstractWall(75, 75, undefined, 275, undefined, 275),
-        new AbstractWall(75, 75, 275, undefined, undefined, 275)
+        new AbstractWall(75, 75, 275, null, 275, null),
+        new AbstractWall(75, 75, null, 275, 275, null),
+        new AbstractWall(75, 75, null, 275, null, 275),
+        new AbstractWall(75, 75, 275, null, null, 275)
         ]
     ],[37, [
         new Ver_TR_Wall(350, 0),
@@ -169,11 +169,11 @@ export const walls = new Map([
         new Hor_TL_Wall(240, 680),
         new Ver_TL_Wall(800, 0),
         new Hor_BL_Wall(1600, 0),
-        new AbstractWall(300, 100, 100, undefined, 200, undefined),
-        new AbstractWall(300, 100, 100, undefined, undefined, 200),
-        new AbstractWall(300, 100, undefined, 100, 200, undefined),
-        new AbstractWall(300, 100, undefined, 100, undefined, 200),
-        new AbstractWall(150, 150, 725, undefined, 325, undefined),
+        new AbstractWall(300, 100, 100, null, 200, null),
+        new AbstractWall(300, 100, 100, null, null, 200),
+        new AbstractWall(300, 100, null, 100, 200, null),
+        new AbstractWall(300, 100, null, 100, null, 200),
+        new AbstractWall(150, 150, 725, null, 325, null),
         ]
     ]
 ]

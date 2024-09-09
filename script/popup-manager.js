@@ -5,10 +5,10 @@ import { addClass, appendAll, createAndAddClass, object2Element, removeClass } f
 
 class Popup {
     constructor(message, progress, duration) {
-        this.message = message
-        this.renderProgress = progress.renderProgress
-        this.progress2Active = progress.progress2Active
-        this.duration = duration ?? 1800
+        this.message =         message ?? null
+        this.renderProgress =  progress?.renderProgress ?? null
+        this.progress2Active = progress?.progress2Active ?? null
+        this.duration =        duration ?? 1800
     }
 }
 

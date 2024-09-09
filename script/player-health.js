@@ -129,6 +129,7 @@ export const setPlayer2Fire = () => {
 }
 
 export const poisonPlayer = () => {
+    if ( getPoisoned() ) return
     setPoisoned(true)
     addClass(getMapEl(), 'poisoned')
     manageDizziness()

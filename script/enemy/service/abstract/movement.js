@@ -36,7 +36,7 @@ export class AbstractMovementService {
     }
 
     decideDirection(enemyWidth, destX, destY, destWidth) {
-        let xMultiplier, yMultiplier
+        let xMultiplier = null, yMultiplier = null
         if ( this.enemy.x > destX + destWidth / 2 ) xMultiplier = -1
         else if ( this.enemy.x + enemyWidth <= destX + destWidth / 2 ) xMultiplier = 1
         if ( this.enemy.y > destY + destWidth / 2 ) yMultiplier = -1

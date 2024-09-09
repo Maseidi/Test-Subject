@@ -5,6 +5,7 @@ import {
     GRENADE_LOOT,
     Loot,
     MAGNUM_AMMO_LOOT,
+    NOTE,
     NoteLoot,
     P90,
     PISTOL4,
@@ -14,21 +15,21 @@ import {
 
 class Interactable {
     constructor(width, left, top, name, heading, popup, solid, amount, space, description, price, progress) {
-        this.width = width
-        this.left = left
-        this.top = top
-        this.name = name
-        this.heading = heading
-        this.popup = popup
-        this.solid = solid
-        this.amount = amount
-        this.space = space
-        this.description = description
-        this.price = price
-        this.renderProgress = progress?.renderProgress ?? '0'
-        this.killAll= progress?.killAll
-        this.progress2Active = progress?.progress2Active
-        this.progress2Deactive = progress?.progress2Deactive
+        this.width =             width                       ?? 0
+        this.left =              left                        ?? 0
+        this.top =               top                         ?? 0
+        this.name =              name                        ?? null
+        this.heading =           heading                     ?? null
+        this.popup =             popup                       ?? null
+        this.solid =             solid                       ?? false
+        this.amount =            amount                      ?? 0
+        this.space =             space                       ?? 0
+        this.description =       description                 ?? null
+        this.price =             price                       ?? 0
+        this.renderProgress =    progress?.renderProgress    ?? '0'
+        this.killAll=            progress?.killAll           ?? null
+        this.progress2Active =   progress?.progress2Active   ?? null
+        this.progress2Deactive = progress?.progress2Deactive ?? null
     }
 }
 
@@ -57,21 +58,26 @@ class Crate extends Interactable {
     }
 
     #initLootValues(loot) {
-        this['loot-name'] = loot.name
-        this['loot-amount'] = loot.amount
-        this['loot-active'] = loot.progress2Deactive
-        this['loot-deactive'] = loot.progress2Deactive
-        this['loot-data'] = loot.data
-        this['loot-code'] = loot.code
-        this['loot-heading'] = loot.heading
-        this['loot-description'] = loot.description
+        this['loot-name'] =        loot.name              ?? null
+        this['loot-amount'] =      loot.amount            ?? 0
+        this['loot-active'] =      loot.progress2Deactive ?? null
+        this['loot-deactive'] =    loot.progress2Deactive ?? null
+        this.#initNoteLootValues(loot)
+    }
+
+    #initNoteLootValues(loot) {
+        if ( loot.name === NOTE ) return
+        this['loot-data'] =        loot.data        ?? null
+        this['loot-code'] =        loot.code        ?? null
+        this['loot-heading'] =     loot.heading     ?? null
+        this['loot-description'] = loot.description ?? null
     }
 
 }
 
 export class Lever extends Interactable {
     constructor(left, top, progress) {
-        super(30, left, top, 'lever', 'lever', 'Toggle', true, undefined, undefined, undefined, undefined, progress)
+        super(30, left, top, 'lever', 'lever', 'Toggle', true, null, null, null, null, progress)
     }
 }
 
@@ -91,7 +97,7 @@ export class Bandage extends Drop {
 export class Coin extends Drop {
     constructor(left, top, amount, progress) {
         super(12, left, top, 'coin', 'coin', amount, 1, 
-            'A neccesity when trading with the vending machine', undefined, progress)
+            'A neccesity when trading with the vending machine', null, progress)
     }
 }
 
@@ -173,20 +179,20 @@ export class WeaponDrop extends Drop {
             getWeaponDetails().get(name).price,
             progress
         )
-        this.currmag = currmag
-        this.damageLvl = damageLvl
-        this.rangeLvl = rangeLvl
-        this.reloadspeedLvl = reloadspeedLvl
-        this.magazineLvl = magazineLvl
-        this.fireratelvl = fireratelvl
-        this.ammotype = getWeaponDetails().get(name).ammotype
+        this.currmag =        currmag ?? 0
+        this.damageLvl =      damageLvl ?? 1
+        this.rangeLvl =       rangeLvl ?? 1
+        this.reloadspeedLvl = reloadspeedLvl ?? 1
+        this.magazineLvl =    magazineLvl ?? 1
+        this.fireratelvl =    fireratelvl ?? 1
+        this.ammotype =       getWeaponDetails().get(name).ammotype ?? null
     }
 }
 
 export class KeyDrop extends Drop {
     constructor(left, top, code, heading, unlocks, progress) {
-        super(10, left, top, `key-${code}`, heading, 1, 1, heading, undefined, progress)
-        this.unlocks = unlocks
+        super(10, left, top, `key-${code}`, heading, 1, 1, heading, null, progress)
+        this.unlocks = unlocks ?? null
     }
 }
 
@@ -226,10 +232,10 @@ export class BodyArmor extends Drop {
 
 export class Note extends Drop {
     constructor(left, top, heading, description, data, progress, code) {
-        super(15, left, top, 'note', heading, 1, 1, description, undefined, progress)
-        this.data = data
+        super(15, left, top, 'note', heading, 1, 1, description, null, progress)
+        this.data =     data ?? null
+        this.code =     code ?? null
         this.examined = false
-        this.code = code
     }
 }
 
