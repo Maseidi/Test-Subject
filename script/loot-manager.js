@@ -64,8 +64,8 @@ export const dropLoot = (rootElem, isEnemy) => {
     else setCurrentRoomSolid(getCurrentRoomSolid().filter(solid => solid !== rootElem.firstElementChild))
     if ( !loot ) return
     let interactable = {...loot, left: left, top: top, id: nextId()}
-    if ( progress2Active !== 'null' ) interactable = {...interactable, progress2Active}
-    if ( progress2Deactive !== 'null' ) interactable = {...interactable, progress2Deactive}
+    if ( progress2Active ) interactable = {...interactable, progress2Active}
+    if ( progress2Deactive ) interactable = {...interactable, progress2Deactive}
     interactables.get(getCurrentRoomId()).push(interactable)
     renderInteractable(getCurrentRoom(), interactable)
 }

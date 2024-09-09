@@ -59,7 +59,7 @@ class Crate extends Interactable {
     #initLootValues(loot) {
         this['loot-name'] =        loot.name              ?? null
         this['loot-amount'] =      loot.amount            ?? 0
-        this['loot-active'] =      loot.progress2Deactive ?? null
+        this['loot-active'] =      loot.progress2Active   ?? null
         this['loot-deactive'] =    loot.progress2Deactive ?? null
         this.#initNoteLootValues(loot)
     }
@@ -312,7 +312,7 @@ export const interactables = new Map([
         new Antidote(600, 600, 5),
         new Grenade(500, 800, 3),
         new Flashbang(600, 800, 5),
-        new Flashbang(700, 800, 2, Progress.builder().setKillAll('5').setProgress2Active('6')),
+        new Flashbang(700, 800, 2, Progress.builder().setKillAll('5')),
         new RedVaccine(100, 100, 2, Progress.builder().setRenderProgress('1'))
         ]
     ],[37, 

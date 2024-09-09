@@ -14,7 +14,7 @@
 ✔️ kill one render popup
 
 ✔️ kill all spawn interactable
-✔️ kill all spawn enemy
+kill all spawn enemy
 kill all open door
 kill all close door
 kill all render popup

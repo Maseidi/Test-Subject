@@ -34,12 +34,6 @@ export const enemies = new Map([
             null,
             Progress.builder().setRenderProgress('6')
         ),
-        new Torturer(
-            1,
-            new SinglePointPath(500, 100),
-            null,
-            Progress.builder().setKillAll('6')
-        )
     ]],
     [37, []]
 ])

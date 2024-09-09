@@ -51,7 +51,9 @@ export const appendAll = (root, ...elems) => elems.forEach(elem => root.append(e
 export const isMoving = () => getUpPressed() || getDownPressed() || getLeftPressed() || getRightPressed()
 
 export const addAllAttributes = (elem, ...attrs) => {
-    for ( let i = 0; i < attrs.length; i += 2 ) elem.setAttribute(attrs[i], attrs[i+1])
+    for ( let i = 0; i < attrs.length; i += 2 ) {
+        if ( attrs[i+1] ) elem.setAttribute(attrs[i], attrs[i+1])
+    }
 }
 
 export const object2Element = (obj) => {
