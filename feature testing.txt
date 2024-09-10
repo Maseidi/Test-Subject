@@ -7,13 +7,13 @@
 ✔️ stash item
 ✔️ retrieve from stash
 
-✔️ kill one spawn interactable
-✔️ kill one spawn enemy
-✔️ kill one open door
-✔️ kill one close door
-✔️ kill one render popup
+kill one spawn interactable
+kill one spawn enemy
+kill one open door
+kill one close door
+kill one render popup
 
-✔️ kill all spawn interactable
+kill all spawn interactable
 kill all spawn enemy
 kill all open door
 kill all close door
@@ -37,7 +37,7 @@ open door render popup
 open door open door
 open door close door
 
-✔️ pick up drop spawn enemy
+pick up drop spawn enemy
 pick up drop spawn interactable
 pick up drop render popup
 pick up drop open door

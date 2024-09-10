@@ -311,9 +311,7 @@ export const interactables = new Map([
         new Bandage(600, 700, 5),
         new Antidote(600, 600, 5),
         new Grenade(500, 800, 3),
-        new Flashbang(600, 800, 5),
-        new Flashbang(700, 800, 2, Progress.builder().setKillAll('5')),
-        new RedVaccine(100, 100, 2, Progress.builder().setRenderProgress('1'))
+        new Flashbang(600, 800, 5)
         ]
     ],[37, 
         [

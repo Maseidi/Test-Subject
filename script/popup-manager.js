@@ -44,22 +44,20 @@ export const renderPopup = (progress) => {
 
 export const closePopup = (popup, active) => {
     addClass(popup, 'popup-fade-out')
-    setTimeout(() => {
+    popup.addEventListener('transitionend', () => {
         popup.remove()
         activateProgress(active)
-    }, 1500)
+    })
 }
 
 export const manageRoomName = () => {
     const roomName = getRoomNameContainer().firstElementChild
     if ( !roomName ) return
     const time = Number(roomName.getAttribute('time'))
-    if ( time === 300 ) {
-        removeClass(roomName, 'room-name-animation')
-        addClass(roomName, 'room-name-fade-out')
-    }
-    if ( time === 600 ) roomName.remove()
     roomName.setAttribute('time', time + 1)
+    if ( time !== 300 ) return
+    removeClass(roomName, 'room-name-animation')
+    addClass(roomName, 'room-name-fade-out')
 }
 
 export const renderRoomName = (name) => {
@@ -74,5 +72,6 @@ export const renderRoomName = (name) => {
         roomNamePopup.append(charEl)
     }
     getRoomNameContainer().append(roomNamePopup)
+    roomNamePopup.addEventListener('transitionend', () => roomNamePopup.remove())
     roomNamePopup.setAttribute('time', 0)
 }

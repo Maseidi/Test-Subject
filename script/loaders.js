@@ -64,16 +64,17 @@ class BottomLoader_FromRight extends Loader {
 
 class Door {
     constructor(color, heading, popup, key, progress, code) {
-        this.name = 'door'
-        this.color = color
-        this.heading = heading
-        this.popup = popup
-        this.key = key
-        this.removeProgress = progress?.removeProgress ?? progress?.progress2Active
-        this.progress2Active = progress?.progress2Active
-        this.killAll = progress?.killAll
-        this.type = Math.random() < 0.5 ? 1 : 2
-        this.code = code
+        this.name =            'door'
+        this.color =           color                     ?? 'red'
+        this.heading =         heading                   ?? null
+        this.popup =           popup                     ?? null
+        this.key =             key                       ?? null
+        this.renderProgress =  progress?.renderProgress  ?? null
+        this.progress2Active = progress?.progress2Active ?? null
+        this.killAll =         progress?.killAll         ?? null
+        this.type =            Math.random() < 0.5       ? 1 : 2
+        this.code =            code                      ?? null
+
         this.value = code ? (() => {
             let result = ""
             for ( let i = 0; i < getPasswords().get(code).toString().length; i++ ) result += "0"
@@ -107,14 +108,10 @@ export const loaders = new Map([
     ],
     [16, [
         new BottomLoader_FromLeft(9, 100, 100),
-        new LeftLoader_FromTop(37, 100, 400, 
-            new Door('#2b2b2b', 'Test door 1', 'Door 1 for testing', null, Progress.builder().setRemoveProgress('2'))
-        ),
-        new TopLoader_FromLeft(38, 250, 475, 
-            new Door('red', 'Test door 2', 'Door 2 for testing', null, Progress.builder().setRemoveProgress('100'))
-        ),
+        new LeftLoader_FromTop(37, 100, 400),
+        new TopLoader_FromLeft(38, 250, 475),
         new RightLoader_FromTop(39, 300, 300)
-        ]   
+        ]
     ],
     [37, [
         new RightLoader_FromTop(16, 100, 350),

@@ -2,7 +2,6 @@ export class Progress {
 
     constructor() {
         this.renderProgress =    null
-        this.removeProgress =    null
         this.progress2Active =   null
         this.progress2Deactive = null
         this.killAll =           null
@@ -14,11 +13,6 @@ export class Progress {
 
     setRenderProgress(value) {
         this.renderProgress = value
-        return this
-    }
-
-    setRemoveProgress(value) {
-        this.removeProgress = value
         return this
     }
 

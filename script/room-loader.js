@@ -71,10 +71,10 @@ const initElements = () => {
 const renderRoom = () => {
     const room = rooms.get(getCurrentRoomId())
     const room2Render = createAndAddClass('div', `${getCurrentRoomId()}`)
-    room2Render.style.width = `${room.width}px`
+    room2Render.style.width =  `${room.width}px`
     room2Render.style.height = `${room.height}px`
-    room2Render.style.left = `${getRoomLeft()}px`
-    room2Render.style.top = `${getRoomTop()}px`
+    room2Render.style.left =   `${getRoomLeft()}px`
+    room2Render.style.top =    `${getRoomTop()}px`
     room2Render.style.backgroundColor = `lightgray`
     activateProgress(room.progress2Active)
     deactivateProgress(room.progress2Deactive)
@@ -107,17 +107,17 @@ const createTrackers = (solid, elem) => {
     let top = true
     let right = true
     let bottom = true
-    if ( elem.left === 0 ) left = false
-    if ( elem.top === 0 ) top = false
-    if ( elem.right === 0 ) right = false
+    if ( elem.left === 0 )   left = false
+    if ( elem.top === 0 )    top = false
+    if ( elem.right === 0 )  right = false
     if ( elem.bottom === 0 ) bottom = false
-    const topLeft = createAndAddClass('div', 'tl')
-    const topRight = createAndAddClass('div', 'tr')
-    const bottomLeft = createAndAddClass('div', 'bl')
+    const topLeft =     createAndAddClass('div', 'tl')
+    const topRight =    createAndAddClass('div', 'tr')
+    const bottomLeft =  createAndAddClass('div', 'bl')
     const bottomRight = createAndAddClass('div', 'br')
-    if ( left && top ) solid.append(topLeft)
-    if ( left && bottom ) solid.append(bottomLeft)
-    if ( right && top ) solid.append(topRight)
+    if ( left && top )     solid.append(topLeft)
+    if ( left && bottom )  solid.append(bottomLeft)
+    if ( right && top )    solid.append(topRight)
     if ( right && bottom ) solid.append(bottomRight)
 }
 
@@ -126,13 +126,13 @@ const renderLoaders = (room2Render) => {
         const loader = createAndAddClass('div', elem.className, 'loader')
         loader.style.width = `${elem.width}px`
         loader.style.height = `${elem.height}px`
-        if ( elem.left !== null ) loader.style.left = `${elem.left}px`
-        else if ( elem.right !== null ) loader.style.right = `${elem.right}px`
-        if ( elem.top !== null ) loader.style.top = `${elem.top}px`
+        if ( elem.left !== null )        loader.style.left = `${elem.left}px`
+        else if ( elem.right !== null )  loader.style.right = `${elem.right}px`
+        if ( elem.top !== null )         loader.style.top = `${elem.top}px`
         else if ( elem.bottom !== null ) loader.style.bottom = `${elem.bottom}px`  
         const door = elem.door
         if ( door ) {
-            if ( !findProgressByName(door.removeProgress) || enemiesLeft(door) ) var open = false
+            if ( !findProgressByName(door.renderProgress) || enemiesLeft(door) ) var open = false
             else var open = true
             renderDoor(elem, room2Render, open)
             }
