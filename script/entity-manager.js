@@ -2,7 +2,7 @@ import { rooms } from './rooms.js'
 import { loaders } from './loaders.js'
 import { dropLoot } from './loot-manager.js'
 import { loadCurrentRoom } from './room-loader.js'
-import { getThrowableDetail, getThrowableDetails } from './throwable-details.js'
+import { getThrowableDetail } from './throwable-details.js'
 import { damagePlayer, poisonPlayer, setPlayer2Fire } from './player-health.js'
 import { CHASE, GO_FOR_RANGED, GRAB, LOST, NO_OFFENCE, STUNNED } from './enemy/util/enemy-constants.js'
 import { 
@@ -207,9 +207,11 @@ const manageThrowables = () => {
             'diff-x': diffX,
             'diff-y': diffY,
             'acc-counter': accCounter } = throwableObj
+
         rotateThrowable(throwable, baseSpeed)
         handleInteractability(throwable, time, name, throwables2Remove)
         throwable.setAttribute('acc-counter', accCounter + 1)
+        
         if ( accCounter === 15 && baseSpeed - 2 >= 0 ) {
             const newSpeed = calculateBulletSpeed(deg, diffY / diffX, diffX, diffY, baseSpeed - 2)
             speedX = Math.sign(speedX) * Math.abs(newSpeed.speedX)

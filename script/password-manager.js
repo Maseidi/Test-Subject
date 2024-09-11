@@ -1,6 +1,6 @@
 import { loaders } from './loaders.js'
 import { managePause } from './controls.js'
-import { openDoor } from './progress-manager.js'
+import { toggleDoor } from './progress-manager.js'
 import { getPauseContainer } from './elements.js'
 import { quitPage, renderQuit } from './user-interface.js'
 import { createAndAddClass, getProperty } from './util.js'
@@ -16,10 +16,11 @@ const passwords = new Map([])
 export const initPasswords = () => 
     passwordNames.forEach(name => passwords.set(name, Math.floor(Math.random() * 99900) + 100))
 
-export const getPasswords = () => new Map(passwords)
+export const getPasswords = () => passwords
 
 export const renderPasswordInput = () => {
     const code = getElementInteractedWith().getAttribute('code')
+    if ( !passwords.get(code) ) return
     const value = getElementInteractedWith().getAttribute('value')
     const digits = passwords.get(code).toString().length
     managePause()
@@ -158,7 +159,7 @@ const renderCheckBtn = () => {
         const value2check = Number(valueMap.join(""))
         if ( targetValue !== value2check ) return
         quitPage()
-        openDoor(getElementInteractedWith()) 
+        toggleDoor(getElementInteractedWith()) 
     })
     return button
 }

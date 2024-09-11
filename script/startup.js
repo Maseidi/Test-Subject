@@ -1,6 +1,5 @@
 import { renderUi } from './user-interface.js'
 import { loadCurrentRoom } from './room-loader.js'
-import { initPasswords } from './password-manager.js'
 import { appendAll, createAndAddClass } from './util.js'
 import { getMapX, getMapY, getPlayerX, getPlayerY } from './variables.js'
 import { 
@@ -16,7 +15,6 @@ export const startUp = () => {
     renderRoomNameContainer()
     renderPauseContainer()
     renderPopupContainer()
-    initPasswords()
     renderUi()
     renderMap()
     renderRoomContainer()

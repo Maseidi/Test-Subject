@@ -51,9 +51,7 @@ export const appendAll = (root, ...elems) => elems.forEach(elem => root.append(e
 export const isMoving = () => getUpPressed() || getDownPressed() || getLeftPressed() || getRightPressed()
 
 export const addAllAttributes = (elem, ...attrs) => {
-    for ( let i = 0; i < attrs.length; i += 2 ) {
-        if ( attrs[i+1] ) elem.setAttribute(attrs[i], attrs[i+1])
-    }
+    for ( let i = 0; i < attrs.length; i += 2 ) elem.setAttribute(attrs[i], attrs[i+1])
 }
 
 export const object2Element = (obj) => {
@@ -114,20 +112,21 @@ export const nextId = () => {
 }
 
 export const calculateBulletSpeed = (deg, slope, diffX, diffY, baseSpeed) => {
-    let speedX
-    let speedY
+    const diffxSpeed = Math.sign(diffX) * baseSpeed
+    const diffySpeed = Math.sign(diffY) * baseSpeed
+
     if ( (deg < 45 && deg >= 0) || (deg < -135 && deg >= -180) ) {
-        speedX = diffX < 0 ? baseSpeed * (1 / slope) : -baseSpeed * (1/ slope)
-        speedY = diffY < 0 ? baseSpeed : -baseSpeed
+        var speedX = -diffxSpeed * ( 1 / slope )
+        var speedY = -diffySpeed
     } else if ( (deg >= 135 && deg < 180) || (deg < 0 && deg >= -45) ) {
-        speedX = diffX < 0 ? -baseSpeed * (1 / slope) : baseSpeed * (1/ slope)
-        speedY = diffY < 0 ? -baseSpeed : baseSpeed
+        var speedX = diffxSpeed * ( 1 / slope )
+        var speedY = diffySpeed
     } else if ( (deg >= 45 && deg < 90) || (deg < -90 && deg >= -135) ) {
-        speedX = diffX < 0 ? baseSpeed : -baseSpeed
-        speedY = diffY < 0 ? baseSpeed * slope : -baseSpeed * slope
+        var speedX = -diffxSpeed
+        var speedY = -diffySpeed * slope
     } else if ( (deg >= 90 && deg < 135) || (deg < -45 && deg >= -90) ) {
-        speedX = diffX < 0 ? -baseSpeed : baseSpeed
-        speedY = diffY < 0 ? -baseSpeed * slope : baseSpeed * slope
+        var speedX = diffxSpeed
+        var speedY = diffySpeed * slope
     }
     return { speedX, speedY }
 }

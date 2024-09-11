@@ -201,7 +201,7 @@ const manageInteractivity = () => {
         let element = target.parentElement
         const enemy = getCurrentRoomEnemies().find(elem => elem.sprite === element)
         const absoluteDamage = getEquippedItemDetail(equipped, 'damage') / Math.pow(2, i)
-        if ( containsClass(element, 'enemy') && enemy.health > 0 && absoluteDamage >= 10 ) {
+        if ( containsClass(element, 'enemy') && enemy?.health > 0 && absoluteDamage >= 10 ) {
             enemy.injuryService.damageEnemy(
                 equipped.name, 
                 absoluteDamage, 

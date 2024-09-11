@@ -1,5 +1,5 @@
 import { Progress } from './progress.js'
-import { getPasswords } from './password-manager.js'
+import { getPasswords, initPasswords } from './password-manager.js'
 
 class Loader {
     constructor(className, width, height, left, top, right, bottom, door) {
@@ -76,12 +76,14 @@ class Door {
         this.code =            code                      ?? null
 
         this.value = code ? (() => {
-            let result = ""
-            for ( let i = 0; i < getPasswords().get(code).toString().length; i++ ) result += "0"
+            let result = ''
+            for ( let i = 0; i < getPasswords().get(code).toString().length; i++ ) result += '0'
             return result
         })() : ''
     }
 }
+
+initPasswords()
 
 export const loaders = new Map([
     [1, [
@@ -108,7 +110,9 @@ export const loaders = new Map([
     ],
     [16, [
         new BottomLoader_FromLeft(9, 100, 100),
-        new LeftLoader_FromTop(37, 100, 400),
+        new LeftLoader_FromTop(37, 100, 400, new Door(
+            'green', 'Test door', 'Door for testing', null, Progress.builder().setKillAll('3'), 'main-hall'
+        )),
         new TopLoader_FromLeft(38, 250, 475),
         new RightLoader_FromTop(39, 300, 300)
         ]

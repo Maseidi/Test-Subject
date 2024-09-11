@@ -16,7 +16,6 @@ kill one render popup
 kill all spawn interactable
 kill all spawn enemy
 kill all open door
-kill all close door
 kill all render popup
 
 lever spawn enemy
@@ -25,11 +24,11 @@ lever open door
 lever close door
 lever render popup
 
-use key spawn enemy
-use key spawn interactable
-use key open door
-use key close door
-use key render popup
+popup spawn enemy
+popup spawn interactable
+popup open door
+popup close door
+popup render popup
 
 open door spawn enemy
 open door spawn interactable

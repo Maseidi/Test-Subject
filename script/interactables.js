@@ -1,16 +1,18 @@
+import { Progress } from './progress.js'
 import { getWeaponDetails } from './weapon-details.js'
 import { 
     FLASHBANG_LOOT,
     GRENADE_LOOT,
+    HARDDRIVE_LOOT,
     Loot,
     MAGNUM_AMMO_LOOT,
     NOTE,
     P90,
+    PISTOL2,
     PISTOL4,
     RIFLE_AMMO_LOOT,
     SHOTGUN_SHELLS_LOOT, 
     SingleLoot } from './loot.js'
-import { Progress } from './progress.js'
 
 class Interactable {
     constructor(width, left, top, name, heading, popup, solid, amount, space, description, price, progress) {
@@ -25,7 +27,7 @@ class Interactable {
         this.space =             space                       ?? 0
         this.description =       description                 ?? null
         this.price =             price                       ?? 0
-        this.renderProgress =    progress?.renderProgress    ?? '0'
+        this.renderProgress =    progress?.renderProgress    ?? Number.MAX_VALUE + ''
         this.killAll=            progress?.killAll           ?? null
         this.progress2Active =   progress?.progress2Active   ?? null
         this.progress2Deactive = progress?.progress2Deactive ?? null
@@ -51,8 +53,8 @@ class VendingMachine extends Interactable {
 }
 
 class Crate extends Interactable {
-    constructor(left, top, loot) {
-        super(35, left, top, 'crate', 'crate', 'Break', true)
+    constructor(left, top, loot, progress) {
+        super(35, left, top, 'crate', 'crate', 'Break', true, null, null, null, null, progress)
         if ( loot ) this.#initLootValues(loot)
     }
 
@@ -311,7 +313,8 @@ export const interactables = new Map([
         new Bandage(600, 700, 5),
         new Antidote(600, 600, 5),
         new Grenade(500, 800, 3),
-        new Flashbang(600, 800, 5)
+        new Flashbang(600, 800, 5),
+        new Crate(100, 700, new Loot(HARDDRIVE_LOOT, 2), Progress.builder().setKillAll('1'))
         ]
     ],[37, 
         [

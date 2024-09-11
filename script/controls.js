@@ -238,7 +238,7 @@ const fDown = () => {
     if ( getGrabbed() ) {
         breakFree()
         return
-    }
+    } else if ( !getElementInteractedWith() ) return
     const { name, amount } = element2Object(getElementInteractedWith())
     if ( getPause() || !getElementInteractedWith() ) return
     if ( amount ) pickupDrop(getElementInteractedWith())

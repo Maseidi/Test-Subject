@@ -7,6 +7,7 @@ import { addAllAttributes, addClass, containsClass, createAndAddClass, removeCla
 import { 
     activateProgress,
     deactivateProgress,
+    getProgress,
     updateKillAllDoors,
     updateKillAllEnemies,
     updateKillAllInteractables } from '../../../progress-manager.js'

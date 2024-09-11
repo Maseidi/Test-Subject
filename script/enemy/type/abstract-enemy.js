@@ -21,11 +21,10 @@ export class AbstractEnemy {
         this.vision =              vision ?? 0
         this.acceleration =        acceleration ?? 0
         this.loot =                loot ?? null
-        this.renderProgress =      progress?.renderProgress ?? '0'
+        this.renderProgress =      progress?.renderProgress ?? Number.MAX_VALUE + ''
         this.progress2Active =     progress?.progress2Active ?? null
         this.progress2Deactive =   progress?.progress2Deactive ?? null
         this.killAll =             progress?.killAll ?? null
-        if ( progress.killAll )    this.renderProgress = progress.killAll
         this.x =                   waypoint.points[0].x ?? 0
         this.y =                   waypoint.points[0].y ?? 0
         this.angleService =        new AbstractAngleService(this)

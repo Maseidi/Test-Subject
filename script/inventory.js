@@ -10,7 +10,7 @@ import { renderInteractable } from './room-loader.js'
 import { renderThrowable } from './throwable-loader.js'
 import { quitPage, renderQuit } from './user-interface.js'
 import { getWeaponDetails, isWeapon } from './weapon-details.js'
-import { activateProgress, deactivateProgress, openDoor } from './progress-manager.js'
+import { activateProgress, deactivateProgress, toggleDoor } from './progress-manager.js'
 import { useAntidote, useBandage, useHealthPotion } from './player-health.js'
 import { getCurrentRoom, getCurrentRoomInteractables, getPauseContainer, getPlayer, getUiEl } from './elements.js'
 import { 
@@ -588,7 +588,7 @@ const useKey = (itemObj) => {
     const neededKey = getElementInteractedWith()?.getAttribute('key')
     if ( !neededKey || itemObj.unlocks !== neededKey ) return false
     quitPage()
-    openDoor(getElementInteractedWith())
+    toggleDoor(getElementInteractedWith())
     return true
 }
 
@@ -644,7 +644,7 @@ const drop = (item) => {
     const itemObj = element2Object(item)
     const left = Math.floor(getPlayerX() - getRoomLeft())
     const top = Math.floor(getPlayerY() - getRoomTop())
-    let interactable = {...itemObj, renderProgress: '0', left: left, top: top}
+    let interactable = {...itemObj, renderProgress: Number.MAX_VALUE + '', left: left, top: top}
     if ( interactables.get(getCurrentRoomId()).find(elem => elem.id === interactable.id) ) 
         interactable = {...interactable, id: nextId()}
     getPauseContainer().firstElementChild.remove()
@@ -711,12 +711,12 @@ const renderNote = (item, itemObj) => {
 }
 
 const OPTIONS = new Map([
-    ['replace', replace],
-    ['use', use],
-    ['equip', equip],
+    ['replace',  replace],
+    ['use',      use],
+    ['equip',    equip],
     ['shortcut', shortcut],
-    ['drop', drop],
-    ['examine', examine],
+    ['drop',     drop],
+    ['examine',  examine],
 ])
 
 const createOption = (options, text) => {    
