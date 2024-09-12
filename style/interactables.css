@@ -11,7 +11,7 @@
   border-radius: 5px;
   color: wheat;
   position: absolute;
-  z-index: 5;
+  z-index: 6;
   padding: 10px;
   width: max-content;
   max-width: 300px;
@@ -20,6 +20,7 @@
   transform: translateX(-50%);
   bottom: calc(100% - 20px);
   transition: 300ms;
+  letter-spacing: 1px;
 }
 
 .interactable > div > p {
@@ -45,4 +46,15 @@
 .interactable > div > div:nth-of-type(2) > .interactable-btn {
   border: 1px solid wheat;
   padding: 2px 7px;
+}
+
+.not-ideal {
+  color: orangered !important;
+  font-weight: bold;
+  bottom: calc(100% + 20px);
+  opacity: 1;
+}
+
+.not-ideal > div:nth-of-type(2) > .interactable-btn {
+  border: 2px solid orangered !important;
 }

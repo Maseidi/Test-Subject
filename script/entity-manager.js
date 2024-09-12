@@ -1,10 +1,19 @@
 import { rooms } from './rooms.js'
 import { loaders } from './loaders.js'
 import { dropLoot } from './loot-manager.js'
+import { enemies } from './enemy/util/enemies.js'
 import { loadCurrentRoom } from './room-loader.js'
 import { getThrowableDetail } from './throwable-details.js'
 import { damagePlayer, poisonPlayer, setPlayer2Fire } from './player-health.js'
-import { CHASE, GO_FOR_RANGED, GRAB, LOST, NO_OFFENCE, STUNNED } from './enemy/util/enemy-constants.js'
+import { 
+    CHASE,
+    GO_FOR_RANGED,
+    GRAB,
+    INVESTIGATE,
+    LOST,
+    MOVE_TO_POSITION,
+    NO_OFFENCE,
+    STUNNED } from './enemy/util/enemy-constants.js'
 import { 
     addAllAttributes,
     addExplosion,
@@ -13,7 +22,8 @@ import {
     containsClass,
     createAndAddClass,
     element2Object,
-    getProperty } from './util.js'
+    getProperty, 
+    removeClass} from './util.js'
 import { 
     getCurrentRoom,
     getCurrentRoomEnemies,
@@ -102,15 +112,28 @@ const manageInteractables = () => {
     setElementInteractedWith(null)
     getCurrentRoomInteractables().forEach((int) => {
         const popup = int.children[1] ?? int.children[0]
-        if ( collide(getPlayer().firstElementChild, int, 20) && !getElementInteractedWith() ) {
+        const isStealthKill = popup.lastElementChild.lastElementChild.src       
+        const range = isStealthKill ? 5 : 20
+        if ( !getElementInteractedWith() && collide(getPlayer().firstElementChild, int, range) ) {
+            if ( isEnemyNotified(isStealthKill, popup) ) return
             popup.style.bottom = `calc(100% + 20px)`
             popup.style.opacity = `1`
-            setElementInteractedWith(int)            
+            setElementInteractedWith(int)
             return
         }
         popup.style.bottom = `calc(100% - 20px)`
         popup.style.opacity = `0`
     })
+}
+
+const isEnemyNotified = (isStealthKill, popup) => {
+    if ( !isStealthKill ) return false
+    const enemyElem = popup.parentElement.parentElement.parentElement
+    const enemyPath = enemyElem.previousSibling.id
+    const index = Number(enemyPath.replace('path-', ''))
+    const validStates = [LOST, INVESTIGATE, MOVE_TO_POSITION, STUNNED] 
+    const enemyState = enemies.get(getCurrentRoomId())[index].state
+    if ( !validStates.includes(enemyState) ) return true
 }
 
 const manageEnemies = () => {

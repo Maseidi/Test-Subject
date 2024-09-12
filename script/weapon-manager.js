@@ -172,6 +172,7 @@ const shoot = () => {
 }
 
 const applyRecoil = () => {
+    undefined.test()
     const currAngle = getProperty(getPlayer().firstElementChild.firstElementChild, 'transform', 'rotateZ(', 'deg)')
     let newAngle = currAngle + (Math.ceil(Math.random() * 7.5) - 3.75)
     if ( newAngle > 180 ) newAngle -= 360
@@ -353,8 +354,8 @@ const unEquipThrowable = () => {
     setWeaponWheel(getWeaponWheel().map(weapon => weapon === equipped.id ? null : weapon))
 }
 
-export const useLuckPills = (item) => {
+export const useLuckPills = (pills) => {
     if ( getCriticalChance() === 20 ) return
     setCriticalChance(getCriticalChance() + 0.019 >= 0.19 ? 0.2 : getCriticalChance() + 0.019)
-    getInventory()[item.row][item.column] = null
+    getInventory()[pills.row][pills.column] = null
 }

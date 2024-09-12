@@ -3,12 +3,10 @@ import { getWeaponDetails } from './weapon-details.js'
 import { 
     FLASHBANG_LOOT,
     GRENADE_LOOT,
-    HARDDRIVE_LOOT,
     Loot,
     MAGNUM_AMMO_LOOT,
     NOTE,
     P90,
-    PISTOL2,
     PISTOL4,
     RIFLE_AMMO_LOOT,
     SHOTGUN_SHELLS_LOOT, 
@@ -314,9 +312,11 @@ export const interactables = new Map([
         new Antidote(600, 600, 5),
         new Grenade(500, 800, 3),
         new Flashbang(600, 800, 5),
-        new Crate(100, 700, new Loot(HARDDRIVE_LOOT, 2), Progress.builder().setKillAll('1')),
-        new RedVaccine(200, 700, 2, Progress.builder().setKillAll('4')),
-        new KeyDrop(300, 700, 3, 'Test key', 'beauty', Progress.builder().setRenderProgress('6'))
+        new RedVaccine(650, 800, 2),
+        new BlueVaccine(700, 800, 2),
+        new GreenVaccine(750, 800, 2),
+        new PurpleVaccine(800, 800, 2),
+        new YellowVaccine(850, 800, 2),
         ]
     ],[37, 
         [

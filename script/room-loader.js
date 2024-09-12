@@ -42,6 +42,7 @@ import {
     setCurrentRoomExplosions,
     setCurrentRoomDoors,
     getCurrentRoomDoors } from './elements.js'
+import { countItem } from './inventory.js'
 
 export const loadCurrentRoom = () => {
     setStunnedCounter(0)
@@ -132,7 +133,7 @@ const renderLoaders = (room2Render) => {
         else if ( elem.bottom !== null ) loader.style.bottom = `${elem.bottom}px`  
         const door = elem.door
         if ( door ) {
-            if ( !findProgressByName(door.renderProgress) || enemiesLeft(door) ) var open = false
+            if ( (door.renderProgress && !findProgressByName(door.renderProgress)) || enemiesLeft(door) ) var open = false
             else var open = true
             renderDoor(elem, room2Render, open)
             }
@@ -142,10 +143,9 @@ const renderLoaders = (room2Render) => {
 }
 
 const enemiesLeft = (object) => {
-    const killAll = object.killAll    
+    const killAll = object.killAll
     if ( !killAll ) return false
-    return enemies.get(getCurrentRoomId())
-        .find(enemy => enemy.health !== 0 && enemy.renderProgress <= killAll) ? true : false
+    return enemies.get(getCurrentRoomId()).find(enemy => enemy.health !== 0 && enemy.renderProgress <= killAll)
 }
 
 export const renderDoor = (loader, room2Render, open) => {    
@@ -169,13 +169,13 @@ export const renderDoor = (loader, room2Render, open) => {
     room2Render.append(doorElem)
 }
 
-const addPosition = (root, input, direction, className, type) => {
+const addPosition = (doorElem, input, direction, className, type) => {
     const output = (() => {
         if ( input === 26 || input === -26 ) return 0
         else if ( input !== null ) return input
     })()
-    if ( output ) addClass(root, `${className}-${type}`)
-    root.style[direction] = `${output}px`
+    if ( output ) addClass(doorElem, `${className}-${type}`)
+    doorElem.style[direction] = `${output}px`
 }
 
 const renderInteractables = (room2Render) => 
@@ -224,6 +224,7 @@ const handleLeverImage = (interactable, image) => {
 
 const renderPopUp = (int, interactable) => {
     const popup = createAndAddClass('div', 'ui-theme', 'popup')
+    handleVaccinePopup(popup, interactable)
     popup.style.bottom = `calc(100% - 20px)`
     popup.style.opacity = `0`
     renderHeading(popup, interactable)
@@ -232,14 +233,18 @@ const renderPopUp = (int, interactable) => {
     int.append(popup)
 }
 
+const handleVaccinePopup = (popup, interactable) => {
+    if ( !interactable.popup.includes('vaccine') ) return
+    if ( countItem(interactable.popup) === 0 ) addClass(popup, 'not-ideal')
+}
+
 const renderHeading = (popup, interactable) => {
     const heading = document.createElement('p')
-    let content = handleHeadingContent(interactable)
-    heading.textContent = content
+    heading.textContent = getHeadingContent(interactable)
     popup.append(heading)
 }
 
-const handleHeadingContent = (interactable) => {
+const getHeadingContent = (interactable) => {
     const {name, amount, examined, heading} = interactable
     if ( name === 'note' && !examined ) return 'Note'
     return amount && !isWeapon(name) && !name.includes('key') && name !== 'note'  ? `${amount} ${heading}` : `${heading}`
@@ -257,12 +262,22 @@ const renderDescription = (popup, interactable) => {
     fButton.textContent = 'F'
     const needCodeDoor = interactable.isDoor && interactable.code
     if ( !interactable.isDoor || needCodeDoor ) appendList.push(fButton)
-    const descText = document.createElement('p')
-    descText.textContent = `${needCodeDoor ? 'Enter code' : interactable.popup}`
-    appendList.push(descText)
+    appendList.push(getDescriptionContent(interactable, needCodeDoor))
     appendAll(descContainer, ...appendList)
     popup.append(descContainer)
 }
+
+const getDescriptionContent = (interactable, needCode) =>
+    (() => {
+        let descContent = document.createElement('p')
+        if ( needCode ) descContent.textContent = 'Note'
+        else if ( interactable.popup.includes('vaccine') ) {
+            descContent = document.createElement('img')
+            descContent.src = `/assets/images/${interactable.popup}.png`
+        }
+        else descContent.textContent = interactable.popup
+        return descContent
+    })()
 
 const renderEnemies = (room2Render) => {
     const currentRoomEnemies = enemies.get(getCurrentRoomId())
@@ -292,9 +307,9 @@ export const spawnEnemy = (elem, room2Render) => {
     const vision = defineVision(elem)
     appendAll(
         enemyCollider, enemyBody, vision, 
-        createAndAddClass('div', `enemy-forward-detector`), 
-        createAndAddClass('div', `enemy-backward-detector`)
+        createAndAddClass('div', `enemy-forward-detector`)
     )
+    renderBackwardDetector(elem, enemy, enemyCollider)
     enemy.append(enemyCollider)
     room2Render.append(enemy)
     elem.sprite = enemy
@@ -327,7 +342,7 @@ const initEnemyStats = (element) => {
 
 const handleEnemyLoot = (element, enemy) => {
     if ( !element.loot ) return
-    const { name, amount, progress2Active, progress2Deactive, data, code, heading, description } = element.loot
+    const { name, amount, progress2Active, progress2Deactive } = element.loot
     addAllAttributes(
         enemy,
         'loot-name',        name,
@@ -335,8 +350,12 @@ const handleEnemyLoot = (element, enemy) => {
         'loot-active',      progress2Active,
         'loot-deactive',    progress2Deactive,
     )
-    
+    handleNoteLoot(element, enemy, name)
+}
+
+const handleNoteLoot = (element, enemy, name) => {
     if ( name !== NOTE ) return
+    const { data, code, heading, description } = element.loot
     addAllAttributes(
         enemy,
         'loot-data',        data,
@@ -377,4 +396,13 @@ const defineVision = (element) => {
         vision.append(visionComponent)
     }
     return vision
+}
+
+const renderBackwardDetector = (enemyObject, enemyElem, enemyCollider) => {
+    if ( [SPIKER, TRACKER].includes(enemyElem.type) ) return
+    const backwardDetector = createAndAddClass('div', `enemy-backward-detector`)
+    enemyCollider.append(backwardDetector)
+    addClass(backwardDetector, 'interactable')
+    renderPopUp(backwardDetector, {heading: 'Stealth kill', popup: `${enemyObject.virus}vaccine`})
+    getCurrentRoomInteractables().push(backwardDetector)
 }

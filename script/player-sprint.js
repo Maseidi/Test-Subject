@@ -48,9 +48,9 @@ const handleSprintAndStamina = (sprint, animator, stamina, refill) => {
         })
 }
 
-export const useEnergyDrink = (item) => {
+export const useEnergyDrink = (energydrink) => {
     if ( getMaxStamina() === 1200 ) return
     setMaxStamina(getMaxStamina() + 60)
     setStamina(getMaxStamina())
-    getInventory()[item.row][item.column] = null
+    getInventory()[energydrink.row][energydrink.column] = null
 }

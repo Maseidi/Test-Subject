@@ -42,28 +42,25 @@ export const deactivateProgress = (name) => {
 const toggleDoors = (name) => 
     getCurrentRoomDoors()
         .filter(door => door.getAttribute('renderprogress') === name )
-        .forEach(door => toggleDoor(door))
+        .forEach(door => toggleDoor(door, name))
 
-export const toggleDoor = (door) => {
-    if ( !containsClass(door, 'open') ) {
+export const toggleDoor = (door, name = true) => {
+    if ( name ) {
         addClass(door, 'open')
-    }
-    else {
-        removeClass(door, 'open')
+        const progress2Active =   door.getAttribute('progress2Active')
+        const progress2Deactive = door.getAttribute('progress2Deactive')
+        if ( progress2Active )    activateProgress(progress2Active)
+        if ( progress2Deactive )  deactivateProgress(progress2Deactive)
         return
     }
-
-    const progress2Active = door.getAttribute('progress2Active')
-    const progress2Deactive = door.getAttribute('progress2Deactive')
-    if ( progress2Active ) activateProgress(progress2Active)
-    if ( progress2Deactive ) deactivateProgress(progress2Deactive)
+    removeClass(door, 'open')
 }
 
 const getAliveEnemies = (needIndex = false) =>
     (() => {
-        var aliveEnemies = enemies.get(getCurrentRoomId())
-        if ( needIndex ) aliveEnemies = aliveEnemies.map((enemy, index) => ({...enemy, index}))
-        return aliveEnemies
+        var currEnemies = enemies.get(getCurrentRoomId())
+        if ( needIndex ) currEnemies = currEnemies.map((enemy, index) => ({...enemy, index}))
+        return currEnemies
     })().filter(enemy => enemy.health !== 0)
 
 export const updateKillAllDoors = () => {

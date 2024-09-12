@@ -7,10 +7,10 @@ import { addAllAttributes, addClass, containsClass, createAndAddClass, removeCla
 import { 
     activateProgress,
     deactivateProgress,
-    getProgress,
     updateKillAllDoors,
     updateKillAllEnemies,
     updateKillAllInteractables } from '../../../progress-manager.js'
+import { getCurrentRoomInteractables, setCurrentRoomInteractables } from '../../../elements.js'
 
 export class AbstractInjuryService {
     constructor(enemy) {
@@ -65,6 +65,12 @@ export class AbstractInjuryService {
         updateKillAllDoors()
         updateKillAllInteractables()
         updateKillAllEnemies()
+        this.removePopup()
+    }
+
+    removePopup() {
+        const backwardDetector = this.enemy.sprite.firstElementChild.lastElementChild
+        setCurrentRoomInteractables(getCurrentRoomInteractables().filter(int => int !== backwardDetector))
     }
 
     deathAnimation() {

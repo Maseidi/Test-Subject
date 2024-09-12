@@ -1,5 +1,6 @@
 import { getPlayer } from '../../../elements.js'
 import { angleOf2Points } from '../../../util.js'
+import { SPIKER, TRACKER } from '../../util/enemy-constants.js'
 
 export class AbstractAngleService {
     constructor(enemy) {
@@ -58,6 +59,7 @@ export class AbstractAngleService {
     }
 
     #updateBackwardDetector(x, y) {
+        if ( [SPIKER, TRACKER].includes(this.enemy.type) ) return
         this.#applyDetectorUpdate(this.enemy.sprite.firstElementChild.children[3], x, y)
     }
 

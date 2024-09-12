@@ -202,7 +202,7 @@ div.selectable-slot {
   position: absolute;
   left: 0;
   top: 0;
-  z-index: 6;
+  z-index: 7;
   display: flex;
   flex-flow: row wrap;
 }

@@ -110,7 +110,7 @@
 .throwable-aim > .player-collider > .player-body > .player-right-hand {
   top: -8px;
   transform: rotateZ(-5deg);
-  z-index: 8;
+  z-index: 10;
 }
 
 .aim > .player-collider > .player-body > .player-left-hand,
@@ -129,7 +129,7 @@
   left: 50%;
   top: 15px;
   width: 4px;
-  z-index: 7;
+  z-index: 8;
   position: absolute;
   border: 1px solid black;
   transform: translateX(-50%);
@@ -137,7 +137,7 @@
 }
 
 .throwable {
-  z-index: 7;
+  z-index: 8;
   left: -3px;
   top: 0px;
   position: absolute;

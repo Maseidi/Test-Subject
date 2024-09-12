@@ -141,10 +141,10 @@ const manageExplosionDamagedState = () => {
     if ( getExplosionDamageCounter() === 100 ) setExplosionDamageCounter(0)
 }
 
-export const useHealthPotion = (item) => {
+export const useHealthPotion = (potion) => {
     if ( getMaxHealth() === 200 ) return
     setMaxHealth(getMaxHealth() + 10)
     modifyHealth(getMaxHealth())
     if ( !isLowHealth() ) decideLowHealth(removeClass)
-    getInventory()[item.row][item.column] = null
+    getInventory()[potion.row][potion.column] = null
 }

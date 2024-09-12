@@ -303,3 +303,9 @@ export const setEnergyDrinksDropped = (val) => {
     energyDrinksDropped = val
 }
 export const getEnergyDrinksDropped = () => energyDrinksDropped
+
+let logCounter = 0
+export const setLogCounter = (val) => {
+    logCounter = val
+}
+export const getLogCounter = () => logCounter

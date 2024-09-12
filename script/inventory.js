@@ -12,7 +12,7 @@ import { quitPage, renderQuit } from './user-interface.js'
 import { getWeaponDetails, isWeapon } from './weapon-details.js'
 import { activateProgress, deactivateProgress, toggleDoor } from './progress-manager.js'
 import { useAntidote, useBandage, useHealthPotion } from './player-health.js'
-import { getCurrentRoom, getCurrentRoomInteractables, getPauseContainer, getPlayer, getUiEl } from './elements.js'
+import { getCurrentRoom, getCurrentRoomEnemies, getCurrentRoomInteractables, getPauseContainer, getPlayer, getUiEl } from './elements.js'
 import { 
     addClass,
     containsClass,
@@ -26,7 +26,8 @@ import {
     isThrowing,
     exitAimModeAnimation, 
     removeEquipped,
-    isStatUpgrader} from './util.js'
+    isStatUpgrader,
+    removeClass} from './util.js'
 import { 
     getAimMode,
     getCurrentRoomId,
@@ -94,6 +95,7 @@ export const pickupDrop = (drop) => {
     searchPack()
     searchEmpty()
     checkSpecialScenarios()
+    handleVaccinePickup(dropObject)
 }
 
 const searchPack = () => {
@@ -161,6 +163,8 @@ const checkSpecialScenarios = () => {
     ammo4Equipped()
 }
 
+const handleVaccinePickup = (itemObj) => handleVaccineTransportation(itemObj, countItem(dropObject.name) !== 0, removeClass)
+
 const ammo4Equipped = () => {
     if ( !getEquippedWeaponId() ) return
     const equipped = getEquippedWeaponObject()
@@ -193,7 +197,7 @@ export const calculateThrowableAmount = () => countItem(getEquippedWeaponObject(
 
 export const calculateTotalCoins = () => countItem('coin')
 
-const countItem = (name) => 
+export const countItem = (name) => 
     inventory.flat().filter(item => item && item.name === name).reduce((a, b) => a + b.amount, 0)
 
 export const useInventoryResource = (name, reduce) => {
@@ -568,18 +572,25 @@ const REPLACE_STATES = new Map([
     [3, destOnEmpty]
 ])
 
+const USE_MAP = new Map([
+    ['bandage', useBandage],
+    ['antidote', useAntidote],
+    ['luckpills', useLuckPills],
+    ['adrenaline', useAdrenaline],
+    ['energydrink', useEnergyDrink],
+    ['healthpotion', useHealthPotion],
+])
+
 const use = (item) => {
     const itemObj = element2Object(item)
-    let theItem = inventory[itemObj.row][itemObj.column]
-    if ( useKey(theItem) ) return
+    let itemFromInventory = inventory[itemObj.row][itemObj.column]
+    if ( useKey(itemFromInventory) ) return
     getPauseContainer().firstElementChild.remove()
-    if ( theItem.name === 'bandage' )           useBandage(theItem)
-    else if ( theItem.name === 'antidote' )     useAntidote(theItem)
-    else if ( theItem.name === 'luckpills' )    useLuckPills(theItem)
-    else if ( theItem.name === 'adrenaline' )   useAdrenaline(theItem)
-    else if ( theItem.name === 'energydrink' )  useEnergyDrink(theItem)
-    else if ( theItem.name === 'healthpotion' ) useHealthPotion(theItem)
-    if ( theItem.amount === 0 ) inventory[itemObj.row][itemObj.column] = null
+    USE_MAP.get(itemFromInventory.name)(itemFromInventory)
+    if ( itemFromInventory.amount === 0 ) {
+        handleVaccineDrop(itemFromInventory)
+        inventory[itemObj.row][itemObj.column] = null
+    }
     renderInventory()
 }
 
@@ -650,6 +661,7 @@ const drop = (item) => {
     getPauseContainer().firstElementChild.remove()
     interactables.get(getCurrentRoomId()).push(interactable)
     dropFromInventory(itemObj)
+    handleVaccineDrop(itemObj)
     renderInteractable(getCurrentRoom(), interactable)
     handleEquippableDrop(itemObj)
     renderInventory()
@@ -661,6 +673,19 @@ const dropFromInventory = (itemObj) => {
     inventory[row][column] = null
     if ( inventory[row][column] === null && column + itemObj.space <= 4 )
         for ( let k = 1; k < itemObj.space; k++ ) inventory[row][column+k] = null
+}
+
+const handleVaccineDrop = (itemObj) => handleVaccineTransportation(itemObj, countItem(itemObj.name) === 0, addClass)
+
+const handleVaccineTransportation = (itemObj, predicate, callbackFn) => {
+    if ( !itemObj.name.includes('vaccine') ) return
+    const virus = itemObj.name.replace('vaccine', '')
+    getCurrentRoomEnemies().forEach(enemy => {
+        const body = enemy.sprite.firstElementChild.firstElementChild
+        if ( body.style.backgroundColor !== virus ) return
+        const popup = enemy.sprite.firstElementChild.lastElementChild.firstElementChild
+        if ( predicate ) callbackFn(popup, 'not-ideal')
+    })
 }
 
 export const handleEquippableDrop = (itemObj) => {
