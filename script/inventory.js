@@ -644,7 +644,7 @@ const drop = (item) => {
     const itemObj = element2Object(item)
     const left = Math.floor(getPlayerX() - getRoomLeft())
     const top = Math.floor(getPlayerY() - getRoomTop())
-    let interactable = {...itemObj, renderProgress: Number.MAX_VALUE + '', left: left, top: top}
+    let interactable = {...itemObj, renderProgress: String(Number.MAX_SAFE_INTEGER), left: left, top: top}
     if ( interactables.get(getCurrentRoomId()).find(elem => elem.id === interactable.id) ) 
         interactable = {...interactable, id: nextId()}
     getPauseContainer().firstElementChild.remove()

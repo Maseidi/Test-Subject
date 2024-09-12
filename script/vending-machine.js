@@ -253,7 +253,7 @@ const manageBuy = (itemObj) => {
         const { width, left, top, name, heading, amount, space, description, price } = chosenItem
 
         const purchasedItem = new Drop(width, left, top, name, heading, amount, 
-                                     space, description, price / amount, Progress.builder().setRenderProgress(Number.MAX_VALUE + ''))
+                                     space, description, price / amount, Progress.builder().setRenderProgress(String(Number.MAX_SAFE_INTEGER)))
                                      
         purchasedItem = handleNewWeapnPurchase(purchasedItem, itemObj.name)
         purchasedItem = handleNewThrowablePurchase(purchasedItem, itemObj.name)

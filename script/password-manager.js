@@ -1,10 +1,10 @@
-import { loaders } from './loaders.js'
+import { getDoorObject } from './loaders.js'
 import { managePause } from './controls.js'
 import { toggleDoor } from './progress-manager.js'
 import { getPauseContainer } from './elements.js'
 import { quitPage, renderQuit } from './user-interface.js'
 import { createAndAddClass, getProperty } from './util.js'
-import { getCurrentRoomId, getElementInteractedWith, setPauseCause } from './variables.js'
+import { getElementInteractedWith, setPauseCause } from './variables.js'
 
 const passwordNames = [
     'main-hall',
@@ -143,10 +143,8 @@ const updateDoorCodeValue = (digit, bar) => {
     for ( let i = 0; i < doorValue.length; i++ )
         newValue += ( i === digit ? bar.children[5].textContent : doorValue.charAt(i) ) 
     getElementInteractedWith().setAttribute('value', newValue)
-    const loaderElem = getElementInteractedWith().nextSibling
-    const loaderClass = Number(loaderElem.classList[0])
-    const loaderObj = loaders.get(getCurrentRoomId()).find(loader => loader.className === loaderClass)
-    loaderObj.door.value = newValue
+    const doorObj = getDoorObject(getElementInteractedWith())
+    doorObj.value = newValue
 }
 
 const renderCheckBtn = () => {

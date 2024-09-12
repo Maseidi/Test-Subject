@@ -12,7 +12,9 @@ class Popup {
     }
 }
 
-const popups = []
+const popups = [
+    new Popup('Test message', Progress.builder().setRenderProgress('5').setProgress2Active('6'), 60)
+]
 
 export const managePopup = () => {
     const popup = getPopupContainer().firstElementChild

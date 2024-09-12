@@ -27,7 +27,7 @@ class Interactable {
         this.space =             space                       ?? 0
         this.description =       description                 ?? null
         this.price =             price                       ?? 0
-        this.renderProgress =    progress?.renderProgress    ?? Number.MAX_VALUE + ''
+        this.renderProgress =    progress?.renderProgress    ?? String(Number.MAX_SAFE_INTEGER)
         this.killAll=            progress?.killAll           ?? null
         this.progress2Active =   progress?.progress2Active   ?? null
         this.progress2Deactive = progress?.progress2Deactive ?? null
@@ -314,7 +314,9 @@ export const interactables = new Map([
         new Antidote(600, 600, 5),
         new Grenade(500, 800, 3),
         new Flashbang(600, 800, 5),
-        new Crate(100, 700, new Loot(HARDDRIVE_LOOT, 2), Progress.builder().setKillAll('1'))
+        new Crate(100, 700, new Loot(HARDDRIVE_LOOT, 2), Progress.builder().setKillAll('1')),
+        new RedVaccine(200, 700, 2, Progress.builder().setKillAll('4')),
+        new KeyDrop(300, 700, 3, 'Test key', 'beauty', Progress.builder().setRenderProgress('6'))
         ]
     ],[37, 
         [

@@ -1,4 +1,5 @@
 import { Progress } from './progress.js'
+import { getCurrentRoomId } from './variables.js'
 import { getPasswords, initPasswords } from './password-manager.js'
 
 class Loader {
@@ -85,6 +86,13 @@ class Door {
 
 initPasswords()
 
+export const getDoorObject = (doorElem) => {
+    const loaderElem = doorElem.nextSibling
+    const loaderClass = Number(loaderElem.classList[0])
+    const loaderObj = loaders.get(getCurrentRoomId()).find(loader => loader.className === loaderClass)
+    return loaderObj.door
+}
+
 export const loaders = new Map([
     [1, [
         new RightLoader_FromTop(2, 100, 300),
@@ -109,11 +117,15 @@ export const loaders = new Map([
         ]
     ],
     [16, [
-        new BottomLoader_FromLeft(9, 100, 100),
+        new BottomLoader_FromLeft(9, 100, 100, new Door(
+            'red', 'Test door', 'Door for testing', 'beauty', Progress.builder().setRenderProgress('10').setProgress2Active('10')
+        )),
         new LeftLoader_FromTop(37, 100, 400, new Door(
             'green', 'Test door', 'Door for testing', null, Progress.builder().setKillAll('3'), 'main-hall'
         )),
-        new TopLoader_FromLeft(38, 250, 475),
+        new TopLoader_FromLeft(38, 250, 475, new Door(
+            'yellow', 'Test door', 'Door for testing', null, Progress.builder().setKillAll('4').setProgress2Active('5')
+        )),
         new RightLoader_FromTop(39, 300, 300)
         ]
     ],

@@ -5,14 +5,13 @@ import { interactables } from './interactables.js'
 import { addClass, containsClass, removeClass } from './util.js'
 import { renderInteractable, spawnEnemy } from './room-loader.js'
 import { getCurrentRoom, getCurrentRoomDoors } from './elements.js'
+import { getDoorObject } from './loaders.js'
 
 let progress = {
     '1' : true,
     '2' : true,
     '3' : true,
-    '4' : true,
-    '5' : true,
-    [Number.MAX_VALUE] : true,
+    [Number.MAX_SAFE_INTEGER] : true,
 }
 
 export const getProgress = () => progress
@@ -46,7 +45,9 @@ const toggleDoors = (name) =>
         .forEach(door => toggleDoor(door))
 
 export const toggleDoor = (door) => {
-    if ( !containsClass(door, 'open') ) addClass(door, 'open')
+    if ( !containsClass(door, 'open') ) {
+        addClass(door, 'open')
+    }
     else {
         removeClass(door, 'open')
         return
@@ -71,8 +72,8 @@ export const updateKillAllDoors = () => {
         const killAll = door.getAttribute('killAll')
         if ( !killAll || aliveEnemies.find(enemy => !enemy.killAll && Number(enemy.renderProgress) <= Number(killAll))) 
             return
-        console.log(door);
-        
+        door.removeAttribute('killAll')
+        getDoorObject(door).killAll = null
         toggleDoor(door)
     })
 }
@@ -83,7 +84,7 @@ const updateEnemies = (name) =>
         if ( enemy.health === 0 ) return
         if ( enemy.renderProgress !== name ) return
         enemy.killAll = null
-        enemy.renderProgress = Number.MAX_VALUE + ''
+        enemy.renderProgress = String(Number.MAX_SAFE_INTEGER)
         spawnEnemy(enemy, getCurrentRoom())
     })
 
@@ -94,7 +95,7 @@ export const updateKillAllEnemies = () => {
         if ( aliveEnemies.find(e => e.index !== index && !e.killAll && Number(e.renderProgress) <= Number(enemy.killAll) ) ) 
             return
         enemy.killAll = null
-        enemy.renderProgress = Number.MAX_VALUE + ''
+        enemy.renderProgress = String(Number.MAX_SAFE_INTEGER)
         spawnEnemy(enemy, getCurrentRoom())
     })
 }   
@@ -104,7 +105,7 @@ const updateInteractables = (name) =>
         .forEach((int, index) => {
             if ( int.renderProgress !== name ) return 
             int.killAll = null
-            int.renderProgress = Number.MAX_VALUE + ''
+            int.renderProgress = String(Number.MAX_SAFE_INTEGER)
             renderInteractable(getCurrentRoom(), int, index)
         })
 
@@ -114,7 +115,7 @@ export const updateKillAllInteractables = () => {
         if ( !int.killAll || aliveEnemies.find(enemy => !enemy.killAll && Number(enemy.renderProgress) <= Number(int.killAll) ) ) 
             return
         int.killAll = null
-        int.renderProgress = Number.MAX_VALUE + ''
+        int.renderProgress = String(Number.MAX_SAFE_INTEGER)
         renderInteractable(getCurrentRoom(), int, index)
     })
 }

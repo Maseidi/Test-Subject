@@ -21,7 +21,7 @@ export class AbstractEnemy {
         this.vision =              vision ?? 0
         this.acceleration =        acceleration ?? 0
         this.loot =                loot ?? null
-        this.renderProgress =      progress?.renderProgress ?? Number.MAX_VALUE + ''
+        this.renderProgress =      progress?.renderProgress ?? String(Number.MAX_SAFE_INTEGER)
         this.progress2Active =     progress?.progress2Active ?? null
         this.progress2Deactive =   progress?.progress2Deactive ?? null
         this.killAll =             progress?.killAll ?? null
