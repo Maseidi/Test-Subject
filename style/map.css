@@ -52,32 +52,6 @@
   filter: grayscale(50%);
 }
 
-.low-health::after,
-.poisoned::before {
-  content: "";
-  width: 100%;
-  height: 100%;
-  position: fixed;
-  left: 50%;
-  top: 50%;
-  animation-name: alert;
-  animation-duration: 1000ms;
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
-  animation-direction: alternate;
-  animation-fill-mode: both;
-  transform: translateX(-50%) translateY(-50%);
-}
-
-.low-health::after {
-  background-color: red;
-}
-
-.poisoned::before {
-  background-color: green;
-  z-index: 100;
-}
-
 .flame {
   position: absolute;
   width: 30px;

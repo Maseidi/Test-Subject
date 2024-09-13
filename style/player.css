@@ -1,28 +1,28 @@
 .player {
-  position: absolute;
   z-index: 4;
+  position: absolute;
 }
 
 .player-collider {
   width: 34px;
   height: 34px;
   display: flex;
-  justify-content: center;
-  align-items: center;
   position: relative;
+  align-items: center;
+  justify-content: center;
 }
 
 .player-body {
   width: 22px;
   height: 12px;
-  background-color: green;
   display: flex;
-  justify-content: center;
-  align-items: center;
-  border: 1px solid black;
+  transition: 300ms;
   border-radius: 1px;
   position: relative;
-  transition: 300ms;
+  align-items: center;
+  justify-content: center;
+  background-color: green;
+  border: 1px solid black;
 }
 
 .player-head {
@@ -34,13 +34,13 @@
 
 .player-left-hand,
 .player-right-hand {
-  position: absolute;
+  top: 1px;
   width: 5px;
   height: 14px;
-  top: 1px;
+  position: absolute;
+  border-radius: 1px;
   background-color: wheat;
   border: 1px solid black;
-  border-radius: 1px;
 }
 
 .player-left-hand {
@@ -56,9 +56,9 @@
 .run > .player-collider > .player-body > .player-left-hand,
 .run > .player-collider > .player-body > .player-right-hand {
   animation-name: walk;
-  animation-iteration-count: infinite;
-  animation-timing-function: linear;
   animation-fill-mode: both;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
 }
 
 .player-left-hand {
@@ -79,21 +79,26 @@
   animation-duration: 300ms;
 }
 
-.low-health-player > .player-collider > .player-body > .player-left-hand,
-.low-health-player > .player-collider > .player-body > .player-right-hand {
-  animation-duration: 900ms !important;
+.low-health-player.walk > .player-collider > .player-body > .player-left-hand,
+.low-health-player.walk > .player-collider > .player-body > .player-right-hand {
+  animation-duration: 800ms !important;
+}
+
+.low-health-player.run > .player-collider > .player-body > .player-left-hand,
+.low-health-player.run > .player-collider > .player-body > .player-right-hand {
+  animation-duration: 400ms !important;
 }
 
 .player-collider > .forward-detector {
-  position: absolute;
   width: 4px;
   height: 4px;
+  position: absolute;
 }
 
 .aim > .player-collider > .player-body > .player-left-hand {
-  transform: rotateZ(40deg);
-  left: unset;
   right: 2px;
+  left: unset;
+  transform: rotateZ(40deg);
 }
 
 .throwable-aim > .player-collider > .player-body > .player-left-hand {
@@ -102,15 +107,15 @@
 }
 
 .aim > .player-collider > .player-body > .player-right-hand {
-  transform: rotateZ(-40deg);
-  right: unset;
   left: 2px;
+  right: unset;
+  transform: rotateZ(-40deg);
 }
 
 .throwable-aim > .player-collider > .player-body > .player-right-hand {
   top: -8px;
-  transform: rotateZ(-5deg);
   z-index: 10;
+  transform: rotateZ(-5deg);
 }
 
 .aim > .player-collider > .player-body > .player-left-hand,
@@ -137,9 +142,9 @@
 }
 
 .throwable {
+  top: 0px;
   z-index: 8;
   left: -3px;
-  top: 0px;
   position: absolute;
 }
 
@@ -153,10 +158,10 @@
 
 .laser,
 .throwable-laser {
+  top: 0;
+  left: 50%;
   width: 0.25px;
   position: absolute;
-  left: 50%;
-  top: 0;
 }
 
 .laser {
@@ -165,21 +170,21 @@
 
 .weapon-fire {
   top: 100%;
-  height: 20px;
   left: 50%;
-  transform: translateX(-50%);
+  height: 20px;
   position: absolute;
+  transform: translateX(-50%);
 }
 
 .throwable-laser {
-  transform: translateX(-50%) translateZ(-10px) rotateZ(-5deg);
   transform-origin: top;
+  transform: translateX(-50%) translateZ(-10px) rotateZ(-5deg);
 }
 
 .laser > div,
 .throwable-laser > div {
-  width: 100%;
   height: 1%;
+  width: 100%;
 }
 
 .throwable-item {
@@ -192,11 +197,11 @@
 }
 
 .throw-target {
+  top: 300px;
+  left: 22px;
   width: 10px;
   height: 10px;
   position: absolute;
-  top: 300px;
-  left: 22px;
 }
 
 .top-collider,
@@ -219,8 +224,8 @@
 }
 
 .top-collider {
-  bottom: 100%;
   left: 50%;
+  bottom: 100%;
   transform: translateX(-50%);
 }
 
@@ -231,13 +236,48 @@
 }
 
 .left-collider {
-  right: 100%;
   top: 50%;
+  right: 100%;
   transform: translateY(-50%);
 }
 
 .right-collider {
-  left: 100%;
   top: 50%;
+  left: 100%;
   transform: translateY(-50%);
+}
+
+.low-health-container, .poisoned-container, .infected-container {
+  top: 0;
+  left: 0;
+  z-index: 7;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+}
+
+.low-health-container, .poisoned-container {
+  animation-name: alert;
+  animation-duration: 1s;
+  animation-direction: alternate;
+  animation-iteration-count: infinite;
+}
+
+.low-health-container {
+  background-color: red;
+}
+
+.poisoned-container {
+  background-color: green;
+}
+
+.infected-container > img {
+  width: 60px;
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  animation-name: rotation;
+  animation-duration: 30s;
+  animation-direction: alternate;
+  animation-iteration-count: infinite;
 }

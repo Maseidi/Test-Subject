@@ -309,3 +309,9 @@ export const setLogCounter = (val) => {
     logCounter = val
 }
 export const getLogCounter = () => logCounter
+
+let infection = null
+export const setInfection = (val) => {
+    infection = val
+}
+export const getInfection = () => infection

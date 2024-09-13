@@ -71,6 +71,7 @@ export class AbstractInjuryService {
     removePopup() {
         const backwardDetector = this.enemy.sprite.firstElementChild.lastElementChild
         setCurrentRoomInteractables(getCurrentRoomInteractables().filter(int => int !== backwardDetector))
+        backwardDetector.remove()
     }
 
     deathAnimation() {

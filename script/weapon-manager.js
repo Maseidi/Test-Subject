@@ -172,7 +172,6 @@ const shoot = () => {
 }
 
 const applyRecoil = () => {
-    undefined.test()
     const currAngle = getProperty(getPlayer().firstElementChild.firstElementChild, 'transform', 'rotateZ(', 'deg)')
     let newAngle = currAngle + (Math.ceil(Math.random() * 7.5) - 3.75)
     if ( newAngle > 180 ) newAngle -= 360

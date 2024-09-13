@@ -1,3 +1,4 @@
+import { NOTE } from './loot.js'
 import { renderStats } from './weapon-examine.js'
 import { renderWeapon } from './weapon-loader.js'
 import { interactables } from './interactables.js'
@@ -12,7 +13,13 @@ import { quitPage, renderQuit } from './user-interface.js'
 import { getWeaponDetails, isWeapon } from './weapon-details.js'
 import { activateProgress, deactivateProgress, toggleDoor } from './progress-manager.js'
 import { useAntidote, useBandage, useHealthPotion } from './player-health.js'
-import { getCurrentRoom, getCurrentRoomEnemies, getCurrentRoomInteractables, getPauseContainer, getPlayer, getUiEl } from './elements.js'
+import { 
+    getCurrentRoom,
+    getCurrentRoomEnemies,
+    getCurrentRoomInteractables,
+    getPauseContainer,
+    getPlayer,
+    getUiEl } from './elements.js'
 import { 
     addClass,
     containsClass,
@@ -51,7 +58,6 @@ import {
     getPause, 
     getEquippedWeaponObject, 
     setEquippedWeaponObject } from './variables.js'
-import { NOTE } from './loot.js'
 
 export const MAX_PACKSIZE = {
     bandage: 3,
@@ -203,7 +209,9 @@ export const countItem = (name) =>
 export const useInventoryResource = (name, reduce) => {
     for ( let i = inventory.length - 1; i >= 0; i-- )
         for ( let j = inventory[i].length - 1; j >= 0; j-- )
-            if ( reduce !== 0 && inventory[i][j] && inventory[i][j].name === name ) reduce -= useItemAtPosition(i, j, reduce)
+            if ( reduce !== 0 && inventory[i][j] && inventory[i][j].name === name ) 
+                reduce -= useItemAtPosition(i, j, reduce)
+    handleVaccineDrop({name})       
 }
 
 export const useItemAtPosition = (row, column, reduce) => {
@@ -684,7 +692,7 @@ const handleVaccineTransportation = (itemObj, predicate, callbackFn) => {
         const body = enemy.sprite.firstElementChild.firstElementChild
         if ( body.style.backgroundColor !== virus ) return
         const popup = enemy.sprite.firstElementChild.lastElementChild.firstElementChild
-        if ( predicate ) callbackFn(popup, 'not-ideal')
+        if ( popup && predicate ) callbackFn(popup, 'not-ideal')
     })
 }
 

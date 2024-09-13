@@ -27,7 +27,7 @@ export const play = () => {
             manageWeaponActions()
             manageHealthStatus()
             manageRoomName()
-            manageLogs()
+            // manageLogs()
         } catch( err ) {
             console.error(err);
             logInfo()

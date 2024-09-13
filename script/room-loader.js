@@ -401,6 +401,12 @@ const defineVision = (element) => {
 const renderBackwardDetector = (enemyObject, enemyElem, enemyCollider) => {
     if ( [SPIKER, TRACKER].includes(enemyElem.type) ) return
     const backwardDetector = createAndAddClass('div', `enemy-backward-detector`)
+    addAllAttributes(
+        backwardDetector,
+        'name', 'vaccine',
+        'heading', 'Stealth kill',
+        'popup', `${enemyObject.virus}vaccine`
+    )
     enemyCollider.append(backwardDetector)
     addClass(backwardDetector, 'interactable')
     renderPopUp(backwardDetector, {heading: 'Stealth kill', popup: `${enemyObject.virus}vaccine`})

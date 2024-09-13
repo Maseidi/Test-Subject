@@ -12,7 +12,7 @@ import { renderPasswordInput } from './password-manager.js'
 import { renderUi, renderWeaponUi, quitPage } from './user-interface.js'
 import { getGrabBar, getPauseContainer, getPlayer, getUiEl } from './elements.js'
 import { activateProgress, deactivateProgress, getProgress } from './progress-manager.js'
-import { findEquippedWeaponById, pickupDrop, removeInventory, renderInventory } from './inventory.js'
+import { countItem, findEquippedWeaponById, pickupDrop, removeInventory, renderInventory, useInventoryResource } from './inventory.js'
 import { 
     addClass,
     angleOf2Points,
@@ -58,7 +58,9 @@ import {
     setShootCounter,
     setShootPressed,
     setSprintPressed,
-    setUpPressed } from './variables.js'
+    setUpPressed, 
+    getCurrentRoomId} from './variables.js'
+import { enemies } from './enemy/util/enemies.js'
 
 export const control = () => {
     onkeydown = (e) => {
@@ -248,6 +250,7 @@ const fDown = () => {
     if ( name === 'lever' ) toggleLever()
     if ( name === 'door' ) renderPasswordInput()
     if ( name === 'vendingMachine' ) openVendingMachine()
+    if ( name === 'vaccine' ) stealthKill()
 }
 
 const breakFree = () => {
@@ -294,6 +297,18 @@ const toggleLever = () => {
         deactivateProgress(toggle1)
         getElementInteractedWith().firstElementChild.style.transform = `scale(1, 1)`
     }
+}
+
+const stealthKill = () => {
+    const intObj = element2Object(getElementInteractedWith())
+    const neededVaccine = intObj.popup
+    if ( countItem(neededVaccine) === 0 ) return
+    useInventoryResource(intObj.popup, 1)
+    const enemy = getElementInteractedWith().parentElement.parentElement
+    const path = enemy.previousSibling
+    const index = Number(path.id.replace('path-', ''))
+    const enemyObj = enemies.get(getCurrentRoomId())[index]
+    enemyObj.injuryService.damageEnemy(null, Math.min(800, enemyObj.health))
 }
 
 const tabDown = () => {

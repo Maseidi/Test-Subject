@@ -1,4 +1,6 @@
+import { walls } from './walls.js'
 import { getStash } from './stash.js'
+import { loaders } from './loaders.js'
 import { getInventory } from './inventory.js'
 import { getShopItems } from './shop-item.js'
 import { enemies } from './enemy/util/enemies.js'
@@ -45,8 +47,7 @@ import {
     getTargets,
     getWeaponWheel,
     setLogCounter } from './variables.js'
-import { walls } from './walls.js'
-import { loaders } from './loaders.js'
+
 
 export const manageLogs = () => {
     if ( getLogCounter() === 30 ) {

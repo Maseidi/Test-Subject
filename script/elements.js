@@ -110,12 +110,16 @@ let popupContainer
 export const setPopupContainer = (val) => {
     popupContainer = val
 }
-
 export const getPopupContainer = () => popupContainer
 
 let roomNameContainer
 export const setRoomNameContainer = (val) => {
     roomNameContainer = val
 }
-
 export const getRoomNameContainer = () => roomNameContainer
+
+let healthStatusContainer
+export const setHealthStatusContainer = (val) => {
+    healthStatusContainer = val
+}
+export const getHealthStatusContainer = () => healthStatusContainer

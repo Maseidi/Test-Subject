@@ -4,6 +4,7 @@ import { appendAll, createAndAddClass } from './util.js'
 import { getMapX, getMapY, getPlayerX, getPlayerY } from './variables.js'
 import { 
     getMapEl,
+    setHealthStatusContainer,
     setMapEl,
     setPauseContainer,
     setPlayer,
@@ -15,6 +16,7 @@ export const startUp = () => {
     renderRoomNameContainer()
     renderPauseContainer()
     renderPopupContainer()
+    renderHealthStatusContainer()
     renderUi()
     renderMap()
     renderRoomContainer()
@@ -28,6 +30,8 @@ const renderRoomNameContainer = () => renderContainer('room-name-container', set
 const renderPauseContainer = () => renderContainer('pause-container', setPauseContainer)
 
 const renderPopupContainer = () => renderContainer('popupover-container', setPopupContainer)
+
+const renderHealthStatusContainer = () => renderContainer('health-status-container', setHealthStatusContainer)
 
 const renderContainer = (className, setter) => {
     const root = document.getElementById('root')

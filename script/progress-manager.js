@@ -2,15 +2,12 @@ import { renderPopup } from './popup-manager.js'
 import { getCurrentRoomId } from './variables.js'
 import { enemies } from './enemy/util/enemies.js'
 import { interactables } from './interactables.js'
-import { addClass, containsClass, removeClass } from './util.js'
+import { addClass, removeClass } from './util.js'
 import { renderInteractable, spawnEnemy } from './room-loader.js'
 import { getCurrentRoom, getCurrentRoomDoors } from './elements.js'
 import { getDoorObject } from './loaders.js'
 
 let progress = {
-    '1' : true,
-    '2' : true,
-    '3' : true,
     [Number.MAX_SAFE_INTEGER] : true,
 }
 
