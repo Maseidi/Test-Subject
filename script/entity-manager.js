@@ -4,7 +4,7 @@ import { dropLoot } from './loot-manager.js'
 import { enemies } from './enemy/util/enemies.js'
 import { loadCurrentRoom } from './room-loader.js'
 import { getThrowableDetail } from './throwable-details.js'
-import { damagePlayer, poisonPlayer, setPlayer2Fire } from './player-health.js'
+import { damagePlayer, infectPlayer2SpecificVirus, poisonPlayer, setPlayer2Fire } from './player-health.js'
 import { 
     CHASE,
     GO_FOR_RANGED,
@@ -130,7 +130,7 @@ const isEnemyNotified = (isStealthKill, popup) => {
     const enemyElem = popup.parentElement.parentElement.parentElement
     const enemyPath = enemyElem.previousSibling.id
     const index = Number(enemyPath.replace('path-', ''))
-    const validStates = [LOST, INVESTIGATE, MOVE_TO_POSITION, STUNNED] 
+    const validStates = [LOST, INVESTIGATE, MOVE_TO_POSITION, STUNNED]
     const enemyState = enemies.get(getCurrentRoomId())[index].state
     if ( !validStates.includes(enemyState) ) return true
 }
@@ -177,7 +177,8 @@ const manageBullets = () => {
             if ( !getGrabbed() ) {
                 damagePlayer(Number(bullet.getAttribute('damage')))
                 if ( containsClass(bullet, 'scorcher-bullet') ) setPlayer2Fire()
-                if ( containsClass(bullet, 'stinger-bullet') ) poisonPlayer()    
+                if ( containsClass(bullet, 'stinger-bullet') ) poisonPlayer()
+                infectPlayer2SpecificVirus(bullet.getAttribute('virus'))    
             }
             bullet.remove()
             bullets2Remove.set(bullet, true)

@@ -271,13 +271,18 @@
   background-color: green;
 }
 
-.infected-container > img {
-  width: 60px;
-  position: absolute;
-  bottom: 10px;
+.infected-container > div {
+  gap: 10px;
   left: 10px;
-  animation-name: rotation;
+  bottom: 10px;
+  display: flex;
+  position: absolute;
+}
+
+.infected-container > div > img {
+  width: 60px;
   animation-duration: 30s;
+  animation-name: rotation;
   animation-direction: alternate;
   animation-iteration-count: infinite;
 }

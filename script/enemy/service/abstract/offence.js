@@ -1,7 +1,6 @@
-import { getHealthStatusContainer } from '../../../elements.js'
-import { getNoOffenseCounter, setInfection } from '../../../variables.js'
-import { addClass, createAndAddClass, removeClass } from '../../../util.js'
-import { damagePlayer, findHealtStatusChildByClassName } from '../../../player-health.js'
+import { addClass, removeClass } from '../../../util.js'
+import { getNoOffenseCounter } from '../../../variables.js'
+import { damagePlayer, infectPlayer2SpecificVirus } from '../../../player-health.js'
 
 export class AbstractOffenceService {
     constructor(enemy) {
@@ -17,14 +16,7 @@ export class AbstractOffenceService {
     }
 
     infectPlayer() {
-        // TODO: Fix later
-        if ( Math.random() > 1 || findHealtStatusChildByClassName('infected-container') ) return
-        const infectionContainer = createAndAddClass('div', 'infected-container')
-        const virusIcon = document.createElement('img')
-        virusIcon.src = `/assets/images/${this.enemy.virus}virus.png`
-        infectionContainer.append(virusIcon)
-        getHealthStatusContainer().append(infectionContainer)
-        setInfection(this.enemy.virus)
+        infectPlayer2SpecificVirus(this.enemy.virus)
     }
 
 }

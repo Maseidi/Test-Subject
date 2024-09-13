@@ -12,7 +12,7 @@ import { renderThrowable } from './throwable-loader.js'
 import { quitPage, renderQuit } from './user-interface.js'
 import { getWeaponDetails, isWeapon } from './weapon-details.js'
 import { activateProgress, deactivateProgress, toggleDoor } from './progress-manager.js'
-import { useAntidote, useBandage, useHealthPotion } from './player-health.js'
+import { useAntidote, useBandage, useHealthPotion, useVaccine } from './player-health.js'
 import { 
     getCurrentRoom,
     getCurrentRoomEnemies,
@@ -381,8 +381,10 @@ const renderOptions = (item, options) => {
 
     const itemObj = element2Object(item)
 
-    if ( ['bandage', 'antidote'].includes(itemObj.name) || isStatUpgrader(itemObj) ||itemObj.name.includes('key') ) 
-        createOption(options, 'use')
+    if ( ['bandage', 'antidote'].includes(itemObj.name) || 
+         isStatUpgrader(itemObj) || 
+         itemObj.name.includes('vaccine') ||
+         itemObj.name.includes('key') ) createOption(options, 'use')
 
     if ( isThrowable(itemObj.name) ) {
         if ( !getReloading() ) createOption(options, 'equip')
@@ -583,8 +585,13 @@ const REPLACE_STATES = new Map([
 const USE_MAP = new Map([
     ['bandage', useBandage],
     ['antidote', useAntidote],
+    ['redvaccine', useVaccine],
+    ['bluevaccine', useVaccine],
     ['luckpills', useLuckPills],
+    ['greenvaccine', useVaccine],
     ['adrenaline', useAdrenaline],
+    ['yellowvaccine', useVaccine],
+    ['purplevaccine', useVaccine],
     ['energydrink', useEnergyDrink],
     ['healthpotion', useHealthPotion],
 ])

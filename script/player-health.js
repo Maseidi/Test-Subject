@@ -19,12 +19,13 @@ import {
     setDownPressed,
     setExplosionDamageCounter,
     setHealth,
+    setInfection,
     setLeftPressed,
     setMaxHealth,
     setNoOffenseCounter, 
     setPoisoned, 
     setRightPressed,
-    setUpPressed} from './variables.js'
+    setUpPressed } from './variables.js'
 
 export const manageHealthStatus = () => {
     manageBurningState()
@@ -163,9 +164,31 @@ export const useHealthPotion = (potion) => {
 }
 
 const manageInfectedState = () => {
-    if ( !getInfection() ) return
-    let newHealth = getHealth() - 0.002
+    if ( getInfection().length === 0 ) return
+    let newHealth = getHealth() - ( 0.002 * getInfection().length )
     newHealth = newHealth < 0 ? 0 : newHealth
     modifyHealth(newHealth)
     if ( isLowHealth() ) decideLowHealth(renderHealthStatusChildByClassName, addClass)
+}
+
+export const infectPlayer2SpecificVirus = (virusName) => {
+    if ( getInfection().includes(virusName) ) return
+    const infectedContainer = findHealtStatusChildByClassName('infected-container')    
+    const virusBar = infectedContainer.firstElementChild
+    const virusIcon = document.createElement('img')
+    virusIcon.src = `/assets/images/${virusName}virus.png`
+    virusBar.append(virusIcon)
+    setInfection([...getInfection(), virusName])
+}
+
+export const useVaccine = (vaccine) => {
+    const antivirus = vaccine.name.replace('vaccine', '')
+    if ( !getInfection().includes(antivirus) ) return 
+    setInfection(getInfection().filter(virus => virus !== antivirus))
+    const infectedContainer = findHealtStatusChildByClassName('infected-container')    
+    const virusBar = infectedContainer.firstElementChild
+    Array.from(virusBar.children).forEach(virus => {
+        if ( virus.src.includes(antivirus) ) virus.remove()
+    })
+    useInventoryResource(vaccine.name, 1)
 }

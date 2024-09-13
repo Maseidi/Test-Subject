@@ -3,6 +3,7 @@ import { loadCurrentRoom } from './room-loader.js'
 import { appendAll, createAndAddClass } from './util.js'
 import { getMapX, getMapY, getPlayerX, getPlayerY } from './variables.js'
 import { 
+    getHealthStatusContainer,
     getMapEl,
     setHealthStatusContainer,
     setMapEl,
@@ -31,7 +32,13 @@ const renderPauseContainer = () => renderContainer('pause-container', setPauseCo
 
 const renderPopupContainer = () => renderContainer('popupover-container', setPopupContainer)
 
-const renderHealthStatusContainer = () => renderContainer('health-status-container', setHealthStatusContainer)
+const renderHealthStatusContainer = () => {
+    renderContainer('health-status-container', setHealthStatusContainer)
+    const infectedContainer = createAndAddClass('div', 'infected-container')
+    const virusBar = createAndAddClass('div', 'virus-bar')
+    infectedContainer.append(virusBar)
+    getHealthStatusContainer().append(infectedContainer)
+}
 
 const renderContainer = (className, setter) => {
     const root = document.getElementById('root')

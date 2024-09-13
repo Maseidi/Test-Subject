@@ -84,6 +84,7 @@ export class GrabberGrabService {
             else elem.state = STAND_AND_WATCH
         })
         this.enemy.state = GRAB
+        this.enemy.offenceService.infectPlayer()
         this.renderQte()
     }
 

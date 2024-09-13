@@ -84,7 +84,8 @@ export class RangerShootingService {
             bullet, 
             'speed-x', speedX, 
             'speed-y', speedY, 
-            'damage', this.enemy.damage
+            'damage',  this.enemy.damage,
+            'virus',   this.enemy.virus
         )
         bullet.style.left = `${srcX}px`
         bullet.style.top = `${srcY}px`

@@ -6,7 +6,7 @@ import { setupReload } from './weapon-manager.js'
 import { renderWeapon } from './weapon-loader.js'
 import { renderStore } from './vending-machine.js'
 import { isThrowable } from './throwable-details.js'
-import { heal, damagePlayer } from './player-health.js'
+import { heal, damagePlayer, findHealtStatusChildByClassName } from './player-health.js'
 import { renderThrowable } from './throwable-loader.js'
 import { renderPasswordInput } from './password-manager.js'
 import { renderUi, renderWeaponUi, quitPage } from './user-interface.js'
@@ -331,10 +331,12 @@ export const managePause = () => {
         removeClass(getPlayer(), 'run')
         removeClass(getPlayer(), 'walk')
         getUiEl().remove()
+        findHealtStatusChildByClassName('infected-container').style.visibility = 'hidden'
         return
     }
     setPauseCause(null)
     renderUi()
+    findHealtStatusChildByClassName('infected-container').style.visibility = ''
     if ( !isMoving() ) return
     if ( !getAimMode() ) addClass(getPlayer(), 'walk')
     else if ( getSprintPressed() ) startSprint()

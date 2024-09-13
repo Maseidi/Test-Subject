@@ -30,6 +30,7 @@ import {
     getGrabbed,
     getHealth,
     getHealthPotionsDropped,
+    getInfection,
     getLogCounter,
     getLuckPillsDropped,
     getMaxHealth,
@@ -103,6 +104,7 @@ export const logInfo = () => {
     console.log('energy-drinks-dropped',   getEnergyDrinksDropped());
     console.log('stash',                   getStash());
     console.log('shop-items',              getShopItems());
+    console.log('infection',               getInfection());
 
     console.log('############################################');
     console.log('############################################');

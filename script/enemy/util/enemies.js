@@ -1,4 +1,6 @@
+import { Ranger } from '../type/ranger.js'
 import { Progress } from '../../progress.js'
+import { Grabber } from '../type/grabber.js'
 import { SinglePointPath } from '../../path.js'
 import { Torturer } from '../type/normal-enemy.js'
 
@@ -7,13 +9,13 @@ export const enemies = new Map([
     [2, []],
     [9, []],
     [16, [
-        new Torturer(
+        new Grabber(
             1,
             new SinglePointPath(100, 100),
             null,
             Progress.builder().setProgress2Active('1')
         ),
-        new Torturer(
+        new Ranger(
             1,
             new SinglePointPath(300, 100),
             null,
