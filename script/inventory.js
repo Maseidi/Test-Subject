@@ -146,6 +146,16 @@ const searchEmpty = () => {
     }
 }
 
+export const isEnoughSpace = (name, space, amount) => {
+    // const pack = MAX_PACKSIZE[name] || 1
+    // const flattenedInventory = inventory.flat()
+
+    // const anyPackNotFilled = flattenedInventory.find(item => item?.name === name && (item.amount + amount <= pack))
+    // if ( anyPackNotFilled ) return true
+
+    // return false
+}
+
 const handleThrowablePickup = () => {
     if ( !isThrowable(dropObject.name) ) return
     const throwable = inventory.flat().find(item => item?.name === dropObject.name)
@@ -199,7 +209,7 @@ export const findEquippedWeaponById = () => inventory.flat().find(item => item &
 
 export const calculateTotalAmmo = () => countItem(getEquippedWeaponObject().ammotype)
 
-export const calculateThrowableAmount = () => countItem(getEquippedWeaponObject().name)
+export const calculateThrowableAmount = (itemObj) => itemObj ? countItem(itemObj.name) : countItem(getEquippedWeaponObject().name)
 
 export const calculateTotalCoins = () => countItem('coin')
 
@@ -211,12 +221,12 @@ export const useInventoryResource = (name, reduce) => {
         for ( let j = inventory[i].length - 1; j >= 0; j-- )
             if ( reduce !== 0 && inventory[i][j] && inventory[i][j].name === name ) 
                 reduce -= useItemAtPosition(i, j, reduce)
-    handleVaccineDrop({name})       
 }
 
 export const useItemAtPosition = (row, column, reduce) => {
     const itemAmount = inventory[row][column].amount
     const diff = itemAmount <= reduce ? itemAmount : reduce
+    const name = inventory[row][column].name
     inventory[row][column].amount -= diff
     const space = inventory[row][column].space
     if ( inventory[row][column].amount === 0 ) {
@@ -224,6 +234,7 @@ export const useItemAtPosition = (row, column, reduce) => {
         for ( let i = 1; i < space; i++ ) 
             if ( inventory[row][column + i] === 'taken' ) inventory[row][column + i] = null
     }
+    handleVaccineDrop({name})
     return diff
 }
 

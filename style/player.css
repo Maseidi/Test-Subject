@@ -280,7 +280,7 @@
 }
 
 .infected-container > div > img {
-  width: 60px;
+  width: 50px;
   animation-duration: 30s;
   animation-name: rotation;
   animation-direction: alternate;

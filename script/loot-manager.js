@@ -56,7 +56,7 @@ export const dropLoot = (rootElem, isEnemy) => {
         left, top, 'loot-name': decision, 'loot-amount': amount, 'loot-active': progress2Active, 'loot-deactive': progress2Deactive,
         'loot-data': data, 'loot-heading': heading, 'loot-description': description, 'loot-code': code } = root
     let loot
-    if ( decision === RANDOM ) loot = dropRandomLoot(left, top)
+    if ( decision === RANDOM ) loot = dropRandomLoot(left, top, amount)
     else if ( !decision ) loot = null
     else if ( decision === NOTE ) loot = new Note(left, top, heading, description, data, null, code)
     else loot = dropDeterminedLoot(decision, left, top, amount, data)
@@ -70,7 +70,7 @@ export const dropLoot = (rootElem, isEnemy) => {
     renderInteractable(getCurrentRoom(), interactable)
 }
 
-const dropRandomLoot = (left, top) => {
+const dropRandomLoot = (left, top, amount) => {
     return [
         {obj: Grenade, chance: 0.01},        {obj: Flashbang, chance: 0.01},
         {obj: MagnumAmmo, chance: 0.02},     {obj: HardDrive, chance: 0.04},
@@ -84,8 +84,8 @@ const dropRandomLoot = (left, top) => {
         {obj: LuckPills, chance: 0.0001,     predicate: getLuckPillsDropped},
     ]
     .sort(() => Math.random() - 0.5)
-    .filter((item) => !item.predicate || predicate() < 10)
-    .map((item) => new decideItemDrop(item.obj, item.chance, left, top, amount))
+    .filter((item) => !item.predicate || item.predicate() < 10)
+    .map((item) => decideItemDrop(item.obj, item.chance, left, top, amount))
     .find(drop => drop)
 }
 

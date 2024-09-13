@@ -30,7 +30,7 @@ export const play = () => {
             // manageLogs()
         } catch( err ) {
             console.error(err);
-            logInfo()
+            // logInfo()
             error = true
         }
     }, 1000 / 60)

@@ -2,6 +2,8 @@ import { Progress } from './progress.js'
 import { getCurrentRoomId } from './variables.js'
 import { getPasswords, initPasswords } from './password-manager.js'
 
+initPasswords()
+
 class Loader {
     constructor(className, width, height, left, top, right, bottom, door) {
         this.className = className ?? null
@@ -83,8 +85,6 @@ class Door {
         })() : ''
     }
 }
-
-initPasswords()
 
 export const getDoorObject = (doorElem) => {
     const loaderElem = doorElem.nextSibling

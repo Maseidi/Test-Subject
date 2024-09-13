@@ -1,15 +1,12 @@
-import { getDoorObject } from './loaders.js'
 import { managePause } from './controls.js'
-import { toggleDoor } from './progress-manager.js'
+import { getDoorObject } from './loaders.js'
 import { getPauseContainer } from './elements.js'
+import { toggleDoor } from './progress-manager.js'
 import { quitPage, renderQuit } from './user-interface.js'
 import { createAndAddClass, getProperty } from './util.js'
 import { getElementInteractedWith, setPauseCause } from './variables.js'
 
-const passwordNames = [
-    'main-hall',
-    'silver-gate'
-]
+const passwordNames = []
 
 const passwords = new Map([])
 
