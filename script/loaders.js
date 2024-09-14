@@ -117,9 +117,15 @@ export const loaders = new Map([
         ]
     ],
     [16, [
-        new BottomLoader_FromLeft(9, 100, 100),
-        new LeftLoader_FromTop(37, 100, 400),
-        new TopLoader_FromLeft(38, 250, 475),
+        new BottomLoader_FromLeft(9, 100, 100, new Door(
+            'green', 'Test door', 'Door for testing', null, Progress.builder().setRenderProgress('10'), 'main-hall'
+        )),
+        new LeftLoader_FromTop(37, 100, 400, new Door(
+            'red', 'Test door 2', 'Door for testing', null, Progress.builder().setRenderProgress('11')
+        )),
+        new TopLoader_FromLeft(38, 250, 475, new Door(
+            'blue', 'Test door 2', 'Door for testing', null, Progress.builder().setRenderProgress('12')
+        )),
         new RightLoader_FromTop(39, 300, 300)
         ]
     ],

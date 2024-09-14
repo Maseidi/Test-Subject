@@ -6,7 +6,9 @@ import { quitPage, renderQuit } from './user-interface.js'
 import { createAndAddClass, getProperty } from './util.js'
 import { getElementInteractedWith, setPauseCause } from './variables.js'
 
-const passwordNames = []
+const passwordNames = [
+    'main-hall'
+]
 
 const passwords = new Map([])
 

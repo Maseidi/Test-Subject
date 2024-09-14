@@ -96,13 +96,14 @@ export const getInventory = () => inventory
 let dropElem
 let dropObject
 export const pickupDrop = (drop) => {
-    dropElem = drop
+    if ( containsClass(drop.lastElementChild, 'not-ideal') ) return
+    dropElem = drop    
     dropObject = element2Object(dropElem)
-    console.log(isEnoughSpace(dropObject.name, dropObject.space));
     searchPack()
     searchEmpty()
     checkSpecialScenarios()
     handleVaccinePickup(dropObject)
+    updateInteractablePopups()
 }
 
 const searchPack = () => {
@@ -153,7 +154,11 @@ const anyPackNotFilled = (name) =>
     inventory.flat().find(item => item?.name === name && item.amount < (MAX_PACKSIZE[item.name] || 1))
 
 const anySpaceLeft = (space) => {
-    // TODO : add later
+    const expected = new Array(space).fill('null').reduce((a, b) => a + b, '')
+    const actual = inventory.flat().map((elem, index) => 
+        index % 4 === 0 ? '|' + String(elem) : String(elem)
+    ).reduce((a,b) => a + b, '')
+    return actual.includes(expected)
 }
 
 const handleThrowablePickup = () => {
@@ -166,10 +171,10 @@ const handleThrowablePickup = () => {
     if ( interactable ) interactable.id = throwable.id
 }
 
-const checkSpecialScenarios = () => {
+const checkSpecialScenarios = () => {    
     const { amount, progress2active, progress2deactive, id, name } = dropObject
     if ( amount === 0 ) {
-        if ( progress2active ) activateProgress(progress2active + '')
+        if ( progress2active )   activateProgress(progress2active + '')
         if ( progress2deactive ) deactivateProgress(progress2deactive + '')
     }
     if ( ( isThrowable(name) && !getWeaponWheel().includes(id) ) ||
@@ -180,6 +185,16 @@ const checkSpecialScenarios = () => {
 }
 
 const handleVaccinePickup = (itemObj) => handleVaccineTransportation(itemObj, countItem(dropObject.name) !== 0, removeClass)
+
+export const updateInteractablePopups = () => getCurrentRoomInteractables().forEach(updateInteractablePopup)
+
+export const updateInteractablePopup = (interactable) => {
+    if ( Array.from(interactable.classList).includes('enemy-backward-detector') ) return
+    const { space, name } = element2Object(interactable)
+    const popup = interactable.lastElementChild
+    if ( isEnoughSpace(name, space) ) removeClass(popup, 'not-ideal')
+    else addClass(popup, 'not-ideal')
+}
 
 const ammo4Equipped = () => {
     if ( !getEquippedWeaponId() ) return
@@ -235,6 +250,7 @@ export const useItemAtPosition = (row, column, reduce) => {
             if ( inventory[row][column + i] === 'taken' ) inventory[row][column + i] = null
     }
     handleVaccineDrop({name})
+    updateInteractablePopups()
     return diff
 }
 
@@ -688,6 +704,7 @@ const drop = (item) => {
     interactables.get(getCurrentRoomId()).push(interactable)
     dropFromInventory(itemObj)
     handleVaccineDrop(itemObj)
+    updateInteractablePopups()
     renderInteractable(getCurrentRoom(), interactable)
     handleEquippableDrop(itemObj)
     renderInventory()

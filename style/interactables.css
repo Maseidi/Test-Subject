@@ -49,12 +49,12 @@
 }
 
 .not-ideal {
-  color: orangered !important;
-  font-weight: bold;
+  color: tomato !important;
   bottom: calc(100% + 20px);
   opacity: 1;
 }
 
+
 .not-ideal > div:nth-of-type(2) > .interactable-btn {
-  border: 2px solid orangered !important;
+  border: 2px solid tomato !important;
 }

@@ -317,6 +317,7 @@ export const interactables = new Map([
         new GreenVaccine(750, 800, 2),
         new PurpleVaccine(800, 800, 2),
         new YellowVaccine(850, 800, 2),
+        new Lever(100, 700, Progress.builder().setProgress2Active('11').setProgress2Deactive('12'))
         ]
     ],[37, 
         [
