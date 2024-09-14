@@ -98,6 +98,7 @@ let dropObject
 export const pickupDrop = (drop) => {
     dropElem = drop
     dropObject = element2Object(dropElem)
+    console.log(isEnoughSpace(dropObject.name, dropObject.space));
     searchPack()
     searchEmpty()
     checkSpecialScenarios()
@@ -146,14 +147,13 @@ const searchEmpty = () => {
     }
 }
 
-export const isEnoughSpace = (name, space, amount) => {
-    // const pack = MAX_PACKSIZE[name] || 1
-    // const flattenedInventory = inventory.flat()
+export const isEnoughSpace = (name, space) => Boolean(anyPackNotFilled(name) || anySpaceLeft(space))
 
-    // const anyPackNotFilled = flattenedInventory.find(item => item?.name === name && (item.amount + amount <= pack))
-    // if ( anyPackNotFilled ) return true
+const anyPackNotFilled = (name) =>
+    inventory.flat().find(item => item?.name === name && item.amount < (MAX_PACKSIZE[item.name] || 1))
 
-    // return false
+const anySpaceLeft = (space) => {
+    // TODO : add later
 }
 
 const handleThrowablePickup = () => {
