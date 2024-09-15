@@ -189,8 +189,8 @@ export class WeaponDrop extends Drop {
 }
 
 export class KeyDrop extends Drop {
-    constructor(left, top, code, heading, unlocks, progress) {
-        super(10, left, top, `key-${code}`, heading, 1, 1, heading, null, progress)
+    constructor(left, top, code, heading, description, unlocks, progress) {
+        super(10, left, top, `key-${code}`, description, 1, 1, heading, null, progress)
         this.unlocks = unlocks ?? null
     }
 }
@@ -317,7 +317,8 @@ export const interactables = new Map([
         new GreenVaccine(750, 800, 2),
         new PurpleVaccine(800, 800, 2),
         new YellowVaccine(850, 800, 2),
-        new Lever(100, 700, Progress.builder().setProgress2Active('11').setProgress2Deactive('12'))
+        new Lever(100, 700, Progress.builder().setProgress2Active('11').setProgress2Deactive('12')),
+        new KeyDrop(100, 800, 3, 'Test key', 'Key for testing', 'love', Progress.builder().setKillAll('6'))
         ]
     ],[37, 
         [

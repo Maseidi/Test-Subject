@@ -54,8 +54,6 @@ export const loadCurrentRoom = () => {
     renderEnemies(room2Render)
     setCurrentRoom(room2Render)
     getRoomContainer().append(room2Render)
-    console.log(getProgress());
-    
 }
 
 const initElements = () => {
@@ -354,6 +352,7 @@ const handleEnemyLoot = (element, enemy) => {
         'loot-deactive',    progress2Deactive,
     )
     handleNoteLoot(element, enemy, name)
+    handleKeyLoot(element, enemy, name)
 }
 
 const handleNoteLoot = (element, enemy, name) => {
@@ -361,10 +360,22 @@ const handleNoteLoot = (element, enemy, name) => {
     const { data, code, heading, description } = element.loot
     addAllAttributes(
         enemy,
-        'loot-data',        data,
-        'loot-code',        code,
-        'loot-heading',     heading,
-        'loot-description', description
+        'note-data',        data,
+        'note-code',        code,
+        'note-heading',     heading,
+        'note-description', description
+    )
+}
+
+const handleKeyLoot = (element, enemy, name) => {
+    if ( !name.includes('key') ) return
+    const { code, heading, description, unlocks } = element.loot
+    addAllAttributes(
+        enemy,
+        'key-code',        code,
+        'key-heading',     heading,
+        'key-description', description,
+        'key-unlocks',     unlocks
     )
 }
 

@@ -23,6 +23,7 @@ import {
     HardDrive,
     HealthPotion,
     interactables,
+    KeyDrop,
     LuckPills,
     MagnumAmmo,
     Note,
@@ -53,12 +54,21 @@ import {
 export const dropLoot = (rootElem, isEnemy) => {
     const root = element2Object(rootElem)
     const {
-        left, top, 'loot-name': decision, 'loot-amount': amount, 'loot-active': progress2Active, 'loot-deactive': progress2Deactive,
-        'loot-data': data, 'loot-heading': heading, 'loot-description': description, 'loot-code': code } = root
+        left, top, 
+        'loot-name': decision, 'loot-amount': amount, 
+        'loot-active': progress2Active, 'loot-deactive': progress2Deactive } = root
+
     let loot
     if ( decision === RANDOM ) loot = dropRandomLoot(left, top, amount)
     else if ( !decision ) loot = null
-    else if ( decision === NOTE ) loot = new Note(left, top, heading, description, data, null, code)
+    else if ( decision === NOTE ) {
+        const { 'note-heading': heading, 'note-description' : description, 'note-data' : data, 'note-code' : code } = root
+        loot = new Note(left, top, heading, description, data, null, code)
+    }
+    else if ( decision.includes('key') ) {
+        const { 'key-heading': heading, 'key-unlocks' : unlocks, 'key-code' : code, 'key-description' : description } = root
+        loot = new KeyDrop(left, top, code, heading, description, unlocks)
+    }
     else loot = dropDeterminedLoot(decision, left, top, amount, data)
     if ( !isEnemy ) removeDrop(rootElem)
     else setCurrentRoomSolid(getCurrentRoomSolid().filter(solid => solid !== rootElem.firstElementChild))

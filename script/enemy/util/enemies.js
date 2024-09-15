@@ -4,7 +4,7 @@ import { Grabber } from '../type/grabber.js'
 import { Stinger } from '../type/stinger.js'
 import { SinglePointPath } from '../../path.js'
 import { Torturer } from '../type/normal-enemy.js'
-import { Loot, NoteLoot, RANDOM } from '../../loot.js'
+import { KeyLoot, Loot, NoteLoot, RANDOM } from '../../loot.js'
 
 export const enemies = new Map([
     [1, []],
@@ -44,7 +44,7 @@ export const enemies = new Map([
         new Torturer(
             1,
             new SinglePointPath(200, 300),
-            new Loot(RANDOM, 2),
+            new KeyLoot('Tes key drop', 'Key for testing drops', 5, 'generosity'),
             Progress.builder().setRenderProgress('6')
         ),
     ]],

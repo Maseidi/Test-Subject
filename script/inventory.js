@@ -639,7 +639,7 @@ const use = (item) => {
 const useKey = (itemObj) => {
     if ( !itemObj.name.includes('key') ) return false
     const neededKey = getElementInteractedWith()?.getAttribute('key')
-    if ( !neededKey || itemObj.unlocks !== neededKey ) return false
+    if ( !neededKey || itemObj.unlocks !== neededKey ) return true
     quitPage()
     toggleDoor(getElementInteractedWith())
     return true

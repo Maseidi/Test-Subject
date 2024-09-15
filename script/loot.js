@@ -67,3 +67,13 @@ export class NoteLoot extends SingleLoot {
         this.data = data
     }
 }
+
+export class KeyLoot extends SingleLoot {
+    constructor(heading, description, code, unlocks, progress) {
+        super('key-' + code, progress)
+        this.heading = heading
+        this.description = description
+        this.code = code
+        this.unlocks = unlocks
+    }
+}
