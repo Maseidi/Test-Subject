@@ -1,4 +1,3 @@
-import { getInventory } from './inventory.js'
 import { isLowHealth, isMoving } from './util.js'
 import { getMapEl, getPlayer } from './elements.js'
 import { 
@@ -57,5 +56,5 @@ const normalizeSpeed = () => {
 export const useAdrenaline = (adrenaline) => {    
     if ( getPlayerSpeed() === 6 ) return
     setPlayerSpeed(getPlayerSpeed() + 0.1 >= 6 ? 6 : getPlayerSpeed() + 0.1)
-    getInventory()[adrenaline.row][adrenaline.column] = null
+    adrenaline.amount -= 1
 }

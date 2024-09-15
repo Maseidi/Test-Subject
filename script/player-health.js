@@ -160,7 +160,15 @@ export const useHealthPotion = (potion) => {
     setMaxHealth(getMaxHealth() + 10)
     modifyHealth(getMaxHealth())
     if ( !isLowHealth() ) decideLowHealth(removeHealthStatusChildByClassName, removeClass)
-    getInventory()[potion.row][potion.column] = null
+    potion.amount -= 1
+    clearAllInfection()
+}
+
+const clearAllInfection = () => {
+    setInfection([])
+    const infectedContainer = findHealtStatusChildByClassName('infected-container')    
+    const virusBar = infectedContainer.firstElementChild
+    Array.from(virusBar.children).forEach(virus => virus.remove())
 }
 
 const manageInfectedState = () => {
@@ -190,5 +198,5 @@ export const useVaccine = (vaccine) => {
     Array.from(virusBar.children).forEach(virus => {
         if ( virus.src.includes(antivirus) ) virus.remove()
     })
-    useInventoryResource(vaccine.name, 1)
+    vaccine.amount -= 1
 }

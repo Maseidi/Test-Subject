@@ -5,8 +5,8 @@ export class NormalInvestigationService {
 
     handleInvestigationState() {
         if ( this.enemy.visionService.playerSpotted() ) return
-        const path = document.getElementById(this.enemy.path)
-        const counter = this.enemy.investigationCounter
+        const path = this.enemy.sprite.previousSibling
+        const counter = this.enemy.investigationCounter        
         if ( counter > 0 ) this.enemy.investigationCounter += 1
         if ( counter && counter !== 300 && counter % 100 === 0 ) this.enemy.angleService.checkSurroundings()
         if ( counter >= 300 ) this.enemy.investigationCounter = 0

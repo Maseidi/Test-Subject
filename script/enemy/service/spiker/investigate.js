@@ -7,7 +7,7 @@ export class SpikerInvestigationService extends NormalInvestigationService {
 
     handleInvestigationState() {
         if ( this.enemy.visionService.playerSpotted() ) return
-        const path = document.getElementById(this.enemy.path)
+        const path = this.enemy.sprite.previousSibling
         const counter = this.enemy.investigationCounter
         if ( counter > 0 ) this.enemy.investigationCounter += 1
         if ( counter >= 300 ) this.enemy.investigationCounter = 0

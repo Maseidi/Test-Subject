@@ -110,7 +110,9 @@ export const loaders = new Map([
         ]
     ],
     [9, [
-        new BottomLoader_FromLeft(2, 100, 450),
+        new BottomLoader_FromLeft(2, 100, 450, new Door(
+            'violet', 'Test door for code', 'Door for testing code', null, Progress.builder().setRenderProgress('200'), 'main-hall'
+        )),
         new LeftLoader_FromBottom(15, 100, 200),
         new TopLoader_FromLeft(16, 100, 450),
         new RightLoader_FromBottom(17, 100, 200, new Door(

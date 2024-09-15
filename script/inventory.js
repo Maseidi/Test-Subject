@@ -190,6 +190,7 @@ export const updateInteractablePopups = () => getCurrentRoomInteractables().forE
 
 export const updateInteractablePopup = (interactable) => {
     if ( Array.from(interactable.classList).includes('enemy-backward-detector') ) return
+    if ( interactable.getAttribute('name') === 'door' ) return
     const { space, name } = element2Object(interactable)
     const popup = interactable.lastElementChild
     if ( isEnoughSpace(name, space) ) removeClass(popup, 'not-ideal')
@@ -704,7 +705,6 @@ const drop = (item) => {
     interactables.get(getCurrentRoomId()).push(interactable)
     dropFromInventory(itemObj)
     handleVaccineDrop(itemObj)
-    updateInteractablePopups()
     renderInteractable(getCurrentRoom(), interactable)
     handleEquippableDrop(itemObj)
     renderInventory()
@@ -833,4 +833,7 @@ const addText2WeaponWheelOption = (slots) =>
     4 - slots === getWeaponWheel().findIndex(x => x === getEquippedWeaponId()) ? 
     'E' : `${5 - slots}`
 
-export const removeInventory = () => getPauseContainer().firstElementChild.remove()
+export const removeInventory = () => {
+    getPauseContainer().firstElementChild.remove()
+    updateInteractablePopups()
+}

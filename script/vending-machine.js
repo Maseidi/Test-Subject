@@ -252,7 +252,7 @@ const manageBuy = (itemObj) => {
         if ( itemObj.name === 'armor' ) chosenItem.price = 50
         const { width, left, top, name, heading, amount, space, description, price } = chosenItem
 
-        const purchasedItem = new Drop(width, left, top, name, heading, amount, 
+        let purchasedItem = new Drop(width, left, top, name, heading, amount, 
                                      space, description, price / amount, Progress.builder().setRenderProgress(String(Number.MAX_SAFE_INTEGER)))
                                      
         purchasedItem = handleNewWeapnPurchase(purchasedItem, itemObj.name)

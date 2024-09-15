@@ -69,7 +69,7 @@ export const dropLoot = (rootElem, isEnemy) => {
         const { 'key-heading': heading, 'key-unlocks' : unlocks, 'key-code' : code, 'key-description' : description } = root
         loot = new KeyDrop(left, top, code, heading, description, unlocks)
     }
-    else loot = dropDeterminedLoot(decision, left, top, amount, data)
+    else loot = dropDeterminedLoot(decision, left, top, amount)
     if ( !isEnemy ) removeDrop(rootElem)
     else setCurrentRoomSolid(getCurrentRoomSolid().filter(solid => solid !== rootElem.firstElementChild))
     if ( !loot ) return

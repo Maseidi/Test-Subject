@@ -7,7 +7,6 @@ import { getWeaponDetail, getWeaponUpgradableDetail, isWeapon } from './weapon-d
 import { 
     calculateThrowableAmount,
     calculateTotalAmmo,
-    getInventory,
     updateInventoryWeaponMag,
     useInventoryResource } from './inventory.js'
 import { 
@@ -356,5 +355,5 @@ const unEquipThrowable = () => {
 export const useLuckPills = (pills) => {
     if ( getCriticalChance() === 20 ) return
     setCriticalChance(getCriticalChance() + 0.019 >= 0.19 ? 0.2 : getCriticalChance() + 0.019)
-    getInventory()[pills.row][pills.column] = null
+    pills.amount -= 1
 }

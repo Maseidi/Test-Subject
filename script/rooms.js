@@ -16,5 +16,5 @@ export const rooms = new Map([
     [2, new Room(2, 1000, 1000, 'Corridor to Heaven')],
     [9, new Room(9, 1000, 500, 'East Waiting Room', Progress.builder().setProgress2Active('400'))],
     [16, new Room(16, 1200, 900, 'Speech Room')],
-    [37, new Room(37, 1600, 800, 'Cold Weapons Museum')],
+    [37, new Room(37, 1600, 800, 'Cold Weapons Museum', Progress.builder().setProgress2Active('500'))],
 ])

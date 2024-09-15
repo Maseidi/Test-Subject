@@ -7,6 +7,7 @@ import { AbstractMovementService } from '../service/abstract/movement.js'
 import { AbstractCollisionService } from '../service/abstract/collision.js'
 import { AbstractPathFindingService } from '../service/abstract/path-finding.js'
 import { AbstractNotificationService } from '../service/abstract/notification.js'
+import { RANGER } from '../util/enemy-constants.js'
 
 export class AbstractEnemy {
     constructor(type, components, waypoint, health, damage, 
@@ -37,7 +38,7 @@ export class AbstractEnemy {
         this.collisionService =    new AbstractCollisionService(this)
     }
 
-    behave() {
+    behave() {        
         if ( this.health === 0 ) return
         this.visionService.look4Player()
         this.injuryService.manageDamagedMode()

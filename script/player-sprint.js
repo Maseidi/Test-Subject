@@ -1,4 +1,3 @@
-import { getInventory } from './inventory.js'
 import { staminaManager } from './user-interface.js'
 import { TRACKER } from './enemy/util/enemy-constants.js'
 import { addClass, isMoving, removeClass } from './util.js'
@@ -52,5 +51,5 @@ export const useEnergyDrink = (energydrink) => {
     if ( getMaxStamina() === 1200 ) return
     setMaxStamina(getMaxStamina() + 60)
     setStamina(getMaxStamina())
-    getInventory()[energydrink.row][energydrink.column] = null
+    energydrink.amount -= 1
 }

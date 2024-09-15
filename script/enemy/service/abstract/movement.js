@@ -60,7 +60,7 @@ export class AbstractMovementService {
         }
         switch ( this.enemy.state ) {
             case INVESTIGATE:
-                const path = document.getElementById(this.enemy.path)
+                const path = this.enemy.sprite.previousSibling
                 const numOfPoints = path.children.length
                 const currentPathPoint = this.enemy.pathPoint
                 let nextPathPoint = currentPathPoint + 1

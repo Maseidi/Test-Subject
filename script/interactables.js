@@ -318,7 +318,11 @@ export const interactables = new Map([
         new PurpleVaccine(800, 800, 2),
         new YellowVaccine(850, 800, 2),
         new Lever(100, 700, Progress.builder().setProgress2Active('11').setProgress2Deactive('12')),
-        new KeyDrop(100, 800, 3, 'Test key', 'Key for testing', 'love', Progress.builder().setKillAll('6'))
+        new KeyDrop(100, 800, 3, 'Test key', 'Key for testing', 'love', Progress.builder().setKillAll('6')),
+        new EnergyDrink(650, 700, 1),
+        new HealthPotion(700, 700, 1),
+        new Adrenaline(750, 700, 1),
+        new LuckPills(800, 700, 1),
         ]
     ],[37, 
         [

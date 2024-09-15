@@ -6,9 +6,9 @@ import { isWeapon } from './weapon-details.js'
 import { enemies } from './enemy/util/enemies.js'
 import { interactables } from './interactables.js'
 import { renderRoomName } from './popup-manager.js'
-import { countItem, updateInteractablePopup, updateInteractablePopups } from './inventory.js'
+import { countItem, updateInteractablePopup } from './inventory.js'
 import { getCurrentRoomId, getRoomLeft, getRoomTop, setStunnedCounter } from './variables.js'
-import { activateProgress, deactivateProgress, findProgressByName, getProgress } from './progress-manager.js'
+import { activateProgress, deactivateProgress, findProgressByName } from './progress-manager.js'
 import { 
     LOST,
     MOVE_TO_POSITION,
@@ -53,6 +53,7 @@ export const loadCurrentRoom = () => {
     renderInteractables(room2Render)
     renderEnemies(room2Render)
     setCurrentRoom(room2Render)
+    manageRoomProgress()
     getRoomContainer().append(room2Render)
 }
 
@@ -77,10 +78,14 @@ const renderRoom = () => {
     room2Render.style.left =   `${getRoomLeft()}px`
     room2Render.style.top =    `${getRoomTop()}px`
     room2Render.style.backgroundColor = `lightgray`
+    return room2Render
+}
+
+const manageRoomProgress = () => {
+    const room = rooms.get(getCurrentRoomId())
     activateProgress(room.progress2Active)
     deactivateProgress(room.progress2Deactive)
     renderRoomName(room.label)
-    return room2Render
 }
 
 const renderWalls = (room2Render) => {
@@ -310,7 +315,8 @@ export const spawnEnemy = (elem, room2Render) => {
         enemyCollider, enemyBody, vision, 
         createAndAddClass('div', `enemy-forward-detector`)
     )
-    renderBackwardDetector(elem, enemy, enemyCollider)
+    const backwardDetector = defineBackwardDetector(elem)
+    if ( backwardDetector ) enemyCollider.append(backwardDetector)
     enemy.append(enemyCollider)
     room2Render.append(enemy)
     elem.sprite = enemy
@@ -319,8 +325,8 @@ export const spawnEnemy = (elem, room2Render) => {
 }
 
 const defineEnemy = (elem) => {
-    const enemy = createAndAddClass('div', `${elem.type}`, 'enemy')
     initEnemyStats(elem)
+    const enemy = createAndAddClass('div', `${elem.type}`, 'enemy')
     enemy.style.left = `${elem.x}px`
     enemy.style.top = `${elem.y}px`
     handleEnemyLoot(elem, enemy)
@@ -332,17 +338,15 @@ const initEnemyStats = (element) => {
     element.angleState = ANGLE_STATE_MAP.get(element.angle)
     element.state = element.type === TRACKER ? LOST : MOVE_TO_POSITION
     element.investigationCounter = 0
-    element.path = `path-${element.index}`
     element.pathPoint = 0
     element.pathFindingX = null
     element.pathFindingY = null
     element.currentSpeed = element.acceleration
     element.accelerationCounter = 0
-    element.counterLimit = Math.ceil(Math.random() * 5) * 60
 }
 
 const handleEnemyLoot = (element, enemy) => {
-    if ( !element.loot ) return
+    if ( !element.loot ) return    
     const { name, amount, progress2Active, progress2Deactive } = element.loot
     addAllAttributes(
         enemy,
@@ -412,8 +416,8 @@ const defineVision = (element) => {
     return vision
 }
 
-const renderBackwardDetector = (enemyObject, enemyElem, enemyCollider) => {
-    if ( [SPIKER, TRACKER].includes(enemyElem.type) ) return
+const defineBackwardDetector = (enemyObject) => {
+    if ( [SPIKER, TRACKER].includes(enemyObject.type) ) return
     const backwardDetector = createAndAddClass('div', `enemy-backward-detector`)
     addAllAttributes(
         backwardDetector,
@@ -421,8 +425,8 @@ const renderBackwardDetector = (enemyObject, enemyElem, enemyCollider) => {
         'heading', 'Stealth kill',
         'popup', `${enemyObject.virus}vaccine`
     )
-    enemyCollider.append(backwardDetector)
     addClass(backwardDetector, 'interactable')
     renderPopUp(backwardDetector, {heading: 'Stealth kill', popup: `${enemyObject.virus}vaccine`})
     getCurrentRoomInteractables().push(backwardDetector)
+    return backwardDetector
 }
