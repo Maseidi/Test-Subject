@@ -8,7 +8,7 @@ import { interactables } from './interactables.js'
 import { renderRoomName } from './popup-manager.js'
 import { countItem, updateInteractablePopup, updateInteractablePopups } from './inventory.js'
 import { getCurrentRoomId, getRoomLeft, getRoomTop, setStunnedCounter } from './variables.js'
-import { activateProgress, deactivateProgress, findProgressByName } from './progress-manager.js'
+import { activateProgress, deactivateProgress, findProgressByName, getProgress } from './progress-manager.js'
 import { 
     LOST,
     MOVE_TO_POSITION,
@@ -54,6 +54,8 @@ export const loadCurrentRoom = () => {
     renderEnemies(room2Render)
     setCurrentRoom(room2Render)
     getRoomContainer().append(room2Render)
+    console.log(getProgress());
+    
 }
 
 const initElements = () => {
@@ -271,7 +273,7 @@ const renderDescription = (popup, interactable) => {
 const getDescriptionContent = (interactable, needCode) =>
     (() => {
         let descContent = document.createElement('p')
-        if ( needCode ) descContent.textContent = 'Note'
+        if ( needCode ) descContent.textContent = 'Enter code'
         else if ( interactable.popup.includes('vaccine') ) {
             descContent = document.createElement('img')
             descContent.src = `/assets/images/${interactable.popup}.png`

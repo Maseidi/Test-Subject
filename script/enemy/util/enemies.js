@@ -11,42 +11,42 @@ export const enemies = new Map([
     [2, []],
     [9, []],
     [16, [
-        // new Stinger(
-        //     1,
-        //     new SinglePointPath(100, 100),
-        //     new NoteLoot('test heading', 'test description', 'Main hall code PLACE_CODE_HERE', 'main-hall'),
-        //     Progress.builder().setProgress2Active('1')
-        // ),
-        // new Ranger(
-        //     1,
-        //     new SinglePointPath(300, 100),
-        //     new Loot(RANDOM, 2),
-        //     Progress.builder().setRenderProgress('1').setProgress2Active('2')
-        // ),
-        // new Torturer(
-        //     1,
-        //     new SinglePointPath(500, 100),
-        //     new Loot(RANDOM, 2),
-        //     Progress.builder().setRenderProgress('2').setProgress2Active('3')
-        // ),
-        // new Torturer(
-        //     1,
-        //     new SinglePointPath(700, 100),
-        //     new Loot(RANDOM, 2),
-        //     Progress.builder().setRenderProgress('3').setProgress2Active('4')
-        // ),
-        // new Torturer(
-        //     1,
-        //     new SinglePointPath(100, 300),
-        //     new Loot(RANDOM, 2),
-        //     Progress.builder().setRenderProgress('4').setProgress2Active('5')
-        // ),
-        // new Torturer(
-        //     1,
-        //     new SinglePointPath(200, 300),
-        //     new Loot(RANDOM, 2),
-        //     Progress.builder().setRenderProgress('6')
-        // ),
+        new Stinger(
+            1,
+            new SinglePointPath(100, 100),
+            new NoteLoot('test heading', 'test description', 'Main hall code PLACE_CODE_HERE', 'main-hall'),
+            Progress.builder().setProgress2Active('1')
+        ),
+        new Ranger(
+            1,
+            new SinglePointPath(300, 100),
+            new Loot(RANDOM, 2),
+            Progress.builder().setRenderProgress('1').setProgress2Active('2')
+        ),
+        new Grabber(
+            1,
+            new SinglePointPath(500, 100),
+            new Loot(RANDOM, 2),
+            Progress.builder().setRenderProgress('2').setProgress2Active('3')
+        ),
+        new Torturer(
+            1,
+            new SinglePointPath(700, 100),
+            new Loot(RANDOM, 2),
+            Progress.builder().setRenderProgress('3').setProgress2Active('4')
+        ),
+        new Torturer(
+            1,
+            new SinglePointPath(100, 300),
+            new Loot(RANDOM, 2),
+            Progress.builder().setRenderProgress('4').setProgress2Active('5')
+        ),
+        new Torturer(
+            1,
+            new SinglePointPath(200, 300),
+            new Loot(RANDOM, 2),
+            Progress.builder().setRenderProgress('6')
+        ),
     ]],
     [37, []]
 ])

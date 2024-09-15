@@ -126,7 +126,9 @@ export const loaders = new Map([
         new TopLoader_FromLeft(38, 250, 475, new Door(
             'blue', 'Test door 2', 'Door for testing', null, Progress.builder().setRenderProgress('12')
         )),
-        new RightLoader_FromTop(39, 300, 300)
+        new RightLoader_FromTop(39, 300, 300, new Door(
+            'yellow', 'Test door 3', 'Door for testing', null, Progress.builder().setKillAll('6')
+        ))
         ]
     ],
     [37, [

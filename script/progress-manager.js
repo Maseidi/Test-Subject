@@ -2,7 +2,7 @@ import { renderPopup } from './popup-manager.js'
 import { getCurrentRoomId } from './variables.js'
 import { enemies } from './enemy/util/enemies.js'
 import { interactables } from './interactables.js'
-import { addClass, removeClass } from './util.js'
+import { addClass, element2Object, removeClass } from './util.js'
 import { renderInteractable, spawnEnemy } from './room-loader.js'
 import { getCurrentRoom, getCurrentRoomDoors } from './elements.js'
 import { getDoorObject } from './loaders.js'
@@ -33,21 +33,24 @@ export const deactivateProgress = (name) => {
         ...progress,
         [name] : false
     }
-    toggleDoors(name)    
+    toggleDoors(name, false)
 }
 
-const toggleDoors = (name) => 
+// Note: Doors with kill all NEVER need a renderProgress property
+// Caution: Doors that need a key or code MUST have a renderProgress property!!
+const toggleDoors = (name, open = true) => 
     getCurrentRoomDoors()
         .filter(door => door.getAttribute('renderprogress') === name )
-        .forEach(door => toggleDoor(door, name))
+        .forEach(door => toggleDoor(door, open))
 
-export const toggleDoor = (door, name = true) => {
-    if ( name ) {
-        addClass(door, 'open')
-        const progress2Active =   door.getAttribute('progress2Active')
-        const progress2Deactive = door.getAttribute('progress2Deactive')
-        if ( progress2Active )    activateProgress(progress2Active)
-        if ( progress2Deactive )  deactivateProgress(progress2Deactive)
+export const toggleDoor = (door, open = true) => {
+    const { renderprogress, ...rest } = element2Object(door)
+    if ( open ) {
+        addClass(door, 'open')        
+        const { progress2active, progress2deactive } = rest
+        if ( renderprogress )     activateProgress(renderprogress)
+        if ( progress2active )    activateProgress(progress2active)
+        if ( progress2deactive )  deactivateProgress(progress2deactive)
         return
     }
     removeClass(door, 'open')
@@ -73,8 +76,7 @@ export const updateKillAllDoors = () => {
 }
 
 const updateEnemies = (name) =>
-    enemies.get(getCurrentRoomId())
-    .forEach(enemy => {
+    enemies.get(getCurrentRoomId()).forEach(enemy => {
         if ( enemy.health === 0 ) return
         if ( enemy.renderProgress !== name ) return
         enemy.killAll = null
@@ -95,13 +97,12 @@ export const updateKillAllEnemies = () => {
 }   
 
 const updateInteractables = (name) =>
-    interactables.get(getCurrentRoomId())
-        .forEach((int, index) => {
-            if ( int.renderProgress !== name ) return 
-            int.killAll = null
-            int.renderProgress = String(Number.MAX_SAFE_INTEGER)
-            renderInteractable(getCurrentRoom(), int, index)
-        })
+    interactables.get(getCurrentRoomId()).forEach((int, index) => {
+        if ( int.renderProgress !== name ) return 
+        int.killAll = null
+        int.renderProgress = String(Number.MAX_SAFE_INTEGER)
+        renderInteractable(getCurrentRoom(), int, index)
+    })
 
 export const updateKillAllInteractables = () => {
     const aliveEnemies = getAliveEnemies()
