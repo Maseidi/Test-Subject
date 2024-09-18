@@ -273,17 +273,16 @@ const renderDescription = (popup, interactable) => {
     popup.append(descContainer)
 }
 
-const getDescriptionContent = (interactable, needCode) =>
-    (() => {
-        let descContent = document.createElement('p')
-        if ( needCode ) descContent.textContent = 'Enter code'
-        else if ( interactable.popup.includes('vaccine') ) {
-            descContent = document.createElement('img')
-            descContent.src = `/assets/images/${interactable.popup}.png`
-        }
-        else descContent.textContent = interactable.popup
-        return descContent
-    })()
+const getDescriptionContent = (interactable, needCode) => {
+    let descContent = document.createElement('p')
+    if ( needCode ) descContent.textContent = 'Enter code'
+    else if ( interactable.popup.includes('vaccine') ) {
+        descContent = document.createElement('img')
+        descContent.src = `/assets/images/${interactable.popup}.png`
+    }
+    else descContent.textContent = interactable.popup
+    return descContent
+}
 
 const renderEnemies = (room2Render) => {
     const currentRoomEnemies = enemies.get(getCurrentRoomId())
@@ -409,7 +408,7 @@ const defineVision = (element) => {
     if ( element.type === TRACKER ) return createAndAddClass('div', 'vision')
     const vision = createAndAddClass('div', 'vision')
     vision.style.height = `${element.vision}px`
-    for ( let i = 0; i < 100; i++ ) {
+    for ( let i = 0; i < 20; i++ ) {
         const visionComponent = document.createElement('div')
         vision.append(visionComponent)
     }

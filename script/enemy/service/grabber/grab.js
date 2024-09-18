@@ -7,7 +7,9 @@ import {
     INVESTIGATE,
     NO_OFFENCE,
     RANGER,
+    SCORCHER,
     STAND_AND_WATCH,
+    STINGER,
     TRACKER } from '../../util/enemy-constants.js'
 import { 
     addAllAttributes,
@@ -80,7 +82,7 @@ export class GrabberGrabService {
         addClass(this.enemy.sprite, 'grab')
         setGrabbed(true)
         getCurrentRoomEnemies().forEach(elem => {
-            if ( elem.type === RANGER && elem.state === GO_FOR_RANGED ) return
+            if ( [RANGER, STINGER, SCORCHER].includes(elem.type) && elem.state === GO_FOR_RANGED ) return
             else elem.state = STAND_AND_WATCH
         })
         this.enemy.state = GRAB

@@ -12,7 +12,7 @@ import { renderPasswordInput } from './password-manager.js'
 import { renderUi, renderWeaponUi, quitPage } from './user-interface.js'
 import { getGrabBar, getPauseContainer, getPlayer, getUiEl } from './elements.js'
 import { activateProgress, deactivateProgress, getProgress } from './progress-manager.js'
-import { countItem, findEquippedWeaponById, pickupDrop, removeInventory, renderInventory, useInventoryResource } from './inventory.js'
+import { countItem, findEquippedWeaponById, pickupDrop, removeInventory, renderInventory, updateInteractablePopups, useInventoryResource } from './inventory.js'
 import { 
     addClass,
     angleOf2Points,
@@ -59,7 +59,8 @@ import {
     setShootPressed,
     setSprintPressed,
     setUpPressed, 
-    getCurrentRoomId} from './variables.js'
+    getCurrentRoomId,
+    getAnimatedLimbs} from './variables.js'
 import { enemies } from './enemy/util/enemies.js'
 
 export const control = () => {
@@ -331,12 +332,14 @@ export const managePause = () => {
         removeClass(getPlayer(), 'run')
         removeClass(getPlayer(), 'walk')
         getUiEl().remove()
-        findHealtStatusChildByClassName('infected-container').style.visibility = 'hidden'
+        document.querySelectorAll('.animation').forEach(elem => elem.style.animationPlayState = 'paused')
+        getAnimatedLimbs().forEach(elem => elem.pause())
         return
     }
     setPauseCause(null)
     renderUi()
-    findHealtStatusChildByClassName('infected-container').style.visibility = ''
+    document.querySelectorAll('.animation').forEach(elem => elem.style.animationPlayState = 'running')
+    getAnimatedLimbs().forEach(elem => elem.play())
     if ( !isMoving() ) return
     if ( !getAimMode() ) addClass(getPlayer(), 'walk')
     else if ( getSprintPressed() ) startSprint()
@@ -356,6 +359,7 @@ const escapeDown = () => {
 const hDown = () => {
     if ( getPause() || getGrabbed() ) return
     heal()
+    updateInteractablePopups()
 }
 
 const wUp = () => disableDirection(setUpPressed, setDownPressed)

@@ -1,44 +1,44 @@
 .enemy {
-  position: absolute;
   z-index: 5;
+  position: absolute;
 }
 
 .enemy-collider {
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
 }
 
 .torturer-collider,
 .grabber-collider,
 .scorcher-collider {
-  height: 37px;
   width: 37px;
+  height: 37px;
 }
 
 .soul-drinker-collider {
-  height: 28px;
   width: 28px;
+  height: 28px;
 }
 
 .rock-crusher-collider {
-  height: 46px;
   width: 46px;
+  height: 46px;
 }
 
 .tracker-collider {
-  height: 45px;
   width: 45px;
+  height: 45px;
 }
 
 .ranger-collider {
-  height: 32px;
   width: 32px;
+  height: 32px;
 }
 
 .spiker-collider {
-  height: 27px;
   width: 27px;
+  height: 27px;
 }
 
 .stinger-collider {
@@ -47,17 +47,17 @@
 }
 
 .vision {
+  top: 50%;
+  left: 50%;
   width: 1px;
   position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translateX(-50%) translateY(-50%);
   transform-origin: top;
+  transform: translateX(-50%) translateY(-50%);
 }
 
 .vision > div {
   width: 100%;
-  height: 1%;
+  height: 5%;
 }
 
 .enemy-forward-detector, .enemy-backward-detector {
@@ -69,8 +69,8 @@
 }
 
 .enemy-collider > div:nth-of-type(1) {
-  border: 1px solid black;
   position: absolute;
+  border: 1px solid black;
 }
 
 .torturer-collider > div:nth-of-type(1),
@@ -129,31 +129,31 @@
 .stinger-collider > div:nth-of-type(1) > div:nth-of-type(1),
 .stinger-collider > div:nth-of-type(1) > div:nth-of-type(2) {
   position: absolute;
-  border: 1px solid black;
-  filter: brightness(66%);
   border-radius: 1px;
+  filter: brightness(66%);
+  border: 1px solid black;
 }
 
 .torturer-collider > div:nth-of-type(1) > div:nth-of-type(1),
 .torturer-collider > div:nth-of-type(1) > div:nth-of-type(2) {
+  top: 2px;
   width: 6px;
   height: 16px;
-  top: 2px;
 }
 
 .scorcher-collider > div:nth-of-type(1) > div:nth-of-type(1),
 .scorcher-collider > div:nth-of-type(1) > div:nth-of-type(2) {
+  top: 2px;
   width: 6px;
   height: 22px;
-  top: 2px;
   border-radius: 5px;
 }
 
 .grabber-collider > div:nth-of-type(1) > div:nth-of-type(1),
 .grabber-collider > div:nth-of-type(1) > div:nth-of-type(2) {
+  top: 2px;
   width: 7px;
   height: 22px;
-  top: 2px;
 }
 
 .grabber-collider > div:nth-of-type(1) > div:nth-of-type(1) {
@@ -166,40 +166,40 @@
 
 .soul-drinker-collider > div:nth-of-type(1) > div:nth-of-type(1),
 .soul-drinker-collider > div:nth-of-type(1) > div:nth-of-type(2) {
+  top: 2px;
   width: 4px;
   height: 16px;
-  top: 2px;
 }
 
 .rock-crusher-collider > div:nth-of-type(1) > div:nth-of-type(1),
 .rock-crusher-collider > div:nth-of-type(1) > div:nth-of-type(2) {
+  top: 6px;
   width: 8px;
   height: 28px;
-  top: 6px;
 }
 
 .tracker-collider > div:nth-of-type(1) > div:nth-of-type(1),
 .tracker-collider > div:nth-of-type(1) > div:nth-of-type(2) {
+  top: -8px;
   width: 6px;
   height: 38px;
-  top: -8px;
 }
 
 .tracker-collider > div:nth-of-type(1) > div:nth-of-type(1) {
-  border-bottom-right-radius: 7px;
   border-top-left-radius: 7px;
+  border-bottom-right-radius: 7px;
 }
 
 .tracker-collider > div:nth-of-type(1) > div:nth-of-type(2) {
-  border-bottom-left-radius: 7px;
   border-top-right-radius: 7px;
+  border-bottom-left-radius: 7px;
 }
 
 .ranger-collider > div:nth-of-type(1) > div:nth-of-type(1),
 .ranger-collider > div:nth-of-type(1) > div:nth-of-type(2) {
+  top: 2px;
   width: 6px;
   height: 21px;
-  top: 2px;
 }
 
 .stinger-collider > div:nth-of-type(1) > div:nth-of-type(1),
@@ -214,43 +214,43 @@
 
 .stinger-collider > div:nth-of-type(1) > div:nth-of-type(1) {
   transform: rotateZ(-60deg);
-  border-top-right-radius: 50%;
   border-top-left-radius: 50%;
+  border-top-right-radius: 50%;
 }
 
 .stinger-collider > div:nth-of-type(1) > div:nth-of-type(1)::after,
 .stinger-collider > div:nth-of-type(1) > div:nth-of-type(2)::after {
+  top: 100%;
   content: "";
-  display: block;
   width: 100%;
   height: 200%;
-  background-color: inherit;
+  display: block;
   position: absolute;
-  top: 100%;
+  background-color: inherit;
   border: 1px solid black;
   border-top: unset !important;
 }
 
 .stinger-collider > div:nth-of-type(1) > div:nth-of-type(1)::after {
-  transform: rotateZ(60deg) translateX(-13px) translateY(6px);
   border-bottom-left-radius: 50px;
+  transform: rotateZ(60deg) translateX(-13px) translateY(6px);
 }
 
 .stinger-collider > div:nth-of-type(1) > div:nth-of-type(2)::after {
-  transform: rotateZ(-60deg) translateX(13px) translateY(6px);
   border-bottom-right-radius: 50px;
+  transform: rotateZ(-60deg) translateX(13px) translateY(6px);
 }
 
 .spiker-collider > div:nth-of-type(1) > div:nth-of-type(1) {
   width: 0;
+  left: 50%;
   height: 0;
-  background-color: transparent !important;
+  bottom: 100%;
+  position: absolute;
+  border-bottom: 5px solid white;
   border-left: 5px solid transparent;
   border-right: 5px solid transparent;
-  border-bottom: 5px solid white;
-  position: absolute;
-  left: 50%;
-  bottom: 100%;
+  background-color: transparent !important;
   transform: translateY(-3px) translateX(-50%);
 }
 
@@ -275,13 +275,13 @@
 .spiker-collider > div:nth-of-type(1) > div:nth-of-type(2) {
   width: 0;
   height: 0;
-  background-color: transparent !important;
-  border-left: 5px solid transparent;
-  border-right: 5px solid transparent;
-  border-top: 5px solid white;
-  position: absolute;
   left: 50%;
   top: 100%;
+  position: absolute;
+  border-top: 5px solid white;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  background-color: transparent !important;
   transform: translateY(3px) translateX(-50%);
 }
 
@@ -293,13 +293,13 @@
 .grabber-collider > div:nth-of-type(1) > div:nth-of-type(3),
 .scorcher-collider > div:nth-of-type(1) > div:nth-of-type(3),
 .stinger-collider > div:nth-of-type(1) > div:nth-of-type(3) {
-  position: absolute;
-  left: 50%;
   top: 50%;
+  left: 50%;
+  position: absolute;
   border-radius: 50%;
-  transform: translateX(-50%) translateY(-50%);
   border: 1px solid black;
   filter: brightness(33%);
+  transform: translateX(-50%) translateY(-50%);
 }
 
 .torturer-collider > div:nth-of-type(1) > div:nth-of-type(3),
@@ -328,14 +328,14 @@
 
 .spiker-collider > div:nth-of-type(1) > div:nth-of-type(3) {
   width: 0;
+  top: 50%;
   height: 0;
-  background-color: transparent !important;
+  right: 100%;
+  position: absolute;
+  border-right: 5px solid white;
   border-top: 5px solid transparent;
   border-bottom: 5px solid transparent;
-  border-right: 5px solid white;
-  position: absolute;
-  top: 50%;
-  right: 100%;
+  background-color: transparent !important;
   transform: translateX(-3px) translateY(-50%);
 }
 
@@ -351,71 +351,71 @@
 
 .spiker-collider > div:nth-of-type(1) > div:nth-of-type(4) {
   width: 0;
+  top: 50%;
   height: 0;
-  background-color: transparent !important;
+  left: 100%;
+  position: absolute;
+  border-left: 5px solid white;
   border-top: 5px solid transparent;
   border-bottom: 5px solid transparent;
-  border-left: 5px solid white;
-  position: absolute;
-  top: 50%;
-  left: 100%;
+  background-color: transparent !important;
   transform: translateX(3px) translateY(-50%);
 }
 
 .ranger-collider > div:nth-of-type(1) > div:nth-of-type(5) {
-  position: absolute;
+  left: 50%;
+  top: -18px;
   width: 8px;
   height: 8px;
-  top: -18px;
-  left: 50%;
+  position: absolute;
   border-radius: 50%;
   border: 1px solid black;
   transform: translateX(-50%);
 }
 
 .spiker-collider > div:nth-of-type(1) > div:nth-of-type(5) {
+  top: 50%;
+  left: 50%;
   width: 50%;
   height: 50%;
   border-radius: 50%;
-  background-color: white !important;
-  left: 50%;
-  top: 50%;
-  transform: translateX(-50%) translateY(-50%);
   position: absolute;
   border: 1px solid black;
+  background-color: white !important;
+  transform: translateX(-50%) translateY(-50%);
 }
 
 .ranger-bullet,
 .scorcher-bullet,
 .stinger-bullet {
-  position: absolute;
   width: 8px;
   height: 8px;
+  position: absolute;
   border-radius: 50%;
   border: 1px solid black;
 }
 
 .stinger-collider > div:nth-of-type(1) > div:nth-of-type(4) {
+  left: 50%;
   width: 5px;
   height: 14px;
-  border: 1px solid black;
-  position: absolute;
-  left: 50%;
   bottom: 100%;
+  position: absolute;
+  border: 1px solid black;
   transform: translateX(-50%);
 }
 
 .stinger-collider > div:nth-of-type(1) > div:nth-of-type(4)::after {
-  content: "";
-  width: 7px;
-  height: 7px;
-  background-color: rgb(177, 151, 5);
-  border-radius: 50%;
-  border: 1px solid black;
-  position: absolute;
-  bottom: 100%;
   left: 50%;
+  width: 7px;
+  content: "";
+  height: 7px;
+  bottom: 100%;
+  border-radius: 50%;
+  position: absolute;
+  border: 1px solid black;
   transform: translateX(-50%);
+  background-color: rgb(177, 151, 5);
 }
 
 .body-transition {
@@ -429,14 +429,14 @@
 .ranger-collider > div:nth-of-type(1) > .attack,
 .grabber-collider > div:nth-of-type(1) > .attack,
 .scorcher-collider > div:nth-of-type(1) > .attack {
-  animation-name: normalAttack;
   animation-duration: 600ms;
+  animation-name: normalAttack;
   animation-direction: alternate;
 }
 
 .stinger-collider > div:nth-of-type(1) > .attack {
-  animation-name: stingerAttack;
   animation-duration: 600ms;
+  animation-name: stingerAttack;
   animation-duration: alternate;
 }
 
@@ -463,15 +463,15 @@
 }
 
 .path-point {
-  position: absolute;
   width: 10px;
   height: 10px;
+  position: absolute;
 }
 
 .damaged,
 .damaged > div {
-  background-color: white !important;
   filter: brightness(1000%);
+  background-color: white !important;
 }
 
 .no-transition {
@@ -479,11 +479,11 @@
 }
 
 .fire {
-  position: absolute;
-  bottom: 100%;
-  width: 200%;
-  height: 200%;
   left: 50%;
+  width: 200%;
+  bottom: 100%;
+  height: 200%;
+  position: absolute;
   transform: translateX(-50%);
 }
 
@@ -551,9 +551,10 @@
 }
 
 .dead {
-  transition: 1s;
-  z-index: 0;
-  opacity: 0.1;
+  animation-duration: 1s;
+  animation-name: corpse;
+  animation-fill-mode: forwards;
+  animation-direction: alternate;
 }
 
 .dead > div:nth-of-type(1) > div:nth-of-type(1),

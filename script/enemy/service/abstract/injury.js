@@ -2,15 +2,15 @@ import { enemies } from '../../util/enemies.js'
 import { dropLoot } from '../../../loot-manager.js'
 import { isWeapon } from '../../../weapon-details.js'
 import { CHASE, STUNNED } from '../../util/enemy-constants.js'
-import { getCriticalChance, getCurrentRoomId } from '../../../variables.js'
-import { addAllAttributes, addClass, containsClass, createAndAddClass, removeClass } from '../../../util.js'
+import { getAnimatedLimbs, getCriticalChance, getCurrentRoomId, setAnimatedLimbs } from '../../../variables.js'
+import { getCurrentRoomInteractables, setCurrentRoomInteractables } from '../../../elements.js'
+import { addAllAttributes, addAllClasses, addClass, containsClass, createAndAddClass, removeClass } from '../../../util.js'
 import { 
     activateProgress,
     deactivateProgress,
     updateKillAllDoors,
     updateKillAllEnemies,
     updateKillAllInteractables } from '../../../progress-manager.js'
-import { getCurrentRoomInteractables, setCurrentRoomInteractables } from '../../../elements.js'
 
 export class AbstractInjuryService {
     constructor(enemy) {
@@ -46,9 +46,9 @@ export class AbstractInjuryService {
         if ( virus ) damageEl.style.color = virus
         if ( virus === 'yellow' ) addClass(damageEl, 'yellow')
         damageEl.textContent = damage
-        addClass(damageEl, `enemy-damage-container-${Math.ceil(Math.random() * 6)}`)
+        addAllClasses(damageEl, `enemy-damage-container-${Math.ceil(Math.random() * 6)}`, 'animation')
         this.enemy.sprite.append(damageEl)
-        setTimeout(() => damageEl.remove(), 1000)
+        damageEl.addEventListener('animationend', () => damageEl.remove())
     }
 
     killEnemy() {
@@ -75,18 +75,22 @@ export class AbstractInjuryService {
     }
 
     deathAnimation() {
-        addClass(this.enemy.sprite, 'dead')
+        addClass(this.enemy.sprite, 'dead', 'animation')
         const body = this.enemy.sprite.firstElementChild.firstElementChild
-        removeClass(body, 'body-transition')
-        this.enemy.sprite.style.transform = `rotateZ(${(Math.random() * 5) - 15}deg)`
         Array.from(body.children).forEach(limb => {
             if ( containsClass(limb, 'fire') ) limb.style.opacity = 0
-            limb.style.transformOrigin = 'top'
-            limb.style.transform = `
-                translateX(${Math.floor(Math.random() * 5) - 15}px)
-                translateY(${Math.floor(Math.random() * 5) - 15}px)
-                rotateZ(${Math.floor(Math.random() * 90) - 270}deg)
-                `
+            const animatedLimb = limb.animate([
+                {transform: 'rotateZ(0deg)'},
+                {transform: `rotateZ(${Math.floor((Math.random() * 360) - 180)}deg)`}
+            ], {
+                duration: 500,
+                fill: 'forwards'
+            })
+            addClass(limb, 'animation')
+            setAnimatedLimbs([...getAnimatedLimbs(), animatedLimb])
+            animatedLimb.addEventListener('finish', () => {
+                setAnimatedLimbs(getAnimatedLimbs().filter(elem => elem !== animatedLimb))                
+            })
         })
     }
 

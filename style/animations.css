@@ -323,6 +323,24 @@
   }
 }
 
+@keyframes fade-out {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+@keyframes corpse {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.1;
+  }
+}
+
 @keyframes rotation {
   0% {
     transform: rotateZ(0deg);

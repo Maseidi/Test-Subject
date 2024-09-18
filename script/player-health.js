@@ -2,7 +2,7 @@ import { healthManager } from './user-interface.js'
 import { CHASE, NO_OFFENCE } from './enemy/util/enemy-constants.js'
 import { getInventory, useInventoryResource } from './inventory.js'
 import { getCurrentRoomEnemies, getHealthStatusContainer, getMapEl, getPlayer } from './elements.js'
-import { addClass, addFireEffect, isLowHealth, removeClass, findAttachmentsOnPlayer, createAndAddClass } from './util.js'
+import { addClass, addFireEffect, isLowHealth, removeClass, findAttachmentsOnPlayer, createAndAddClass, addAllClasses } from './util.js'
 import { 
     getBurning,
     getDownPressed,
@@ -96,7 +96,7 @@ const negateDirection = (setOppositeDir, setDir) => {
 
 export const damagePlayer = (damage) => {    
     if ( getNoOffenseCounter() !== 0 ) return
-    addClass(getMapEl(), 'camera-shake')
+    addAllClasses(getMapEl(), 'camera-shake', 'animation')
     getMapEl().addEventListener('animationend', () => removeClass(getMapEl(), 'camera-shake'))
     if ( getInventory().flat().find(item => item && item.name === 'armor') ) damage /= 2
     let newHealth = getHealth() - damage
@@ -126,7 +126,7 @@ const decideLowHealth = (lowHealthContainerCallbackFn, classCallbackFn) => {
 
 const renderHealthStatusChildByClassName = (className) => {
     if ( findHealtStatusChildByClassName(className) ) return
-    getHealthStatusContainer().append(createAndAddClass('div', className))    
+    getHealthStatusContainer().append(createAndAddClass('div', className, 'animation'))
 }
 
 const removeHealthStatusChildByClassName = (className) => findHealtStatusChildByClassName(className)?.remove()
@@ -185,6 +185,7 @@ export const infectPlayer2SpecificVirus = (virusName) => {
     const virusBar = infectedContainer.firstElementChild
     const virusIcon = document.createElement('img')
     virusIcon.src = `/assets/images/${virusName}virus.png`
+    addClass(virusIcon, 'animation')
     virusBar.append(virusIcon)
     setInfection([...getInfection(), virusName])
 }

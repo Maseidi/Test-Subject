@@ -274,9 +274,9 @@ const blindEnemies = (throwable) => {
         setStunnedCounter(1)
         if ( enemy.state !== GO_FOR_RANGED ) enemy.state = STUNNED
     })
-    const flashbang = createAndAddClass('div', 'flashbang')
+    const flashbang = createAndAddClass('div', 'flashbang', 'animation')
     getMapEl().append(flashbang)
-    setTimeout(() => flashbang.remove(), 1000)
+    flashbang.addEventListener('animationend', () => flashbang.remove())
 }
 
 const THROWABLE_FUNCTIONALITY = new Map([

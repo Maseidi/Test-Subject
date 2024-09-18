@@ -13,7 +13,7 @@ class Popup {
 }
 
 const popups = [
-    new Popup('This is a test message', Progress.builder().setRenderProgress('5').setProgress2Active('6'), 120)
+    new Popup('This is a test message', Progress.builder().setRenderProgress('2').setProgress2Active('6'), 120)
 ]
 
 export const managePopup = () => {
@@ -43,7 +43,7 @@ export const renderPopup = (progress) => {
 
 export const closePopup = (popup, active) => {
     addClass(popup, 'popup-fade-out')
-    popup.addEventListener('transitionend', () => {
+    popup.addEventListener('animationend', () => {
         popup.remove()
         activateProgress(active)
     })
@@ -56,21 +56,22 @@ export const manageRoomName = () => {
     roomName.setAttribute('time', time + 1)
     if ( time !== 300 ) return
     removeClass(roomName, 'room-name-animation')
-    addClass(roomName, 'room-name-fade-out')
+    addClass(roomName, 'room-name-fade-out', 'animation')
+    roomName.addEventListener('animationend', () => roomName.remove())
 }
 
 export const renderRoomName = (name) => {
     if ( getRoomNameContainer().firstElementChild ) getRoomNameContainer().firstElementChild.remove()
-    const roomNamePopup = createAndAddClass('div', 'room-name-popup', 'ui-theme', 'room-name-animation')
+    const roomNamePopup = createAndAddClass('div', 'room-name-popup', 'ui-theme', 'room-name-animation', 'animation')
     const chars = name.split('')
     for ( let i = 0; i < chars.length; i++ ) {
         const char = chars[i]
         const charEl = document.createElement('span')
+        addClass(charEl, 'animation')
         charEl.textContent = char
         charEl.style.animationDelay = `${i * 100}ms`
         roomNamePopup.append(charEl)
     }
     getRoomNameContainer().append(roomNamePopup)
-    roomNamePopup.addEventListener('transitionend', () => roomNamePopup.remove())
     roomNamePopup.setAttribute('time', 0)
 }

@@ -14,11 +14,11 @@ export const enemies = new Map([
     [2, []],
     [9, []],
     [16, [
-        new Torturer(
+        new Stinger(
             1,
             new SinglePointPath(100, 100),
             new Loot(RANDOM, 2),
-            Progress.builder().setProgress2Active('1')
+            Progress.builder().setProgress2Active('100')
         ),
         new SoulDrinker(
             1,

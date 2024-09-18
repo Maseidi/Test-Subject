@@ -22,7 +22,7 @@ export const setPlayerY = (val) => {
 }
 export const getPlayerY = () => playerY
 
-let currentRoomId = 16
+let currentRoomId = 1
 export const setCurrentRoomId = (val) => {
     currentRoomId = val
 }
@@ -315,3 +315,9 @@ export const setInfection = (val) => {
     infection = val
 }
 export const getInfection = () => infection
+
+let animatedLimbs = []
+export const setAnimatedLimbs = (val) => {
+    animatedLimbs = val
+}
+export const getAnimatedLimbs = () => animatedLimbs

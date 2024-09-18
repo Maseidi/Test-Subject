@@ -185,8 +185,9 @@
 }
 
 .popup-fade-out {
-  opacity: 0;
-  transition: 1s;
+  animation-duration: 1s;
+  animation-name: fade-out;
+  animation-direction: alternate;
 }
 
 .progress-popup > span {
@@ -227,13 +228,14 @@
   opacity: 0;
   margin-left: 2px;
   margin-right: 2px;
-  animation-name: room-name-character;
-  animation-direction: alternate;
-  animation-fill-mode: forwards;
   animation-duration: 300ms;
+  animation-fill-mode: forwards;
+  animation-direction: alternate;
+  animation-name: room-name-character;
 }
 
 .room-name-fade-out {
-  opacity: 0;
-  transition: 5s;
+  animation-duration: 5s;
+  animation-name: fade-out;
+  animation-direction: alternate;
 }

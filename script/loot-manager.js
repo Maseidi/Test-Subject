@@ -87,7 +87,7 @@ const dropRandomLoot = (left, top, amount) => {
         {obj: Bandage, chance: 0.1},         {obj: Antidote, chance: 0.1},
         {obj: RifleAmmo, chance: 0.1},       {obj: ShotgunShells, chance: 0.2},
         {obj: SmgAmmo, chance: 0.3},         {obj: Coin, chance: 0.4},
-        {obj: PistolAmmo, chance: 0.6},
+        {obj: PistolAmmo, chance: 0.5},      {obj: null, chance: 0.1},
         {obj: Adrenaline, chance: 0.0001,    predicate: getAdrenalinesDropped},
         {obj: HealthPotion, chance: 0.0001,  predicate: getHealthPotionsDropped}, 
         {obj: EnergyDrink, chance: 0.0001,   predicate: getEnergyDrinksDropped},
@@ -126,6 +126,7 @@ const dropDeterminedLoot = (decision, left, top, amount) => {
 }
 
 const decideItemDrop = (drop, chance, left, top, amount) => {
+    if ( !drop ) return null
     if ( Math.random() < chance ) var result = new drop(left, top, amount)
     Array.from([
         {expected: ADRENALINE,    setter: setAdrenalinesDropped,   getter: getAdrenalinesDropped},

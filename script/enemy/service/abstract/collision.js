@@ -27,9 +27,9 @@ export class AbstractCollisionService {
             .find(e =>
                   e.health !== 0 && 
                   e.sprite !== this.enemy.sprite 
-                  && collide(this.enemy.sprite.firstElementChild.children[2], e.sprite.firstElementChild, 0) 
                   && e.type !== TRACKER && e.type !== SPIKER
-                  && e.state !== INVESTIGATE && e.state !== GO_FOR_RANGED)
+                  && e.state !== INVESTIGATE && e.state !== GO_FOR_RANGED
+                  && collide(this.enemy.sprite.firstElementChild.children[2], e.sprite.firstElementChild, 0))
         this.enemy.collidingEnemy = null
         return collidingEnemy
     }

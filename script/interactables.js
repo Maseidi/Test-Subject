@@ -307,7 +307,7 @@ export const interactables = new Map([
     ],[16, 
         [
         new WeaponDrop(500, 600, 'famas', 50, 5, 5, 5, 5, 5),
-        new SmgAmmo(500, 700, 90),
+        new SmgAmmo(500, 700, 90, Progress.builder().setRenderProgress('100')),
         new Bandage(600, 700, 5),
         new Antidote(600, 600, 5),
         new Grenade(500, 800, 3),

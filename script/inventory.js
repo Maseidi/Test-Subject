@@ -104,6 +104,8 @@ export const pickupDrop = (drop) => {
     checkSpecialScenarios()
     handleVaccinePickup(dropObject)
     updateInteractablePopups()
+    console.log(inventory);
+    
 }
 
 const searchPack = () => {

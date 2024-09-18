@@ -44,6 +44,10 @@ export const addClass = (elem, className) => elem.classList.add(className)
 
 export const removeClass = (elem, className) => elem.classList.remove(className)
 
+export const addAllClasses = (root, ...classNames) => classNames.forEach(className => addClass(root, className))
+
+export const removeAllClasses = (root, ...classNames) => classNames.forEach(className => removeClass(root, className))
+
 export const containsClass = (elem, className) => elem?.classList?.contains(className)
 
 export const appendAll = (root, ...elems) => elems.forEach(elem => root.append(elem))
@@ -175,8 +179,8 @@ export const addExplosion = (left, top) => {
     explosion.setAttribute('time', 0)
     explosion.append(explosionImage)
     getCurrentRoom().append(explosion)
-    addClass(getMapEl(), 'explosion-shake')
-    setTimeout(() => removeClass(getMapEl(), 'explosion-shake'), 300)
+    addAllClasses(getMapEl(), 'explosion-shake', 'animation')
+    getMapEl().addEventListener('animationend', () => removeClass(getMapEl(), 'explosion-shake'))
     getCurrentRoomExplosions().push(explosion)
 }
 
