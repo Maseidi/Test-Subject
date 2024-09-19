@@ -349,3 +349,14 @@
     transform: rotateZ(360deg);
   }
 }
+
+@keyframes activePopup {
+  0% {
+    opacity: 0;
+    bottom: calc(100% - 20px);
+  }
+  100% {
+    opacity: 1;
+    bottom: calc(100% + 20px);
+  }
+}

@@ -16,13 +16,15 @@ import {
     STUNNED } from './enemy/util/enemy-constants.js'
 import { 
     addAllAttributes,
+    addAllClasses,
     addExplosion,
     calculateBulletSpeed,
     collide,
     containsClass,
     createAndAddClass,
     element2Object,
-    getProperty } from './util.js'
+    getProperty, 
+    removeAllClasses} from './util.js'
 import { 
     getCurrentRoom,
     getCurrentRoomEnemies,
@@ -105,32 +107,35 @@ const calculateNewRoomLeftAndTop = (prevLoader) => {
     setRoomTop(getRoomTop() - top + getProperty(prevLoader, 'top', 'px'))
 }
 
+let isStealthKill
 const manageInteractables = () => {
     setElementInteractedWith(null)
     getCurrentRoomInteractables().forEach((int) => {
         const popup = int.children[1] ?? int.children[0]
-        const isStealthKill = popup.lastElementChild.lastElementChild.src       
+        isStealthKill = popup.lastElementChild.lastElementChild.src       
         const range = isStealthKill ? 5 : 20
         if ( !getElementInteractedWith() && collide(getPlayer().firstElementChild, int, range) ) {
-            if ( isEnemyNotified(isStealthKill, popup) ) return
-            popup.style.bottom = `calc(100% + 20px)`
-            popup.style.opacity = `1`
+            if ( isEnemyNotified(popup) ) {
+                removeAllClasses(popup, 'active-popup', 'animation')
+                return
+            }
+            addAllClasses(popup, 'active-popup', 'animation')
             setElementInteractedWith(int)
             return
         }
-        popup.style.bottom = `calc(100% - 20px)`
-        popup.style.opacity = `0`
+        removeAllClasses(popup, 'active-popup', 'animation')
     })
 }
 
-const isEnemyNotified = (isStealthKill, popup) => {
+const isEnemyNotified = (popup) => {
     if ( !isStealthKill ) return false
     const enemyElem = popup.parentElement.parentElement.parentElement
     const enemyPath = enemyElem.previousSibling.id
     const index = Number(enemyPath.replace('path-', ''))
     const validStates = [LOST, INVESTIGATE, MOVE_TO_POSITION, STUNNED]
-    const enemyState = enemies.get(getCurrentRoomId())[index].state
-    if ( !validStates.includes(enemyState) ) return true
+    const enemyObj = enemies.get(getCurrentRoomId())[index]
+    if ( !validStates.includes(enemyObj.state) || enemyObj.health === 0 ) return true
+    return false
 }
 
 const manageEnemies = () => {

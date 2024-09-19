@@ -13,7 +13,16 @@ class Popup {
 }
 
 const popups = [
-    new Popup('This is a test message', Progress.builder().setRenderProgress('2').setProgress2Active('6'), 120)
+    new Popup('Use <span>W</span> <span>A</span> <span>S</span> <span>D</span> to move around', 
+        Progress.builder().setRenderProgress('1').setProgress2Active('2'), 300),
+    new Popup('Press <span>F</span> to pickup items', Progress.builder().setRenderProgress('2'), 300),
+    new Popup('Use <span>TAB</span> to open inventory', Progress.builder().setRenderProgress('3').setProgress2Active('4'), 300),
+    new Popup('You can do a wide variety of things with any item in your inventory', 
+        Progress.builder().setRenderProgress('4').setProgress2Active('5'), 300
+    ),
+    new Popup('Open inventory when interacting with doors and use the needed key to open them', 
+        Progress.builder().setRenderProgress('6'), 300
+    ),
 ]
 
 export const managePopup = () => {
@@ -32,7 +41,7 @@ export const renderPopup = (progress) => {
     addClass(popup, 'progress-popup')
     addClass(popup, 'ui-theme')
     const content = document.createElement('p')
-    content.textContent = popupObj.message
+    content.innerHTML = popupObj.message
     const close = document.createElement('span')
     close.textContent = 'continue'
     close.addEventListener('click', () => closePopup(popup, popupObj.progress2Active))

@@ -1,7 +1,6 @@
 .interactable {
   object-fit: cover;
   position: absolute;
-  border-radius: 50%;
 }
 
 .interactable > img {
@@ -20,8 +19,14 @@
   left: 50%;
   transform: translateX(-50%);
   bottom: calc(100% - 20px);
-  transition: 300ms;
   letter-spacing: 1px;
+}
+
+.active-popup {
+  animation-duration: 300ms;
+  animation-name: activePopup;
+  animation-fill-mode: forwards;
+  animation-direction: alternate;
 }
 
 .interactable > div > p {

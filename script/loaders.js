@@ -17,51 +17,27 @@ class Loader {
     }
 }
 
-class LeftLoader_FromTop extends Loader {
+export class LeftLoader_FromTop extends Loader {
     constructor(className, height, top, door) {
         super(className, 5, height, -26, top, null, null, door)
     }
 }
 
-class LeftLoader_FromBottom extends Loader {
-    constructor(className, height, bottom, door) {
-        super(className, 5, height, -26, null, null, bottom, door)
-    }
-}
-
-class RightLoader_FromTop extends Loader {
+export class RightLoader_FromTop extends Loader {
     constructor(className, height, top, door) {
         super(className, 5, height, null, top, -26, null, door)
     }
 }
 
-class RightLoader_FromBottom extends Loader {
-    constructor(className, height, bottom, door) {
-        super(className, 5, height, null, null, -26, bottom, door)
-    }
-}
-
-class TopLoader_FromLeft extends Loader {
+export class TopLoader_FromLeft extends Loader {
     constructor(className, width, left, door) {
         super(className, width, 5, left, -26, null, null, door)
     }
 }
 
-class TopLoader_FromRight extends Loader {
-    constructor(className, width, right, door) {
-        super(className, width, 5, null, -26, right, null, door)
-    }
-}
-
-class BottomLoader_FromLeft extends Loader {
+export class BottomLoader_FromLeft extends Loader {
     constructor(className, width, left, door) {
         super(className, width, 5, left, null, null, -26, door)
-    }
-}
-
-class BottomLoader_FromRight extends Loader {
-    constructor(className, width, right, door) {
-        super(className, width, 5, null, null, right, -26, door)
     }
 }
 
@@ -95,40 +71,21 @@ export const getDoorObject = (doorElem) => {
 
 export const loaders = new Map([
     [1, [
-        new RightLoader_FromTop(2, 100, 300),
-        new RightLoader_FromBottom(3, 100, 300),
-        new BottomLoader_FromRight(4, 100, 300),
-        new BottomLoader_FromLeft(5, 100, 300),
-        new LeftLoader_FromBottom(6, 100, 300),
-        new LeftLoader_FromTop(7, 100, 300),
-        new TopLoader_FromLeft(8, 200, 450),
-        ]
-    ], 
+        new TopLoader_FromLeft(2, 100, 200, 
+            new Door('black', 'Dorm door', 'Danger outside', 'dorm', Progress.builder().setRenderProgress('7'))
+        ),
+    ]],
     [2, [
-        new LeftLoader_FromBottom(1, 100, 0),
-        new TopLoader_FromRight(9, 100, 0)
-        ]
-    ],
-    [9, [
+        new BottomLoader_FromLeft(1, 100, 450),
+        new TopLoader_FromLeft(3, 100, 450)
+    ]],
+    [3, [
         new BottomLoader_FromLeft(2, 100, 450),
-        new LeftLoader_FromBottom(15, 100, 200),
-        new TopLoader_FromLeft(16, 100, 450),
-        new RightLoader_FromBottom(17, 100, 200),
-        ]
-    ],
-    [16, [
-        new BottomLoader_FromLeft(9, 100, 100),
-        new LeftLoader_FromTop(37, 100, 400),
-        new TopLoader_FromLeft(38, 250, 475),
-        new RightLoader_FromTop(39, 300, 300)
-        ]
-    ],
-    [37, [
-        new RightLoader_FromTop(16, 100, 350),
-        new TopLoader_FromLeft(62, 100, 240),
-        new TopLoader_FromLeft(63, 100, 580),
-        new TopLoader_FromRight(64, 100, 240),
-        new TopLoader_FromRight(65, 100, 580)
-    ]
-    ],
+        new TopLoader_FromLeft(4, 100, 450, new Door(
+            'black', 'Metal door', 'In need of right direction', null, Progress.builder().setRenderProgress('9')
+        )),
+    ]],
+    [4, [
+
+    ]]
 ])

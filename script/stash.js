@@ -151,8 +151,6 @@ const move2Stash = (object2Move, reduce) => {
     handleEquippableDrop(object2Move)
     removeStash()
     renderStash()
-    console.log(stash);
-    
 }
 
 const move2Inventory = (object2Move, reduce) => {

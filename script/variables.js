@@ -28,13 +28,13 @@ export const setCurrentRoomId = (val) => {
 }
 export const getCurrentRoomId = () => currentRoomId
 
-let roomTop = 50000
+let roomTop = 49500
 export const setRoomTop = (val) => {
     roomTop = val
 }
 export const getRoomTop = () => roomTop
 
-let roomLeft = 50217.5
+let roomLeft = 50500
 export const setRoomLeft = (val) => {
     roomLeft = val
 }

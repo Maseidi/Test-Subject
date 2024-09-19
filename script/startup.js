@@ -1,4 +1,3 @@
-import { setupNewGame } from './new-game.js'
 import { renderUi } from './user-interface.js'
 import { loadCurrentRoom } from './room-loader.js'
 import { appendAll, createAndAddClass } from './util.js'
@@ -17,7 +16,6 @@ import {
     setShadowContainer} from './elements.js'
 
 export const startUp = () => {
-    setupNewGame()
     renderRoomNameContainer()
     renderPauseContainer()
     renderPopupContainer()
@@ -98,7 +96,7 @@ const renderPlayer = () => {
 }
 
 export const centralizePlayer = () => {
-    const xDiff = getMapX() + getPlayerX() - window.innerWidth / 2
-    const yDiff = getMapY() + getPlayerY() - window.innerHeight / 2
+    const xDiff = getMapX() + getPlayerX() - window.innerWidth / 2 + 12
+    const yDiff = getMapY() + getPlayerY() - window.innerHeight / 2 + 12
     getMapEl().style.transform = `translateX(${-xDiff}px) translateY(${-yDiff}px)`
 }

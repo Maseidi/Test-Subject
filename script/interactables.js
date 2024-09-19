@@ -276,60 +276,25 @@ export class BlueVaccine extends Vaccine {
 }
 
 export const interactables = new Map([
-    [1 ,
-        [
-        new Coin(100, 100, 100),
-        new Bandage(300, 300, 4),
-        new HardDrive(500, 500, 3),
-        new PC(700, 700),
-        new Stash(900, 900),
-        new WeaponDrop(800, 200, 'remington1858', 0, 1, 1, 1, 1, 1),
-        new WeaponDrop(100, 900, 'sniper', 0, 1, 1, 1, 1, 1),
-        new WeaponDrop(200, 950, 'riotgun', 0, 1, 1, 1, 1, 1),
-        new WeaponDrop(300, 1000, 'mauser', 0, 1, 1, 1, 1, 1),
-        new PistolAmmo(200, 700, 10),
-        new ShotgunShells(300, 800, 11),
-        new SmgAmmo(200, 400, 100),
-        new MagnumAmmo(500, 100, 1),
-        new RifleAmmo(400, 100, 2),
-        new VendingMachine(900, 100),
-        new Crate(900, 300, new Loot(GRENADE_LOOT, 1)),
-        new Crate(900, 400, new Loot(FLASHBANG_LOOT, 2)),
-        new Crate(900, 500, new Loot(MAGNUM_AMMO_LOOT, 3)),
-        new Crate(900, 600, new Loot(RIFLE_AMMO_LOOT, 4)),
-        new Crate(900, 700, new Loot(SHOTGUN_SHELLS_LOOT, 5)),
-        new Crate(900, 800, new SingleLoot(P90)),
-        ]
-    ], [2, 
-        []
-    ],[9, 
-        []
-    ],[16, 
-        [
-        new WeaponDrop(500, 600, 'famas', 50, 5, 5, 5, 5, 5),
-        new SmgAmmo(500, 700, 90),
-        new Bandage(600, 700, 5),
-        new Antidote(600, 600, 5),
-        new Grenade(500, 800, 3),
-        new Flashbang(600, 800, 5),
-        new RedVaccine(650, 800, 2),
-        new BlueVaccine(700, 800, 2),
-        new GreenVaccine(750, 800, 2),
-        new PurpleVaccine(800, 800, 2),
-        new YellowVaccine(850, 800, 2),
-        new EnergyDrink(650, 700, 1),
-        new HealthPotion(700, 700, 1),
-        new Adrenaline(750, 700, 1),
-        new LuckPills(800, 700, 1),
-        ]
-    ],[37, 
-        [
-        new PistolAmmo(100, 100, 10),
-        new ShotgunShells(200, 100, 11),
-        new SmgAmmo(300, 100, 100),
-        new MagnumAmmo(400, 100, 1),
-        new RifleAmmo(500, 100, 2),
-        new Crate(600, 100, new SingleLoot(PISTOL4)),
-        ]
-    ]
+    [1, [
+        new Note(100, 850, "Prisoner's note", 'Memories of a prisoner', 
+            "It's just so weird. All I remember was my normal life. Now I see I'm here. I don't know if I'm kidnapped by a criminal or arrested by cops. What did I do? Why would this happen? Am I a prisoner of gvernment? But why? I wish there was somebody that could help me. Hear me, ANSWER me.... I tried to get out of here. But I heard strange noises past the door. I was frightened. I AM frightened...", 
+            Progress.builder().setRenderProgress('2').setProgress2Active('3')),
+        new Note(300, 100, "Prisoner's note", 'Memories of a prisoner', 
+            "Ok, It's been 2 days I'm stuck in this shithole and seems no one's responsible for this mess. The thirst and the hunger are really getting out of control. I gotta do something or else I might starve here. Guess I have to be brave enough to witness what really is on the other side of the door. I assume there were people trapped here before. Now it's my turn. I'll face my destiny. I just need to be brave.",
+            Progress.builder().setRenderProgress('5')
+        ),
+        new KeyDrop(50, 50, 1, 'Dorm key', 'Dormitory key', 'dorm', Progress.builder().setRenderProgress('5').setProgress2Active('6'))
+    ]],
+    [2, []],
+    [3, [
+        new Note(475, 900, "Fugitive's memories", "Possible use case of vaccines", "I somehow managed to get past the monster, but it appears the more progress I make, the harder the challenges turn out to be. I got wounded by one of the monsters and I am feeling a lot of pain inside me. It is BURNING ME... I don't know what to do. I feel like I need to inject some of these vaccines on the ground. This might be a risk, but this is my last resort. All that matters is getting rid of this scorching pain inside me. Even if it costs my life...", 
+        Progress.builder().setRenderProgress('9')),
+        new RedVaccine(425, 900, 1),
+        new RedVaccine(525, 900, 1),
+        new Lever(475, 100, Progress.builder().setKillAll('8').setProgress2Active('8'))
+    ]],
+    [4, [
+
+    ]]
 ])

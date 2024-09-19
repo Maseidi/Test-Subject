@@ -1,7 +1,7 @@
 import { NOTE } from './loot.js'
-import { walls } from './walls.js'
+import { Wall, walls } from './walls.js'
 import { rooms } from './rooms.js'
-import { loaders } from './loaders.js'
+import { BottomLoader_FromLeft, LeftLoader_FromTop, loaders, RightLoader_FromTop, TopLoader_FromLeft } from './loaders.js'
 import { isWeapon } from './weapon-details.js'
 import { enemies } from './enemy/util/enemies.js'
 import { interactables } from './interactables.js'
@@ -78,7 +78,7 @@ const renderRoom = () => {
     room2Render.style.left =            `${getRoomLeft()}px`
     room2Render.style.top =             `${getRoomTop()}px`
     getShadowContainer().firstElementChild.style.background = 
-        `radial-gradient(circle at center,transparent,${new Array(roomObject.darkness).fill('black').join(',')})`
+        `radial-gradient(circle at center,transparent,black ${roomObject.darkness * 10}%)`
     setCurrentRoom(room2Render)
     getRoomContainer().append(room2Render)
 }
@@ -91,10 +91,9 @@ const manageRoomProgress = () => {
 }
 
 const renderWalls = () => {
-    walls.get(getCurrentRoomId()).forEach((elem, index) => {
-        const wall = createAndAddClass('div', 'solid')
+    [...walls.get(getCurrentRoomId()), ...getSideWalls()].forEach((elem, index) => {
+        const wall = createAndAddClass('div', 'solid', 'wall')
         wall.id = `wall-${index+1}`
-        wall.style.backgroundColor = `darkgray`
         wall.style.width = `${elem.width}px`
         wall.style.height = `${elem.height}px`
         if ( elem.left !== null )        wall.style.left = `${elem.left}px`
@@ -108,6 +107,63 @@ const renderWalls = () => {
         getCurrentRoom().append(wall)
         getCurrentRoomSolid().push(wall)
     })
+}
+
+const getSideWalls = () => {
+    const { top, left, right, bottom } = getAllLoaders()
+    const result = []
+    let topOffset = 0
+    top.forEach(topLoader => {
+        const width = topLoader.left - topOffset
+        const wall = new Wall(width, 5, topOffset, null, 0, null, true)
+        topOffset = topLoader.left + topLoader.width
+        result.push(wall)
+    })
+    let leftOffset = 0
+    left.forEach(leftLoader => {
+        const height = leftLoader.top - leftOffset
+        const wall = new Wall(5, height, 0, null, leftOffset, null, true)
+        leftOffset = leftLoader.top + leftLoader.height
+        result.push(wall)
+    })
+    let rightOffset = 0
+    right.forEach(rightLoader => {
+        const height = rightLoader.top - rightOffset
+        const wall = new Wall(5, height, null, 0, rightOffset, null, true)
+        rightOffset = rightLoader.top + rightLoader.height
+        result.push(wall)
+    })
+    let bottomOffset = 0
+    bottom.forEach(bottomLoader => {
+        const width = bottomLoader.left - bottomOffset
+        const wall = new Wall(width, 5, bottomOffset, null, null, 0, true)
+        bottomOffset = bottomLoader.left + bottomLoader.width
+        result.push(wall)
+    })
+    return result
+}
+
+const getAllLoaders = () => {
+    const { width, height } = rooms.get(getCurrentRoomId())
+    const top =    new TopLoader_FromLeft   (null, 100, width)
+    const left =   new LeftLoader_FromTop   (null, 100, height)
+    const right =  new RightLoader_FromTop  (null, 100, height)
+    const bottom = new BottomLoader_FromLeft(null, 100, width)
+
+    return {
+        top:   [...filterLoadersByPosition('top'),   top],   left:   [...filterLoadersByPosition('left'),   left],
+        right: [...filterLoadersByPosition('right'), right], bottom: [...filterLoadersByPosition('bottom'), bottom],
+    }
+}
+
+const filterLoadersByPosition = (direction) => {
+    const { length, base } = ['top', 'bottom'].includes(direction) ? 
+                             { length: 'height', base: 'left'} : 
+                             { length: 'width',  base: 'top' }
+
+    const result = loaders.get(getCurrentRoomId())
+        .filter(loader => loader[length] === 5 && loader[direction] === -26).sort((a, b) => a[base] - b[base])
+    return result
 }
 
 const createTrackers = (solid, elem) => {
@@ -410,7 +466,7 @@ const defineVision = (element) => {
     if ( element.type === TRACKER ) return createAndAddClass('div', 'vision')
     const vision = createAndAddClass('div', 'vision')
     vision.style.height = `${element.vision}px`
-    for ( let i = 0; i < 20; i++ ) {
+    for ( let i = 0; i < 50; i++ ) {
         const visionComponent = document.createElement('div')
         vision.append(visionComponent)
     }

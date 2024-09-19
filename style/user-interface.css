@@ -171,7 +171,9 @@
   width: 500px;
   padding: 20px;
   display: flex;
+  line-height: 30px;
   border-radius: 5px;
+  letter-spacing: 2px;
   text-align: justify;
   flex-direction: column;
   animation-duration: 300ms;
@@ -183,6 +185,11 @@
 
 .progress-popup > p {
   color: wheat;
+}
+
+.progress-popup > p > span {
+  padding: 3px;
+  border: 1px solid wheat;
 }
 
 .popup-fade-out {
