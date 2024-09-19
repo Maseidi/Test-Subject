@@ -1,5 +1,5 @@
 .enemy {
-  z-index: 5;
+  z-index: 40;
   position: absolute;
 }
 
@@ -555,11 +555,6 @@
   animation-name: corpse;
   animation-fill-mode: forwards;
   animation-direction: alternate;
-}
-
-.dead > div:nth-of-type(1) > div:nth-of-type(1),
-.dead > div:nth-of-type(1) > div:nth-of-type(1) > div {
-  transition: 1s;
 }
 
 .popup > div > img {

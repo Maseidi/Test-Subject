@@ -2,9 +2,16 @@ import { enemies } from '../../util/enemies.js'
 import { dropLoot } from '../../../loot-manager.js'
 import { isWeapon } from '../../../weapon-details.js'
 import { CHASE, STUNNED } from '../../util/enemy-constants.js'
-import { getAnimatedLimbs, getCriticalChance, getCurrentRoomId, setAnimatedLimbs } from '../../../variables.js'
 import { getCurrentRoomInteractables, setCurrentRoomInteractables } from '../../../elements.js'
-import { addAllAttributes, addAllClasses, addClass, containsClass, createAndAddClass, removeClass } from '../../../util.js'
+import { getAnimatedLimbs, getCriticalChance, getCurrentRoomId, setAnimatedLimbs } from '../../../variables.js'
+import { 
+    addAllAttributes,
+    addAllClasses,
+    addClass,
+    containsClass,
+    createAndAddClass,
+    removeAllClasses,
+    removeClass } from '../../../util.js'
 import { 
     activateProgress,
     deactivateProgress,
@@ -75,8 +82,9 @@ export class AbstractInjuryService {
     }
 
     deathAnimation() {
-        addClass(this.enemy.sprite, 'dead', 'animation')
+        addAllClasses(this.enemy.sprite, 'dead', 'animation')
         const body = this.enemy.sprite.firstElementChild.firstElementChild
+        removeAllClasses(body, 'body-transition', 'no-transition')
         Array.from(body.children).forEach(limb => {
             if ( containsClass(limb, 'fire') ) limb.style.opacity = 0
             const animatedLimb = limb.animate([

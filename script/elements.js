@@ -123,3 +123,9 @@ export const setHealthStatusContainer = (val) => {
     healthStatusContainer = val
 }
 export const getHealthStatusContainer = () => healthStatusContainer
+
+let shadowContainer
+export const setShadowContainer = (val) => {
+    shadowContainer = val
+}
+export const getShadowContainer = () => shadowContainer

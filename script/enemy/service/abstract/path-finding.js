@@ -20,8 +20,6 @@ export class AbstractPathFindingService {
     }
 
     #findWall() {
-        const wallIntheWay = this.enemy.wallInTheWay
-        if ( wallIntheWay && wallIntheWay !== 'out-of-range' ) return wallIntheWay
         let wall
         for ( const solid of getCurrentRoomSolid() ) {
             if ( containsClass(solid.parentElement, 'enemy') )   continue

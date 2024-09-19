@@ -110,29 +110,17 @@ export const loaders = new Map([
         ]
     ],
     [9, [
-        new BottomLoader_FromLeft(2, 100, 450, new Door(
-            'violet', 'Test door for code', 'Door for testing code', null, Progress.builder().setRenderProgress('200'), 'main-hall'
-        )),
+        new BottomLoader_FromLeft(2, 100, 450),
         new LeftLoader_FromBottom(15, 100, 200),
         new TopLoader_FromLeft(16, 100, 450),
-        new RightLoader_FromBottom(17, 100, 200, new Door(
-            'purple', 'Test door for key', 'Door for testing key', 'generosity', Progress.builder().setRenderProgress('100')
-        )),
+        new RightLoader_FromBottom(17, 100, 200),
         ]
     ],
     [16, [
-        new BottomLoader_FromLeft(9, 100, 100, new Door(
-            'green', 'Test door', 'Door for testing', 'love', Progress.builder().setRenderProgress('10')
-        )),
-        new LeftLoader_FromTop(37, 100, 400, new Door(
-            'red', 'Test door 2', 'Door for testing', null, Progress.builder().setRenderProgress('11')
-        )),
-        new TopLoader_FromLeft(38, 250, 475, new Door(
-            'blue', 'Test door 2', 'Door for testing', null, Progress.builder().setRenderProgress('12')
-        )),
-        new RightLoader_FromTop(39, 300, 300, new Door(
-            'yellow', 'Test door 3', 'Door for testing', null, Progress.builder().setKillAll('6')
-        ))
+        new BottomLoader_FromLeft(9, 100, 100),
+        new LeftLoader_FromTop(37, 100, 400),
+        new TopLoader_FromLeft(38, 250, 475),
+        new RightLoader_FromTop(39, 300, 300)
         ]
     ],
     [37, [

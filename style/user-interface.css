@@ -1,32 +1,33 @@
 .ui-theme {
-  position: fixed;
   left: 0;
-  z-index: 8;
-  background: rgba(0, 0, 0, 0.67);
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  z-index: 70;
+  position: fixed;
   backdrop-filter: blur(3.3px);
+  background: rgba(0, 0, 0, 0.67);
   -webkit-backdrop-filter: blur(3.3px);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
 }
 
 .ui {
-  width: max-content;
-  height: fit-content;
   top: 10px;
-  border-radius: 0 5px 5px 0;
-  display: flex;
-  flex-direction: column;
-  padding: 20px 30px;
   gap: 20px;
+  display: flex;
+  width: max-content;
+  padding: 20px 30px;
+  height: fit-content;
+  flex-direction: column;
+  border-radius: 0 5px 5px 0;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.9);
 }
 
 .health-bar,
 .stamina-bar {
   height: 8px;
-  background-color: rgba(255, 255, 255, 0.5);
-  box-shadow: 1px 1px 10px white;
-  backdrop-filter: blur(3.3px);
-  -webkit-backdrop-filter: blur(3.3px);
   transform: skewX(-40deg);
+  backdrop-filter: blur(3.3px);
+  box-shadow: 1px 1px 10px white;
+  -webkit-backdrop-filter: blur(3.3px);
+  background-color: rgba(255, 255, 255, 0.5);
 }
 
 .health,
@@ -36,8 +37,8 @@
 }
 
 .health {
-  background: linear-gradient(to right, #cb2d3e, #ef473a);
   transition: 300ms;
+  background: linear-gradient(to right, #cb2d3e, #ef473a);
 }
 
 .stamina {
@@ -48,8 +49,8 @@
   width: 100%;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
 }
 
 .weapon-icon {
@@ -58,26 +59,26 @@
 }
 
 .ammo-count {
+  gap: 20px;
   color: wheat;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  gap: 20px;
 }
 
 .quit {
-  position: fixed;
+  gap: 20px;
   right: 100px;
   bottom: 30px;
-  width: fit-content;
-  display: flex;
-  flex-direction: row;
-  justify-content: left;
-  align-items: center;
-  gap: 20px;
-  color: wheat;
   padding: 5px;
+  display: flex;
+  color: wheat;
+  position: fixed;
   transition: 100ms;
+  width: fit-content;
+  flex-direction: row;
+  align-items: center;
+  justify-content: left;
 }
 
 .quit:hover {
@@ -85,8 +86,8 @@
 }
 
 .quit > p:nth-of-type(1) {
-  border: 1px solid wheat;
   padding: 2px 7px;
+  border: 1px solid wheat;
   text-transform: uppercase;
 }
 
@@ -95,17 +96,17 @@
 }
 
 .grab-bar {
+  left: 50%;
   width: 30%;
+  z-index: 40;
+  bottom: 40%;
   height: 16px;
   position: fixed;
-  left: 50%;
-  bottom: 40%;
-  transform: translateX(-50%) skewX(-40deg);
-  box-shadow: 1px 1px 10px darkmagenta;
-  backdrop-filter: blur(3.3px);
-  background: linear-gradient(to right, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7));
   border: 3px solid wheat;
-  z-index: 5;
+  backdrop-filter: blur(3.3px);
+  box-shadow: 1px 1px 10px darkmagenta;
+  transform: translateX(-50%) skewX(-40deg);
+  background: linear-gradient(to right, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7));
 }
 
 .grab-bar > .breakpoint {
@@ -136,37 +137,37 @@
 }
 
 .grab-bar > .slider {
+  top: 50%;
   width: 1%;
   height: 200%;
-  background-color: wheat;
   position: absolute;
-  top: 50%;
+  background-color: wheat;
   transform: translateY(-50%);
 }
 
 .grab-bar-message-container {
-  display: flex;
-  align-items: center;
   gap: 5px;
-  text-transform: capitalize;
-  position: absolute;
-  color: white;
   bottom: 30px;
+  display: flex;
+  color: white;
+  position: absolute;
+  align-items: center;
+  text-transform: capitalize;
+  animation-duration: 200ms;
   animation-name: grabBarMessage;
   animation-direction: alternate;
   animation-iteration-count: infinite;
-  animation-duration: 200ms;
 }
 
 .grab-bar-btn {
-  border: 1px solid white;
   padding: 1px 5px 0 5px;
+  border: 1px solid white;
 }
 
 .progress-popup {
-  left: 100%;
   gap: 10px;
   top: 10px;
+  left: 100%;
   width: 500px;
   padding: 20px;
   display: flex;
@@ -191,15 +192,15 @@
 }
 
 .progress-popup > span {
-  align-self: end;
-  text-transform: capitalize;
-  color: white;
-  border-bottom: 1px solid white;
-  width: max-content;
   padding: 5px;
+  color: white;
+  align-self: end;
+  transition: 300ms;
+  width: max-content;
+  text-transform: capitalize;
   border-top-left-radius: 5px;
   border-top-right-radius: 5px;
-  transition: 300ms;
+  border-bottom: 1px solid white;
 }
 
 .progress-popup > span:hover {
@@ -207,21 +208,21 @@
 }
 
 .room-name-animation {
-  animation-name: room-name-popup;
-  animation-direction: alternate;
   animation-duration: 500ms;
+  animation-direction: alternate;
+  animation-name: room-name-popup;
 }
 
 .room-name-popup {
   left: 100%;
   bottom: 10px;
-  transform: translateX(-100%);
-  width: max-content;
-  color: wheat;
   padding: 20px;
-  box-shadow: 5px 5px 25px rgba(0, 0, 0, 0.9);
+  color: wheat;
+  width: max-content;
   border-top-left-radius: 5px;
+  transform: translateX(-100%);
   border-bottom-left-radius: 5px;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.9);
 }
 
 .room-name-popup > span {

@@ -10,7 +10,7 @@ import { heal, damagePlayer, findHealtStatusChildByClassName } from './player-he
 import { renderThrowable } from './throwable-loader.js'
 import { renderPasswordInput } from './password-manager.js'
 import { renderUi, renderWeaponUi, quitPage } from './user-interface.js'
-import { getGrabBar, getPauseContainer, getPlayer, getUiEl } from './elements.js'
+import { getGrabBar, getPauseContainer, getPlayer, getRoomNameContainer, getUiEl } from './elements.js'
 import { activateProgress, deactivateProgress, getProgress } from './progress-manager.js'
 import { countItem, findEquippedWeaponById, pickupDrop, removeInventory, renderInventory, updateInteractablePopups, useInventoryResource } from './inventory.js'
 import { 
@@ -334,12 +334,16 @@ export const managePause = () => {
         getUiEl().remove()
         document.querySelectorAll('.animation').forEach(elem => elem.style.animationPlayState = 'paused')
         getAnimatedLimbs().forEach(elem => elem.pause())
+        getRoomNameContainer().style.visibility = 'hidden'
+        findHealtStatusChildByClassName('infected-container').style.visibility = 'hidden'
         return
     }
     setPauseCause(null)
     renderUi()
     document.querySelectorAll('.animation').forEach(elem => elem.style.animationPlayState = 'running')
     getAnimatedLimbs().forEach(elem => elem.play())
+    getRoomNameContainer().style.visibility = 'visible'
+    findHealtStatusChildByClassName('infected-container').style.visibility = 'visible'
     if ( !isMoving() ) return
     if ( !getAimMode() ) addClass(getPlayer(), 'walk')
     else if ( getSprintPressed() ) startSprint()

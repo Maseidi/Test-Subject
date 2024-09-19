@@ -2,7 +2,7 @@ import { healthManager } from './user-interface.js'
 import { CHASE, NO_OFFENCE } from './enemy/util/enemy-constants.js'
 import { getInventory, useInventoryResource } from './inventory.js'
 import { getCurrentRoomEnemies, getHealthStatusContainer, getMapEl, getPlayer } from './elements.js'
-import { addClass, addFireEffect, isLowHealth, removeClass, findAttachmentsOnPlayer, createAndAddClass, addAllClasses } from './util.js'
+import { addClass, addFireEffect, isLowHealth, removeClass, findAttachmentsOnPlayer, createAndAddClass, addAllClasses, removeAllClasses } from './util.js'
 import { 
     getBurning,
     getDownPressed,
@@ -97,7 +97,7 @@ const negateDirection = (setOppositeDir, setDir) => {
 export const damagePlayer = (damage) => {    
     if ( getNoOffenseCounter() !== 0 ) return
     addAllClasses(getMapEl(), 'camera-shake', 'animation')
-    getMapEl().addEventListener('animationend', () => removeClass(getMapEl(), 'camera-shake'))
+    getMapEl().addEventListener('animationend', () => removeAllClasses(getMapEl(), 'camera-shake', 'animation'))
     if ( getInventory().flat().find(item => item && item.name === 'armor') ) damage /= 2
     let newHealth = getHealth() - damage
     newHealth = newHealth < 0 ? 0 : newHealth

@@ -30,7 +30,7 @@ export class AbstractVisionService {
             }
             for ( const wall of walls )
                 if ( collide(component, wall, 0) ) {
-                    this.enemy.wallInTheWay = wall
+                    this.enemy.wallInTheWay = wall.id
                     return
                 }
         }

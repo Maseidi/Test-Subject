@@ -1,3 +1,4 @@
+import { setupNewGame } from './new-game.js'
 import { renderUi } from './user-interface.js'
 import { loadCurrentRoom } from './room-loader.js'
 import { appendAll, createAndAddClass } from './util.js'
@@ -5,19 +6,23 @@ import { getMapX, getMapY, getPlayerX, getPlayerY } from './variables.js'
 import { 
     getHealthStatusContainer,
     getMapEl,
+    getShadowContainer,
     setHealthStatusContainer,
     setMapEl,
     setPauseContainer,
     setPlayer,
     setPopupContainer,
     setRoomContainer,
-    setRoomNameContainer } from './elements.js'
+    setRoomNameContainer, 
+    setShadowContainer} from './elements.js'
 
 export const startUp = () => {
+    setupNewGame()
     renderRoomNameContainer()
     renderPauseContainer()
     renderPopupContainer()
     renderHealthStatusContainer()
+    renderShadowContainer()
     renderUi()
     renderMap()
     renderRoomContainer()
@@ -38,6 +43,12 @@ const renderHealthStatusContainer = () => {
     const virusBar = createAndAddClass('div', 'virus-bar')
     infectedContainer.append(virusBar)
     getHealthStatusContainer().append(infectedContainer)
+}
+
+const renderShadowContainer = () => {
+    renderContainer('shadow-container', setShadowContainer)
+    const shadow = createAndAddClass('div', 'shadow')
+    getShadowContainer().append(shadow)
 }
 
 const renderContainer = (className, setter) => {

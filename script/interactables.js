@@ -307,7 +307,7 @@ export const interactables = new Map([
     ],[16, 
         [
         new WeaponDrop(500, 600, 'famas', 50, 5, 5, 5, 5, 5),
-        new SmgAmmo(500, 700, 90, Progress.builder().setRenderProgress('100')),
+        new SmgAmmo(500, 700, 90),
         new Bandage(600, 700, 5),
         new Antidote(600, 600, 5),
         new Grenade(500, 800, 3),
@@ -317,8 +317,6 @@ export const interactables = new Map([
         new GreenVaccine(750, 800, 2),
         new PurpleVaccine(800, 800, 2),
         new YellowVaccine(850, 800, 2),
-        new Lever(100, 700, Progress.builder().setProgress2Active('11').setProgress2Deactive('12')),
-        new KeyDrop(100, 800, 3, 'Test key', 'Key for testing', 'love', Progress.builder().setKillAll('6')),
         new EnergyDrink(650, 700, 1),
         new HealthPotion(700, 700, 1),
         new Adrenaline(750, 700, 1),

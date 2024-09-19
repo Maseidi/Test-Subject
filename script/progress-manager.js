@@ -1,11 +1,11 @@
+import { getDoorObject } from './loaders.js'
 import { renderPopup } from './popup-manager.js'
 import { getCurrentRoomId } from './variables.js'
 import { enemies } from './enemy/util/enemies.js'
 import { interactables } from './interactables.js'
+import { getCurrentRoomDoors } from './elements.js'
 import { addClass, element2Object, removeClass } from './util.js'
 import { renderInteractable, spawnEnemy } from './room-loader.js'
-import { getCurrentRoom, getCurrentRoomDoors } from './elements.js'
-import { getDoorObject } from './loaders.js'
 
 let progress = {
     [Number.MAX_SAFE_INTEGER] : true,
@@ -81,7 +81,7 @@ const updateEnemies = (name) =>
         if ( enemy.renderProgress !== name ) return
         enemy.killAll = null
         enemy.renderProgress = String(Number.MAX_SAFE_INTEGER)
-        spawnEnemy(enemy, getCurrentRoom())
+        spawnEnemy(enemy)
     })
 
 export const updateKillAllEnemies = () => { 
@@ -92,7 +92,7 @@ export const updateKillAllEnemies = () => {
             return
         enemy.killAll = null
         enemy.renderProgress = String(Number.MAX_SAFE_INTEGER)
-        spawnEnemy(enemy, getCurrentRoom())
+        spawnEnemy(enemy)
     })
 }   
 
@@ -101,7 +101,7 @@ const updateInteractables = (name) =>
         if ( int.renderProgress !== name ) return 
         int.killAll = null
         int.renderProgress = String(Number.MAX_SAFE_INTEGER)
-        renderInteractable(getCurrentRoom(), int, index)
+        renderInteractable(int, index)
     })
 
 export const updateKillAllInteractables = () => {
@@ -111,6 +111,6 @@ export const updateKillAllInteractables = () => {
             return
         int.killAll = null
         int.renderProgress = String(Number.MAX_SAFE_INTEGER)
-        renderInteractable(getCurrentRoom(), int, index)
+        renderInteractable(int, index)
     })
 }

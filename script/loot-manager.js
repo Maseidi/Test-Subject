@@ -77,7 +77,7 @@ export const dropLoot = (rootElem, isEnemy) => {
     if ( progress2Active ) interactable = {...interactable, progress2Active}
     if ( progress2Deactive ) interactable = {...interactable, progress2Deactive}
     interactables.get(getCurrentRoomId()).push(interactable)
-    renderInteractable(getCurrentRoom(), interactable)
+    renderInteractable(interactable)
 }
 
 const dropRandomLoot = (left, top, amount) => {

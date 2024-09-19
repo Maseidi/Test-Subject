@@ -7,17 +7,21 @@
 .loader,
 .solid,
 .map,
-.room-container > div {
+.room {
   position: absolute;
+}
+
+.room {
+  background-color: lightgrey;
 }
 
 .tl,
 .bl,
 .tr,
 .br {
-  position: absolute;
   width: 10px;
   height: 10px;
+  position: absolute;
 }
 
 .tl {
@@ -31,21 +35,21 @@
 }
 
 .bl {
-  bottom: -50px;
   left: -50px;
+  bottom: -50px;
 }
 
 .br {
-  bottom: -50px;
   right: -50px;
+  bottom: -50px;
 }
 
 .camera-shake {
   animation-name: camshake;
   animation-duration: 200ms;
-  animation-timing-function: linear;
   animation-iteration-count: 1;
   animation-direction: alternate;
+  animation-timing-function: linear;
 }
 
 .low-health {
@@ -53,21 +57,21 @@
 }
 
 .flame {
-  position: absolute;
   width: 30px;
   height: 25px;
+  position: absolute;
 }
 
 .poison {
-  position: absolute;
   width: 60px;
   height: 50px;
+  position: absolute;
 }
 
 .flashbang {
   top: 0;
   left: 0;
-  z-index: 7;
+  z-index: 60;
   width: 100%;
   height: 100%;
   position: fixed;
@@ -81,9 +85,9 @@
 }
 
 .explosion {
-  position: absolute;
   width: 10px;
-  z-index: 5;
+  z-index: 40;
+  position: absolute;
 }
 
 .explosion > img {
@@ -91,18 +95,18 @@
 }
 
 .explosion-shake {
-  animation-name: camera-explosion;
+  filter: blur(1px);
   animation-duration: 200ms;
-  animation-timing-function: linear;
   animation-iteration-count: 1;
   animation-direction: alternate;
-  filter: blur(1px);
+  animation-name: camera-explosion;
+  animation-timing-function: linear;
 }
 
 .door {
+  transition: 600ms;
   position: absolute;
   border: 1px solid black;
-  transition: 600ms;
 }
 
 .ver-1.open {
@@ -130,4 +134,14 @@
 .hor-3.open > div,
 .hor-4.open > div {
   display: none;
+}
+
+.shadow {
+  top: 0;
+  left: 0;
+  z-index: 35;
+  width: 100vw;
+  height: 100vh;
+  position: fixed;
+  background: radial-gradient(circle at center, transparent, black, black);
 }

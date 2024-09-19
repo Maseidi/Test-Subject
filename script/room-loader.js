@@ -42,19 +42,19 @@ import {
     setCurrentRoomThrowables,
     setCurrentRoomExplosions,
     setCurrentRoomDoors,
-    getCurrentRoomDoors } from './elements.js'
+    getCurrentRoomDoors, 
+    getShadowContainer,
+    getCurrentRoom} from './elements.js'
 
 export const loadCurrentRoom = () => {
     setStunnedCounter(0)
     initElements()
-    const room2Render = renderRoom()
-    renderWalls(room2Render)
-    renderLoaders(room2Render)
-    renderInteractables(room2Render)
-    renderEnemies(room2Render)
-    setCurrentRoom(room2Render)
+    renderRoom()
+    renderWalls()
+    renderLoaders()
+    renderInteractables()
+    renderEnemies()
     manageRoomProgress()
-    getRoomContainer().append(room2Render)
 }
 
 const initElements = () => {
@@ -71,14 +71,16 @@ const initElements = () => {
 }
 
 const renderRoom = () => {
-    const room = rooms.get(getCurrentRoomId())
-    const room2Render = createAndAddClass('div', `${getCurrentRoomId()}`)
-    room2Render.style.width =  `${room.width}px`
-    room2Render.style.height = `${room.height}px`
-    room2Render.style.left =   `${getRoomLeft()}px`
-    room2Render.style.top =    `${getRoomTop()}px`
-    room2Render.style.backgroundColor = `lightgray`
-    return room2Render
+    const roomObject = rooms.get(getCurrentRoomId())
+    const room2Render = createAndAddClass('div', 'room', `${getCurrentRoomId()}`)
+    room2Render.style.width =           `${roomObject.width}px`
+    room2Render.style.height =          `${roomObject.height}px`
+    room2Render.style.left =            `${getRoomLeft()}px`
+    room2Render.style.top =             `${getRoomTop()}px`
+    getShadowContainer().firstElementChild.style.background = 
+        `radial-gradient(circle at center,transparent,${new Array(roomObject.darkness).fill('black').join(',')})`
+    setCurrentRoom(room2Render)
+    getRoomContainer().append(room2Render)
 }
 
 const manageRoomProgress = () => {
@@ -88,7 +90,7 @@ const manageRoomProgress = () => {
     renderRoomName(room.label)
 }
 
-const renderWalls = (room2Render) => {
+const renderWalls = () => {
     walls.get(getCurrentRoomId()).forEach((elem, index) => {
         const wall = createAndAddClass('div', 'solid')
         wall.id = `wall-${index+1}`
@@ -103,7 +105,7 @@ const renderWalls = (room2Render) => {
             createTrackers(wall, elem)
             wall.setAttribute('side', false)  
         } else wall.setAttribute('side', true)    
-        room2Render.append(wall)
+        getCurrentRoom().append(wall)
         getCurrentRoomSolid().push(wall)
     })
 }
@@ -127,7 +129,7 @@ const createTrackers = (solid, elem) => {
     if ( right && bottom ) solid.append(bottomRight)
 }
 
-const renderLoaders = (room2Render) => {
+const renderLoaders = () => {
     loaders.get(getCurrentRoomId()).forEach((elem) => {
         const loader = createAndAddClass('div', elem.className, 'loader')
         loader.style.width = `${elem.width}px`
@@ -140,9 +142,9 @@ const renderLoaders = (room2Render) => {
         if ( door ) {
             if ( (door.renderProgress && !findProgressByName(door.renderProgress)) || enemiesLeft(door) ) var open = false
             else var open = true
-            renderDoor(elem, room2Render, open)
+            renderDoor(elem, open)
             }
-        room2Render.append(loader)
+        getCurrentRoom().append(loader)
         getCurrentRoomLoaders().push(loader)
     })
 }
@@ -153,7 +155,7 @@ const enemiesLeft = (object) => {
     return enemies.get(getCurrentRoomId()).find(enemy => enemy.health !== 0 && enemy.renderProgress <= killAll)
 }
 
-export const renderDoor = (loader, room2Render, open) => {    
+export const renderDoor = (loader, open) => {    
     const { door: doorObj, width, height, left, top, right, bottom } = loader
     const doorElem = object2Element(doorObj)
     addClass(doorElem, 'door')
@@ -171,7 +173,7 @@ export const renderDoor = (loader, room2Render, open) => {
     getCurrentRoomSolid().push(doorElem)
     getCurrentRoomInteractables().push(doorElem)
     getCurrentRoomDoors().push(doorElem)
-    room2Render.append(doorElem)
+    getCurrentRoom().append(doorElem)
 }
 
 const addPosition = (doorElem, input, direction, className, type) => {
@@ -183,11 +185,11 @@ const addPosition = (doorElem, input, direction, className, type) => {
     doorElem.style[direction] = `${output}px`
 }
 
-const renderInteractables = (room2Render) => 
+const renderInteractables = () => 
     interactables.get(getCurrentRoomId())
-        .forEach((interactable, index) => renderInteractable(room2Render, interactable, index))
+        .forEach((interactable, index) => renderInteractable(interactable, index))
 
-export const renderInteractable = (root, interactable, index) => {
+export const renderInteractable = (interactable, index) => {
     if ( !findProgressByName(interactable.renderProgress) ) return
     if ( enemiesLeft(interactable) ) return
     const int = object2Element(interactable)    
@@ -198,7 +200,7 @@ export const renderInteractable = (root, interactable, index) => {
     int.style.width = `${interactable.width}px`
     renderImage(int, interactable)
     renderPopUp(int, interactable)
-    root.append(int)
+    getCurrentRoom().append(int)
     if ( interactable.solid ) {
         getCurrentRoomSolid().push(int)
         createTrackers(int, interactable)
@@ -284,12 +286,12 @@ const getDescriptionContent = (interactable, needCode) => {
     return descContent
 }
 
-const renderEnemies = (room2Render) => {
+const renderEnemies = () => {
     const currentRoomEnemies = enemies.get(getCurrentRoomId())
     if ( !currentRoomEnemies ) return
     indexEnemies(currentRoomEnemies)
     const filteredEnemies = filterEnemies(currentRoomEnemies)
-    spawnEnemies(filteredEnemies, room2Render)
+    spawnEnemies(filteredEnemies)
 }
 
 const indexEnemies = (enemies) => enemies.forEach((enemy, index) => enemy.index = index)
@@ -298,11 +300,11 @@ const filterEnemies = (enemies) => enemies.filter(enemy =>
     enemy.health !== 0 && findProgressByName(enemy?.renderProgress) && !enemiesLeft(enemy)
 )
 
-const spawnEnemies = (enemies, room2Render) => enemies.forEach(elem => spawnEnemy(elem, room2Render))
+const spawnEnemies = (enemies) => enemies.forEach(elem => spawnEnemy(elem))
 
-export const spawnEnemy = (elem, room2Render) => {
+export const spawnEnemy = (elem) => {
     const enemy = defineEnemy(elem)
-    createPath(elem, elem.index, room2Render)
+    createPath(elem, elem.index)
     const enemyCollider = createAndAddClass('div', 'enemy-collider', `${elem.type}-collider`)
     const enemyBody = createAndAddClass('div', 'enemy-body', `${elem.type}-body`, 'body-transition')
     enemyBody.style.transform = `rotateZ(${elem.angle}deg)`
@@ -317,7 +319,7 @@ export const spawnEnemy = (elem, room2Render) => {
     const backwardDetector = defineBackwardDetector(elem)
     if ( backwardDetector ) enemyCollider.append(backwardDetector)
     enemy.append(enemyCollider)
-    room2Render.append(enemy)
+    getCurrentRoom().append(enemy)
     elem.sprite = enemy
     getCurrentRoomEnemies().push(elem)
     getCurrentRoomSolid().push(enemyCollider)
@@ -382,7 +384,7 @@ const handleKeyLoot = (element, enemy, name) => {
     )
 }
 
-const createPath = (elem, index, room2Render) => {
+const createPath = (elem, index) => {
     const path = document.createElement('div')
     path.id = `path-${index}`
     for ( let p of elem.waypoint.points ) {
@@ -391,7 +393,7 @@ const createPath = (elem, index, room2Render) => {
         point.style.top = `${p.y}px`
         path.append(point)
     }
-    room2Render.append(path)
+    getCurrentRoom().append(path)
 }
 
 const defineComponents = (element, enemyBody) => {

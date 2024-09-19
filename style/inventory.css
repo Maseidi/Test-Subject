@@ -65,7 +65,7 @@
   position: absolute;
   left: 100%;
   top: 0;
-  z-index: 3;
+  z-index: 20;
   text-transform: capitalize;
   animation-name: options-animation;
   animation-duration: 100ms;
@@ -116,7 +116,7 @@
   right: 0;
   bottom: 0;
   color: white;
-  z-index: 2;
+  z-index: 10;
 }
 
 .description {
@@ -202,7 +202,7 @@ div.selectable-slot {
   position: absolute;
   left: 0;
   top: 0;
-  z-index: 7;
+  z-index: 60;
   display: flex;
   flex-flow: row wrap;
 }

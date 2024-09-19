@@ -321,3 +321,9 @@ export const setAnimatedLimbs = (val) => {
     animatedLimbs = val
 }
 export const getAnimatedLimbs = () => animatedLimbs
+
+let dirtyRooms = []
+export const setDirtyRooms = (val) => {
+    dirtyRooms = val
+}
+export const getDirtyRooms = () => dirtyRooms

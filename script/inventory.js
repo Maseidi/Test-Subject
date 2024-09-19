@@ -14,7 +14,6 @@ import { getWeaponDetails, isWeapon } from './weapon-details.js'
 import { activateProgress, deactivateProgress, toggleDoor } from './progress-manager.js'
 import { useAntidote, useBandage, useHealthPotion, useVaccine } from './player-health.js'
 import { 
-    getCurrentRoom,
     getCurrentRoomEnemies,
     getCurrentRoomInteractables,
     getPauseContainer,
@@ -707,7 +706,7 @@ const drop = (item) => {
     interactables.get(getCurrentRoomId()).push(interactable)
     dropFromInventory(itemObj)
     handleVaccineDrop(itemObj)
-    renderInteractable(getCurrentRoom(), interactable)
+    renderInteractable(interactable)
     handleEquippableDrop(itemObj)
     renderInventory()
 }

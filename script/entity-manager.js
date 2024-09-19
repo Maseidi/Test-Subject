@@ -34,8 +34,6 @@ import {
     getPlayer, 
     getCurrentRoomPoisons,
     setCurrentRoomBullets,
-    setCurrentRoomFlames,
-    setCurrentRoomPoisons,
     getCurrentRoomThrowables,
     setCurrentRoomThrowables,
     getMapEl, 
@@ -58,7 +56,7 @@ import {
     setNoOffenseCounter,
     setRoomLeft,
     setRoomTop, 
-    setStunnedCounter} from './variables.js'
+    setStunnedCounter } from './variables.js'
 
 export const manageEntities = () => {
     manageSolidObjects()
@@ -74,8 +72,8 @@ export const manageEntities = () => {
 
 const manageSolidObjects = () => {
     setAllowMove(true)
-    if ( getCurrentRoomSolid().find(solid => collide(getPlayer().firstElementChild.children[1], solid, 12)) ) 
-        setAllowMove(false)
+    const collision = getCurrentRoomSolid().find(solid => collide(getPlayer().firstElementChild.children[1], solid, 12)) 
+    if ( collision ) setAllowMove(false)
 }
 
 let prevRoomId
@@ -195,26 +193,17 @@ const manageBullets = () => {
     setCurrentRoomBullets(getCurrentRoomBullets().filter(bullet => !bullets2Remove.get(bullet)))    
 }
 
-const manageFlames = () => handleObstacles(getCurrentRoomFlames, setCurrentRoomFlames, 900, setPlayer2Fire)
+const manageFlames = () => handleObstacles(getCurrentRoomFlames, 900, setPlayer2Fire)
 
-const managePoisons = () => handleObstacles(getCurrentRoomPoisons, setCurrentRoomPoisons, 600, poisonPlayer)
+const managePoisons = () => handleObstacles(getCurrentRoomPoisons, 600, poisonPlayer)
 
-const handleObstacles = (getItems, setItems, time, harmPlayer) => {
-    const items2Remove = new Map([])
+const handleObstacles = (getItems, time, harmPlayer) =>
     getItems().forEach(item => {
         const theTime = Number(item.getAttribute('time'))
-        if ( theTime === time ) {
-            item.remove()
-            items2Remove.set(item, true)
-        }
+        if ( theTime === time ) item.remove()
         item.setAttribute('time', theTime + 1)
-        if ( collide(item, getPlayer(), 0) ) {
-            harmPlayer()
-            items2Remove.set(item, true)
-        }    
+        if ( collide(item, getPlayer(), 0) ) harmPlayer()
     })
-    setItems(getItems().filter(item => !items2Remove.get(item)))
-}
 
 const manageThrowables = () => {
     const throwables2Remove = new Map([])
@@ -222,14 +211,10 @@ const manageThrowables = () => {
         const throwableObj = element2Object(throwable)
         let { 
             deg,
-            time,
-            name,
-            'base-speed': baseSpeed,
-            'speed-x': speedX,
-            'speed-y': speedY,
-            'diff-x': diffX,
-            'diff-y': diffY,
-            'acc-counter': accCounter } = throwableObj
+            time, name,
+            'speed-y': speedY, 'diff-x': diffX,
+            'base-speed': baseSpeed, 'speed-x': speedX,
+            'diff-y': diffY, 'acc-counter': accCounter } = throwableObj
 
         rotateThrowable(throwable, baseSpeed)
         handleInteractability(throwable, time, name, throwables2Remove)
@@ -241,12 +226,10 @@ const manageThrowables = () => {
             speedY = Math.sign(speedY) * Math.abs(newSpeed.speedY)
             addAllAttributes(
                 throwable,
-                'acc-counter', 0, 
-                'speed-x', speedX, 
-                'speed-y', speedY, 
-                'base-speed', baseSpeed - 2
-            )
+                'acc-counter', 0, 'speed-x', speedX, 
+                'speed-y', speedY, 'base-speed', baseSpeed - 2)
         }
+
         throwable.style.left = `${getProperty(throwable, 'left', 'px') + speedX}px`
         throwable.style.top = `${getProperty(throwable, 'top', 'px') + speedY}px`
         wallIntersection(throwable, speedX, speedY)
