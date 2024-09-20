@@ -1,131 +1,143 @@
-let mapEl
+let mapEl = null
 export const setMapEl = (val) => {
     mapEl = val
 }
 export const getMapEl = () => mapEl
 
-let roomContainer
+let roomContainer = null
 export const setRoomContainer = (val) => {
     roomContainer = val
 }
 export const getRoomContainer = () => roomContainer
 
-let pauseContainer
+let pauseContainer = null
 export const setPauseContainer = (val) => {
     pauseContainer = val
 }
 export const getPauseContainer = () => pauseContainer
 
-let uiEl
+let uiEl = null
 export const setUiEl = (val) => {
     uiEl = val
 }
 export const getUiEl = () => uiEl
 
-let currentRoom
+let currentRoom = null
 export const setCurrentRoom = (val) => {
     currentRoom = val
 }
 export const getCurrentRoom = () => currentRoom
 
-let currentRoomSolid
+let currentRoomSolid = null
 export const setCurrentRoomSolid = (val) => {
     currentRoomSolid = val
 }
 export const getCurrentRoomSolid = () => currentRoomSolid
 
-let currentRoomLoaders
+let currentRoomLoaders = null
 export const setCurrentRoomLoaders = (val) => {
     currentRoomLoaders = val
 }
 export const getCurrentRoomLoaders = () => currentRoomLoaders
 
-let currentRoomInteractables
+let currentRoomInteractables = null
 export const setCurrentRoomInteractables = (val) => {
     currentRoomInteractables = val
 }
 export const getCurrentRoomInteractables = () => currentRoomInteractables
 
-let currentRoomEnemies
+let currentRoomEnemies = null
 export const setCurrentRoomEnemies = (val) => {
     currentRoomEnemies = val
 }
 export const getCurrentRoomEnemies = () => currentRoomEnemies
 
-let currentRoomBullets
+let currentRoomBullets = null
 export const setCurrentRoomBullets = (val) => {
     currentRoomBullets = val
 }
 export const getCurrentRoomBullets = () => currentRoomBullets
 
-let currentRoomFlames
+let currentRoomFlames = null
 export const setCurrentRoomFlames = (val) => {
     currentRoomFlames = val
 }
 export const getCurrentRoomFlames = () => currentRoomFlames
 
-let currentRoomPoisons
+let currentRoomPoisons = null
 export const setCurrentRoomPoisons = (val) => {
     currentRoomPoisons = val
 }
 export const getCurrentRoomPoisons = () => currentRoomPoisons
 
-let currentRoomThrowables
+let currentRoomThrowables = null
 export const setCurrentRoomThrowables = (val) => {
     currentRoomThrowables = val
 }
 export const getCurrentRoomThrowables = () => currentRoomThrowables
 
-let currentRoomExplosions
+let currentRoomExplosions = null
 export const setCurrentRoomExplosions = (val) => {
     currentRoomExplosions = val
 }
 export const getCurrentRoomExplosions = () => currentRoomExplosions
 
-let currentRoomDoors
+let currentRoomDoors = null
 export const setCurrentRoomDoors = (val) => {
     currentRoomDoors = val
 }
 export const getCurrentRoomDoors = () => currentRoomDoors
 
-let player
+let player = null
 export const setPlayer = (val) => {
     player = val
 }
 export const getPlayer = () => player
 
-let grabBar
+let grabBar = null
 export const setGrabBar = (val) => {
     grabBar = val
 }
 export const getGrabBar = () => grabBar
 
-let buffer
+let buffer = null
 export const setBuffer = (val) => {
     buffer = val
 }
 export const getBuffer = () => buffer
 
-let popupContainer
+let popupContainer = null
 export const setPopupContainer = (val) => {
     popupContainer = val
 }
 export const getPopupContainer = () => popupContainer
 
-let roomNameContainer
+let roomNameContainer = null
 export const setRoomNameContainer = (val) => {
     roomNameContainer = val
 }
 export const getRoomNameContainer = () => roomNameContainer
 
-let healthStatusContainer
+let healthStatusContainer = null
 export const setHealthStatusContainer = (val) => {
     healthStatusContainer = val
 }
 export const getHealthStatusContainer = () => healthStatusContainer
 
-let shadowContainer
+let shadowContainer = null
 export const setShadowContainer = (val) => {
     shadowContainer = val
 }
 export const getShadowContainer = () => shadowContainer
+
+let speaker = null
+export const setSpeaker = (val) => {
+    speaker = val
+}
+export const getSpeaker = () => speaker
+
+let lightContainer = null
+export const setLightContainer = (val) => {
+    lightContainer = val
+}
+export const getLightContainer = () => lightContainer

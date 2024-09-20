@@ -4,6 +4,7 @@ import { getCurrentRoomId } from './variables.js'
 import { enemies } from './enemy/util/enemies.js'
 import { interactables } from './interactables.js'
 import { getCurrentRoomDoors } from './elements.js'
+import { renderDialogue } from './dialogue-manager.js'
 import { addClass, element2Object, removeClass } from './util.js'
 import { renderInteractable, spawnEnemy } from './room-loader.js'
 
@@ -24,7 +25,8 @@ export const activateProgress = (name) => {
     renderPopup(name)
     toggleDoors(name)
     updateEnemies(name)
-    updateInteractables(name)    
+    renderDialogue(name)
+    updateInteractables(name)
 }
 
 export const deactivateProgress = (name) => {

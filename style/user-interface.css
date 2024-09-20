@@ -168,6 +168,7 @@
   gap: 10px;
   top: 10px;
   left: 100%;
+  z-index: 65;
   width: 500px;
   padding: 20px;
   display: flex;
@@ -188,7 +189,7 @@
 }
 
 .progress-popup > p > span {
-  padding: 3px;
+  padding: 2px 5px;
   border: 1px solid wheat;
 }
 
@@ -239,11 +240,49 @@
   animation-duration: 300ms;
   animation-fill-mode: forwards;
   animation-direction: alternate;
-  animation-name: room-name-character;
+  animation-name: character-animation;
 }
 
 .room-name-fade-out {
   animation-duration: 5s;
   animation-name: fade-out;
   animation-direction: alternate;
+}
+
+.timer {
+  animation-name: time-counter;
+  animation-fill-mode: forwards;
+  animation-direction: alternate;
+}
+
+.dialogue {
+  top: 0;
+  left: 100%;
+  z-index: 35;
+  opacity: 0.9;
+  padding: 10px;
+  color: white;
+  position: absolute;
+  border-radius: 2px;
+  letter-spacing: 2px;
+  border: 1px solid white;
+  box-shadow: 0 0 5px black;
+  transform: translateY(-100%);
+  background-color: lightblue;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.6);
+}
+
+.dialogue-animation {
+  animation-duration: 400ms;
+  animation-fill-mode: forwards;
+  animation-direction: alternate;
+  animation-name: dialogue-animation;
+}
+
+.dialogue > span {
+  opacity: 0;
+  animation-duration: 10ms;
+  animation-direction: alternate;
+  animation-fill-mode: forwards;
+  animation-name: character-animation;
 }

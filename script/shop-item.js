@@ -1,21 +1,27 @@
 import { Progress } from './progress.js'
-import { getWeaponDetails } from './weapon-details.js'
+import { getGunDetails } from './gun-details.js'
 import { 
     Adrenaline,
     Bandage,
+    BlueVaccine,
     BodyArmor,
     EnergyDrink,
     Flashbang,
+    GreenVaccine,
     Grenade,
     HardDrive,
     HealthPotion,
     LuckPills,
     MagnumAmmo,
     PistolAmmo,
+    PurpleVaccine,
+    RedVaccine,
     RifleAmmo,
     ShotgunShells,
     SmgAmmo,
-    WeaponDrop } from './interactables.js'
+    Stick,
+    GunDrop, 
+    YellowVaccine } from './interactables.js'
 
 class ShopItem {
     constructor(drop, amount, price) {
@@ -74,10 +80,10 @@ class RifleAmmoShopItem extends ShopItem {
     }
 }
 
-class WeaponShopItem extends ShopItem {
+class GunShopItem extends ShopItem {
     constructor(name, renderProgress) {
-        super(new WeaponDrop(null, null, name, 0, 1, 1, 1, 1, 1, 
-            Progress.builder().setRenderProgress(renderProgress)), 1, getWeaponDetails().get(name).price)
+        super(new GunDrop(null, null, name, 0, 1, 1, 1, 1, 1, 
+            Progress.builder().setRenderProgress(renderProgress)), 1, getGunDetails().get(name).price)
     }
 }
 
@@ -130,25 +136,43 @@ class ArmorShopItem extends ShopItem {
     }
 }
 
-let shopItems = [
-    new BandageShopItem(),
-    new HardDriveShopItem('1'),
-    new PistolAmmoShopItem('2'),
-    new ShotgunShellsShopItem('3'),
-    new MagnumAmmoShopItem('4'),
-    new SmgAmmoShopItem('5'),
-    new RifleAmmoShopItem('6'),
-    new WeaponShopItem('uzi', '7'),
-    new WeaponShopItem('mp5k', '8'),
-    new Pouch('9'),
-    new GrenadeShopItem('10'),
-    new FlashbangShopItem('11'),
-    new ArmorShopItem('2'),
-    new LuckPillsShopItem(),
-    new HealthPotionShopItem(),
-    new EnergyDrinkShopItem(),
-    new AdrenalineShopItem()
-]
+class RedVaccineShopItem extends ShopItem {
+    constructor(renderProgress) {
+        super(new RedVaccine(null, null, null, Progress.builder().setRenderProgress(renderProgress)), 3, 1)
+    }
+}
+
+class GreenVaccineShopItem extends ShopItem {
+    constructor(renderProgress) {
+        super(new GreenVaccine(null, null, null, Progress.builder().setRenderProgress(renderProgress)), 3, 1)
+    }
+}
+
+class BlueVaccineShopItem extends ShopItem {
+    constructor(renderProgress) {
+        super(new BlueVaccine(null, null, null, Progress.builder().setRenderProgress(renderProgress)), 3, 1)
+    }
+}
+
+class YellowVaccineShopItem extends ShopItem {
+    constructor(renderProgress) {
+        super(new YellowVaccine(null, null, null, Progress.builder().setRenderProgress(renderProgress)), 3, 1)
+    }
+}
+
+class PurpleVaccineShopItem extends ShopItem {
+    constructor(renderProgress) {
+        super(new PurpleVaccine(null, null, null, Progress.builder().setRenderProgress(renderProgress)), 3, 1)
+    }
+}
+
+class StickShopItem extends ShopItem {
+    constructor(renderProgress) {
+        super(new Stick(null, null, null, Progress.builder().setRenderProgress(renderProgress)), 1, 3)
+    }
+}
+
+let shopItems = []
 
 export const setShopItems = (val) => {
     shopItems = val

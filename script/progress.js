@@ -1,10 +1,11 @@
 export class Progress {
 
     constructor() {
-        this.renderProgress =    null
-        this.progress2Active =   null
-        this.progress2Deactive = null
-        this.killAll =           null
+        this.renderProgress =           null
+        this.progress2Active =          null
+        this.progress2Deactive =        null
+        this.killAll =                  null
+        this.onExamineProgress2Active = null
     }
 
     static builder() {
@@ -29,6 +30,10 @@ export class Progress {
     setKillAll(value) {
         this.killAll = value
         return this
+    }
+
+    setOnExamineProgress2Active(value) {
+        this.onExamineProgress2Active = value
     }
 
 }

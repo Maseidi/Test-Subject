@@ -15,7 +15,7 @@ export const enemies = new Map([
         new Torturer(1, new RectPath(350, 150, 300, 100))
     ]],
     [3, [
-        new Torturer(1, new RectPath(100, 100, 200, 800), null, Progress.builder().setRenderProgress('8'), 'red'),
-        new Torturer(1, new RectPath(700, 100, 200, 800), null, Progress.builder().setRenderProgress('8'), 'red'),
+        new Torturer(1, new RectPath(100, 100, 200, 800), null, null, 'red'),
+        new Torturer(1, new RectPath(700, 100, 200, 800), null, null, 'red'),
     ]]
 ])

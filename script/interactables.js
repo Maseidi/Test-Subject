@@ -1,5 +1,5 @@
 import { Progress } from './progress.js'
-import { getWeaponDetails } from './weapon-details.js'
+import { getGunDetails } from './gun-details.js'
 import { 
     FLASHBANG_LOOT,
     GRENADE_LOOT,
@@ -47,6 +47,12 @@ class Stash extends Interactable {
 class VendingMachine extends Interactable {
     constructor(left, top) {
         super(35, left, top, 'vendingMachine', 'vending machine', 'Trade', true)
+    }
+}
+
+class Speaker extends Interactable {
+    constructor(left, top) {
+        super(35, left, top, 'speaker', null, '', true)
     }
 }
 
@@ -163,7 +169,22 @@ export class Flashbang extends Drop {
     }
 }
 
-export class WeaponDrop extends Drop {
+export class Stick extends Drop {
+    constructor(left, top, progress, health) {
+        super(30, left, top, 'stick', 'stick', 1, 1, 
+            'Coupling it with a lighter could be a life saver darkness', 3, progress)
+        
+        this.health = health  ?? 100
+    }
+}
+
+export class Lighter extends Drop {
+    constructor(left, top, progress) {
+        super(15, left, top, 'lighter', 'lighter', 1, 1, 'Does its job just like any other lighter', null, progress)
+    }
+}
+
+export class GunDrop extends Drop {
     constructor(left, top, name, currmag, damageLvl, rangeLvl, 
         reloadspeedLvl, magazineLvl, fireratelvl, progress) {
         super(
@@ -171,11 +192,11 @@ export class WeaponDrop extends Drop {
             left,
             top,
             name,
-            getWeaponDetails().get(name).heading,
+            getGunDetails().get(name).heading,
             1,
-            getWeaponDetails().get(name).space,
-            getWeaponDetails().get(name).description,
-            getWeaponDetails().get(name).price,
+            getGunDetails().get(name).space,
+            getGunDetails().get(name).description,
+            getGunDetails().get(name).price,
             progress
         )
         this.currmag =        currmag ?? 0
@@ -184,7 +205,7 @@ export class WeaponDrop extends Drop {
         this.reloadspeedLvl = reloadspeedLvl ?? 1
         this.magazineLvl =    magazineLvl ?? 1
         this.fireratelvl =    fireratelvl ?? 1
-        this.ammotype =       getWeaponDetails().get(name).ammotype ?? null
+        this.ammotype =       getGunDetails().get(name).ammotype ?? null
     }
 }
 
@@ -277,24 +298,10 @@ export class BlueVaccine extends Vaccine {
 
 export const interactables = new Map([
     [1, [
-        new Note(100, 850, "Prisoner's note", 'Memories of a prisoner', 
-            "It's just so weird. All I remember was my normal life. Now I see I'm here. I don't know if I'm kidnapped by a criminal or arrested by cops. What did I do? Why would this happen? Am I a prisoner of gvernment? But why? I wish there was somebody that could help me. Hear me, ANSWER me.... I tried to get out of here. But I heard strange noises past the door. I was frightened. I AM frightened...", 
-            Progress.builder().setRenderProgress('2').setProgress2Active('3')),
-        new Note(300, 100, "Prisoner's note", 'Memories of a prisoner', 
-            "Ok, It's been 2 days I'm stuck in this shithole and seems no one's responsible for this mess. The thirst and the hunger are really getting out of control. I gotta do something or else I might starve here. Guess I have to be brave enough to witness what really is on the other side of the door. I assume there were people trapped here before. Now it's my turn. I'll face my destiny. I just need to be brave.",
-            Progress.builder().setRenderProgress('5')
-        ),
-        new KeyDrop(50, 50, 1, 'Dorm key', 'Dormitory key', 'dorm', Progress.builder().setRenderProgress('5').setProgress2Active('6'))
+        new Stick(250, 300, null, 100),
+        new Lighter(250, 500)
     ]],
     [2, []],
-    [3, [
-        new Note(475, 900, "Fugitive's memories", "Possible use case of vaccines", "I somehow managed to get past the monster, but it appears the more progress I make, the harder the challenges turn out to be. I got wounded by one of the monsters and I am feeling a lot of pain inside me. It is BURNING ME... I don't know what to do. I feel like I need to inject some of these vaccines on the ground. This might be a risk, but this is my last resort. All that matters is getting rid of this scorching pain inside me. Even if it costs my life...", 
-        Progress.builder().setRenderProgress('9')),
-        new RedVaccine(425, 900, 1),
-        new RedVaccine(525, 900, 1),
-        new Lever(475, 100, Progress.builder().setKillAll('8').setProgress2Active('8'))
-    ]],
-    [4, [
-
-    ]]
+    [3, []],
+    [4, []]
 ])

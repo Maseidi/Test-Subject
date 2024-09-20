@@ -1,8 +1,8 @@
-import { removeWeapon } from './weapon-loader.js'
+import { removeWeapon } from './gun-loader.js'
 import { removeThrowable } from './throwable-loader.js'
 import { getThrowableDetail, isThrowable } from './throwable-details.js'
 import { ADRENALINE, ENERGY_DRINK, HEALTH_POTION, LUCK_PILLS } from './loot.js'
-import { getWeaponDetail, getWeaponUpgradableDetail } from './weapon-details.js'
+import { getGunDetail, getGunUpgradableDetail } from './gun-details.js'
 import { getCurrentRoom, getCurrentRoomExplosions, getMapEl, getPlayer } from './elements.js'
 import { 
     getDownPressed,
@@ -159,9 +159,9 @@ export const getEquippedItemDetail = (equipped, detail) => {
         return getThrowableDetail(equipped.name, detail)
 
     if ( ['damage', 'range', 'firerate', 'reloadspeed', 'magazine'].includes(detail) )
-        return getWeaponUpgradableDetail(equipped.name, detail, equipped[detail+'lvl'])
+        return getGunUpgradableDetail(equipped.name, detail, equipped[detail+'lvl'])
 
-    return getWeaponDetail(equipped?.name, detail)
+    return getGunDetail(equipped?.name, detail)
 }
 
 export const isThrowing = () => getThrowCounter() > 0

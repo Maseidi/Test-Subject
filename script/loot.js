@@ -1,6 +1,7 @@
 export const NOTE = 'note'
 export const RANDOM = 'random'
 export const COIN_LOOT = 'coin'
+export const STICK_LOOT = 'stick'
 export const GRENADE_LOOT = 'grenade'
 export const BANDAGE_LOOT = 'bandage'
 export const LUCK_PILLS = 'luckpills'

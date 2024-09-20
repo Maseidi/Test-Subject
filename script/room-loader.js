@@ -2,11 +2,11 @@ import { NOTE } from './loot.js'
 import { Wall, walls } from './walls.js'
 import { rooms } from './rooms.js'
 import { BottomLoader_FromLeft, LeftLoader_FromTop, loaders, RightLoader_FromTop, TopLoader_FromLeft } from './loaders.js'
-import { isWeapon } from './weapon-details.js'
+import { isGun } from './gun-details.js'
 import { enemies } from './enemy/util/enemies.js'
 import { interactables } from './interactables.js'
 import { renderRoomName } from './popup-manager.js'
-import { countItem, updateInteractablePopup } from './inventory.js'
+import { countItem, findEquippedTorchById, updateInteractablePopup } from './inventory.js'
 import { getCurrentRoomId, getRoomLeft, getRoomTop, setStunnedCounter } from './variables.js'
 import { activateProgress, deactivateProgress, findProgressByName } from './progress-manager.js'
 import { 
@@ -44,7 +44,8 @@ import {
     setCurrentRoomDoors,
     getCurrentRoomDoors, 
     getShadowContainer,
-    getCurrentRoom} from './elements.js'
+    getCurrentRoom,
+    setSpeaker} from './elements.js'
 
 export const loadCurrentRoom = () => {
     setStunnedCounter(0)
@@ -58,6 +59,7 @@ export const loadCurrentRoom = () => {
 }
 
 const initElements = () => {
+    setSpeaker(null)
     setCurrentRoomSolid([])
     setCurrentRoomLoaders([])
     setCurrentRoomInteractables([])
@@ -77,10 +79,17 @@ const renderRoom = () => {
     room2Render.style.height =          `${roomObject.height}px`
     room2Render.style.left =            `${getRoomLeft()}px`
     room2Render.style.top =             `${getRoomTop()}px`
-    getShadowContainer().firstElementChild.style.background = 
-        `radial-gradient(circle at center,transparent,black ${roomObject.darkness * 10}%)`
+    calculateRoomBrightness(roomObject.darkness)
     setCurrentRoom(room2Render)
     getRoomContainer().append(room2Render)
+}
+
+const calculateRoomBrightness = (darkness) => {
+    const equippedTorch = findEquippedTorchById()
+    const brightness = equippedTorch ? (equippedTorch.health / 100 * 40) : Number.MIN_SAFE_INTEGER
+    const percentage = Math.max(darkness * 10, brightness + 20)
+    getShadowContainer().firstElementChild.style.background = 
+        `radial-gradient(circle at center,transparent,black ${percentage}%)`
 }
 
 const manageRoomProgress = () => {
@@ -263,6 +272,11 @@ export const renderInteractable = (interactable, index) => {
     }
     updateInteractablePopup(int)
     getCurrentRoomInteractables().push(int)
+    if ( interactable.name === 'speaker' ) {
+        setSpeaker(int)
+        const dialogueContainer = document.createElement('div')
+        int.append(dialogueContainer)
+    }
 }
 
 const setInteractableId = (interactable, int, index) => {
@@ -287,10 +301,9 @@ const handleLeverImage = (interactable, image) => {
 }
 
 const renderPopUp = (int, interactable) => {
-    const popup = createAndAddClass('div', 'ui-theme', 'popup')
+    const popup = createAndAddClass('div', 'ui-theme', 'popup', 'active-popup', 'animation')
+    popup.style.display = 'none'
     handleVaccinePopup(popup, interactable)
-    popup.style.bottom = `calc(100% - 20px)`
-    popup.style.opacity = `0`
     renderHeading(popup, interactable)
     renderLine(popup)
     renderDescription(popup, interactable)
@@ -311,7 +324,7 @@ const renderHeading = (popup, interactable) => {
 const getHeadingContent = (interactable) => {
     const {name, amount, examined, heading} = interactable
     if ( name === 'note' && !examined ) return 'Note'
-    return amount && !isWeapon(name) && !name.includes('key') && name !== 'note'  ? `${amount} ${heading}` : `${heading}`
+    return amount && !isGun(name) && !name.includes('key') && name !== 'note'  ? `${amount} ${heading}` : `${heading}`
 }
 
 const renderLine = (popup) => {

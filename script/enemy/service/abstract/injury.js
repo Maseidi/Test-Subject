@@ -1,6 +1,6 @@
 import { enemies } from '../../util/enemies.js'
 import { dropLoot } from '../../../loot-manager.js'
-import { isWeapon } from '../../../weapon-details.js'
+import { isGun } from '../../../gun-details.js'
 import { CHASE, STUNNED } from '../../util/enemy-constants.js'
 import { getCurrentRoomInteractables, setCurrentRoomInteractables } from '../../../elements.js'
 import { getAnimatedLimbs, getCriticalChance, getCurrentRoomId, setAnimatedLimbs } from '../../../variables.js'
@@ -27,7 +27,7 @@ export class AbstractInjuryService {
     }
 
     damageEnemy(name, damage, antivirus) {
-        if ( isWeapon(name) && this.enemy.virus === antivirus ) {
+        if ( isGun(name) && this.enemy.virus === antivirus ) {
             damage *= 1.2
             var sameVirus = this.enemy.virus
         }

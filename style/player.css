@@ -69,6 +69,11 @@
   animation-direction: alternate-reverse;
 }
 
+.torch > .player-collider > .player-body > .player-right-hand {
+  height: 14px !important;
+  animation-duration: 0s !important;
+}
+
 .walk > .player-collider > .player-body > .player-left-hand,
 .walk > .player-collider > .player-body > .player-right-hand {
   animation-duration: 600ms;
@@ -130,7 +135,7 @@
   transition: 0ms !important;
 }
 
-.weapon {
+.gun {
   left: 50%;
   top: 15px;
   width: 4px;
@@ -156,6 +161,14 @@
   transform: rotateZ(-5deg);
 }
 
+.torch-img {
+  width: 30px;
+  left: -100%;
+  top: 8px;
+  position: absolute;
+  transform: rotateZ(180deg) translateX(-2px);
+}
+
 .laser,
 .throwable-laser {
   top: 0;
@@ -168,7 +181,7 @@
   transform: translateX(-50%) translateZ(-10px);
 }
 
-.weapon-fire {
+.gun-fire {
   top: 100%;
   left: 50%;
   height: 20px;

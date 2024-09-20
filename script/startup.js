@@ -1,12 +1,14 @@
 import { renderUi } from './user-interface.js'
 import { loadCurrentRoom } from './room-loader.js'
 import { appendAll, createAndAddClass } from './util.js'
-import { getMapX, getMapY, getPlayerX, getPlayerY } from './variables.js'
+import { getMapX, getMapY, getPlayerX, getPlayerY, getWindowHeight, getWindowWidth } from './variables.js'
 import { 
     getHealthStatusContainer,
+    getLightContainer,
     getMapEl,
     getShadowContainer,
     setHealthStatusContainer,
+    setLightContainer,
     setMapEl,
     setPauseContainer,
     setPlayer,
@@ -21,11 +23,12 @@ export const startUp = () => {
     renderPopupContainer()
     renderHealthStatusContainer()
     renderShadowContainer()
+    renderLightContainer()
     renderUi()
     renderMap()
     renderRoomContainer()
-    renderCurrentRoom()
     renderPlayer()
+    renderCurrentRoom()
     centralizePlayer()
 }
 
@@ -47,6 +50,12 @@ const renderShadowContainer = () => {
     renderContainer('shadow-container', setShadowContainer)
     const shadow = createAndAddClass('div', 'shadow')
     getShadowContainer().append(shadow)
+}
+
+const renderLightContainer = () => {
+    renderContainer('light-container', setLightContainer)
+    const light = createAndAddClass('div', 'light')
+    getLightContainer().append(light)
 }
 
 const renderContainer = (className, setter) => {
@@ -86,7 +95,8 @@ const renderPlayer = () => {
     playerBody.style.transform = `rotateZ(0deg)`
     player.setAttribute('angle', 0)
     const forwardDetector = createAndAddClass('div', 'forward-detector')
-    appendAll(playerCollider, playerBody, forwardDetector)
+    const dialogueContainer = createAndAddClass('div', 'player-dialouge-container')
+    appendAll(playerCollider, playerBody, forwardDetector, dialogueContainer)
     const leftHand = createAndAddClass('div', 'player-left-hand')
     const playerHead = createAndAddClass('div', 'player-head')
     const rightHand = createAndAddClass('div', 'player-right-hand')

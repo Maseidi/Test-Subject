@@ -20,8 +20,8 @@ export class Room {
 }
 
 export const rooms = new Map([
-    [1, new Room(1, 500, 1000,  'Dormitory', null, Progress.builder().setProgress2Active('1'))],
-    [2, new Room(2, 1000, 500,  'Bunker A',  5,    Progress.builder().setProgress2Active('8'))],
-    [3, new Room(3, 1000, 1000, 'Bunker B',  5)],
-    [4, new Room(4, 1000, 1000, 'Bunker C',  5,    Progress.builder().setProgress2Active('10'))],
+    [1, new Room(1, 500,  1000, 'Dormitory', 5)],
+    [2, new Room(2, 1000, 500,  'Bunker A' , 5)],
+    [3, new Room(3, 1000, 1000, 'Bunker B' , 5)],
+    [4, new Room(4, 1000, 1000, 'Bunker C' , 5)],
 ])

@@ -1,18 +1,37 @@
 import { renderStash } from './stash.js'
+import { isGun } from './gun-details.js'
+import { renderGun } from './gun-loader.js'
 import { dropLoot } from './loot-manager.js'
-import { isWeapon } from './weapon-details.js'
 import { centralizePlayer } from './startup.js'
 import { setupReload } from './weapon-manager.js'
-import { renderWeapon } from './weapon-loader.js'
+import { enemies } from './enemy/util/enemies.js'
 import { renderStore } from './vending-machine.js'
 import { isThrowable } from './throwable-details.js'
-import { heal, damagePlayer, findHealtStatusChildByClassName } from './player-health.js'
 import { renderThrowable } from './throwable-loader.js'
 import { renderPasswordInput } from './password-manager.js'
+import { removeTorch, renderTorch } from './torch-loader.js'
 import { renderUi, renderWeaponUi, quitPage } from './user-interface.js'
-import { getGrabBar, getPauseContainer, getPlayer, getRoomNameContainer, getUiEl } from './elements.js'
+import { heal, damagePlayer, findHealtStatusChildByClassName } from './player-health.js'
 import { activateProgress, deactivateProgress, getProgress } from './progress-manager.js'
-import { countItem, findEquippedWeaponById, pickupDrop, removeInventory, renderInventory, updateInteractablePopups, useInventoryResource } from './inventory.js'
+import { 
+    getGrabBar,
+    getPauseContainer,
+    getPlayer,
+    getPopupContainer,
+    getRoomNameContainer,
+    getShadowContainer,
+    getSpeaker,
+    getUiEl } from './elements.js'
+import { 
+    countItem,
+    findEquippedTorchById,
+    findEquippedWeaponById,
+    getInventory,
+    pickupDrop,
+    removeInventory,
+    renderInventory,
+    updateInteractablePopups,
+    useInventoryResource } from './inventory.js'
 import { 
     addClass,
     angleOf2Points,
@@ -22,6 +41,7 @@ import {
     getProperty,
     isMoving,
     isThrowing,
+    removeAllClasses,
     removeClass, 
     removeEquipped} from './util.js'
 import { 
@@ -29,7 +49,6 @@ import {
     getDownPressed,
     getDraggedItem,
     getEquippedWeaponId,
-    getEquippedWeaponObject,
     getGrabbed,
     getElementInteractedWith,
     getLeftPressed,
@@ -47,7 +66,6 @@ import {
     setAimMode,
     setDownPressed,
     setEquippedWeaponId,
-    setEquippedWeaponObject,
     setLeftPressed,
     setMouseX,
     setMouseY,
@@ -60,10 +78,12 @@ import {
     setSprintPressed,
     setUpPressed, 
     getCurrentRoomId,
-    getAnimatedLimbs} from './variables.js'
-import { enemies } from './enemy/util/enemies.js'
+    getAnimatedLimbs, 
+    setEquippedTorchId,
+    getEquippedTorchId} from './variables.js'
+import { rooms } from './rooms.js'
 
-export const control = () => {
+export const initControls = () => {
     onkeydown = (e) => {
         e.preventDefault()
         if ( !e.repeat ) {
@@ -114,7 +134,10 @@ export const control = () => {
                 case 'H':
                 case 'h':
                     hDown()
-                    break        
+                    break  
+                case 'Q':
+                case 'q':
+                    qDown()    
             }
         }
     }
@@ -167,59 +190,83 @@ const enableDirection = (getPressed, getOppositePressed, setPressed, setOpposite
 }
 
 const eDown = () => {
-    if ( getPause() || getGrabbed() || isThrowing() ) return
-    if ( getEquippedWeaponId() !== null  ) {
-        setAimMode(!getAimMode())
-        if ( getAimMode() ) {
-            removeClass(getPlayer(), 'walk')
-            removeClass(getPlayer(), 'run')
-            const equipped = findEquippedWeaponById()
-            if ( isWeapon(equipped.name) ) {
-                addClass(getPlayer(), 'aim')
-                renderWeapon()
-            }
-            else if ( isThrowable(equipped.name) ) {
-                addClass(getPlayer(), 'throwable-aim')
-                renderThrowable()
-            }
-            return
-        }
-        exitAimModeAnimation()
-        removeEquipped()
-        if ( isMoving() ) addClass(getPlayer(), 'walk')
-    }
+    if ( getPause() || getGrabbed() || isThrowing() || !getEquippedWeaponId() ) return
+    toggleWeaponAim()
+}
+
+const toggleWeaponAim = () => {
+    setAimMode(!getAimMode())
+    if ( getAimMode() ) aimWeapon()
+    else exitAim()
+}
+
+const aimWeapon = () => {
+    removeAllClasses(getPlayer(), 'walk', 'run')
+    const equipped = findEquippedWeaponById()
+    if ( isGun(equipped.name) ) aimGun()
+    else if ( isThrowable(equipped.name) ) aimThrowable()
+}
+
+const aimGun = () => {
+    addClass(getPlayer(), 'aim')
+    renderGun()
+}
+
+const aimThrowable = () => {
+    addClass(getPlayer(), 'throwable-aim')
+    renderThrowable()
+}
+
+const exitAim = () => {
+    exitAimModeAnimation()
+    removeEquipped()
+    if ( isMoving() ) addClass(getPlayer(), 'walk')
 }
 
 const weaponSlotDown = (key) => {
     if ( getPause() || getReloading() || getShooting() || getGrabbed() ) return
     removeEquipped()
-    if ( getWeaponWheel()[Number(key) - 1] === getEquippedWeaponId() ) {
-        setEquippedWeaponId(null)
-        setEquippedWeaponObject(null)
-        setAimMode(false)
-        exitAimModeAnimation()
-        renderWeaponUi()
-        if (isMoving()) addClass(getPlayer(), 'walk')
-        return
-    }
-    setEquippedWeaponId(getWeaponWheel()[Number(key) - 1])
-    setEquippedWeaponObject(findEquippedWeaponById())
+    if ( getWeaponWheel()[Number(key) - 1] === getEquippedWeaponId() ) unEquipWeapon()
+    else equipWeapon(key) 
+}
+
+const unEquipWeapon = () => {
+    setEquippedWeaponId(null)
+    setAimMode(false)
+    exitAimModeAnimation()
     renderWeaponUi()
-    if ( getEquippedWeaponId() ) setShootCounter(getEquippedItemDetail(getEquippedWeaponObject(), 'firerate') * 60)
-    if ( getEquippedWeaponId() && getAimMode() ) {
-        const equipped = getEquippedWeaponObject()
-        if ( isWeapon(equipped.name) ) {
-            removeClass(getPlayer(), 'throwable-aim')
-            addClass(getPlayer(), 'aim')
-            renderWeapon()
-        }
-        else if ( isThrowable(equipped.name) ) {
-            removeClass(getPlayer(), 'aim')
-            addClass(getPlayer(), 'throwable-aim')
-            renderThrowable()
-        }  
-        return
-    }
+    if (isMoving()) addClass(getPlayer(), 'walk')
+}
+
+const equipWeapon = (key) => {
+    setEquippedWeaponId(getWeaponWheel()[Number(key) - 1])
+    renderWeaponUi()
+    unequipTorch()
+    setEquippedTorchId(null)
+    if ( getEquippedWeaponId() ) setShootCounter(getEquippedItemDetail(findEquippedWeaponById(), 'firerate') * 60)
+    if ( getEquippedWeaponId() && getAimMode() ) equipWeaponOnAimMode()
+    else equipNothing()
+}
+
+const equipWeaponOnAimMode = () => {
+    const equipped = findEquippedWeaponById()
+    if ( isGun(equipped.name) ) equipGunOnAimMode()
+    else if ( isThrowable(equipped.name) ) equipThrowableOnAimMode()
+}
+
+const equipGunOnAimMode = () => {
+    removeClass(getPlayer(), 'throwable-aim')
+    addClass(getPlayer(), 'aim')
+    renderGun()
+}
+
+const equipThrowableOnAimMode = () => {
+    removeClass(getPlayer(), 'aim')
+    addClass(getPlayer(), 'throwable-aim')
+    renderThrowable()
+}
+
+const equipNothing = () => {
     exitAimModeAnimation()
     if (isMoving()) addClass(getPlayer(), 'walk')
     setAimMode(false)
@@ -238,20 +285,14 @@ const startSprint = () => {
 }
 
 const fDown = () => {
-    if ( getGrabbed() ) {
-        breakFree()
-        return
-    } else if ( !getElementInteractedWith() ) return
-    const { name, amount } = element2Object(getElementInteractedWith())
-    if ( getPause() || !getElementInteractedWith() ) return
-    if ( amount ) pickupDrop(getElementInteractedWith())
-    if ( getShooting() || getReloading() ) return    
-    if ( name === 'stash' ) openStash()    
-    if ( name === 'crate' ) breakCrate()
-    if ( name === 'lever' ) toggleLever()
-    if ( name === 'door' ) renderPasswordInput()
-    if ( name === 'vendingMachine' ) openVendingMachine()
-    if ( name === 'vaccine' ) stealthKill()
+    if ( getGrabbed() ) breakFree()
+    else if ( getElementInteractedWith() ) {
+        const { name, amount } = element2Object(getElementInteractedWith())
+        if ( getPause() || !getElementInteractedWith() ) return
+        if ( amount ) pickupDrop(getElementInteractedWith())
+        if ( getShooting() || getReloading() ) return    
+        INTERACT_MAP.get(name)?.()
+    }
 }
 
 const breakFree = () => {
@@ -312,6 +353,15 @@ const stealthKill = () => {
     enemyObj.injuryService.damageEnemy(null, Math.min(800, enemyObj.health))
 }
 
+const INTERACT_MAP = new Map([
+    ['stash', openStash],
+    ['crate', breakCrate],
+    ['lever', toggleLever],
+    ['vaccine', stealthKill],
+    ['door', renderPasswordInput],
+    ['vendingMachine', openVendingMachine],
+])
+
 const tabDown = () => {
     if ( getGrabbed() ) return
     if ( getPause() && getPauseCause() !== 'inventory' ) return
@@ -328,22 +378,54 @@ const tabDown = () => {
 
 export const managePause = () => {
     setPause(!getPause())
-    if ( getPause() ) {
-        removeClass(getPlayer(), 'run')
-        removeClass(getPlayer(), 'walk')
-        getUiEl().remove()
-        document.querySelectorAll('.animation').forEach(elem => elem.style.animationPlayState = 'paused')
-        getAnimatedLimbs().forEach(elem => elem.pause())
-        getRoomNameContainer().style.visibility = 'hidden'
-        findHealtStatusChildByClassName('infected-container').style.visibility = 'hidden'
-        return
-    }
+    if ( getPause() ) gamePaused()
+    else gamePlaying()
+}
+
+const gamePaused = () => {
+    removeAllClasses(getPlayer(), 'run', 'walk')
+    getUiEl().remove()
+    stopAnimations()
+    removeUi()
+}
+
+const stopAnimations = () => {
+    document.querySelectorAll('.animation').forEach(elem => elem.style.animationPlayState = 'paused')
+    getAnimatedLimbs().forEach(elem => elem.pause())
+}
+
+const removeUi = () => {
+    getRoomNameContainer().style.opacity = '0'
+    findHealtStatusChildByClassName('infected-container').style.opacity = '0'
+    getPopupContainer().style.opacity = '0'
+    getPlayer().firstElementChild.children[2].style.opacity = '0'
+    if ( getSpeaker() ) getSpeaker().lastElementChild.style.opacity = '0'
+    if ( getElementInteractedWith() ) getElementInteractedWith().style.opacity = '0'
+}
+
+const gamePlaying = () => {
     setPauseCause(null)
     renderUi()
+    resumeAnimations()
+    showUi()
+    resumePlayerActions()
+}
+
+const resumeAnimations = () => {
     document.querySelectorAll('.animation').forEach(elem => elem.style.animationPlayState = 'running')
     getAnimatedLimbs().forEach(elem => elem.play())
-    getRoomNameContainer().style.visibility = 'visible'
-    findHealtStatusChildByClassName('infected-container').style.visibility = 'visible'
+}
+
+const showUi = () => {
+    getRoomNameContainer().style.opacity = '1'
+    findHealtStatusChildByClassName('infected-container').style.opacity = '1'
+    getPopupContainer().style.opacity = '1'
+    getPlayer().firstElementChild.children[2].style.opacity = '1'
+    if ( getSpeaker() ) getSpeaker().lastElementChild.style.opacity = '1'
+    if ( getElementInteractedWith() ) getElementInteractedWith().style.opacity = '1'
+}
+
+const resumePlayerActions = () => {
     if ( !isMoving() ) return
     if ( !getAimMode() ) addClass(getPlayer(), 'walk')
     else if ( getSprintPressed() ) startSprint()
@@ -364,6 +446,48 @@ const hDown = () => {
     if ( getPause() || getGrabbed() ) return
     heal()
     updateInteractablePopups()
+}
+
+const qDown = () => {
+    if ( getPause() || getReloading() || getShooting() || getGrabbed() ) return
+    const stick = getInventory().flat().filter(item => item?.name === 'stick').sort((a, b) => a.health - b.health)
+    const lighter = getInventory().flat().find(item => item?.name === 'lighter')
+    if ( stick.length === 0 || !lighter ) return
+    setEquippedTorchId(getEquippedTorchId() ? null : stick[0].id)
+    if ( getEquippedTorchId() ) equipTorch()
+    else unequipTorch()
+}
+
+const equipTorch = () => {
+    if ( getEquippedWeaponId() ) switchWeapon2Torch()
+    else takeOutTorch()
+}
+
+const switchWeapon2Torch = () => {
+    setEquippedWeaponId(null)
+    renderWeaponUi()
+    if ( isMoving() ) addClass(getPlayer(), 'walk')
+    setAimMode(false)
+    removeEquipped()
+    exitAimModeAnimation()
+    takeOutTorch()
+}
+
+const takeOutTorch = () => {
+    renderTorch()
+    const health = findEquippedTorchById().health
+    const brightness = (health / 100 * 40)
+    const percentage = Math.max(brightness + 20, rooms.get(getCurrentRoomId()).darkness * 10)
+    getShadowContainer().firstElementChild.style.background = 
+        `radial-gradient(circle at center,transparent,black ${percentage}%)`
+}
+
+export const unequipTorch = () => {
+    removeClass(getPlayer(), 'torch')
+    setEquippedTorchId(null)
+    removeTorch()
+    getShadowContainer().firstElementChild.style.background = 
+        `radial-gradient(circle at center,transparent,black ${rooms.get(getCurrentRoomId()).darkness * 10}%)`
 }
 
 const wUp = () => disableDirection(setUpPressed, setDownPressed)
@@ -388,8 +512,7 @@ const shiftUp = () => {
 
 const stopWalkingAnimation = () => {
     if ( isMoving() ) return
-    removeClass(getPlayer(), 'walk')
-    removeClass(getPlayer(), 'run')
+    removeAllClasses(getPlayer(), 'run', 'walk')
 }
 
 const aimAngle = (event) => {

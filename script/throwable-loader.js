@@ -1,15 +1,15 @@
 import { getPlayer } from './elements.js'
-import { getEquippedWeaponObject } from './variables.js'
+import { findEquippedWeaponById } from './inventory.js'
 import { getThrowableDetail } from './throwable-details.js'
 import { appendAll, createAndAddClass, findAttachmentsOnPlayer } from './util.js'
 
 export const renderThrowable = () => {
-    const equippedThrowable = getEquippedWeaponObject()
+    const equippedThrowable = findEquippedWeaponById()
     const throwable = createAndAddClass('div', 'throwable')
     const laser = renderLaser(equippedThrowable.name)
     const throwableImg = renderImage(equippedThrowable.name) 
     appendAll(throwable, laser, throwableImg, createAndAddClass('div', 'throw-target'))
-    getPlayer().children[0].children[0].append(throwable)
+    getPlayer().firstElementChild.firstElementChild.append(throwable)
 }
 
 const renderLaser = (name) => {

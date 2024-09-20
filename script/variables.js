@@ -154,12 +154,6 @@ export const setEquippedWeaponId = (val) => {
 }
 export const getEquippedWeaponId = () => equippedWeaponId
 
-let EquippedWeaponObject = null
-export const setEquippedWeaponObject = (val) => {
-    EquippedWeaponObject = val
-}
-export const getEquippedWeaponObject = () => EquippedWeaponObject
-
 let intObj = null
 export const setElementInteractedWith = (val) => {
     intObj = val
@@ -327,3 +321,21 @@ export const setDirtyRooms = (val) => {
     dirtyRooms = val
 }
 export const getDirtyRooms = () => dirtyRooms
+
+let equippedTorchId = null
+export const setEquippedTorchId = (val) => {
+    equippedTorchId = val
+}
+export const getEquippedTorchId = () => equippedTorchId
+
+let windowWidth = window.innerWidth
+export const setWindowWidth = (val) => {
+    windowWidth = val
+}
+export const getWindowWidth = () => windowWidth
+
+let windowHeight = window.innerHeight
+export const setWindowHeight = (val) => {
+    windowHeight = val
+}
+export const getWindowHeight = () => windowHeight

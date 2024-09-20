@@ -43,7 +43,6 @@ export class AbstractVisionService {
     }
 
     isPlayerVisible() {
-        return false
         let result = false
         if ( this.enemy.wallInTheWay !== false ) return result
         const angle = getProperty(this.enemy.sprite.firstElementChild.children[1], 'transform', 'rotateZ(', 'deg)')

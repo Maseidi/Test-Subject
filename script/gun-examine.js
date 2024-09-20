@@ -2,7 +2,7 @@ import { getInventory } from './inventory.js'
 import { renderQuit } from './user-interface.js'
 import { getPauseContainer } from './elements.js'
 import { addClass, appendAll, createAndAddClass } from './util.js'
-import { getWeaponUpgradableDetail, getWeaponDetails } from './weapon-details.js'
+import { getGunUpgradableDetail, getGunDetails } from './gun-details.js'
 
 export const renderStats = (itemObj) => {
     const weaponStatsContainer = createAndAddClass('div', 'weapon-stats-container', 'ui-theme')
@@ -13,7 +13,7 @@ export const renderStats = (itemObj) => {
     imgContainer.append(img)
     const weaponStatsName = createAndAddClass('div', 'weapon-stats-name')
     weaponStatsName.textContent = itemObj.heading
-    weaponStatsName.style.color = `${getWeaponDetails().get(itemObj.name).antivirus}`
+    weaponStatsName.style.color = `${getGunDetails().get(itemObj.name).antivirus}`
     const weaponStatsDesc = createAndAddClass('div', 'weapon-stats-desc')
     weaponStatsDesc.textContent = itemObj.description
     const damage = createStat(itemObj, 'damage')
@@ -62,5 +62,5 @@ const getValue = (itemObj, name) => {
             magazinelvl: 1, 
             fireratelvl: 1
         }
-    return getWeaponUpgradableDetail(weapon.name, name.replace(' ', ''), weapon[name.replace(' ', '').concat('lvl')])
+    return getGunUpgradableDetail(weapon.name, name.replace(' ', ''), weapon[name.replace(' ', '').concat('lvl')])
 }

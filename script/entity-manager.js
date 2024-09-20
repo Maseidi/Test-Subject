@@ -16,15 +16,13 @@ import {
     STUNNED } from './enemy/util/enemy-constants.js'
 import { 
     addAllAttributes,
-    addAllClasses,
     addExplosion,
     calculateBulletSpeed,
     collide,
     containsClass,
     createAndAddClass,
     element2Object,
-    getProperty, 
-    removeAllClasses} from './util.js'
+    getProperty } from './util.js'
 import { 
     getCurrentRoom,
     getCurrentRoomEnemies,
@@ -35,17 +33,15 @@ import {
     getCurrentRoomSolid,
     getPlayer, 
     getCurrentRoomPoisons,
-    setCurrentRoomBullets,
     getCurrentRoomThrowables,
-    setCurrentRoomThrowables,
     getMapEl, 
     getCurrentRoomExplosions,
-    setCurrentRoomExplosions } from './elements.js'
+    setCurrentRoomExplosions, 
+    getShadowContainer} from './elements.js'
 import {
     getCurrentRoomId,
     getExplosionDamageCounter,
     getGrabbed,
-    getElementInteractedWith,
     getMaxHealth,
     getNoOffenseCounter,
     getRoomLeft,
@@ -58,7 +54,12 @@ import {
     setNoOffenseCounter,
     setRoomLeft,
     setRoomTop, 
-    setStunnedCounter } from './variables.js'
+    setStunnedCounter, 
+    getElementInteractedWith,
+    getEquippedTorchId} from './variables.js'
+import { findEquippedTorchById, getInventory } from './inventory.js'
+import { removeTorch } from './torch-loader.js'
+import { unequipTorch } from './controls.js'
 
 export const manageEntities = () => {
     manageSolidObjects()
@@ -70,6 +71,7 @@ export const manageEntities = () => {
     managePoisons()
     manageThrowables()
     manageExplosions()
+    manageTorch()
 }
 
 const manageSolidObjects = () => {
@@ -107,28 +109,26 @@ const calculateNewRoomLeftAndTop = (prevLoader) => {
     setRoomTop(getRoomTop() - top + getProperty(prevLoader, 'top', 'px'))
 }
 
-let isStealthKill
 const manageInteractables = () => {
     setElementInteractedWith(null)
     getCurrentRoomInteractables().forEach((int) => {
-        const popup = int.children[1] ?? int.children[0]
-        isStealthKill = popup.lastElementChild.lastElementChild.src       
-        const range = isStealthKill ? 5 : 20
-        if ( !getElementInteractedWith() && collide(getPlayer().firstElementChild, int, range) ) {
-            if ( isEnemyNotified(popup) ) {
-                removeAllClasses(popup, 'active-popup', 'animation')
+        const popup = int.children[1] ?? int.firstElementChild
+        const isEnemy = popup.lastElementChild.lastElementChild.src
+        if ( int.getAttribute('name') === 'speaker' ) return
+        if ( collide(getPlayer().firstElementChild, int, 20) && !getElementInteractedWith() ) {
+            if ( isEnemy && isEnemyNotified(popup) ) {
+                popup.style.display = 'none'
                 return
             }
-            addAllClasses(popup, 'active-popup', 'animation')
             setElementInteractedWith(int)
+            popup.style.display = 'block'
             return
         }
-        removeAllClasses(popup, 'active-popup', 'animation')
+        popup.style.display = 'none'
     })
 }
 
 const isEnemyNotified = (popup) => {
-    if ( !isStealthKill ) return false
     const enemyElem = popup.parentElement.parentElement.parentElement
     const enemyPath = enemyElem.previousSibling.id
     const index = Number(enemyPath.replace('path-', ''))
@@ -168,7 +168,6 @@ const handleEnemies = () =>
     getCurrentRoomEnemies().sort(() => Math.random() - 0.5).forEach(elem => elem.behave())
 
 const manageBullets = () => {
-    const bullets2Remove = new Map([])
     for ( const bullet of getCurrentRoomBullets() ) {
         const x = getProperty(bullet, 'left', 'px')
         const y = getProperty(bullet, 'top', 'px')
@@ -184,18 +183,13 @@ const manageBullets = () => {
                 infectPlayer2SpecificVirus(bullet.getAttribute('virus'))    
             }
             bullet.remove()
-            bullets2Remove.set(bullet, true)
             continue
         }
         for ( const solid of getCurrentRoomSolid() )
             if ((!containsClass(solid, 'enemy-collider') && 
                  collide(bullet, solid, 0)) || 
-                 !collide(bullet, getCurrentRoom(), 0) ) {
-                bullet.remove()
-                bullets2Remove.set(bullet, true)
-            }
+                 !collide(bullet, getCurrentRoom(), 0) ) bullet.remove()
     }
-    setCurrentRoomBullets(getCurrentRoomBullets().filter(bullet => !bullets2Remove.get(bullet)))    
 }
 
 const manageFlames = () => handleObstacles(getCurrentRoomFlames, 900, setPlayer2Fire)
@@ -211,7 +205,6 @@ const handleObstacles = (getItems, time, harmPlayer) =>
     })
 
 const manageThrowables = () => {
-    const throwables2Remove = new Map([])
     for ( const throwable of getCurrentRoomThrowables() ) {
         const throwableObj = element2Object(throwable)
         let { 
@@ -222,7 +215,7 @@ const manageThrowables = () => {
             'diff-y': diffY, 'acc-counter': accCounter } = throwableObj
 
         rotateThrowable(throwable, baseSpeed)
-        handleInteractability(throwable, time, name, throwables2Remove)
+        handleInteractability(throwable, time, name)
         throwable.setAttribute('acc-counter', accCounter + 1)
         
         if ( accCounter === 15 && baseSpeed - 2 >= 0 ) {
@@ -239,7 +232,6 @@ const manageThrowables = () => {
         throwable.style.top = `${getProperty(throwable, 'top', 'px') + speedY}px`
         wallIntersection(throwable, speedX, speedY)
     }
-    setCurrentRoomThrowables(getCurrentRoomThrowables().filter(throwable => !throwables2Remove.get(throwable)))
 }
 
 const rotateThrowable = (throwable, baseSpeed) => {
@@ -272,10 +264,9 @@ const THROWABLE_FUNCTIONALITY = new Map([
     ['flashbang', blindEnemies]
 ])
 
-const handleInteractability = (throwable, time, name, throwables2Remove) => {
+const handleInteractability = (throwable, time, name) => {
     if ( time === 180 ) {
         THROWABLE_FUNCTIONALITY.get(name)(throwable)
-        throwables2Remove.set(throwable, true)
         throwable.remove()
     }
     throwable.setAttribute('time', time + 1)
@@ -316,7 +307,6 @@ const updateThrowableSpeed = (throwable, wall, colliderX, colliderY, speedX, spe
 }
 
 const manageExplosions = () => {
-    const explosions2Remove = new Map([])
     getCurrentRoomExplosions().forEach(explosion => {
         explodePlayer(explosion)
         explodeEnemies(explosion)
@@ -325,13 +315,9 @@ const manageExplosions = () => {
         const scale = getProperty(explosion, 'transform', 'scale(', ')')
         if ( time < 10 ) explosion.style.transform = `scale(${scale + 2})`
         else if ( time < 20 ) explosion.style.transform = `scale(${scale - 2})`
-        if ( time === 30 ) {
-            explosion.remove()
-            explosions2Remove.set(explosion, true)
-        }
+        if ( time === 30 ) explosion.remove()
         explosion.setAttribute('time', time + 1)
     })
-    setCurrentRoomExplosions(getCurrentRoomExplosions().filter(explosion => !explosions2Remove.get(explosion)))
 }
 
 const explodePlayer = (explosion) => {
@@ -359,4 +345,33 @@ const explodeCrates = (explosion) => {
         if ( !collide(explosion, int, 0) ) continue
         dropLoot(int)
     }
+}
+
+let torchCounter = 0
+const manageTorch = () => {
+    if ( !getEquippedTorchId() ) return
+    if ( torchCounter < 180 ) torchCounter++
+    if ( torchCounter !== 180 ) return
+    const torchOfInventory = findEquippedTorchById()
+    torchOfInventory.health--
+    const health = torchOfInventory.health
+    const roomBrightness = rooms.get(getCurrentRoomId()).darkness * 10
+    if ( health === 0 ) killTorch(torchOfInventory.row, torchOfInventory.column, roomBrightness)
+    else lightenEnvironment(health, roomBrightness)
+    torchCounter = 0
+}
+
+const killTorch = (row, column, brightness) => {
+    removeTorch()
+    unequipTorch()
+    getInventory()[row][column] = null
+    getShadowContainer().firstElementChild.style.background =
+        `radial-gradient(circle at center,transparent,black ${brightness}%)`
+}
+
+const lightenEnvironment = (health, roomBrightness) => {
+    const brightness = (health / 100 * 40)
+    const percentage = Math.max(roomBrightness, brightness + 20)
+    getShadowContainer().firstElementChild.style.background = 
+        `radial-gradient(circle at center,transparent,black ${percentage}%)`
 }

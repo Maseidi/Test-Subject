@@ -71,9 +71,7 @@ export const getDoorObject = (doorElem) => {
 
 export const loaders = new Map([
     [1, [
-        new TopLoader_FromLeft(2, 100, 200, 
-            new Door('black', 'Dorm door', 'Danger outside', 'dorm', Progress.builder().setRenderProgress('7'))
-        ),
+        new TopLoader_FromLeft(2, 100, 200),
     ]],
     [2, [
         new BottomLoader_FromLeft(1, 100, 450),
@@ -81,11 +79,7 @@ export const loaders = new Map([
     ]],
     [3, [
         new BottomLoader_FromLeft(2, 100, 450),
-        new TopLoader_FromLeft(4, 100, 450, new Door(
-            'black', 'Metal door', 'In need of right direction', null, Progress.builder().setRenderProgress('9')
-        )),
+        new TopLoader_FromLeft(4, 100, 450),
     ]],
-    [4, [
-
-    ]]
+    [4, []]
 ])

@@ -1,7 +1,7 @@
 import { walls } from './walls.js'
 import { getStash } from './stash.js'
 import { loaders } from './loaders.js'
-import { getInventory } from './inventory.js'
+import { findEquippedWeaponById, getInventory } from './inventory.js'
 import { getShopItems } from './shop-item.js'
 import { enemies } from './enemy/util/enemies.js'
 import { interactables } from './interactables.js'
@@ -26,7 +26,6 @@ import {
     getEnergyDrinksDropped,
     getEntityId,
     getEquippedWeaponId,
-    getEquippedWeaponObject,
     getGrabbed,
     getHealth,
     getHealthPotionsDropped,
@@ -88,7 +87,7 @@ export const logInfo = () => {
     console.log('aim-mode',                getAimMode());
     console.log('weapon-wheel',            getWeaponWheel());
     console.log('equipped-weapon-id',      getEquippedWeaponId());
-    console.log('equipped-weapon-object',  getEquippedWeaponObject());
+    console.log('equipped-weapon-object',  findEquippedWeaponById());
     console.log('element-interacted-with', getElementInteractedWith());
     console.log('targets',                 getTargets());
     console.log('reloading',               getReloading());

@@ -3,10 +3,11 @@ import { isThrowable } from './throwable-details.js'
 import { removeThrowable } from './throwable-loader.js'
 import { manageAimModeAngle } from './angle-manager.js'
 import { TRACKER } from './enemy/util/enemy-constants.js'
-import { getWeaponDetail, getWeaponUpgradableDetail, isWeapon } from './weapon-details.js'
+import { getGunDetail, getGunUpgradableDetail, isGun } from './gun-details.js'
 import { 
     calculateThrowableAmount,
     calculateTotalAmmo,
+    findEquippedWeaponById,
     updateInventoryWeaponMag,
     useInventoryResource } from './inventory.js'
 import { 
@@ -35,7 +36,6 @@ import {
     getAimMode,
     getCriticalChance,
     getEquippedWeaponId,
-    getEquippedWeaponObject,
     getNoOffenseCounter,
     getPlayerAimAngle,
     getPlayerAngle,
@@ -53,7 +53,6 @@ import {
     setAimMode,
     setCriticalChance,
     setEquippedWeaponId,
-    setEquippedWeaponObject,
     setPlayerAimAngle,
     setPlayerAngle,
     setPlayerAngleState,
@@ -68,7 +67,7 @@ const EMPTY_WEAPON = new Audio('../assets/audio/empty-weapon.mp3')
 
 let equipped
 export const manageWeaponActions = () => {
-    equipped = getEquippedWeaponObject()
+    equipped = findEquippedWeaponById()
     manageAim()
     manageReload()
     manageShoot()
@@ -86,7 +85,7 @@ const manageAim = () => {
     } 
     if ( counter !== 0 ) return
     const range = getEquippedItemDetail(equipped, 'range')
-    const laser = findAttachmentsOnPlayer('throwable', 'weapon').firstElementChild
+    const laser = findAttachmentsOnPlayer('throwable', 'gun').firstElementChild
     laser.style.height = `${range}px`
     let found = false
     let intersectedWithWall = false
@@ -94,7 +93,7 @@ const manageAim = () => {
         elem.style.visibility = found ? 'hidden' : 'visible'
         if ( intersectedWithWall ) return
         for ( const solid of getCurrentRoomSolid() ) {
-            if ( ( isThrowable(equipped.name) && !containsClass(solid, 'enemy-collider')  || isWeapon(equipped.name)) &&
+            if ( ( isThrowable(equipped.name) && !containsClass(solid, 'enemy-collider')  || isGun(equipped.name)) &&
                  collide(elem, solid, 0) ) {
                     if ( !getTargets().includes(solid) ) getTargets().push(solid)
                     intersectedWithWall = !containsClass(solid, 'enemy-collider') && solid.getAttribute('name') !== 'crate'
@@ -106,7 +105,7 @@ const manageAim = () => {
 
 export const setupReload = () => {    
     if ( isThrowable(equipped.name) ) return
-    if ( equipped.currmag === getWeaponUpgradableDetail(equipped.name, 'magazine', equipped.magazinelvl) ) return
+    if ( equipped.currmag === getGunUpgradableDetail(equipped.name, 'magazine', equipped.magazinelvl) ) return
     if ( calculateTotalAmmo() === 0 ) return
     if ( getShooting() ) return
     setReloading(true)
@@ -117,7 +116,7 @@ const manageReload = () => {
     if ( isThrowable(equipped?.name) ) return
     if ( !getEquippedWeaponId() ) return
     if ( getReloading() ) reloadCounter++
-    if ( reloadCounter / 60 >= getWeaponUpgradableDetail(equipped.name, 'reloadspeed', equipped.reloadspeedlvl) ) {
+    if ( reloadCounter / 60 >= getGunUpgradableDetail(equipped.name, 'reloadspeed', equipped.reloadspeedlvl) ) {
         reload()
         setReloading(false)
         reloadCounter = 0
@@ -125,7 +124,7 @@ const manageReload = () => {
 }
 
 const reload = () => {    
-    const mag = getWeaponUpgradableDetail(equipped.name, 'magazine', equipped.magazinelvl)
+    const mag = getGunUpgradableDetail(equipped.name, 'magazine', equipped.magazinelvl)
     const currentMag = equipped.currmag
     const totalAmmo = calculateTotalAmmo()
     const need = mag - currentMag
@@ -180,7 +179,7 @@ const applyRecoil = () => {
 }
 
 const addFireAnimation = () => {
-    const weaponFire = findAttachmentsOnPlayer('weapon').lastElementChild
+    const weaponFire = findAttachmentsOnPlayer('gun').lastElementChild
     if ( !Number(weaponFire.getAttribute('time')) === 0 ) return
     weaponFire.style.display = 'block'
     weaponFire.setAttribute('time', 1)
@@ -204,7 +203,7 @@ const manageInteractivity = () => {
             enemy.injuryService.damageEnemy(
                 equipped.name, 
                 absoluteDamage, 
-                getWeaponDetail(equipped.name, 'antivirus')
+                getGunDetail(equipped.name, 'antivirus')
             )
         } 
         if ( target?.getAttribute('name') === 'crate' && absoluteDamage >= 10 ) dropLoot(target)
@@ -215,15 +214,15 @@ const useAmmoFromInventory = (newMag, trade) => {
     useInventoryResource(equipped.ammotype, trade)
     updateInventoryWeaponMag(newMag)
     const ammoCount = getUiEl().children[2].children[1]
-    const mag = ammoCount.children[0]
+    const mag = ammoCount.firstElementChild
     const totalAmmo = ammoCount.children[1]
     mag.textContent = newMag
     totalAmmo.textContent = calculateTotalAmmo()
 }
 
 const manageFireAnimation = () => {
-    if ( !getAimMode() || isThrowable(getEquippedWeaponObject().name) ) return
-    const weaponFire = findAttachmentsOnPlayer('weapon').lastElementChild
+    if ( !getAimMode() || isThrowable(findEquippedWeaponById().name) ) return
+    const weaponFire = findAttachmentsOnPlayer('gun').lastElementChild
     const time = Number(weaponFire.getAttribute('time'))
     if ( time === 0 ) return
     if ( time === 6 ) {
@@ -343,7 +342,6 @@ const unEquipThrowable = () => {
     setThrowCounter(0)
     setShooting(false)
     setEquippedWeaponId(null)
-    setEquippedWeaponObject(null)
     removeClass(getPlayer(), 'throwable-aim')
     if (isMoving()) addClass(getPlayer(), 'walk')
     const rightHand = getPlayer().firstElementChild.firstElementChild.children[2]
