@@ -19,12 +19,19 @@ class Dialogue {
 
 export const dialogues = [
     new Dialogue('Where the hell am I?', sources.MIAN, 
-        Progress.builder().setRenderProgress('2').setProgress2Active([3])),
-    new Dialogue('What the ..., I gotta find that key.', sources.MIAN, Progress.builder().setRenderProgress('6')),
-    new Dialogue('There it is.', sources.MIAN, Progress.builder().setRenderProgress('7')),
-    new Dialogue("It's so dark", sources.MIAN, Progress.builder().setRenderProgress('9')),
-    new Dialogue("The hell was that?!", sources.MIAN, Progress.builder().setRenderProgress('10')),
-    new Dialogue("Alright, good to know.", sources.MIAN, Progress.builder().setRenderProgress('11')),
+        Progress.builder().setRenderProgress('1001').setProgress2Active('1002'), 300000),
+    new Dialogue('What the ..., I gotta find that key.', sources.MIAN, Progress.builder().setRenderProgress('1005')),
+    new Dialogue('There it is.', sources.MIAN, Progress.builder().setRenderProgress('1006').setProgress2Active('1007')),
+    new Dialogue("It's so dark", sources.MIAN, Progress.builder().setRenderProgress('2000').setProgress2Active('2001')),
+    new Dialogue("What the hell was that?!", sources.MIAN, Progress.builder().setRenderProgress('3000')),
+    new Dialogue("Alright, good to know.", sources.MIAN, Progress.builder().setRenderProgress('3001').setProgress2Active('3002')),
+    new Dialogue("I might be able to find a weapon. It's a bunker after all.", sources.MIAN, 
+        Progress.builder().setRenderProgress('4000'), 6000
+    ),
+    new Dialogue("It's so dark. I barely can see anything...", sources.MIAN, Progress.builder().setRenderProgress('7000')),
+    new Dialogue("Nice! I might be able to light something up with this!", sources.MIAN, 
+        Progress.builder().setRenderProgress('7001'), 6000
+    ),
 ]
 
 export const renderDialogue = (progress) => {

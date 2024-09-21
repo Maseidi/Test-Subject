@@ -12,25 +12,39 @@ class Popup {
 }
 
 const popups = [
-    new Popup('Use <span>W</span> <span>A</span> <span>S</span> <span>D</span> to move around', 
-        Progress.builder().setRenderProgress('3').setProgress2Active([4]), 3000
+    new Popup('You can always leave the infection state by using an appropriate vaccine', 
+        Progress.builder().setRenderProgress('10000000'), 10000
     ),
-    new Popup('Use <span>F</span> to pick up items', 
-        Progress.builder().setRenderProgress('4')
+    new Popup('<span>H</span> Use bandage to heal', 
+        Progress.builder().setRenderProgress('10000001'), 10000
     ),
-    new Popup('Use <span>Tab</span> to open inventory. You can do some actions with items in your inventory, such as examining stuff.', 
-        Progress.builder().setRenderProgress('5')
+    new Popup('<span>Q</span> Light up torch', 
+        Progress.builder().setRenderProgress('10000002'), 10000
     ),
-    new Popup('Open inventory when interacting with the door and use the key to open the door', 
-        Progress.builder().setRenderProgress('7')
-    )
+
+    new Popup('<span>W</span> <span>A</span> <span>S</span> <span>D</span> Move', 
+        Progress.builder().setRenderProgress('1002').setProgress2Active('1003'), 3000
+    ),
+    new Popup('<span>F</span> Interact',
+        Progress.builder().setRenderProgress('1003')
+    ),
+    new Popup('<span>Tab</span> Open inventory', 
+        Progress.builder().setRenderProgress('1004')
+    ),
+    new Popup('Use the key from inventory to open the door.', 
+        Progress.builder().setRenderProgress('1007')
+    ),
+    new Popup('<span>Shift</span> Sprint', Progress.builder().setRenderProgress('2001')),
+    new Popup('Sneak past enemies with vaccine to perform stealth kills. Do not let them notice you.', 
+        Progress.builder().setRenderProgress('3002')
+    ),
 ]
 
 export const renderPopup = (progress) => {
     const popupObj = popups.find(popup => popup.renderProgress === progress)
     if ( !popupObj ) return
     if ( getPopupContainer().firstElementChild ) getPopupContainer().firstElementChild.remove()
-    const popup = createAndAddClass('div', 'ui-theme', 'popup-animation', 'animation')
+    const popup = createAndAddClass('div', 'ui-theme', 'hint-popup', 'animation')
     const content = document.createElement('p')
     content.innerHTML = popupObj.message
     appendAll(popup, content)

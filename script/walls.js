@@ -41,6 +41,23 @@ export const walls = new Map([
         new Wall(200, 50, 400, null, null, 200)
     ]],
     [4, [
-        
+        new Wall(500, 50, 125, null, 200),
+        new Wall(500, 50, 125, null, null, 200),
+    ]],
+    [5, [
+        new Wall(100, 100, 200, null, 250),
+        new Wall(100, 100, 500, null, 250),
+    ]],
+    [6, [
+        new Wall(100, 600, 300, null, 200),
+        new Wall(100, 600, 700, null, 200),
+        new Wall(100, 600, 1100, null, 200),
+        new Wall(100, 600, 1500, null, 200),
+    ]],
+    [7, [
+        new Wall(200, 200, 200, null, 200),
+        new Wall(200, 200, 200, null, 600),
+        new Wall(200, 200, null, 200, 200),
+        new Wall(200, 200, null, 200, 600),
     ]]
 ])

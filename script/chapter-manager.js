@@ -12,7 +12,7 @@ class Chapter {
 }
 
 const chapters = [
-    new Chapter(1, Progress.builder().setRenderProgress('1').setProgress2Active([2]), 3000)
+    new Chapter(1, Progress.builder().setRenderProgress('1000').setProgress2Active([1001]), 3000)
 ]
 
 export const renderChapter = (progress) => {

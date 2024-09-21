@@ -1,16 +1,23 @@
 import { Progress } from './progress.js'
 import { getGunDetails } from './gun-details.js'
 import { 
+    BANDAGE_LOOT,
+    BLUE_VACCINE,
     FLASHBANG_LOOT,
+    GREEN_VACCINE,
     GRENADE_LOOT,
     Loot,
     MAGNUM_AMMO_LOOT,
     NOTE,
     P90,
     PISTOL4,
+    PURPLE_VACCINE,
+    RED_VACCINE,
     RIFLE_AMMO_LOOT,
     SHOTGUN_SHELLS_LOOT, 
-    SingleLoot } from './loot.js'
+    SingleLoot, 
+    STICK_LOOT, 
+    YELLOW_VACCINE} from './loot.js'
 
 class Interactable {
     constructor(width, left, top, name, heading, popup, solid, amount, space, description, price, progress) {
@@ -212,7 +219,7 @@ export class GunDrop extends Drop {
 
 export class KeyDrop extends Drop {
     constructor(left, top, code, heading, description, unlocks, progress) {
-        super(10, left, top, `key-${code}`, description, 1, 1, heading, null, progress)
+        super(10, left, top, `key-${code}`, heading, 1, 1, description, null, progress)
         this.unlocks = unlocks ?? null
     }
 }
@@ -299,21 +306,44 @@ export class BlueVaccine extends Vaccine {
 
 export const interactables = new Map([
     [1, [
-        new Note(125, 850, "Prisoner's memo", "Memories of a prisoner", "It's been 2 days I'm here. I'm so hungry and there's no one responsible for this mess. I don't know what happened. All I remember was my normal life. Now I'm here. Alone. Why would this happen? I don't even know if I'm kidnapped by a criminal or arrested by law. Even then I would have contacted someone by now. The door's key is on the ground, so I can get out whenever I want, but the outdoors is terrifying. It's so dark and I think there's a predator past the doors. I can hear it breathing every now and then. I might have to get out of here and face it, or else I would starve to death...",
-            Progress.builder().setRenderProgress('4').setProgress2Active([5]).setOnExamineProgress2Active([6])
+        new Note(125, 850, "Prisoner's memo", "Memories of a prisoner", "It's been 2 days since I'm here. I'm so hungry and there's no one responsible for this mess. I don't know what happened. All I remember was my normal life. Now I'm here. Alone. Why would this happen? I don't even know if I'm kidnapped by a criminal or arrested by law. Even then I would have contacted someone by now. The door's key is on the ground, so I can get out whenever I want, but the outdoors is terrifying. It's so dark and I think there's a predator past these doors. I can hear it breathing every now and then. I might have to get out of here and face it, or else I would starve to death...",
+            Progress.builder().setRenderProgress('1003').setProgress2Active([1004]).setOnExamineProgress2Active([1005])
         ),
-        new KeyDrop(100, 50, 1, 'Dorm key', 'Key for the dormitory', 'dorm', 
-            Progress.builder().setRenderProgress('6').setProgress2Active([7])
+        new KeyDrop(400, 850, 1, 'Dorm key', 'Key for the dormitory', 'dorm', 
+            Progress.builder().setRenderProgress('1005').setProgress2Active([1006])
         )
     ]],
     [2, []],
     [3, [
-        new RedVaccine(350, 825, 2, Progress.builder().setRenderProgress('10')),
-        new RedVaccine(650, 825, 2, Progress.builder().setRenderProgress('10')),
-        new Note(500, 825, "Fugitive's note", "Possible use case of vaccines", "Seems like I'm not the first one encountering this situation, so I'll leave a note cause I believe I won't be the last one either. I found out that the monsters are super weak to the vaccines. I had no clue what they are used for but I picked them up anyway. One of the monsters was after me. It caught me and bit me. I didn't know what to do... I just pulled out the vaccine and injected it to the freak. The monster vanished from existance! It happened so quick I couldn't believe my eyes. Even though the bite hurts, but that was a satisfying achievement...", 
-            Progress.builder().setRenderProgress('10').setOnExamineProgress2Active([11])
+        new RedVaccine(350, 825, 2, Progress.builder().setRenderProgress('3000')),
+        new RedVaccine(650, 825, 2, Progress.builder().setRenderProgress('3000')),
+        new Note(500, 825, "Fugitive's note", "Possible use case of vaccine", "Seems like I'm not the first one facing this, so I'll leave a note cause I believe I won't be the last one either. I found out that the monsters are super weak to the vaccines. I had no clue what they were used for but I picked them up anyway. One of the monsters was after me. It caught me and bit me. I didn't know what to do... I just pulled out the vaccine and injected it to the freak. The monster vanished from existance! It happened so quick I couldn't believe my eyes. Even though the bite hurts, but that was a satisfying achievement...", 
+            Progress.builder().setRenderProgress('3000').setOnExamineProgress2Active('3001')
         ),
-        new Lever(500, 300, Progress.builder().setKillAll('1').setProgress2Active('12'))
+        new Lever(500, 300, Progress.builder().setKillAll('3000').setProgress2Active('3003'))
     ]],
-    [4, []]
+    [4, [
+        new Crate(100, 375, new Loot(BLUE_VACCINE, 3)),
+        new Crate(650, 375, new Loot(PURPLE_VACCINE, 3)),
+    ]],
+    [5, [
+        new Crate(700, 100, new Loot(YELLOW_VACCINE, 3)),
+        new Crate(700, 300, new Loot(BANDAGE_LOOT, 3)),
+        new Crate(700, 500, new Loot(GREEN_VACCINE, 3)),
+    ]],
+    [6, [
+        new Crate(100, 100, new Loot(RED_VACCINE, 2)),
+        new Crate(100, 800, new Loot(GREEN_VACCINE, 2)),
+        new Crate(1000, 800, new Loot(PURPLE_VACCINE, 2)),
+        new Crate(1900, 100, new Loot(YELLOW_VACCINE, 2)),
+        new Crate(1900, 800, new Loot(BLUE_VACCINE, 2)),
+        new Bandage(950, 100, 3),
+        new KeyDrop(950, 500, 2, 'Key of sacrifice', 'A key demonstrating the beauty of sacrifice', 'sacrifice', 
+            Progress.builder().setKillAll('5000')
+        )
+    ]],
+    [7, [
+        new Crate(900, 700, new Loot(STICK_LOOT, 1)),
+        new Lighter(1100, 700, Progress.builder().setProgress2Active('7001'))
+    ]]
 ])

@@ -164,7 +164,7 @@
   border: 1px solid white;
 }
 
-.popup-animation {
+.hint-popup {
   gap: 10px;
   top: 10px;
   left: 100%;
@@ -180,18 +180,19 @@
   animation-name: popup-animation;
   transform: translateX(calc(-100% - 10px));
   box-shadow: 5px 5px 25px rgba(0, 0, 0, 0.9);
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.9);
 }
 
-.popup-animation > p {
+.hint-popup > p {
   color: wheat;
 }
 
-.popup-animation > p > span {
+.hint-popup > p > span {
   padding: 2px 5px;
   border: 1px solid wheat;
 }
 
-.popup-animation > span {
+.hint-popup > span {
   padding: 5px;
   color: white;
   align-self: end;
@@ -203,7 +204,7 @@
   border-bottom: 1px solid white;
 }
 
-.popup-animation > span:hover {
+.hint-popup > span:hover {
   background-color: rgba(255, 255, 255, 0.1);
 }
 
@@ -238,10 +239,6 @@
   animation-duration: 300ms;
 }
 
-.dialogue > span {
-  animation-duration: 10ms;
-}
-
 .chapter-popup > span {
   animation-duration: 150ms;
 }
@@ -249,7 +246,7 @@
 .dialogue {
   top: 0;
   left: 100%;
-  z-index: 35;
+  z-index: 50;
   opacity: 0.9;
   padding: 10px;
   color: white;
@@ -268,6 +265,10 @@
   animation-fill-mode: forwards;
   animation-direction: alternate;
   animation-name: dialogue-animation;
+}
+
+.dialogue > span {
+  animation-duration: 10ms;
 }
 
 .chapter-popup {
