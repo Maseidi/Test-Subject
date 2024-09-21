@@ -136,8 +136,8 @@ export const setSpeaker = (val) => {
 }
 export const getSpeaker = () => speaker
 
-let lightContainer = null
-export const setLightContainer = (val) => {
-    lightContainer = val
+let chapterContainer = null
+export const setChapterContainer = (val) => {
+    chapterContainer = val
 }
-export const getLightContainer = () => lightContainer
+export const getChapterContainer = () => chapterContainer

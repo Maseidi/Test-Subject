@@ -319,17 +319,15 @@ const getDestinationCoordinates = () => {
 const appendColliders = (throwable) => 
     appendAll(
         throwable, 
-        createAndAddClass('div', 'top-collider'), 
-        createAndAddClass('div', 'left-collider'), 
-        createAndAddClass('div', 'right-collider'), 
-        createAndAddClass('div', 'bottom-collider')
+        createAndAddClass('div', 'top-collider'),   createAndAddClass('div', 'left-collider'), 
+        createAndAddClass('div', 'right-collider'), createAndAddClass('div', 'bottom-collider')
     )
 
 const useThrowableFromInventory = () => {
-    useInventoryResource(equipped.name, 1)
     const ammoCount = getUiEl().children[2].children[1]
     const totalAmmo = calculateThrowableAmount()
-    if ( totalAmmo === 0 ) {
+    useInventoryResource(equipped.name, 1)
+    if ( totalAmmo === 1 ) {
         ammoCount.parentElement.remove()
         unEquipThrowable()
     }

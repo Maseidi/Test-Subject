@@ -1,7 +1,6 @@
 import { Progress } from './progress.js'
 import { getPlayer, getSpeaker } from './elements.js'
-import { activateProgress } from './progress-manager.js'
-import { addClass, createAndAddClass, removeClass } from './util.js'
+import { addAllAttributes, addClass, createAndAddClass } from './util.js'
 
 const sources = {
     MIAN: 'main',
@@ -13,12 +12,20 @@ class Dialogue {
         this.message =         message                   ?? null
         this.source =          source                    ?? null
         this.renderProgress =  progress?.renderProgress  ?? null
-        this.progress2Active = progress?.progress2Active ?? null
-        this.duration =        duration                  ?? 10000
+        this.progress2Active = progress?.progress2Active ?? []
+        this.duration =        duration                  ?? 3000
     }
 }
 
-export const dialogues = []
+export const dialogues = [
+    new Dialogue('Where the hell am I?', sources.MIAN, 
+        Progress.builder().setRenderProgress('2').setProgress2Active([3])),
+    new Dialogue('What the ..., I gotta find that key.', sources.MIAN, Progress.builder().setRenderProgress('6')),
+    new Dialogue('There it is.', sources.MIAN, Progress.builder().setRenderProgress('7')),
+    new Dialogue("It's so dark", sources.MIAN, Progress.builder().setRenderProgress('9')),
+    new Dialogue("The hell was that?!", sources.MIAN, Progress.builder().setRenderProgress('10')),
+    new Dialogue("Alright, good to know.", sources.MIAN, Progress.builder().setRenderProgress('11')),
+]
 
 export const renderDialogue = (progress) => {
     const dialogueObj = dialogues.find(dialogue => dialogue.renderProgress === progress)
@@ -46,28 +53,9 @@ const displayDialogue = (message, progress2Active, duration, dialogueContainer) 
         addClass(charEl, 'animation')
         charEl.style.animationDelay = `${i * 50}ms`
         dialogueContent.append(charEl)
-        if ( i === chars.length - 1 ) 
-            charEl.addEventListener('animationend', () => dialogueLifetime(dialogueContent, progress2Active, duration))
     }
+    addAllAttributes(dialogueContent, 
+        'timer', 0, 'duration', Math.floor((duration / 1000) * 60), 'progress2active', progress2Active, 'fade-out', 200
+    )
     dialogueContainer.append(dialogueContent)
-}
-
-const dialogueLifetime = (dialogueContent, progress2Active, duration) => {
-    removeClass(dialogueContent, 'dialogue-animation')
-    addClass(dialogueContent, 'timer')
-    dialogueContent.style.animationDuration = `${duration}ms`
-    const closeDialogueRunner = closeDialogue(dialogueContent, progress2Active)
-    dialogueContent.addEventListener('animationend', () => closeDialogueRunner())
-}
-
-const closeDialogue = (dialogueContent, progress2Active) => {
-    let timerAnimation = false
-    return () => {
-        if ( !timerAnimation ) {
-            timerAnimation = true
-            return
-        }
-        dialogueContent.remove()
-        if ( progress2Active ) activateProgress(progress2Active)
-    }    
 }

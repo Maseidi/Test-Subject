@@ -218,15 +218,6 @@
   }
 }
 
-@keyframes flash {
-  0% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
-}
-
 @keyframes camera-explosion {
   20% {
     transform: translateX(80px) translateY(-20px);
@@ -314,15 +305,6 @@
   }
 }
 
-@keyframes message {
-  0% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
-}
-
 @keyframes fade-out {
   0% {
     opacity: 1;
@@ -361,11 +343,6 @@
   }
 }
 
-@keyframes time-counter {
-  0% { }
-  100% { }
-}
-
 @keyframes dialogue-animation {
   0% {
     opacity: 0;
@@ -375,4 +352,8 @@
     opacity: 1;
     transform: translateY(-100%);
   }
+}
+
+@keyframes fadeout {
+  
 }

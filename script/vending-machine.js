@@ -4,7 +4,7 @@ import { renderQuit } from './user-interface.js'
 import { getPauseContainer } from './elements.js'
 import { renderStats } from './gun-examine.js'
 import { isThrowable } from './throwable-details.js'
-import { findProgressByName } from './progress-manager.js'
+import { getProgressValueByNumber } from './progress-manager.js'
 import { getShopItems, getShopItemsWithId } from './shop-item.js'
 import { ADRENALINE, ENERGY_DRINK, HEALTH_POTION, LUCK_PILLS } from './loot.js'
 import { getGunUpgradableDetail, getGunDetails, isGun } from './gun-details.js'
@@ -107,7 +107,7 @@ const renderBuy = () => {
 const renderBuyItems = () => {
     const statUpgraderLimitRunner = statUpgraderOffLimit()
     return getShopItemsWithId()
-        .filter(item => !item.sold && findProgressByName(item.renderProgress) && statUpgraderLimitRunner(item))
+        .filter(item => !item.sold && getProgressValueByNumber(item.renderProgress) && statUpgraderLimitRunner(item))
         .map((item) => {
             const buyItem = object2Element(item)
             addClass(buyItem, 'buy-item')

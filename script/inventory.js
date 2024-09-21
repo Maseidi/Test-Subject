@@ -11,7 +11,7 @@ import { renderInteractable } from './room-loader.js'
 import { renderThrowable } from './throwable-loader.js'
 import { quitPage, renderQuit } from './user-interface.js'
 import { getGunDetails, isGun } from './gun-details.js'
-import { activateProgress, deactivateProgress, toggleDoor } from './progress-manager.js'
+import { activateAllProgresses, deactivateAllProgresses, toggleDoor } from './progress-manager.js'
 import { useAntidote, useBandage, useHealthPotion, useVaccine } from './player-health.js'
 import { 
     getCurrentRoomEnemies,
@@ -55,8 +55,9 @@ import {
     setShootCounter,
     getShooting, 
     getPause, 
-    getEquippedTorchId} from './variables.js'
-import { unequipTorch } from './controls.js'
+    getEquippedTorchId,
+    setEquippedTorchId} from './variables.js'
+import { equipTorch, unequipTorch } from './controls.js'
 
 export const MAX_PACKSIZE = {
     coin: 50,
@@ -174,9 +175,10 @@ const handleThrowablePickup = () => {
 
 const checkSpecialScenarios = () => {    
     const { amount, progress2active, progress2deactive, id, name } = dropObject
+    
     if ( amount === 0 ) {
-        if ( progress2active )   activateProgress(progress2active + '')
-        if ( progress2deactive ) deactivateProgress(progress2deactive + '')
+        if ( progress2active )   activateAllProgresses  (progress2active)
+        if ( progress2deactive ) deactivateAllProgresses(progress2deactive)
     }
     if ( ( isThrowable(name) && !getWeaponWheel().includes(id) ) ||
          ( isGun(name) && amount === 0 ) ) updateWeaponWheel()        
@@ -418,8 +420,13 @@ const renderOptions = (item, options) => {
          itemObj.name.includes('vaccine') ||
          itemObj.name.includes('key') ) createOption(options, 'use')
 
+    const allowSitchGun = !getShooting() && !getReloading()     
+
+    if ( itemObj.name === 'stick' && countItem('lighter') > 0 )
+        if ( allowSitchGun ) createOption(options, 'equip')
+
     if ( isThrowable(itemObj.name) ) {
-        if ( !getReloading() ) createOption(options, 'equip')
+        if ( allowSitchGun ) createOption(options, 'equip')
         if ( isThrowing() ) renderDropOption = false    
         createOption(options, 'shortcut')
     }
@@ -428,7 +435,7 @@ const renderOptions = (item, options) => {
         if ( getEquippedWeaponId() && itemObj.name === findEquippedWeaponById()?.name ) {
              if ( getReloading() || getShooting() ) renderDropOption = false
         } else {
-            if ( !getReloading() && !getShooting() ) createOption(options, 'equip')
+            if ( allowSitchGun ) createOption(options, 'equip')
         }
         createOption(options, 'shortcut')
         createOption(options, 'examine')
@@ -653,23 +660,42 @@ const useKey = (itemObj) => {
 const equip = (item) => {
     getPauseContainer().firstElementChild.remove()
     const itemObj = element2Object(item)
+    if ( itemObj.name === 'stick' ) equipTorchFromInventory(itemObj)
+    else equipWeaponFromInventory(itemObj)
+    renderInventory()
+}
+
+const equipTorchFromInventory = (itemObj) => {
+    setEquippedTorchId(itemObj.id)
+    equipTorch()
+}
+
+const equipWeaponFromInventory = (itemObj) => {
     const row = itemObj.row
     const column = itemObj.column
     setEquippedWeaponId(inventory[row][column].id)
     const equipped = findEquippedWeaponById()
+    unequipTorch()
     setShootCounter(getEquippedItemDetail(equipped, 'firerate') * 60)
-    if ( getAimMode() ) {
-        exitAimModeAnimation()
-        removeEquipped()
-        if ( isGun(equipped.name) ) {
-            addClass(getPlayer(), 'aim')
-            renderGun()
-        } else if ( isThrowable(equipped.name) ) {
-            addClass(getPlayer(), 'throwable-aim')
-            renderThrowable()
-        }
-    }
-    renderInventory()
+    equipWeaponFromInventoryOnAimMode(equipped.name)
+} 
+
+const equipWeaponFromInventoryOnAimMode = (name) => {
+    if ( !getAimMode() ) return
+    exitAimModeAnimation()
+    removeEquipped()
+    if ( isGun(name) ) equipGunFromInventoryOnAimMode()
+    else if ( isThrowable(name) ) equipThrowableFromInventoryOnAimMode()
+}
+
+const equipGunFromInventoryOnAimMode = () => {
+    addClass(getPlayer(), 'aim')
+    renderGun()
+}
+
+const equipThrowableFromInventoryOnAimMode = () => {
+    addClass(getPlayer(), 'throwable-aim')
+    renderThrowable()
 }
 
 const shortcut = (item) => {
@@ -767,9 +793,9 @@ const dropFromWeaponWheel = (itemObj) => {
 
 const examine = (item) => {
     const itemObj = element2Object(item)  
-    if ( isGun(itemObj.name) ) renderStats(itemObj)
+    if ( isGun(itemObj.name) )          renderStats(itemObj)
     else if ( itemObj.name === 'note' ) renderNote(item, itemObj)
-    if ( itemObj.onExamineProgress2Active ) activateProgress(itemObj.onExamineProgress2Active)
+    if ( itemObj.onexamine )            activateAllProgresses(itemObj.onexamine)
 }
 
 const renderNote = (item, itemObj) => {

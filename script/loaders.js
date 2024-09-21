@@ -49,7 +49,7 @@ class Door {
         this.popup =           popup                     ?? null
         this.key =             key                       ?? null
         this.renderProgress =  progress?.renderProgress  ?? null
-        this.progress2Active = progress?.progress2Active ?? null
+        this.progress2Active = progress?.progress2Active ?? []
         this.killAll =         progress?.killAll         ?? null
         this.type =            Math.random() < 0.5       ? 1 : 2
         this.code =            code                      ?? null
@@ -71,7 +71,9 @@ export const getDoorObject = (doorElem) => {
 
 export const loaders = new Map([
     [1, [
-        new TopLoader_FromLeft(2, 100, 200),
+        new TopLoader_FromLeft(2, 100, 200, 
+            new Door('black', 'Drom door', 'Danger outside', 'dorm', Progress.builder().setRenderProgress('8'))
+        ),
     ]],
     [2, [
         new BottomLoader_FromLeft(1, 100, 450),
@@ -79,7 +81,11 @@ export const loaders = new Map([
     ]],
     [3, [
         new BottomLoader_FromLeft(2, 100, 450),
-        new TopLoader_FromLeft(4, 100, 450),
+        new TopLoader_FromLeft(4, 100, 450,
+            new Door('black', 'Bunker C Door', 'In need of right direction', null, 
+                Progress.builder().setRenderProgress('12')
+            )
+        ),
     ]],
     [4, []]
 ])

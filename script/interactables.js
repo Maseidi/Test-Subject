@@ -14,21 +14,22 @@ import {
 
 class Interactable {
     constructor(width, left, top, name, heading, popup, solid, amount, space, description, price, progress) {
-        this.width =             width                       ?? 0
-        this.left =              left                        ?? 0
-        this.top =               top                         ?? 0
-        this.name =              name                        ?? null
-        this.heading =           heading                     ?? null
-        this.popup =             popup                       ?? null
-        this.solid =             solid                       ?? false
-        this.amount =            amount                      ?? 0
-        this.space =             space                       ?? 0
-        this.description =       description                 ?? null
-        this.price =             price                       ?? 0
-        this.renderProgress =    progress?.renderProgress    ?? String(Number.MAX_SAFE_INTEGER)
-        this.killAll=            progress?.killAll           ?? null
-        this.progress2Active =   progress?.progress2Active   ?? null
-        this.progress2Deactive = progress?.progress2Deactive ?? null
+        this.width =             width                              ?? 0
+        this.left =              left                               ?? 0
+        this.top =               top                                ?? 0
+        this.name =              name                               ?? null
+        this.heading =           heading                            ?? null
+        this.popup =             popup                              ?? null
+        this.solid =             solid                              ?? false
+        this.amount =            amount                             ?? 0
+        this.space =             space                              ?? 0
+        this.description =       description                        ?? null
+        this.price =             price                              ?? 0
+        this.renderProgress =    progress?.renderProgress           ?? String(Number.MAX_SAFE_INTEGER)
+        this.killAll=            progress?.killAll                  ?? null
+        this.progress2Active =   progress?.progress2Active          ?? []
+        this.progress2Deactive = progress?.progress2Deactive        ?? []
+        this.onexamine =         progress?.onExamineProgress2Active ?? []
     }
 }
 
@@ -199,12 +200,12 @@ export class GunDrop extends Drop {
             getGunDetails().get(name).price,
             progress
         )
-        this.currmag =        currmag ?? 0
-        this.damageLvl =      damageLvl ?? 1
-        this.rangeLvl =       rangeLvl ?? 1
-        this.reloadspeedLvl = reloadspeedLvl ?? 1
-        this.magazineLvl =    magazineLvl ?? 1
-        this.fireratelvl =    fireratelvl ?? 1
+        this.currmag =        currmag                            ?? 0
+        this.damageLvl =      damageLvl                          ?? 1
+        this.rangeLvl =       rangeLvl                           ?? 1
+        this.reloadspeedLvl = reloadspeedLvl                     ?? 1
+        this.magazineLvl =    magazineLvl                        ?? 1
+        this.fireratelvl =    fireratelvl                        ?? 1
         this.ammotype =       getGunDetails().get(name).ammotype ?? null
     }
 }
@@ -298,10 +299,21 @@ export class BlueVaccine extends Vaccine {
 
 export const interactables = new Map([
     [1, [
-        new Stick(250, 300, null, 100),
-        new Lighter(250, 500)
+        new Note(125, 850, "Prisoner's memo", "Memories of a prisoner", "It's been 2 days I'm here. I'm so hungry and there's no one responsible for this mess. I don't know what happened. All I remember was my normal life. Now I'm here. Alone. Why would this happen? I don't even know if I'm kidnapped by a criminal or arrested by law. Even then I would have contacted someone by now. The door's key is on the ground, so I can get out whenever I want, but the outdoors is terrifying. It's so dark and I think there's a predator past the doors. I can hear it breathing every now and then. I might have to get out of here and face it, or else I would starve to death...",
+            Progress.builder().setRenderProgress('4').setProgress2Active([5]).setOnExamineProgress2Active([6])
+        ),
+        new KeyDrop(100, 50, 1, 'Dorm key', 'Key for the dormitory', 'dorm', 
+            Progress.builder().setRenderProgress('6').setProgress2Active([7])
+        )
     ]],
     [2, []],
-    [3, []],
+    [3, [
+        new RedVaccine(350, 825, 2, Progress.builder().setRenderProgress('10')),
+        new RedVaccine(650, 825, 2, Progress.builder().setRenderProgress('10')),
+        new Note(500, 825, "Fugitive's note", "Possible use case of vaccines", "Seems like I'm not the first one encountering this situation, so I'll leave a note cause I believe I won't be the last one either. I found out that the monsters are super weak to the vaccines. I had no clue what they are used for but I picked them up anyway. One of the monsters was after me. It caught me and bit me. I didn't know what to do... I just pulled out the vaccine and injected it to the freak. The monster vanished from existance! It happened so quick I couldn't believe my eyes. Even though the bite hurts, but that was a satisfying achievement...", 
+            Progress.builder().setRenderProgress('10').setOnExamineProgress2Active([11])
+        ),
+        new Lever(500, 300, Progress.builder().setKillAll('1').setProgress2Active('12'))
+    ]],
     [4, []]
 ])

@@ -328,14 +328,8 @@ export const setEquippedTorchId = (val) => {
 }
 export const getEquippedTorchId = () => equippedTorchId
 
-let windowWidth = window.innerWidth
-export const setWindowWidth = (val) => {
-    windowWidth = val
+let waitingFunctions = []
+export const setWaitingFunctions = (val) => {
+    waitingFunctions = val
 }
-export const getWindowWidth = () => windowWidth
-
-let windowHeight = window.innerHeight
-export const setWindowHeight = (val) => {
-    windowHeight = val
-}
-export const getWindowHeight = () => windowHeight
+export const getWaitingFunctions = () => waitingFunctions

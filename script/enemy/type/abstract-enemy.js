@@ -7,7 +7,6 @@ import { AbstractMovementService } from '../service/abstract/movement.js'
 import { AbstractCollisionService } from '../service/abstract/collision.js'
 import { AbstractPathFindingService } from '../service/abstract/path-finding.js'
 import { AbstractNotificationService } from '../service/abstract/notification.js'
-import { RANGER } from '../util/enemy-constants.js'
 
 export class AbstractEnemy {
     constructor(type, components, waypoint, health, damage, 
@@ -23,8 +22,8 @@ export class AbstractEnemy {
         this.acceleration =        acceleration ?? 0
         this.loot =                loot ?? null
         this.renderProgress =      progress?.renderProgress ?? String(Number.MAX_SAFE_INTEGER)
-        this.progress2Active =     progress?.progress2Active ?? null
-        this.progress2Deactive =   progress?.progress2Deactive ?? null
+        this.progress2Active =     progress?.progress2Active ?? []
+        this.progress2Deactive =   progress?.progress2Deactive ?? []
         this.killAll =             progress?.killAll ?? null
         this.x =                   waypoint.points[0].x ?? 0
         this.y =                   waypoint.points[0].y ?? 0

@@ -5,10 +5,9 @@ import { BottomLoader_FromLeft, LeftLoader_FromTop, loaders, RightLoader_FromTop
 import { isGun } from './gun-details.js'
 import { enemies } from './enemy/util/enemies.js'
 import { interactables } from './interactables.js'
-import { renderRoomName } from './popup-manager.js'
 import { countItem, findEquippedTorchById, updateInteractablePopup } from './inventory.js'
 import { getCurrentRoomId, getRoomLeft, getRoomTop, setStunnedCounter } from './variables.js'
-import { activateProgress, deactivateProgress, findProgressByName } from './progress-manager.js'
+import { activateAllProgresses, deactivateAllProgresses, getProgressValueByNumber } from './progress-manager.js'
 import { 
     LOST,
     MOVE_TO_POSITION,
@@ -24,7 +23,8 @@ import {
     createAndAddClass,
     nextId,
     object2Element,
-    removeClass } from './util.js'
+    removeClass, 
+    renderShadow} from './util.js'
 import { 
     getCurrentRoomEnemies,
     getCurrentRoomInteractables, 
@@ -43,9 +43,9 @@ import {
     setCurrentRoomExplosions,
     setCurrentRoomDoors,
     getCurrentRoomDoors, 
-    getShadowContainer,
     getCurrentRoom,
     setSpeaker} from './elements.js'
+import { renderRoomName } from './room-name-manager.js'
 
 export const loadCurrentRoom = () => {
     setStunnedCounter(0)
@@ -87,15 +87,13 @@ const renderRoom = () => {
 const calculateRoomBrightness = (darkness) => {
     const equippedTorch = findEquippedTorchById()
     const brightness = equippedTorch ? (equippedTorch.health / 100 * 40) : Number.MIN_SAFE_INTEGER
-    const percentage = Math.max(darkness * 10, brightness + 20)
-    getShadowContainer().firstElementChild.style.background = 
-        `radial-gradient(circle at center,transparent,black ${percentage}%)`
+    renderShadow(Math.max(darkness * 10, brightness + 20))
 }
 
 const manageRoomProgress = () => {
     const room = rooms.get(getCurrentRoomId())
-    activateProgress(room.progress2Active)
-    deactivateProgress(room.progress2Deactive)
+    activateAllProgresses(room.progress2Active)
+    deactivateAllProgresses(room.progress2Deactive)
     renderRoomName(room.label)
 }
 
@@ -205,7 +203,7 @@ const renderLoaders = () => {
         else if ( elem.bottom !== null ) loader.style.bottom = `${elem.bottom}px`  
         const door = elem.door
         if ( door ) {
-            if ( (door.renderProgress && !findProgressByName(door.renderProgress)) || enemiesLeft(door) ) var open = false
+            if ( (door.renderProgress && !getProgressValueByNumber(door.renderProgress)) || enemiesLeft(door) ) var open = false
             else var open = true
             renderDoor(elem, open)
             }
@@ -229,9 +227,9 @@ export const renderDoor = (loader, open) => {
     doorElem.style.backgroundColor = doorObj.color
     doorElem.style.width = `${width}px`
     doorElem.style.height = `${height}px`
-    addPosition(doorElem, left, 'left', 'hor', doorObj.type)
-    addPosition(doorElem, right, 'right', 'hor', doorObj.type)
-    addPosition(doorElem, top, 'top', 'ver', doorObj.type)
+    addPosition(doorElem, left,   'left',   'hor', doorObj.type)
+    addPosition(doorElem, right,  'right',  'hor', doorObj.type)
+    addPosition(doorElem, top,    'top',    'ver', doorObj.type)
     addPosition(doorElem, bottom, 'bottom', 'ver', doorObj.type)
     doorObj.isDoor = true
     renderPopUp(doorElem, doorObj)
@@ -255,7 +253,7 @@ const renderInteractables = () =>
         .forEach((interactable, index) => renderInteractable(interactable, index))
 
 export const renderInteractable = (interactable, index) => {
-    if ( !findProgressByName(interactable.renderProgress) ) return
+    if ( !getProgressValueByNumber(interactable.renderProgress) ) return
     if ( enemiesLeft(interactable) ) return
     const int = object2Element(interactable)    
     addClass(int, 'interactable')
@@ -297,7 +295,7 @@ const renderImage = (int, interactable) => {
 const handleLeverImage = (interactable, image) => {
     if ( interactable.name !== 'lever' ) return
     const toggle1 = interactable.progress2Active
-    if ( findProgressByName(toggle1) ) image.style.transform = `scale(-1, 1)` 
+    if ( getProgressValueByNumber(toggle1) ) image.style.transform = `scale(-1, 1)` 
 }
 
 const renderPopUp = (int, interactable) => {
@@ -366,7 +364,7 @@ const renderEnemies = () => {
 const indexEnemies = (enemies) => enemies.forEach((enemy, index) => enemy.index = index)
 
 const filterEnemies = (enemies) => enemies.filter(enemy => 
-    enemy.health !== 0 && findProgressByName(enemy?.renderProgress) && !enemiesLeft(enemy)
+    enemy.health !== 0 && getProgressValueByNumber(enemy?.renderProgress) && !enemiesLeft(enemy)
 )
 
 const spawnEnemies = (enemies) => enemies.forEach(elem => spawnEnemy(elem))

@@ -12,8 +12,9 @@ import { renderPasswordInput } from './password-manager.js'
 import { removeTorch, renderTorch } from './torch-loader.js'
 import { renderUi, renderWeaponUi, quitPage } from './user-interface.js'
 import { heal, damagePlayer, findHealtStatusChildByClassName } from './player-health.js'
-import { activateProgress, deactivateProgress, getProgress } from './progress-manager.js'
+import { activateAllProgresses, deactivateAllProgresses, getProgress } from './progress-manager.js'
 import { 
+    getChapterContainer,
     getGrabBar,
     getPauseContainer,
     getPlayer,
@@ -43,7 +44,8 @@ import {
     isThrowing,
     removeAllClasses,
     removeClass, 
-    removeEquipped} from './util.js'
+    removeEquipped,
+    renderShadow} from './util.js'
 import { 
     getAimMode,
     getDownPressed,
@@ -80,7 +82,9 @@ import {
     getCurrentRoomId,
     getAnimatedLimbs, 
     setEquippedTorchId,
-    getEquippedTorchId} from './variables.js'
+    getEquippedTorchId,
+    getWaitingFunctions,
+    setWaitingFunctions} from './variables.js'
 import { rooms } from './rooms.js'
 
 export const initControls = () => {
@@ -330,13 +334,13 @@ const toggleLever = () => {
     const toggle2 = getElementInteractedWith().getAttribute('progress2Deactive')
     const value = getProgress()[toggle1]
     if ( !value ) {
-        activateProgress(toggle1)
-        deactivateProgress(toggle2)
+        activateAllProgresses(toggle1)
+        deactivateAllProgresses(toggle2)
         getElementInteractedWith().firstElementChild.style.transform = `scale(-1, 1)`
     }
     else {
-        activateProgress(toggle2)
-        deactivateProgress(toggle1)
+        activateAllProgresses(toggle2)
+        deactivateAllProgresses(toggle1)
         getElementInteractedWith().firstElementChild.style.transform = `scale(1, 1)`
     }
 }
@@ -395,12 +399,14 @@ const stopAnimations = () => {
 }
 
 const removeUi = () => {
-    getRoomNameContainer().style.opacity = '0'
-    findHealtStatusChildByClassName('infected-container').style.opacity = '0'
     getPopupContainer().style.opacity = '0'
+    getChapterContainer().style.opacity = '0'
+    getRoomNameContainer().style.opacity = '0'
     getPlayer().firstElementChild.children[2].style.opacity = '0'
     if ( getSpeaker() ) getSpeaker().lastElementChild.style.opacity = '0'
-    if ( getElementInteractedWith() ) getElementInteractedWith().style.opacity = '0'
+    findHealtStatusChildByClassName('infected-container').style.opacity = '0'
+    if ( getElementInteractedWith()?.children[1] ) getElementInteractedWith().children[1].style.visibility = 'hidden'
+    else if ( getElementInteractedWith()?.children[0] ) getElementInteractedWith().children[0].style.visibility = 'hidden'
 }
 
 const gamePlaying = () => {
@@ -409,6 +415,8 @@ const gamePlaying = () => {
     resumeAnimations()
     showUi()
     resumePlayerActions()
+    getWaitingFunctions().forEach(elem => elem.fn(...elem.args))
+    setWaitingFunctions([])
 }
 
 const resumeAnimations = () => {
@@ -417,12 +425,14 @@ const resumeAnimations = () => {
 }
 
 const showUi = () => {
-    getRoomNameContainer().style.opacity = '1'
-    findHealtStatusChildByClassName('infected-container').style.opacity = '1'
     getPopupContainer().style.opacity = '1'
+    getChapterContainer().style.opacity = '1'
+    getRoomNameContainer().style.opacity = '1'
     getPlayer().firstElementChild.children[2].style.opacity = '1'
     if ( getSpeaker() ) getSpeaker().lastElementChild.style.opacity = '1'
-    if ( getElementInteractedWith() ) getElementInteractedWith().style.opacity = '1'
+    findHealtStatusChildByClassName('infected-container').style.opacity = '1'
+    if ( getElementInteractedWith()?.children[1] ) getElementInteractedWith().children[1].style.visibility = 'visible'
+    else if ( getElementInteractedWith()?.children[0] ) getElementInteractedWith().children[0].style.visibility = 'visible'
 }
 
 const resumePlayerActions = () => {
@@ -458,7 +468,7 @@ const qDown = () => {
     else unequipTorch()
 }
 
-const equipTorch = () => {
+export const equipTorch = () => {
     if ( getEquippedWeaponId() ) switchWeapon2Torch()
     else takeOutTorch()
 }
@@ -477,17 +487,14 @@ const takeOutTorch = () => {
     renderTorch()
     const health = findEquippedTorchById().health
     const brightness = (health / 100 * 40)
-    const percentage = Math.max(brightness + 20, rooms.get(getCurrentRoomId()).darkness * 10)
-    getShadowContainer().firstElementChild.style.background = 
-        `radial-gradient(circle at center,transparent,black ${percentage}%)`
+    renderShadow(Math.max(brightness + 20, rooms.get(getCurrentRoomId()).darkness * 10))
 }
 
 export const unequipTorch = () => {
     removeClass(getPlayer(), 'torch')
     setEquippedTorchId(null)
     removeTorch()
-    getShadowContainer().firstElementChild.style.background = 
-        `radial-gradient(circle at center,transparent,black ${rooms.get(getCurrentRoomId()).darkness * 10}%)`
+    renderShadow(rooms.get(getCurrentRoomId()).darkness * 10)
 }
 
 const wUp = () => disableDirection(setUpPressed, setDownPressed)

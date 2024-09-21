@@ -32,13 +32,13 @@ export const walls = new Map([
         new Wall(75, 25, null, 100, 900),
     ]],
     [2, [
-        new Wall(400, 10, 300, null, 400),
-        new Wall(200, 10, 400, null, 200)
+        new Wall(400, 50, 300, null, 300),
+        new Wall(200, 50, 400, null, 100)
     ]],
     [3, [
-        new Wall(10, 700, 200, null, 150),
-        new Wall(10, 700, null, 200, 150),
-        new Wall(200, 10, 400, null, null, 200)
+        new Wall(50, 700, 200, null, 150),
+        new Wall(50, 700, null, 200, 150),
+        new Wall(200, 50, 400, null, null, 200)
     ]],
     [4, [
         

@@ -2,10 +2,10 @@ export class Progress {
 
     constructor() {
         this.renderProgress =           null
-        this.progress2Active =          null
-        this.progress2Deactive =        null
+        this.progress2Active =          []
+        this.progress2Deactive =        []
         this.killAll =                  null
-        this.onExamineProgress2Active = null
+        this.onExamineProgress2Active = []
     }
 
     static builder() {
@@ -34,6 +34,7 @@ export class Progress {
 
     setOnExamineProgress2Active(value) {
         this.onExamineProgress2Active = value
+        return this
     }
 
 }

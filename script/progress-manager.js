@@ -1,9 +1,10 @@
 import { getDoorObject } from './loaders.js'
 import { renderPopup } from './popup-manager.js'
-import { getCurrentRoomId } from './variables.js'
+import { getCurrentRoomId, getPause, getWaitingFunctions, setWaitingFunctions } from './variables.js'
 import { enemies } from './enemy/util/enemies.js'
 import { interactables } from './interactables.js'
 import { getCurrentRoomDoors } from './elements.js'
+import { renderChapter } from './chapter-manager.js'
 import { renderDialogue } from './dialogue-manager.js'
 import { addClass, element2Object, removeClass } from './util.js'
 import { renderInteractable, spawnEnemy } from './room-loader.js'
@@ -14,35 +15,53 @@ let progress = {
 
 export const getProgress = () => progress
 
-export const findProgressByName = (name) => progress[name]
+export const getProgressValueByNumber = (number) => progress[number]
 
-export const activateProgress = (name) => {
-    if ( !name || progress[name] ) return
-    progress = {
-        ...progress,
-        [name]: true
+export const activateAllProgresses = (numbers) => {
+    if ( !numbers ) return
+
+    const progresses2Active = String(numbers).split(',')
+    
+    for ( const progress2Active of progresses2Active ) {
+        if ( progress[progress2Active] ) continue
+        progress = {
+            ...progress,
+            [progress2Active]: true
+        }
+        add2Queue(renderPopup, [progress2Active])
+        add2Queue(toggleDoors, [progress2Active])
+        add2Queue(updateEnemies, [progress2Active])
+        add2Queue(renderChapter, [progress2Active])
+        add2Queue(renderDialogue, [progress2Active])
+        add2Queue(updateInteractables, [progress2Active])
     }
-    renderPopup(name)
-    toggleDoors(name)
-    updateEnemies(name)
-    renderDialogue(name)
-    updateInteractables(name)
 }
 
-export const deactivateProgress = (name) => {
-    if ( !name || !progress[name] ) return
-    progress = {
-        ...progress,
-        [name] : false
+export const deactivateAllProgresses = (numbers) => {
+    if ( !numbers ) return
+
+    const progresses2Deactive = String(numbers).split(',')    
+
+    for ( const progress2Deactive of progresses2Deactive ) {
+        if ( !progress[progress2Deactive] ) continue
+        progress = {
+            ...progress,
+            [progress2Deactive] : false
+        }
+        add2Queue(toggleDoors, [progress2Deactive, false])
     }
-    toggleDoors(name, false)
+}
+
+const add2Queue = (func, args) => {
+    if ( getPause() ) setWaitingFunctions([...getWaitingFunctions(), {fn: func, args}])
+    else func(...args)
 }
 
 // Note: Doors with kill all NEVER need a renderProgress property
 // Caution: Doors that need a key or code MUST have a renderProgress property!!
-const toggleDoors = (name, open = true) => 
+const toggleDoors = (number, open = true) => 
     getCurrentRoomDoors()
-        .filter(door => door.getAttribute('renderprogress') === name )
+        .filter(door => door.getAttribute('renderprogress') === number )
         .forEach(door => toggleDoor(door, open))
 
 export const toggleDoor = (door, open = true) => {
@@ -50,9 +69,9 @@ export const toggleDoor = (door, open = true) => {
     if ( open ) {
         addClass(door, 'open')        
         const { progress2active, progress2deactive } = rest
-        if ( renderprogress )     activateProgress(renderprogress)
-        if ( progress2active )    activateProgress(progress2active)
-        if ( progress2deactive )  deactivateProgress(progress2deactive)
+        if ( renderprogress )     activateAllProgresses(renderprogress)
+        if ( progress2active )    activateAllProgresses(progress2active)
+        if ( progress2deactive )  deactivateAllProgresses(progress2deactive)
         return
     }
     removeClass(door, 'open')
@@ -77,10 +96,10 @@ export const updateKillAllDoors = () => {
     })
 }
 
-const updateEnemies = (name) =>
+const updateEnemies = (number) =>
     enemies.get(getCurrentRoomId()).forEach(enemy => {
         if ( enemy.health === 0 ) return
-        if ( enemy.renderProgress !== name ) return
+        if ( enemy.renderProgress !== number ) return
         enemy.killAll = null
         enemy.renderProgress = String(Number.MAX_SAFE_INTEGER)
         spawnEnemy(enemy)
@@ -98,9 +117,9 @@ export const updateKillAllEnemies = () => {
     })
 }   
 
-const updateInteractables = (name) =>
+const updateInteractables = (number) =>
     interactables.get(getCurrentRoomId()).forEach((int, index) => {
-        if ( int.renderProgress !== name ) return 
+        if ( int.renderProgress !== number ) return 
         int.killAll = null
         int.renderProgress = String(Number.MAX_SAFE_INTEGER)
         renderInteractable(int, index)

@@ -164,19 +164,17 @@
   border: 1px solid white;
 }
 
-.progress-popup {
+.popup-animation {
   gap: 10px;
   top: 10px;
   left: 100%;
   z-index: 65;
   width: 500px;
   padding: 20px;
-  display: flex;
   line-height: 30px;
   border-radius: 5px;
   letter-spacing: 2px;
   text-align: justify;
-  flex-direction: column;
   animation-duration: 300ms;
   animation-direction: alternate;
   animation-name: popup-animation;
@@ -184,22 +182,16 @@
   box-shadow: 5px 5px 25px rgba(0, 0, 0, 0.9);
 }
 
-.progress-popup > p {
+.popup-animation > p {
   color: wheat;
 }
 
-.progress-popup > p > span {
+.popup-animation > p > span {
   padding: 2px 5px;
   border: 1px solid wheat;
 }
 
-.popup-fade-out {
-  animation-duration: 1s;
-  animation-name: fade-out;
-  animation-direction: alternate;
-}
-
-.progress-popup > span {
+.popup-animation > span {
   padding: 5px;
   color: white;
   align-self: end;
@@ -211,7 +203,7 @@
   border-bottom: 1px solid white;
 }
 
-.progress-popup > span:hover {
+.popup-animation > span:hover {
   background-color: rgba(255, 255, 255, 0.1);
 }
 
@@ -233,26 +225,25 @@
   box-shadow: 0 0 10px rgba(255, 255, 255, 0.9);
 }
 
-.room-name-popup > span {
+.room-name-popup > span, .dialogue > span, .chapter-popup > span {
   opacity: 0;
-  margin-left: 2px;
-  margin-right: 2px;
-  animation-duration: 300ms;
   animation-fill-mode: forwards;
   animation-direction: alternate;
   animation-name: character-animation;
 }
 
-.room-name-fade-out {
-  animation-duration: 5s;
-  animation-name: fade-out;
-  animation-direction: alternate;
+.room-name-popup > span {
+  margin-left: 2px;
+  margin-right: 2px;
+  animation-duration: 300ms;
 }
 
-.timer {
-  animation-name: time-counter;
-  animation-fill-mode: forwards;
-  animation-direction: alternate;
+.dialogue > span {
+  animation-duration: 10ms;
+}
+
+.chapter-popup > span {
+  animation-duration: 150ms;
 }
 
 .dialogue {
@@ -279,10 +270,24 @@
   animation-name: dialogue-animation;
 }
 
-.dialogue > span {
-  opacity: 0;
-  animation-duration: 10ms;
-  animation-direction: alternate;
+.chapter-popup {
+  left: 50%;
+  top: 200px;
+  z-index: 35;
+  padding: 10px;
+  color: wheat;
+  font-size: 32px;
+  font-weight: bold;
+  width: max-content;
+  position: absolute;
+  letter-spacing: 20px;
+  text-transform: uppercase;
+  transform: translateX(-50%);
+  text-shadow: 0 0 15px black;
+}
+
+.fade-out {
+  animation-name: fade-out;
   animation-fill-mode: forwards;
-  animation-name: character-animation;
+  animation-direction: alternate;
 }

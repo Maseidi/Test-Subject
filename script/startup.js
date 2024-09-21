@@ -1,14 +1,13 @@
 import { renderUi } from './user-interface.js'
 import { loadCurrentRoom } from './room-loader.js'
 import { appendAll, createAndAddClass } from './util.js'
-import { getMapX, getMapY, getPlayerX, getPlayerY, getWindowHeight, getWindowWidth } from './variables.js'
+import { getMapX, getMapY, getPlayerX, getPlayerY } from './variables.js'
 import { 
     getHealthStatusContainer,
-    getLightContainer,
     getMapEl,
     getShadowContainer,
+    setChapterContainer,
     setHealthStatusContainer,
-    setLightContainer,
     setMapEl,
     setPauseContainer,
     setPlayer,
@@ -23,7 +22,7 @@ export const startUp = () => {
     renderPopupContainer()
     renderHealthStatusContainer()
     renderShadowContainer()
-    renderLightContainer()
+    renderChapterContainer()
     renderUi()
     renderMap()
     renderRoomContainer()
@@ -52,11 +51,7 @@ const renderShadowContainer = () => {
     getShadowContainer().append(shadow)
 }
 
-const renderLightContainer = () => {
-    renderContainer('light-container', setLightContainer)
-    const light = createAndAddClass('div', 'light')
-    getLightContainer().append(light)
-}
+const renderChapterContainer = () => renderContainer('chapter-container', setChapterContainer)
 
 const renderContainer = (className, setter) => {
     const root = document.getElementById('root')

@@ -1,9 +1,13 @@
 import { rooms } from './rooms.js'
 import { loaders } from './loaders.js'
 import { dropLoot } from './loot-manager.js'
+import { unequipTorch } from './controls.js'
+import { removeTorch } from './torch-loader.js'
 import { enemies } from './enemy/util/enemies.js'
 import { loadCurrentRoom } from './room-loader.js'
 import { getThrowableDetail } from './throwable-details.js'
+import { activateAllProgresses } from './progress-manager.js'
+import { findEquippedTorchById, getInventory } from './inventory.js'
 import { damagePlayer, infectPlayer2SpecificVirus, poisonPlayer, setPlayer2Fire } from './player-health.js'
 import { 
     CHASE,
@@ -16,13 +20,15 @@ import {
     STUNNED } from './enemy/util/enemy-constants.js'
 import { 
     addAllAttributes,
+    addClass,
     addExplosion,
     calculateBulletSpeed,
     collide,
     containsClass,
     createAndAddClass,
     element2Object,
-    getProperty } from './util.js'
+    getProperty, 
+    renderShadow} from './util.js'
 import { 
     getCurrentRoom,
     getCurrentRoomEnemies,
@@ -36,8 +42,10 @@ import {
     getCurrentRoomThrowables,
     getMapEl, 
     getCurrentRoomExplosions,
-    setCurrentRoomExplosions, 
-    getShadowContainer} from './elements.js'
+    getSpeaker,
+    getRoomNameContainer,
+    getChapterContainer,
+    getPopupContainer} from './elements.js'
 import {
     getCurrentRoomId,
     getExplosionDamageCounter,
@@ -57,9 +65,6 @@ import {
     setStunnedCounter, 
     getElementInteractedWith,
     getEquippedTorchId} from './variables.js'
-import { findEquippedTorchById, getInventory } from './inventory.js'
-import { removeTorch } from './torch-loader.js'
-import { unequipTorch } from './controls.js'
 
 export const manageEntities = () => {
     manageSolidObjects()
@@ -72,6 +77,7 @@ export const manageEntities = () => {
     manageThrowables()
     manageExplosions()
     manageTorch()
+    managePopovers()
 }
 
 const manageSolidObjects = () => {
@@ -115,7 +121,7 @@ const manageInteractables = () => {
         const popup = int.children[1] ?? int.firstElementChild
         const isEnemy = popup.lastElementChild.lastElementChild.src
         if ( int.getAttribute('name') === 'speaker' ) return
-        if ( collide(getPlayer().firstElementChild, int, 20) && !getElementInteractedWith() ) {
+        if ( collide(getPlayer().firstElementChild, int, 20) && !getElementInteractedWith() && !containsClass(int, 'open') ) {
             if ( isEnemy && isEnemyNotified(popup) ) {
                 popup.style.display = 'none'
                 return
@@ -365,13 +371,38 @@ const killTorch = (row, column, brightness) => {
     removeTorch()
     unequipTorch()
     getInventory()[row][column] = null
-    getShadowContainer().firstElementChild.style.background =
-        `radial-gradient(circle at center,transparent,black ${brightness}%)`
+    renderShadow(brightness)
 }
 
 const lightenEnvironment = (health, roomBrightness) => {
     const brightness = (health / 100 * 40)
-    const percentage = Math.max(roomBrightness, brightness + 20)
-    getShadowContainer().firstElementChild.style.background = 
-        `radial-gradient(circle at center,transparent,black ${percentage}%)`
+    renderShadow(Math.max(roomBrightness, brightness + 20))
+}
+
+const managePopovers = () => {
+    [
+        getPlayer().firstElementChild.children[2],
+        getSpeaker()?.lastElementChild,
+        getRoomNameContainer(),
+        getChapterContainer(),
+        getPopupContainer()
+    ].forEach(container => {
+        const popover = container?.firstElementChild
+        if ( !popover ) return
+        const timer = Number(popover.getAttribute('timer'))
+        const duration = Number(popover.getAttribute('duration'))
+        if ( timer === duration ) removePopover(popover)
+        popover.setAttribute('timer', timer + 1)    
+    })
+}
+
+const removePopover = (popover) => {
+    const progress2Active = popover.getAttribute('progress2active')
+    addClass(popover, 'fade-out')
+    const fadeOut = Number(popover.getAttribute('fade-out'))
+    popover.style.animationDuration = `${fadeOut}ms`
+    popover.addEventListener('animationend', () => {
+        popover.remove()
+        activateAllProgresses(progress2Active)
+    })
 }

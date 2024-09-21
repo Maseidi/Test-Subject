@@ -13,8 +13,8 @@ import {
     removeAllClasses,
     removeClass } from '../../../util.js'
 import { 
-    activateProgress,
-    deactivateProgress,
+    activateAllProgresses,
+    deactivateAllProgresses,
     updateKillAllDoors,
     updateKillAllEnemies,
     updateKillAllInteractables } from '../../../progress-manager.js'
@@ -67,8 +67,8 @@ export class AbstractInjuryService {
         dropLoot(this.enemy.sprite, true)
         this.deathAnimation()
         enemies.get(getCurrentRoomId())[this.enemy.index].health = 0
-        activateProgress(this.enemy.progress2Active)
-        deactivateProgress(this.enemy.progress2Deactive)
+        activateAllProgresses(this.enemy.progress2Active)
+        deactivateAllProgresses(this.enemy.progress2Deactive)
         updateKillAllDoors()
         updateKillAllInteractables()
         updateKillAllEnemies()

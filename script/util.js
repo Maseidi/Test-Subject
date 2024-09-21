@@ -3,7 +3,7 @@ import { removeThrowable } from './throwable-loader.js'
 import { getThrowableDetail, isThrowable } from './throwable-details.js'
 import { ADRENALINE, ENERGY_DRINK, HEALTH_POTION, LUCK_PILLS } from './loot.js'
 import { getGunDetail, getGunUpgradableDetail } from './gun-details.js'
-import { getCurrentRoom, getCurrentRoomExplosions, getMapEl, getPlayer } from './elements.js'
+import { getCurrentRoom, getCurrentRoomExplosions, getMapEl, getPlayer, getShadowContainer } from './elements.js'
 import { 
     getDownPressed,
     getEntityId,
@@ -195,3 +195,8 @@ export const removeEquipped = () => {
 }
 
 export const isStatUpgrader = (item) => [ADRENALINE, HEALTH_POTION, ENERGY_DRINK, LUCK_PILLS].includes(item.name)
+
+export const renderShadow = (brightness) => {
+    getShadowContainer().firstElementChild.style.background = 
+        `radial-gradient(circle at center,transparent,black ${brightness}%)`
+}
