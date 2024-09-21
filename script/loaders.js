@@ -72,7 +72,7 @@ export const getDoorObject = (doorElem) => {
 export const loaders = new Map([
     [1, [
         new TopLoader_FromLeft(2, 100, 200, 
-            // new Door('black', 'Drom door', 'Danger outside', 'dorm', Progress.builder().setRenderProgress('1008'))
+            new Door('black', 'Drom door', 'Danger outside', 'dorm', Progress.builder().setRenderProgress('1008'))
         ),
     ]],
     [2, [
@@ -82,33 +82,33 @@ export const loaders = new Map([
     [3, [
         new BottomLoader_FromLeft(2, 100, 450),
         new TopLoader_FromLeft(4, 100, 450,
-        //     new Door('black', 'Bunker C Door', 'In need of right direction', null, 
-        //         Progress.builder().setRenderProgress('3003')
-        //     )
+            new Door('black', 'Bunker C Door', 'In need of right direction', null, 
+                Progress.builder().setRenderProgress('3003')
+            )
         ),
     ]],
     [4, [
         new BottomLoader_FromLeft(3, 100, 400),
         new LeftLoader_FromTop(5, 200, 200, 
-        //     new Door('black', 'Bunker D door', 'Free the souls to free yourself', null, 
-        //         Progress.builder().setKillAll('3000')
-        //     )
+            new Door('black', 'Bunker D door', 'Free the souls to free yourself', null, 
+                Progress.builder().setKillAll('3000')
+            )
         )
     ]],
     [5, [
         new RightLoader_FromTop(4, 200, 200),
         new LeftLoader_FromTop(6, 100, 250, 
-        //     new Door('black', 'Bunker E door', 'Fetch the corpses to obtain freedom', null, 
-        //         Progress.builder().setKillAll('4000')
-        //     )
+            new Door('black', 'Bunker E door', 'Fetch the corpses to obtain freedom', null, 
+                Progress.builder().setKillAll('4000')
+            )
         )
     ]],
     [6, [
         new RightLoader_FromTop(5, 100, 450),
         new TopLoader_FromLeft(7, 200, 900, 
-        //     new Door('black', 'Bunker F door', 'Prioritizing others', 'sacrifice', 
-        //         Progress.builder().setRenderProgress('6002')
-        //     )
+            new Door('black', 'Bunker F door', 'Prioritizing others', 'sacrifice', 
+                Progress.builder().setRenderProgress('6002')
+            )
         )
     ]],
     [7, [
