@@ -307,10 +307,10 @@ export class BlueVaccine extends Vaccine {
 export const interactables = new Map([
     [1, [
         new Note(125, 850, "Prisoner's memo", "Memories of a prisoner", "It's been 2 days since I'm here. I'm so hungry and there's no one responsible for this mess. I don't know what happened. All I remember was my normal life. Now I'm here. Alone. Why would this happen? I don't even know if I'm kidnapped by a criminal or arrested by law. Even then I would have contacted someone by now. The door's key is on the ground, so I can get out whenever I want, but the outdoors is terrifying. It's so dark and I think there's a predator past these doors. I can hear it breathing every now and then. I might have to get out of here and face it, or else I would starve to death...",
-            Progress.builder().setRenderProgress('1003').setProgress2Active([1004]).setOnExamineProgress2Active([1005])
+            Progress.builder().setRenderProgress('1003').setProgress2Active('1004').setOnExamineProgress2Active('1005')
         ),
         new KeyDrop(400, 850, 1, 'Dorm key', 'Key for the dormitory', 'dorm', 
-            Progress.builder().setRenderProgress('1005').setProgress2Active([1006])
+            Progress.builder().setRenderProgress('1005').setProgress2Active('1006')
         )
     ]],
     [2, []],
@@ -339,7 +339,7 @@ export const interactables = new Map([
         new Crate(1900, 800, new Loot(BLUE_VACCINE, 2)),
         new Bandage(950, 100, 3),
         new KeyDrop(950, 500, 2, 'Key of sacrifice', 'A key demonstrating the beauty of sacrifice', 'sacrifice', 
-            Progress.builder().setKillAll('5000')
+            Progress.builder().setKillAll('6000')
         )
     ]],
     [7, [

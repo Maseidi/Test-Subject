@@ -91,7 +91,7 @@ export const loaders = new Map([
         new BottomLoader_FromLeft(3, 100, 400),
         new LeftLoader_FromTop(5, 200, 200, 
             new Door('black', 'Bunker D door', 'Free the souls to free yourself', null, 
-                Progress.builder().setKillAll('3000')
+                Progress.builder().setKillAll('4000')
             )
         )
     ]],
@@ -99,7 +99,7 @@ export const loaders = new Map([
         new RightLoader_FromTop(4, 200, 200),
         new LeftLoader_FromTop(6, 100, 250, 
             new Door('black', 'Bunker E door', 'Fetch the corpses to obtain freedom', null, 
-                Progress.builder().setKillAll('4000')
+                Progress.builder().setKillAll('5000')
             )
         )
     ]],
@@ -115,7 +115,7 @@ export const loaders = new Map([
         new BottomLoader_FromLeft(6, 200, 900),
         new RightLoader_FromTop(8, 100, 450, 
             new Door('black', 'Bunker G door', 'Free the souls to free yourself', null, 
-                Progress.builder().setKillAll('6000')
+                Progress.builder().setKillAll('7000')
             )
         ),
         new LeftLoader_FromTop(9, 100, 450, 

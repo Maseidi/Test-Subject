@@ -19,7 +19,7 @@ class Dialogue {
 
 export const dialogues = [
     new Dialogue('Where the hell am I?', sources.MIAN, 
-        Progress.builder().setRenderProgress('1001').setProgress2Active('1002'), 300000),
+        Progress.builder().setRenderProgress('1001').setProgress2Active('1002')),
     new Dialogue('What the ..., I gotta find that key.', sources.MIAN, Progress.builder().setRenderProgress('1005')),
     new Dialogue('There it is.', sources.MIAN, Progress.builder().setRenderProgress('1006').setProgress2Active('1007')),
     new Dialogue("It's so dark", sources.MIAN, Progress.builder().setRenderProgress('2000').setProgress2Active('2001')),

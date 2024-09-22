@@ -101,7 +101,6 @@ const updateEnemies = (number) =>
         if ( enemy.health === 0 ) return
         if ( enemy.renderProgress !== number ) return
         enemy.killAll = null
-        enemy.renderProgress = String(Number.MAX_SAFE_INTEGER)
         spawnEnemy(enemy)
     })
 
@@ -112,7 +111,6 @@ export const updateKillAllEnemies = () => {
         if ( aliveEnemies.find(e => e.index !== index && !e.killAll && Number(e.renderProgress) <= Number(enemy.killAll) ) ) 
             return
         enemy.killAll = null
-        enemy.renderProgress = String(Number.MAX_SAFE_INTEGER)
         spawnEnemy(enemy)
     })
 }   

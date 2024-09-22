@@ -15,55 +15,55 @@ export const enemies = new Map([
         new Torturer(1, new RectPath(350, 150, 300, 100))
     ]],
     [3, [
-        new Torturer(1, new RectPath(100, 100, 200, 800), null, Progress.builder().setRenderProgress('2000'), 'red'),
-        new Torturer(1, new RectPath(700, 100, 200, 800), null, Progress.builder().setRenderProgress('2000'), 'red'),
+        new Torturer(1, new RectPath(100, 100, 200, 800), null, Progress.builder().setRenderProgress('3000'), 'red'),
+        new Torturer(1, new RectPath(700, 100, 200, 800), null, Progress.builder().setRenderProgress('3000'), 'red'),
     ]],
     [4, [
         new Torturer(1, new Path([
             new Point(675, 100), new Point(675, 350), new Point(75, 350), new Point(75, 100)
         ]), null, 
-            Progress.builder().setRenderProgress('3000'), 'blue'
+            Progress.builder().setRenderProgress('4000'), 'blue'
         ),
         new Torturer(1, new Path([
             new Point(75, 450), new Point(75, 650), new Point(675, 650), new Point(675, 450)
         ]), null, 
-            Progress.builder().setRenderProgress('3000'), 'purple'
+            Progress.builder().setRenderProgress('4000'), 'purple'
         ),
     ]],
     [5, [
         new Torturer(1, new Path([
             new Point(350, 275), new Point(150, 275)
         ]), null, 
-            Progress.builder().setRenderProgress('4000'), 'green'
+            Progress.builder().setRenderProgress('5000'), 'green'
         ),
         new Torturer(1, new Path([
             new Point(425, 275), new Point(675, 275)
         ]), null, 
-            Progress.builder().setRenderProgress('4000'), 'yellow'
+            Progress.builder().setRenderProgress('5000'), 'yellow'
         ),
     ]],
     [6, [
-        new Torturer(1, new SinglePointPath(150, 500), null, Progress.builder().setRenderProgress('5000'), 'red'),
-        new Torturer(1, new SinglePointPath(550, 500), null, Progress.builder().setRenderProgress('5000'), 'green'),
-        new Torturer(1, new SinglePointPath(950, 500), null, Progress.builder().setRenderProgress('5000'), 'yellow'),
-        new Torturer(1, new SinglePointPath(1350, 500), null, Progress.builder().setRenderProgress('5000'), 'blue'),
-        new Torturer(1, new SinglePointPath(1750, 500), null, Progress.builder().setRenderProgress('5000'), 'purple'),
+        new Torturer(1, new SinglePointPath(150, 500), null, Progress.builder().setRenderProgress('6000'), 'red'),
+        new Torturer(1, new SinglePointPath(550, 500), null, Progress.builder().setRenderProgress('6000'), 'green'),
+        new Torturer(1, new SinglePointPath(950, 500), null, Progress.builder().setRenderProgress('6000'), 'yellow'),
+        new Torturer(1, new SinglePointPath(1350, 500), null, Progress.builder().setRenderProgress('6000'), 'blue'),
+        new Torturer(1, new SinglePointPath(1750, 500), null, Progress.builder().setRenderProgress('6000'), 'purple'),
     ]],
     [7, [
         new Torturer(1, new VerDoublePointPath(300, 100, 400), new Loot(YELLOW_VACCINE, 2), 
-            Progress.builder().setRenderProgress('6000'), 'purple'
+            Progress.builder().setRenderProgress('7000'), 'purple'
         ),
         new Torturer(1, new VerDoublePointPath(300, 500, 400), new Loot(BLUE_VACCINE, 2), 
-            Progress.builder().setRenderProgress('6000'), 'yellow'
+            Progress.builder().setRenderProgress('7000'), 'yellow'
         ),
         new Torturer(1, new VerDoublePointPath(1000, 100, 400), new Loot(GREEN_VACCINE, 2), 
-            Progress.builder().setRenderProgress('6000'), 'blue'
+            Progress.builder().setRenderProgress('7000'), 'blue'
         ),
         new Torturer(1, new VerDoublePointPath(1700, 100, 400), new Loot(RED_VACCINE, 2), 
-            Progress.builder().setRenderProgress('6000'), 'green'
+            Progress.builder().setRenderProgress('7000'), 'green'
         ),
         new Torturer(1, new VerDoublePointPath(1700, 500, 400), new Loot(PURPLE_VACCINE, 2), 
-            Progress.builder().setRenderProgress('6000'), 'red'
+            Progress.builder().setRenderProgress('7000'), 'red'
         ),
     ]]
 ])
