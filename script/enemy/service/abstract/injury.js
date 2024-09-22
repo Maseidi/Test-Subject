@@ -1,7 +1,6 @@
-import { enemies } from '../../util/enemies.js'
-import { dropLoot } from '../../../loot-manager.js'
 import { isGun } from '../../../gun-details.js'
-import { CHASE, STUNNED } from '../../util/enemy-constants.js'
+import { dropLoot } from '../../../loot-manager.js'
+import { CHASE, STUNNED } from '../../enemy-constants.js'
 import { getCurrentRoomInteractables, setCurrentRoomInteractables } from '../../../elements.js'
 import { getAnimatedLimbs, getCriticalChance, getCurrentRoomId, setAnimatedLimbs } from '../../../variables.js'
 import { 
@@ -18,6 +17,7 @@ import {
     updateKillAllDoors,
     updateKillAllEnemies,
     updateKillAllInteractables } from '../../../progress-manager.js'
+import { enemies } from '../../../entities.js'
 
 export class AbstractInjuryService {
     constructor(enemy) {

@@ -1,4 +1,4 @@
-import { GRAB } from '../../util/enemy-constants.js'
+import { GRAB } from '../../enemy-constants.js'
 import { AbstractInjuryService } from '../abstract/injury.js'
 
 export class GrabberInjuryService extends AbstractInjuryService {

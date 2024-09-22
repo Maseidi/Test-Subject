@@ -1,8 +1,8 @@
-import { Progress } from './progress.js'
 import { getChapterContainer } from './elements.js'
+import { chapters } from './entities.js'
 import { addAllAttributes, addClass, createAndAddClass } from './util.js'
 
-class Chapter {
+export class Chapter {
     constructor(number, progress, duration) {
         this.number =          number                    ?? null
         this.renderProgress =  progress?.renderProgress  ?? null
@@ -10,10 +10,6 @@ class Chapter {
         this.duration =        duration                  ?? 10000
     }
 }
-
-const chapters = [
-    new Chapter(1, Progress.builder().setRenderProgress('1000').setProgress2Active([1001]), 3000)
-]
 
 export const renderChapter = (progress) => {
     const chapterObj = chapters.find(elem => elem.renderProgress === progress)

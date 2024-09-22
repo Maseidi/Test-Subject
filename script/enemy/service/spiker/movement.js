@@ -1,6 +1,6 @@
 import { getProperty } from '../../../util.js'
 import { AbstractMovementService } from '../abstract/movement.js'
-import { INVESTIGATE, NO_OFFENCE } from '../../util/enemy-constants.js'
+import { INVESTIGATE, NO_OFFENCE } from '../../enemy-constants.js'
 
 export class SpikerMovementService extends AbstractMovementService {
     constructor(enemy) {

@@ -1,13 +1,13 @@
-import { Progress } from './progress.js'
+import { dialogues } from './entities.js'
 import { getPlayer, getSpeaker } from './elements.js'
 import { addAllAttributes, addClass, createAndAddClass } from './util.js'
 
-const sources = {
+export const sources = {
     MIAN: 'main',
     SPEAKER: 'speaker' 
 }
 
-class Dialogue {
+export class Dialogue {
     constructor(message, source, progress, duration) {
         this.message =         message                   ?? null
         this.source =          source                    ?? null
@@ -16,23 +16,6 @@ class Dialogue {
         this.duration =        duration                  ?? 3000
     }
 }
-
-export const dialogues = [
-    new Dialogue('Where the hell am I?', sources.MIAN, 
-        Progress.builder().setRenderProgress('1001').setProgress2Active('1002')),
-    new Dialogue('What the ..., I gotta find that key.', sources.MIAN, Progress.builder().setRenderProgress('1005')),
-    new Dialogue('There it is.', sources.MIAN, Progress.builder().setRenderProgress('1006').setProgress2Active('1007')),
-    new Dialogue("It's so dark", sources.MIAN, Progress.builder().setRenderProgress('2000').setProgress2Active('2001')),
-    new Dialogue("What the hell was that?!", sources.MIAN, Progress.builder().setRenderProgress('3000')),
-    new Dialogue("Alright, good to know.", sources.MIAN, Progress.builder().setRenderProgress('3001').setProgress2Active('3002')),
-    new Dialogue("I might be able to find a weapon. It's a bunker after all.", sources.MIAN, 
-        Progress.builder().setRenderProgress('4000'), 6000
-    ),
-    new Dialogue("It's so dark. I barely can see anything...", sources.MIAN, Progress.builder().setRenderProgress('7000')),
-    new Dialogue("Nice! I might be able to light something up with this!", sources.MIAN, 
-        Progress.builder().setRenderProgress('7001'), 6000
-    ),
-]
 
 export const renderDialogue = (progress) => {
     const dialogueObj = dialogues.find(dialogue => dialogue.renderProgress === progress)

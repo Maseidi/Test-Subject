@@ -1,7 +1,7 @@
 import { distance, getProperty } from '../../../util.js'
 import { getCurrentRoomEnemies, getPlayer } from '../../../elements.js'
 import { getNoOffenseCounter, getPlayerX, getPlayerY, getRoomLeft, getRoomTop } from '../../../variables.js'
-import { CHASE, GO_FOR_RANGED, GRAB, NO_OFFENCE, STAND_AND_WATCH, STUNNED, TRACKER } from '../../util/enemy-constants.js'
+import { CHASE, GO_FOR_RANGED, GRAB, NO_OFFENCE, STAND_AND_WATCH, STUNNED, TRACKER } from '../../enemy-constants.js'
 
 export class AbstractNotificationService {
     constructor(enemy) {

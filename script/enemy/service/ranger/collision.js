@@ -1,4 +1,4 @@
-import { GO_FOR_RANGED } from '../../util/enemy-constants.js'
+import { GO_FOR_RANGED } from '../../enemy-constants.js'
 import { getGrabbed, getStunnedCounter } from '../../../variables.js'
 import { AbstractCollisionService } from '../abstract/collision.js'
 

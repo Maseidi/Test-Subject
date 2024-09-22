@@ -1,19 +1,19 @@
 import { NOTE } from './loot.js'
-import { Wall, walls } from './walls.js'
-import { rooms } from './rooms.js'
-import { BottomLoader_FromLeft, LeftLoader_FromTop, loaders, RightLoader_FromTop, TopLoader_FromLeft } from './loaders.js'
+import { Wall } from './wall.js'
 import { isGun } from './gun-details.js'
-import { enemies } from './enemy/util/enemies.js'
-import { interactables } from './interactables.js'
+import { enemies, loaders } from './entities.js'
+import { renderRoomName } from './room-name-manager.js'
+import { interactables, rooms, walls } from './entities.js'
 import { countItem, findEquippedTorchById, updateInteractablePopup } from './inventory.js'
 import { getCurrentRoomId, getRoomLeft, getRoomTop, setStunnedCounter } from './variables.js'
 import { activateAllProgresses, deactivateAllProgresses, getProgressValueByNumber } from './progress-manager.js'
+import { BottomLoader_FromLeft, LeftLoader_FromTop, RightLoader_FromTop, TopLoader_FromLeft } from './loader.model.js'
 import { 
     LOST,
     MOVE_TO_POSITION,
     SCORCHER,
     SPIKER,
-    TRACKER } from './enemy/util/enemy-constants.js'
+    TRACKER } from './enemy/enemy-constants.js'
 import { 
     addAllAttributes,
     addClass,
@@ -44,8 +44,7 @@ import {
     setCurrentRoomDoors,
     getCurrentRoomDoors, 
     getCurrentRoom,
-    setSpeaker} from './elements.js'
-import { renderRoomName } from './room-name-manager.js'
+    setSpeaker } from './elements.js'
 
 export const loadCurrentRoom = () => {
     setStunnedCounter(0)

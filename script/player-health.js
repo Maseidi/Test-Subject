@@ -1,5 +1,5 @@
 import { healthManager } from './user-interface.js'
-import { CHASE, NO_OFFENCE } from './enemy/util/enemy-constants.js'
+import { CHASE, NO_OFFENCE } from './enemy/enemy-constants.js'
 import { getInventory, useInventoryResource } from './inventory.js'
 import { activateAllProgresses, getProgressValueByNumber } from './progress-manager.js'
 import { getCurrentRoomEnemies, getHealthStatusContainer, getMapEl, getPlayer } from './elements.js'

@@ -15,7 +15,7 @@ import {
     LOST,
     MOVE_TO_POSITION,
     NO_OFFENCE,
-    SPIKER } from '../util/enemy-constants.js'
+    SPIKER } from '../enemy-constants.js'
 import { SpikerAngleService } from '../service/spiker/angle.js'
 
 export class Spiker extends AbstractEnemy {

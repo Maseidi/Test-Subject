@@ -1,5 +1,5 @@
 import { NormalLostService } from '../normal/lost.js'
-import { MOVE_TO_POSITION } from '../../util/enemy-constants.js'
+import { MOVE_TO_POSITION } from '../../enemy-constants.js'
 
 export class SpikerLostService extends NormalLostService {
     constructor(enemy) {

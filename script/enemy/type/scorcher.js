@@ -17,7 +17,7 @@ import {
     LOST,
     MOVE_TO_POSITION,
     NO_OFFENCE,
-    SCORCHER } from '../util/enemy-constants.js'
+    SCORCHER } from '../enemy-constants.js'
 
 export class Scorcher extends AbstractEnemy {
     constructor(level, waypoint, loot, progress, virus) {

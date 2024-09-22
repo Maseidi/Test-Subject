@@ -1,13 +1,12 @@
-import { getDoorObject } from './loaders.js'
+import { getDoorObject } from './loader.model.js'
 import { renderPopup } from './popup-manager.js'
-import { getCurrentRoomId, getPause, getWaitingFunctions, setWaitingFunctions } from './variables.js'
-import { enemies } from './enemy/util/enemies.js'
-import { interactables } from './interactables.js'
 import { getCurrentRoomDoors } from './elements.js'
 import { renderChapter } from './chapter-manager.js'
 import { renderDialogue } from './dialogue-manager.js'
+import { enemies, interactables } from './entities.js'
 import { addClass, element2Object, removeClass } from './util.js'
 import { renderInteractable, spawnEnemy } from './room-loader.js'
+import { getCurrentRoomId, getPause, getWaitingFunctions, setWaitingFunctions } from './variables.js'
 
 let progress = {
     [Number.MAX_SAFE_INTEGER] : true,
@@ -28,11 +27,11 @@ export const activateAllProgresses = (numbers) => {
             ...progress,
             [progress2Active]: true
         }
-        add2Queue(renderPopup, [progress2Active])
-        add2Queue(toggleDoors, [progress2Active])
-        add2Queue(updateEnemies, [progress2Active])
-        add2Queue(renderChapter, [progress2Active])
-        add2Queue(renderDialogue, [progress2Active])
+        add2Queue(renderPopup,         [progress2Active])
+        add2Queue(toggleDoors,         [progress2Active])
+        add2Queue(updateEnemies,       [progress2Active])
+        add2Queue(renderChapter,       [progress2Active])
+        add2Queue(renderDialogue,      [progress2Active])
         add2Queue(updateInteractables, [progress2Active])
     }
 }

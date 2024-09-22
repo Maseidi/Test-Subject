@@ -1,6 +1,6 @@
 import { poisonPlayer } from '../../../player-health.js'
 import { addClass, collide, isThrowing } from '../../../util.js'
-import { CHASE, NO_OFFENCE } from '../../util/enemy-constants.js'
+import { CHASE, NO_OFFENCE } from '../../enemy-constants.js'
 import { AbstractMovementService } from '../abstract/movement.js'
 import { getCurrentRoom, getCurrentRoomPoisons, getPlayer } from '../../../elements.js'
 

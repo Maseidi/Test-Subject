@@ -1,10 +1,11 @@
+import { rooms } from './entities.js'
+import { enemies } from './entities.js'
 import { renderStash } from './stash.js'
 import { isGun } from './gun-details.js'
 import { renderGun } from './gun-loader.js'
 import { dropLoot } from './loot-manager.js'
 import { centralizePlayer } from './startup.js'
 import { setupReload } from './weapon-manager.js'
-import { enemies } from './enemy/util/enemies.js'
 import { renderStore } from './vending-machine.js'
 import { isThrowable } from './throwable-details.js'
 import { renderThrowable } from './throwable-loader.js'
@@ -20,7 +21,6 @@ import {
     getPlayer,
     getPopupContainer,
     getRoomNameContainer,
-    getShadowContainer,
     getSpeaker,
     getUiEl } from './elements.js'
 import { 
@@ -85,7 +85,6 @@ import {
     getEquippedTorchId,
     getWaitingFunctions,
     setWaitingFunctions} from './variables.js'
-import { rooms } from './rooms.js'
 
 export const initControls = () => {
     onkeydown = (e) => {

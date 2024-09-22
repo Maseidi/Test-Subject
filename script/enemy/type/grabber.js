@@ -15,7 +15,7 @@ import {
     INVESTIGATE,
     LOST,
     MOVE_TO_POSITION,
-    NO_OFFENCE } from '../util/enemy-constants.js'
+    NO_OFFENCE } from '../enemy-constants.js'
 
 export class Grabber extends AbstractEnemy {
     constructor(level, path, loot, progress, virus) {

@@ -17,7 +17,7 @@ import {
     LOST,
     MOVE_TO_POSITION,
     NO_OFFENCE,
-    STINGER } from '../util/enemy-constants.js'
+    STINGER } from '../enemy-constants.js'
 
 export class Stinger extends AbstractEnemy {
     constructor(level, waypoint, loot, progress, virus) {

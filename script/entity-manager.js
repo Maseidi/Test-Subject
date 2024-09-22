@@ -1,9 +1,7 @@
-import { rooms } from './rooms.js'
-import { loaders } from './loaders.js'
+import { rooms } from './entities.js'
 import { dropLoot } from './loot-manager.js'
 import { unequipTorch } from './controls.js'
 import { removeTorch } from './torch-loader.js'
-import { enemies } from './enemy/util/enemies.js'
 import { loadCurrentRoom } from './room-loader.js'
 import { getThrowableDetail } from './throwable-details.js'
 import { activateAllProgresses } from './progress-manager.js'
@@ -17,7 +15,7 @@ import {
     LOST,
     MOVE_TO_POSITION,
     NO_OFFENCE,
-    STUNNED } from './enemy/util/enemy-constants.js'
+    STUNNED } from './enemy/enemy-constants.js'
 import { 
     addAllAttributes,
     addClass,
@@ -45,7 +43,8 @@ import {
     getSpeaker,
     getRoomNameContainer,
     getChapterContainer,
-    getPopupContainer} from './elements.js'
+    getPopupContainer,
+    getShadowContainer} from './elements.js'
 import {
     getCurrentRoomId,
     getExplosionDamageCounter,
@@ -65,6 +64,7 @@ import {
     setStunnedCounter, 
     getElementInteractedWith,
     getEquippedTorchId} from './variables.js'
+import { enemies, loaders } from './entities.js'
 
 export const manageEntities = () => {
     manageSolidObjects()
@@ -262,7 +262,12 @@ const blindEnemies = (throwable) => {
     })
     const flashbang = createAndAddClass('div', 'flashbang', 'animation')
     getMapEl().append(flashbang)
-    flashbang.addEventListener('animationend', () => flashbang.remove())
+    // const cloneShadow = getShadowContainer().firstElementChild.cloneNode()
+    // getShadowContainer().firstElementChild.remove()
+    flashbang.addEventListener('animationend', () => {
+        flashbang.remove()
+        // getShadowContainer().append(cloneShadow)
+    })
 }
 
 const THROWABLE_FUNCTIONALITY = new Map([

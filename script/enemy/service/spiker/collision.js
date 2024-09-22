@@ -1,7 +1,7 @@
 import { collide } from '../../../util.js'
 import { getCurrentRoomEnemies } from '../../../elements.js'
 import { AbstractCollisionService } from '../abstract/collision.js'
-import { GO_FOR_RANGED, INVESTIGATE, SPIKER, TRACKER } from '../../util/enemy-constants.js'
+import { GO_FOR_RANGED, INVESTIGATE, SPIKER, TRACKER } from '../../enemy-constants.js'
 
 export class SpikerCollisionService extends AbstractCollisionService {
     constructor(enemy) {

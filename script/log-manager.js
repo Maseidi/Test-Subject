@@ -1,11 +1,8 @@
-import { walls } from './walls.js'
 import { getStash } from './stash.js'
-import { loaders } from './loaders.js'
-import { findEquippedWeaponById, getInventory } from './inventory.js'
 import { getShopItems } from './shop-item.js'
-import { enemies } from './enemy/util/enemies.js'
-import { interactables } from './interactables.js'
+import { interactables, walls } from './entities.js'
 import { getProgress } from './progress-manager.js'
+import { findEquippedWeaponById, getInventory } from './inventory.js'
 import { 
     getCurrentRoomBullets,
     getCurrentRoomDoors,
@@ -47,6 +44,7 @@ import {
     getTargets,
     getWeaponWheel,
     setLogCounter } from './variables.js'
+import { enemies, loaders } from './entities.js'
 
 
 export const manageLogs = () => {

@@ -2,7 +2,7 @@ import { dropLoot } from './loot-manager.js'
 import { isThrowable } from './throwable-details.js'
 import { removeThrowable } from './throwable-loader.js'
 import { manageAimModeAngle } from './angle-manager.js'
-import { TRACKER } from './enemy/util/enemy-constants.js'
+import { TRACKER } from './enemy/enemy-constants.js'
 import { getGunDetail, getGunUpgradableDetail, isGun } from './gun-details.js'
 import { 
     calculateThrowableAmount,
@@ -62,6 +62,7 @@ import {
     setTargets, 
     setThrowCounter,
     setWeaponWheel } from './variables.js'
+import { activateAllProgresses } from './progress-manager.js'
 
 const EMPTY_WEAPON = new Audio('../assets/audio/empty-weapon.mp3')
 
@@ -154,6 +155,7 @@ const shoot = () => {
     }
     const totalAmmo = calculateTotalAmmo()
     let currMag = equipped.currmag
+    if ( currMag === 2 && totalAmmo > 0 ) activateAllProgresses('10000003') 
     if ( currMag === 0 ) {
         EMPTY_WEAPON.play()
         setShooting(false)

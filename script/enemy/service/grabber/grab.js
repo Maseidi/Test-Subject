@@ -10,7 +10,7 @@ import {
     SCORCHER,
     STAND_AND_WATCH,
     STINGER,
-    TRACKER } from '../../util/enemy-constants.js'
+    TRACKER } from '../../enemy-constants.js'
 import { 
     addAllAttributes,
     addClass,

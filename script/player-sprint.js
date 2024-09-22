@@ -1,5 +1,5 @@
 import { staminaManager } from './user-interface.js'
-import { TRACKER } from './enemy/util/enemy-constants.js'
+import { TRACKER } from './enemy/enemy-constants.js'
 import { addClass, isMoving, removeClass } from './util.js'
 import { getCurrentRoomEnemies, getPlayer } from './elements.js'
 import { 

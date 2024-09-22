@@ -1,5 +1,5 @@
 import { managePause } from './controls.js'
-import { getDoorObject } from './loaders.js'
+import { getDoorObject } from './loader.model.js'
 import { getPauseContainer } from './elements.js'
 import { toggleDoor } from './progress-manager.js'
 import { quitPage, renderQuit } from './user-interface.js'

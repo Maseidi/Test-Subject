@@ -7,7 +7,7 @@ import { TrackerMovemenetService } from '../service/tracker/movement.js'
 import { TrackerCollisionService } from '../service/tracker/collision.js'
 import { TrackerGuessSearchService } from '../service/tracker/guess-search.js'
 import { TrackerNotificationService } from '../service/tracker/notification.js'
-import { CHASE, GUESS_SEARCH, LOST, TRACKER } from '../util/enemy-constants.js'
+import { CHASE, GUESS_SEARCH, LOST, TRACKER } from '../enemy-constants.js'
 
 export class Tracker extends AbstractEnemy {
     constructor(level, x, y, loot, progress, virus) {

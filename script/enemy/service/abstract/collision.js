@@ -9,7 +9,7 @@ import {
     MOVE_TO_POSITION,
     NO_OFFENCE,
     SPIKER,
-    TRACKER } from '../../util/enemy-constants.js'
+    TRACKER } from '../../enemy-constants.js'
 
 export class AbstractCollisionService {
     constructor(enemy) {

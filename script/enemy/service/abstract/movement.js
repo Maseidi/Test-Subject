@@ -1,6 +1,6 @@
 import { getPlayer } from '../../../elements.js'
 import { collide, distance, getProperty } from '../../../util.js'
-import { CHASE, GUESS_SEARCH, INVESTIGATE, LOST, MOVE_TO_POSITION, NO_OFFENCE } from '../../util/enemy-constants.js'
+import { CHASE, GUESS_SEARCH, INVESTIGATE, LOST, MOVE_TO_POSITION, NO_OFFENCE } from '../../enemy-constants.js'
 
 export class AbstractMovementService {
     constructor(enemy) {

@@ -24,7 +24,6 @@ import {
     Grenade,
     HardDrive,
     HealthPotion,
-    interactables,
     KeyDrop,
     LuckPills,
     MagnumAmmo,
@@ -62,6 +61,7 @@ import {
     SMG_AMMO_LOOT, 
     STICK_LOOT, 
     YELLOW_VACCINE } from './loot.js'
+import { interactables } from './entities.js'
 
 export const dropLoot = (rootElem, isEnemy) => {
     const root = element2Object(rootElem)

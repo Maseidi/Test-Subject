@@ -14,7 +14,7 @@ import {
     LOST,
     MOVE_TO_POSITION,
     NO_OFFENCE,
-    RANGER } from '../util/enemy-constants.js'
+    RANGER } from '../enemy-constants.js'
 
 export class Ranger extends AbstractEnemy {
     constructor(level, waypoint, loot, progress, virus) {

@@ -1,6 +1,6 @@
 import { getPlayer } from '../../../elements.js'
 import { angleOf2Points } from '../../../util.js'
-import { SPIKER, TRACKER } from '../../util/enemy-constants.js'
+import { SPIKER, TRACKER } from '../../enemy-constants.js'
 
 export class AbstractAngleService {
     constructor(enemy) {
