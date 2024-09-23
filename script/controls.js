@@ -16,6 +16,7 @@ import { heal, damagePlayer, findHealtStatusChildByClassName } from './player-he
 import { activateAllProgresses, deactivateAllProgresses, getProgress } from './progress-manager.js'
 import { 
     getChapterContainer,
+    getDialogueContainer,
     getGrabBar,
     getPauseContainer,
     getPlayer,
@@ -401,8 +402,7 @@ const removeUi = () => {
     getPopupContainer().style.opacity = '0'
     getChapterContainer().style.opacity = '0'
     getRoomNameContainer().style.opacity = '0'
-    getPlayer().firstElementChild.children[2].style.opacity = '0'
-    if ( getSpeaker() ) getSpeaker().lastElementChild.style.opacity = '0'
+    getDialogueContainer().style.opacity = '0'
     findHealtStatusChildByClassName('infected-container').style.opacity = '0'
     if ( getElementInteractedWith()?.children[1] ) getElementInteractedWith().children[1].style.visibility = 'hidden'
     else if ( getElementInteractedWith()?.children[0] ) getElementInteractedWith().children[0].style.visibility = 'hidden'
@@ -427,8 +427,7 @@ const showUi = () => {
     getPopupContainer().style.opacity = '1'
     getChapterContainer().style.opacity = '1'
     getRoomNameContainer().style.opacity = '1'
-    getPlayer().firstElementChild.children[2].style.opacity = '1'
-    if ( getSpeaker() ) getSpeaker().lastElementChild.style.opacity = '1'
+    getDialogueContainer().style.opacity = '1'
     findHealtStatusChildByClassName('infected-container').style.opacity = '1'
     if ( getElementInteractedWith()?.children[1] ) getElementInteractedWith().children[1].style.visibility = 'visible'
     else if ( getElementInteractedWith()?.children[0] ) getElementInteractedWith().children[0].style.visibility = 'visible'

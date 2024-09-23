@@ -6,7 +6,7 @@ import { Chapter } from './chapter-manager.js'
 import { Torturer } from './enemy/type/normal-enemy.js'
 import { Dialogue, sources } from './dialogue-manager.js'
 import { Path, Point, RectPath, SinglePointPath, VerDoublePointPath } from './path.js'
-import { Bandage, Crate, GunDrop, KeyDrop, Lever, Lighter, Note, PistolAmmo, RedVaccine, Speaker, Stick } from './interactables.js'
+import { Bandage, Crate, GunDrop, KeyDrop, Lever, Lighter, Note, PistolAmmo, RedVaccine, Stick } from './interactables.js'
 import { 
     BottomLoader_FromLeft,
     Door,
@@ -123,57 +123,57 @@ export const walls = new Map([
 export const loaders = new Map([
     [1, [
         new TopLoader_FromLeft(2, 100, 200, 
-            // new Door('black', 'Drom door', 'Danger outside', 'dorm', 
-            //     Progress.builder().setRenderProgress('1009')
-            // )
+            new Door('black', 'Drom door', 'Danger outside', 'dorm', 
+                Progress.builder().setRenderProgress('1009')
+            )
         ),
     ]],
     [2, [
         new BottomLoader_FromLeft(1, 100, 450),
         new TopLoader_FromLeft(3, 100, 450, 
-            // new Door('black', 'Bunker B door', 'In need of right directions', null, 
-            //     Progress.builder().setRenderProgress('2005')
-            // )
+            new Door('black', 'Bunker B door', 'In need of right directions', null, 
+                Progress.builder().setRenderProgress('2005')
+            )
         )
     ]],
     [3, [
         new BottomLoader_FromLeft(2, 100, 450),
         new TopLoader_FromLeft(4, 100, 450,
-            // new Door('black', 'Bunker C Door', 'In need of right direction', null, 
-            //     Progress.builder().setRenderProgress('3003')
-            // )
+            new Door('black', 'Bunker C Door', 'In need of right direction', null, 
+                Progress.builder().setRenderProgress('3004')
+            )
         ),
     ]],
     [4, [
         new BottomLoader_FromLeft(3, 100, 400),
         new LeftLoader_FromTop(5, 200, 200, 
-            // new Door('black', 'Bunker D door', 'Free the souls to free yourself', null, 
-            //     Progress.builder().setKillAll('4000')
-            // )
+            new Door('black', 'Bunker D door', 'Free the souls to free yourself', null, 
+                Progress.builder().setKillAll('4000')
+            )
         )
     ]],
     [5, [
         new RightLoader_FromTop(4, 200, 200),
         new LeftLoader_FromTop(6, 100, 250, 
-            // new Door('black', 'Bunker E door', 'Fetch the corpses to obtain freedom', null, 
-            //     Progress.builder().setKillAll('5000')
-            // )
+            new Door('black', 'Bunker E door', 'Fetch the corpses to obtain freedom', null, 
+                Progress.builder().setKillAll('5000')
+            )
         )
     ]],
     [6, [
         new RightLoader_FromTop(5, 100, 450),
         new TopLoader_FromLeft(7, 200, 900, 
-            // new Door('black', 'Bunker F door', 'Prioritizing others', 'sacrifice', 
-            //     Progress.builder().setRenderProgress('6002')
-            // )
+            new Door('black', 'Bunker F door', 'Prioritizing others', 'sacrifice', 
+                Progress.builder().setRenderProgress('6002')
+            )
         )
     ]],
     [7, [
         new BottomLoader_FromLeft(6, 200, 900),
         new RightLoader_FromTop(8, 100, 450, 
-            // new Door('black', 'Bunker G door', 'Free the souls to free yourself', null, 
-            //     Progress.builder().setKillAll('7000')
-            // )
+            new Door('black', 'Bunker G door', 'Free the souls to free yourself', null, 
+                Progress.builder().setKillAll('7000')
+            )
         ),
         new LeftLoader_FromTop(9, 100, 450, 
             new Door('black', 'Bunker H door', 'In need of right direction', null, 
@@ -242,12 +242,6 @@ export const enemies = new Map([
         new Torturer(0.2, new Path([
             new Point(425, 275), new Point(675, 275)
         ]), null, 
-            Progress.builder().setRenderProgress('5000'), 'yellow'
-        ),
-        new Torturer(0.2, new SinglePointPath(350, 100), null, 
-            Progress.builder().setRenderProgress('5000'), 'green'
-        ),
-        new Torturer(0.2, new SinglePointPath(350, 500), null, 
             Progress.builder().setRenderProgress('5000'), 'yellow'
         ),
     ]],
@@ -372,16 +366,16 @@ export const interactables = new Map([
         new Note(500, 825, "Fugitive's note", "Possible use case of vaccine", "Seems like I'm not the first one facing this, so I'll leave a note cause I believe I won't be the last one either. I found out that the monsters are super weak to the vaccines. I had no clue what they were used for but I picked them up anyway. One of the monsters was after me. It caught me and bit me. I didn't know what to do... I just pulled out the vaccine and injected it to the freak. The monster vanished from existance! It happened so quick I couldn't believe my eyes. Even though the bite hurts, but that was a satisfying achievement...", 
             Progress.builder().setRenderProgress('3000').setOnExamineProgress2Active('3001')
         ),
-        new Lever(500, 300, Progress.builder().setKillAll('3000').setProgress2Active('3003'))
+        new Lever(500, 300, Progress.builder().setKillAll('3000').setProgress2Active('3004'))
     ]],
     [4, [
         new Crate(100, 375, new Loot(BLUE_VACCINE, 3)),
         new Crate(650, 375, new Loot(PURPLE_VACCINE, 3)),
     ]],
     [5, [
-        new Crate(700, 100, new Loot(YELLOW_VACCINE, 3)),
-        new Crate(700, 300, new Loot(BANDAGE_LOOT, 3)),
-        new Crate(700, 500, new Loot(GREEN_VACCINE, 3)),
+        new Crate(650, 100, new Loot(YELLOW_VACCINE, 3)),
+        new Crate(350, 500, new Loot(BANDAGE_LOOT, 3)),
+        new Crate(650, 500, new Loot(GREEN_VACCINE, 3)),
     ]],
     [6, [
         new Crate(100, 100, new Loot(RED_VACCINE, 2)),
@@ -458,17 +452,20 @@ export const dialogues = [
 // **********************************************************************************
 
 export const popups = [
-    new Popup('You can always leave the infection state by using an appropriate vaccine', 
-        Progress.builder().setRenderProgress('10000000'), 10000
+    new Popup('Getting bitten by the enemies will put you in an infection state', 
+        Progress.builder().setRenderProgress('10000000').setProgress2Active('10000001'),
     ),
-    new Popup('<span>H</span> Use bandage to heal', 
+    new Popup('You can always leave the infection state by using an appropriate vaccine', 
         Progress.builder().setRenderProgress('10000001'), 10000
     ),
-    new Popup('<span>Q</span> Light up torch', 
+    new Popup('<span>H</span> Use bandage to heal', 
         Progress.builder().setRenderProgress('10000002'), 10000
     ),
-    new Popup('<span>R</span> Reload', 
+    new Popup('<span>Q</span> Light up torch', 
         Progress.builder().setRenderProgress('10000003'), 10000
+    ),
+    new Popup('<span>R</span> Reload', 
+        Progress.builder().setRenderProgress('10000004'), 10000
     ),
 
     new Popup('<span>W</span> <span>A</span> <span>S</span> <span>D</span> Move', 
@@ -487,7 +484,7 @@ export const popups = [
         Progress.builder().setRenderProgress('2001')
     ),
     new Popup('Sneak past enemies with vaccine to perform stealth kills. Do not let them notice you.', 
-        Progress.builder().setRenderProgress('3002')
+        Progress.builder().setRenderProgress('3002').setProgress2Active('3003')
     ),
     new Popup('<span>1</span> <span>2</span> <span>3</span> <span>4</span> Weapon wheel', 
         Progress.builder().setRenderProgress('9001').setProgress2Active('9002')

@@ -155,7 +155,7 @@ const shoot = () => {
     }
     const totalAmmo = calculateTotalAmmo()
     let currMag = equipped.currmag
-    if ( currMag === 2 && totalAmmo > 0 ) activateAllProgresses('10000003') 
+    if ( currMag === 2 && totalAmmo > 0 ) activateAllProgresses('10000004') 
     if ( currMag === 0 ) {
         EMPTY_WEAPON.play()
         setShooting(false)

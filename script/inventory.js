@@ -179,9 +179,9 @@ const checkSpecialScenarios = () => {
     if ( amount === 0 ) {
         if ( progress2active )   activateAllProgresses  (progress2active)
         if ( progress2deactive ) deactivateAllProgresses(progress2deactive)
-        if ( name === 'bandage' ) activateAllProgresses('10000001')
+        if ( name === 'bandage' ) activateAllProgresses('10000002')
         if ( name === 'stick' && countItem('lighter') > 0 || name === 'lighter' && countItem('stick') > 0 )
-            activateAllProgresses('10000002')    
+            activateAllProgresses('10000003')    
     }
     if ( ( isThrowable(name) && !getWeaponWheel().includes(id) ) ||
          ( isGun(name) && amount === 0 ) ) updateWeaponWheel()

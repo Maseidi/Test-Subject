@@ -2,9 +2,11 @@ import { rooms } from './entities.js'
 import { dropLoot } from './loot-manager.js'
 import { unequipTorch } from './controls.js'
 import { removeTorch } from './torch-loader.js'
+import { sources } from './dialogue-manager.js'
+import { enemies, loaders } from './entities.js'
 import { loadCurrentRoom } from './room-loader.js'
 import { getThrowableDetail } from './throwable-details.js'
-import { activateAllProgresses } from './progress-manager.js'
+import { activateAllProgresses, getProgressValueByNumber } from './progress-manager.js'
 import { findEquippedTorchById, getInventory } from './inventory.js'
 import { damagePlayer, infectPlayer2SpecificVirus, poisonPlayer, setPlayer2Fire } from './player-health.js'
 import { 
@@ -44,7 +46,6 @@ import {
     getRoomNameContainer,
     getChapterContainer,
     getPopupContainer,
-    getShadowContainer,
     getDialogueContainer} from './elements.js'
 import {
     getCurrentRoomId,
@@ -67,8 +68,6 @@ import {
     getEquippedTorchId,
     getPlayingDialogue,
     setPlayingDialogue} from './variables.js'
-import { enemies, loaders } from './entities.js'
-import { sources } from './dialogue-manager.js'
 
 export const manageEntities = () => {
     manageSolidObjects()
@@ -127,7 +126,7 @@ const manageInteractables = () => {
         const isEnemy = popup.lastElementChild.lastElementChild.src
         if ( int.getAttribute('name') === 'speaker' ) return
         if ( collide(getPlayer().firstElementChild, int, 20) && !getElementInteractedWith() && !containsClass(int, 'open') ) {
-            if ( isEnemy && isEnemyNotified(popup) ) {
+            if ( isEnemy && (isEnemyNotified(popup) || !getProgressValueByNumber('3003')) ) {
                 popup.style.display = 'none'
                 return
             }
