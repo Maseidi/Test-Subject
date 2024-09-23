@@ -266,11 +266,11 @@ const blindEnemies = (throwable) => {
     })
     const flashbang = createAndAddClass('div', 'flashbang', 'animation')
     getMapEl().append(flashbang)
-    // const cloneShadow = getShadowContainer().firstElementChild.cloneNode()
-    // getShadowContainer().firstElementChild.remove()
+    const cloneShadow = getShadowContainer().firstElementChild.cloneNode()
+    getShadowContainer().firstElementChild.remove()
     flashbang.addEventListener('animationend', () => {
         flashbang.remove()
-        // getShadowContainer().append(cloneShadow)
+        getShadowContainer().append(cloneShadow)
     })
 }
 
@@ -411,8 +411,8 @@ const removePopover = (popover) => {
     popover.style.animationDuration = `${fadeOut}ms`
     popover.addEventListener('animationend', () => {
         popover.remove()
-        activateAllProgresses(progress2Active)
         if ( containsClass(popover, 'dialogue') ) setPlayingDialogue(null)
+        activateAllProgresses(progress2Active)
     })
 }
 
