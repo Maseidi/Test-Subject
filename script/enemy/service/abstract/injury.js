@@ -52,7 +52,7 @@ export class AbstractInjuryService {
         if ( critical ) addClass(damageEl, 'critical')
         if ( virus ) damageEl.style.color = virus
         if ( virus === 'yellow' ) addClass(damageEl, 'yellow')
-        damageEl.textContent = damage
+        damageEl.textContent = Math.floor(damage)
         addAllClasses(damageEl, `enemy-damage-container-${Math.ceil(Math.random() * 6)}`, 'animation')
         this.enemy.sprite.append(damageEl)
         damageEl.addEventListener('animationend', () => damageEl.remove())
