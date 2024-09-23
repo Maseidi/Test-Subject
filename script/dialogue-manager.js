@@ -1,6 +1,7 @@
 import { dialogues } from './entities.js'
-import { getPlayer, getSpeaker } from './elements.js'
+import { getDialogueContainer } from './elements.js'
 import { addAllAttributes, addClass, createAndAddClass } from './util.js'
+import { setPlayingDialogue } from './variables.js'
 
 export const sources = {
     MIAN: 'main',
@@ -20,19 +21,12 @@ export class Dialogue {
 export const renderDialogue = (progress) => {
     const dialogueObj = dialogues.find(dialogue => dialogue.renderProgress === progress)
     if ( !dialogueObj ) return
-    const { message, progress2Active, duration } = dialogueObj
-    if ( dialogueObj.source === sources.MIAN ) displayPlayerDialougue(message, progress2Active, duration)
-    else if ( dialogueObj.source === sources.SPEAKER ) displaySpeakerDialogue(message, progress2Active, duration)
+    displayDialogue(dialogueObj)
 }
 
-const displayPlayerDialougue = (message, progress2Active, duration) =>
-    displayDialogue(message, progress2Active, duration, getPlayer().firstElementChild.children[2])
-
-const displaySpeakerDialogue = (message, progress2Active, duration) => 
-    displayDialogue(message, progress2Active, duration, getSpeaker().lastElementChild)
-
-const displayDialogue = (message, progress2Active, duration, dialogueContainer) => {
-    if ( dialogueContainer.firstElementChild ) dialogueContainer.firstElementChild.remove()
+const displayDialogue = (dialogueObj) => {
+    const { message, duration, progress2Active } = dialogueObj
+    if ( getDialogueContainer().firstElementChild ) getDialogueContainer().firstElementChild.remove()
     const dialogueContent = createAndAddClass('p', 'dialogue', 'dialogue-animation', 'animation')
     const chars = message.split('')
     if ( chars.length > 20 ) dialogueContent.style.width = '300px'
@@ -47,5 +41,6 @@ const displayDialogue = (message, progress2Active, duration, dialogueContainer) 
     addAllAttributes(dialogueContent, 
         'timer', 0, 'duration', Math.floor((duration / 1000) * 60), 'progress2active', progress2Active, 'fade-out', 200
     )
-    dialogueContainer.append(dialogueContent)
+    setPlayingDialogue(dialogueObj)
+    getDialogueContainer().append(dialogueContent)
 }

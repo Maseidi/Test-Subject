@@ -198,5 +198,5 @@ export const isStatUpgrader = (item) => [ADRENALINE, HEALTH_POTION, ENERGY_DRINK
 
 export const renderShadow = (brightness) => {
     getShadowContainer().firstElementChild.style.background = 
-        `radial-gradient(circle at center,transparent,black ${brightness}%)`
+        `radial-gradient(circle at center,transparent,black ${brightness * 10}px)`
 }

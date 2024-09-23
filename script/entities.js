@@ -6,7 +6,7 @@ import { Chapter } from './chapter-manager.js'
 import { Torturer } from './enemy/type/normal-enemy.js'
 import { Dialogue, sources } from './dialogue-manager.js'
 import { Path, Point, RectPath, SinglePointPath, VerDoublePointPath } from './path.js'
-import { Bandage, Crate, GunDrop, KeyDrop, Lever, Lighter, Note, PistolAmmo, RedVaccine, Stick } from './interactables.js'
+import { Bandage, Crate, GunDrop, KeyDrop, Lever, Lighter, Note, PistolAmmo, RedVaccine, Speaker, Stick } from './interactables.js'
 import { 
     BottomLoader_FromLeft,
     Door,
@@ -100,11 +100,11 @@ export const walls = new Map([
         new Wall(200, 200, null, 200, 600),
     ]],
     [8, [
-        new Wall(200, 200, 200, null, 300),
-        new Wall(200, 200, 400, null, 0),
-        new Wall(200, 200, 600, null, 300),
-        new Wall(200, 200, 800, null, 0),
-        new Wall(200, 200, 1000, null, 300),
+        new Wall(50, 200, 200, null, 300),
+        new Wall(50, 200, 400, null, 0),
+        new Wall(50, 200, 600, null, 300),
+        new Wall(50, 200, 800, null, 0),
+        new Wall(50, 200, 1000, null, 300),
     ]],
     [9, [
         new Wall(200, 200, 0, null, 0),
@@ -171,9 +171,9 @@ export const loaders = new Map([
     [7, [
         new BottomLoader_FromLeft(6, 200, 900),
         new RightLoader_FromTop(8, 100, 450, 
-            new Door('black', 'Bunker G door', 'Free the souls to free yourself', null, 
-                Progress.builder().setKillAll('7000')
-            )
+            // new Door('black', 'Bunker G door', 'Free the souls to free yourself', null, 
+            //     Progress.builder().setKillAll('7000')
+            // )
         ),
         new LeftLoader_FromTop(9, 100, 450, 
             new Door('black', 'Bunker H door', 'In need of right direction', null, 
@@ -291,24 +291,30 @@ export const enemies = new Map([
         ),
     ]],
     [8, [
-        new Torturer(0.2, new SinglePointPath(700, 100), new Loot(YELLOW_VACCINE, 2), 
+        new Torturer(0.2, new SinglePointPath(300, 450), null, 
+            Progress.builder().setRenderProgress('8000'),
+        ),
+        new Torturer(0.2, new SinglePointPath(500, 50), new Loot(YELLOW_VACCINE, 2), 
             Progress.builder().setRenderProgress('8000'), 'blue'
         ),
-        new Torturer(0.2, new SinglePointPath(900, 400), new Loot(BLUE_VACCINE, 2), 
+        new Torturer(0.2, new SinglePointPath(700, 450), new Loot(BLUE_VACCINE, 2), 
             Progress.builder().setRenderProgress('8000'), 'purple'
         ),
-        new Torturer(0.2, new SinglePointPath(1200, 100), new Loot(BANDAGE_LOOT, 5), 
+        new Torturer(0.2, new SinglePointPath(900, 50), new Loot(BANDAGE_LOOT, 3), 
             Progress.builder().setRenderProgress('8000')
         ),
 
-        new Torturer(0.2, new SinglePointPath(100, 400), new Loot(GREEN_VACCINE, 2), 
+        new Torturer(0.2, new SinglePointPath(100, 450), new Loot(GREEN_VACCINE, 2), 
             Progress.builder().setRenderProgress('8001'), 'red'
         ),
-        new Torturer(0.2, new SinglePointPath(300, 100), new Loot(RED_VACCINE, 2), 
+        new Torturer(0.2, new SinglePointPath(300, 50), new Loot(RED_VACCINE, 2), 
             Progress.builder().setRenderProgress('8001'), 'green'
         ),
-        new Torturer(0.2, new SinglePointPath(500, 400), new Loot(PURPLE_VACCINE, 2), 
+        new Torturer(0.2, new SinglePointPath(500, 450), new Loot(PURPLE_VACCINE, 2), 
             Progress.builder().setRenderProgress('8001'), 'yellow'
+        ),
+        new Torturer(0.2, new SinglePointPath(700, 50), null, 
+            Progress.builder().setRenderProgress('8001'),
         ),
     ]],
     [9, [
@@ -394,7 +400,7 @@ export const interactables = new Map([
     ]],
     [8, [
         new Lever(1200, 250, Progress.builder().setKillAll('8000').setProgress2Active('8001')),
-        new Stick(1200, 250, Progress.builder().setRenderProgress('8000'), 100)
+        new Stick(1200, 100, Progress.builder().setRenderProgress('8000'), 100)
     ]],
     [9, [
         new GunDrop(900, 600, PISTOL, 10, 1, 1, 1, 1, 1, 

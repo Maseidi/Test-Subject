@@ -44,7 +44,8 @@ import {
     getRoomNameContainer,
     getChapterContainer,
     getPopupContainer,
-    getShadowContainer} from './elements.js'
+    getShadowContainer,
+    getDialogueContainer} from './elements.js'
 import {
     getCurrentRoomId,
     getExplosionDamageCounter,
@@ -63,8 +64,11 @@ import {
     setRoomTop, 
     setStunnedCounter, 
     getElementInteractedWith,
-    getEquippedTorchId} from './variables.js'
+    getEquippedTorchId,
+    getPlayingDialogue,
+    setPlayingDialogue} from './variables.js'
 import { enemies, loaders } from './entities.js'
+import { sources } from './dialogue-manager.js'
 
 export const manageEntities = () => {
     manageSolidObjects()
@@ -78,6 +82,7 @@ export const manageEntities = () => {
     manageExplosions()
     manageTorch()
     managePopovers()
+    manageDialogues()
 }
 
 const manageSolidObjects = () => {
@@ -386,8 +391,7 @@ const lightenEnvironment = (health, roomBrightness) => {
 
 const managePopovers = () => {
     [
-        getPlayer().firstElementChild.children[2],
-        getSpeaker()?.lastElementChild,
+        getDialogueContainer(),
         getRoomNameContainer(),
         getChapterContainer(),
         getPopupContainer()
@@ -397,7 +401,7 @@ const managePopovers = () => {
         const timer = Number(popover.getAttribute('timer'))
         const duration = Number(popover.getAttribute('duration'))
         if ( timer === duration ) removePopover(popover)
-        popover.setAttribute('timer', timer + 1)    
+        popover.setAttribute('timer', timer + 1)
     })
 }
 
@@ -409,5 +413,18 @@ const removePopover = (popover) => {
     popover.addEventListener('animationend', () => {
         popover.remove()
         activateAllProgresses(progress2Active)
+        if ( containsClass(popover, 'dialogue') ) setPlayingDialogue(null)
     })
+}
+
+const manageDialogues = () => {
+    if ( !getPlayingDialogue() ) return
+    if ( getPlayingDialogue().source === sources.MIAN ) {
+        var { x, y, width } = getPlayer().getBoundingClientRect()
+    } else if ( getSpeaker() && getPlayingDialogue().source === sources.SPEAKER ) {
+        var { x, y, width } = getSpeaker().getBoundingClientRect()
+    }    
+    if ( x === undefined || y === undefined || width === undefined ) return
+    getDialogueContainer().firstElementChild.style.left = `${x + width}px`
+    getDialogueContainer().firstElementChild.style.top = `${y}px`
 }

@@ -8,6 +8,7 @@ import {
     getMapEl,
     getShadowContainer,
     setChapterContainer,
+    setDialogueContainer,
     setHealthStatusContainer,
     setMapEl,
     setPauseContainer,
@@ -25,6 +26,7 @@ export const startUp = () => {
     renderHealthStatusContainer()
     renderShadowContainer()
     renderChapterContainer()
+    renderDialogueContainer()
     renderUi()
     renderMap()
     renderRoomContainer()
@@ -54,6 +56,8 @@ const renderShadowContainer = () => {
 }
 
 const renderChapterContainer = () => renderContainer('chapter-container', setChapterContainer)
+
+const renderDialogueContainer = () => renderContainer('dialouge-container', setDialogueContainer)
 
 const renderContainer = (className, setter) => {
     const root = document.getElementById('root')

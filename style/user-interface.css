@@ -245,11 +245,10 @@
 
 .dialogue {
   top: 0;
-  left: 100%;
   z-index: 50;
   padding: 10px;
   color: white;
-  position: absolute;
+  position: fixed;
   border-radius: 2px;
   letter-spacing: 2px;
   border: 1px solid white;

@@ -333,3 +333,9 @@ export const setWaitingFunctions = (val) => {
     waitingFunctions = val
 }
 export const getWaitingFunctions = () => waitingFunctions
+
+let playingDialogue = null
+export const setPlayingDialogue = (val) => {
+    playingDialogue = val
+}
+export const getPlayingDialogue = () => playingDialogue

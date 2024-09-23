@@ -141,3 +141,9 @@ export const setChapterContainer = (val) => {
     chapterContainer = val
 }
 export const getChapterContainer = () => chapterContainer
+
+let dialogueContainer = null
+export const setDialogueContainer = (val) => {
+    dialogueContainer = val
+}
+export const getDialogueContainer = () => dialogueContainer
