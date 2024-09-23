@@ -126,7 +126,7 @@ const manageInteractables = () => {
         const isEnemy = popup.lastElementChild.lastElementChild.src
         if ( int.getAttribute('name') === 'speaker' ) return
         if ( collide(getPlayer().firstElementChild, int, 20) && !getElementInteractedWith() && !containsClass(int, 'open') ) {
-            if ( isEnemy && (isEnemyNotified(popup) || !getProgressValueByNumber('3003')) ) {
+            if ( isEnemy && (isEnemyNotified(popup) || !getProgressValueByNumber('3002')) ) {
                 popup.style.display = 'none'
                 return
             }

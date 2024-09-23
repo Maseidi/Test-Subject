@@ -1,3 +1,4 @@
+import { enemies } from '../../../entities.js'
 import { isGun } from '../../../gun-details.js'
 import { dropLoot } from '../../../loot-manager.js'
 import { CHASE, STUNNED } from '../../enemy-constants.js'
@@ -17,7 +18,6 @@ import {
     updateKillAllDoors,
     updateKillAllEnemies,
     updateKillAllInteractables } from '../../../progress-manager.js'
-import { enemies } from '../../../entities.js'
 
 export class AbstractInjuryService {
     constructor(enemy) {
@@ -69,9 +69,9 @@ export class AbstractInjuryService {
         enemies.get(getCurrentRoomId())[this.enemy.index].health = 0
         activateAllProgresses(this.enemy.progress2Active)
         deactivateAllProgresses(this.enemy.progress2Deactive)
+        updateKillAllEnemies()
         updateKillAllDoors()
         updateKillAllInteractables()
-        updateKillAllEnemies()
         this.removePopup()
     }
 

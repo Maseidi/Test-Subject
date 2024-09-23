@@ -16,6 +16,7 @@ import {
 import { 
     BANDAGE_LOOT,
     BLUE_VACCINE,
+    FAMAS,
     GREEN_VACCINE,
     Loot,
     PISTOL,
@@ -32,15 +33,17 @@ import {
 // **********************************************************************************
 
 export const rooms = new Map([
-    [1, new Room(1, 500,  1000, 'Dormitory', 5, Progress.builder().setProgress2Active('1000'))],
-    [2, new Room(2, 1000, 500,  'Bunker A' , 5, Progress.builder().setProgress2Active('2000'))],
-    [3, new Room(3, 1000, 1000, 'Bunker B' , 5, Progress.builder().setProgress2Active('3000'))],
-    [4, new Room(4, 750,  750,  'Bunker C',  5, Progress.builder().setProgress2Active('4000'))],
-    [5, new Room(5, 800,  600,  'Bunker D',  5, Progress.builder().setProgress2Active('5000'))],
-    [6, new Room(6, 2000, 1000, 'Bunker E',  4, Progress.builder().setProgress2Active('6000'))],
-    [7, new Room(7, 2000, 1000, 'Bunker F',  3, Progress.builder().setProgress2Active('7000'))],
-    [8, new Room(8, 1400,  500, 'Bunker G',  1, Progress.builder().setProgress2Active('8000'))],
-    [9, new Room(9, 1000, 1200, 'Bunker H',  7, Progress.builder().setProgress2Active('9000'))],
+    [1,  new Room(1,  500,  1000, 'Dormitory', 5, Progress.builder().setProgress2Active('1000'))],
+    [2,  new Room(2,  1000, 500,  'Bunker A' , 5, Progress.builder().setProgress2Active('2000'))],
+    [3,  new Room(3,  1000, 1000, 'Bunker B' , 5, Progress.builder().setProgress2Active('3000'))],
+    [4,  new Room(4,  750,  750,  'Bunker C',  5, Progress.builder().setProgress2Active('4000'))],
+    [5,  new Room(5,  800,  600,  'Bunker D',  5, Progress.builder().setProgress2Active('5000'))],
+    [6,  new Room(6,  2000, 1000, 'Bunker E',  4, Progress.builder().setProgress2Active('6000'))],
+    [7,  new Room(7,  2000, 1000, 'Bunker F',  3, Progress.builder().setProgress2Active('7000'))],
+    [8,  new Room(8,  1400,  500, 'Bunker G',  1, Progress.builder().setProgress2Active('8000'))],
+    [9,  new Room(9,  1000, 1200, 'Bunker H',  7, Progress.builder().setProgress2Active('9000'))],
+    [10, new Room(10, 1000, 5000, 'Bunker I',  8, Progress.builder().setProgress2Active('10000'))],
+    [11, new Room(11, 10000, 10000, 'Corridor to heaven', 9, Progress.builder().setProgress2Active('11000'))]
 ])
 
 // **********************************************************************************
@@ -100,17 +103,25 @@ export const walls = new Map([
         new Wall(200, 200, null, 200, 600),
     ]],
     [8, [
-        new Wall(50, 200, 200, null, 300),
+        new Wall(50, 200, 200, null, null, 0),
         new Wall(50, 200, 400, null, 0),
-        new Wall(50, 200, 600, null, 300),
+        new Wall(50, 200, 600, null, null, 0),
         new Wall(50, 200, 800, null, 0),
-        new Wall(50, 200, 1000, null, 300),
+        new Wall(50, 200, 1000, null, null, 0),
     ]],
     [9, [
         new Wall(200, 200, 0, null, 0),
         new Wall(200, 200, 0, null, 1000),
         new Wall(200, 200, 800, null, 0),
         new Wall(200, 200, 800, null, 1000),
+    ]],
+    [10, [
+        new Wall(100, 4000, 100, null, 500),
+        new Wall(100, 4000, null, 100, 500),
+    ]],
+    [11, [
+        new Wall(9800, 4900, 0, null, 0),
+        new Wall(9800, 4900, null, 0, null, 0)
     ]]
 ])
 
@@ -140,7 +151,7 @@ export const loaders = new Map([
         new BottomLoader_FromLeft(2, 100, 450),
         new TopLoader_FromLeft(4, 100, 450,
             new Door('black', 'Bunker C Door', 'In need of right direction', null, 
-                Progress.builder().setRenderProgress('3004')
+                Progress.builder().setRenderProgress('3003')
             )
         ),
     ]],
@@ -163,7 +174,7 @@ export const loaders = new Map([
     [6, [
         new RightLoader_FromTop(5, 100, 450),
         new TopLoader_FromLeft(7, 200, 900, 
-            new Door('black', 'Bunker F door', 'Prioritizing others', 'sacrifice', 
+            new Door('black', 'Bunker F door', 'Stay away', 'bunkerF', 
                 Progress.builder().setRenderProgress('6002')
             )
         )
@@ -172,7 +183,7 @@ export const loaders = new Map([
         new BottomLoader_FromLeft(6, 200, 900),
         new RightLoader_FromTop(8, 100, 450, 
             new Door('black', 'Bunker G door', 'Free the souls to free yourself', null, 
-                Progress.builder().setKillAll('7000')
+                Progress.builder().setKillAll('7002')
             )
         ),
         new LeftLoader_FromTop(9, 100, 450, 
@@ -181,22 +192,38 @@ export const loaders = new Map([
             )
         ),
         new TopLoader_FromLeft(10, 200, 900, 
-            new Door('black', 'Bunker I door', "I'm the most important one", 'selfishness', 
+            new Door('black', 'Bunker I door', "Take the thirst of blood away from me", null, 
                 Progress.builder().setKillAll('9004')
             )
         )
     ]],
     [8, [
-        new LeftLoader_FromTop(7, 100, 200, 
-            new Door('black', 'Bunker F door', 'Free all the souls to free yourself', null, 
-                Progress.builder().setKillAll('8001')
-            )
-        )
+        new LeftLoader_FromTop(7, 100, 200)
     ]],
     [9, [
         new RightLoader_FromTop(7, 100, 550, 
             new Door('black', 'Bunker F door', 'Free all souls to free yourself', null, 
                 Progress.builder().setKillAll('9004')
+            )
+        )
+    ]],
+    [10, [
+        new BottomLoader_FromLeft(7, 200, 400, 
+            new Door('black', 'Bunker I door', 'No turning back now', null, 
+                Progress.builder().setKillAll('10001')
+            )
+        ),
+        new TopLoader_FromLeft(11, 200, 400, 
+            new Door('black', 'Corridor to heaven', 'Leaving here is just the first step', null, 
+                Progress.builder().setKillAll('10001')
+            )
+        )
+    ]],
+    [11, [
+        new BottomLoader_FromLeft(10, 200, 0),
+        new TopLoader_FromLeft(12, 200, 9800, 
+            new Door('black', 'Door to heaven', 'Arriving at heaven', null, 
+                Progress.builder().setRenderProgress('11004')
             )
         )
     ]]
@@ -246,28 +273,28 @@ export const enemies = new Map([
         ),
     ]],
     [6, [
-        new Torturer(0.2, new SinglePointPath(150, 500), null, Progress.builder().setRenderProgress('6000'), 'red'),
-        new Torturer(0.2, new SinglePointPath(550, 500), null, Progress.builder().setRenderProgress('6000'), 'green'),
-        new Torturer(0.2, new SinglePointPath(950, 500), null, Progress.builder().setRenderProgress('6000'), 'yellow'),
-        new Torturer(0.2, new SinglePointPath(1350, 500), null, Progress.builder().setRenderProgress('6000'), 'blue'),
-        new Torturer(0.2, new SinglePointPath(1750, 500), null, Progress.builder().setRenderProgress('6000'), 'purple'),
+        new Torturer(0.2, new SinglePointPath(150, 500),  null,  Progress.builder().setRenderProgress('6000'), 'red'   ),
+        new Torturer(0.2, new SinglePointPath(550, 500),  null,  Progress.builder().setRenderProgress('6000'), 'green' ),
+        new Torturer(0.2, new SinglePointPath(950, 500),  null,  Progress.builder().setRenderProgress('6000'), 'yellow'),
+        new Torturer(0.2, new SinglePointPath(1350, 500), null,  Progress.builder().setRenderProgress('6000'), 'blue'  ),
     ]],
     [7, [
         new Torturer(0.2, new VerDoublePointPath(300, 100, 400), new Loot(YELLOW_VACCINE, 2), 
-            Progress.builder().setRenderProgress('7000'), 'purple'
+            Progress.builder().setRenderProgress('7002'), 'purple'
         ),
         new Torturer(0.2, new VerDoublePointPath(300, 500, 400), new Loot(BLUE_VACCINE, 2), 
-            Progress.builder().setRenderProgress('7000'), 'yellow'
+            Progress.builder().setRenderProgress('7002'), 'yellow'
         ),
         new Torturer(0.2, new VerDoublePointPath(1000, 100, 400), new Loot(GREEN_VACCINE, 2), 
-            Progress.builder().setRenderProgress('7000'), 'blue'
+            Progress.builder().setRenderProgress('7002'), 'blue'
         ),
         new Torturer(0.2, new VerDoublePointPath(1700, 100, 400), new Loot(RED_VACCINE, 2), 
-            Progress.builder().setRenderProgress('7000'), 'green'
+            Progress.builder().setRenderProgress('7002'), 'green'
         ),
         new Torturer(0.2, new VerDoublePointPath(1700, 500, 400), new Loot(PURPLE_VACCINE, 2), 
-            Progress.builder().setRenderProgress('7000'), 'red'
+            Progress.builder().setRenderProgress('7002'), 'red'
         ),
+
         new Torturer(0.2, new VerDoublePointPath(300, 100, 400), new Loot(PISTOL_AMMO_LOOT, 10), 
             Progress.builder().setRenderProgress('9004'),
         ),
@@ -286,29 +313,16 @@ export const enemies = new Map([
     ]],
     [8, [
         new Torturer(0.2, new SinglePointPath(300, 450), null, 
-            Progress.builder().setRenderProgress('8000'),
+            Progress.builder().setRenderProgress('8000'), 'red'
         ),
         new Torturer(0.2, new SinglePointPath(500, 50), new Loot(YELLOW_VACCINE, 2), 
-            Progress.builder().setRenderProgress('8000'), 'blue'
+            Progress.builder().setRenderProgress('8000'), 'green'
         ),
         new Torturer(0.2, new SinglePointPath(700, 450), new Loot(BLUE_VACCINE, 2), 
-            Progress.builder().setRenderProgress('8000'), 'purple'
+            Progress.builder().setRenderProgress('8000'), 'yellow'
         ),
         new Torturer(0.2, new SinglePointPath(900, 50), new Loot(BANDAGE_LOOT, 3), 
-            Progress.builder().setRenderProgress('8000')
-        ),
-
-        new Torturer(0.2, new SinglePointPath(100, 450), new Loot(GREEN_VACCINE, 2), 
-            Progress.builder().setRenderProgress('8001'), 'red'
-        ),
-        new Torturer(0.2, new SinglePointPath(300, 50), new Loot(RED_VACCINE, 2), 
-            Progress.builder().setRenderProgress('8001'), 'green'
-        ),
-        new Torturer(0.2, new SinglePointPath(500, 450), new Loot(PURPLE_VACCINE, 2), 
-            Progress.builder().setRenderProgress('8001'), 'yellow'
-        ),
-        new Torturer(0.2, new SinglePointPath(700, 50), null, 
-            Progress.builder().setRenderProgress('8001'),
+            Progress.builder().setRenderProgress('8000'), 'blue'
         ),
     ]],
     [9, [
@@ -336,7 +350,83 @@ export const enemies = new Map([
         new Torturer(0.2, new SinglePointPath(400, 1100), new Loot(PISTOL_AMMO_LOOT, 3), 
             Progress.builder().setRenderProgress('9004')
     ),
-    ]]
+    ]],
+    [10, [
+        new Torturer(0.2, new SinglePointPath(300, 3000), new Loot(RED_VACCINE, 1), 
+            Progress.builder().setRenderProgress('10000')
+        ),
+        new Torturer(0.2, new SinglePointPath(500, 3000), new Loot(PISTOL_AMMO_LOOT, 7), 
+            Progress.builder().setRenderProgress('10000')
+        ),
+        new Torturer(0.2, new SinglePointPath(700, 3000), null, 
+            Progress.builder().setRenderProgress('10000')
+        ),
+        new Torturer(0.2, new SinglePointPath(300, 3500), new Loot(PISTOL_AMMO_LOOT, 7), 
+            Progress.builder().setRenderProgress('10000')
+        ),
+        new Torturer(0.2, new SinglePointPath(500, 3500), new Loot(GREEN_VACCINE, 1), 
+            Progress.builder().setRenderProgress('10000')
+        ),
+        new Torturer(0.2, new SinglePointPath(700, 3500), new Loot(PISTOL_AMMO_LOOT, 7), 
+            Progress.builder().setRenderProgress('10000')
+        ),
+        new Torturer(0.2, new SinglePointPath(300, 4000), null, 
+            Progress.builder().setRenderProgress('10000')
+        ),
+        new Torturer(0.2, new SinglePointPath(500, 4000), new Loot(PISTOL_AMMO_LOOT, 7), 
+            Progress.builder().setRenderProgress('10000')
+        ),
+        new Torturer(0.2, new SinglePointPath(700, 4000), new Loot(YELLOW_VACCINE, 1), 
+            Progress.builder().setRenderProgress('10000')
+        ),
+        new Torturer(0.2, new SinglePointPath(300, 4500), new Loot(PISTOL_AMMO_LOOT, 7), 
+            Progress.builder().setRenderProgress('10000')
+        ),
+        new Torturer(0.2, new SinglePointPath(500, 4500), null, 
+            Progress.builder().setRenderProgress('10000')
+        ),
+        new Torturer(0.2, new SinglePointPath(700, 4500), new Loot(PISTOL_AMMO_LOOT, 7), 
+            Progress.builder().setRenderProgress('10000')
+        ),
+
+        new Torturer(0.2, new SinglePointPath(300, 3000), new Loot(BLUE_VACCINE, 1), 
+            Progress.builder().setRenderProgress('10001').setKillAll('10000')
+        ),
+        new Torturer(0.2, new SinglePointPath(500, 3000), new Loot(PISTOL_AMMO_LOOT, 7), 
+            Progress.builder().setRenderProgress('10001').setKillAll('10000')
+        ),
+        new Torturer(0.2, new SinglePointPath(700, 3000), null,
+            Progress.builder().setRenderProgress('10001').setKillAll('10000')
+        ),
+        new Torturer(0.2, new SinglePointPath(300, 3500), new Loot(PISTOL_AMMO_LOOT, 7), 
+            Progress.builder().setRenderProgress('10001').setKillAll('10000')
+        ),
+        new Torturer(0.2, new SinglePointPath(500, 3500), new Loot(BANDAGE_LOOT, 2), 
+            Progress.builder().setRenderProgress('10001').setKillAll('10000')
+        ),
+        new Torturer(0.2, new SinglePointPath(700, 3500), new Loot(PISTOL_AMMO_LOOT, 7), 
+            Progress.builder().setRenderProgress('10001').setKillAll('10000')
+        ),
+        new Torturer(0.2, new SinglePointPath(300, 4000), null, 
+            Progress.builder().setRenderProgress('10001').setKillAll('10000')
+        ),
+        new Torturer(0.2, new SinglePointPath(500, 4000), new Loot(PISTOL_AMMO_LOOT, 7), 
+            Progress.builder().setRenderProgress('10001').setKillAll('10000')
+        ),
+        new Torturer(0.2, new SinglePointPath(700, 4000), new Loot(PURPLE_VACCINE, 1), 
+            Progress.builder().setRenderProgress('10001').setKillAll('10000')
+        ),
+        new Torturer(0.2, new SinglePointPath(300, 4500), new Loot(PISTOL_AMMO_LOOT, 7), 
+            Progress.builder().setRenderProgress('10001').setKillAll('10000')
+        ),
+        new Torturer(0.2, new SinglePointPath(500, 4500), null, 
+            Progress.builder().setRenderProgress('10001').setKillAll('10000')
+        ),
+        new Torturer(0.2, new SinglePointPath(700, 4500), new Loot(PISTOL_AMMO_LOOT, 7), 
+            Progress.builder().setRenderProgress('10001').setKillAll('10000')
+        ),
+    ]],
+    [11, []]
 ])
 
 // **********************************************************************************
@@ -366,7 +456,7 @@ export const interactables = new Map([
         new Note(500, 825, "Fugitive's note", "Possible use case of vaccine", "Seems like I'm not the first one facing this, so I'll leave a note cause I believe I won't be the last one either. I found out that the monsters are super weak to the vaccines. I had no clue what they were used for but I picked them up anyway. One of the monsters was after me. It caught me and bit me. I didn't know what to do... I just pulled out the vaccine and injected it to the freak. The monster vanished from existance! It happened so quick I couldn't believe my eyes. Even though the bite hurts, but that was a satisfying achievement...", 
             Progress.builder().setRenderProgress('3000').setOnExamineProgress2Active('3001')
         ),
-        new Lever(500, 300, Progress.builder().setKillAll('3000').setProgress2Active('3004'))
+        new Lever(500, 300, Progress.builder().setKillAll('3000').setProgress2Active('3003'))
     ]],
     [4, [
         new Crate(100, 375, new Loot(BLUE_VACCINE, 3)),
@@ -384,7 +474,7 @@ export const interactables = new Map([
         new Crate(1900, 100, new Loot(YELLOW_VACCINE, 2)),
         new Crate(1900, 800, new Loot(BLUE_VACCINE, 2)),
         new Bandage(950, 100, 3),
-        new KeyDrop(950, 500, 2, 'Key of sacrifice', 'A key demonstrating the beauty of sacrifice', 'sacrifice', 
+        new KeyDrop(950, 500, 2, 'Bunker F key', 'Key for the section F of the bunker', 'bunkerF', 
             Progress.builder().setKillAll('6000')
         )
     ]],
@@ -403,7 +493,9 @@ export const interactables = new Map([
         new PistolAmmo(900, 700, 30, 
             Progress.builder().setRenderProgress('9000')
         )
-    ]]
+    ]],
+    [10, []],
+    [11, []]
 ])
 
 // **********************************************************************************
@@ -443,6 +535,21 @@ export const dialogues = [
     new Dialogue("Oh, nice!", sources.MIAN, 
         Progress.builder().setRenderProgress('9001'), 2000
     ),
+    new Dialogue("You gotta be kidding me!", sources.MIAN, 
+        Progress.builder().setRenderProgress('10000'), 3000
+    ),
+    new Dialogue("Damn, That was close.", sources.MIAN, 
+        Progress.builder().setRenderProgress('11000').setProgress2Active('11001'), 2000
+    ),
+    new Dialogue("What is this place? Why am I here?!", sources.MIAN, 
+        Progress.builder().setRenderProgress('11001').setProgress2Active('11002'), 6000
+    ),
+    new Dialogue("What the HELL where those things? Hope those were the last of them.", sources.MIAN, 
+        Progress.builder().setRenderProgress('11002').setProgress2Active('11003'), 100000
+    ),
+    new Dialogue("I need to find a way out", sources.MIAN, 
+        Progress.builder().setRenderProgress('11003').setProgress2Active('11004'), 3000
+    ),
 ]
 
 // **********************************************************************************
@@ -462,7 +569,7 @@ export const popups = [
         Progress.builder().setRenderProgress('10000002'), 10000
     ),
     new Popup('<span>Q</span> Light up torch', 
-        Progress.builder().setRenderProgress('10000003'), 10000
+        Progress.builder().setRenderProgress('10000003').setProgress2Active('7002'), 10000
     ),
     new Popup('<span>R</span> Reload', 
         Progress.builder().setRenderProgress('10000004'), 10000
@@ -484,7 +591,7 @@ export const popups = [
         Progress.builder().setRenderProgress('2001')
     ),
     new Popup('Sneak past enemies with vaccine to perform stealth kills. Do not let them notice you.', 
-        Progress.builder().setRenderProgress('3002').setProgress2Active('3003')
+        Progress.builder().setRenderProgress('3002')
     ),
     new Popup('<span>1</span> <span>2</span> <span>3</span> <span>4</span> Weapon wheel', 
         Progress.builder().setRenderProgress('9001').setProgress2Active('9002')

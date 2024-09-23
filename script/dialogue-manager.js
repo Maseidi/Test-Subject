@@ -13,6 +13,7 @@ export class Dialogue {
         this.message =         message                   ?? null
         this.source =          source                    ?? null
         this.renderProgress =  progress?.renderProgress  ?? null
+        this.killAll =         progress?.killAll         ?? null
         this.progress2Active = progress?.progress2Active ?? []
         this.duration =        duration                  ?? 3000
     }
