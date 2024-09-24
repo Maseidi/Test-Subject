@@ -91,9 +91,21 @@ const calculateRoomBrightness = (darkness) => {
 
 const manageRoomProgress = () => {
     const room = rooms.get(getCurrentRoomId())
-    activateAllProgresses(room.progress2Active)
-    deactivateAllProgresses(room.progress2Deactive)
+    commitProgressChanges(room.progress2Active,   activateAllProgresses  )
+    commitProgressChanges(room.progress2Deactive, deactivateAllProgresses)
     renderRoomName(room.label)
+}
+
+const commitProgressChanges = (toChange, action) => {
+    if ( typeof toChange === 'number' || typeof toChange === 'string' ) {
+        action(toChange)
+        return
+    }
+
+    for ( const activator of toChange ) {
+        if ( typeof activator === 'number' || typeof activator === 'string' ) activateAllProgresses(activator)
+        else if ( getProgressValueByNumber(activator.condition) ) action(activator.value)
+    }
 }
 
 const renderWalls = () => {
