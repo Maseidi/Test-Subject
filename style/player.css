@@ -162,9 +162,9 @@
 }
 
 .torch-img {
+  top: 8px;
   width: 30px;
   left: -100%;
-  top: 8px;
   position: absolute;
   transform: rotateZ(180deg) translateX(-2px);
 }

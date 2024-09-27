@@ -1,30 +1,30 @@
 .store-ui {
+  top: 0;
   width: 100%;
   height: 100%;
-  top: 0;
   padding: 80px 80px 130px 80px;
 }
 
 .pagination-container {
+  gap: 10px;
   width: 100%;
   height: 40px;
-  margin: 0 auto;
   display: flex;
+  margin: 0 auto;
   flex-direction: row;
-  justify-content: space-between;
   align-items: center;
-  gap: 10px;
+  justify-content: space-between;
 }
 
 .pagination-container > div {
-  width: calc(100% / 3);
   height: 100%;
   display: flex;
-  justify-content: center;
   align-items: center;
-  border: 1px solid rgb(245, 222, 179, 0.7);
-  color: rgb(245, 222, 179, 0.7);
+  width: calc(100% / 3);
+  justify-content: center;
   text-transform: capitalize;
+  color: rgb(245, 222, 179, 0.7);
+  border: 1px solid rgb(245, 222, 179, 0.7);
 }
 
 .pagination-container > div:hover {
@@ -34,16 +34,16 @@
 .page-container {
   width: 100%;
   height: 100%;
-  border: 1px solid rgb(245, 222, 179, 0.7);
   margin-top: 10px;
+  border: 1px solid rgb(245, 222, 179, 0.7);
 }
 
 .page-container,
 .upgrade-right,
 .upgrade-left {
   overflow: auto;
-  -ms-overflow-style: none;
   scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 .page-container::-webkit-scrollbar,
@@ -86,8 +86,8 @@
 .sell-item,
 .upgrade-item,
 .upgrade-detail-component {
-  padding: 15px;
   width: 100%;
+  padding: 15px;
   color: wheat;
 }
 
@@ -108,18 +108,18 @@
 
 .upgrade-detail-lower {
   display: flex;
+  margin-top: 10px;
   flex-direction: row;
   justify-content: space-between;
-  margin-top: 10px;
 }
 
 .upgrade-detail-level,
 .upgrade-detail-value,
 .upgrade-detail-price {
+  gap: 10px;
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 10px;
 }
 
 .upgrade-detail-price > img {
@@ -132,8 +132,8 @@
   width: 100%;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
 }
 
 .buy-item-name,
@@ -154,8 +154,8 @@
 }
 
 .info {
-  width: fit-content;
   gap: 400px;
+  width: fit-content;
 }
 
 .info,
@@ -177,25 +177,25 @@
 }
 
 .popup-container {
+  top: 0;
   width: 100%;
   height: 100%;
-  top: 0;
 }
 
 .buy-popup,
 .upgrade-popup,
 .sell-popup {
-  position: fixed;
-  left: 50%;
   top: 50%;
-  transform: translateX(-50%) translateY(-50%);
-  background-color: black;
-  color: wheat;
-  border: 1px solid wheat;
-  border-radius: 5px;
+  left: 50%;
   padding: 40px;
   display: flex;
+  color: wheat;
+  position: fixed;
+  border-radius: 5px;
   flex-direction: column;
+  background-color: black;
+  border: 1px solid wheat;
+  transform: translateX(-50%) translateY(-50%);
 }
 
 .buy-popup,
@@ -216,10 +216,10 @@
 
 .buy-heading-container,
 .sell-heading-container {
+  gap: 30px;
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 30px;
   text-transform: capitalize;
 }
 
@@ -238,9 +238,9 @@
 .popup-cancel:hover,
 .popup-confirm:hover,
 .popup-examine:hover {
-  box-shadow: 5px 5px 25px white;
   color: white;
   filter: brightness(110%);
+  box-shadow: 5px 5px 25px white;
 }
 
 .popup-confirm:hover {
@@ -261,20 +261,20 @@
 .popup-examine {
   border: none;
   padding: 10px;
-  border-radius: 3px;
-  text-transform: capitalize;
   color: white;
+  border-radius: 3px;
   letter-spacing: 2px;
+  text-transform: capitalize;
 }
 
 .popup-cancel {
-  background-color: darkred;
   color: lightgrey;
+  background-color: darkred;
 }
 
 .popup-examine {
-  background-color: black;
   border: 1px solid grey;
+  background-color: black;
 }
 
 .popup-examine:hover {
@@ -282,13 +282,13 @@
 }
 
 .popup-confirm {
-  background-color: darkgreen;
-  color: lightgrey;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
   gap: 10px;
+  display: flex;
+  color: lightgrey;
+  flex-direction: row;
+  align-items: center;
+  background-color: darkgreen;
+  justify-content: space-between;
 }
 
 .popup-confirm > img {
@@ -296,16 +296,16 @@
 }
 
 .message {
-  color: red;
-  width: max-content;
-  font-weight: bold;
-  font-size: 20px;
-  text-transform: uppercase;
-  position: absolute;
   left: 50%;
-  transform: translateX(-50%);
   top: 100%;
+  color: red;
+  font-size: 20px;
   margin-top: 10px;
+  font-weight: bold;
+  width: max-content;
+  position: absolute;
+  text-transform: uppercase;
+  transform: translateX(-50%);
 }
 
 .message-animation {
@@ -321,9 +321,9 @@
 
 .upgrade-right {
   width: 60%;
+  overflow: auto;
   height: inherit;
   border-left: 1px solid wheat;
-  overflow: auto;
 }
 
 .active-page {

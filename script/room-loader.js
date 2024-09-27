@@ -164,8 +164,8 @@ const getSideWalls = () => {
 const getAllLoaders = () => {
     const { width, height } = rooms.get(getCurrentRoomId())
     const top =    new TopLoader   (null, 100, width)
-    const left =   new LeftLoader   (null, 100, height)
-    const right =  new RightLoader  (null, 100, height)
+    const left =   new LeftLoader  (null, 100, height)
+    const right =  new RightLoader (null, 100, height)
     const bottom = new BottomLoader(null, 100, width)
 
     return {
@@ -174,13 +174,13 @@ const getAllLoaders = () => {
     }
 }
 
-const filterLoadersByPosition = (direction) => {
-    const { length, base } = ['top', 'bottom'].includes(direction) ? 
+const filterLoadersByPosition = (position) => {
+    const { length, base } = ['top', 'bottom'].includes(position) ? 
                              { length: 'height', base: 'left'} : 
                              { length: 'width',  base: 'top' }
 
     const result = loaders.get(getCurrentRoomId())
-        .filter(loader => loader[length] === 5 && loader[direction] === -26).sort((a, b) => a[base] - b[base])
+        .filter(loader => loader[length] === 5 && loader[position] === -26).sort((a, b) => a[base] - b[base])
     return result
 }
 
@@ -217,7 +217,7 @@ const renderLoaders = () => {
             if ( (door.renderProgress && !getProgressValueByNumber(door.renderProgress)) || enemiesLeft(door) ) var open = false
             else var open = true
             renderDoor(elem, open)
-            }
+        }
         getCurrentRoom().append(loader)
         getCurrentRoomLoaders().push(loader)
     })

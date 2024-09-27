@@ -1,28 +1,28 @@
 .stash-ui {
+  top: 0;
   width: 100%;
   height: 100%;
-  top: 0;
   display: flex;
+  padding: 0 100px;
+  align-items: center;
   flex-direction: row-reverse;
   justify-content: space-between;
-  align-items: center;
-  padding: 0 100px;
 }
 
 .stash-items-container {
   width: 550px;
   height: 550px;
-  border: 1px solid rgb(245, 222, 179, 0.8);
   position: relative;
   border-radius: 5px;
+  border: 1px solid rgb(245, 222, 179, 0.8);
 }
 
 .stash-items {
   width: 100%;
   height: 100%;
   overflow: auto;
-  -ms-overflow-style: none;
   scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 .stash-items > div:nth-last-of-type(1) {
@@ -37,25 +37,25 @@
   width: 100%;
   height: 60px;
   padding: 10px;
-  background-color: rgb(0, 0, 0, 0.5);
   display: flex;
+  position: relative;
   flex-direction: row;
-  justify-content: space-between;
   align-items: center;
   text-transform: capitalize;
-  position: relative;
-  border: 1px solid rgba(255, 255, 255, 0.7);
+  justify-content: space-between;
   color: rgba(255, 255, 255, 0.7);
+  background-color: rgb(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.7);
 }
 
 .stash-item-selector {
+  top: 0;
+  left: 0;
+  opacity: 0;
   width: 100%;
   height: 100%;
   position: absolute;
-  left: 0;
-  top: 0;
   background-color: green;
-  opacity: 0;
 }
 
 .stash-item:hover {
@@ -69,38 +69,38 @@
 .specs {
   width: 220px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
 }
 
 .stash-items-container::after {
+  left: 0;
+  font-size: 40px;
   content: "Stash";
   position: absolute;
-  left: 0;
+  letter-spacing: 2px;
   bottom: calc(100% + 10px);
   color: rgb(245, 222, 179, 0.8);
-  font-size: 40px;
-  letter-spacing: 2px;
 }
 
 .move-to-stash,
 .move-to-inventory {
+  gap: 10px;
+  z-index: 20;
+  opacity: 0.9;
+  padding: 10px;
+  display: flex;
   width: fit-content;
   position: absolute;
-  z-index: 20;
-  display: flex;
+  border-radius: 5px;
+  align-items: center;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
-  border-radius: 5px;
+  animation-duration: 200ms;
+  animation-direction: alternate;
   background-color: rgb(0, 0, 0);
   color: rgba(255, 255, 255, 0.7);
   border: 1px solid rgba(255, 255, 255, 0.5);
-  padding: 10px;
-  gap: 10px;
-  opacity: 0.9;
-  animation-duration: 200ms;
-  animation-direction: alternate;
 }
 
 .move-to-stash {
@@ -119,36 +119,36 @@
   width: 100%;
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
 }
 
 .confirm-bigger {
+  gap: 10px;
   width: 100%;
   display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
   font-size: 14px;
-  text-transform: capitalize;
+  flex-direction: row;
+  align-items: center;
   letter-spacing: 1.5px;
+  text-transform: capitalize;
+  justify-content: space-between;
 }
 
 .confirm {
-  background-color: forestgreen;
-  border-radius: 5px;
   padding: 5px;
+  border-radius: 5px;
+  background-color: forestgreen;
 }
 
 .bigger {
+  gap: 5px;
   display: flex;
+  overflow: hidden;
+  border-radius: 5px;
+  align-items: center;
   flex-direction: row;
   justify-content: space-between;
-  align-items: center;
-  gap: 5px;
-  border-radius: 5px;
-  overflow: hidden;
 }
 
 .bigger > div {
