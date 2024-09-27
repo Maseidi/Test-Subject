@@ -69,15 +69,15 @@ export const rooms = new Map([
         Progress.builder().setProgress2Active('12000'), 
         sections.CASTLE
     )],
-    [13, new Room(13,  200,  300, 'Room of Sacrifice',                  9,
+    [13, new Room(13,  200, 1000, 'Room of Sacrifice',                  9,
         null, 
         sections.CASTLE
     )],
-    [14, new Room(14,  200,  300, 'Room of Chivalry' ,                  9,
+    [14, new Room(14,  200, 1000, 'Room of Chivalry' ,                  9,
         null, 
         sections.CASTLE
     )],
-    [15, new Room(15,  200,  300, 'Room of Wisdom',                     9,
+    [15, new Room(15,  200, 1000, 'Room of Wisdom',                     9,
         null, 
         sections.CASTLE
     )],
