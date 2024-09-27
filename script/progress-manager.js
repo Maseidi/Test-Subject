@@ -1,4 +1,4 @@
-import { getDoorObject } from './loader.model.js'
+import { getDoorObject } from './loader.js'
 import { renderPopup } from './popup-manager.js'
 import { getCurrentRoomDoors } from './elements.js'
 import { renderChapter } from './chapter-manager.js'

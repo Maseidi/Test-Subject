@@ -7,7 +7,7 @@ import { interactables, rooms, walls } from './entities.js'
 import { countItem, findEquippedTorchById, updateInteractablePopup } from './inventory.js'
 import { getCurrentRoomId, getRoomLeft, getRoomTop, setStunnedCounter } from './variables.js'
 import { activateAllProgresses, deactivateAllProgresses, getProgressValueByNumber } from './progress-manager.js'
-import { BottomLoader_FromLeft, LeftLoader_FromTop, RightLoader_FromTop, TopLoader_FromLeft } from './loader.model.js'
+import { BottomLoader, LeftLoader, RightLoader, TopLoader } from './loader.js'
 import { 
     LOST,
     MOVE_TO_POSITION,
@@ -163,10 +163,10 @@ const getSideWalls = () => {
 
 const getAllLoaders = () => {
     const { width, height } = rooms.get(getCurrentRoomId())
-    const top =    new TopLoader_FromLeft   (null, 100, width)
-    const left =   new LeftLoader_FromTop   (null, 100, height)
-    const right =  new RightLoader_FromTop  (null, 100, height)
-    const bottom = new BottomLoader_FromLeft(null, 100, width)
+    const top =    new TopLoader   (null, 100, width)
+    const left =   new LeftLoader   (null, 100, height)
+    const right =  new RightLoader  (null, 100, height)
+    const bottom = new BottomLoader(null, 100, width)
 
     return {
         top:   [...filterLoadersByPosition('top'),   top],   left:   [...filterLoadersByPosition('left'),   left],
@@ -399,6 +399,7 @@ export const spawnEnemy = (elem) => {
     enemy.append(enemyCollider)
     getCurrentRoom().append(enemy)
     elem.sprite = enemy
+    enemyBody.addEventListener('transitionend', () => elem.isTransitioning = false)
     getCurrentRoomEnemies().push(elem)
     getCurrentRoomSolid().push(enemyCollider)
 }

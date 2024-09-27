@@ -30,6 +30,7 @@ export class AbstractAngleService {
         const newAngle = currAngle + diff * 45
         this.enemy.angle = newAngle
         this.enemy.angleState = newState
+        this.enemy.isTransitioning = true
         this.enemy.sprite.firstElementChild.firstElementChild.style.transform = `rotateZ(${this.enemy.angle}deg)`
     }
 

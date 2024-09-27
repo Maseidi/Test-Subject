@@ -15,25 +15,25 @@ class Loader {
     }
 }
 
-export class LeftLoader_FromTop extends Loader {
+export class LeftLoader extends Loader {
     constructor(className, height, top, door) {
         super(className, 5, height, -26, top, null, null, door)
     }
 }
 
-export class RightLoader_FromTop extends Loader {
+export class RightLoader extends Loader {
     constructor(className, height, top, door) {
         super(className, 5, height, null, top, -26, null, door)
     }
 }
 
-export class TopLoader_FromLeft extends Loader {
+export class TopLoader extends Loader {
     constructor(className, width, left, door) {
         super(className, width, 5, left, -26, null, null, door)
     }
 }
 
-export class BottomLoader_FromLeft extends Loader {
+export class BottomLoader extends Loader {
     constructor(className, width, left, door) {
         super(className, width, 5, left, null, null, -26, door)
     }

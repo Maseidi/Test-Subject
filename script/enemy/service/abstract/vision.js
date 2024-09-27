@@ -1,5 +1,6 @@
 import { getCurrentRoomSolid, getPlayer } from '../../../elements.js'
 import { collide, containsClass, getProperty } from '../../../util.js'
+import { INVESTIGATE, LOST, MOVE_TO_POSITION } from '../../enemy-constants.js'
 
 export class AbstractVisionService {
     constructor(enemy) {
@@ -43,9 +44,9 @@ export class AbstractVisionService {
     }
 
     isPlayerVisible() {
-        let result = false
-        return result
-        if ( this.enemy.wallInTheWay !== false ) return result
+        if ( this.enemy.wallInTheWay !== false ||
+             ( [LOST, INVESTIGATE, MOVE_TO_POSITION].includes(this.enemy.state) 
+             && this.enemy.isTransitioning === true ) ) return false
         const angle = getProperty(this.enemy.sprite.firstElementChild.children[1], 'transform', 'rotateZ(', 'deg)')
         const predicateRunner = this.predicate(this.enemy.angleState, angle)
         const runners = [

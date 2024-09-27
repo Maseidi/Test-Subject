@@ -8,7 +8,7 @@ export class AbstractPathFindingService {
 
     findPath() {
         const wall = this.#findWall()
-        if ( !wall ) return
+        if ( !wall || wall === 'out-of-range' ) return
         const enemyWidth = getProperty(this.enemy.sprite, 'width', 'px')
         const { wallX, wallY, wallW, wallH } = this.#getWallCoordinates(wall)
         let enemyState = this.#getPositionState(this.enemy.x, this.enemy.y, enemyWidth, wallX, wallY, wallW, wallH)
@@ -91,7 +91,7 @@ export class AbstractPathFindingService {
                 } 
                 if ( this.enemy.pathFindingX === wallX + wallW + 50 && this.enemy.pathFindingY === wallY - 50 ) return
                 this.#addPathFinding(wallX - 50, wallY + wallH + 50)
-                break  
+                break
             default:
                 this.#addPathFinding(null, null)
         }
