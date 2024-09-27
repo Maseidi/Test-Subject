@@ -1,4 +1,4 @@
-import { Room } from './room.js'
+import { Room, sections } from './room.js'
 import { Wall } from './wall.js'
 import { Progress } from './progress.js'
 import { Popup } from './popup-manager.js'
@@ -32,63 +32,223 @@ import {
 // **********************************************************************************
 
 export const rooms = new Map([
-    [1,  new Room(1,  500,  1000, 'Dormitory', 5, Progress.builder().setProgress2Active('1000'))],
-    [2,  new Room(2,  1000, 500,  'Bunker A' , 5, Progress.builder().setProgress2Active('2000'))],
-    [3,  new Room(3,  1000, 1000, 'Bunker B' , 5, Progress.builder().setProgress2Active('3000'))],
-    [4,  new Room(4,  750,  750,  'Bunker C',  5, Progress.builder().setProgress2Active('4000'))],
-    [5,  new Room(5,  800,  600,  'Bunker D',  5, Progress.builder().setProgress2Active('5000'))],
-    [6,  new Room(6,  2000, 1000, 'Bunker E',  4, Progress.builder().setProgress2Active('6000'))],
-    [7,  new Room(7,  2000, 1000, 'Bunker F',  3, Progress.builder().setProgress2Active('7000'))],
-    [8,  new Room(8,  1400,  500, 'Bunker G',  1, Progress.builder().setProgress2Active('8000'))],
-    [9,  new Room(9,  1000, 1200, 'Bunker H',  7, Progress.builder().setProgress2Active('9000'))],
-    [10, new Room(10, 1000, 3000, 'Bunker I',  8, Progress.builder().setProgress2Active('10000'))],
-    [11, new Room(11, 3000, 3000, 'Corridor to heaven', 9, Progress.builder().setProgress2Active('11000'))],
-    [12, new Room(12, 1200, 1200, 'Main hall', 9, Progress.builder().setProgress2Active('12000'))],
-    [13, new Room(13, 200, 300, 'Room 13', 9)],
-    [14, new Room(14, 200, 300, 'Room 14', 9)],
-    [15, new Room(15, 200, 300, 'Room 15', 9)],
-    [16, new Room(16, 1000, 1000, 'Room 16', 6)],
-    [17, new Room(17, 200, 5000, 'Room 17', 9)],
-    [18, new Room(18, 1000, 1000, 'Room 18', 9)],
-    [19, new Room(19, 1000, 1000, 'Room 19', 9)],
-    [20, new Room(20, 1000, 1000, 'Room 20', 9)],
-    [21, new Room(21, 1000, 1000, 'Room 21', 9)],
-    [22, new Room(22, 1000, 1000, 'Room 22', 8)],
-    [23, new Room(23, 1200, 800, 'Room 23', 7)],
-    [24, new Room(24, 800, 1200, 'Room 24', 7)],
-    [25, new Room(25, 1500, 1500, 'Room 25', 7)],
-    [26, new Room(26, 2000, 1000, 'Room 26', 7)],
-    [27, new Room(27, 750, 2000, 'Room 27', 7)],
-    [28, new Room(28, 800, 2000, 'Room 28', 7)],
-    [29, new Room(29, 1400, 700, 'Room 29', 7)],
-    [30, new Room(30, 2000, 1000, 'Room 30', 7)],
-    [31, new Room(31, 1200, 1400, 'Room 31', 7)],
-    [32, new Room(32, 800, 1100, 'Room 32', 7)],
-    [33, new Room(33, 1300, 700, 'Room 33', 7)],
-    [34, new Room(34, 2500, 2500, 'Room 34', 7)],
-    [35, new Room(35, 1000, 1000, 'Room 35', 7)],
-    [36, new Room(36, 1100, 775, 'Room 36', 7)],
-    [37, new Room(37, 1025, 825, 'Room 37', 7)],
-    [38, new Room(38, 1750, 1250, 'Room 38', 7)],
-    [39, new Room(39, 1500, 1750, 'Room 39', 7)],
-    [40, new Room(40, 1100, 1300, 'Room 40', 7)],
-    [41, new Room(41, 1600, 1175, 'Room 41', 7)],
-    [42, new Room(42, 2000, 2000, 'Room 42', 7)],
-    [43, new Room(43, 1200, 875, 'Room 43', 7)],
-    [44, new Room(44, 1000, 2000, 'Room 44', 7)],
-    [45, new Room(45, 900, 900, 'Room 45', 7)],
-    [46, new Room(46, 975, 1850, 'Room 46', 7)],
-    [47, new Room(47, 1150, 1425, 'Room 47', 7)],
-    [48, new Room(48, 2000, 1025, 'Room 48', 7)],
-    [49, new Room(49, 1375, 2225, 'Room 49', 7)],
-    [50, new Room(50, 1625, 875, 'Room 50', 7)],
-    [51, new Room(51, 1000, 2000, 'Room 51', 7)],
-    [52, new Room(52, 2500, 1250, 'Room 52', 7)],
-    [53, new Room(53, 2500, 1250, 'Room 53', 7)],
-    [54, new Room(54, 1750, 800, 'Room 54', 7)],
-    [55, new Room(55, 800, 1750, 'Room 55', 7)],
-    [56, new Room(56, 1000, 1000, 'Room 56', 7)],
-    [57, new Room(57, 1325, 675, 'Room 57', 7)],
+    [1,  new Room(1,   500, 1000, 'Dormitory',                          5, 
+        Progress.builder().setProgress2Active('1000')
+    )],
+    [2,  new Room(2,  1000,  500, 'Bunker A' ,                          5, 
+        Progress.builder().setProgress2Active('2000')
+    )],
+    [3,  new Room(3,  1000, 1000, 'Bunker B' ,                          5, 
+        Progress.builder().setProgress2Active('3000')
+    )],
+    [4,  new Room(4,   750,  750, 'Bunker C',                           5, 
+        Progress.builder().setProgress2Active('4000')
+    )],
+    [5,  new Room(5,   800,  600, 'Bunker D',                           5, 
+        Progress.builder().setProgress2Active('5000')
+    )],
+    [6,  new Room(6,  2000, 1000, 'Bunker E',                           4, 
+        Progress.builder().setProgress2Active('6000')
+    )],
+    [7,  new Room(7,  2000, 1000, 'Bunker F',                           3, 
+        Progress.builder().setProgress2Active('7000')
+    )],
+    [8,  new Room(8,  1400,  500, 'Bunker G',                           1, 
+        Progress.builder().setProgress2Active('8000')
+    )],
+    [9,  new Room(9,  1000, 1200, 'Bunker H',                           7, 
+        Progress.builder().setProgress2Active('9000')
+    )],
+    [10, new Room(10, 1000, 3000, 'Bunker I',                           8, 
+        Progress.builder().setProgress2Active('10000')
+    )],
+    [11, new Room(11, 3000, 3000, 'Corridor to Heaven',                 9, 
+        Progress.builder().setProgress2Active('11000')
+    )],
+    [12, new Room(12, 1200, 1200, 'Main Hall',                          9, 
+        Progress.builder().setProgress2Active('12000'), 
+        sections.CASTLE
+    )],
+    [13, new Room(13,  200,  300, 'Room of Sacrifice',                  9,
+        null, 
+        sections.CASTLE
+    )],
+    [14, new Room(14,  200,  300, 'Room of Chivalry' ,                  9,
+        null, 
+        sections.CASTLE
+    )],
+    [15, new Room(15,  200,  300, 'Room of Wisdom',                     9,
+        null, 
+        sections.CASTLE
+    )],
+    [16, new Room(16, 1000, 1000, 'Speech Room',                        6,
+        null, 
+        sections.CASTLE
+    )],
+    [17, new Room(17,  200, 5000, 'Exit',                               9,
+        null, 
+        sections.CASTLE
+    )],
+    [18, new Room(18, 1000, 1000, 'Museum Entrance',                    9,
+        null, 
+        sections.CASTLE
+    )],
+    [19, new Room(19, 1000, 1000, 'Lab Entrance',                       9,
+        null, 
+        sections.CASTLE
+    )],
+    [20, new Room(20, 1000, 1000, 'Yard Entrance',                      9,
+        null, 
+        sections.CASTLE
+    )],
+    [21, new Room(21, 1000, 1000, 'Library Entrance',                   9,
+        null, 
+        sections.CASTLE
+    )],
+    [22, new Room(22, 1000, 1000, 'Meusum Waiting Room',                7,
+        null, 
+        sections.MUSEUM
+    )],
+    [23, new Room(23, 1200,  800, 'Military and Arms Museum',           7,
+        null, 
+        sections.MUSEUM
+    )],
+    [24, new Room(24,  800, 1200, 'Arts Museum',                        7,
+        null, 
+        sections.MUSEUM
+    )],
+    [25, new Room(25, 1500, 1500, 'Wildlife Museum',                    7,
+        null, 
+        sections.MUSEUM
+    )],
+    [26, new Room(26, 2000, 1000, 'Biology Lab',                        7,
+        null, 
+        sections.LAB
+    )],
+    [27, new Room(27,  750, 2000, 'Blood Samples',                      7,
+        null, 
+        sections.LAB
+    )],
+    [28, new Room(28,  800, 2000, 'Main Square',                        7,
+        null, 
+        sections.YARD
+    )],
+    [29, new Room(29, 1400,  700, 'History Books',                      7,
+        null, 
+        sections.LIBRARY
+    )],
+    [30, new Room(30, 2000, 1000, 'Poetry',                             7,
+        null, 
+        sections.LIBRARY
+    )],
+    [31, new Room(31, 1200, 1400, 'Math and Algebra',                   7,
+        null, 
+        sections.LIBRARY
+    )],
+    [32, new Room(32,  800, 1100, 'Biology',                            7,
+        null, 
+        sections.LIBRARY
+    )],
+    [33, new Room(33, 1300,  700, 'Cold Weapons Showcase',              7,
+        null, 
+        sections.MUSEUM
+    )],
+    [34, new Room(34, 2500, 2500, 'Warm Weapons Showcase',              7,
+        null, 
+        sections.MUSEUM
+    )],
+    [35, new Room(35, 1000, 1000, 'Armors Showcase',                    7,
+        null, 
+        sections.MUSEUM
+    )],
+    [36, new Room(36, 1100,  775, 'Literature Showcase',                7,
+        null, 
+        sections.MUSEUM
+    )],
+    [37, new Room(37, 1025,  825, 'Handcrafts Showcase',                7,
+        null, 
+        sections.MUSEUM
+    )],
+    [38, new Room(38, 1750, 1250, 'Animals Showcase',                   7,
+        null, 
+        sections.MUSEUM
+    )],
+    [39, new Room(39, 1500, 1750, 'Dinosours Showcase',                 7,
+        null, 
+        sections.MUSEUM
+    )],
+    [40, new Room(40, 1100, 1300, 'Insects Showcase',                   7,
+        null, 
+        sections.MUSEUM
+    )],
+    [41, new Room(41, 1600, 1175, 'Biology Lab A- Fish and Amphabians', 7,
+        null, 
+        sections.LAB
+    )],
+    [42, new Room(42, 2000, 2000, 'Biology Lab B- Reptiles and Birds',  7,
+        null, 
+        sections.LAB
+    )],
+    [43, new Room(43, 1200,  875, 'Biology Lab C- Mammals',             7,
+        null, 
+        sections.LAB
+    )],
+    [44, new Room(44, 1000, 2000, 'DNA Samples',                        7,
+        null, 
+        sections.LAB
+    )],
+    [45, new Room(45,  900,  900, 'Oak Land',                           7,
+        null, 
+        sections.YARD
+    )],
+    [46, new Room(46,  975, 1850, 'Pine Land',                          7,
+        null, 
+        sections.YARD
+    )],
+    [47, new Room(47, 1150, 1425, 'Maple land',                         7,
+        null, 
+        sections.YARD
+    )],
+    [48, new Room(48, 2000, 1025, 'Berry Bush Land',                    7,
+        null, 
+        sections.YARD
+    )],
+    [49, new Room(49, 1375, 2225, 'Cedar Land',                         7,
+        null, 
+        sections.YARD
+    )],
+    [50, new Room(50, 1625,  875, 'Geology',                            7,
+        null, 
+        sections.LIBRARY
+    )],
+    [51, new Room(51, 1000, 2000, 'Computer Science',                   7,
+        null, 
+        sections.LIBRARY
+    )],
+    [52, new Room(52, 2500, 1250, 'Novels',                             7,
+        null, 
+        sections.LIBRARY
+    )],
+    [53, new Room(53, 2500, 1250, 'Geograohy',                          7,
+        null, 
+        sections.LIBRARY
+    )],
+    [54, new Room(54, 1750,  800, 'Chemistry',                          7,
+        null, 
+        sections.LIBRARY
+    )],
+    [55, new Room(55,  800, 1750, 'Physics',                            7,
+        null, 
+        sections.LIBRARY
+    )],
+    [56, new Room(56, 1000, 1000, 'Animals',                            7,
+        null, 
+        sections.LIBRARY
+    )],
+    [57, new Room(57, 1325,  675, 'Plants',                             7,
+        null, 
+        sections.LIBRARY
+    )],
 ])
 
 // **********************************************************************************
@@ -490,7 +650,7 @@ export const walls = new Map([
 export const loaders = new Map([
     [1, [
         new TopLoader(2, 100, 200, 
-            new Door('black', 'Drom door', 'Danger outside', 'dorm', 
+            new Door('Drom door', 'Danger outside', 'dorm', 
                 Progress.builder().setRenderProgress('1009')
             )
         ),
@@ -498,7 +658,7 @@ export const loaders = new Map([
     [2, [
         new BottomLoader(1, 100, 450),
         new TopLoader(3, 100, 450, 
-            new Door('black', 'Bunker B door', 'In need of right directions', null, 
+            new Door('Bunker B door', 'In need of right directions', null, 
                 Progress.builder().setRenderProgress('2005')
             )
         )
@@ -506,7 +666,7 @@ export const loaders = new Map([
     [3, [
         new BottomLoader(2, 100, 450),
         new TopLoader(4, 100, 450,
-            new Door('black', 'Bunker C Door', 'In need of right direction', null, 
+            new Door('Bunker C Door', 'In need of right direction', null, 
                 Progress.builder().setRenderProgress('3003')
             )
         ),
@@ -514,7 +674,7 @@ export const loaders = new Map([
     [4, [
         new BottomLoader(3, 100, 400),
         new LeftLoader(5, 200, 200, 
-            new Door('black', 'Bunker D door', 'Free the souls to free yourself', null, 
+            new Door('Bunker D door', 'Free the souls to free yourself', null, 
                 Progress.builder().setKillAll('4000')
             )
         )
@@ -522,7 +682,7 @@ export const loaders = new Map([
     [5, [
         new RightLoader(4, 200, 200),
         new LeftLoader(6, 100, 250, 
-            new Door('black', 'Bunker E door', 'Fetch the corpses to obtain freedom', null, 
+            new Door('Bunker E door', 'Fetch the corpses to obtain freedom', null, 
                 Progress.builder().setKillAll('5000')
             )
         )
@@ -530,7 +690,7 @@ export const loaders = new Map([
     [6, [
         new RightLoader(5, 100, 450),
         new TopLoader(7, 200, 900, 
-            new Door('black', 'Bunker F door', 'Stay away', 'bunkerF', 
+            new Door('Bunker F door', 'Stay away', 'bunkerF', 
                 Progress.builder().setRenderProgress('6002')
             )
         )
@@ -538,17 +698,17 @@ export const loaders = new Map([
     [7, [
         new BottomLoader(6, 200, 900),
         new RightLoader(8, 100, 450, 
-            new Door('black', 'Bunker G door', 'Free the souls to free yourself', null, 
+            new Door('Bunker G door', 'Free the souls to free yourself', null, 
                 Progress.builder().setKillAll('7002')
             )
         ),
         new LeftLoader(9, 100, 450, 
-            new Door('black', 'Bunker H door', 'In need of right direction', null, 
+            new Door('Bunker H door', 'In need of right direction', null, 
                 Progress.builder().setRenderProgress('8001')
             )
         ),
         new TopLoader(10, 200, 900, 
-            new Door('black', 'Bunker I door', "Take the thirst of blood away from me", null, 
+            new Door('Bunker I door', "Take the thirst of blood away from me", null, 
                 Progress.builder().setKillAll('9004')
             )
         )
@@ -558,19 +718,19 @@ export const loaders = new Map([
     ]],
     [9, [
         new RightLoader(7, 100, 550, 
-            new Door('black', 'Bunker F door', 'Free all souls to free yourself', null, 
+            new Door('Bunker F door', 'Free all souls to free yourself', null, 
                 Progress.builder().setKillAll('9004')
             )
         )
     ]],
     [10, [
         new BottomLoader(7, 200, 400, 
-            new Door('black', 'Bunker I door', 'No turning back now', null, 
+            new Door('Bunker I door', 'No turning back now', null, 
                 Progress.builder().setKillAll('10001')
             )
         ),
         new TopLoader(11, 200, 400, 
-            new Door('black', 'Corridor to heaven', 'Leaving here is just the first step', null, 
+            new Door('Corridor to heaven', 'Leaving here is just the first step', null, 
                 Progress.builder().setKillAll('10001')
             )
         )
@@ -578,7 +738,7 @@ export const loaders = new Map([
     [11, [
         new BottomLoader(10, 200, 0),
         new TopLoader(12, 200, 2800, 
-            new Door('black', 'Door to heaven', 'Arriving at heaven', null, 
+            new Door('Door to heaven', 'Arriving at heaven', null, 
                 Progress.builder().setRenderProgress('11004')
             )
         )

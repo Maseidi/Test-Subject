@@ -40,9 +40,8 @@ export class BottomLoader extends Loader {
 }
 
 export class Door {
-    constructor(color, heading, popup, key, progress, code) {
+    constructor(heading, popup, key, progress, code) {
         this.name =            'door'
-        this.color =           color                     ?? 'red'
         this.heading =         heading                   ?? null
         this.popup =           popup                     ?? null
         this.key =             key                       ?? null

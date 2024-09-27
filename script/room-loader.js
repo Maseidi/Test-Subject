@@ -73,7 +73,9 @@ const initElements = () => {
 
 const renderRoom = () => {
     const roomObject = rooms.get(getCurrentRoomId())
-    const room2Render = createAndAddClass('div', 'room', `${getCurrentRoomId()}`)
+    const room2Render = createAndAddClass(
+        'div', 'room', `${getCurrentRoomId()}`, `${roomObject.section}`)
+
     room2Render.style.width =           `${roomObject.width}px`
     room2Render.style.height =          `${roomObject.height}px`
     room2Render.style.left =            `${getRoomLeft()}px`

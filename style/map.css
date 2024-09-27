@@ -9,13 +9,60 @@
   position: absolute;
 }
 
-.room {
-  background-color: lightgrey;
+.room.bunker {
+  background-color: lightgray;
+}
+
+.room.bunker > .wall {
+  background-color: darkgray;
+}
+
+.room.castle {
+  background-color: lightyellow;
+}
+
+.room.castle > .wall {
+  background-color: tomato;
+}
+
+.room.museum {
+  background-color: burlywood;
+}
+
+.room.museum > .wall {
+  background-color: white;
+}
+
+.room.lab {
+  background-color: lightcyan;
+}
+
+.room.lab > .wall {
+  background-color: blue;
+}
+
+.room.yard {
+  background-color: darkkhaki;
+}
+
+.room.yard > .wall {
+  background-color: forestgreen;
+}
+
+.room.library {
+  background-color: lightcoral;
+}
+
+.room.library > .wall {
+  background-color: brown;
 }
 
 .wall {
   border: 1px solid black;
-  background-color: darkgray;
+}
+
+.door {
+  background-color: black;
 }
 
 .tl,
