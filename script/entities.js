@@ -1,6 +1,6 @@
-import { Room, sections } from './room.js'
 import { Wall } from './wall.js'
 import { Progress } from './progress.js'
+import { Room, sections } from './room.js'
 import { Popup } from './popup-manager.js'
 import { Chapter } from './chapter-manager.js'
 import { Torturer } from './enemy/type/normal-enemy.js'
@@ -991,19 +991,19 @@ export const enemies = new Map([
             Progress.builder().setRenderProgress('7002'), 'red'
         ),
 
-        new Torturer(0.2, new VerDoublePointPath(300, 100, 400), new Loot(PISTOL_AMMO_LOOT, 10), 
+        new Torturer(0.2, new VerDoublePointPath(300, 100, 400), new Loot(GREEN_VACCINE, 2), 
             Progress.builder().setRenderProgress('9004'),
         ),
-        new Torturer(0.2, new VerDoublePointPath(300, 500, 400), new Loot(BANDAGE_LOOT, 3), 
+        new Torturer(0.2, new VerDoublePointPath(300, 500, 400), null, 
             Progress.builder().setRenderProgress('9004'),
         ),
-        new Torturer(0.2, new VerDoublePointPath(1000, 100, 400), new Loot(PISTOL_AMMO_LOOT, 10), 
+        new Torturer(0.2, new VerDoublePointPath(1000, 100, 400), null, 
             Progress.builder().setRenderProgress('9004'),
         ),
-        new Torturer(0.2, new VerDoublePointPath(1700, 100, 400), new Loot(BANDAGE_LOOT, 3), 
+        new Torturer(0.2, new VerDoublePointPath(1700, 100, 400), null, 
             Progress.builder().setRenderProgress('9004'),
         ),
-        new Torturer(0.2, new VerDoublePointPath(1700, 500, 400), new Loot(PISTOL_AMMO_LOOT, 10), 
+        new Torturer(0.2, new VerDoublePointPath(1700, 500, 400), new Loot(BANDAGE_LOOT, 3), 
             Progress.builder().setRenderProgress('9004'),
         ),
     ]],
@@ -1022,28 +1022,28 @@ export const enemies = new Map([
         ),
     ]],
     [9, [
-        new Torturer(0.2, new SinglePointPath(100, 600), new Loot(PISTOL_AMMO_LOOT, 5), 
+        new Torturer(0.2, new SinglePointPath(100, 600), new Loot(PISTOL_AMMO_LOOT, 3), 
             Progress.builder().setRenderProgress('9004')
         ),
-        new Torturer(0.2, new SinglePointPath(200, 600), new Loot(PISTOL_AMMO_LOOT, 6), 
+        new Torturer(0.2, new SinglePointPath(200, 600), null, 
             Progress.builder().setRenderProgress('9004')
         ),
         new Torturer(0.2, new SinglePointPath(300, 600), new Loot(PISTOL_AMMO_LOOT, 4), 
             Progress.builder().setRenderProgress('9004')
         ),
-        new Torturer(0.2, new SinglePointPath(300, 100), new Loot(PISTOL_AMMO_LOOT, 7), 
+        new Torturer(0.2, new SinglePointPath(300, 100), null, 
             Progress.builder().setRenderProgress('9004')
         ),
         new Torturer(0.2, new SinglePointPath(300, 1100), new Loot(PISTOL_AMMO_LOOT, 3), 
             Progress.builder().setRenderProgress('9004')
         ),
-        new Torturer(0.2, new SinglePointPath(400, 600), new Loot(PISTOL_AMMO_LOOT, 4), 
+        new Torturer(0.2, new SinglePointPath(400, 600), null, 
             Progress.builder().setRenderProgress('9004')
         ),
-        new Torturer(0.2, new SinglePointPath(400, 100), new Loot(PISTOL_AMMO_LOOT, 7), 
+        new Torturer(0.2, new SinglePointPath(400, 100), new Loot(PISTOL_AMMO_LOOT, 4), 
             Progress.builder().setRenderProgress('9004')
         ),
-        new Torturer(0.2, new SinglePointPath(400, 1100), new Loot(PISTOL_AMMO_LOOT, 3), 
+        new Torturer(0.2, new SinglePointPath(400, 1100), null, 
             Progress.builder().setRenderProgress('9004')
     ),
     ]],
@@ -1051,74 +1051,74 @@ export const enemies = new Map([
         new Torturer(0.2, new SinglePointPath(300, 1800), new Loot(RED_VACCINE, 1), 
             Progress.builder().setRenderProgress('10000')
         ),
-        new Torturer(0.2, new SinglePointPath(500, 1800), new Loot(PISTOL_AMMO_LOOT, 7), 
+        new Torturer(0.2, new SinglePointPath(500, 1800), new Loot(PISTOL_AMMO_LOOT, 6), 
             Progress.builder().setRenderProgress('10000')
         ),
         new Torturer(0.2, new SinglePointPath(700, 1800), null, 
             Progress.builder().setRenderProgress('10000')
         ),
-        new Torturer(0.2, new SinglePointPath(300, 2100), new Loot(PISTOL_AMMO_LOOT, 7), 
+        new Torturer(0.2, new SinglePointPath(300, 2100), new Loot(PISTOL_AMMO_LOOT, 6), 
             Progress.builder().setRenderProgress('10000')
         ),
         new Torturer(0.2, new SinglePointPath(500, 2100), new Loot(GREEN_VACCINE, 1), 
             Progress.builder().setRenderProgress('10000')
         ),
-        new Torturer(0.2, new SinglePointPath(700, 2100), new Loot(PISTOL_AMMO_LOOT, 7), 
+        new Torturer(0.2, new SinglePointPath(700, 2100), new Loot(PISTOL_AMMO_LOOT, 6), 
             Progress.builder().setRenderProgress('10000')
         ),
         new Torturer(0.2, new SinglePointPath(300, 2400), null, 
             Progress.builder().setRenderProgress('10000')
         ),
-        new Torturer(0.2, new SinglePointPath(500, 2400), new Loot(PISTOL_AMMO_LOOT, 7), 
+        new Torturer(0.2, new SinglePointPath(500, 2400), new Loot(PISTOL_AMMO_LOOT, 6), 
             Progress.builder().setRenderProgress('10000')
         ),
         new Torturer(0.2, new SinglePointPath(700, 2400), new Loot(YELLOW_VACCINE, 1), 
             Progress.builder().setRenderProgress('10000')
         ),
-        new Torturer(0.2, new SinglePointPath(300, 2700), new Loot(PISTOL_AMMO_LOOT, 7), 
+        new Torturer(0.2, new SinglePointPath(300, 2700), new Loot(PISTOL_AMMO_LOOT, 6), 
             Progress.builder().setRenderProgress('10000')
         ),
         new Torturer(0.2, new SinglePointPath(500, 2700), null, 
             Progress.builder().setRenderProgress('10000')
         ),
-        new Torturer(0.2, new SinglePointPath(700, 2700), new Loot(PISTOL_AMMO_LOOT, 7), 
+        new Torturer(0.2, new SinglePointPath(700, 2700), new Loot(PISTOL_AMMO_LOOT, 6), 
             Progress.builder().setRenderProgress('10000')
         ),
 
         new Torturer(0.2, new SinglePointPath(300, 1800), new Loot(BLUE_VACCINE, 1), 
             Progress.builder().setRenderProgress('10001').setKillAll('10000')
         ),
-        new Torturer(0.2, new SinglePointPath(500, 1800), new Loot(PISTOL_AMMO_LOOT, 7), 
+        new Torturer(0.2, new SinglePointPath(500, 1800), new Loot(PISTOL_AMMO_LOOT, 6), 
             Progress.builder().setRenderProgress('10001').setKillAll('10000')
         ),
         new Torturer(0.2, new SinglePointPath(700, 1800), null,
             Progress.builder().setRenderProgress('10001').setKillAll('10000')
         ),
-        new Torturer(0.2, new SinglePointPath(300, 2100), new Loot(PISTOL_AMMO_LOOT, 7), 
+        new Torturer(0.2, new SinglePointPath(300, 2100), new Loot(PISTOL_AMMO_LOOT, 6), 
             Progress.builder().setRenderProgress('10001').setKillAll('10000')
         ),
         new Torturer(0.2, new SinglePointPath(500, 2100), new Loot(BANDAGE_LOOT, 2), 
             Progress.builder().setRenderProgress('10001').setKillAll('10000')
         ),
-        new Torturer(0.2, new SinglePointPath(700, 2100), new Loot(PISTOL_AMMO_LOOT, 7), 
+        new Torturer(0.2, new SinglePointPath(700, 2100), new Loot(PISTOL_AMMO_LOOT, 6), 
             Progress.builder().setRenderProgress('10001').setKillAll('10000')
         ),
         new Torturer(0.2, new SinglePointPath(300, 2400), null, 
             Progress.builder().setRenderProgress('10001').setKillAll('10000')
         ),
-        new Torturer(0.2, new SinglePointPath(500, 2400), new Loot(PISTOL_AMMO_LOOT, 7), 
+        new Torturer(0.2, new SinglePointPath(500, 2400), new Loot(PISTOL_AMMO_LOOT, 6), 
             Progress.builder().setRenderProgress('10001').setKillAll('10000')
         ),
         new Torturer(0.2, new SinglePointPath(700, 2400), new Loot(PURPLE_VACCINE, 1), 
             Progress.builder().setRenderProgress('10001').setKillAll('10000')
         ),
-        new Torturer(0.2, new SinglePointPath(300, 2700), new Loot(PISTOL_AMMO_LOOT, 7), 
+        new Torturer(0.2, new SinglePointPath(300, 2700), new Loot(PISTOL_AMMO_LOOT, 6), 
             Progress.builder().setRenderProgress('10001').setKillAll('10000')
         ),
         new Torturer(0.2, new SinglePointPath(500, 2700), null, 
             Progress.builder().setRenderProgress('10001').setKillAll('10000')
         ),
-        new Torturer(0.2, new SinglePointPath(700, 2700), new Loot(PISTOL_AMMO_LOOT, 7), 
+        new Torturer(0.2, new SinglePointPath(700, 2700), new Loot(PISTOL_AMMO_LOOT, 6), 
             Progress.builder().setRenderProgress('10001').setKillAll('10000')
         ),
     ]],

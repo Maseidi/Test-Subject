@@ -274,13 +274,14 @@ export const renderInteractable = (interactable, index) => {
     int.style.left = `${interactable.left}px`
     int.style.top = `${interactable.top}px`
     int.style.width = `${interactable.width}px`
+    int.style.height = `${interactable.width}px`
     renderImage(int, interactable)
     renderPopUp(int, interactable)
     getCurrentRoom().append(int)
     if ( interactable.solid ) {
         getCurrentRoomSolid().push(int)
         createTrackers(int, interactable)
-    }
+    } else addClass(int, 'drop')
     updateInteractablePopup(int)
     getCurrentRoomInteractables().push(int)
     if ( interactable.name === 'speaker' ) {

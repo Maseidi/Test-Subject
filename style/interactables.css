@@ -1,10 +1,29 @@
 .interactable {
+  display: flex;
   object-fit: cover;
   position: absolute;
+  align-items: center;
+  justify-content: center;
+}
+
+.drop::after {
+  top: 50%;
+  left: 50%;
+  content: "";
+  z-index: 33;
+  width: 150%;
+  height: 150%;
+  position: absolute;
+  border-radius: 50%;
+  border: 1px solid black;
+  transform: translateX(-50%) translateY(-50%);
+  background: radial-gradient(rgba(255, 215, 0, 1) 25%, rgba(255, 215, 0, 0.5) 50%, rgba(255, 215, 0, 0.1) 75%);
 }
 
 .interactable > img {
   width: 100%;
+  z-index: 34;
+  position: relative;
 }
 
 .interactable > .popup {
@@ -59,7 +78,6 @@
   color: tomato !important;
   bottom: calc(100% + 20px);
 }
-
 
 .not-ideal > div:nth-of-type(2) > .interactable-btn {
   border: 2px solid tomato !important;
