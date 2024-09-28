@@ -1,3 +1,20 @@
+import { 
+    ARCTIC_WARFERE,
+    BENELLI_M4,
+    GLOCK,
+    M1911,
+    MAUSER,
+    MP5K,
+    P90,
+    PARKER_HALE_M_85,
+    PPSH,
+    REMINGTON_1858,
+    REMINGTON_870,
+    REVOLVER,
+    SPAS,
+    STEYR_SSG_69,
+    UZI } from './loot.js'
+
 class Gun {
     constructor(
         heading,
@@ -35,14 +52,14 @@ export const getGunUpgradableDetail = (gunName, detail, detailLevel) =>
     gunDetails.get(gunName)[detail][detailLevel - 1]
 
 const gunDetails = new Map([
-    ['remington1858', new Gun(
+    [REMINGTON_1858, new Gun(
         'remington 1858',
         'magnumAmmo',
         16,
         'lightgray',
         'blue',
         2,
-        [1000, 1250, 1500, 1750, 2000],
+        [400, 1250, 1500, 1750, 2000],
         [300, 350, 400, 450, 500],
         [5, 4.5, 4, 3.5, 3],
         [5, 6, 7, 8, 9],
@@ -50,7 +67,7 @@ const gunDetails = new Map([
         'A powerful magnum handy in very special scenarios',
         100,
     )],
-    ['revolver', new Gun(
+    [REVOLVER, new Gun(
         'revolver',
         'magnumAmmo',
         14,
@@ -65,7 +82,8 @@ const gunDetails = new Map([
         'A magnum capable of tearing through every living creature',
         90,
     )],
-    ['mauser', new Gun(
+
+    [MAUSER, new Gun(
         'mauser',
         'pistolAmmo',
         12,
@@ -73,15 +91,15 @@ const gunDetails = new Map([
         'red',
         1,
         [30, 33, 36, 39, 42],
-        [600, 650, 700, 750, 800],
+        [400, 475, 550, 750, 800],
         [3.2, 2.7, 2.2, 1.7, 1.2],
         [7, 9, 11, 13, 15],
         [2, 1.75, 1.5, 1.25, 1],
         'A high damage handgun making it a nice choice for every avid gun collector',
         15,
     )],
-    ['pistol', new Gun(
-        'pistol',
+    [GLOCK, new Gun(
+        'glock',
         'pistolAmmo',
         10,
         'black',
@@ -95,8 +113,8 @@ const gunDetails = new Map([
         'Small and fast paced pistol with a pretty decent range',
         14,
     )],
-    ['pistol2', new Gun(
-        'pistol 2',
+    [M1911, new Gun(
+        'M 1911',
         'pistolAmmo',
         12,
         'lightgray',
@@ -110,52 +128,8 @@ const gunDetails = new Map([
         'A handgun with a clip capacity that barely makes you think of reloading',
         13,
     )],
-    ['pistol3', new Gun(
-        'pistol 3',
-        'pistolAmmo',
-        10,
-        'gray',
-        'blue',
-        2,
-        [12, 18, 24, 30, 36],
-        [900, 920, 940, 960, 980],
-        [1.8, 1.5, 1.2, 0.9, 0.6],
-        [11, 12, 13, 14, 15],
-        [1.4, 1.2, 1, 0.8, 0.6],
-        'A pistol that every tiny bit of upgrade is definately a profitable move',
-        12,
-    )],
-    ['pistol4', new Gun(
-        'pistol 4',
-        'pistolAmmo',
-        12,
-        'darkgray',
-        'purple',
-        1,
-        [29, 30, 31, 32, 33],
-        [575, 650, 725, 800, 875],
-        [2.2, 2, 1.8, 1.6, 1.4],
-        [14, 15, 16, 17, 18],
-        [1.6, 1.5, 1.4, 1.3, 1.2],
-        'The handgun every single person never thinks of upgrading its damage',
-        11,
-    )],
-    ['famas', new Gun(
-        'famas',
-        'smgAmmo',
-        14,
-        'lightgray',
-        'red',
-        2,
-        [19, 21, 23, 25, 27],
-        [400, 450, 500, 550, 600],
-        [3, 2.6, 2.2, 1.8, 1.4],
-        [30, 35, 40, 45, 50],
-        [0.2, 0.19, 0.18, 0.17, 0.16],
-        'Sub-machine gun purely focused on dealing the most possible damage',
-        25,
-    )],
-    ['mp5k', new Gun(
+
+    [MP5K, new Gun(
         'mp5k',
         'smgAmmo',
         12,
@@ -170,7 +144,7 @@ const gunDetails = new Map([
         'Pretty balanced SMG useful for most cases',
         24,
     )],
-    ['p90', new Gun(
+    [P90, new Gun(
         'p90',
         'smgAmmo',
         14,
@@ -182,10 +156,10 @@ const gunDetails = new Map([
         [1.8, 1.7, 1.6, 1.5, 1.4],
         [40, 50, 60, 70, 80],
         [0.15, 0.14, 0.13, 0.12, 0.11],
-        "Decent damage and magazine capacity are this weapon's points of shine",
+        "An SMG with high damage and huge capacity.",
         23,
     )],
-    ['ppsh', new Gun(
+    [PPSH, new Gun(
         'ppsh',
         'smgAmmo',
         12,
@@ -200,7 +174,7 @@ const gunDetails = new Map([
         'Decent range, fast reload and fire rate are the greatest highlights of this weapon',
         22,
     )],
-    ['uzi', new Gun(
+    [UZI, new Gun(
         'uzi',
         'smgAmmo',
         10,
@@ -215,8 +189,9 @@ const gunDetails = new Map([
         'The insane fire rate and reload speed make up for its low damage',
         21,
     )],
-    ['shotgun', new Gun(
-        'shotgon',
+
+    [REMINGTON_870, new Gun(
+        'remington 870',
         'shotgunShells',
         16,
         'gray',
@@ -230,38 +205,8 @@ const gunDetails = new Map([
         'Long range shotgun suitable for dealing high damage from afar',
         35,
     )],
-    ['shotgun2', new Gun(
-        'shotgun 2',
-        'shotgunShells',
-        18,
-        'darkgray',
-        'green',
-        2,
-        [120, 180, 240, 300, 360],
-        [250, 300, 350, 400, 450],
-        [3.5, 3.1, 2.7, 2.3, 1.9],
-        [7, 8, 9, 10, 11],
-        [2.3, 2.1, 1.9, 1.7, 1.5],
-        'Balanced shotgun for everyday use',
-        40,
-    )],
-    ['shotgun3', new Gun(
-        'shotgun 3',
-        'shotgunShells',
-        14,
-        'black',
-        'yellow',
-        2,
-        [160, 200, 240, 280, 320],
-        [275, 318, 400, 463, 525],
-        [2.5, 2.3, 2.1, 1.9, 1.7],
-        [6, 8, 10, 12, 14],
-        [1.7, 1.6, 1.5, 1.4, 1.3],
-        "This shotgun's decent damage and range is enough to make your lucky day",
-        45,
-    )],
-    ['riotgun', new Gun(
-        'riotgun',
+    [BENELLI_M4, new Gun(
+        'benelli m4',
         'shotgunShells',
         16,
         'lightgray',
@@ -275,7 +220,7 @@ const gunDetails = new Map([
         'A real boomstick ideal for shredding everything on its way',
         70,
     )],
-    ['spas', new Gun(
+    [SPAS, new Gun(
         'spas',
         'shotgunShells',
         12,
@@ -290,8 +235,9 @@ const gunDetails = new Map([
         'An automatic shotgun with an insane fire rate and magazine capacity',
         50,
     )],
-    ['sniper', new Gun(
-        'sniper',
+    
+    [ARCTIC_WARFERE, new Gun(
+        'arctic warfare',
         'rifleAmmo',
         16,
         'darkgray',
@@ -305,8 +251,8 @@ const gunDetails = new Map([
         'Slow paced sniper rifle focused primarily on dealing damage',
         65,
     )],
-    ['sniper2', new Gun(
-        'sniper 2',
+    [PARKER_HALE_M_85, new Gun(
+        'parker hale m 85',
         'rifleAmmo',
         18,
         'black',
@@ -320,8 +266,8 @@ const gunDetails = new Map([
         'A sniper rifle with incredibly fast fire rate making it one of a kind',
         75,
     )],
-    ['sniper3', new Gun(
-        'sniper 3',
+    [STEYR_SSG_69, new Gun(
+        'steyr ssg 69',
         'rifleAmmo',
         14,
         'lightgray',

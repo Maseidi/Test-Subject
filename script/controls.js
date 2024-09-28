@@ -459,14 +459,15 @@ const hDown = () => {
 const qDown = () => {
     if ( getPause() || getReloading() || getShooting() || getGrabbed() ) return
     const stick = getInventory().flat().filter(item => item?.name === 'stick').sort((a, b) => a.health - b.health)
-    const lighter = getInventory().flat().find(item => item?.name === 'lighter')
-    if ( stick.length === 0 || !lighter ) return
+    if ( stick.length === 0 ) return
     setEquippedTorchId(getEquippedTorchId() ? null : stick[0].id)
     if ( getEquippedTorchId() ) equipTorch()
     else unequipTorch()
 }
 
 export const equipTorch = () => {
+    const lighter = getInventory().flat().find(item => item?.name === 'lighter')
+    if ( !lighter ) return
     if ( getEquippedWeaponId() ) switchWeapon2Torch()
     else takeOutTorch()
 }

@@ -15,10 +15,11 @@ import {
     TopLoader } from './loader.js'
 import { 
     BANDAGE_LOOT,
+    BENELLI_M4,
     BLUE_VACCINE,
+    GLOCK,
     GREEN_VACCINE,
     Loot,
-    PISTOL,
     PISTOL_AMMO_LOOT,
     PURPLE_VACCINE,
     RED_VACCINE,
@@ -1229,7 +1230,7 @@ export const interactables = new Map([
         new Stick(1200, 100, Progress.builder().setRenderProgress('8000'), 100)
     ]],
     [9, [
-        new GunDrop(900, 600, PISTOL, 10, 1, 1, 1, 1, 1, 
+        new GunDrop(900, 600, BENELLI_M4, 10, 1, 1, 1, 1, 1, 
             Progress.builder().setRenderProgress('9000').setProgress2Active('9001')
         ),
         new PistolAmmo(900, 700, 30, 
