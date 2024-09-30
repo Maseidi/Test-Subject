@@ -2,7 +2,6 @@ import { Wall } from './wall.js'
 import { Progress } from './progress.js'
 import { Room, sections } from './room.js'
 import { Popup } from './popup-manager.js'
-import { Chapter } from './chapter-manager.js'
 import { Torturer } from './enemy/type/normal-enemy.js'
 import { Dialogue, sources } from './dialogue-manager.js'
 import { Path, Point, RectPath, SinglePointPath, VerDoublePointPath } from './path.js'
@@ -934,8 +933,13 @@ export const loaders = new Map([
 // Enemies
 // **********************************************************************************
 // **********************************************************************************
+let enemies = null
+export const setEnemies = (val) => {
+    enemies = val
+}
+export const getEnemies = () => enemies
 
-export const enemies = new Map([
+export const initialEnemies = () => new Map([
     [1, []],
     [2, [
         new Torturer(0.2, new RectPath(350, 150, 300, 100))
@@ -1177,8 +1181,13 @@ export const enemies = new Map([
 // Interactables
 // **********************************************************************************
 // **********************************************************************************
+let interactables = null
+export const setInteractables = (val) => {
+    interactables = val
+}
+export const getInteractables = () => interactables
 
-export const interactables = new Map([
+export const initialInteractables = new Map([
     [1, [
         new Note(125, 850, "Prisoner's memo", "Memories of a prisoner", "It's been 2 days since I'm here. I'm so hungry and there's no one responsible for this mess. I don't know what happened. All I remember was my normal life. And now I'm here, alone.... Why would this happen? I don't even know if I'm kidnapped by a criminal or arrested by law. Even then I would have contacted someone by now. The door's key is on the ground, so I can get out whenever I want, but the outdoors is terrifying. It's so dark and I think there's a predator past these doors. I can hear it breathing every now and then. I might have to get out of here and face it, or else I would starve to death...",
             Progress.builder().setRenderProgress('1003').setProgress2Active('1004').setOnExamineProgress2Active('1005')
@@ -1391,14 +1400,4 @@ export const popups = [
     new Popup('<span>Left click</span> Shoot', 
         Progress.builder().setRenderProgress('9003').setProgress2Active('9004')
     )
-]
-
-// **********************************************************************************
-// **********************************************************************************
-// Chapters
-// **********************************************************************************
-// **********************************************************************************
-
-export const chapters = [
-    new Chapter(1, Progress.builder().setRenderProgress('1000').setProgress2Active('1001'), 3000)
 ]

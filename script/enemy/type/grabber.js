@@ -16,11 +16,13 @@ import {
     LOST,
     MOVE_TO_POSITION,
     NO_OFFENCE } from '../enemy-constants.js'
+import { getRoundsFinished } from '../../variables.js'
 
 export class Grabber extends AbstractEnemy {
     constructor(level, path, loot, progress, virus) {
-        const health = Math.floor(level * 100 + Math.random() * 50)
-        const damage = Math.floor(level * 20 + Math.random() * 10)
+        const base = level + (getRoundsFinished()+ 5)
+        const health = Math.floor(base * 100 + Math.random() * 50)
+        const damage = Math.floor(base * 20 + Math.random() * 10)
         const maxSpeed = 3 + Math.random()
         super(GRABBER, 4, path, health, damage, maxSpeed, 400, 1.4, loot, progress, virus)
         this.injuryService = new GrabberInjuryService(this)

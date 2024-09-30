@@ -61,7 +61,7 @@ import {
     SMG_AMMO_LOOT, 
     STICK_LOOT, 
     YELLOW_VACCINE } from './loot.js'
-import { interactables } from './entities.js'
+import { getInteractables } from './entities.js'
 
 export const dropLoot = (rootElem, isEnemy) => {
     const root = element2Object(rootElem)
@@ -88,7 +88,7 @@ export const dropLoot = (rootElem, isEnemy) => {
     let interactable = {...loot, left: left, top: top, id: nextId()}
     if ( progress2Active ) interactable = {...interactable, progress2Active}
     if ( progress2Deactive ) interactable = {...interactable, progress2Deactive}
-    interactables.get(getCurrentRoomId()).push(interactable)
+    getInteractables().get(getCurrentRoomId()).push(interactable)
     renderInteractable(interactable)
 }
 

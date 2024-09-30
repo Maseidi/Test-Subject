@@ -15,11 +15,13 @@ import {
     MOVE_TO_POSITION,
     NO_OFFENCE,
     RANGER } from '../enemy-constants.js'
+import { getRoundsFinished } from '../../variables.js'
 
 export class Ranger extends AbstractEnemy {
     constructor(level, waypoint, loot, progress, virus) {
-        const health = Math.floor(level * 112 + Math.random() * 17)
-        const damage = Math.floor(level * 25 + Math.random() * 5)
+        const base = level + (getRoundsFinished()+ 5)
+        const health = Math.floor(base * 112 + Math.random() * 17)
+        const damage = Math.floor(base * 25 + Math.random() * 5)
         const maxSpeed = 4 + Math.random()
         const vision = Math.floor(500 + Math.random() * 300)
         super(RANGER, 6, waypoint, health, damage, maxSpeed, vision, 2, loot, progress, virus)

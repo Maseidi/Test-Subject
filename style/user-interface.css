@@ -226,21 +226,17 @@
   box-shadow: 0 0 10px rgba(255, 255, 255, 0.9);
 }
 
-.room-name-popup > span, .dialogue > span, .chapter-popup > span {
+.room-name-popup > span, .dialogue > span {
   opacity: 0;
   animation-fill-mode: forwards;
   animation-direction: alternate;
-  animation-name: character-animation;
+  animation-name: fade-in;
 }
 
 .room-name-popup > span {
   margin-left: 2px;
   margin-right: 2px;
   animation-duration: 300ms;
-}
-
-.chapter-popup > span {
-  animation-duration: 150ms;
 }
 
 .dialogue {
@@ -267,22 +263,6 @@
 
 .dialogue > span {
   animation-duration: 10ms;
-}
-
-.chapter-popup {
-  left: 50%;
-  top: 200px;
-  z-index: 35;
-  padding: 10px;
-  color: wheat;
-  font-size: 32px;
-  font-weight: bold;
-  width: max-content;
-  position: absolute;
-  letter-spacing: 20px;
-  text-transform: uppercase;
-  transform: translateX(-50%);
-  text-shadow: 0 0 15px black;
 }
 
 .fade-out {

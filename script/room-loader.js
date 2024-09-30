@@ -1,9 +1,8 @@
 import { NOTE } from './loot.js'
 import { Wall } from './wall.js'
 import { isGun } from './gun-details.js'
-import { enemies, loaders } from './entities.js'
 import { renderRoomName } from './room-name-manager.js'
-import { interactables, rooms, walls } from './entities.js'
+import { getInteractables, rooms, walls, getEnemies, loaders } from './entities.js'
 import { countItem, findEquippedTorchById, updateInteractablePopup } from './inventory.js'
 import { getCurrentRoomId, getRoomLeft, getRoomTop, setStunnedCounter } from './variables.js'
 import { activateAllProgresses, deactivateAllProgresses, getProgressValueByNumber } from './progress-manager.js'
@@ -228,7 +227,7 @@ const renderLoaders = () => {
 const enemiesLeft = (object) => {
     const killAll = object.killAll
     if ( !killAll ) return false
-    return enemies.get(getCurrentRoomId()).find(enemy => enemy.health !== 0 && enemy.renderProgress <= killAll)
+    return getEnemies().get(getCurrentRoomId()).find(enemy => enemy.health !== 0 && enemy.renderProgress <= killAll)
 }
 
 export const renderDoor = (loader, open) => {    
@@ -262,7 +261,7 @@ const addPosition = (doorElem, input, direction, className, type) => {
 }
 
 const renderInteractables = () => 
-    interactables.get(getCurrentRoomId())
+    getInteractables().get(getCurrentRoomId())
         .forEach((interactable, index) => renderInteractable(interactable, index))
 
 export const renderInteractable = (interactable, index) => {
@@ -294,9 +293,9 @@ export const renderInteractable = (interactable, index) => {
 const setInteractableId = (interactable, int, index) => {
     if ( interactable.id != null ) return
     int.id = nextId()
-    const newInteractables = interactables.get(getCurrentRoomId())
+    const newInteractables = getInteractables().get(getCurrentRoomId())
     newInteractables[index] = { ...interactable, id: +int.id }
-    interactables.set(getCurrentRoomId(), newInteractables)
+    getInteractables().set(getCurrentRoomId(), newInteractables)
 }
 
 const renderImage = (int, interactable) => {
@@ -368,7 +367,7 @@ const getDescriptionContent = (interactable, needCode) => {
 }
 
 const renderEnemies = () => {
-    const currentRoomEnemies = enemies.get(getCurrentRoomId())
+    const currentRoomEnemies = getEnemies().get(getCurrentRoomId())
     if ( !currentRoomEnemies ) return
     indexEnemies(currentRoomEnemies)
     const filteredEnemies = filterEnemies(currentRoomEnemies)

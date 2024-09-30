@@ -1,4 +1,4 @@
-import { managePause } from './controls.js'
+import { managePause } from './actions.js'
 import { isThrowable } from './throwable-details.js'
 import { getPauseContainer, getUiEl, setUiEl } from './elements.js'
 import { addClass, appendAll, containsClass, createAndAddClass } from './util.js'

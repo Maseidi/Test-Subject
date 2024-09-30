@@ -1,10 +1,10 @@
-let mapX = -50000
+let mapX = 0
 export const setMapX = (val) => {
     mapX = val
 }
 export const getMapX = () => mapX
 
-let mapY = -50000
+let mapY = 0
 export const setMapY = (val) => {
     mapY = val
 }
@@ -22,7 +22,7 @@ export const setPlayerY = (val) => {
 }
 export const getPlayerY = () => playerY
 
-let currentRoomId = 7
+let currentRoomId = 1
 export const setCurrentRoomId = (val) => {
     currentRoomId = val
 }
@@ -339,3 +339,9 @@ export const setPlayingDialogue = (val) => {
     playingDialogue = val
 }
 export const getPlayingDialogue = () => playingDialogue
+
+let roundsFinished = 0
+export const setRoundsFinished = (val) => {
+    roundsFinished = val
+}
+export const getRoundsFinished = () => roundsFinished

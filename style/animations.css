@@ -296,7 +296,7 @@
   }
 }
 
-@keyframes character-animation {
+@keyframes fade-in {
   0% {
     opacity: 0;
   }
@@ -351,5 +351,14 @@
   100% {
     opacity: 1;
     transform: translateY(-100%);
+  }
+}
+
+@keyframes main-menu-options-bar {
+  0% {
+    width: 0%;
+  }
+  100%{
+    width: 100%;
   }
 }

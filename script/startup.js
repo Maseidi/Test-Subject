@@ -7,7 +7,6 @@ import {
     getHealthStatusContainer,
     getMapEl,
     getShadowContainer,
-    setChapterContainer,
     setDialogueContainer,
     setHealthStatusContainer,
     setMapEl,
@@ -25,7 +24,6 @@ export const startUp = () => {
     renderPopupContainer()
     renderHealthStatusContainer()
     renderShadowContainer()
-    renderChapterContainer()
     renderDialogueContainer()
     renderUi()
     renderMap()
@@ -54,8 +52,6 @@ const renderShadowContainer = () => {
     const shadow = createAndAddClass('div', 'shadow')
     getShadowContainer().append(shadow)
 }
-
-const renderChapterContainer = () => renderContainer('chapter-container', setChapterContainer)
 
 const renderDialogueContainer = () => renderContainer('dialouge-container', setDialogueContainer)
 

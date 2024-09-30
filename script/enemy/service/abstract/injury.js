@@ -1,4 +1,4 @@
-import { enemies } from '../../../entities.js'
+import { getEnemies } from '../../../entities.js'
 import { isGun } from '../../../gun-details.js'
 import { dropLoot } from '../../../loot-manager.js'
 import { CHASE, STUNNED } from '../../enemy-constants.js'
@@ -66,7 +66,7 @@ export class AbstractInjuryService {
         )
         dropLoot(this.enemy.sprite, true)
         this.deathAnimation()
-        enemies.get(getCurrentRoomId())[this.enemy.index].health = 0
+        getEnemies().get(getCurrentRoomId())[this.enemy.index].health = 0
         activateAllProgresses(this.enemy.progress2Active)
         deactivateAllProgresses(this.enemy.progress2Deactive)
         updateKillAllEnemies()

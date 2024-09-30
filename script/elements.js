@@ -136,14 +136,14 @@ export const setSpeaker = (val) => {
 }
 export const getSpeaker = () => speaker
 
-let chapterContainer = null
-export const setChapterContainer = (val) => {
-    chapterContainer = val
-}
-export const getChapterContainer = () => chapterContainer
-
 let dialogueContainer = null
 export const setDialogueContainer = (val) => {
     dialogueContainer = val
 }
 export const getDialogueContainer = () => dialogueContainer
+
+let mainMenuEl = null
+export const setMainMenuEl = (val) => {
+    mainMenuEl = val
+}
+export const getMainMenuEl = () => mainMenuEl

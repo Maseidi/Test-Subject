@@ -172,11 +172,12 @@ class StickShopItem extends ShopItem {
     }
 }
 
-let shopItems = []
-
+let shopItems = null
 export const setShopItems = (val) => {
     shopItems = val
 }
 export const getShopItems = () => shopItems
 
 export const getShopItemsWithId = () => shopItems.map((item, index) => ({...item, id:index}))
+
+export const initialShopItems = []

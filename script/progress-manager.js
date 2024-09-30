@@ -1,17 +1,16 @@
 import { getDoorObject } from './loader.js'
 import { renderPopup } from './popup-manager.js'
 import { getCurrentRoomDoors } from './elements.js'
-import { renderChapter } from './chapter-manager.js'
 import { renderDialogue } from './dialogue-manager.js'
-import { enemies, interactables } from './entities.js'
+import { getEnemies, getInteractables } from './entities.js'
 import { addClass, element2Object, removeClass } from './util.js'
 import { renderInteractable, spawnEnemy } from './room-loader.js'
 import { getCurrentRoomId, getPause, getWaitingFunctions, setWaitingFunctions } from './variables.js'
 
-let progress = {
-    [Number.MAX_SAFE_INTEGER] : true,
+let progress = null
+export const setProgress = (val) => {
+    progress = val
 }
-
 export const getProgress = () => progress
 
 export const getProgressValueByNumber = (number) => progress[number]
@@ -30,7 +29,6 @@ export const activateAllProgresses = (numbers) => {
         add2Queue(renderPopup,         [progress2Active])
         add2Queue(toggleDoors,         [progress2Active])
         add2Queue(updateEnemies,       [progress2Active])
-        add2Queue(renderChapter,       [progress2Active])
         add2Queue(renderDialogue,      [progress2Active])
         add2Queue(updateInteractables, [progress2Active])
     }
@@ -78,7 +76,7 @@ export const toggleDoor = (door, open = true) => {
 
 const getAliveEnemies = (needIndex = false) =>
     (() => {
-        var currEnemies = enemies.get(getCurrentRoomId())
+        var currEnemies = getEnemies().get(getCurrentRoomId())
         if ( needIndex ) currEnemies = currEnemies.map((enemy, index) => ({...enemy, index}))
         return currEnemies
     })().filter(enemy => enemy.health !== 0)
@@ -96,7 +94,7 @@ export const updateKillAllDoors = () => {
 }
 
 const updateEnemies = (number) =>
-    enemies.get(getCurrentRoomId()).forEach(enemy => {
+    getEnemies().get(getCurrentRoomId()).forEach(enemy => {
         if ( enemy.health === 0 ) return
         if ( enemy.renderProgress !== number ) return
         spawnEnemy(enemy)
@@ -104,7 +102,7 @@ const updateEnemies = (number) =>
 
 export const updateKillAllEnemies = () => { 
     const aliveEnemies = getAliveEnemies(true)
-    enemies.get(getCurrentRoomId()).forEach((enemy, index) => {
+    getEnemies().get(getCurrentRoomId()).forEach((enemy, index) => {
         if ( !enemy.killAll ) return
         if ( aliveEnemies.find(e => e.index !== index && !e.killAll && Number(e.renderProgress) <= Number(enemy.killAll) ) ) 
             return
@@ -114,7 +112,7 @@ export const updateKillAllEnemies = () => {
 }   
 
 const updateInteractables = (number) =>
-    interactables.get(getCurrentRoomId()).forEach((int, index) => {
+    getInteractables().get(getCurrentRoomId()).forEach((int, index) => {
         if ( int.renderProgress !== number ) return
         int.renderProgress = String(Number.MAX_SAFE_INTEGER) 
         renderInteractable(int, index)
@@ -122,7 +120,7 @@ const updateInteractables = (number) =>
 
 export const updateKillAllInteractables = () => {
     const aliveEnemies = getAliveEnemies()
-    interactables.get(getCurrentRoomId()).forEach((int, index) => {
+    getInteractables().get(getCurrentRoomId()).forEach((int, index) => {
         if ( !int.killAll ) return
         if ( aliveEnemies.find(enemy => !enemy.killAll && Number(enemy.renderProgress) <= Number(int.killAll) ) ) return
         int.killAll = null

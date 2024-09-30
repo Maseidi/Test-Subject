@@ -1,6 +1,6 @@
 import { NOTE } from './loot.js'
 import { renderGun } from './gun-loader.js'
-import { interactables } from './entities.js'
+import { getInteractables } from './entities.js'
 import { renderStats } from './gun-examine.js'
 import { useLuckPills } from './weapon-manager.js'
 import { useEnergyDrink } from './player-sprint.js'
@@ -9,10 +9,11 @@ import { isThrowable } from './throwable-details.js'
 import { useAdrenaline } from './player-movement.js'
 import { renderInteractable } from './room-loader.js'
 import { renderThrowable } from './throwable-loader.js'
-import { quitPage, renderQuit } from './user-interface.js'
 import { getGunDetails, isGun } from './gun-details.js'
-import { activateAllProgresses, deactivateAllProgresses, toggleDoor } from './progress-manager.js'
+import { equipTorch, unequipTorch } from './actions.js'
+import { quitPage, renderQuit } from './user-interface.js'
 import { useAntidote, useBandage, useHealthPotion, useVaccine } from './player-health.js'
+import { activateAllProgresses, deactivateAllProgresses, toggleDoor } from './progress-manager.js'
 import { 
     getCurrentRoomEnemies,
     getCurrentRoomInteractables,
@@ -57,7 +58,6 @@ import {
     getPause, 
     getEquippedTorchId,
     setEquippedTorchId} from './variables.js'
-import { equipTorch, unequipTorch } from './controls.js'
 
 export const MAX_PACKSIZE = {
     coin: 50,
@@ -84,15 +84,10 @@ export const MAX_PACKSIZE = {
     shotgunShells: 20,
 }
 
-let inventory = [
-    [null, null, null, null],
-    [null, null, null, null],
-    ['locked', 'locked', 'locked', 'locked'],
-    ['locked', 'locked', 'locked', 'locked'],
-    ['locked', 'locked', 'locked', 'locked'],
-    ['locked', 'locked', 'locked', 'locked'],
-]
-
+let inventory = null
+export const setInventory = (val) => {
+    inventory = val 
+}
 export const getInventory = () => inventory
 
 let dropElem
@@ -270,8 +265,8 @@ const updateAmount = (newValue) => {
     dropObject.amount = newValue
     if ( dropElem.children.length === 0 ) return
     dropElem.children[1].firstElementChild.textContent = `${newValue} ${dropElem.getAttribute('heading')}`
-    interactables.set(getCurrentRoomId(), 
-    interactables.get(getCurrentRoomId()).map(int => {
+    getInteractables().set(getCurrentRoomId(), 
+    getInteractables().get(getCurrentRoomId()).map(int => {
         return int.id === Number(dropElem.getAttribute('id')) ? 
         {
             ...int,
@@ -282,7 +277,7 @@ const updateAmount = (newValue) => {
 
 export const removeDrop = (drop) => {
     drop.remove()
-    interactables.set(getCurrentRoomId(), interactables.get(getCurrentRoomId()).filter(elem => elem.id !== Number(drop.id)))
+    getInteractables().set(getCurrentRoomId(), getInteractables().get(getCurrentRoomId()).filter(elem => elem.id !== Number(drop.id)))
 }
 
 const updateWeaponWheel = () => {
@@ -731,10 +726,10 @@ const drop = (item) => {
     const left = Math.floor(getPlayerX() - getRoomLeft())
     const top = Math.floor(getPlayerY() - getRoomTop())
     let interactable = {...itemObj, renderProgress: String(Number.MAX_SAFE_INTEGER), left: left, top: top}
-    if ( interactables.get(getCurrentRoomId()).find(elem => elem.id === interactable.id) ) 
+    if ( getInteractables().get(getCurrentRoomId()).find(elem => elem.id === interactable.id) ) 
         interactable = {...interactable, id: nextId()}
     getPauseContainer().firstElementChild.remove()
-    interactables.get(getCurrentRoomId()).push(interactable)
+    getInteractables().get(getCurrentRoomId()).push(interactable)
     dropFromInventory(itemObj)
     handleVaccineDrop(itemObj)
     renderInteractable(interactable)

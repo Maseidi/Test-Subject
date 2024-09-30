@@ -1,4 +1,4 @@
-import { managePause } from './controls.js'
+import { managePause } from './actions.js'
 import { getDoorObject } from './loader.js'
 import { getPauseContainer } from './elements.js'
 import { toggleDoor } from './progress-manager.js'

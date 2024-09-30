@@ -1,13 +1,12 @@
-import { rooms } from './entities.js'
+import { unequipTorch } from './actions.js'
 import { dropLoot } from './loot-manager.js'
-import { unequipTorch } from './controls.js'
 import { removeTorch } from './torch-loader.js'
 import { sources } from './dialogue-manager.js'
-import { enemies, loaders } from './entities.js'
 import { loadCurrentRoom } from './room-loader.js'
+import { getEnemies, loaders, rooms } from './entities.js'
 import { getThrowableDetail } from './throwable-details.js'
-import { activateAllProgresses, getProgressValueByNumber } from './progress-manager.js'
 import { findEquippedTorchById, getInventory } from './inventory.js'
+import { activateAllProgresses, getProgressValueByNumber } from './progress-manager.js'
 import { damagePlayer, infectPlayer2SpecificVirus, poisonPlayer, setPlayer2Fire } from './player-health.js'
 import { 
     CHASE,
@@ -44,9 +43,8 @@ import {
     getCurrentRoomExplosions,
     getSpeaker,
     getRoomNameContainer,
-    getChapterContainer,
     getPopupContainer,
-    getDialogueContainer} from './elements.js'
+    getDialogueContainer } from './elements.js'
 import {
     getCurrentRoomId,
     getExplosionDamageCounter,
@@ -67,7 +65,7 @@ import {
     getElementInteractedWith,
     getEquippedTorchId,
     getPlayingDialogue,
-    setPlayingDialogue} from './variables.js'
+    setPlayingDialogue } from './variables.js'
 
 export const manageEntities = () => {
     manageSolidObjects()
@@ -143,7 +141,7 @@ const isEnemyNotified = (popup) => {
     const enemyPath = enemyElem.previousSibling.id
     const index = Number(enemyPath.replace('path-', ''))
     const validStates = [LOST, INVESTIGATE, MOVE_TO_POSITION, STUNNED]
-    const enemyObj = enemies.get(getCurrentRoomId())[index]
+    const enemyObj = getEnemies().get(getCurrentRoomId())[index]
     if ( !validStates.includes(enemyObj.state) || enemyObj.health === 0 ) return true
     return false
 }
@@ -392,7 +390,6 @@ const managePopovers = () => {
     [
         getDialogueContainer(),
         getRoomNameContainer(),
-        getChapterContainer(),
         getPopupContainer()
     ].forEach(container => {
         const popover = container?.firstElementChild

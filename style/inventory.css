@@ -7,11 +7,6 @@
   color: white;
 }
 
-@font-face {
-  font-family: kalam;
-  src: url("../assets/fonts/kalam.ttf");
-}
-
 .note {
   top: 50%;
   left: 50%;

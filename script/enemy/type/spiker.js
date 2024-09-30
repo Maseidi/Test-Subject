@@ -17,11 +17,13 @@ import {
     NO_OFFENCE,
     SPIKER } from '../enemy-constants.js'
 import { SpikerAngleService } from '../service/spiker/angle.js'
+import { getRoundsFinished } from '../../variables.js'
 
 export class Spiker extends AbstractEnemy {
     constructor(level, waypoint, loot, progress, virus) {
-        const health = Math.floor(level * 25 + Math.random() * 5)
-        const damage = Math.floor(level * 15 + Math.random() * 5)
+        const base = level + (getRoundsFinished()+ 5)
+        const health = Math.floor(base * 25 + Math.random() * 5)
+        const damage = Math.floor(base * 15 + Math.random() * 5)
         const maxSpeed = 6 + Math.random()
         super(SPIKER, 6, waypoint, health, damage, maxSpeed, 400, maxSpeed, loot, progress, virus)
         this.axis = Math.random() < 0.5 ? 1 : 2

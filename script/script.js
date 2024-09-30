@@ -1,3 +1,3 @@
-import { play } from './game.js'
+import { renderMainMenu } from './main-menu.js';
 
-play()
+renderMainMenu()

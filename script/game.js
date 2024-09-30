@@ -1,20 +1,20 @@
 import { startUp } from './startup.js'
 import { getPause } from './variables.js'
-import { initControls } from './controls.js'
 import { manageSprint } from './player-sprint.js'
 import { manageEntities } from './entity-manager.js'
 import { managePlayerAngle } from './angle-manager.js'
-import { logInfo, manageLogs } from './log-manager.js'
 import { manageHealthStatus } from './player-health.js'
 import { manageWeaponActions } from './weapon-manager.js'
 import { managePlayerMovement } from './player-movement.js'
+import { addControls, removeControls } from './controls.js'
 
 let error = false
+let gameId = null
 export const play = () => {
     startUp()
-    initControls()
+    addControls()
 
-    window.setInterval(() => {
+    gameId = window.setInterval(() => {
         try {
             if ( error ) return
             if ( getPause() ) return
@@ -24,11 +24,16 @@ export const play = () => {
             managePlayerMovement()
             manageWeaponActions()
             manageHealthStatus()
-            // manageLogs()
         } catch( err ) {
             console.error(err);
-            // logInfo()
             error = true
         }
     }, 1000 / 60)
+
+}
+
+export const endSession = () => {
+    removeControls()
+    window.clearInterval(gameId)
+    gameId = null
 }
