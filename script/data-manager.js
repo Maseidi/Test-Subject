@@ -3,8 +3,19 @@ import { setProgress } from './progress-manager.js'
 import { initPasswords } from './password-manager.js'
 import { initialInventory, setInventory } from './inventory.js'
 import { initialShopItems, setShopItems } from './shop-item.js'
-import { initEnemies, initialInteractables, initLoaders, setEnemies, setInteractables, setLoaders } from './entities.js'
 import { 
+    getInteractables,
+    initEnemies,
+    initialInteractables,
+    initLoaders,
+    rooms,
+    setEnemies,
+    setInteractables,
+    setLoaders } from './entities.js'
+import { 
+    getCurrentRoomId,
+    getRoundsFinished,
+    getTimesSaved,
     setAdrenalinesDropped,
     setAimMode,
     setAllowMove,
@@ -59,6 +70,7 @@ import {
     setStunnedCounter,
     setTargets,
     setThrowCounter,
+    setTimesSaved,
     setUpPressed,
     setWaitingFunctions, 
     setWeaponWheel } from './variables.js'
@@ -159,6 +171,7 @@ const initNewGameVariables = (difficulty) => {
         infection : [],
         equippedTorchId : null,
         roundsFinished : 0,
+        timesSaved: 0,
         difficulty,
     }
     setVariables(newGameVariables)
@@ -198,4 +211,26 @@ const setVariables = (variables) => {
     setEquippedTorchId(     variables.equippedTorchId)
     setRoundsFinished(      variables.roundsFinished)
     setDifficulty(          variables.difficulty)
+    setTimesSaved(          variables.timesSaved)
+}
+
+export const saveAtSlot = (slotNumber) => {
+    setTimesSaved(getTimesSaved() + 1)
+    localStorage.setItem('slot-' + slotNumber, JSON.stringify({
+        room: rooms.get(getCurrentRoomId()).label,
+        timeStamp: Date.now(),
+        rounds: getRoundsFinished(),
+        saves: getTimesSaved()
+    }))
+    saveInteractables()
+}
+
+const saveInteractables = () => {
+    
+    
+    // localStorage.setItem('slot-' + slotNumber + '-interactables', 
+    //     JSON.stringify(
+    //         getInteractables()
+    //     )
+    // )
 }

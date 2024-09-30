@@ -160,15 +160,14 @@
   justify-content: space-between;
 }
 
-.popup-container {
+.deal-popup-container {
   top: 0;
   width: 100%;
   height: 100%;
 }
 
-.buy-popup,
 .upgrade-popup,
-.sell-popup {
+.deal-popup {
   top: 50%;
   left: 50%;
   padding: 40px;
@@ -182,8 +181,7 @@
   transform: translateX(-50%) translateY(-50%);
 }
 
-.buy-popup,
-.sell-popup {
+.deal-popup {
   gap: 40px;
 }
 
@@ -192,14 +190,12 @@
   align-items: center;
 }
 
-.buy-popup-title,
-.sell-popup-title {
+.deal-popup-title {
   text-align: center;
   text-transform: capitalize;
 }
 
-.buy-heading-container,
-.sell-heading-container {
+.deal-heading-container {
   gap: 30px;
   display: flex;
   flex-direction: row;
@@ -207,9 +203,8 @@
   text-transform: capitalize;
 }
 
-.buy-popup-btn-container,
 .upgrade-popup-btn-container,
-.sell-popup-btn-container {
+.deal-popup-btn-container {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -219,41 +214,12 @@
   gap: 100px;
 }
 
-.popup-cancel:hover,
-.popup-confirm:hover,
-.popup-examine:hover {
-  color: white;
-  filter: brightness(110%);
-  box-shadow: 5px 5px 25px white;
-}
-
 .popup-confirm:hover {
   background-color: forestgreen;
 }
 
-.popup-cancel:hover {
-  background-color: crimson;
-}
-
-.buy-popup-img,
-.sell-popup-img {
+.deal-popup-img {
   height: 60px;
-}
-
-.popup-cancel,
-.popup-confirm,
-.popup-examine {
-  border: none;
-  padding: 10px;
-  color: white;
-  border-radius: 3px;
-  letter-spacing: 2px;
-  text-transform: capitalize;
-}
-
-.popup-cancel {
-  color: lightgrey;
-  background-color: darkred;
 }
 
 .popup-examine {

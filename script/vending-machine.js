@@ -154,31 +154,34 @@ const statUpgraderOffLimit = () => {
 
 const buyPopup = (e) => {
     const itemObj = element2Object(e.currentTarget)
-    const popupContainer = createAndAddClass('div', 'popup-container', 'ui-theme')
-    const popup = createAndAddClass('div', 'buy-popup')
-    const title = createAndAddClass('h2', 'buy-popup-title')
-    title.textContent = `purchase item?`
-    const image = createAndAddClass('img', 'buy-popup-img')
+    renderDealPopup(itemObj, 'Purchase item?', isGun(itemObj.name) || itemObj.name === 'pouch', renderConfirmBuyBtn)
+}
+
+export const renderDealPopup = (itemObj, title, headingPredicate, confirmCb) => {
+    const popupContainer = createAndAddClass('div', 'deal-popup-container', 'popup-container', 'ui-theme')
+    const popup = createAndAddClass('div', 'deal-popup')
+    const titleEl = createAndAddClass('h2', 'deal-popup-title')
+    titleEl.textContent = title
+    const image = createAndAddClass('img', 'deal-popup-img')
     image.src = `../assets/images/${itemObj.name}.png`
-    const heading = createAndAddClass('h2', 'buy-popup-heading')
-    const imageHeading = createAndAddClass('div', 'buy-heading-container')
+    const heading = createAndAddClass('h2', 'deal-popup-heading')
+    const imageHeading = createAndAddClass('div', 'deal-heading-container')
     appendAll(imageHeading, image, heading)
-    if (isGun(itemObj.name) || itemObj.name === 'pouch') heading.textContent = `${itemObj.heading}`
+    if (headingPredicate) heading.textContent = `${itemObj.heading}`
     else heading.textContent = `${itemObj.amount} ${itemObj.heading}`
-    const description = createAndAddClass('p', 'buy-popup-description')
+    const description = createAndAddClass('p', 'deal-popup-description')
     description.textContent = `${itemObj.description}`
-    const btnContainer = createAndAddClass('div', 'buy-popup-btn-container')
+    const btnContainer = createAndAddClass('div', 'deal-popup-btn-container')
     const cancel = renderCancelBtn(itemObj)
     btnContainer.append(cancel)
     renderExamineBtn(itemObj, btnContainer)
-    const confirm = renderConfirmBtn(itemObj)
+    const confirm = confirmCb(itemObj)
     btnContainer.append(confirm)
     const message = createAndAddClass('p', 'message')
-    appendAll(popup, title, imageHeading, description, btnContainer, message)
+    appendAll(popup, titleEl, imageHeading, description, btnContainer, message)
     popupContainer.append(popup)
     getPauseContainer().firstElementChild.append(popupContainer)
 }
-
 
 const renderCancelBtn = () => {
     const cancel = createAndAddClass('button', 'popup-cancel')
@@ -188,29 +191,34 @@ const renderCancelBtn = () => {
 }
 
 const renderExamineBtn = (itemObj, btnContainer) => {
-    if ( isGun(itemObj.name) ) {
-        const examine = createAndAddClass('button', 'popup-examine')
-        examine.textContent = `examine`
-        const weapon = getInventory().flat().find(item => item && item.name === itemObj.name)
-        examine.addEventListener('click', () => renderStats( weapon || {
-            ...getGunDetails().get(itemObj.name), 
-            name: itemObj.name, damagelvl: 1, fireratelvl: 1, reloadspeedlvl: 1, magazinelvl:1, rangelvl: 1
-        }))
-        btnContainer.append(examine)
-    }
+    if ( !isGun(itemObj.name) ) return
+    const examine = createAndAddClass('button', 'popup-examine')
+    examine.textContent = `examine`
+    const weapon = getInventory().flat().find(item => item && item.name === itemObj.name)
+    examine.addEventListener('click', () => renderStats( weapon || {
+        ...getGunDetails().get(itemObj.name), 
+        name: itemObj.name, damagelvl: 1, fireratelvl: 1, reloadspeedlvl: 1, magazinelvl:1, rangelvl: 1
+    }))
+    btnContainer.append(examine)
 }
 
-const renderConfirmBtn = (itemObj) => {
+const renderConfirmBuyBtn = (itemObj) => 
+    renderConfirmBtn(
+        itemObj.price, 
+        () => {
+            if ( !checkEnoughCoins(itemObj) ) return
+            manageBuy(itemObj)
+        }
+    )
+
+const renderConfirmBtn = (price, cb, priceUnit = 'coin') => {
     const confirm = createAndAddClass('button', 'popup-confirm')
     const img = document.createElement('img')
-    img.src = `../assets/images/coin.png`
+    img.src = `../assets/images/${priceUnit}.png`
     const p = document.createElement('p')
-    p.textContent = `${itemObj.price}` 
+    p.textContent = `${price}` 
     appendAll(confirm, img, p)
-    confirm.addEventListener('click', () => {
-        if ( !checkEnoughCoins(itemObj) ) return
-        manageBuy(itemObj)
-    })
+    confirm.addEventListener('click', cb)
     return confirm
 }
 
@@ -399,7 +407,7 @@ const upgradePopup = (e) => {
     const itemObj = element2Object(e.currentTarget)
     const popupContainer = createAndAddClass('div', 'popup-container', 'ui-theme')
     const popup = createAndAddClass('div', 'upgrade-popup')
-    const title = createAndAddClass('h2', 'buy-popup-title')
+    const title = createAndAddClass('h2', 'deal-popup-title')
     title.textContent = `Purchase upgrade?`
     const btnContainer = createAndAddClass('div', 'upgrade-popup-btn-container')
     const cancel = renderCancelBtn(itemObj)
@@ -424,19 +432,14 @@ const upgradePopup = (e) => {
     getPauseContainer().firstElementChild.append(popupContainer)
 }
 
-const renderUpgradeConfirmBtn = (itemObj) => {
-    const confirm = createAndAddClass('button', 'popup-confirm')
-    const img = document.createElement('img')
-    img.src = `../assets/images/coin.png`
-    const p = document.createElement('p')
-    p.textContent = `${itemObj.cost}` 
-    confirm.addEventListener('click', () => {
-        if ( !checkEnoughCoins({price: itemObj.cost}) ) return
-        manageUpgrade(itemObj)
-    })
-    appendAll(confirm, img, p)
-    return confirm
-}
+const renderUpgradeConfirmBtn = (itemObj) => 
+    renderConfirmBtn(
+        itemObj.cost, 
+        () => {
+            if ( !checkEnoughCoins({price: itemObj.cost}) ) return
+            manageUpgrade(itemObj)
+        }
+    )
 
 const manageUpgrade = (itemObj) => {
     useInventoryResource('coin', itemObj.cost)
@@ -487,43 +490,14 @@ const renderSell = () => {
 
 const sellPopup = (e) => {
     const itemObj = element2Object(e.currentTarget)
-    const popupContainer = createAndAddClass('div', 'popup-container', 'ui-theme')
-    const popup = createAndAddClass('div', 'sell-popup')
-    const title = createAndAddClass('h2', 'sell-popup-title')
-    title.textContent = `Sell item?`
-    const image = createAndAddClass('img', 'sell-popup-img')
-    image.src = `../assets/images/${itemObj.name}.png`
-    const heading = createAndAddClass('h2', 'sell-popup-heading')
-    const imageHeading = createAndAddClass('div', 'sell-heading-container')
-    appendAll(imageHeading, image, heading)
-    if ( isGun(itemObj.name) ) heading.textContent = `${itemObj.heading}`
-    else heading.textContent = `${itemObj.amount} ${itemObj.heading}`
-    const description = createAndAddClass('p', 'sell-popup-description')
-    description.textContent = `${itemObj.description}`
-    const btnContainer = createAndAddClass('div', 'sell-popup-btn-container')
-    const cancel = renderCancelBtn(itemObj)
-    btnContainer.append(cancel)
-    renderExamineBtn(itemObj, btnContainer)
-    const confirm = renderConfirmSellBtn(itemObj)
-    btnContainer.append(confirm)
-    const message = createAndAddClass('p', 'message')
-    appendAll(popup, title, imageHeading, description, btnContainer, message)
-    popupContainer.append(popup)
-    getPauseContainer().firstElementChild.append(popupContainer)
+    renderDealPopup(itemObj, 'Sell item?', isGun(itemObj.name), renderConfirmSellBtn)
 }
 
-const renderConfirmSellBtn = (itemObj) => {
-    const confirm = createAndAddClass('button', 'popup-confirm')
-    const img = document.createElement('img')
-    img.src = `../assets/images/coin.png`
-    const p = document.createElement('p')
-    p.textContent = `${itemObj.price * itemObj.amount}` 
-    appendAll(confirm, img, p)
-    confirm.addEventListener('click', () => {
-        manageSell(itemObj)
-    })
-    return confirm
-}
+const renderConfirmSellBtn = (itemObj) => 
+    renderConfirmBtn(
+        itemObj.price * itemObj.amount,
+        () => manageSell(itemObj) 
+    )
 
 const manageSell = (itemObj) => {
     const gain = itemObj.price * itemObj.amount

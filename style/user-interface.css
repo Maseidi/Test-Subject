@@ -286,3 +286,32 @@
 .item-img {
   width: 40px;
 }
+
+.popup-cancel:hover,
+.popup-confirm:hover,
+.popup-examine:hover {
+  color: white;
+  filter: brightness(110%);
+  box-shadow: 5px 5px 25px white;
+}
+
+.popup-cancel:hover {
+  background-color: crimson;
+}
+
+.popup-cancel,
+.popup-confirm,
+.popup-examine {
+  border: none;
+  padding: 10px;
+  color: white;
+  border-radius: 3px;
+  letter-spacing: 2px;
+  text-transform: capitalize;
+}
+
+.popup-cancel {
+  color: lightgrey;
+  background-color: darkred;
+}
+

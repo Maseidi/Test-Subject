@@ -140,7 +140,7 @@ const manageInteractables = () => {
 }
 
 const handleInteractions = (int, popup) => {
-    if ( int.getAttribute('solid') !== 'true' && !int.getAttribute('value') ) return
+    if ( !['computer', 'stash', 'vendingMachine'].includes(int.getAttribute('name')) && !int.getAttribute('value') ) return
     if ( isAble2Interact() ) removeClass(popup, 'not-ideal')
     else addClass(popup, 'not-ideal')
 }

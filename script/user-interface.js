@@ -88,7 +88,7 @@ export const renderQuit = () => {
 
 export const quitPage = () => {
     if ( getDraggedItem() ) return
-    const last = getPauseContainer().lastElementChild 
+    const last = getPauseContainer().lastElementChild
     if ( Array.from(last.children).find(child => containsClass(child, 'popup-container')) ) return
     last.remove()
     updateInteractablePopups()

@@ -180,4 +180,8 @@ export const getShopItems = () => shopItems
 
 export const getShopItemsWithId = () => shopItems.map((item, index) => ({...item, id:index}))
 
-export const initialShopItems = []
+export const initialShopItems = [
+    new BandageShopItem(Number.MAX_SAFE_INTEGER),
+    new BandageShopItem(Number.MAX_SAFE_INTEGER),
+    new BandageShopItem(Number.MAX_SAFE_INTEGER),
+]

@@ -2,10 +2,26 @@ import { Wall } from './wall.js'
 import { Progress } from './progress.js'
 import { Room, sections } from './room.js'
 import { Popup } from './popup-manager.js'
+import { getDifficulty } from './variables.js'
 import { Torturer } from './enemy/type/normal-enemy.js'
 import { Dialogue, sources } from './dialogue-manager.js'
 import { Path, Point, RectPath, SinglePointPath, VerDoublePointPath } from './path.js'
-import { Bandage, Crate, GunDrop, KeyDrop, Lever, Lighter, Note, PC, PistolAmmo, RedVaccine, Stash, Stick, VendingMachine } from './interactables.js'
+import { 
+    Bandage,
+    Coin,
+    Crate,
+    GunDrop,
+    HardDrive,
+    KeyDrop,
+    Lever,
+    Lighter,
+    Note,
+    PC,
+    PistolAmmo,
+    RedVaccine,
+    Stash,
+    Stick,
+    VendingMachine } from './interactables.js'
 import { 
     Door,
     BottomLoader,
@@ -14,7 +30,6 @@ import {
     TopLoader } from './loader.js'
 import { 
     BANDAGE_LOOT,
-    BENELLI_M4,
     BLUE_VACCINE,
     GLOCK,
     GREEN_VACCINE,
@@ -24,7 +39,6 @@ import {
     RED_VACCINE,
     STICK_LOOT,
     YELLOW_VACCINE } from './loot.js'
-import { getDifficulty } from './variables.js'
 
 // **********************************************************************************
 // **********************************************************************************
@@ -34,7 +48,7 @@ import { getDifficulty } from './variables.js'
 
 export const rooms = new Map([
     [1,  new Room(1,   500, 1000, 'Dormitory',                          5, 
-        Progress.builder().setProgress2Active('1000')
+        Progress.builder().setProgress2Active('10001111111')
     )],
     [2,  new Room(2,  1000,  500, 'Bunker A' ,                          5, 
         Progress.builder().setProgress2Active('2000')
@@ -1294,7 +1308,9 @@ export const initialInteractables = new Map([
         ),
         new PC(10, 900),
         new VendingMachine(450, 900),
-        new Stash(10, 10)
+        new Stash(10, 10),
+        new HardDrive(250, 300, 2),
+        new Coin(250, 400, 10)
     ]],
     [2, [
         new Lever(100, 100, Progress.builder().setRenderProgress('2000').setProgress2Active('2002')),
@@ -1339,7 +1355,7 @@ export const initialInteractables = new Map([
         new Stick(1200, 100, Progress.builder().setRenderProgress('8000'), 100)
     ]],
     [9, [
-        new GunDrop(900, 600, BENELLI_M4, 10, 1, 1, 1, 1, 1, 
+        new GunDrop(900, 600, GLOCK, 10, 1, 1, 1, 1, 1, 
             Progress.builder().setRenderProgress('9000').setProgress2Active('9001')
         ),
         new PistolAmmo(900, 700, 30, 

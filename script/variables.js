@@ -339,3 +339,9 @@ export const setDifficulty = (val) => {
     difficulty = val
 }
 export const getDifficulty = () => difficulty
+
+let timesSaved = null
+export const setTimesSaved = (val) => {
+    timesSaved = val
+}
+export const getTimesSaved = () => timesSaved

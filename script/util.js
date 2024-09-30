@@ -5,7 +5,7 @@ import { removeThrowable } from './throwable-loader.js'
 import { getGunDetail, getGunUpgradableDetail } from './gun-details.js'
 import { getThrowableDetail, isThrowable } from './throwable-details.js'
 import { ADRENALINE, ENERGY_DRINK, HEALTH_POTION, LUCK_PILLS } from './loot.js'
-import { getCurrentRoom, getCurrentRoomExplosions, getMapEl, getPlayer, getShadowContainer } from './elements.js'
+import { getCurrentRoom, getCurrentRoomExplosions, getMapEl, getPlayer, getPopupContainer, getShadowContainer } from './elements.js'
 import { 
     getCurrentRoomId,
     getDownPressed,
@@ -212,4 +212,5 @@ export const difficulties = {
 
 export const isAble2Interact = () => 
     !getPlayingDialogue() && 
+    !getPopupContainer().firstElementChild &&
     getExistingEnemies(getEnemies().get(getCurrentRoomId())).length === 0

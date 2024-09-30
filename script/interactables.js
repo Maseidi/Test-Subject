@@ -162,7 +162,7 @@ export class Flashbang extends Drop {
 export class Stick extends Drop {
     constructor(left, top, progress, health) {
         super(30, left, top, 'stick', 'stick', 1, 1, 
-            'Coupling it with a lighter could be a life saver darkness', 3, progress)
+            'Coupling it with a lighter could be a life saver in darkness', 3, progress)
         
         this.health = health  ?? 100
     }
