@@ -1,4 +1,4 @@
-import { loaders } from './entities.js'
+import { getLoaders } from './entities.js'
 import { getCurrentRoomId } from './variables.js'
 import { getPasswords } from './password-manager.js'
 
@@ -62,6 +62,6 @@ export class Door {
 export const getDoorObject = (doorElem) => {
     const loaderElem = doorElem.nextSibling
     const loaderClass = Number(loaderElem.classList[0])
-    const loaderObj = loaders.get(getCurrentRoomId()).find(loader => loader.className === loaderClass)
+    const loaderObj = getLoaders().get(getCurrentRoomId()).find(loader => loader.className === loaderClass)
     return loaderObj.door
 }

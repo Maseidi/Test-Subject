@@ -52,22 +52,6 @@
   display: none;
 }
 
-.coin-container {
-  gap: 30px;
-  top: 20px;
-  left: 40px;
-  z-index: 80;
-  display: flex;
-  color: wheat;
-  position: fixed;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.coin-img {
-  width: 40px;
-}
-
 .buy,
 .sell {
   width: 100%;

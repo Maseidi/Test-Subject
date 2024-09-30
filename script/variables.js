@@ -1,142 +1,142 @@
-let mapX = 0
+let mapX = null
 export const setMapX = (val) => {
     mapX = val
 }
 export const getMapX = () => mapX
 
-let mapY = 0
+let mapY = null
 export const setMapY = (val) => {
     mapY = val
 }
 export const getMapY = () => mapY
 
-let playerX = 50750
+let playerX = null
 export const setPlayerX = (val) => {
     playerX = val
 }
 export const getPlayerX = () => playerX
 
-let playerY = 50400
+let playerY = null
 export const setPlayerY = (val) => {
     playerY = val
 }
 export const getPlayerY = () => playerY
 
-let currentRoomId = 1
+let currentRoomId = null
 export const setCurrentRoomId = (val) => {
     currentRoomId = val
 }
 export const getCurrentRoomId = () => currentRoomId
 
-let roomTop = 49500
+let roomTop = null
 export const setRoomTop = (val) => {
     roomTop = val
 }
 export const getRoomTop = () => roomTop
 
-let roomLeft = 50500
+let roomLeft = null
 export const setRoomLeft = (val) => {
     roomLeft = val
 }
 export const getRoomLeft = () => roomLeft
 
-let upPressed = false
+let upPressed = null
 export const setUpPressed = (val) => {
     upPressed = val
 }
 export const getUpPressed = () => upPressed
 
-let downPressed = false
+let downPressed = null
 export const setDownPressed = (val) => {
     downPressed = val
 }
 export const getDownPressed = () => downPressed
 
-let rightPressed = false
+let rightPressed = null
 export const setRightPressed = (val) => {
     rightPressed = val
 }
 export const getRightPressed = () => rightPressed
 
-let leftPressed = false
+let leftPressed = null
 export const setLeftPressed = (val) => {
     leftPressed = val
 }
 export const getLeftPressed = () => leftPressed
 
-let playerSpeed = 5
+let playerSpeed = null
 export const setPlayerSpeed = (val) => {
     playerSpeed = val
 }
 export const getPlayerSpeed = () => playerSpeed
 
-let allowMove = true
+let allowMove = null
 export const setAllowMove = (val) => {
     allowMove = val
 }
 export const getAllowMove = () => allowMove
 
-let sprint = false
+let sprint = null
 export const setSprint = (val) => {
     sprint = val
 }
 export const getSprint = () => sprint
 
-let playerAngle = 0
+let playerAngle = null
 export const setPlayerAngle = (val) => {
     playerAngle = val
 }
 export const getPlayerAngle = () => playerAngle
 
-let playerAngleState = 0
+let playerAngleState = null
 export const setPlayerAngleState = (val) => {
     playerAngleState = val
 }
 export const getPlayerAngleState = () => playerAngleState
 
-let playerAimAngle = 0
+let playerAimAngle = null
 export const setPlayerAimAngle = (val) => {
     playerAimAngle = val
 }
 export const getPlayerAimAngle = () => playerAimAngle
 
-let maxStamina = 600
+let maxStamina = null
 export const setMaxStamina = (val) => {
     maxStamina = val
 }
 export const getMaxStamina = () => maxStamina
 
-let stamina = 600
+let stamina = null
 export const setStamina = (val) => {
     stamina = val
 }
 export const getStamina = () => stamina
 
-let maxHealth = 100
+let maxHealth = null
 export const setMaxHealth = (val) => {
     maxHealth = val
 }
 export const getMaxHealth = () => maxHealth
 
-let health = 100
+let health = null
 export const setHealth = (val) => {
     health = val
 }
 export const getHealth = () => health
 
-let refillStamina = false
+let refillStamina = null
 export const setRefillStamina = (val) => {
     refillStamina = val
 }
 export const getRefillStamina = () => refillStamina
 
-let sprintPressed = false
+let sprintPressed = null
 export const setSprintPressed = (val) => {
     sprintPressed = val
 }
 export const getSprintPressed = () => sprintPressed
 
-let aimMode = false
+let aimMode = null
 export const setAimMode = (val) => {
     aimMode = val
 }
@@ -160,13 +160,13 @@ export const setElementInteractedWith = (val) => {
 }
 export const getElementInteractedWith = () => intObj
 
-let targets = []
+let targets = null
 export const setTargets = (val) => {
     targets = val
 }
 export const getTargets = () => targets
 
-let pause = false
+let pause = null
 export const setPause = (val) => {
     pause = val
 }
@@ -196,131 +196,119 @@ export const setMouseY = (val) => {
 }
 export const getMouseY = () => mouseY
 
-let reloading = false
+let reloading = null
 export const setReloading = (val) => {
     reloading = val
 }
 export const getReloading = () => reloading
 
-let shootPressed = false
+let shootPressed = null
 export const setShootPressed = (val) => {
     shootPressed = val
 }
 export const getShootPressed = () => shootPressed
 
-let shooting = false
+let shooting = null
 export const setShooting = (val) => {
     shooting = val
 }
 export const getShooting = () => shooting
 
-let shootCounter = 0
+let shootCounter = null
 export const setShootCounter = (val) => {
     shootCounter = val
 }
 export const getShootCounter = () => shootCounter
 
-let noOffenseCounter = 0
+let noOffenseCounter = null
 export const setNoOffenseCounter = (val) => {
     noOffenseCounter = val
 }
 export const getNoOffenseCounter = () => noOffenseCounter
 
-let stunnedCounter = 0
+let stunnedCounter = null
 export const setStunnedCounter = (val) => {
     stunnedCounter = val
 }
 export const getStunnedCounter = () => stunnedCounter
 
-let entityId = 1
+let entityId = null
 export const setEntityId = (val) => {
     entityId = val
 }
 export const getEntityId = () => entityId
 
-let grabbed = false
+let grabbed = null
 export const setGrabbed = (val) => {
     grabbed = val
 }
 export const getGrabbed = () => grabbed
 
-let burning = 0
+let burning = null
 export const setBurning = (val) => {
     burning = val
 }
 export const getBurning = () => burning
 
-let poisoned = false
+let poisoned = null
 export const setPoisoned = (val) => {
     poisoned = val
 }
 export const getPoisoned = () => poisoned
 
-let throwCounter = 0
+let throwCounter = null
 export const setThrowCounter = (val) => {
     throwCounter = val
 }
 export const getThrowCounter = () => throwCounter
 
-let explosionDamageCounter = 0
+let explosionDamageCounter = null
 export const setExplosionDamageCounter = (val) => {
     explosionDamageCounter = val
 }
 export const getExplosionDamageCounter = () => explosionDamageCounter
 
-let criticalChance = 0.01
+let criticalChance = null
 export const setCriticalChance = (val) => {
     criticalChance = val
 }
 export const getCriticalChance = () => criticalChance
 
-let adrenalinesDropped = 0
+let adrenalinesDropped = null
 export const setAdrenalinesDropped = (val) => {
     adrenalinesDropped = val
 }
 export const getAdrenalinesDropped = () => adrenalinesDropped
 
-let healthPotionsDropped = 0
+let healthPotionsDropped = null
 export const setHealthPotionsDropped = (val) => {
     healthPotionsDropped = val
 }
 export const getHealthPotionsDropped = () => healthPotionsDropped
 
-let LuckPillsDropped = 0
+let LuckPillsDropped = null
 export const setLuckPillsDropped = (val) => {
     LuckPillsDropped = val
 }
 export const getLuckPillsDropped = () => LuckPillsDropped
 
-let energyDrinksDropped = 0
+let energyDrinksDropped = null
 export const setEnergyDrinksDropped = (val) => {
     energyDrinksDropped = val
 }
 export const getEnergyDrinksDropped = () => energyDrinksDropped
 
-let logCounter = 0
-export const setLogCounter = (val) => {
-    logCounter = val
-}
-export const getLogCounter = () => logCounter
-
-let infection = []
+let infection = null
 export const setInfection = (val) => {
     infection = val
 }
 export const getInfection = () => infection
 
-let animatedLimbs = []
+let animatedLimbs = null
 export const setAnimatedLimbs = (val) => {
     animatedLimbs = val
 }
 export const getAnimatedLimbs = () => animatedLimbs
-
-let dirtyRooms = []
-export const setDirtyRooms = (val) => {
-    dirtyRooms = val
-}
-export const getDirtyRooms = () => dirtyRooms
 
 let equippedTorchId = null
 export const setEquippedTorchId = (val) => {
@@ -328,7 +316,7 @@ export const setEquippedTorchId = (val) => {
 }
 export const getEquippedTorchId = () => equippedTorchId
 
-let waitingFunctions = []
+let waitingFunctions = null
 export const setWaitingFunctions = (val) => {
     waitingFunctions = val
 }
@@ -340,8 +328,14 @@ export const setPlayingDialogue = (val) => {
 }
 export const getPlayingDialogue = () => playingDialogue
 
-let roundsFinished = 0
+let roundsFinished = null
 export const setRoundsFinished = (val) => {
     roundsFinished = val
 }
 export const getRoundsFinished = () => roundsFinished
+
+let difficulty = null
+export const setDifficulty = (val) => {
+    difficulty = val
+}
+export const getDifficulty = () => difficulty

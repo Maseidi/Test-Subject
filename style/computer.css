@@ -1,0 +1,22 @@
+.desktop {
+    padding: 100px 100px 150px 100px;
+}
+
+.desktop, .desktop-content {
+    width: 100%;
+    height: 100%;
+}
+
+.desktop-title {
+    color: wheat;
+    font-size: 32px;
+    text-transform: capitalize;
+    letter-spacing: 5px;
+}
+
+.desktop-slots {
+    width: 100%;
+    height: 100%;
+    border: 1px solid wheat;
+    margin-top: 18px;
+}

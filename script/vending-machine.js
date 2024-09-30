@@ -1,6 +1,6 @@
 import { Progress } from './progress.js'
 import { Coin, Drop } from './interactables.js'
-import { renderQuit } from './user-interface.js'
+import { itemNotification, renderQuit } from './user-interface.js'
 import { getPauseContainer } from './elements.js'
 import { renderStats } from './gun-examine.js'
 import { isThrowable } from './throwable-details.js'
@@ -20,7 +20,7 @@ import {
     setLuckPillsDropped } from './variables.js'
 import { 
     MAX_PACKSIZE,
-    calculateTotalCoins,
+    countItem,
     getInventory,
     handleEquippableDrop,
     pickupDrop,
@@ -53,15 +53,7 @@ const renderBackground = () => {
     getPauseContainer().append(background)
 }
 
-const renderCoins = () => {
-    const coinContainer = createAndAddClass('div', 'coin-container')
-    const coin = createAndAddClass('img', 'coin-img')
-    coin.src = '../assets/images/coin.png'
-    const amount = createAndAddClass('p', 'coin-amount')
-    amount.textContent = calculateTotalCoins()
-    appendAll(coinContainer, coin, amount)
-    getPauseContainer().firstElementChild.append(coinContainer)
-}
+const renderCoins = () => getPauseContainer().firstElementChild.append(itemNotification('coin'))
 
 const renderPagination = () => {
     const paginationContainer = createAndAddClass('div', 'pagination-container')
@@ -223,7 +215,7 @@ const renderConfirmBtn = (itemObj) => {
 }
 
 const checkEnoughCoins = (itemObj) => {
-    const result = calculateTotalCoins() >= itemObj.price
+    const result = countItem('coin') >= itemObj.price
     if ( !result ) addMessage('no enough cash')
     return result
 }

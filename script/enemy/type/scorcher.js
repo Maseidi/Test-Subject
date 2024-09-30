@@ -21,12 +21,12 @@ import {
 import { getRoundsFinished } from '../../variables.js'
 
 export class Scorcher extends AbstractEnemy {
-    constructor(level, waypoint, loot, progress, virus) {
-        const base = level + (getRoundsFinished()+ 5)
+    constructor(level, waypoint, loot, progress, virus, difficulties) {
+        const base = level + (getRoundsFinished() * 5)
         const health = Math.floor(base * 135 + Math.random() * 15)
         const damage = Math.floor(base * 15 + Math.random() * 10)
         const maxSpeed = 2.5 + Math.random()
-        super(SCORCHER, 5, waypoint, health, damage, maxSpeed, 600, 1.1, loot, progress, virus)
+        super(SCORCHER, 5, waypoint, health, damage, maxSpeed, 600, 1.1, loot, progress, virus, difficulties)
         this.injuryService = new GrabberInjuryService(this)
         this.movementService = new ScorcherMovementService(this)
         this.investigationService = new NormalInvestigationService(this)

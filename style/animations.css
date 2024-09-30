@@ -362,3 +362,30 @@
     width: 100%;
   }
 }
+
+@keyframes main-menu-option-tick {
+  0% {
+    opacity: 0%;
+  }
+  50% {
+    opacity: 100%;
+  }
+  75% {
+    opacity: 0%;
+  }
+  80% {
+    opacity: 100%;
+  }
+  85% {
+    opacity: 0%;
+  }
+  90% {
+    opacity: 100%;
+  }
+  95% {
+    opacity: 0%;
+  }
+  100% {
+    opacity: 100%;
+  }
+}

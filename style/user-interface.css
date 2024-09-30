@@ -270,3 +270,19 @@
   animation-fill-mode: forwards;
   animation-direction: alternate;
 }
+
+.item-container {
+  gap: 30px;
+  top: 20px;
+  left: 40px;
+  z-index: 80;
+  display: flex;
+  color: wheat;
+  position: fixed;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.item-img {
+  width: 40px;
+}

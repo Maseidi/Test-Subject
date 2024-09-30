@@ -20,12 +20,12 @@ import { SpikerAngleService } from '../service/spiker/angle.js'
 import { getRoundsFinished } from '../../variables.js'
 
 export class Spiker extends AbstractEnemy {
-    constructor(level, waypoint, loot, progress, virus) {
-        const base = level + (getRoundsFinished()+ 5)
+    constructor(level, waypoint, loot, progress, virus, difficulties) {
+        const base = level + (getRoundsFinished() * 5)
         const health = Math.floor(base * 25 + Math.random() * 5)
         const damage = Math.floor(base * 15 + Math.random() * 5)
         const maxSpeed = 6 + Math.random()
-        super(SPIKER, 6, waypoint, health, damage, maxSpeed, 400, maxSpeed, loot, progress, virus)
+        super(SPIKER, 6, waypoint, health, damage, maxSpeed, 400, maxSpeed, loot, progress, virus, difficulties)
         this.axis = Math.random() < 0.5 ? 1 : 2
         this.angleService = new SpikerAngleService(this)
         this.visionService = new SpikerVisionService(this)

@@ -17,8 +17,8 @@ import {
 import { getRoundsFinished } from '../../variables.js'
 
 class NormalEnemy extends AbstractEnemy {
-    constructor(type, level, waypoint, health, damage, maxSpeed, vision, acceleration, loot, progress, virus) {
-        super(type, level, waypoint, health, damage, maxSpeed, vision, acceleration, loot, progress, virus)
+    constructor(type, level, waypoint, health, damage, maxSpeed, vision, acceleration, loot, progress, virus, difficulties) {
+        super(type, level, waypoint, health, damage, maxSpeed, vision, acceleration, loot, progress, virus, difficulties)
         this.investigationService = new NormalInvestigationService(this)
         this.chaseService = new NormalChaseService(this)
         this.guessSearchService = new NormalGuessSearchService(this)
@@ -50,31 +50,31 @@ class NormalEnemy extends AbstractEnemy {
 }
 
 export class Torturer extends NormalEnemy {
-    constructor(level, waypoint, loot, progress, virus) {
-        const base = level + (getRoundsFinished()+ 5)
+    constructor(level, waypoint, loot, progress, virus, difficulties) {
+        const base = level + (getRoundsFinished() * 5)
         const health = Math.floor(base * 180 + Math.random() * 20)
         const damage = Math.floor(base * 20 + Math.random() * 10)
         const maxSpeed = 3.5 + Math.random()
-        super(TORTURER, 4, waypoint, health, damage, maxSpeed, 600, 1.5, loot, progress, virus)
+        super(TORTURER, 4, waypoint, health, damage, maxSpeed, 600, 1.5, loot, progress, virus, difficulties)
     }
 }
 
 export class SoulDrinker extends NormalEnemy {
-    constructor(level, waypoint, loot, progress, virus) {
-        const base = level + (getRoundsFinished()+ 5)
+    constructor(level, waypoint, loot, progress, virus, difficulties) {
+        const base = level + (getRoundsFinished() * 5)
         const health = Math.floor(base * 90 + Math.random() * 15)
         const damage = Math.floor(base * 10 + Math.random() * 5)
         const maxSpeed = 4.5 + Math.random()
-        super(SOUL_DRINKER, 4, waypoint, health, damage, maxSpeed, 400, 0.9, loot, progress, virus)
+        super(SOUL_DRINKER, 4, waypoint, health, damage, maxSpeed, 400, 0.9, loot, progress, virus, difficulties)
     }
 }
 
 export class RockCrusher extends NormalEnemy {
-    constructor(level, waypoint, loot, progress, virus) {
-        const base = level + (getRoundsFinished()+ 5)
+    constructor(level, waypoint, loot, progress, virus, difficulties) {
+        const base = level + (getRoundsFinished() * 5)
         const health = Math.floor(base * 360 + Math.random() * 45)
         const damage = Math.floor(base * 40 + Math.random() * 20)
         const maxSpeed = 2.5 + Math.random()
-        super(ROCK_CRUSHER, 4, waypoint, health, damage, maxSpeed, 800, 1.8, loot, progress, virus)
+        super(ROCK_CRUSHER, 4, waypoint, health, damage, maxSpeed, 800, 1.8, loot, progress, virus, difficulties)
     }
 }

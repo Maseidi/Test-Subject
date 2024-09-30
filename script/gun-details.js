@@ -1,3 +1,4 @@
+import { getRoundsFinished } from './variables.js'
 import { 
     ARCTIC_WARFERE,
     BENELLI_M4,
@@ -36,7 +37,7 @@ class Gun {
         this.color =       color
         this.antivirus =   antivirus
         this.space =       space
-        this.damage =      damage
+        this.damage =      damage.map(item => item * ( getRoundsFinished() + 1 ))
         this.range =       range
         this.reloadspeed = reloadspeed
         this.magazine =    magazine

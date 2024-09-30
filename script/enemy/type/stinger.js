@@ -21,12 +21,12 @@ import {
 import { getRoundsFinished } from '../../variables.js'
 
 export class Stinger extends AbstractEnemy {
-    constructor(level, waypoint, loot, progress, virus) {
-        const base = level + (getRoundsFinished()+ 5)
+    constructor(level, waypoint, loot, progress, virus, difficulties) {
+        const base = level + (getRoundsFinished() * 5)
         const health = Math.floor(base * 85 + Math.random() * 5)
         const damage = Math.floor(base * 25 + Math.random() * 15)
         const maxSpeed = 2.75 + Math.random()
-        super(STINGER, 5, waypoint, health, damage, maxSpeed, 700, 1.3, loot, progress, virus)
+        super(STINGER, 5, waypoint, health, damage, maxSpeed, 700, 1.3, loot, progress, virus, difficulties)
         this.injuryService = new GrabberInjuryService(this)
         this.movementService = new StingerMovementService(this)
         this.investigationService = new NormalInvestigationService(this)

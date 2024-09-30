@@ -90,6 +90,16 @@ export const setInventory = (val) => {
 }
 export const getInventory = () => inventory
 
+export const initialInventory = 
+    [
+        [null, null, null, null],
+        [null, null, null, null],
+        ['locked', 'locked', 'locked', 'locked'],
+        ['locked', 'locked', 'locked', 'locked'],
+        ['locked', 'locked', 'locked', 'locked'],
+        ['locked', 'locked', 'locked', 'locked'],
+    ]
+
 let dropElem
 let dropObject
 export const pickupDrop = (drop) => {
@@ -228,9 +238,8 @@ export const findEquippedTorchById = () => inventory.flat().find(item => item?.i
 
 export const calculateTotalAmmo = () => countItem(findEquippedWeaponById().ammotype)
 
-export const calculateThrowableAmount = (itemObj) => itemObj ? countItem(itemObj.name) : countItem(findEquippedWeaponById().name)
-
-export const calculateTotalCoins = () => countItem('coin')
+export const calculateThrowableAmount = (itemObj) => 
+    itemObj ? countItem(itemObj.name) : countItem(findEquippedWeaponById().name)
 
 export const countItem = (name) => 
     inventory.flat().filter(item => item && item.name === name).reduce((a, b) => a + b.amount, 0)

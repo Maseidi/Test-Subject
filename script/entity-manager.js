@@ -3,7 +3,7 @@ import { dropLoot } from './loot-manager.js'
 import { removeTorch } from './torch-loader.js'
 import { sources } from './dialogue-manager.js'
 import { loadCurrentRoom } from './room-loader.js'
-import { getEnemies, loaders, rooms } from './entities.js'
+import { getEnemies, getLoaders, rooms } from './entities.js'
 import { getThrowableDetail } from './throwable-details.js'
 import { findEquippedTorchById, getInventory } from './inventory.js'
 import { activateAllProgresses, getProgressValueByNumber } from './progress-manager.js'
@@ -27,6 +27,8 @@ import {
     createAndAddClass,
     element2Object,
     getProperty, 
+    isAble2Interact, 
+    removeClass, 
     renderShadow} from './util.js'
 import { 
     getCurrentRoom,
@@ -101,7 +103,7 @@ const manageLoaders = () => {
 
 const calculateNewRoomLeftAndTop = (prevLoader) => {
     const newRoom = rooms.get(getCurrentRoomId())
-    const loader = loaders.get(getCurrentRoomId()).find(loader => loader.className === prevRoomId)
+    const loader = getLoaders().get(getCurrentRoomId()).find(loader => loader.className === prevRoomId)
     let left, top    
     if ( loader.bottom !== null )
         top = loader.bottom === -26 ? newRoom.height - loader.height - loader.bottom - 52 : 
@@ -123,6 +125,7 @@ const manageInteractables = () => {
         const popup = int.children[1] ?? int.firstElementChild
         const isEnemy = popup.lastElementChild.lastElementChild.src
         if ( int.getAttribute('name') === 'speaker' ) return
+        handleInteractions(int, popup)
         if ( collide(getPlayer().firstElementChild, int, 20) && !getElementInteractedWith() && !containsClass(int, 'open') ) {
             if ( isEnemy && (isEnemyNotified(popup) || !getProgressValueByNumber('3002')) ) {
                 popup.style.display = 'none'
@@ -134,6 +137,12 @@ const manageInteractables = () => {
         }
         popup.style.display = 'none'
     })
+}
+
+const handleInteractions = (int, popup) => {
+    if ( int.getAttribute('solid') !== 'true' && !int.getAttribute('value') ) return
+    if ( isAble2Interact() ) removeClass(popup, 'not-ideal')
+    else addClass(popup, 'not-ideal')
 }
 
 const isEnemyNotified = (popup) => {
@@ -415,11 +424,13 @@ const removePopover = (popover) => {
 
 const manageDialogues = () => {
     if ( !getPlayingDialogue() ) return
-    if ( getPlayingDialogue().source === sources.MIAN ) {
-        var { x, y, width } = getPlayer().getBoundingClientRect()
-    } else if ( getSpeaker() && getPlayingDialogue().source === sources.SPEAKER ) {
-        var { x, y, width } = getSpeaker().getBoundingClientRect()
-    }    
+
+    const {x, y, width} = (() => {
+        if ( getPlayingDialogue().source === sources.MIAN )                         var src = getPlayer()
+        else if ( getSpeaker() && getPlayingDialogue().source === sources.SPEAKER ) var src = getSpeaker()
+        return src.getBoundingClientRect()
+    })()
+    
     if ( x === undefined || y === undefined || width === undefined ) return
     getDialogueContainer().firstElementChild.style.left = `${x + width}px`
     getDialogueContainer().firstElementChild.style.top = `${y}px`

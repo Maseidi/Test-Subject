@@ -47,8 +47,8 @@ export class Speaker extends Interactable {
 }
 
 export class Crate extends Interactable {
-    constructor(left, top, loot, progress) {
-        super(35, left, top, 'crate', 'crate', 'Break', true, null, null, null, null, progress)
+    constructor(left, top, loot, progress, difficulties) {
+        super(35, left, top, 'crate', 'crate', 'Break', true, null, null, null, null, progress, difficulties)
         if ( loot ) this.#initLootValues(loot)
     }
 

@@ -1,14 +1,18 @@
+import { getEnemies } from './entities.js'
 import { removeWeapon } from './gun-loader.js'
+import { getExistingEnemies } from './room-loader.js'
 import { removeThrowable } from './throwable-loader.js'
+import { getGunDetail, getGunUpgradableDetail } from './gun-details.js'
 import { getThrowableDetail, isThrowable } from './throwable-details.js'
 import { ADRENALINE, ENERGY_DRINK, HEALTH_POTION, LUCK_PILLS } from './loot.js'
-import { getGunDetail, getGunUpgradableDetail } from './gun-details.js'
 import { getCurrentRoom, getCurrentRoomExplosions, getMapEl, getPlayer, getShadowContainer } from './elements.js'
 import { 
+    getCurrentRoomId,
     getDownPressed,
     getEntityId,
     getHealth,
     getLeftPressed,
+    getPlayingDialogue,
     getRightPressed,
     getThrowCounter,
     getUpPressed,
@@ -196,7 +200,16 @@ export const removeEquipped = () => {
 
 export const isStatUpgrader = (item) => [ADRENALINE, HEALTH_POTION, ENERGY_DRINK, LUCK_PILLS].includes(item.name)
 
-export const renderShadow = (brightness) => {
+export const renderShadow = (brightness) =>
     getShadowContainer().firstElementChild.style.background = 
         `radial-gradient(circle at center,transparent,black ${brightness * 10}px)`
+
+export const difficulties = {
+    MILD: 'mild',
+    MIDDLE: 'middle',
+    SURVIVAL: 'survival'
 }
+
+export const isAble2Interact = () => 
+    !getPlayingDialogue() && 
+    getExistingEnemies(getEnemies().get(getCurrentRoomId())).length === 0

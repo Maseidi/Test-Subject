@@ -38,6 +38,7 @@ import {
     exitAimModeAnimation,
     getEquippedItemDetail,
     getProperty,
+    isAble2Interact,
     isMoving,
     isThrowing,
     removeAllClasses,
@@ -83,6 +84,7 @@ import {
     getEquippedTorchId,
     getWaitingFunctions,
     setWaitingFunctions} from './variables.js'
+import { turnOnComputer } from './computer.js'
 
 export const wDown = () => enableDirection(getUpPressed, getDownPressed, setUpPressed, setDownPressed)
 
@@ -198,16 +200,18 @@ const startSprint = () => {
 export const fDown = () => {
     if ( getGrabbed() ) breakFree()
     else if ( getElementInteractedWith() ) {
-        const { name, amount } = element2Object(getElementInteractedWith())
+        const { name, amount } = element2Object(getElementInteractedWith())        
         if ( getPause() || !getElementInteractedWith() ) return
         if ( amount ) pickupDrop(getElementInteractedWith())
         if ( getShooting() || getReloading() ) return    
-        if ( name === 'stash' )          openStash()
-        if ( name === 'crate' )          breakCrate()
         if ( name === 'lever' )          toggleLever()
+        if ( name === 'crate' )          breakCrate()
         if ( name === 'vaccine' )        stealthKill()
+        if ( !isAble2Interact() ) return
+        if ( name === 'stash' )          openStash()
         if ( name === 'door' )           renderPasswordInput()
         if ( name === 'vendingMachine' ) openVendingMachine()
+        if ( name === 'computer' )       turnOnComputer()
     }
 }
 

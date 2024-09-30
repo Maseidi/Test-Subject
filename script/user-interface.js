@@ -2,7 +2,7 @@ import { managePause } from './actions.js'
 import { isThrowable } from './throwable-details.js'
 import { getPauseContainer, getUiEl, setUiEl } from './elements.js'
 import { addClass, appendAll, containsClass, createAndAddClass } from './util.js'
-import { calculateThrowableAmount, calculateTotalAmmo, findEquippedWeaponById, updateInteractablePopups } from './inventory.js'
+import { calculateThrowableAmount, calculateTotalAmmo, countItem, findEquippedWeaponById, updateInteractablePopups } from './inventory.js'
 import { 
     getDraggedItem,
     getEquippedWeaponId,
@@ -93,4 +93,14 @@ export const quitPage = () => {
     last.remove()
     updateInteractablePopups()
     if ( getPauseContainer().children.length === 0 ) managePause()
+}
+
+export const itemNotification = (name) => {
+    const container = createAndAddClass('div', 'item-container')
+    const hardDrive = createAndAddClass('img', 'item-img')
+    hardDrive.src = `../assets/images/${name}.png`
+    const amount = createAndAddClass('p', 'item-amount')
+    amount.textContent = countItem(name)
+    appendAll(container, hardDrive, amount)
+    return container
 }

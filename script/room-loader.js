@@ -2,11 +2,11 @@ import { NOTE } from './loot.js'
 import { Wall } from './wall.js'
 import { isGun } from './gun-details.js'
 import { renderRoomName } from './room-name-manager.js'
-import { getInteractables, rooms, walls, getEnemies, loaders } from './entities.js'
+import { BottomLoader, LeftLoader, RightLoader, TopLoader } from './loader.js'
+import { getInteractables, rooms, walls, getEnemies, getLoaders } from './entities.js'
 import { countItem, findEquippedTorchById, updateInteractablePopup } from './inventory.js'
 import { getCurrentRoomId, getRoomLeft, getRoomTop, setStunnedCounter } from './variables.js'
 import { activateAllProgresses, deactivateAllProgresses, getProgressValueByNumber } from './progress-manager.js'
-import { BottomLoader, LeftLoader, RightLoader, TopLoader } from './loader.js'
 import { 
     LOST,
     MOVE_TO_POSITION,
@@ -180,7 +180,7 @@ const filterLoadersByPosition = (position) => {
                              { length: 'height', base: 'left'} : 
                              { length: 'width',  base: 'top' }
 
-    const result = loaders.get(getCurrentRoomId())
+    const result = getLoaders().get(getCurrentRoomId())
         .filter(loader => loader[length] === 5 && loader[position] === -26).sort((a, b) => a[base] - b[base])
     return result
 }
@@ -205,7 +205,7 @@ const createTrackers = (solid, elem) => {
 }
 
 const renderLoaders = () => {
-    loaders.get(getCurrentRoomId()).forEach((elem) => {
+    getLoaders().get(getCurrentRoomId()).forEach((elem) => {
         const loader = createAndAddClass('div', elem.className, 'loader')
         loader.style.width = `${elem.width}px`
         loader.style.height = `${elem.height}px`
@@ -369,14 +369,15 @@ const getDescriptionContent = (interactable, needCode) => {
 const renderEnemies = () => {
     const currentRoomEnemies = getEnemies().get(getCurrentRoomId())
     if ( !currentRoomEnemies ) return
-    indexEnemies(currentRoomEnemies)
-    const filteredEnemies = filterEnemies(currentRoomEnemies)
-    spawnEnemies(filteredEnemies)
+    spawnEnemies(getExistingEnemies(indexEnemies(currentRoomEnemies)))
 }
 
-const indexEnemies = (enemies) => enemies.forEach((enemy, index) => enemy.index = index)
+const indexEnemies = (enemies) => enemies.map((enemy, index) => {
+    enemy.index = index
+    return enemy
+})
 
-const filterEnemies = (enemies) => enemies.filter(enemy => 
+export const getExistingEnemies = (enemies) => enemies.filter(enemy => 
     enemy.health !== 0 && getProgressValueByNumber(enemy?.renderProgress) && !enemiesLeft(enemy)
 )
 
