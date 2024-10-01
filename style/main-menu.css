@@ -57,7 +57,8 @@
 }
 
 .main-menu-option:hover,
-.new-game-options > p:hover {
+.new-game-options > p:hover,
+.load-game-option-full-slot:hover {
   background-color: rgb(245, 222, 179, 0.3);
 }
 
@@ -80,6 +81,44 @@
 }
 
 .new-game-options > p {
-  cursor: pointer;
   padding: 5px;
+  cursor: pointer;
+}
+
+.load-game-options {
+  gap: 10px;
+  width: 100%;
+  height: 200px;
+  display: flex;
+  flex-shrink: 0;
+  overflow: auto;
+  flex-direction: row;
+  justify-content: flex-start;
+}
+
+.load-game-options::-webkit-scrollbar {
+  display: none;
+}
+
+.load-game-options > div {
+  width: 400px;
+  height: 100%;
+  color: wheat;
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  letter-spacing: 4px;
+  flex-direction: column;
+  border: 1px solid wheat;
+}
+
+.load-game-option-empty-slot {
+  gap: 10px;
+  justify-content: center;
+  text-transform: uppercase;
+}
+
+.load-game-option-full-slot {
+  cursor: pointer;
+  justify-content: space-evenly;
 }

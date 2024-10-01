@@ -1,6 +1,7 @@
 import { play } from './game.js'
-import { prepareNewGameData } from './data-manager.js'
+import { savedSlotContent } from './computer.js'
 import { getMainMenuEl, setMainMenuEl } from './elements.js'
+import { loadGameFromSlot, prepareNewGameData } from './data-manager.js'
 import { addClass, appendAll, createAndAddClass, difficulties, removeClass } from './util.js'
 
 let isContinueIncluded = null
@@ -40,7 +41,7 @@ const handleContinueOption = (options) => {
             isContinueIncluded = true
             break
         }
-    isContinueIncluded = false   
+    isContinueIncluded = false
 }
 
 const continueOption = () => 
@@ -101,7 +102,7 @@ const loadGame = () =>
         'load game', 
         (e) => {
             addSelectedStyle(e.currentTarget)
-            console.log(2);
+            refreshContents(loadGameOptions())
         },
         getDelay(2),
         getDuration(2)
@@ -134,4 +135,39 @@ const newGameOption = (difficulty) => {
     const option = document.createElement('p')
     option.textContent = difficulty
     return option
+}
+
+const loadGameOptions = () => {
+    const loadGameOptionsContainer = createAndAddClass('div', 'load-game-options')
+    for ( let i = 0; i < 10; i++ ) {
+        const option = loadGameOption(i + 1)
+        loadGameOptionsContainer.append(option)
+    }
+    return loadGameOptionsContainer
+}
+
+const loadGameOption = (slotNumber) => {
+    const slotData = localStorage.getItem('slot-' + slotNumber)
+    if ( slotData === 'empty' ) return noSavedDataSlot()
+    else return slotWithData(slotData)
+}
+
+const noSavedDataSlot = () => {    
+    const slot = createAndAddClass('div', 'load-game-option-empty-slot')
+    const word1 = document.createElement('p')
+    word1.textContent = 'No'
+    const word2 = document.createElement('p')
+    word2.textContent = 'saved'
+    const word3 = document.createElement('p')
+    word3.textContent = 'data'
+    slot.append(word1, word2, word3)
+    return slot
+}
+
+const slotWithData = (slotData) => {
+    const elements = savedSlotContent(slotData)
+    const slot = createAndAddClass('div', 'load-game-option-full-slot')
+    elements.forEach(elem => slot.append(elem))
+    slot.addEventListener('click', () => loadGameFromSlot())
+    return slot
 }

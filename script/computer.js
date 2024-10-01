@@ -43,10 +43,10 @@ const slots = () => {
     return slots
 }
 
-const savedSlotContent = (slotData) => {
+export const savedSlotContent = (slotData) => {
     const { timeStamp, room, saves, difficulty, rounds } = JSON.parse(slotData)
     const timeStampEl = document.createElement('div')
-    timeStampEl.textContent = 'Time: ' + new Date(timeStamp).toLocaleString()
+    timeStampEl.textContent = 'Date: ' + new Date(timeStamp).toLocaleString()
     const roomEl = document.createElement('div')
     roomEl.textContent = 'Room: ' + room
     const savesEl = document.createElement('div')
@@ -102,6 +102,7 @@ const confirmSave = (slotNumber) => {
     renderDesktop()
 }
 
-const addComputerMessage = (input) => addMessage(input, getPauseContainer().firstElementChild.lastElementChild.firstElementChild)
+const addComputerMessage = (input) => 
+    addMessage(input, getPauseContainer().firstElementChild.lastElementChild.firstElementChild)
 
 const closeSavePopup = () => getPauseContainer().firstElementChild.lastElementChild.remove()

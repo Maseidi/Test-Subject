@@ -97,14 +97,13 @@ export const quitPage = () => {
 
 export const itemNotification = (name) => {
     const container = createAndAddClass('div', 'item-container')
-    const hardDrive = createAndAddClass('img', 'item-img')
-    hardDrive.src = `../assets/images/${name}.png`
+    const item = createAndAddClass('img', 'item-img')
+    item.src = `../assets/images/${name}.png`
     const amount = createAndAddClass('p', 'item-amount')
     amount.textContent = countItem(name)
-    appendAll(container, hardDrive, amount)
+    appendAll(container, item, amount)
     return container
 }
-
 
 export const addMessage = (input, popup) => {
     const message = popup.lastElementChild
