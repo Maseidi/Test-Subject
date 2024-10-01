@@ -260,7 +260,9 @@
   transform: translateY(-50%);
 }
 
-.low-health-container, .poisoned-container, .infected-container {
+.low-health-container,
+.poisoned-container,
+.infected-container {
   top: 0;
   left: 0;
   z-index: 60;
@@ -269,7 +271,8 @@
   position: absolute;
 }
 
-.low-health-container, .poisoned-container {
+.low-health-container,
+.poisoned-container {
   animation-name: alert;
   animation-duration: 1s;
   animation-direction: alternate;

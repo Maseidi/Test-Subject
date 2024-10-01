@@ -1,6 +1,6 @@
 import { Progress } from './progress.js'
 import { Coin, Drop } from './interactables.js'
-import { itemNotification, renderQuit } from './user-interface.js'
+import { addMessage, itemNotification, renderQuit } from './user-interface.js'
 import { getPauseContainer } from './elements.js'
 import { renderStats } from './gun-examine.js'
 import { isThrowable } from './throwable-details.js'
@@ -34,7 +34,8 @@ import {
     element2Object,
     isStatUpgrader,
     nextId,
-    object2Element } from './util.js'
+    object2Element, 
+    removeClass} from './util.js'
 
 let page = 1
 export const renderStore = () => {
@@ -224,15 +225,11 @@ const renderConfirmBtn = (price, cb, priceUnit = 'coin') => {
 
 const checkEnoughCoins = (itemObj) => {
     const result = countItem('coin') >= itemObj.price
-    if ( !result ) addMessage('no enough cash')
+    if ( !result ) addVendingMachineMessage('no enough cash')
     return result
 }
 
-const addMessage = (input) => {
-    const message = getPauseContainer().firstElementChild.children[4].firstElementChild.lastElementChild
-    message.textContent = input
-    addClass(message, 'message-animation')
-}
+const addVendingMachineMessage = (input) => addMessage(input, getPauseContainer().firstElementChild.children[4].firstElementChild)
 
 const manageBuy = (itemObj) => {
     const loss = itemObj.price
@@ -261,7 +258,7 @@ const manageBuy = (itemObj) => {
         submitPurchase(itemObj)
         return
     }
-    addMessage('No enough space')
+    addVendingMachineMessage('No enough space')
 }
 
 const handleNewWeapnPurchase = (purchasedItem, name) => {
@@ -514,7 +511,7 @@ const manageSell = (itemObj) => {
         renderStore()
         return
     }
-    addMessage('No enough space') 
+    addVendingMachineMessage('No enough space') 
 }
 
 const removeStore = () => {

@@ -56,7 +56,8 @@
   animation-name: main-menu-option-tick;
 }
 
-.main-menu-option:hover, .new-game-options > p:hover {
+.main-menu-option:hover,
+.new-game-options > p:hover {
   background-color: rgb(245, 222, 179, 0.3);
 }
 

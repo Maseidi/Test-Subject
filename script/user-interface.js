@@ -1,7 +1,7 @@
 import { managePause } from './actions.js'
 import { isThrowable } from './throwable-details.js'
 import { getPauseContainer, getUiEl, setUiEl } from './elements.js'
-import { addClass, appendAll, containsClass, createAndAddClass } from './util.js'
+import { addClass, appendAll, containsClass, createAndAddClass, removeClass } from './util.js'
 import { calculateThrowableAmount, calculateTotalAmmo, countItem, findEquippedWeaponById, updateInteractablePopups } from './inventory.js'
 import { 
     getDraggedItem,
@@ -103,4 +103,15 @@ export const itemNotification = (name) => {
     amount.textContent = countItem(name)
     appendAll(container, hardDrive, amount)
     return container
+}
+
+
+export const addMessage = (input, popup) => {
+    const message = popup.lastElementChild
+    message.textContent = input
+    addClass(message, 'message-animation')
+    message.addEventListener('animationend', () => {
+        removeClass(message, 'message-animation')
+        message.textContent = ''
+    })
 }

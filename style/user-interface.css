@@ -226,7 +226,8 @@
   box-shadow: 0 0 10px rgba(255, 255, 255, 0.9);
 }
 
-.room-name-popup > span, .dialogue > span {
+.room-name-popup > span,
+.dialogue > span {
   opacity: 0;
   animation-fill-mode: forwards;
   animation-direction: alternate;
@@ -251,7 +252,7 @@
   box-shadow: 0 0 5px black;
   transform: translateY(-100%);
   background-color: lightblue;
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.6);
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
 }
 
 .dialogue-animation {
@@ -314,4 +315,3 @@
   color: lightgrey;
   background-color: darkred;
 }
-

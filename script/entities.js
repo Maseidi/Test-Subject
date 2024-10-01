@@ -1282,7 +1282,7 @@ export const initEnemies = () => {
 
         ]
     ])
-    .map(arr => arr.filter(enemy => enemy.difficulties.includes(getDifficulty())))
+    .map(arr => arr.filter(enemy => enemy.difficulty.includes(getDifficulty())))
     .forEach((arr, index) => enemiesMap.set(index + 1, arr))
     return enemiesMap
 }

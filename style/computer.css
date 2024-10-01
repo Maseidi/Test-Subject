@@ -2,7 +2,8 @@
   padding: 100px 100px 150px 100px;
 }
 
-.desktop, .save-popup-container {
+.desktop,
+.save-popup-container {
   width: 100%;
   height: 100%;
 }
@@ -26,12 +27,15 @@
   display: none;
 }
 
-.desktop-slot, .desktop-empty-slot {
+.desktop-slot,
+.desktop-empty-slot {
   width: 100%;
   padding: 20px;
   color: wheat;
 }
-  .desktop-slot:hover, .desktop-empty-slot:hover {
+
+.desktop-slot:hover,
+.desktop-empty-slot:hover {
   background-color: rgb(245, 222, 179, 0.3);
 }
 

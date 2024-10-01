@@ -1,9 +1,10 @@
 import { initialStash, setStash } from './stash.js'
-import { setProgress } from './progress-manager.js'
-import { initPasswords } from './password-manager.js'
 import { initialInventory, setInventory } from './inventory.js'
 import { initialShopItems, setShopItems } from './shop-item.js'
+import { getProgress, setProgress } from './progress-manager.js'
+import { getPasswords, initPasswords } from './password-manager.js'
 import { 
+    getEnemies,
     getInteractables,
     initEnemies,
     initialInteractables,
@@ -13,9 +14,38 @@ import {
     setInteractables,
     setLoaders } from './entities.js'
 import { 
+    getAdrenalinesDropped,
+    getAimMode,
+    getBurning,
+    getCriticalChance,
     getCurrentRoomId,
+    getDifficulty,
+    getEnergyDrinksDropped,
+    getEntityId,
+    getEquippedTorchId,
+    getEquippedWeaponId,
+    getHealth,
+    getHealthPotionsDropped,
+    getInfection,
+    getLuckPillsDropped,
+    getMapX,
+    getMapY,
+    getMaxHealth,
+    getMaxStamina,
+    getPlayerAimAngle,
+    getPlayerAngle,
+    getPlayerAngleState,
+    getPlayerSpeed,
+    getPlayerX,
+    getPlayerY,
+    getPoisoned,
+    getRefillStamina,
+    getRoomLeft,
+    getRoomTop,
     getRoundsFinished,
+    getStamina,
     getTimesSaved,
+    getWeaponWheel,
     setAdrenalinesDropped,
     setAimMode,
     setAllowMove,
@@ -135,6 +165,8 @@ const initConstants = () => {
     setAnimatedLimbs([])
     setWaitingFunctions([])
     setPlayingDialogue(null)
+    setNoOffenseCounter(0)
+    setStunnedCounter(0)
 }
 
 const initNewGameVariables = (difficulty) => {
@@ -197,7 +229,6 @@ const setVariables = (variables) => {
     setAimMode(             variables.aimMode),
     setWeaponWheel(         variables.weaponWheel)
     setEquippedWeaponId(    variables.equippedWeaponId)
-    setNoOffenseCounter(    variables.noOffenseCounter)
     setStunnedCounter(      variables.stunnedCounter)
     setEntityId(            variables.entityId)
     setBurning(             variables.burning)
@@ -216,21 +247,95 @@ const setVariables = (variables) => {
 
 export const saveAtSlot = (slotNumber) => {
     setTimesSaved(getTimesSaved() + 1)
-    localStorage.setItem('slot-' + slotNumber, JSON.stringify({
-        room: rooms.get(getCurrentRoomId()).label,
-        timeStamp: Date.now(),
-        rounds: getRoundsFinished(),
-        saves: getTimesSaved()
-    }))
-    saveInteractables()
+    savePasswords(slotNumber)
+    saveStats(slotNumber)
+    saveProgress(slotNumber)
+    saveInteractables(slotNumber)
+    saveEnemies(slotNumber)
+    saveVariables(slotNumber)
 }
 
-const saveInteractables = () => {
-    
-    
-    // localStorage.setItem('slot-' + slotNumber + '-interactables', 
-    //     JSON.stringify(
-    //         getInteractables()
-    //     )
-    // )
+const savePasswords = (slotNumber) => saveMapAsString(slotNumber, 'passwords', getPasswords(``))
+
+const saveMapAsString = (slotNumber, entityType, entities) => {
+    let data2save = {}
+    for ( const [key, entitiesOfKey] of entities.entries() ) {
+        data2save = {
+            ...data2save,
+            [key] : entitiesOfKey
+        }
+    }
+    localStorage.setItem('slot-' + slotNumber + '-' + entityType, JSON.stringify(data2save))
+}
+
+const saveStats = (slotNumber) =>
+    localStorage.setItem('slot-' + slotNumber, JSON.stringify({
+        timeStamp: Date.now(),
+        room: rooms.get(getCurrentRoomId()).label,
+        saves: getTimesSaved(),
+        difficulty: getDifficulty(),
+        rounds: getRoundsFinished()
+    }))
+
+const saveProgress = (slotNumber) => localStorage.setItem('slot-' + slotNumber + '-progress', JSON.stringify(getProgress()))
+
+const saveInteractables = (slotNumber) => saveMapAsString(slotNumber, 'interactables', getInteractables())
+
+const saveEnemies = (slotNumber) => {
+    let data2save = {}
+    for ( const [roomId, enemies] of getEnemies().entries() ) {
+        data2save = {
+            ...data2save,
+            [roomId] : enemies.map(enemy => {
+                let result = {}
+                Object.getOwnPropertyNames(enemy).forEach(name => {
+                    if ( name.toLowerCase().includes('service') ) return
+                    result = {
+                        ...result,
+                        [name]: enemy[name]
+                    }
+                })
+                return result
+            })
+        }
+    }
+
+    localStorage.setItem('slot-' + slotNumber + '-enemies', JSON.stringify(data2save))
+}
+
+const saveVariables = (slotNumber) => {
+    localStorage.setItem('slot-' + slotNumber + '-variables', JSON.stringify({
+        mapX :                 getMapX(),
+        mapY :                 getMapY(),
+        playerX :              getPlayerX(),
+        playerY :              getPlayerY(),
+        currentRoomId :        getCurrentRoomId(),
+        roomTop :              getRoomTop(),
+        roomLeft :             getRoomLeft(),
+        playerSpeed :          getPlayerSpeed(),
+        playerAngle :          getPlayerAngle(),
+        playerAngleState :     getPlayerAngleState(),
+        playerAimAngle :       getPlayerAimAngle(),
+        maxStamina :           getMaxStamina(),
+        stamina :              getStamina(),
+        maxHealth :            getMaxHealth(),
+        health :               getHealth(),
+        refillStamina :        getRefillStamina(),
+        aimMode :              getAimMode(),
+        weaponWheel :          getWeaponWheel(),
+        equippedWeaponId :     getEquippedWeaponId(),
+        entityId :             getEntityId(),
+        burning :              getBurning(),
+        poisoned :             getPoisoned(),
+        criticalChance :       getCriticalChance(),
+        adrenalinesDropped :   getAdrenalinesDropped(),
+        healthPotionsDropped : getHealthPotionsDropped(),
+        luckPillsDropped :     getLuckPillsDropped(),
+        energyDrinksDropped :  getEnergyDrinksDropped(),
+        infection :            getInfection(),
+        equippedTorchId :      getEquippedTorchId(),
+        roundsFinished :       getRoundsFinished(),
+        timesSaved:            getTimesSaved(),
+        difficulty:            getDifficulty(),
+    }))
 }

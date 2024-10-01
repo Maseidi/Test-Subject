@@ -261,7 +261,7 @@
 .message-animation {
   animation-name: fade-out;
   animation-duration: 500ms;
-  animation-iteration-count: 8;
+  animation-iteration-count: 7;
   animation-direction: alternate;
 }
 
