@@ -1,7 +1,8 @@
 import { renderUi } from './user-interface.js'
 import { loadCurrentRoom } from './room-loader.js'
+import { renderVirusIcon } from './player-health.js'
 import { appendAll, createAndAddClass } from './util.js'
-import { getMapX, getMapY, getPlayerX, getPlayerY } from './variables.js'
+import { getInfection, getMapX, getMapY, getPlayerAngle, getPlayerX, getPlayerY } from './variables.js'
 import { 
     getHealthStatusContainer,
     getMapEl,
@@ -43,6 +44,7 @@ const renderHealthStatusContainer = () => {
     const virusBar = createAndAddClass('div', 'virus-bar')
     infectedContainer.append(virusBar)
     getHealthStatusContainer().append(infectedContainer)
+    getInfection().forEach(virus => renderVirusIcon(virus))
 }
 
 const renderShadowContainer = () => {
@@ -87,7 +89,7 @@ const renderPlayer = () => {
     const playerCollider = createAndAddClass('div', 'player-collider')
     player.append(playerCollider)
     const playerBody = createAndAddClass('div', 'player-body')
-    playerBody.style.transform = `rotateZ(0deg)`
+    playerBody.style.transform = `rotateZ(${getPlayerAngle()}deg)`
     player.setAttribute('angle', 0)
     const forwardDetector = createAndAddClass('div', 'forward-detector')
     const dialogueContainer = createAndAddClass('div', 'player-dialouge-container')

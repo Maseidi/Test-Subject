@@ -30,6 +30,7 @@ import {
     TopLoader } from './loader.js'
 import { 
     BANDAGE_LOOT,
+    BENELLI_M4,
     BLUE_VACCINE,
     GLOCK,
     GREEN_VACCINE,
@@ -48,7 +49,7 @@ import {
 
 export const rooms = new Map([
     [1,  new Room(1,   500, 1000, 'Dormitory',                          5, 
-        Progress.builder().setProgress2Active('10001111111')
+        Progress.builder().setProgress2Active('1000')
     )],
     [2,  new Room(2,  1000,  500, 'Bunker A' ,                          5, 
         Progress.builder().setProgress2Active('2000')
@@ -1282,7 +1283,7 @@ export const initEnemies = () => {
 
         ]
     ])
-    .map(arr => arr.filter(enemy => enemy.difficulty.includes(getDifficulty())))
+    .map(arr => arr.filter(enemy => enemy.difficulties.includes(getDifficulty())))
     .forEach((arr, index) => enemiesMap.set(index + 1, arr))
     return enemiesMap
 }
@@ -1304,13 +1305,14 @@ export const initialInteractables = new Map([
             Progress.builder().setRenderProgress('1002').setProgress2Active('1003').setOnExamineProgress2Active('1004')
         ),
         new KeyDrop(400, 850, 1, 'Dorm key', 'Key for the dormitory', 'dorm', 
-            Progress.builder().setRenderProgress('1005').setProgress2Active('1006')
+            Progress.builder().setRenderProgress('1000').setProgress2Active('1006')
         ),
         new PC(10, 900),
         new VendingMachine(450, 900),
         new Stash(10, 10),
         new HardDrive(250, 300, 2),
-        new Coin(250, 400, 10)
+        new Coin(250, 400, 10),
+        new GunDrop(250, 500, BENELLI_M4, 3, 1, 2, 3, 4, 5)
     ]],
     [2, [
         new Lever(100, 100, Progress.builder().setRenderProgress('2000').setProgress2Active('2002')),
@@ -1420,7 +1422,7 @@ export const initialInteractables = new Map([
 
 export const dialogues = [
     new Dialogue('Where the hell am I?', sources.MIAN, 
-        Progress.builder().setRenderProgress('1000').setProgress2Active('1001')
+        Progress.builder().setRenderProgress('165000').setProgress2Active('1001')
     ),
     new Dialogue('What the ..., I gotta find that key.', sources.MIAN, 
         Progress.builder().setRenderProgress('1004').setProgress2Active('1005')

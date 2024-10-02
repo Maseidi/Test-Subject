@@ -94,14 +94,6 @@
   bottom: -50px;
 }
 
-.camera-shake {
-  animation-name: camshake;
-  animation-duration: 200ms;
-  animation-iteration-count: 1;
-  animation-direction: alternate;
-  animation-timing-function: linear;
-}
-
 .low-health {
   filter: grayscale(50%);
 }

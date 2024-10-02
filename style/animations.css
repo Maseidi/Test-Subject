@@ -197,18 +197,6 @@
   }
 }
 
-@keyframes camshake {
-  33% {
-    transform: translateX(40px);
-  }
-  66% {
-    transform: translateY(40px);
-  }
-  100% {
-    transform: translateX(20px) translateY(20px);
-  }
-}
-
 @keyframes alert {
   0% {
     opacity: 0;

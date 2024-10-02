@@ -105,8 +105,6 @@ const negateDirection = (setOppositeDir, setDir) => {
 
 export const damagePlayer = (damage) => {    
     if ( getNoOffenseCounter() !== 0 ) return
-    addAllClasses(getMapEl(), 'camera-shake', 'animation')
-    getMapEl().addEventListener('animationend', () => removeAllClasses(getMapEl(), 'camera-shake', 'animation'))
     if ( getInventory().flat().find(item => item && item.name === 'armor') ) damage /= 2
     let newHealth = getHealth() - damage
     newHealth = newHealth < 0 ? 0 : newHealth
@@ -188,16 +186,20 @@ const manageInfectedState = () => {
     if ( isLowHealth() ) decideLowHealth(renderHealthStatusChildByClassName, addClass)
 }
 
-export const infectPlayer2SpecificVirus = (virusName) => {
+export const infectPlayer2SpecificVirus = (virusName) => {    
     if ( getProgressValueByNumber(4000) ) activateAllProgresses('10000000')
     if ( getInfection().includes(virusName) ) return
+    setInfection([...getInfection(), virusName])
+    renderVirusIcon(virusName)
+}
+
+export const renderVirusIcon = (virusName) => {
     const infectedContainer = findHealtStatusChildByClassName('infected-container')    
     const virusBar = infectedContainer.firstElementChild
     const virusIcon = document.createElement('img')
     virusIcon.src = `/assets/images/${virusName}virus.png`
     addClass(virusIcon, 'animation')
     virusBar.append(virusIcon)
-    setInfection([...getInfection(), virusName])
 }
 
 export const useVaccine = (vaccine) => {

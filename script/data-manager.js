@@ -1,6 +1,6 @@
 import { getStash, initialStash, setStash } from './stash.js'
 import { getProgress, setProgress } from './progress-manager.js'
-import { getPasswords, initPasswords } from './password-manager.js'
+import { getPasswords, initPasswords, setPasswords } from './password-manager.js'
 import { getInventory, initialInventory, setInventory } from './inventory.js'
 import { getShopItems, initialShopItems, setShopItems } from './shop-item.js'
 import { 
@@ -104,6 +104,7 @@ import {
     setUpPressed,
     setWaitingFunctions, 
     setWeaponWheel } from './variables.js'
+import { buildEnemy } from './enemy/enemy-factory.js'
 
 export const prepareNewGameData = (difficulty) => {
     initPasswords()
@@ -141,69 +142,69 @@ const initNewGameEnemies = () => setEnemies(initEnemies())
 const initNewGameInteractables = () => setInteractables(initialInteractables)
 
 const initConstants = () => {
-    setUpPressed(false)
-    setDownPressed(false)
-    setLeftPressed(false)
-    setRightPressed(false)
-    setAllowMove(true)
-    setSprint(false)
-    setSprintPressed(false)
-    setElementInteractedWith(null)
-    setTargets([])
-    setPause(false)
-    setPauseCause(null)
-    setDraggedItem(null)
-    setMouseX(null)
-    setMouseY(null)
-    setReloading(false)
-    setShootPressed(false)
-    setShooting(false)
-    setShootCounter(0)
-    setGrabbed(false)
-    setThrowCounter(0)
+    setUpPressed(             false)
+    setDownPressed(           false)
+    setLeftPressed(           false)
+    setRightPressed(          false)
+    setAllowMove(             true)
+    setSprint(                false)
+    setSprintPressed(         false)
+    setElementInteractedWith( null)
+    setTargets(               [])
+    setPause(                 false)
+    setPauseCause(            null)
+    setDraggedItem(           null)
+    setMouseX(                null)
+    setMouseY(                null)
+    setReloading(             false)
+    setShootPressed(          false)
+    setShooting(              false)
+    setShootCounter(          0)
+    setGrabbed(               false)
+    setThrowCounter(          0)
     setExplosionDamageCounter(0)
-    setAnimatedLimbs([])
-    setWaitingFunctions([])
-    setPlayingDialogue(null)
-    setNoOffenseCounter(0)
-    setStunnedCounter(0)
-    setPlayerAngle(0)
-    setPlayerAngleState(0)
-    setPlayerAimAngle(0)
-    setAimMode(false)
+    setAnimatedLimbs(         [])
+    setWaitingFunctions(      [])
+    setPlayingDialogue(       null)
+    setNoOffenseCounter(      0)
+    setStunnedCounter(        0)
+    setPlayerAngle(           0)
+    setPlayerAngleState(      0)
+    setPlayerAimAngle(        0)
+    setAimMode(               false)
 }
 
 const initNewGameVariables = (difficulty) => {
     const newGameVariables = {
-        mapX : 0,
-        mapY : 0,
-        playerX : 50750,
-        playerY : 50400,
-        currentRoomId : 1,
-        roomTop : 49500,
-        roomLeft : 50500,
-        playerSpeed : 5,
-        maxStamina : 600,
-        stamina : 600,
-        maxHealth : 100,
-        health : 100,
-        refillStamina : false,
-        weaponWheel : [null, null, null, null],
-        equippedWeaponId : null,
-        noOffenseCounter : 0,
-        stunnedCounter : 0,
-        entityId : 1,
-        burning : 0,
-        poisoned : false,
-        criticalChance : 0.01,
-        adrenalinesDropped : 0,
+        mapX :                 0,
+        mapY :                 0,
+        playerX :              50750,
+        playerY :              50400,
+        currentRoomId :        1,
+        roomTop :              49500,
+        roomLeft :             50500,
+        playerSpeed :          5,
+        maxStamina :           600,
+        stamina :              600,
+        maxHealth :            100,
+        health :               100,
+        refillStamina :        false,
+        weaponWheel :          [null, null, null, null],
+        equippedWeaponId :     null,
+        noOffenseCounter :     0,
+        stunnedCounter :       0,
+        entityId :             1,
+        burning :              0,
+        poisoned :             false,
+        criticalChance :       0.01,
+        adrenalinesDropped :   0,
         healthPotionsDropped : 0,
-        luckPillsDropped : 0,
-        energyDrinksDropped : 0,
-        infection : [],
-        equippedTorchId : null,
-        roundsFinished : 0,
-        timesSaved: 0,
+        luckPillsDropped :     0,
+        energyDrinksDropped :  0,
+        infection :            [],
+        equippedTorchId :      null,
+        roundsFinished :       0,
+        timesSaved:            0,
         difficulty,
     }
     setVariables(newGameVariables)
@@ -259,7 +260,7 @@ export const saveAtSlot = (slotNumber) => {
     saveStash(        slotNumber)
 }
 
-const savePasswords = (slotNumber) => saveMapAsString(slotNumber, 'passwords', getPasswords(``))
+const savePasswords = (slotNumber) => saveMapAsString(slotNumber, 'passwords', getPasswords())
 
 const saveMapAsString = (slotNumber, entityType, entities) => {
     let data2save = {}
@@ -283,7 +284,7 @@ const saveStats = (slotNumber) =>
 
 const saveProgress = (slotNumber) => simpleSave(slotNumber, 'progress', getProgress())
 
-const saveInteractables = (slotNumber) => simpleSave(slotNumber, 'interactables', getInteractables())
+const saveInteractables = (slotNumber) => saveMapAsString(slotNumber, 'interactables', getInteractables())
 
 const simpleSave = (slotNumber, postfix, data2save) => 
     localStorage.setItem('slot-' + slotNumber + '-' + postfix, JSON.stringify(data2save))
@@ -355,5 +356,55 @@ const saveStash = (slotNumber) => simpleSave(slotNumber, 'stash', getStash())
 
 export const loadGameFromSlot = (slotNumber) => {
     initConstants()
+    loadPasswords(    slotNumber)
+    loadStats(        slotNumber)
+    laodProgress(     slotNumber)
+    loadInteractables(slotNumber)
+    loadEnemies(      slotNumber)
+    loadVariables(    slotNumber)
+    loadShopItems(    slotNumber)
+    loadInventory(    slotNumber)
+    loadStash(        slotNumber)
+    setLoaders(initLoaders())
     
 }
+
+const loadPasswords = (slotNumber) => loadStringAsMap(slotNumber, 'passwords', setPasswords, false)
+
+const loadStringAsMap = (slotNumber, entityType, setter, toNumber = true) => {
+    const data2Load = new Map([])
+    const data = JSON.parse(localStorage.getItem('slot-' + slotNumber + '-' + entityType))
+    Object.getOwnPropertyNames(data).forEach(name => data2Load.set(toNumber ? Number(name) : name, data[name]))
+    setter(data2Load)
+}
+
+const loadStats = (slotNumber) => {
+    const { saves, difficulty, rounds } = JSON.parse(localStorage.getItem('slot-' + slotNumber))
+    setTimesSaved(saves)
+    setDifficulty(difficulty)
+    setRoundsFinished(rounds)
+}
+
+const laodProgress = (slotNumber) => simpleLoad(slotNumber, 'progress', setProgress)
+
+const simpleLoad = (slotNumber, postfix, setter) =>
+    setter(JSON.parse(localStorage.getItem('slot-' + slotNumber + '-' + postfix)))
+
+const loadInteractables = (slotNumber) => loadStringAsMap(slotNumber, 'interactables', setInteractables)
+
+const loadEnemies = (slotNumber) => {
+    const data2Load = new Map([])
+    const data = JSON.parse(localStorage.getItem('slot-' + slotNumber + '-enemies'))
+    Object.getOwnPropertyNames(data).forEach(name => {
+        data2Load.set(Number(name), data[name].map(enemy => buildEnemy(enemy)))
+    })
+    setEnemies(data2Load)
+}
+
+const loadVariables = (slotNumber) => setVariables(JSON.parse(localStorage.getItem('slot-' + slotNumber + '-variables')))
+
+const loadShopItems = (slotNumber) => simpleLoad(slotNumber, 'shop-items', setShopItems)
+
+const loadInventory = (slotNumber) => simpleLoad(slotNumber, 'inventory', setInventory)
+
+const loadStash = (slotNumber) => simpleLoad(slotNumber, 'stash', setStash)

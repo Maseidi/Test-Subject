@@ -10,12 +10,14 @@ const passwordNames = [
     'main-hall'
 ]
 
-const passwords = new Map([])
+let passwords = new Map([])
+export const setPasswords = (val) => {
+    passwords = val
+}
+export const getPasswords = () => passwords
 
 export const initPasswords = () => 
     passwordNames.forEach(name => passwords.set(name, Math.floor(Math.random() * 99900) + 100))
-
-export const getPasswords = () => passwords
 
 export const renderPasswordInput = () => {
     const code = getElementInteractedWith().getAttribute('code')

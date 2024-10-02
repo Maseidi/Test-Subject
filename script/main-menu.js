@@ -49,22 +49,42 @@ const continueOption = () =>
         'continue', 
         (e) => {
             addSelectedStyle(e.currentTarget)
-            console.log(0);
+            loadLatestSavedSlot()
         },
         getDelay(0),
         getDuration(0)
-    )
+    )    
 
 const getDelay = (number) => 2 + ( isContinueIncluded ? number : number - 1 ) * 0.1
 
 const getDuration = (number) => 0.5 + ( isContinueIncluded ? number : number - 1 ) * 0.25
 
+const loadLatestSavedSlot = () => {
+    const slotData = new Array(10)
+        .fill(null)
+        .map((elem, index) => {
+            const slot = localStorage.getItem(`slot-${index + 1}`)
+            return slot === 'empty' ? {timeStamp: Number.MIN_SAFE_INTEGER} : JSON.parse(slot)
+        })
+        .map((slot, index) => ({...slot, slotNumber: index + 1}))
+        .sort((a, b) => b.timeStamp - a.timeStamp)[0]
+        playGameWithGivenData(() => loadGameFromSlot(slotData.slotNumber))
+}
+
+const playGameWithGivenData = (loader) => {
+    getMainMenuEl().remove()
+    loader()
+    play()
+}
+
 const mainMenuOption = (textContent, onClick, delay, duration) => {
     const option = createAndAddClass('div', 'main-menu-option')
     option.textContent = textContent
-    option.addEventListener('animationend', () => {
-        option.style.cursor = 'pointer'
-        option.addEventListener('click', onClick)}
+    option.addEventListener('animationend', 
+        () => {
+            option.style.cursor = 'pointer'
+            option.addEventListener('click', onClick)
+        }
     )
     option.style.animationDelay = delay + 's'
     option.style.animationDuration = duration + 's'
@@ -120,11 +140,7 @@ const newGameOptions = () => {
         newGameOption(difficulties.MIDDLE), 
         newGameOption(difficulties.SURVIVAL)
     ]).forEach(option => {
-        option.addEventListener('click', (e) => {
-            getMainMenuEl().remove()
-            prepareNewGameData(e.target.textContent)
-            play()
-        })
+        option.addEventListener('click', (e) => playGameWithGivenData(() => prepareNewGameData(e.target.textContent)))
         newGameOptionsContainer.append(option)
     })
 
@@ -143,13 +159,19 @@ const loadGameOptions = () => {
         const option = loadGameOption(i + 1)
         loadGameOptionsContainer.append(option)
     }
+    loadGameOptionsContainer.addEventListener('wheel', (e) => {
+        if ( e.deltaX !== 0 ) return
+        if ( e.deltaY > 0 ) loadGameOptionsContainer.scrollLeft += 100;
+        else loadGameOptionsContainer.scrollLeft -= 100;
+    });
+
     return loadGameOptionsContainer
 }
 
 const loadGameOption = (slotNumber) => {
     const slotData = localStorage.getItem('slot-' + slotNumber)
     if ( slotData === 'empty' ) return noSavedDataSlot()
-    else return slotWithData(slotData)
+    else return slotWithData(slotData, slotNumber)
 }
 
 const noSavedDataSlot = () => {    
@@ -164,10 +186,10 @@ const noSavedDataSlot = () => {
     return slot
 }
 
-const slotWithData = (slotData) => {
+const slotWithData = (slotData, slotNumber) => {
     const elements = savedSlotContent(slotData)
     const slot = createAndAddClass('div', 'load-game-option-full-slot')
     elements.forEach(elem => slot.append(elem))
-    slot.addEventListener('click', () => loadGameFromSlot())
+    slot.addEventListener('click', () => playGameWithGivenData(() => loadGameFromSlot(slotNumber)))
     return slot
 }
