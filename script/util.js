@@ -184,6 +184,7 @@ export const addExplosion = (left, top) => {
     explosion.append(explosionImage)
     getCurrentRoom().append(explosion)
     addAllClasses(getMapEl(), 'explosion-shake', 'animation')
+    debugger
     getMapEl().addEventListener('animationend', () => removeAllClasses(getMapEl(), 'explosion-shake', 'animation'))
     getCurrentRoomExplosions().push(explosion)
 }

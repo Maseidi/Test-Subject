@@ -57,9 +57,9 @@ const renderDialogueContainer = () => renderContainer('dialouge-container', setD
 
 const renderContainer = (className, setter) => {
     const root = document.getElementById('root')
-    const popupContainer = createAndAddClass('div', className)
-    setter(popupContainer)
-    root.append(popupContainer)
+    const container = createAndAddClass('div', className)
+    setter(container)
+    root.append(container)
 }
 
 const renderMap = () => {
@@ -77,9 +77,7 @@ const renderRoomContainer = () => {
     getMapEl().append(roomContainer)
 }
 
-const renderCurrentRoom = () => {
-    loadCurrentRoom()
-}
+const renderCurrentRoom = () => loadCurrentRoom()
 
 const renderPlayer = () => {
     const player = createAndAddClass('div', 'player')
@@ -90,7 +88,6 @@ const renderPlayer = () => {
     player.append(playerCollider)
     const playerBody = createAndAddClass('div', 'player-body')
     playerBody.style.transform = `rotateZ(${getPlayerAngle()}deg)`
-    player.setAttribute('angle', 0)
     const forwardDetector = createAndAddClass('div', 'forward-detector')
     const dialogueContainer = createAndAddClass('div', 'player-dialouge-container')
     appendAll(playerCollider, playerBody, forwardDetector, dialogueContainer)

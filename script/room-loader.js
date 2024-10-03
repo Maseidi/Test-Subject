@@ -131,6 +131,7 @@ const renderWalls = () => {
 const getSideWalls = () => {
     const { top, left, right, bottom } = getAllLoaders()
     const result = []
+    
     let topOffset = 0
     top.forEach(topLoader => {
         const width = topLoader.left - topOffset
@@ -138,6 +139,7 @@ const getSideWalls = () => {
         topOffset = topLoader.left + topLoader.width
         result.push(wall)
     })
+
     let leftOffset = 0
     left.forEach(leftLoader => {
         const height = leftLoader.top - leftOffset
@@ -145,6 +147,7 @@ const getSideWalls = () => {
         leftOffset = leftLoader.top + leftLoader.height
         result.push(wall)
     })
+
     let rightOffset = 0
     right.forEach(rightLoader => {
         const height = rightLoader.top - rightOffset
@@ -152,6 +155,7 @@ const getSideWalls = () => {
         rightOffset = rightLoader.top + rightLoader.height
         result.push(wall)
     })
+
     let bottomOffset = 0
     bottom.forEach(bottomLoader => {
         const width = bottomLoader.left - bottomOffset
@@ -461,8 +465,8 @@ const handleKeyLoot = (element, enemy, name) => {
         enemy,
         'key-code',        code,
         'key-heading',     heading,
+        'key-unlocks',     unlocks,
         'key-description', description,
-        'key-unlocks',     unlocks
     )
 }
 
@@ -504,7 +508,7 @@ const defineBackwardDetector = (enemyObject) => {
     const backwardDetector = createAndAddClass('div', `enemy-backward-detector`)
     addAllAttributes(
         backwardDetector,
-        'name', 'vaccine',
+        'name', 'enemy-back',
         'heading', 'Stealth kill',
         'popup', `${enemyObject.virus}vaccine`
     )

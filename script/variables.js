@@ -345,3 +345,9 @@ export const setTimesSaved = (val) => {
     timesSaved = val
 }
 export const getTimesSaved = () => timesSaved
+
+let lastSavedSlot = null
+export const setLastSavedSlot = (val) => {
+    lastSavedSlot = val
+}
+export const getLastSavedSlot = () => lastSavedSlot

@@ -3,13 +3,14 @@ import { Progress } from './progress.js'
 import { Room, sections } from './room.js'
 import { Popup } from './popup-manager.js'
 import { getDifficulty } from './variables.js'
-import { Torturer } from './enemy/type/normal-enemy.js'
+import { RockCrusher, SoulDrinker, Torturer } from './enemy/type/normal-enemy.js'
 import { Dialogue, sources } from './dialogue-manager.js'
 import { Path, Point, RectPath, SinglePointPath, VerDoublePointPath } from './path.js'
 import { 
     Bandage,
     Coin,
     Crate,
+    Grenade,
     GunDrop,
     HardDrive,
     KeyDrop,
@@ -40,6 +41,11 @@ import {
     RED_VACCINE,
     STICK_LOOT,
     YELLOW_VACCINE } from './loot.js'
+import { Ranger } from './enemy/type/ranger.js'
+import { Stinger } from './enemy/type/stinger.js'
+import { Tracker } from './enemy/type/tracker.js'
+import { Scorcher } from './enemy/type/scorcher.js'
+import { Spiker } from './enemy/type/spiker.js'
 
 // **********************************************************************************
 // **********************************************************************************
@@ -968,7 +974,7 @@ export const initEnemies = () => {
 
         ],
         [ //2
-            new Torturer(0.2, new RectPath(350, 150, 300, 100))
+            new Torturer(0.2, new RectPath(225, 175, 550, 250)),
         ],
         [ //3
             new Torturer(0.2, new RectPath(100, 100, 200, 800), null, 
@@ -1235,7 +1241,7 @@ export const initEnemies = () => {
 
         ],
         [ //42
-
+            
         ],
         [ //43
 
@@ -1312,7 +1318,8 @@ export const initialInteractables = new Map([
         new Stash(10, 10),
         new HardDrive(250, 300, 2),
         new Coin(250, 400, 10),
-        new GunDrop(250, 500, BENELLI_M4, 3, 1, 2, 3, 4, 5)
+        new GunDrop(250, 500, BENELLI_M4, 3, 1, 2, 3, 4, 5),
+        new Grenade(250, 600, 2)
     ]],
     [2, [
         new Lever(100, 100, Progress.builder().setRenderProgress('2000').setProgress2Active('2002')),

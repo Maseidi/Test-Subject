@@ -7,16 +7,16 @@ import { Grabber } from './type/grabber.js'
 import { Scorcher } from './type/scorcher.js'
 import { RockCrusher, SoulDrinker, Torturer } from './type/normal-enemy.js'
 
-const enemyDictionary = {
-    'ranger': Ranger,
-    'spiker': Spiker,
-    'grabber': Grabber,
-    'stinger': Stinger,
-    'torturer': Torturer,
-    'scorcher': Scorcher,
-    'rock-crusher': RockCrusher,
-    'soul-drinker': SoulDrinker,
-}
+const ENEMIES_BY_TYPE = new Map([
+    ['ranger', Ranger],
+    ['spiker', Spiker],
+    ['grabber', Grabber],
+    ['stinger', Stinger],
+    ['torturer', Torturer],
+    ['scorcher', Scorcher],
+    ['rock-crusher', RockCrusher],
+    ['soul-drinker', SoulDrinker],
+])
 
 export const buildEnemy = (data) => {
     const { x, y, health, killAll, renderProgress, progress2Active, progress2Deactive, difficulties } = data
@@ -30,7 +30,7 @@ export const buildEnemy = (data) => {
     if ( data.type === 'tracker' ) var enemy = buildTracker(data, progress)
     else {
         const { waypoint, loot, virus } = data
-        var enemy = new enemyDictionary[data.type](null, waypoint, loot, progress, virus)
+        var enemy = new (ENEMIES_BY_TYPE.get(data.type))(null, waypoint, loot, progress, virus)
     }
 
     enemy.health = health

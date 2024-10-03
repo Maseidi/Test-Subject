@@ -1,8 +1,9 @@
+import { buildEnemy } from './enemy/enemy-factory.js'
 import { getStash, initialStash, setStash } from './stash.js'
 import { getProgress, setProgress } from './progress-manager.js'
-import { getPasswords, initPasswords, setPasswords } from './password-manager.js'
 import { getInventory, initialInventory, setInventory } from './inventory.js'
 import { getShopItems, initialShopItems, setShopItems } from './shop-item.js'
+import { getPasswords, initPasswords, setPasswords } from './password-manager.js'
 import { 
     getEnemies,
     getInteractables,
@@ -66,6 +67,7 @@ import {
     setHealth,
     setHealthPotionsDropped,
     setInfection,
+    setLastSavedSlot,
     setLeftPressed,
     setLuckPillsDropped,
     setMapX,
@@ -104,7 +106,6 @@ import {
     setUpPressed,
     setWaitingFunctions, 
     setWeaponWheel } from './variables.js'
-import { buildEnemy } from './enemy/enemy-factory.js'
 
 export const prepareNewGameData = (difficulty) => {
     initPasswords()
@@ -178,11 +179,11 @@ const initNewGameVariables = (difficulty) => {
     const newGameVariables = {
         mapX :                 0,
         mapY :                 0,
-        playerX :              50750,
-        playerY :              50400,
+        playerX :              750,
+        playerY :              400,
         currentRoomId :        1,
-        roomTop :              49500,
-        roomLeft :             50500,
+        roomTop :              -500,
+        roomLeft :             500,
         playerSpeed :          5,
         maxStamina :           600,
         stamina :              600,
@@ -205,6 +206,7 @@ const initNewGameVariables = (difficulty) => {
         equippedTorchId :      null,
         roundsFinished :       0,
         timesSaved:            0,
+        lastSavedSlot:         null,
         difficulty,
     }
     setVariables(newGameVariables)
@@ -244,11 +246,12 @@ const setVariables = (variables) => {
     setRoundsFinished(      variables.roundsFinished)
     setDifficulty(          variables.difficulty)
     setTimesSaved(          variables.timesSaved)
+    setLastSavedSlot(       variables.lastSavedSlot)
 }
 
 export const saveAtSlot = (slotNumber) => {
     setTimesSaved(getTimesSaved() + 1)
-
+    setLastSavedSlot( slotNumber)
     savePasswords(    slotNumber)
     saveStats(        slotNumber)
     saveProgress(     slotNumber)
@@ -356,6 +359,7 @@ const saveStash = (slotNumber) => simpleSave(slotNumber, 'stash', getStash())
 
 export const loadGameFromSlot = (slotNumber) => {
     initConstants()
+    setLastSavedSlot( slotNumber)
     loadPasswords(    slotNumber)
     loadStats(        slotNumber)
     laodProgress(     slotNumber)
@@ -365,7 +369,7 @@ export const loadGameFromSlot = (slotNumber) => {
     loadShopItems(    slotNumber)
     loadInventory(    slotNumber)
     loadStash(        slotNumber)
-    setLoaders(initLoaders())
+    setLoaders(       initLoaders())
     
 }
 

@@ -1,7 +1,7 @@
 import { dialogues } from './entities.js'
+import { setPlayingDialogue } from './variables.js'
 import { getDialogueContainer } from './elements.js'
 import { addAllAttributes, addClass, createAndAddClass } from './util.js'
-import { setPlayingDialogue } from './variables.js'
 
 export const sources = {
     MIAN: 'main',
@@ -9,7 +9,7 @@ export const sources = {
 }
 
 export class Dialogue {
-    constructor(message, source, progress, duration) {
+    constructor(message, source, progress, duration, delay) {
         this.message =         message                   ?? null
         this.source =          source                    ?? null
         this.renderProgress =  progress?.renderProgress  ?? null
@@ -29,7 +29,7 @@ const displayDialogue = (dialogueObj) => {
     if ( getDialogueContainer().firstElementChild ) getDialogueContainer().firstElementChild.remove()
     const dialogueContent = createAndAddClass('p', 'dialogue', 'dialogue-animation', 'animation')
     const chars = message.split('')
-    if ( chars.length > 20 ) dialogueContent.style.width = '300px'
+    if ( chars.length > 30 ) dialogueContent.style.width = '300px'
     else dialogueContent.style.width = 'max-content'
     for ( let i = 0; i < chars.length; i++ ) {
         const charEl = document.createElement('span')

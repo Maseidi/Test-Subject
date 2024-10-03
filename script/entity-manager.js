@@ -104,17 +104,21 @@ const manageLoaders = () => {
 const calculateNewRoomLeftAndTop = (prevLoader) => {
     const newRoom = rooms.get(getCurrentRoomId())
     const loader = getLoaders().get(getCurrentRoomId()).find(loader => loader.className === prevRoomId)
-    let left, top    
+       
     if ( loader.bottom !== null )
-        top = loader.bottom === -26 ? newRoom.height - loader.height - loader.bottom - 52 : 
-        newRoom.height - loader.height - loader.bottom
+        var top = loader.bottom === -26 ? newRoom.height - loader.height - loader.bottom - 52 : 
+            newRoom.height - loader.height - loader.bottom
+
     if ( loader.right !== null )
-        left = loader.right === -26 ? newRoom.width - loader.width - loader.right - 52 : 
-        newRoom.width - loader.width - loader.right
+        var left = loader.right === -26 ? newRoom.width - loader.width - loader.right - 52 : 
+            newRoom.width - loader.width - loader.right
+
     if ( loader.top !== null )
-        top = loader.top === -26 ? loader.top + 52 : loader.top
+        var top = loader.top === -26 ? loader.top + 52 : loader.top
+
     if ( loader.left !== null )
-        left = loader.left === -26 ? loader.left + 52 : loader.left
+        var left = loader.left === -26 ? loader.left + 52 : loader.left
+
     setRoomLeft(getRoomLeft() - left + getProperty(prevLoader, 'left', 'px'))
     setRoomTop(getRoomTop() - top + getProperty(prevLoader, 'top', 'px'))
 }
@@ -122,37 +126,79 @@ const calculateNewRoomLeftAndTop = (prevLoader) => {
 const manageInteractables = () => {
     setElementInteractedWith(null)
     getCurrentRoomInteractables().forEach((int) => {
-        const popup = int.children[1] ?? int.firstElementChild
-        const isEnemy = popup.lastElementChild.lastElementChild.src
-        if ( int.getAttribute('name') === 'speaker' ) return
-        handleInteractions(int, popup)
-        if ( collide(getPlayer().firstElementChild, int, 20) && !getElementInteractedWith() && !containsClass(int, 'open') ) {
-            if ( isEnemy && (isEnemyNotified(popup) || !getProgressValueByNumber('3002')) ) {
-                popup.style.display = 'none'
+        switch ( int.getAttribute('name') ) {
+            case 'speaker':
                 return
-            }
-            setElementInteractedWith(int)
-            popup.style.display = 'block'
-            return
+            case 'door': 
+                handleDoorInteractables(int)
+                break
+            case 'enemy-back':
+                handleEnemyInteractables(int)
+                break
+            default:
+                hanldeRestOfInteractables(int)
         }
-        popup.style.display = 'none'
     })
 }
 
-const handleInteractions = (int, popup) => {
-    if ( !['computer', 'stash', 'vendingMachine'].includes(int.getAttribute('name')) && !int.getAttribute('value') ) return
-    if ( isAble2Interact() ) removeClass(popup, 'not-ideal')
-    else addClass(popup, 'not-ideal')
+const handleDoorInteractables = (int) => {
+    const popup = int.firstElementChild
+    handleDoorWithCodeIdealInteraction(int, popup)
+    if ( containsClass(int, 'open') )      removePopup(popup)
+    else if ( !interactionPredicate(int) ) removePopup(popup)
+    else                                   setAsInteractingObject(popup, int)
 }
 
-const isEnemyNotified = (popup) => {
-    const enemyElem = popup.parentElement.parentElement.parentElement
+const showPopup = (popup) => popup.style.display = 'block'
+
+const removePopup = (popup) => popup.style.display = 'none'
+
+const interactionPredicate = (int) => collide(getPlayer().firstElementChild, int, 20) && !getElementInteractedWith()
+
+const setAsInteractingObject = (popup, int) => {
+    showPopup(popup)
+    setElementInteractedWith(int)
+}
+
+const handleEnemyInteractables = (int) => {
+    const popup = int.firstElementChild
+    const enemyElem = int.parentElement.parentElement
+    const enemyObject = getEnemyObject(enemyElem)
+    if ( !getProgressValueByNumber('3002') ) removePopup(popup)
+    else if ( enemyObject.health === 0 )     removePopup(popup)
+    else if ( isEnemyNotified(enemyObject) ) removePopup(popup)
+    else if ( !interactionPredicate(int) )   removePopup(popup)
+    else                                     setAsInteractingObject(popup, int)
+}
+
+const getEnemyObject = (enemyElem) => {
     const enemyPath = enemyElem.previousSibling.id
     const index = Number(enemyPath.replace('path-', ''))
-    const validStates = [LOST, INVESTIGATE, MOVE_TO_POSITION, STUNNED]
-    const enemyObj = getEnemies().get(getCurrentRoomId())[index]
-    if ( !validStates.includes(enemyObj.state) || enemyObj.health === 0 ) return true
-    return false
+    return getEnemies().get(getCurrentRoomId())[index]
+}
+
+const isEnemyNotified = (enemyObj) => ![LOST, INVESTIGATE, MOVE_TO_POSITION, STUNNED].includes(enemyObj.state)
+
+const hanldeRestOfInteractables = (int) => {
+    const popup = int.children[1]
+    handleStaticInteractablesIdealInteraction(int, popup)
+    if ( !interactionPredicate(int) ) removePopup(popup)
+    else                              setAsInteractingObject(popup, int)
+}
+
+const handleDoorWithCodeIdealInteraction = (int, popup) => {
+    if ( !int.getAttribute('value') ) return
+    refreshPopupIdealStyles(popup)
+}
+
+const refreshPopupIdealStyles = (popup) => {
+    if ( isAble2Interact() ) removeClass(popup, 'not-ideal')
+    else                     addClass(popup, 'not-ideal')
+}
+
+const handleStaticInteractablesIdealInteraction = (int, popup) => {
+    if ( !['computer', 'stash', 'vendingMachine'].includes(int.getAttribute('name')) ) return
+    refreshPopupIdealStyles(popup)
 }
 
 const manageEnemies = () => {
@@ -193,7 +239,7 @@ const manageBullets = () => {
         bullet.style.left = `${x + speedX}px`
         bullet.style.top = `${y + speedY}px`
         if ( collide(bullet, getPlayer().firstElementChild, 0) ) {
-            if ( !getGrabbed() ) {
+            if ( !getGrabbed() && getNoOffenseCounter() === 0 ) {
                 damagePlayer(Number(bullet.getAttribute('damage')))
                 if ( containsClass(bullet, 'scorcher-bullet') ) setPlayer2Fire()
                 if ( containsClass(bullet, 'stinger-bullet') ) poisonPlayer()
