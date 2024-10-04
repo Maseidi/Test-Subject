@@ -1,9 +1,11 @@
-import { getEnemies, rooms } from './entities.js'
 import { renderStash } from './stash.js'
 import { isGun } from './gun-details.js'
 import { renderGun } from './gun-loader.js'
 import { dropLoot } from './loot-manager.js'
+import { turnOnComputer } from './computer.js'
 import { centralizePlayer } from './startup.js'
+import { renderPauseMenu } from './pause-menu.js'
+import { getEnemies, rooms } from './entities.js'
 import { setupReload } from './weapon-manager.js'
 import { renderStore } from './vending-machine.js'
 import { isThrowable } from './throwable-details.js'
@@ -83,9 +85,8 @@ import {
     setEquippedTorchId,
     getEquippedTorchId,
     getWaitingFunctions,
-    setWaitingFunctions} from './variables.js'
-import { turnOnComputer } from './computer.js'
-import { renderPauseMenu } from './pause-menu.js'
+    setWaitingFunctions,
+    getRefillStamina } from './variables.js'
 
 export const wDown = () => enableDirection(getUpPressed, getDownPressed, setUpPressed, setDownPressed)
 
@@ -187,6 +188,7 @@ const equipNothing = () => {
 }
 
 export const shiftDown = () => {
+    if ( getRefillStamina() ) addClass(getPlayer(), 'walk')
     setSprintPressed(true)
     startSprint()
 }
@@ -352,6 +354,7 @@ export const rDown = () => {
 }
 
 export const escapeDown = () => {
+    if ( getPauseCause() === 'game-over' && !getPauseContainer().children[1] ) return
     if ( !getPause() ) {
         managePause()
         setPauseCause('pause')
@@ -424,7 +427,7 @@ const disableDirection = (setPressed, setOppositePressed) => {
 export const shiftUp = () => {
     setSprintPressed(false)
     stopWalkingAnimation()
-    if ( isMoving() && !getAimMode() && !getGrabbed() ) addClass(getPlayer(), 'walk')
+    if ( isMoving() && !getAimMode() && !getGrabbed() && !getPause() ) addClass(getPlayer(), 'walk')
 }
 
 const stopWalkingAnimation = () => {

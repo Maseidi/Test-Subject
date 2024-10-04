@@ -5,7 +5,13 @@ import { removeThrowable } from './throwable-loader.js'
 import { getGunDetail, getGunUpgradableDetail } from './gun-details.js'
 import { getThrowableDetail, isThrowable } from './throwable-details.js'
 import { ADRENALINE, ENERGY_DRINK, HEALTH_POTION, LUCK_PILLS } from './loot.js'
-import { getCurrentRoom, getCurrentRoomExplosions, getMapEl, getPlayer, getPopupContainer, getShadowContainer } from './elements.js'
+import { 
+    getCurrentRoom,
+    getCurrentRoomExplosions,
+    getMapEl,
+    getPlayer,
+    getPopupContainer,
+    getShadowContainer } from './elements.js'
 import { 
     getCurrentRoomId,
     getDownPressed,
@@ -184,7 +190,6 @@ export const addExplosion = (left, top) => {
     explosion.append(explosionImage)
     getCurrentRoom().append(explosion)
     addAllClasses(getMapEl(), 'explosion-shake', 'animation')
-    debugger
     getMapEl().addEventListener('animationend', () => removeAllClasses(getMapEl(), 'explosion-shake', 'animation'))
     getCurrentRoomExplosions().push(explosion)
 }

@@ -1,30 +1,31 @@
+import { finishUp } from './finishUp.js'
+import { renderDesktop } from './computer.js'
+import { renderMainMenu } from './main-menu.js'
 import { getPauseContainer } from './elements.js'
 import { appendAll, createAndAddClass } from './util.js'
 import { quitPage, renderQuit } from './user-interface.js'
-import { finishUp } from './finishUp.js'
-import { renderMainMenu } from './main-menu.js'
-import { renderDesktop } from './computer.js'
 
 export const renderPauseMenu = () => {
-    const background = createAndAddClass('div', 'ui-theme', 'full', 'pause-menu')
+    const background = createAndAddClass('div', 'ui-theme', 'full', 'common')
+    background.style.padding = '100px'
     background.append(renderOptionsContainer())
     getPauseContainer().append(background)
     renderQuit()
 }
 
 const renderOptionsContainer = () => {
-    const options = createAndAddClass('div', 'pause-menu-options')
+    const options = createAndAddClass('div', 'common-options')
     appendAll(options, ...renderOptions())
     return options
 }
 
 const renderOptions = () => {
-    const resume = createAndAddClass('div', 'pause-menu-option')
+    const resume = createAndAddClass('div', 'common-option')
     resume.textContent = 'resume'
     resume.addEventListener('click', quitPage)
-    const loadGame = createAndAddClass('div', 'pause-menu-option')
+    const loadGame = createAndAddClass('div', 'common-option')
     loadGame.textContent = 'load game'
-    const mainMenu = createAndAddClass('div', 'pause-menu-option')
+    const mainMenu = createAndAddClass('div', 'common-option')
     loadGame.addEventListener('click', () => renderDesktop(true))
     mainMenu.textContent = 'return to main menu'
     mainMenu.addEventListener('click', renderConfirmReturn2MainMenu)
@@ -46,7 +47,6 @@ const renderConfirmReturn2MainMenu = () => {
     confirm.textContent = 'yes'
     confirm.addEventListener('click', return2MainMenu)
     getPauseContainer().append(returnPopup)
-
     appendAll(buttons, cancel, confirm)
     appendAll(returnPopup, title, helper, buttons)
     returnPopupContainer.append(returnPopup)
@@ -57,7 +57,7 @@ const closeReturnPopup = () => {
     getPauseContainer().firstElementChild.lastElementChild?.remove()
 }
 
-const return2MainMenu = () => {
+export const return2MainMenu = () => {
     finishUp()
     renderMainMenu()
 }

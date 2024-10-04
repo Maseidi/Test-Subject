@@ -55,7 +55,7 @@ const manageBurningState = () => {
     let newHealth = getHealth() - 0.02
     newHealth = newHealth < 0 ? 0 : newHealth
     modifyHealth(newHealth)
-    if ( isLowHealth() ) decideLowHealth(renderHealthStatusChildByClassName, addClass)
+    if ( isLowHealth() ) renderDangerStateEffect(renderHealthStatusChildByClassName, addClass)
 }
 
 const managePoisonedState = () => {
@@ -63,7 +63,7 @@ const managePoisonedState = () => {
     let newHealth = getHealth() - 0.01
     newHealth = newHealth < 0 ? 0 : newHealth
     modifyHealth(newHealth)
-    if ( isLowHealth() ) decideLowHealth(renderHealthStatusChildByClassName, addClass)
+    if ( isLowHealth() ) renderDangerStateEffect(renderHealthStatusChildByClassName, addClass)
 }
 
 export const heal = () => {
@@ -73,7 +73,7 @@ export const heal = () => {
     let newHealth = Math.min(getHealth() + getMaxHealth() / 5, getMaxHealth())
     useInventoryResource('bandage', 1)
     modifyHealth(newHealth)
-    if ( !isLowHealth() ) decideLowHealth(removeHealthStatusChildByClassName, removeClass)
+    if ( !isLowHealth() ) renderDangerStateEffect(removeHealthStatusChildByClassName, removeClass)
 }
 
 export const useBandage = (bandage) => {
@@ -81,7 +81,7 @@ export const useBandage = (bandage) => {
     let newHealth = Math.min(getHealth() + getMaxHealth() / 5, getMaxHealth())
     bandage.amount -= 1
     modifyHealth(newHealth)
-    if ( !isLowHealth() ) decideLowHealth(removeHealthStatusChildByClassName, removeClass)
+    if ( !isLowHealth() ) renderDangerStateEffect(removeHealthStatusChildByClassName, removeClass)
 }
 
 export const useAntidote = (antidote) => {
@@ -104,7 +104,7 @@ const negateDirection = (setOppositeDir, setDir) => {
     setDir(false)
 }
 
-export const damagePlayer = (damage) => {    
+export const damagePlayer = (damage) => {
     if ( getNoOffenseCounter() !== 0 ) return
     addAllClasses(getMapEl(), 'camera-shake', 'animation')
     getMapEl().addEventListener('animationend', () => removeAllClasses(getMapEl(), 'camera-shake', 'animation'))
@@ -112,7 +112,7 @@ export const damagePlayer = (damage) => {
     let newHealth = getHealth() - damage
     newHealth = newHealth < 0 ? 0 : newHealth
     modifyHealth(newHealth)
-    if ( isLowHealth() ) decideLowHealth(renderHealthStatusChildByClassName, addClass)
+    if ( isLowHealth() ) renderDangerStateEffect(renderHealthStatusChildByClassName, addClass)
     noOffenceAllEnemies()
 }
 
@@ -128,7 +128,7 @@ const modifyHealth = (val) => {
     healthManager(getHealth())
 }
 
-const decideLowHealth = (lowHealthContainerCallbackFn, classCallbackFn) => {
+const renderDangerStateEffect = (lowHealthContainerCallbackFn, classCallbackFn) => {
     lowHealthContainerCallbackFn('low-health-container')
     classCallbackFn(getPlayer(), 'low-health-player')
     classCallbackFn(getMapEl(), 'low-health')
@@ -169,7 +169,7 @@ export const useHealthPotion = (potion) => {
     if ( getMaxHealth() === 200 ) return
     setMaxHealth(getMaxHealth() + 10)
     modifyHealth(getMaxHealth())
-    if ( !isLowHealth() ) decideLowHealth(removeHealthStatusChildByClassName, removeClass)
+    if ( !isLowHealth() ) renderDangerStateEffect(removeHealthStatusChildByClassName, removeClass)
     potion.amount -= 1
     clearAllInfection()
 }
@@ -186,7 +186,7 @@ const manageInfectedState = () => {
     let newHealth = getHealth() - ( 0.002 * getInfection().length )
     newHealth = newHealth < 0 ? 0 : newHealth
     modifyHealth(newHealth)
-    if ( isLowHealth() ) decideLowHealth(renderHealthStatusChildByClassName, addClass)
+    if ( isLowHealth() ) renderDangerStateEffect(renderHealthStatusChildByClassName, addClass)
 }
 
 export const infectPlayer2SpecificVirus = (virusName) => {    

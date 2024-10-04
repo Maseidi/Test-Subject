@@ -1,0 +1,16 @@
+.game-over {
+    opacity: 0;
+    display: flex;
+    align-items: center ;
+    justify-content: center;
+    animation-name: fade-in;
+    animation-duration: 1s;
+    animation-fill-mode: forwards;
+}
+
+.game-over-contents > h1 {
+    color: crimson;
+    font-size: 64px;
+    margin-bottom: 32px;
+    text-transform: uppercase;
+}

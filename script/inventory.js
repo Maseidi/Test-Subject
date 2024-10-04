@@ -342,15 +342,13 @@ export const renderBlocks = () => {
                 amount.append(amountText)
                 theBlock.append(amount)
             }
-            if ( !skip ) {                
-                if ( block === 'locked' ) theBlock.style.backgroundColor = `rgba(255, 0, 0, 0.1)`
-                if ( block === null || block === 'locked' ) skip = true   
-                if ( !skip ) {
-                    const image = document.createElement('img')
-                    image.src = `../assets/images/${block.name}.png`
-                    theBlock.append(image)
-                }
+            if ( !skip ) {
                 inventoryEl.append(theBlock)
+                if ( block === 'locked' ) theBlock.style.backgroundColor = `rgba(255, 0, 0, 0.1)`
+                if ( block === null || block === 'locked' ) return   
+                const image = document.createElement('img')
+                image.src = `../assets/images/${block.name}.png`
+                theBlock.append(image)
             }          
         })
     })

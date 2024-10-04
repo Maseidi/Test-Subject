@@ -59,23 +59,8 @@ const getDelay = (number) => 2 + ( isContinueIncluded ? number : number - 1 ) * 
 
 const getDuration = (number) => 0.5 + ( isContinueIncluded ? number : number - 1 ) * 0.25
 
-const loadLatestSavedSlot = () => {
-    const slotData = new Array(10)
-        .fill(null)
-        .map((elem, index) => {
-            const slot = localStorage.getItem(`slot-${index + 1}`)
-            return slot === 'empty' ? {timeStamp: Number.MIN_SAFE_INTEGER} : JSON.parse(slot)
-        })
-        .map((slot, index) => ({...slot, slotNumber: index + 1}))
-        .sort((a, b) => b.timeStamp - a.timeStamp)[0]
-        playGameWithGivenData(() => loadGameFromSlot(slotData.slotNumber))
-}
-
-const playGameWithGivenData = (loader) => {
-    getMainMenuEl().remove()
-    loader()
-    play()
-}
+const loadLatestSavedSlot = () => 
+    playGameWithGivenData(() => loadGameFromSlot(Number(localStorage.getItem('last-slot-used'))))
 
 const mainMenuOption = (textContent, onClick, delay, duration) => {
     const option = createAndAddClass('div', 'main-menu-option')
@@ -163,7 +148,7 @@ const loadGameOptions = () => {
         if ( e.deltaX !== 0 ) return
         if ( e.deltaY > 0 ) loadGameOptionsContainer.scrollLeft += 100;
         else loadGameOptionsContainer.scrollLeft -= 100;
-    });
+    }, {passive: true});
 
     return loadGameOptionsContainer
 }
@@ -192,4 +177,10 @@ const slotWithData = (slotData, slotNumber) => {
     elements.forEach(elem => slot.append(elem))
     slot.addEventListener('click', () => playGameWithGivenData(() => loadGameFromSlot(slotNumber)))
     return slot
+}
+
+const playGameWithGivenData = (loader) => {
+    getMainMenuEl().remove()
+    loader()
+    play()
 }

@@ -1,8 +1,8 @@
 import { buildEnemy } from './enemy/enemy-factory.js'
 import { getStash, initStash, setStash } from './stash.js'
-import { getProgress, initProgress, setProgress } from './progress-manager.js'
 import { getInventory, initInventory, setInventory } from './inventory.js'
 import { getShopItems, initShopItems, setShopItems } from './shop-item.js'
+import { getProgress, initProgress, setProgress } from './progress-manager.js'
 import { getPasswords, initPasswords, setPasswords } from './password-manager.js'
 import { 
     getEnemies,
@@ -39,6 +39,7 @@ import {
     getPlayerSpeed,
     getPlayerX,
     getPlayerY,
+    getPlaythroughId,
     getPoisoned,
     getRefillStamina,
     getRoomLeft,
@@ -67,7 +68,6 @@ import {
     setHealth,
     setHealthPotionsDropped,
     setInfection,
-    setLastSavedSlot,
     setLeftPressed,
     setLuckPillsDropped,
     setMapX,
@@ -86,6 +86,7 @@ import {
     setPlayerX,
     setPlayerY,
     setPlayingDialogue,
+    setPlaythroughId,
     setPoisoned,
     setRefillStamina,
     setReloading,
@@ -202,7 +203,7 @@ const initNewGameVariables = (difficulty) => {
         equippedTorchId :      null,
         roundsFinished :       0,
         timesSaved:            0,
-        lastSavedSlot:         null,
+        playthroughId:         Date.now(),
         difficulty,
     }
     setVariables(newGameVariables)
@@ -242,12 +243,11 @@ const setVariables = (variables) => {
     setRoundsFinished(      variables.roundsFinished)
     setDifficulty(          variables.difficulty)
     setTimesSaved(          variables.timesSaved)
-    setLastSavedSlot(       variables.lastSavedSlot)
+    setPlaythroughId(       variables.playthroughId)
 }
 
 export const saveAtSlot = (slotNumber) => {
     setTimesSaved(getTimesSaved() + 1)
-    setLastSavedSlot( slotNumber)
     savePasswords(    slotNumber)
     saveStats(        slotNumber)
     saveProgress(     slotNumber)
@@ -257,6 +257,7 @@ export const saveAtSlot = (slotNumber) => {
     saveShopItems(    slotNumber)
     saveInventory(    slotNumber)
     saveStash(        slotNumber)
+    localStorage.setItem('last-slot-used', slotNumber)
 }
 
 const savePasswords = (slotNumber) => saveMapAsString(slotNumber, 'passwords', getPasswords())
@@ -344,6 +345,7 @@ const saveVariables = (slotNumber) => {
         roundsFinished :       getRoundsFinished(),
         timesSaved:            getTimesSaved(),
         difficulty:            getDifficulty(),
+        playthroughId:         getPlaythroughId()
     }))
 }
 
@@ -355,7 +357,6 @@ const saveStash = (slotNumber) => simpleSave(slotNumber, 'stash', getStash())
 
 export const loadGameFromSlot = (slotNumber) => {
     initConstants()
-    setLastSavedSlot( slotNumber)
     loadPasswords(    slotNumber)
     loadStats(        slotNumber)
     laodProgress(     slotNumber)
@@ -366,7 +367,7 @@ export const loadGameFromSlot = (slotNumber) => {
     loadInventory(    slotNumber)
     loadStash(        slotNumber)
     setLoaders(       initLoaders())
-    
+    localStorage.setItem('last-slot-used', slotNumber)
 }
 
 const loadPasswords = (slotNumber) => loadStringAsMap(slotNumber, 'passwords', setPasswords, false)

@@ -302,3 +302,40 @@
   animation-direction: alternate;
   animation-iteration-count: infinite;
 }
+
+.dead-player > .player-collider > .player-body {
+  width: 14px;
+  height: 16px;
+}
+
+.dead-player > .player-collider > .player-body > .player-left-hand,
+.dead-player > .player-collider > .player-body > .player-right-hand {
+  top: 70%;
+  height: 16px;
+}
+
+.dead-player > .player-collider > .player-body > .player-head {
+  top: 85%;
+  width: 7px;
+  height: 7px;
+  position: absolute;
+}
+
+.left-leg, .right-leg {
+  width: 5px;
+  height: 16px;
+  bottom: 100%;
+  position: absolute;
+  border: 1px solid black;
+  background-color: brown;
+  border-top-left-radius: 1px;
+  border-top-right-radius: 1px;
+}
+
+.right-leg {
+  right: 0;
+}
+
+.left-leg {
+  left: 0;
+}

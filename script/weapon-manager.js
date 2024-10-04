@@ -1,8 +1,9 @@
 import { dropLoot } from './loot-manager.js'
 import { isThrowable } from './throwable-details.js'
+import { TRACKER } from './enemy/enemy-constants.js'
 import { removeThrowable } from './throwable-loader.js'
 import { manageAimModeAngle } from './angle-manager.js'
-import { TRACKER } from './enemy/enemy-constants.js'
+import { activateAllProgresses } from './progress-manager.js'
 import { getGunDetail, getGunUpgradableDetail, isGun } from './gun-details.js'
 import { 
     calculateThrowableAmount,
@@ -62,7 +63,6 @@ import {
     setTargets, 
     setThrowCounter,
     setWeaponWheel } from './variables.js'
-import { activateAllProgresses } from './progress-manager.js'
 
 const EMPTY_WEAPON = new Audio('../assets/audio/empty-weapon.mp3')
 
@@ -333,7 +333,7 @@ const useThrowableFromInventory = () => {
         ammoCount.parentElement.remove()
         unEquipThrowable()
     }
-    else ammoCount.firstElementChild.textContent = totalAmmo
+    else ammoCount.firstElementChild.textContent = totalAmmo - 1    
 }
 
 const unEquipThrowable = () => {

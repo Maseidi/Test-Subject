@@ -346,14 +346,14 @@ export const setTimesSaved = (val) => {
 }
 export const getTimesSaved = () => timesSaved
 
-let lastSavedSlot = null
-export const setLastSavedSlot = (val) => {
-    lastSavedSlot = val
-}
-export const getLastSavedSlot = () => lastSavedSlot
-
 let gameId = null
 export const setGameId = (val) => {
     gameId = val
 }
 export const getGameId = () => gameId
+
+let playthroughId = null
+export const setPlaythroughId = (val) => {
+    playthroughId = val
+}
+export const getPlaythroughId = () => playthroughId
