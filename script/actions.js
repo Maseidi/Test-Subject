@@ -85,6 +85,7 @@ import {
     getWaitingFunctions,
     setWaitingFunctions} from './variables.js'
 import { turnOnComputer } from './computer.js'
+import { renderPauseMenu } from './pause-menu.js'
 
 export const wDown = () => enableDirection(getUpPressed, getDownPressed, setUpPressed, setDownPressed)
 
@@ -295,7 +296,6 @@ export const managePause = () => {
 
 const gamePaused = () => {
     removeAllClasses(getPlayer(), 'run', 'walk')
-    getUiEl().remove()
     stopAnimations()
     removeUi()
 }
@@ -306,6 +306,7 @@ const stopAnimations = () => {
 }
 
 const removeUi = () => {
+    getUiEl().remove()
     getPopupContainer().style.opacity = '0'
     getRoomNameContainer().style.opacity = '0'
     getDialogueContainer().style.opacity = '0'
@@ -316,7 +317,6 @@ const removeUi = () => {
 
 const gamePlaying = () => {
     setPauseCause(null)
-    renderUi()
     resumeAnimations()
     showUi()
     resumePlayerActions()
@@ -330,6 +330,7 @@ const resumeAnimations = () => {
 }
 
 const showUi = () => {
+    renderUi()
     getPopupContainer().style.opacity = '1'
     getRoomNameContainer().style.opacity = '1'
     getDialogueContainer().style.opacity = '1'
@@ -351,7 +352,12 @@ export const rDown = () => {
 }
 
 export const escapeDown = () => {
-    if ( !getPause() ) return
+    if ( !getPause() ) {
+        managePause()
+        setPauseCause('pause')
+        renderPauseMenu()
+        return
+    }
     quitPage()
 }
 

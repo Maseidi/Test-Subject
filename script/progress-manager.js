@@ -13,6 +13,10 @@ export const setProgress = (val) => {
 }
 export const getProgress = () => progress
 
+export const initProgress = () => ({
+    [Number.MAX_SAFE_INTEGER] : true
+})
+
 export const getProgressValueByNumber = (number) => progress[number]
 
 export const activateAllProgresses = (numbers) => {

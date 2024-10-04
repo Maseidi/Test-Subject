@@ -1,0 +1,25 @@
+.pause-menu {
+    padding: 100px;
+}
+
+.pause-menu-options {
+    gap: 10px;
+    display: flex;
+    color: wheat;
+    letter-spacing: 3px;
+    flex-direction: column;
+    text-transform: capitalize;
+}
+
+.pause-menu-options > .pause-menu-option {
+    padding: 10px;
+    transition: 100ms;
+    border: 1px solid transparent;
+}
+
+.pause-menu-options > .pause-menu-option:hover {
+    font-weight: bold;
+    padding-left: 30px;
+    background-color: rgb(245, 222, 179, 0.1);
+    border: 1px solid wheat;
+}

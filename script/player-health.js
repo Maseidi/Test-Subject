@@ -11,7 +11,8 @@ import {
     findAttachmentsOnPlayer,
     createAndAddClass,
     addAllClasses,
-    removeAllClasses } from './util.js'
+    removeAllClasses, 
+    containsClass } from './util.js'
 import { 
     getBurning,
     getDownPressed,
@@ -141,7 +142,7 @@ const renderHealthStatusChildByClassName = (className) => {
 const removeHealthStatusChildByClassName = (className) => findHealtStatusChildByClassName(className)?.remove()
 
 export const findHealtStatusChildByClassName = (className) =>
-    Array.from(getHealthStatusContainer().children).find(child => child.classList[0] === className)
+    Array.from(getHealthStatusContainer().children).find(child => containsClass(child, className))
 
 export const setPlayer2Fire = () => {
     const wasBurninig = getBurning() > 0

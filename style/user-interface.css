@@ -8,6 +8,15 @@
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
 }
 
+.full {
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 70;
+  height: 100%;
+  position: fixed;
+}
+
 .ui {
   top: 10px;
   gap: 20px;
@@ -314,4 +323,34 @@
 .popup-cancel {
   color: lightgrey;
   background-color: darkred;
+}
+
+.common-popup-container {
+  top: 0;
+  left: 0;
+  z-index: 85;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+}
+
+.common-popup {
+  top: 50%;
+  left: 50%;
+  gap: 20px;
+  display: flex;
+  padding: 20px;
+  color: wheat;
+  position: absolute;
+  text-align: center;
+  border-radius: 5px;
+  letter-spacing: 1px;
+  flex-direction: column;
+  border: 1px solid wheat;
+  transform: translateX(-50%) translateY(-50%);
+}
+
+.common-popup > .common-buttons {
+    display: flex;
+    justify-content: space-between;
 }

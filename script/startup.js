@@ -1,3 +1,4 @@
+import { addControls } from './controls.js'
 import { renderUi } from './user-interface.js'
 import { loadCurrentRoom } from './room-loader.js'
 import { renderVirusIcon } from './player-health.js'
@@ -18,6 +19,7 @@ import {
     setShadowContainer} from './elements.js'
 
 export const startUp = () => {
+    addControls()
     renderRoomNameContainer()
     renderPauseContainer()
     renderPopupContainer()

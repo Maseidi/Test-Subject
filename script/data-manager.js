@@ -1,14 +1,14 @@
 import { buildEnemy } from './enemy/enemy-factory.js'
-import { getStash, initialStash, setStash } from './stash.js'
-import { getProgress, setProgress } from './progress-manager.js'
-import { getInventory, initialInventory, setInventory } from './inventory.js'
-import { getShopItems, initialShopItems, setShopItems } from './shop-item.js'
+import { getStash, initStash, setStash } from './stash.js'
+import { getProgress, initProgress, setProgress } from './progress-manager.js'
+import { getInventory, initInventory, setInventory } from './inventory.js'
+import { getShopItems, initShopItems, setShopItems } from './shop-item.js'
 import { getPasswords, initPasswords, setPasswords } from './password-manager.js'
 import { 
     getEnemies,
     getInteractables,
     initEnemies,
-    initialInteractables,
+    initInteractables,
     initLoaders,
     rooms,
     setEnemies,
@@ -121,17 +121,13 @@ export const prepareNewGameData = (difficulty) => {
 
 const initNewGameLoaders = () => setLoaders(initLoaders())
 
-const initNewGameProgress = () =>
-    setProgress({
-            [Number.MAX_SAFE_INTEGER] : true
-        }
-    )
+const initNewGameProgress = () => setProgress(initProgress())
 
-const initNewGameInventory = () => setInventory(initialInventory)
+const initNewGameInventory = () => setInventory(initInventory())
 
-const initNewGameStash = () => setStash(initialStash) 
+const initNewGameStash = () => setStash(initStash())
 
-const initNewGameShop = () => setShopItems(initialShopItems)
+const initNewGameShop = () => setShopItems(initShopItems())
 
 const initNewGameEntities = () => {
     initNewGameEnemies()
@@ -140,7 +136,7 @@ const initNewGameEntities = () => {
 
 const initNewGameEnemies = () => setEnemies(initEnemies())
 
-const initNewGameInteractables = () => setInteractables(initialInteractables)
+const initNewGameInteractables = () => setInteractables(initInteractables())
 
 const initConstants = () => {
     setUpPressed(             false)
@@ -273,11 +269,11 @@ const saveMapAsString = (slotNumber, entityType, entities) => {
             [key] : entitiesOfKey
         }
     }
-    localStorage.setItem('slot-' + slotNumber + '-' + entityType, JSON.stringify(data2save))
+    localStorage.setItem(`slot-${slotNumber}-${entityType}`, JSON.stringify(data2save))
 }
 
 const saveStats = (slotNumber) =>
-    localStorage.setItem('slot-' + slotNumber, JSON.stringify({
+    localStorage.setItem(`slot-${slotNumber}`, JSON.stringify({
         timeStamp: Date.now(),
         room: rooms.get(getCurrentRoomId()).label,
         saves: getTimesSaved(),
@@ -290,7 +286,7 @@ const saveProgress = (slotNumber) => simpleSave(slotNumber, 'progress', getProgr
 const saveInteractables = (slotNumber) => saveMapAsString(slotNumber, 'interactables', getInteractables())
 
 const simpleSave = (slotNumber, postfix, data2save) => 
-    localStorage.setItem('slot-' + slotNumber + '-' + postfix, JSON.stringify(data2save))
+    localStorage.setItem(`slot-${slotNumber}-${postfix}`, JSON.stringify(data2save))
 
 const saveEnemies = (slotNumber) => {
     let data2save = {}
@@ -311,11 +307,11 @@ const saveEnemies = (slotNumber) => {
         }
     }
 
-    localStorage.setItem('slot-' + slotNumber + '-enemies', JSON.stringify(data2save))
+    localStorage.setItem(`slot-${slotNumber}-enemies`, JSON.stringify(data2save))
 }
 
 const saveVariables = (slotNumber) => {
-    localStorage.setItem('slot-' + slotNumber + '-variables', JSON.stringify({
+    localStorage.setItem(`slot-${slotNumber}-variables`, JSON.stringify({
         mapX :                 getMapX(),
         mapY :                 getMapY(),
         playerX :              getPlayerX(),
@@ -377,13 +373,13 @@ const loadPasswords = (slotNumber) => loadStringAsMap(slotNumber, 'passwords', s
 
 const loadStringAsMap = (slotNumber, entityType, setter, toNumber = true) => {
     const data2Load = new Map([])
-    const data = JSON.parse(localStorage.getItem('slot-' + slotNumber + '-' + entityType))
+    const data = JSON.parse(localStorage.getItem(`slot-${slotNumber}-${entityType}`))
     Object.getOwnPropertyNames(data).forEach(name => data2Load.set(toNumber ? Number(name) : name, data[name]))
     setter(data2Load)
 }
 
 const loadStats = (slotNumber) => {
-    const { saves, difficulty, rounds } = JSON.parse(localStorage.getItem('slot-' + slotNumber))
+    const { saves, difficulty, rounds } = JSON.parse(localStorage.getItem(`slot-${slotNumber}`))
     setTimesSaved(saves)
     setDifficulty(difficulty)
     setRoundsFinished(rounds)
@@ -392,20 +388,20 @@ const loadStats = (slotNumber) => {
 const laodProgress = (slotNumber) => simpleLoad(slotNumber, 'progress', setProgress)
 
 const simpleLoad = (slotNumber, postfix, setter) =>
-    setter(JSON.parse(localStorage.getItem('slot-' + slotNumber + '-' + postfix)))
+    setter(JSON.parse(localStorage.getItem(`slot-${slotNumber}-${postfix}`)))
 
 const loadInteractables = (slotNumber) => loadStringAsMap(slotNumber, 'interactables', setInteractables)
 
 const loadEnemies = (slotNumber) => {
     const data2Load = new Map([])
-    const data = JSON.parse(localStorage.getItem('slot-' + slotNumber + '-enemies'))
+    const data = JSON.parse(localStorage.getItem(`slot-${slotNumber}-enemies`))
     Object.getOwnPropertyNames(data).forEach(name => {
         data2Load.set(Number(name), data[name].map(enemy => buildEnemy(enemy)))
     })
     setEnemies(data2Load)
 }
 
-const loadVariables = (slotNumber) => setVariables(JSON.parse(localStorage.getItem('slot-' + slotNumber + '-variables')))
+const loadVariables = (slotNumber) => setVariables(JSON.parse(localStorage.getItem(`slot-${slotNumber}-variables`)))
 
 const loadShopItems = (slotNumber) => simpleLoad(slotNumber, 'shop-items', setShopItems)
 

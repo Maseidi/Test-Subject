@@ -1,25 +1,30 @@
+import { play } from './game.js'
+import { finishUp } from './finishUp.js'
 import { managePause } from './actions.js'
-import { saveAtSlot } from './data-manager.js'
 import { getPauseContainer } from './elements.js'
 import { appendAll, createAndAddClass } from './util.js'
-import { addMessage, itemNotification, renderQuit } from './user-interface.js'
 import { countItem, useInventoryResource } from './inventory.js'
+import { loadGameFromSlot, saveAtSlot } from './data-manager.js'
+import { addMessage, itemNotification, renderQuit } from './user-interface.js'
 
 export const turnOnComputer = () => {
     managePause()
     renderDesktop()
 }
 
-const renderDesktop = () => {
+export const renderDesktop = (load = false) => {
     const desktop = createAndAddClass('div', 'desktop', 'ui-theme')
-    appendAll(desktop, itemNotification('hardDrive'), contents())
+    const content2Render = []
+    if ( !load ) content2Render.push(itemNotification('hardDrive'))
+    content2Render.push(contents(load))    
+    appendAll(desktop, ...content2Render)
     getPauseContainer().append(desktop)
     renderQuit()
 }
 
-const contents = () => {
+const contents = (load) => {
     const content = createAndAddClass('div', 'desktop-content')
-    appendAll(content, title(), slots())
+    appendAll(content, title(), slots(load))
     return content
 }
 
@@ -29,7 +34,7 @@ const title = () => {
     return title
 }
 
-const slots = () => {
+const slots = (load) => {
     const slots = createAndAddClass('div', 'desktop-slots')
     for ( let i = 0; i < 10; i++ ) {
         const slotData = localStorage.getItem('slot-' + ( i + 1 ))
@@ -37,7 +42,8 @@ const slots = () => {
         const className = isNotEmpty ? 'desktop-slot' : 'desktop-empty-slot'
         const slot = createAndAddClass('div', className)
         appendAll(slot, ...(isNotEmpty ? savedSlotContent(slotData) : noSaveData()))
-        slot.addEventListener('click', () => renderSaveConfirmPopup(i + 1, isNotEmpty))
+        if ( !load ) slot.addEventListener('click', () => renderSaveConfirmPopup(i + 1, isNotEmpty))
+        if ( isNotEmpty && load ) slot.addEventListener('click', () => renderLoadConfirmPopup(i+1))    
         slots.append(slot)
     }
     return slots
@@ -68,11 +74,11 @@ const renderSaveConfirmPopup = (slotNumber, isNotEmpty) => {
     const title = 
         isNotEmpty ? 'This might overwrite previous saved data. Do you wish to continue?' : 'Use this slot to save data?'
 
-    const savePopupContainer = createAndAddClass('div', 'save-popup-container', 'ui-theme', 'popup-container')
-    const savePopup = createAndAddClass('div', 'save-popup')
+    const savePopupContainer = createAndAddClass('div', 'common-popup-container', 'ui-theme', 'popup-container')
+    const savePopup = createAndAddClass('div', 'common-popup')
     const titleEl = createAndAddClass('p', 'save-title')
     titleEl.textContent = title
-    const buttons = createAndAddClass('div', 'save-buttons')
+    const buttons = createAndAddClass('div', 'common-buttons')
     const cancel = createAndAddClass('button', 'popup-cancel')
     cancel.addEventListener('click', closeSavePopup)
     cancel.textContent = 'cancel'
@@ -87,7 +93,7 @@ const renderSaveConfirmPopup = (slotNumber, isNotEmpty) => {
     appendAll(buttons, cancel, confirm)
     appendAll(savePopup, titleEl, buttons, message)
     savePopupContainer.append(savePopup)
-    getPauseContainer().firstElementChild.append(savePopupContainer)
+    getPauseContainer().lastElementChild.append(savePopupContainer)
 }
 
 const confirmSave = (slotNumber) => {
@@ -103,6 +109,37 @@ const confirmSave = (slotNumber) => {
 }
 
 const addComputerMessage = (input) => 
-    addMessage(input, getPauseContainer().firstElementChild.lastElementChild.firstElementChild)
+    addMessage(input, getPauseContainer().lastElementChild.lastElementChild.firstElementChild)
 
-const closeSavePopup = () => getPauseContainer().firstElementChild.lastElementChild.remove()
+const closeSavePopup = () => getPauseContainer().lastElementChild.lastElementChild.remove()
+
+const renderLoadConfirmPopup = (slotNumber) => {
+    const loadPopupContainer = createAndAddClass('div', 'common-popup-container', 'ui-theme', 'popup-container')
+    const loadPopup = createAndAddClass('div', 'common-popup')
+    const title = createAndAddClass('p', 'load-title')
+    title.textContent = 'Are you sure you wish to load?'
+    const helper = createAndAddClass('p', 'load-helper')
+    helper.textContent = 'All unsaved progress will be lost'
+    const buttons = createAndAddClass('div', 'common-buttons')
+    const cancel = createAndAddClass('button', 'popup-cancel')
+    cancel.addEventListener('click', closeLoadPopup)
+    cancel.textContent = 'cancel'
+    const confirm = createAndAddClass('button', 'popup-confirm')
+    confirm.textContent = 'yes'
+    confirm.addEventListener('click', () => confirmSlotLoad(slotNumber))
+    getPauseContainer().append(loadPopup)
+    appendAll(buttons, cancel, confirm)
+    appendAll(loadPopup, title, helper, buttons)
+    loadPopupContainer.append(loadPopup)
+    getPauseContainer().lastElementChild.append(loadPopupContainer)
+}
+
+const closeLoadPopup = () => {
+    getPauseContainer().lastElementChild.lastElementChild?.remove()
+}
+
+const confirmSlotLoad = (slotNumber) => {
+    finishUp()
+    loadGameFromSlot(slotNumber)
+    play()
+}

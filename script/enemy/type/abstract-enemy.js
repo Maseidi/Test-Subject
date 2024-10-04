@@ -12,7 +12,7 @@ import { AbstractNotificationService } from '../service/abstract/notification.js
 
 export class AbstractEnemy {
     constructor(type, components, waypoint, health, damage, 
-        maxSpeed, vision, acceleration, loot, progress, virus, difficulties) {
+        maxSpeed, vision, acceleration, loot, progress, virus, difficulty) {
         this.type =                type ?? null
         this.components =          components ?? 0
         this.waypoint =            waypoint ?? new SinglePointPath(0, 0)
@@ -29,7 +29,7 @@ export class AbstractEnemy {
         this.killAll =             progress?.killAll ?? null
         this.x =                   waypoint.points[0].x ?? 0
         this.y =                   waypoint.points[0].y ?? 0        
-        this.difficulties =        difficulties ? this.decideDifficulty(difficulties) : 
+        this.difficulties =        difficulty ? this.decideDifficulty(difficulty) : 
                                    [difficultyMap.MILD, difficultyMap.MIDDLE, difficultyMap.SURVIVAL]
 
         this.angleService =        new AbstractAngleService(this)
@@ -43,10 +43,10 @@ export class AbstractEnemy {
         this.balanceStatsBasedOnDifficulty()
     }
 
-    decideDifficulty(difficulties) {
-        if ( difficulties === difficultyMap.MILD )        
+    decideDifficulty(difficulty) {
+        if ( difficulty === difficultyMap.MILD )        
             return [difficultyMap.MILD, difficultyMap.MIDDLE, difficultyMap.SURVIVAL]
-        else if ( difficulties === difficultyMap.MIDDLE ) 
+        else if ( difficulty === difficultyMap.MIDDLE ) 
             return [difficultyMap.MIDDLE, difficultyMap.SURVIVAL]
         else                                           
             return [difficultyMap.SURVIVAL]

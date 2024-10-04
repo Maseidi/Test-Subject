@@ -24,7 +24,7 @@ export const setStash = (val) => {
 }
 export const getStash = () => stash
 
-export const initialStash = []
+export const initStash = () => []
 
 export const renderStash = () => {
     renderBackground()

@@ -1305,7 +1305,7 @@ export const setInteractables = (val) => {
 }
 export const getInteractables = () => interactables
 
-export const initialInteractables = new Map([
+export const initInteractables = () => new Map([
     [1, [
         new Note(125, 850, "Prisoner's memo", "Memories of a prisoner", "It's been 2 days since I'm here. I'm so hungry and there's no one responsible for this mess. I don't know what happened. All I remember was my normal life. And now I'm here, alone.... Why would this happen? I don't even know if I'm kidnapped by a criminal or arrested by law. Even then I would have contacted someone by now. The door's key is on the ground, so I can get out whenever I want, but the outdoors is terrifying. It's so dark and I think there's a predator past these doors. I can hear it breathing every now and then. I might have to get out of here and face it, or else I would starve to death...",
             Progress.builder().setRenderProgress('1002').setProgress2Active('1003').setOnExamineProgress2Active('1004')

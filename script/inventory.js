@@ -90,7 +90,7 @@ export const setInventory = (val) => {
 }
 export const getInventory = () => inventory
 
-export const initialInventory = 
+export const initInventory = () =>
     [
         [null, null, null, null],
         [null, null, null, null],

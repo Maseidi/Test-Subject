@@ -351,3 +351,9 @@ export const setLastSavedSlot = (val) => {
     lastSavedSlot = val
 }
 export const getLastSavedSlot = () => lastSavedSlot
+
+let gameId = null
+export const setGameId = (val) => {
+    gameId = val
+}
+export const getGameId = () => gameId
