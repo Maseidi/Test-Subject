@@ -1,11 +1,12 @@
 import { play } from './game.js'
-import { finishUp } from './finishUp.js'
+import { finishUp } from './finishup.js'
 import { managePause } from './actions.js'
 import { getPauseContainer } from './elements.js'
 import { appendAll, createAndAddClass } from './util.js'
 import { countItem, useInventoryResource } from './inventory.js'
 import { loadGameFromSlot, saveAtSlot } from './data-manager.js'
 import { addMessage, itemNotification, renderQuit } from './user-interface.js'
+import { activateAllProgresses } from './progress-manager.js'
 
 export const turnOnComputer = () => {
     managePause()
@@ -101,6 +102,7 @@ const confirmSave = (slotNumber) => {
         addComputerMessage('Out of hard drive memory')
         return
     }
+    activateAllProgresses([9007])
     useInventoryResource('hardDrive', 1)
     saveAtSlot(slotNumber)
     closeSavePopup()
@@ -134,9 +136,7 @@ const renderLoadConfirmPopup = (slotNumber) => {
     getPauseContainer().lastElementChild.append(loadPopupContainer)
 }
 
-const closeLoadPopup = () => {
-    getPauseContainer().lastElementChild.lastElementChild?.remove()
-}
+const closeLoadPopup = () => getPauseContainer().lastElementChild.lastElementChild?.remove()
 
 const confirmSlotLoad = (slotNumber) => {
     finishUp()

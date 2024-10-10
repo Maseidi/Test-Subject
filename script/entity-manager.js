@@ -472,12 +472,15 @@ const manageDialogues = () => {
     if ( !getPlayingDialogue() ) return
 
     const {x, y, width} = (() => {
-        if ( getPlayingDialogue().source === sources.MIAN )                         var src = getPlayer()
+        if ( getPlayingDialogue().source === sources.MAIN )                         var src = getPlayer()
         else if ( getSpeaker() && getPlayingDialogue().source === sources.SPEAKER ) var src = getSpeaker()
         return src.getBoundingClientRect()
     })()
     
     if ( x === undefined || y === undefined || width === undefined ) return
-    getDialogueContainer().firstElementChild.style.left = `${x + width}px`
-    getDialogueContainer().firstElementChild.style.top = `${y}px`
+    const { width: dialogueWidth, height: dialogueHeight } = getDialogueContainer().firstElementChild.getBoundingClientRect()
+    const newX = x + width < 10 ? 10 : x + width + dialogueWidth > innerWidth - 10 ? innerWidth - 10 - dialogueWidth : x + width
+    const newY = y < 200 ? 200 : y + dialogueHeight > innerHeight + 20 ? innerHeight + 20 - dialogueHeight : y
+    getDialogueContainer().firstElementChild.style.left = `${newX}px`
+    getDialogueContainer().firstElementChild.style.top = `${newY}px`
 }

@@ -1,4 +1,4 @@
-import { finishUp } from './finishUp.js'
+import { finishUp } from './finishup.js'
 import { renderDesktop } from './computer.js'
 import { renderMainMenu } from './main-menu.js'
 import { getPauseContainer } from './elements.js'

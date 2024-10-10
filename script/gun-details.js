@@ -115,7 +115,7 @@ const gunDetails = new Map([
         14,
     )],
     [M1911, new Gun(
-        'M 1911',
+        'm 1911',
         'pistolAmmo',
         12,
         'lightgray',

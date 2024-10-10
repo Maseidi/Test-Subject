@@ -4,12 +4,12 @@ import { getDialogueContainer } from './elements.js'
 import { addAllAttributes, addClass, createAndAddClass } from './util.js'
 
 export const sources = {
-    MIAN: 'main',
+    MAIN: 'main',
     SPEAKER: 'speaker' 
 }
 
 export class Dialogue {
-    constructor(message, source, progress, duration, delay) {
+    constructor(message, source, progress, duration) {
         this.message =         message                   ?? null
         this.source =          source                    ?? null
         this.renderProgress =  progress?.renderProgress  ?? null

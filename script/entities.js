@@ -5,7 +5,7 @@ import { Popup } from './popup-manager.js'
 import { getDifficulty } from './variables.js'
 import { RockCrusher, SoulDrinker, Torturer } from './enemy/type/normal-enemy.js'
 import { Dialogue, sources } from './dialogue-manager.js'
-import { Path, Point, RectPath, SinglePointPath, VerDoublePointPath } from './path.js'
+import { DoublePointPath, Path, Point, RectPath, SinglePointPath, VerDoublePointPath } from './path.js'
 import { 
     Bandage,
     Coin,
@@ -20,6 +20,7 @@ import {
     PC,
     PistolAmmo,
     RedVaccine,
+    Speaker,
     Stash,
     Stick,
     VendingMachine } from './interactables.js'
@@ -39,6 +40,7 @@ import {
     PISTOL_AMMO_LOOT,
     PURPLE_VACCINE,
     RED_VACCINE,
+    SHOTGUN_SHELLS_LOOT,
     STICK_LOOT,
     YELLOW_VACCINE } from './loot.js'
 import { Ranger } from './enemy/type/ranger.js'
@@ -112,7 +114,7 @@ export const rooms = new Map([
         sections.CASTLE
     )],
     [18, new Room(18, 1000, 1000, 'Museum Entrance',                    9,
-        null, 
+        Progress.builder().setProgress2Active('18000'), 
         sections.CASTLE
     )],
     [19, new Room(19, 1000, 1000, 'Lab Entrance',                       9,
@@ -128,7 +130,7 @@ export const rooms = new Map([
         sections.CASTLE
     )],
     [22, new Room(22, 1000, 1000, 'Meusum Waiting Room',                7,
-        null, 
+        Progress.builder().setProgress2Active('22000'), 
         sections.MUSEUM
     )],
     [23, new Room(23, 1200,  800, 'Military and Arms Museum',           7,
@@ -370,7 +372,9 @@ export const walls = new Map([
         new Wall(850, 400/3, 0, null, 300 + 400/3),
         new Wall(850, 400/3, 0, null, 450 + 800/3),
     ]],
-    [22, []],
+    [22, [
+        new Wall(700, 50, 0, null, 700)
+    ]],
     [23, [
         new Wall(50, 500, 300, null, 150),
         new Wall(50, 500, null, 300, 150),
@@ -687,7 +691,7 @@ export const initLoaders = () => new Map([
         new BottomLoader(1, 100, 450),
         new TopLoader(3, 100, 450, 
             new Door('Bunker B door', 'In need of right directions', null, 
-                Progress.builder().setRenderProgress('2005')
+                Progress.builder().setRenderProgress('2008')
             )
         )
     ]],
@@ -737,7 +741,7 @@ export const initLoaders = () => new Map([
         ),
         new TopLoader(10, 200, 900, 
             new Door('Bunker I door', "Take the thirst of blood away from me", null, 
-                Progress.builder().setKillAll('9004')
+                Progress.builder().setRenderProgress('9007')
             )
         )
     ]],
@@ -772,9 +776,17 @@ export const initLoaders = () => new Map([
         )
     ]],
     [12, [
-        new RightLoader(18, 150, 300),
+        new RightLoader(18, 150, 300, 
+            new Door('Museum', 'Want some entertaining stuff?', null, 
+                Progress.builder().setRenderProgress('12011')
+            )
+        ),
         new RightLoader(19, 150, 750),
-        new BottomLoader(11, 200, 500),
+        new BottomLoader(11, 200, 500, 
+            new Door('To Corridor to bunker', 'No need to go back', null, 
+                Progress.builder().setRenderProgress('-1')
+            )
+        ),
         new LeftLoader(21, 150, 300),
         new LeftLoader(20, 150, 750),
         new TopLoader(13, 200, 500)
@@ -819,8 +831,16 @@ export const initLoaders = () => new Map([
         new LeftLoader(29, 150, 450 + 1200/3)
     ]],
     [22, [
-        new BottomLoader(18, 150, 0),
-        new TopLoader(23, 100, 450),
+        new BottomLoader(18, 150, 0,             
+            new Door('To Museum entrance', 'Kill All', null, 
+                Progress.builder().setKillAll('22000')
+            )
+        ),
+        new TopLoader(23, 100, 450, 
+            new Door('To Arms and Military', 'Kill All', null, 
+                Progress.builder().setKillAll('22000')
+            )
+        ),
         new RightLoader(24, 100, 0),
         new RightLoader(25, 100, 900)
     ]],
@@ -1181,7 +1201,24 @@ export const initEnemies = () => {
 
         ],
         [ //22
-
+            new Torturer(0.5, new DoublePointPath(100, 100, 850, 100), new Loot(PISTOL_AMMO_LOOT, 5), 
+                Progress.builder().setRenderProgress('22000')
+            ),
+            new Torturer(0.5, new DoublePointPath(100, 300, 850, 300), new Loot(PISTOL_AMMO_LOOT, 5), 
+                Progress.builder().setRenderProgress('22000')
+            ),
+            new Torturer(0.5, new DoublePointPath(100, 500, 850, 500), new Loot(PISTOL_AMMO_LOOT, 5), 
+                Progress.builder().setRenderProgress('22000')
+            ),
+            new SoulDrinker(0.5, new DoublePointPath(850, 200, 100, 200), new Loot(SHOTGUN_SHELLS_LOOT, 4), 
+                Progress.builder().setRenderProgress('22000')
+            ),
+            new SoulDrinker(0.5, new DoublePointPath(850, 600, 100, 600), new Loot(SHOTGUN_SHELLS_LOOT, 4), 
+                Progress.builder().setRenderProgress('22000')
+            ),
+            new RockCrusher(0.5, new DoublePointPath(850, 400, 100, 400), new Loot(BANDAGE_LOOT, 1),
+                Progress.builder().setRenderProgress('22000')
+            )
         ],
         [ //23
 
@@ -1311,21 +1348,14 @@ export const initInteractables = () => new Map([
             Progress.builder().setRenderProgress('1002').setProgress2Active('1003').setOnExamineProgress2Active('1004')
         ),
         new KeyDrop(400, 850, 1, 'Dorm key', 'Key for the dormitory', 'dorm', 
-            Progress.builder().setRenderProgress('1000').setProgress2Active('1006')
+            Progress.builder().setRenderProgress('1005').setProgress2Active('1006')
         ),
-        new PC(10, 900),
-        new VendingMachine(450, 900),
-        new Stash(10, 10),
-        new HardDrive(250, 300, 2),
-        new Coin(250, 400, 10),
-        new GunDrop(250, 500, BENELLI_M4, 3, 1, 2, 3, 4, 5),
-        new Grenade(250, 600, 2)
     ]],
     [2, [
-        new Lever(100, 100, Progress.builder().setRenderProgress('2000').setProgress2Active('2002')),
-        new Lever(100, 400, Progress.builder().setRenderProgress('2002').setProgress2Active('2003')),
-        new Lever(900, 100, Progress.builder().setRenderProgress('2003').setProgress2Active('2004')),
-        new Lever(900, 400, Progress.builder().setRenderProgress('2004').setProgress2Active('2005')),
+        new Lever(100, 100, Progress.builder().setRenderProgress('2000').setProgress2Active('2005')),
+        new Lever(100, 400, Progress.builder().setRenderProgress('2005').setProgress2Active('2006')),
+        new Lever(900, 100, Progress.builder().setRenderProgress('2006').setProgress2Active('2007')),
+        new Lever(900, 400, Progress.builder().setRenderProgress('2007').setProgress2Active('2008')),
     ]],
     [3, [
         new RedVaccine(350, 825, 2, Progress.builder().setRenderProgress('3000')),
@@ -1357,7 +1387,9 @@ export const initInteractables = () => new Map([
     ]],
     [7, [
         new Crate(900, 700, new Loot(STICK_LOOT, 1)),
-        new Lighter(1100, 700, Progress.builder().setProgress2Active('7001'))
+        new Lighter(1100, 700, Progress.builder().setProgress2Active('7001')),
+        new PC(50, 50),
+        new HardDrive(1000, 50, 2, Progress.builder().setKillAll('9004').setProgress2Active('9005'))
     ]],
     [8, [
         new Lever(1200, 250, Progress.builder().setKillAll('8000').setProgress2Active('8001')),
@@ -1371,9 +1403,15 @@ export const initInteractables = () => new Map([
             Progress.builder().setRenderProgress('9000')
         )
     ]],
-    [10, []],
+    [10, [
+        new PistolAmmo(35, 1200, 20, Progress.builder().setRenderProgress('10000')),
+        new PistolAmmo(935, 1200, 20, Progress.builder().setRenderProgress('10000')),
+    ]],
     [11, []],
-    [12, []],
+    [12, [
+        new Speaker(50, 1125),
+        new Stash(1100, 1125)
+    ]],
     [13, []],
     [14, []],
     [15, []],
@@ -1428,50 +1466,95 @@ export const initInteractables = () => new Map([
 // **********************************************************************************
 
 export const dialogues = [
-    new Dialogue('Where the hell am I?', sources.MIAN, 
-        Progress.builder().setRenderProgress('165000').setProgress2Active('1001')
+    new Dialogue('Where the hell am I?', sources.MAIN, 
+        Progress.builder().setRenderProgress('1000').setProgress2Active('1001')
     ),
-    new Dialogue('What the ..., I gotta find that key.', sources.MIAN, 
+    new Dialogue('What the ..., I gotta find that key.', sources.MAIN, 
         Progress.builder().setRenderProgress('1004').setProgress2Active('1005')
     ),
-    new Dialogue('There it is.', sources.MIAN, 
+    new Dialogue('There it is.', sources.MAIN, 
         Progress.builder().setRenderProgress('1006').setProgress2Active('1007')
     ),
-    new Dialogue("It's so dark", sources.MIAN, 
+    new Dialogue("I can hear something. I gotta be careful...", sources.MAIN, 
         Progress.builder().setRenderProgress('2000').setProgress2Active('2001')
     ),
-    new Dialogue("What the hell was that?!", sources.MIAN, 
+    new Dialogue("What the hell was that?!", sources.MAIN, 
         Progress.builder().setRenderProgress('3000')
     ),
-    new Dialogue("Alright, good to know.", sources.MIAN, 
+    new Dialogue("Alright, good to know.", sources.MAIN, 
         Progress.builder().setRenderProgress('3001').setProgress2Active('3002')
     ),
-    new Dialogue("I might be able to find a weapon. It's a bunker after all.", sources.MIAN, 
+    new Dialogue("I might be able to find a weapon. It's a bunker after all.", sources.MAIN, 
         Progress.builder().setRenderProgress('4000'), 6000
     ),
-    new Dialogue("It's so dark. I barely can see anything...", sources.MIAN, 
+    new Dialogue("It's so dark. I barely can see anything...", sources.MAIN, 
         Progress.builder().setRenderProgress('7000')
     ),
-    new Dialogue("Nice! I might be able to light something up with this!", sources.MIAN, 
+    new Dialogue("Nice! I might be able to light something up with this!", sources.MAIN, 
         Progress.builder().setRenderProgress('7001'), 6000
     ),
-    new Dialogue("Oh, nice!", sources.MIAN, 
+    new Dialogue("Oh, nice!", sources.MAIN, 
         Progress.builder().setRenderProgress('9001'), 2000
     ),
-    new Dialogue("You gotta be kidding me!", sources.MIAN, 
+    new Dialogue("You gotta be kidding me!", sources.MAIN, 
         Progress.builder().setRenderProgress('10000'), 3000
     ),
-    new Dialogue("Damn, That was close.", sources.MIAN, 
+    new Dialogue("Damn, That was close.", sources.MAIN, 
         Progress.builder().setRenderProgress('11000').setProgress2Active('11001'), 2000
     ),
-    new Dialogue("What is this place? Why am I here?!", sources.MIAN, 
+    new Dialogue("What is this place? Why am I here?!", sources.MAIN, 
         Progress.builder().setRenderProgress('11001').setProgress2Active('11002'), 3000
     ),
-    new Dialogue("What the HELL where those things? Hope those were the last of them.", sources.MIAN, 
+    new Dialogue("What the HELL where those things? Hope those were the last of them.", sources.MAIN, 
         Progress.builder().setRenderProgress('11002').setProgress2Active('11003'), 4000
     ),
-    new Dialogue("I need to find a way out", sources.MIAN, 
+    new Dialogue("I need to find a way out", sources.MAIN, 
         Progress.builder().setRenderProgress('11003').setProgress2Active('11004'), 2000
+    ),
+    new Dialogue('Wow! Look at this place.', sources.MAIN, 
+        Progress.builder().setRenderProgress('12000').setProgress2Active('12001'), 3500
+    ),
+    new Dialogue("Impressed by the visuals, aren't you?", 
+        sources.SPEAKER, Progress.builder().setRenderProgress('12001').setProgress2Active('12002')
+    ),
+    new Dialogue("Who are you?", 
+        sources.MAIN, Progress.builder().setRenderProgress('12002').setProgress2Active('12003'), 2000
+    ),
+    new Dialogue("Just a friend", 
+        sources.SPEAKER, Progress.builder().setRenderProgress('12003').setProgress2Active('12004')
+    ),
+    new Dialogue("I don't consider you a friend if you are the one causing all of this.", 
+        sources.MAIN, Progress.builder().setRenderProgress('12004').setProgress2Active('12005'), 5000
+    ),
+    new Dialogue("Why so suspicious?", 
+        sources.SPEAKER, Progress.builder().setRenderProgress('12005').setProgress2Active('12006')
+    ),
+    new Dialogue("Why would I want to do all of this? What would the reason be?", 
+        sources.SPEAKER, Progress.builder().setRenderProgress('12006').setProgress2Active('12007'), 5000
+    ),
+    new Dialogue("Alright then. So tell me who the HELL are you?", 
+        sources.MAIN, Progress.builder().setRenderProgress('12007').setProgress2Active('12008')
+    ),
+    new Dialogue("He he he he...", 
+        sources.SPEAKER, Progress.builder().setRenderProgress('12008').setProgress2Active('12009')
+    ),
+    new Dialogue("???", 
+        sources.MAIN, Progress.builder().setRenderProgress('12009').setProgress2Active('12010'), 1000
+    ),
+    new Dialogue("You'll find out soon enough.", 
+        sources.SPEAKER, Progress.builder().setRenderProgress('12010').setProgress2Active('12011')
+    ),
+    new Dialogue("I swear if I catch you...", 
+        sources.MAIN, Progress.builder().setRenderProgress('12011').setProgress2Active('12012')
+    ),
+    new Dialogue("Damn, who was he? Nothing makes sense now.", 
+        sources.MAIN, Progress.builder().setRenderProgress('12012').setProgress2Active('12013')
+    ),
+    new Dialogue("I wish it was all a dream.", 
+        sources.MAIN, Progress.builder().setRenderProgress('12013').setProgress2Active('12014')
+    ),
+    new Dialogue("Let's forget about him now, I gotta get the hell out of this place.", 
+        sources.MAIN, Progress.builder().setRenderProgress('12014').setProgress2Active('10000005'), 5000
     ),
 ]
 
@@ -1497,6 +1580,9 @@ export const popups = [
     new Popup('<span>R</span> Reload', 
         Progress.builder().setRenderProgress('10000004'), 10000
     ),
+    new Popup('Use stash to manage your items in a much more organized environment',
+        Progress.builder().setRenderProgress('10000005'), 4000
+    ),
 
     new Popup('<span>W</span> <span>A</span> <span>S</span> <span>D</span> Move', 
         Progress.builder().setRenderProgress('1001').setProgress2Active('1002'), 3000
@@ -1507,13 +1593,19 @@ export const popups = [
     new Popup('<span>Tab</span> Open inventory', 
         Progress.builder().setRenderProgress('1003')
     ),
-    new Popup('Use the key from inventory to open the door.', 
+    new Popup('Use the key from inventory to open the door', 
         Progress.builder().setRenderProgress('1007')
     ),
-    new Popup('<span>Shift</span> Sprint', 
-        Progress.builder().setRenderProgress('2001')
+    new Popup('Try not to notify enemies of your presence', 
+        Progress.builder().setRenderProgress('2001').setProgress2Active('2002'), 1000
     ),
-    new Popup('Sneak past enemies with vaccine to perform stealth kills. Do not let them notice you.', 
+    new Popup('Making loud noise, like sprinting or gunshots will catch the monsters attention', 
+        Progress.builder().setRenderProgress('2002').setProgress2Active('2003'), 1000
+    ),
+    new Popup('However, you can always use <span>Shift</span> to sprint in emergencies', 
+        Progress.builder().setRenderProgress('2003').setProgress2Active('2004'), 1000
+    ),
+    new Popup('Sneak past enemies with vaccine to perform stealth kills. Do not let them notice you', 
         Progress.builder().setRenderProgress('3002')
     ),
     new Popup('<span>1</span> <span>2</span> <span>3</span> <span>4</span> Weapon wheel', 
@@ -1524,5 +1616,11 @@ export const popups = [
     ),
     new Popup('<span>Left click</span> Shoot', 
         Progress.builder().setRenderProgress('9003').setProgress2Active('9004')
+    ),
+    new Popup('You can save your progress using the PC', 
+        Progress.builder().setRenderProgress('9005').setProgress2Active('9006')
+    ),
+    new Popup('Saving costs one hard drive', 
+        Progress.builder().setRenderProgress('9006')
     )
 ]

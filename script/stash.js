@@ -1,6 +1,6 @@
 import { renderQuit } from './user-interface.js'
 import { getPauseContainer } from './elements.js'
-import { getElementInteractedWith } from './variables.js'
+import { getElementInteractedWith, getEntityId } from './variables.js'
 import { 
     addAllAttributes,
     addClass,
@@ -17,6 +17,7 @@ import {
     renderBlocks,
     renderHeadingAndDescription,
     useItemAtPosition } from './inventory.js'
+import { Bandage, PistolAmmo, ShotgunShells } from './interactables.js'
 
 let stash = []
 export const setStash = (val) => {
@@ -24,7 +25,11 @@ export const setStash = (val) => {
 }
 export const getStash = () => stash
 
-export const initStash = () => []
+export const initStash = () => [
+    {...(new PistolAmmo(null, null, 20)),   id: 1},
+    {...(new Bandage(null, null, 1)),       id: 2},
+    {...(new ShotgunShells(null, null, 5)), id: 3},
+]
 
 export const renderStash = () => {
     renderBackground()
