@@ -191,7 +191,7 @@ const initNewGameVariables = (difficulty) => {
         equippedWeaponId :     null,
         noOffenseCounter :     0,
         stunnedCounter :       0,
-        entityId :             4,
+        entityId :             6,
         burning :              0,
         poisoned :             false,
         criticalChance :       0.01,

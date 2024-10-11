@@ -44,6 +44,7 @@ export class AbstractVisionService {
     }
 
     isPlayerVisible() {
+        return false
         if ( this.enemy.wallInTheWay !== false ||
              ( [LOST, INVESTIGATE, MOVE_TO_POSITION].includes(this.enemy.state) 
              && this.enemy.isTransitioning === true ) ) return false

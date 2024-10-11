@@ -21,6 +21,15 @@ import {
     wDown,
     weaponSlotDown,
     wUp } from './actions.js'
+import { loadGameFromSlot, saveAtSlot } from './data-manager.js'
+import { initEnemies, initInteractables, setEnemies, setInteractables } from './entities.js'
+import { finishUp } from './finishup.js'
+import { play } from './game.js'
+import { initPasswords, setPasswords } from './password-manager.js'
+import { initShopItems, setShopItems } from './shop-item.js'
+import { initStash, setStash } from './stash.js'
+import { difficulties } from './util.js'
+import { setDifficulty } from './variables.js'
 
 const keyDown = (e) => {
     e.preventDefault()
@@ -66,7 +75,24 @@ const keyDown = (e) => {
                 hDown()
                 break  
             case 'KeyQ':
-                qDown()    
+                qDown()
+                break
+
+            // development purposes
+            case 'KeyO':
+                saveAtSlot(1)
+                break
+            case 'KeyP':
+                loadGameFromSlot(1)
+                setEnemies(initEnemies())
+                setInteractables(initInteractables())
+                setStash(initStash())
+                setShopItems(initShopItems())
+                setDifficulty(difficulties.SURVIVAL)
+                initPasswords()
+                finishUp()
+                play()
+                break
         }
     }
 }

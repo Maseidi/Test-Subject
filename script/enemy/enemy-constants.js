@@ -10,7 +10,6 @@ export const STAND_AND_WATCH = 'stand-and-watch'
 export const MOVE_TO_POSITION = 'move-to-position'
 
 export const RANGER = 'ranger'
-export const SPIKER = 'spiker'
 export const TRACKER = 'tracker'
 export const GRABBER = 'grabber'
 export const STINGER = 'stinger'

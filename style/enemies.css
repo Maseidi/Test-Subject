@@ -36,11 +36,6 @@
   height: 32px;
 }
 
-.spiker-collider {
-  width: 27px;
-  height: 27px;
-}
-
 .stinger-collider {
   width: 50px;
   height: 50px;
@@ -103,12 +98,6 @@
 .ranger-collider > div:nth-of-type(1) {
   width: 21px;
   height: 16px;
-}
-
-.spiker-collider > div:nth-of-type(1) {
-  width: 15px;
-  height: 15px;
-  border-radius: 50%;
 }
 
 .stinger-collider > div:nth-of-type(1) {
@@ -246,19 +235,6 @@
   transform: rotateZ(-60deg) translateX(13px) translateY(6px);
 }
 
-.spiker-collider > div:nth-of-type(1) > div:nth-of-type(1) {
-  width: 0;
-  left: 50%;
-  height: 0;
-  bottom: 100%;
-  position: absolute;
-  border-bottom: 5px solid white;
-  border-left: 5px solid transparent;
-  border-right: 5px solid transparent;
-  background-color: transparent !important;
-  transform: translateY(-3px) translateX(-50%);
-}
-
 .enemy-collider > div:nth-of-type(1) > div:nth-of-type(2) {
   right: 100%;
 }
@@ -275,19 +251,6 @@
 
 .ranger-collider > div:nth-of-type(1) > div:nth-of-type(2) {
   border-bottom-left-radius: 10px;
-}
-
-.spiker-collider > div:nth-of-type(1) > div:nth-of-type(2) {
-  width: 0;
-  height: 0;
-  left: 50%;
-  top: 100%;
-  position: absolute;
-  border-top: 5px solid white;
-  border-left: 5px solid transparent;
-  border-right: 5px solid transparent;
-  background-color: transparent !important;
-  transform: translateY(3px) translateX(-50%);
 }
 
 .torturer-collider > div:nth-of-type(1) > div:nth-of-type(3),
@@ -331,19 +294,6 @@
   height: 7px;
 }
 
-.spiker-collider > div:nth-of-type(1) > div:nth-of-type(3) {
-  width: 0;
-  top: 50%;
-  height: 0;
-  right: 100%;
-  position: absolute;
-  border-right: 5px solid white;
-  border-top: 5px solid transparent;
-  border-bottom: 5px solid transparent;
-  background-color: transparent !important;
-  transform: translateX(-3px) translateY(-50%);
-}
-
 .ranger-collider > div:nth-of-type(1) > div:nth-of-type(4) {
   position: absolute;
   left: 50%;
@@ -352,19 +302,6 @@
   height: 14px;
   transform: translateX(-50%);
   border: 1px solid black;
-}
-
-.spiker-collider > div:nth-of-type(1) > div:nth-of-type(4) {
-  width: 0;
-  top: 50%;
-  height: 0;
-  left: 100%;
-  position: absolute;
-  border-left: 5px solid white;
-  border-top: 5px solid transparent;
-  border-bottom: 5px solid transparent;
-  background-color: transparent !important;
-  transform: translateX(3px) translateY(-50%);
 }
 
 .ranger-collider > div:nth-of-type(1) > div:nth-of-type(5) {
@@ -376,18 +313,6 @@
   border-radius: 50%;
   border: 1px solid black;
   transform: translateX(-50%);
-}
-
-.spiker-collider > div:nth-of-type(1) > div:nth-of-type(5) {
-  top: 50%;
-  left: 50%;
-  width: 50%;
-  height: 50%;
-  border-radius: 50%;
-  position: absolute;
-  border: 1px solid black;
-  background-color: white !important;
-  transform: translateX(-50%) translateY(-50%);
 }
 
 .ranger-bullet,

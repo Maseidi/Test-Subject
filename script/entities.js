@@ -5,7 +5,7 @@ import { Popup } from './popup-manager.js'
 import { getDifficulty } from './variables.js'
 import { RockCrusher, SoulDrinker, Torturer } from './enemy/type/normal-enemy.js'
 import { Dialogue, sources } from './dialogue-manager.js'
-import { DoublePointPath, Path, Point, RectPath, SinglePointPath, VerDoublePointPath } from './path.js'
+import { DoublePointPath, HorDoublePointPath, Path, Point, RectPath, SinglePointPath, VerDoublePointPath } from './path.js'
 import { 
     Bandage,
     Coin,
@@ -34,20 +34,27 @@ import {
     BANDAGE_LOOT,
     BENELLI_M4,
     BLUE_VACCINE,
+    COIN_LOOT,
     GLOCK,
     GREEN_VACCINE,
+    GRENADE_LOOT,
+    HARDDRIVE_LOOT,
+    KeyLoot,
     Loot,
+    NoteLoot,
     PISTOL_AMMO_LOOT,
     PURPLE_VACCINE,
     RED_VACCINE,
+    REMINGTON_870,
     SHOTGUN_SHELLS_LOOT,
+    SMG_AMMO_LOOT,
     STICK_LOOT,
     YELLOW_VACCINE } from './loot.js'
 import { Ranger } from './enemy/type/ranger.js'
 import { Stinger } from './enemy/type/stinger.js'
 import { Tracker } from './enemy/type/tracker.js'
 import { Scorcher } from './enemy/type/scorcher.js'
-import { Spiker } from './enemy/type/spiker.js'
+import { difficulties } from './util.js'
 
 // **********************************************************************************
 // **********************************************************************************
@@ -90,7 +97,7 @@ export const rooms = new Map([
         Progress.builder().setProgress2Active('11000')
     )],
     [12, new Room(12, 1200, 1200, 'Main Hall',                          9, 
-        Progress.builder().setProgress2Active('12000'), 
+        Progress.builder().setProgress2Active(['12000', {condition:2000000, value:2000003}]), 
         sections.CASTLE
     )],
     [13, new Room(13,  200, 1000, 'Room of Sacrifice',                  9,
@@ -134,22 +141,22 @@ export const rooms = new Map([
         sections.MUSEUM
     )],
     [23, new Room(23, 1200,  800, 'Military and Arms Museum',           7,
-        null, 
+        Progress.builder().setProgress2Active('23000'),  
         sections.MUSEUM
     )],
     [24, new Room(24,  800, 1200, 'Arts Museum',                        7,
         null, 
         sections.MUSEUM
     )],
-    [25, new Room(25, 1500, 1500, 'Wildlife Museum',                    7,
-        null, 
+    [25, new Room(25, 1500, 1500, 'Wildlife Museum',                    3,
+        Progress.builder().setProgress2Active('25000'), 
         sections.MUSEUM
     )],
     [26, new Room(26, 2000, 1000, 'Biology Lab',                        7,
         null, 
         sections.LAB
     )],
-    [27, new Room(27,  750, 2000, 'Blood Samples',                      7,
+    [27, new Room(27,  750, 2000, 'Blood Samples',                      2,
         null, 
         sections.LAB
     )],
@@ -777,17 +784,25 @@ export const initLoaders = () => new Map([
     ]],
     [12, [
         new RightLoader(18, 150, 300, 
-            new Door('Museum', 'Want some entertaining stuff?', null, 
-                Progress.builder().setRenderProgress('12011')
+            new Door('Museum', 'Want some entertaining stuff?', 'museum', 
+                Progress.builder().setRenderProgress('12016')
             )
         ),
-        new RightLoader(19, 150, 750),
+        new RightLoader(19, 150, 750, 
+            new Door('Lab', 'In need of of venom for research', 'scorpion', 
+                Progress.builder().setRenderProgress('2000002')
+            )
+        ),
         new BottomLoader(11, 200, 500, 
-            new Door('To Corridor to bunker', 'No need to go back', null, 
+            new Door('Corridor to bunker', 'No need to go back', null, 
                 Progress.builder().setRenderProgress('-1')
             )
         ),
-        new LeftLoader(21, 150, 300),
+        new LeftLoader(21, 150, 300, 
+            new Door('Library', '', null, 
+                Progress.builder().setRenderProgress('-2'), 'library-entrance'
+            )
+        ),
         new LeftLoader(20, 150, 750),
         new TopLoader(13, 200, 500)
     ]],
@@ -842,10 +857,18 @@ export const initLoaders = () => new Map([
             )
         ),
         new RightLoader(24, 100, 0),
-        new RightLoader(25, 100, 900)
+        new RightLoader(25, 100, 900, 
+            new Door('To wildlife museum', 'October 22 - November 21', 'scorpion', 
+                Progress.builder().setRenderProgress('2000001')
+            )
+        )
     ]],
     [23, [
-        new BottomLoader(22, 100, 1100),
+        new BottomLoader(22, 100, 1100, 
+            new Door('To Museum waiting room', 'Kill All', null, 
+                Progress.builder().setRenderProgress('23002')
+            )
+        ),
         new TopLoader(33, 100, 225),
         new TopLoader(34, 100, 550),
         new TopLoader(35, 100, 875),
@@ -856,7 +879,11 @@ export const initLoaders = () => new Map([
         new RightLoader(37, 150, 750)
     ]],
     [25, [
-        new LeftLoader(22, 100, 700),
+        new LeftLoader(22, 100, 700, 
+            new Door('To museum waiting room', 'Kill all', null, 
+                Progress.builder().setKillAll('25001')
+            )
+        ),
         new BottomLoader(40, 100, 300),
         new BottomLoader(39, 100, 700),
         new BottomLoader(38, 100, 1100),
@@ -881,7 +908,11 @@ export const initLoaders = () => new Map([
     ]],
     [29, [
         new RightLoader(21, 150, 275),
-        new BottomLoader(51, 100, 400),
+        new BottomLoader(51, 100, 400, 
+            new Door('To Compuer science', 'Not a spider nor an insect, but close', 'scorpion', 
+                Progress.builder().setRenderProgress('2005000')
+            )
+        ),
         new BottomLoader(50, 100, 900),
     ]],
     [30, [
@@ -1201,33 +1232,109 @@ export const initEnemies = () => {
 
         ],
         [ //22
-            new Torturer(0.5, new DoublePointPath(100, 100, 850, 100), new Loot(PISTOL_AMMO_LOOT, 5), 
+            new Torturer(0.5, new HorDoublePointPath(100, 100, 750), new Loot(PISTOL_AMMO_LOOT, 10), 
                 Progress.builder().setRenderProgress('22000')
             ),
-            new Torturer(0.5, new DoublePointPath(100, 300, 850, 300), new Loot(PISTOL_AMMO_LOOT, 5), 
+            new Torturer(0.5, new HorDoublePointPath(100, 300, 750), new Loot(SMG_AMMO_LOOT, 20), 
                 Progress.builder().setRenderProgress('22000')
             ),
-            new Torturer(0.5, new DoublePointPath(100, 500, 850, 500), new Loot(PISTOL_AMMO_LOOT, 5), 
+            new Torturer(0.5, new HorDoublePointPath(100, 500, 750), new Loot(COIN_LOOT, 3), 
                 Progress.builder().setRenderProgress('22000')
             ),
-            new SoulDrinker(0.5, new DoublePointPath(850, 200, 100, 200), new Loot(SHOTGUN_SHELLS_LOOT, 4), 
+            new SoulDrinker(0.5, new HorDoublePointPath(850, 200, -750), new Loot(SHOTGUN_SHELLS_LOOT, 3), 
                 Progress.builder().setRenderProgress('22000')
             ),
-            new SoulDrinker(0.5, new DoublePointPath(850, 600, 100, 600), new Loot(SHOTGUN_SHELLS_LOOT, 4), 
+            new SoulDrinker(0.5, new HorDoublePointPath(850, 600, -750), new Loot(SHOTGUN_SHELLS_LOOT, 3), 
                 Progress.builder().setRenderProgress('22000')
             ),
-            new RockCrusher(0.5, new DoublePointPath(850, 400, 100, 400), new Loot(BANDAGE_LOOT, 1),
+            new RockCrusher(0.5, new HorDoublePointPath(850, 400, -750), new Loot(BANDAGE_LOOT, 1),
                 Progress.builder().setRenderProgress('22000')
-            )
+            ),
+            new SoulDrinker(0.6, new HorDoublePointPath(100, 100, 750), new Loot(COIN_LOOT, 3), 
+                Progress.builder().setRenderProgress('2000000')
+            ),
+            new SoulDrinker(0.6, new HorDoublePointPath(100, 300, 750), new Loot(COIN_LOOT, 3), 
+                Progress.builder().setRenderProgress('2000000')
+            ),
+            new SoulDrinker(0.6, new HorDoublePointPath(850, 200, -750), new Loot(COIN_LOOT, 3), 
+                Progress.builder().setRenderProgress('2000000')
+            ),
+            new RockCrusher(0.7, new SinglePointPath(100, 800), new Loot(COIN_LOOT, 3), 
+                Progress.builder().setRenderProgress('3000000')
+            ),
+            new RockCrusher(0.7, new HorDoublePointPath(300, 800), new Loot(COIN_LOOT, 3), 
+                Progress.builder().setRenderProgress('3000000')
+            ),
         ],
         [ //23
-
+            new SoulDrinker(0.6, new RectPath(250, 100, 150, 600), new Loot(RED_VACCINE, 2), 
+                Progress.builder().setRenderProgress('23000')
+            ),
+            new SoulDrinker(0.6, new RectPath(800, 100, 150, 600), new Loot(BLUE_VACCINE, 2), 
+                Progress.builder().setRenderProgress('23000')
+            ),
+            new SoulDrinker(0.6, new SinglePointPath(600, 300), new Loot(GREEN_VACCINE, 2), 
+                Progress.builder().setRenderProgress('23000')
+            ),
+            new SoulDrinker(0.6, new SinglePointPath(600, 400), new Loot(YELLOW_VACCINE, 2), 
+                Progress.builder().setRenderProgress('23000')
+            ),
+            new SoulDrinker(0.6, new SinglePointPath(150, 300), new Loot(PURPLE_VACCINE, 2), 
+                Progress.builder().setRenderProgress('23000')
+            ),
+            new SoulDrinker(0.6, new SinglePointPath(150, 400), new Loot(SHOTGUN_SHELLS_LOOT, 10), 
+                Progress.builder().setRenderProgress('23000')
+            ),
+            new RockCrusher(2, new SinglePointPath(600, 350), 
+                new KeyLoot('Scorpion key', 'Key labeled with scorpion', 4, 'scorpion', 
+                    Progress.builder().setProgress2Active('2000000')
+                ), Progress.builder().setKillAll('23000').setProgress2Active('23002')
+            )
         ],
         [ //24
 
         ],
         [ //25
-
+            new RockCrusher(0.7, new DoublePointPath(450, 230, 150, 230), new Loot(BANDAGE_LOOT, 2), 
+                Progress.builder().setRenderProgress('25000')
+            ),
+            new SoulDrinker(0.7, new DoublePointPath(450, 530, 150, 530), new Loot(RED_VACCINE, 1), 
+                Progress.builder().setRenderProgress('25000')
+            ),
+            new RockCrusher(0.7, new DoublePointPath(450, 830, 150, 830), new Loot(GREEN_VACCINE, 1), 
+                Progress.builder().setRenderProgress('25000')
+            ),
+            new SoulDrinker(0.7, new DoublePointPath(450, 1130, 150, 1130), new Loot(BLUE_VACCINE, 1), 
+                Progress.builder().setRenderProgress('25000')
+            ),
+            new RockCrusher(0.7, new HorDoublePointPath(1020, 230, 330), new Loot(YELLOW_VACCINE, 1), 
+                Progress.builder().setRenderProgress('25000')
+            ),
+            new SoulDrinker(0.7, new HorDoublePointPath(1020, 530, 330), new Loot(PURPLE_VACCINE, 1), 
+                Progress.builder().setRenderProgress('25000')
+            ),
+            new RockCrusher(0.7, new HorDoublePointPath(1020, 830, 330), new Loot(SHOTGUN_SHELLS_LOOT, 3), 
+                Progress.builder().setRenderProgress('25000')
+            ),
+            new SoulDrinker(0.7, new HorDoublePointPath(1020, 1130, 330), new Loot(SMG_AMMO_LOOT, 50), 
+                Progress.builder().setRenderProgress('25000')
+            ),
+            new Torturer(0.7, new SinglePointPath(735, 530), new Loot(PISTOL_AMMO_LOOT, 10), 
+                Progress.builder().setRenderProgress('25000')
+            ),
+            new Torturer(0.7, new SinglePointPath(735, 830), new Loot(PISTOL_AMMO_LOOT, 10), 
+                Progress.builder().setRenderProgress('25000')
+            ),
+            new RockCrusher(2, new SinglePointPath(735, 680), 
+                new NoteLoot('Library gate code', "Note revealing the library entrance code", 
+                    "Library gate's code: PLACE_CODE_HERE", 'library-entrance', Progress.builder().setProgress2Active(3000000)), 
+                Progress.builder().setKillAll('25000').setRenderProgress('25001')),
+            new SoulDrinker(2, new SinglePointPath(735, 530), new Loot(COIN_LOOT, 3), 
+                Progress.builder().setKillAll('25000').setRenderProgress('25001')
+            ),
+            new SoulDrinker(2, new SinglePointPath(735, 830), new Loot(HARDDRIVE_LOOT, 2), 
+                Progress.builder().setKillAll('25000').setRenderProgress('25001')
+            ),
         ],
         [ //26
 
@@ -1410,19 +1517,38 @@ export const initInteractables = () => new Map([
     [11, []],
     [12, [
         new Speaker(50, 1125),
-        new Stash(1100, 1125)
+        new Stash(1100, 1125),
+        new PC(50, 50),
+        new VendingMachine(1100, 35),
+        new GunDrop(500, 500, BENELLI_M4, 100000, 5, 5, 5, 5, 5)
     ]],
     [13, []],
     [14, []],
     [15, []],
     [16, []],
     [17, []],
-    [18, []],
+    [18, [
+        new Note(900, 900, "Stranger's Note", 'Note describing the museum', 
+            "This place is terrifying, I can see much more monsters in here and they have diverse variants. I wish none of this was real. I need to get a stronger weapon cause I can't resist with this small peashooter that I have. There's a millitary and armory section in the museum. If I get there, I might be able to find a decent gun. To whoever that reads this, BE CAREFUL! AND HEAD STRAIGHT TO THE ARMORY. This is getting harder and harder.", 
+            Progress.builder().setRenderProgress('18000')
+        )
+    ]],
     [19, []],
     [20, []],
     [21, []],
-    [22, []],
-    [23, []],
+    [22, [
+        new Crate(300, 900, new Loot(COIN_LOOT, 3), Progress.builder().setRenderProgress('22000')),
+        new Crate(500, 900, new Loot(PISTOL_AMMO_LOOT, 10), Progress.builder().setRenderProgress('22000')),
+        new Crate(700, 900, new Loot(SMG_AMMO_LOOT, 50), Progress.builder().setRenderProgress('22000')),
+    ]],
+    [23, [
+        new GunDrop(1000, 700, REMINGTON_870, 5, 1, 1, 1, 1, 1, 
+            Progress.builder().setRenderProgress('23000').setProgress2Active('23001')
+        ),
+        new Crate(100, 100, new Loot(GRENADE_LOOT, 1), Progress.builder().setRenderProgress('23000')),
+        new Crate(100, 700, new Loot(BANDAGE_LOOT, 2), Progress.builder().setRenderProgress('23000')),
+        new Crate(1000, 100, new Loot(COIN_LOOT, 3), Progress.builder().setRenderProgress('23000')),
+    ]],
     [24, []],
     [25, []],
     [26, []],
@@ -1554,7 +1680,40 @@ export const dialogues = [
         sources.MAIN, Progress.builder().setRenderProgress('12013').setProgress2Active('12014')
     ),
     new Dialogue("Let's forget about him now, I gotta get the hell out of this place.", 
-        sources.MAIN, Progress.builder().setRenderProgress('12014').setProgress2Active('10000005'), 5000
+        sources.MAIN, Progress.builder().setRenderProgress('12014').setProgress2Active('12015'), 5000
+    ),
+    new Dialogue("Okay ...", 
+        sources.MAIN, Progress.builder().setRenderProgress('23001'), 1250
+    ),
+    new Dialogue("Good to see you are making some progress.", sources.SPEAKER, 
+        Progress.builder().setRenderProgress('2000003').setProgress2Active('2000004'), 3000
+    ),
+    new Dialogue("Althogh slowly, but it's much better than nothing, isn't it?", sources.SPEAKER, 
+        Progress.builder().setRenderProgress('2000004').setProgress2Active('2000005'), 5000
+    ),
+    new Dialogue("What do you want?", sources.MAIN, 
+        Progress.builder().setRenderProgress('2000005').setProgress2Active('2000006'), 3000
+    ),
+    new Dialogue("I just want some entertainment.", sources.SPEAKER, 
+        Progress.builder().setRenderProgress('2000006').setProgress2Active('2000007'), 3000
+    ),
+    new Dialogue("Entertainment?", sources.MAIN, 
+        Progress.builder().setRenderProgress('2000007').setProgress2Active('2000008'), 2000
+    ),
+    new Dialogue("Indeed. You know, It's so satisfying to see people struggling for their lives.", sources.SPEAKER, 
+        Progress.builder().setRenderProgress('2000008').setProgress2Active('2000009'), 6000
+    ),
+    new Dialogue("So you are a moron. That's all", sources.MAIN, 
+        Progress.builder().setRenderProgress('2000009').setProgress2Active('2000010'), 2000
+    ),
+    new Dialogue("I might be. But there would be other reasons you are here...", sources.SPEAKER, 
+        Progress.builder().setRenderProgress('2000010').setProgress2Active('2000011'), 4000
+    ),
+    new Dialogue("I'm not gonna spoil them to you, because...", sources.SPEAKER, 
+        Progress.builder().setRenderProgress('2000011').setProgress2Active('2000012'), 3000
+    ),
+    new Dialogue("What's the fun in that?", sources.SPEAKER, 
+        Progress.builder().setRenderProgress('2000012'), 2500
     ),
 ]
 
@@ -1582,6 +1741,12 @@ export const popups = [
     ),
     new Popup('Use stash to manage your items in a much more organized environment',
         Progress.builder().setRenderProgress('10000005'), 4000
+    ),
+    new Popup('Use vending machine to trade items, or upgrade weapons',
+        Progress.builder().setRenderProgress('10000006').setProgress2Active('10000007'), 4000
+    ),
+    new Popup('Coins are the main resource when interacting with the vending machine',
+        Progress.builder().setRenderProgress('10000007'), 4000
     ),
 
     new Popup('<span>W</span> <span>A</span> <span>S</span> <span>D</span> Move', 

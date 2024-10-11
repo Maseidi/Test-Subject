@@ -7,7 +7,7 @@ import { createAndAddClass, getProperty } from './util.js'
 import { getElementInteractedWith, setPauseCause } from './variables.js'
 
 const passwordNames = [
-    'main-hall'
+    'library-entrance'
 ]
 
 let passwords = new Map([])

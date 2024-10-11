@@ -8,7 +8,6 @@ import {
     LOST,
     MOVE_TO_POSITION,
     NO_OFFENCE,
-    SPIKER,
     TRACKER } from '../../enemy-constants.js'
 
 export class AbstractCollisionService {
@@ -26,10 +25,10 @@ export class AbstractCollisionService {
         const collidingEnemy = getCurrentRoomEnemies()
             .find(e =>
                   e.health !== 0 && 
-                  e.sprite !== this.enemy.sprite 
-                  && e.type !== TRACKER && e.type !== SPIKER
-                  && e.state !== INVESTIGATE && e.state !== GO_FOR_RANGED
-                  && collide(this.enemy.sprite.firstElementChild.children[2], e.sprite.firstElementChild, 0))
+                  e.type !== TRACKER &&
+                  e.sprite !== this.enemy.sprite &&
+                  e.state !== INVESTIGATE && e.state !== GO_FOR_RANGED &&
+                  collide(this.enemy.sprite.firstElementChild.children[2], e.sprite.firstElementChild, 0))
         this.enemy.collidingEnemy = null
         return collidingEnemy
     }

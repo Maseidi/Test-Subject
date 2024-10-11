@@ -46,7 +46,8 @@ import {
     getSpeaker,
     getRoomNameContainer,
     getPopupContainer,
-    getDialogueContainer } from './elements.js'
+    getDialogueContainer, 
+    getShadowContainer } from './elements.js'
 import {
     getCurrentRoomId,
     getExplosionDamageCounter,
@@ -183,7 +184,15 @@ const hanldeRestOfInteractables = (int) => {
     const popup = int.children[1]
     handleStaticInteractablesIdealInteraction(int, popup)
     if ( !interactionPredicate(int) ) removePopup(popup)
-    else                              setAsInteractingObject(popup, int)
+    else {
+        handleFirstTimeInteraction(int, 'stash', 10000005)    
+        handleFirstTimeInteraction(int, 'vendingMachine', 10000006)    
+        setAsInteractingObject(popup, int)
+    }                              
+}
+
+const handleFirstTimeInteraction = (int, name, progress2Active) => {
+    if ( getProgressValueByNumber(12015) && int.getAttribute('name') === name ) activateAllProgresses(progress2Active)
 }
 
 const handleDoorWithCodeIdealInteraction = (int, popup) => {
@@ -318,7 +327,7 @@ const blindEnemies = (throwable) => {
         if ( enemy.state !== GO_FOR_RANGED ) enemy.state = STUNNED
     })
     const flashbang = createAndAddClass('div', 'flashbang', 'animation')
-    getMapEl().append(flashbang)
+    document.getElementById('root').append(flashbang)
     const cloneShadow = getShadowContainer().firstElementChild.cloneNode()
     getShadowContainer().firstElementChild.remove()
     flashbang.addEventListener('animationend', () => {

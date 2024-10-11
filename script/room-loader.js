@@ -11,7 +11,6 @@ import {
     LOST,
     MOVE_TO_POSITION,
     SCORCHER,
-    SPIKER,
     TRACKER } from './enemy/enemy-constants.js'
 import { 
     addAllAttributes,
@@ -104,7 +103,7 @@ const commitProgressChanges = (toChange, action) => {
     }
 
     for ( const activator of toChange ) {
-        if ( typeof activator === 'number' || typeof activator === 'string' ) activateAllProgresses(activator)
+        if ( typeof activator === 'number' || typeof activator === 'string' ) action(activator)
         else if ( getProgressValueByNumber(activator.condition) ) action(activator.value)
     }
 }
@@ -260,7 +259,7 @@ const addPosition = (doorElem, input, direction, className, type) => {
         if ( input === 26 || input === -26 ) return 0
         else if ( input !== null ) return input
     })()
-    if ( output ) addClass(doorElem, `${className}-${type}`)
+    if ( output || input === 0 ) addClass(doorElem, `${className}-${type}`)
     doorElem.style[direction] = `${output}px`
 }
 
@@ -393,7 +392,6 @@ export const spawnEnemy = (elem) => {
     const enemyCollider = createAndAddClass('div', 'enemy-collider', `${elem.type}-collider`)
     const enemyBody = createAndAddClass('div', 'enemy-body', `${elem.type}-body`, 'body-transition')
     enemyBody.style.transform = `rotateZ(${elem.angle}deg)`
-    if ( elem.type === SPIKER ) removeClass(enemyBody, 'body-transition')
     enemyBody.style.backgroundColor = `${elem.virus}`
     defineComponents(elem, enemyBody)
     const vision = defineVision(elem)
@@ -504,7 +502,7 @@ const defineVision = (element) => {
 }
 
 const defineBackwardDetector = (enemyObject) => {
-    if ( [SPIKER, TRACKER].includes(enemyObject.type) ) return
+    if ( [TRACKER].includes(enemyObject.type) ) return
     const backwardDetector = createAndAddClass('div', `enemy-backward-detector`)
     addAllAttributes(
         backwardDetector,

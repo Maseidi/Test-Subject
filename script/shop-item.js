@@ -22,6 +22,7 @@ import {
     Stick,
     GunDrop, 
     YellowVaccine } from './interactables.js'
+import { MAUSER, MP5K, P90, REVOLVER, STEYR_SSG_69 } from './loot.js'
 
 class ShopItem {
     constructor(drop, amount, price) {
@@ -102,7 +103,7 @@ class FlashbangShopItem extends ShopItem {
 class Pouch extends ShopItem {
     constructor(renderProgress) {
         super({name: 'pouch', heading: 'pouch', description: 'Increases your carry capacity by 2 slots', 
-            renderprogress: Progress.builder().setRenderProgress(renderProgress)}, 1, 5)
+            renderProgress: renderProgress}, 1, 5)
     }
 }
 
@@ -168,7 +169,7 @@ class PurpleVaccineShopItem extends ShopItem {
 
 class StickShopItem extends ShopItem {
     constructor(renderProgress) {
-        super(new Stick(null, null, null, Progress.builder().setRenderProgress(renderProgress)), 1, 3)
+        super(new Stick(null, null, Progress.builder().setRenderProgress(renderProgress), 100), 1, 3)
     }
 }
 
@@ -181,7 +182,40 @@ export const getShopItems = () => shopItems
 export const getShopItemsWithId = () => shopItems.map((item, index) => ({...item, id:index}))
 
 export const initShopItems = () => [
-    new BandageShopItem(Number.MAX_SAFE_INTEGER),
-    new BandageShopItem(Number.MAX_SAFE_INTEGER),
-    new BandageShopItem(Number.MAX_SAFE_INTEGER),
+    new ShopItem(new PistolAmmoShopItem(12015), 30, 1),
+    new ShopItem(new RifleAmmoShopItem(12015), 10, 1),
+    new ShopItem(new ShotgunShellsShopItem(12015), 20, 1),
+    new ShopItem(new SmgAmmoShopItem(12015), 90, 1),
+    new ShopItem(new MagnumAmmoShopItem(12015), 5, 1),
+    new ShopItem(new BandageShopItem(12015), 3, 1),
+    new ShopItem(new GunShopItem(P90, 12015), 1, 20),
+    new ShopItem(new RedVaccineShopItem(12015), 3, 1),
+    new ShopItem(new GreenVaccineShopItem(12015), 3, 1),
+    new ShopItem(new YellowVaccineShopItem(12015), 3, 1),
+    new ShopItem(new PurpleVaccineShopItem(12015), 3, 1),
+    new ShopItem(new BlueVaccineShopItem(12015), 3, 1),
+    new ShopItem(new Pouch(12015), null, 3),
+    new ShopItem(new PistolAmmoShopItem(2000000), 30, 1),
+    new ShopItem(new RifleAmmoShopItem(2000000), 10, 1),
+    new ShopItem(new ShotgunShellsShopItem(2000000), 20, 1),
+    new ShopItem(new SmgAmmoShopItem(2000000), 90, 1),
+    new ShopItem(new MagnumAmmoShopItem(2000000), 5, 1),
+    new ShopItem(new BandageShopItem(2000000), 3, 1),
+    new ShopItem(new GunShopItem(REVOLVER, 2000000), 1, 50),
+    new ShopItem(new GunShopItem(MAUSER, 2000000), 1, 15),
+    new ShopItem(new GunShopItem(STEYR_SSG_69, 2000000), 1, 40),
+    new ShopItem(new GunShopItem(MP5K, 2000000), 1, 25),
+    new ShopItem(new RedVaccineShopItem(2000000), 3, 1),
+    new ShopItem(new GreenVaccineShopItem(2000000), 3, 1),
+    new ShopItem(new YellowVaccineShopItem(2000000), 3, 1),
+    new ShopItem(new PurpleVaccineShopItem(2000000), 3, 1),
+    new ShopItem(new BlueVaccineShopItem(2000000), 3, 1),
+    new ShopItem(new AdrenalineShopItem(2000000), 1, 10),
+    new ShopItem(new LuckPillsShopItem(2000000), 1, 10),
+    new ShopItem(new HealthPotionShopItem(2000000), 1, 10),
+    new ShopItem(new EnergyDrinkShopItem(2000000), 1, 10),
+    new ShopItem(new GrenadeShopItem(2000000), 2, 1),
+    new ShopItem(new FlashbangShopItem(2000000), 3, 1),
+    new ShopItem(new HardDriveShopItem(2000000), 2, 1),
+    new ShopItem(new StickShopItem(2000000), 1, 1),
 ]

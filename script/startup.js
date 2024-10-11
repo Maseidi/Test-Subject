@@ -16,7 +16,7 @@ import {
     setPopupContainer,
     setRoomContainer,
     setRoomNameContainer, 
-    setShadowContainer} from './elements.js'
+    setShadowContainer } from './elements.js'
 
 export const startUp = () => {
     addControls()
