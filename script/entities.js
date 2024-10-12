@@ -55,6 +55,7 @@ import { Stinger } from './enemy/type/stinger.js'
 import { Tracker } from './enemy/type/tracker.js'
 import { Scorcher } from './enemy/type/scorcher.js'
 import { difficulties } from './util.js'
+import { Spiker } from './enemy/type/spiker.js'
 
 // **********************************************************************************
 // **********************************************************************************

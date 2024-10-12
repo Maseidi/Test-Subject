@@ -11,6 +11,7 @@ import {
     LOST,
     MOVE_TO_POSITION,
     SCORCHER,
+    SPIKER,
     TRACKER } from './enemy/enemy-constants.js'
 import { 
     addAllAttributes,
@@ -392,6 +393,7 @@ export const spawnEnemy = (elem) => {
     const enemyCollider = createAndAddClass('div', 'enemy-collider', `${elem.type}-collider`)
     const enemyBody = createAndAddClass('div', 'enemy-body', `${elem.type}-body`, 'body-transition')
     enemyBody.style.transform = `rotateZ(${elem.angle}deg)`
+    if ( elem.type === SPIKER ) removeClass(enemyBody, 'body-transition')
     enemyBody.style.backgroundColor = `${elem.virus}`
     defineComponents(elem, enemyBody)
     const vision = defineVision(elem)
@@ -502,7 +504,7 @@ const defineVision = (element) => {
 }
 
 const defineBackwardDetector = (enemyObject) => {
-    if ( [TRACKER].includes(enemyObject.type) ) return
+    if ( [SPIKER, TRACKER].includes(enemyObject.type) ) return
     const backwardDetector = createAndAddClass('div', `enemy-backward-detector`)
     addAllAttributes(
         backwardDetector,

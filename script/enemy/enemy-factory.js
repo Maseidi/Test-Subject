@@ -1,4 +1,5 @@
 import { Ranger } from './type/ranger.js'
+import { Spiker } from './type/spiker.js'
 import { Progress } from '../progress.js'
 import { Tracker } from './type/tracker.js'
 import { Stinger } from './type/stinger.js'
@@ -8,6 +9,7 @@ import { RockCrusher, SoulDrinker, Torturer } from './type/normal-enemy.js'
 
 export const ENEMIES_BY_TYPE = new Map([
     ['ranger', Ranger],
+    ['spiker', Spiker],
     ['grabber', Grabber],
     ['stinger', Stinger],
     ['torturer', Torturer],
