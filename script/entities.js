@@ -3,8 +3,8 @@ import { Progress } from './progress.js'
 import { Room, sections } from './room.js'
 import { Popup } from './popup-manager.js'
 import { getDifficulty } from './variables.js'
-import { RockCrusher, SoulDrinker, Torturer } from './enemy/type/normal-enemy.js'
 import { Dialogue, sources } from './dialogue-manager.js'
+import { RockCrusher, SoulDrinker, Torturer } from './enemy/type/normal-enemy.js'
 import { DoublePointPath, HorDoublePointPath, Path, Point, RectPath, SinglePointPath, VerDoublePointPath } from './path.js'
 import { 
     Bandage,
@@ -48,6 +48,7 @@ import {
     REMINGTON_870,
     SHOTGUN_SHELLS_LOOT,
     SMG_AMMO_LOOT,
+    STEYR_SSG_69,
     STICK_LOOT,
     YELLOW_VACCINE } from './loot.js'
 import { Ranger } from './enemy/type/ranger.js'
@@ -56,6 +57,7 @@ import { Tracker } from './enemy/type/tracker.js'
 import { Scorcher } from './enemy/type/scorcher.js'
 import { difficulties } from './util.js'
 import { Spiker } from './enemy/type/spiker.js'
+import { Grabber } from './enemy/type/grabber.js'
 
 // **********************************************************************************
 // **********************************************************************************
@@ -149,7 +151,7 @@ export const rooms = new Map([
         null, 
         sections.MUSEUM
     )],
-    [25, new Room(25, 1500, 1500, 'Wildlife Museum',                    3,
+    [25, new Room(25, 1500, 1500, 'Wildlife Museum',                    9,
         Progress.builder().setProgress2Active('25000'), 
         sections.MUSEUM
     )],
@@ -1336,6 +1338,7 @@ export const initEnemies = () => {
             new SoulDrinker(2, new SinglePointPath(735, 830), new Loot(HARDDRIVE_LOOT, 2), 
                 Progress.builder().setKillAll('25000').setRenderProgress('25001')
             ),
+            
         ],
         [ //26
 
@@ -1450,141 +1453,235 @@ export const setInteractables = (val) => {
 }
 export const getInteractables = () => interactables
 
-export const initInteractables = () => new Map([
-    [1, [
-        new Note(125, 850, "Prisoner's memo", "Memories of a prisoner", "It's been 2 days since I'm here. I'm so hungry and there's no one responsible for this mess. I don't know what happened. All I remember was my normal life. And now I'm here, alone.... Why would this happen? I don't even know if I'm kidnapped by a criminal or arrested by law. Even then I would have contacted someone by now. The door's key is on the ground, so I can get out whenever I want, but the outdoors is terrifying. It's so dark and I think there's a predator past these doors. I can hear it breathing every now and then. I might have to get out of here and face it, or else I would starve to death...",
-            Progress.builder().setRenderProgress('1002').setProgress2Active('1003').setOnExamineProgress2Active('1004')
-        ),
-        new KeyDrop(400, 850, 1, 'Dorm key', 'Key for the dormitory', 'dorm', 
-            Progress.builder().setRenderProgress('1005').setProgress2Active('1006')
-        ),
-    ]],
-    [2, [
-        new Lever(100, 100, Progress.builder().setRenderProgress('2000').setProgress2Active('2005')),
-        new Lever(100, 400, Progress.builder().setRenderProgress('2005').setProgress2Active('2006')),
-        new Lever(900, 100, Progress.builder().setRenderProgress('2006').setProgress2Active('2007')),
-        new Lever(900, 400, Progress.builder().setRenderProgress('2007').setProgress2Active('2008')),
-    ]],
-    [3, [
-        new RedVaccine(350, 825, 2, Progress.builder().setRenderProgress('3000')),
-        new RedVaccine(650, 825, 2, Progress.builder().setRenderProgress('3000')),
-        new Note(500, 825, "Fugitive's note", "Possible use case of vaccine", "Seems like I'm not the first one facing this, so I'll leave a note cause I believe I won't be the last one either. I found out that the monsters are super weak to the vaccines. I had no clue what they were used for but I picked them up anyway. One of the monsters was after me. It caught me and bit me. I didn't know what to do... I just pulled out the vaccine and injected it to the freak. The monster vanished from existance! It happened so quick I couldn't believe my eyes. Even though the bite hurts, but that was a satisfying achievement...", 
-            Progress.builder().setRenderProgress('3000').setOnExamineProgress2Active('3001')
-        ),
-        new Lever(500, 300, Progress.builder().setKillAll('3000').setProgress2Active('3003'))
-    ]],
-    [4, [
-        new Crate(100, 375, new Loot(BLUE_VACCINE, 3)),
-        new Crate(650, 375, new Loot(PURPLE_VACCINE, 3)),
-    ]],
-    [5, [
-        new Crate(650, 100, new Loot(YELLOW_VACCINE, 3)),
-        new Crate(350, 500, new Loot(BANDAGE_LOOT, 3)),
-        new Crate(650, 500, new Loot(GREEN_VACCINE, 3)),
-    ]],
-    [6, [
-        new Crate(100, 100, new Loot(RED_VACCINE, 2)),
-        new Crate(100, 800, new Loot(GREEN_VACCINE, 2)),
-        new Crate(1000, 800, new Loot(PURPLE_VACCINE, 2)),
-        new Crate(1900, 100, new Loot(YELLOW_VACCINE, 2)),
-        new Crate(1900, 800, new Loot(BLUE_VACCINE, 2)),
-        new Bandage(950, 100, 3),
-        new KeyDrop(950, 500, 2, 'Bunker F key', 'Key for the section F of the bunker', 'bunkerF', 
-            Progress.builder().setKillAll('6000')
-        )
-    ]],
-    [7, [
-        new Crate(900, 700, new Loot(STICK_LOOT, 1)),
-        new Lighter(1100, 700, Progress.builder().setProgress2Active('7001')),
-        new PC(50, 50),
-        new HardDrive(1000, 50, 2, Progress.builder().setKillAll('9004').setProgress2Active('9005'))
-    ]],
-    [8, [
-        new Lever(1200, 250, Progress.builder().setKillAll('8000').setProgress2Active('8001')),
-        new Stick(1200, 100, Progress.builder().setRenderProgress('8000'), 100)
-    ]],
-    [9, [
-        new GunDrop(900, 600, GLOCK, 10, 1, 1, 1, 1, 1, 
-            Progress.builder().setRenderProgress('9000').setProgress2Active('9001')
-        ),
-        new PistolAmmo(900, 700, 30, 
-            Progress.builder().setRenderProgress('9000')
-        )
-    ]],
-    [10, [
-        new PistolAmmo(35, 1200, 20, Progress.builder().setRenderProgress('10000')),
-        new PistolAmmo(935, 1200, 20, Progress.builder().setRenderProgress('10000')),
-    ]],
-    [11, []],
-    [12, [
-        new Speaker(50, 1125),
-        new Stash(1100, 1125),
-        new PC(50, 50),
-        new VendingMachine(1100, 35),
-        new GunDrop(500, 500, BENELLI_M4, 100000, 5, 5, 5, 5, 5)
-    ]],
-    [13, []],
-    [14, []],
-    [15, []],
-    [16, []],
-    [17, []],
-    [18, [
-        new Note(900, 900, "Stranger's Note", 'Note describing the museum', 
-            "This place is terrifying, I can see much more monsters in here and they have diverse variants. I wish none of this was real. I need to get a stronger weapon cause I can't resist with this small peashooter that I have. There's a millitary and armory section in the museum. If I get there, I might be able to find a decent gun. To whoever that reads this, BE CAREFUL! AND HEAD STRAIGHT TO THE ARMORY. This is getting harder and harder.", 
-            Progress.builder().setRenderProgress('18000')
-        )
-    ]],
-    [19, []],
-    [20, []],
-    [21, []],
-    [22, [
-        new Crate(300, 900, new Loot(COIN_LOOT, 3), Progress.builder().setRenderProgress('22000')),
-        new Crate(500, 900, new Loot(PISTOL_AMMO_LOOT, 10), Progress.builder().setRenderProgress('22000')),
-        new Crate(700, 900, new Loot(SMG_AMMO_LOOT, 50), Progress.builder().setRenderProgress('22000')),
-    ]],
-    [23, [
-        new GunDrop(1000, 700, REMINGTON_870, 5, 1, 1, 1, 1, 1, 
-            Progress.builder().setRenderProgress('23000').setProgress2Active('23001')
-        ),
-        new Crate(100, 100, new Loot(GRENADE_LOOT, 1), Progress.builder().setRenderProgress('23000')),
-        new Crate(100, 700, new Loot(BANDAGE_LOOT, 2), Progress.builder().setRenderProgress('23000')),
-        new Crate(1000, 100, new Loot(COIN_LOOT, 3), Progress.builder().setRenderProgress('23000')),
-    ]],
-    [24, []],
-    [25, []],
-    [26, []],
-    [27, []],
-    [28, []],
-    [29, []],
-    [30, []],
-    [31, []],
-    [32, []],
-    [33, []],
-    [34, []],
-    [35, []],
-    [36, []],
-    [37, []],
-    [38, []],
-    [39, []],
-    [40, []],
-    [41, []],
-    [42, []],
-    [43, []],
-    [44, []],
-    [45, []],
-    [46, []],
-    [47, []],
-    [48, []],
-    [49, []],
-    [50, []],
-    [51, []],
-    [52, []],
-    [53, []],
-    [54, []],
-    [55, []],
-    [56, []],
-    [57, []],
-])
+export const initInteractables = () => {
+    const interactablesMap = new Map([])
+    Array.from([
+        [ //1
+            new Note(125, 850, "Prisoner's memo", "Memories of a prisoner", "It's been 2 days since I'm here. I'm so hungry and there's no one responsible for this mess. I don't know what happened. All I remember was my normal life. And now I'm here, alone.... Why would this happen? I don't even know if I'm kidnapped by a criminal or arrested by law. Even then I would have contacted someone by now. The door's key is on the ground, so I can get out whenever I want, but the outdoors is terrifying. It's so dark and I think there's a predator past these doors. I can hear it breathing every now and then. I might have to get out of here and face it, or else I would starve to death...",
+                Progress.builder().setRenderProgress('1002').setProgress2Active('1003').setOnExamineProgress2Active('1004')
+            ),
+            new KeyDrop(400, 850, 1, 'Dorm key', 'Key for the dormitory', 'dorm', 
+                Progress.builder().setRenderProgress('1005').setProgress2Active('1006')
+            ),
+        ],
+        [ //2
+            new Lever(100, 100, Progress.builder().setRenderProgress('2000').setProgress2Active('2005')),
+            new Lever(100, 400, Progress.builder().setRenderProgress('2005').setProgress2Active('2006')),
+            new Lever(900, 100, Progress.builder().setRenderProgress('2006').setProgress2Active('2007')),
+            new Lever(900, 400, Progress.builder().setRenderProgress('2007').setProgress2Active('2008')),
+        ],
+        [ //3
+            new RedVaccine(350, 825, 2, Progress.builder().setRenderProgress('3000')),
+            new RedVaccine(650, 825, 2, Progress.builder().setRenderProgress('3000')),
+            new Note(500, 825, "Fugitive's note", "Possible use case of vaccine", "Seems like I'm not the first one facing this, so I'll leave a note cause I believe I won't be the last one either. I found out that the monsters are super weak to the vaccines. I had no clue what they were used for but I picked them up anyway. One of the monsters was after me. It caught me and bit me. I didn't know what to do... I just pulled out the vaccine and injected it to the freak. The monster vanished from existance! It happened so quick I couldn't believe my eyes. Even though the bite hurts, but that was a satisfying achievement...", 
+                Progress.builder().setRenderProgress('3000').setOnExamineProgress2Active('3001')
+            ),
+            new Lever(500, 300, Progress.builder().setKillAll('3000').setProgress2Active('3003'))
+        ],
+        [ //4
+            new Crate(100, 375, new Loot(BLUE_VACCINE, 3)),
+            new Crate(650, 375, new Loot(PURPLE_VACCINE, 3)),
+        ],
+        [ //5
+            new Crate(650, 100, new Loot(YELLOW_VACCINE, 3)),
+            new Crate(350, 500, new Loot(BANDAGE_LOOT, 3)),
+            new Crate(650, 500, new Loot(GREEN_VACCINE, 3)),
+        ],
+        [ //6
+            new Crate(100, 100, new Loot(RED_VACCINE, 2)),
+            new Crate(100, 800, new Loot(GREEN_VACCINE, 2)),
+            new Crate(1000, 800, new Loot(PURPLE_VACCINE, 2)),
+            new Crate(1900, 100, new Loot(YELLOW_VACCINE, 2)),
+            new Crate(1900, 800, new Loot(BLUE_VACCINE, 2)),
+            new Bandage(950, 100, 3),
+            new KeyDrop(950, 500, 2, 'Bunker F key', 'Key for the section F of the bunker', 'bunkerF', 
+                Progress.builder().setKillAll('6000')
+            )
+        ],
+        [ //7
+            new Crate(900, 700, new Loot(STICK_LOOT, 1)),
+            new Lighter(1100, 700, Progress.builder().setProgress2Active('7001')),
+            new PC(50, 50),
+            new HardDrive(1000, 50, 2, Progress.builder().setKillAll('9004').setProgress2Active('9005'))
+        ],
+        [ //8
+            new Lever(1200, 250, Progress.builder().setKillAll('8000').setProgress2Active('8001')),
+            new Stick(1200, 100, Progress.builder().setRenderProgress('8000'), 100)
+        ],
+        [ //9
+            new GunDrop(900, 600, GLOCK, 10, 1, 1, 1, 1, 1, 
+                Progress.builder().setRenderProgress('9000').setProgress2Active('9001')
+            ),
+            new PistolAmmo(900, 700, 30, 
+                Progress.builder().setRenderProgress('9000')
+            )
+        ],
+        [ //10
+            new PistolAmmo(35, 1200, 20, Progress.builder().setRenderProgress('10000')),
+            new PistolAmmo(935, 1200, 20, Progress.builder().setRenderProgress('10000')),
+        ],
+        [ //11
+
+        ],
+        [ //12
+            new Speaker(50, 1125),
+            new Stash(1100, 1125),
+            new PC(50, 50),
+            new VendingMachine(1100, 35),
+            new GunDrop(500, 500, BENELLI_M4, 10000, 1, 1, 1, 1, 1)
+        ],
+        [ //13
+
+        ],
+        [ //14
+
+        ],
+        [ //15
+
+        ],
+        [ //16
+
+        ],
+        [ //17
+
+        ],
+        [ //18
+            new Note(900, 900, "Stranger's Note", 'Note describing the museum', 
+                "This place is terrifying, I can see much more monsters in here and they have diverse variants. I wish none of this was real. I need to get a stronger weapon cause I can't resist with this small peashooter that I have. There's a millitary and armory section in the museum. If I get there, I might be able to find a decent gun. To whoever that reads this, BE CAREFUL! AND HEAD STRAIGHT TO THE ARMORY. This is getting harder and harder.", 
+                Progress.builder().setRenderProgress('18000')
+            )
+        ],
+        [ //19
+
+        ],
+        [ //20
+
+        ],
+        [ //21
+
+        ],
+        [ //22
+            new Crate(300, 900, new Loot(COIN_LOOT, 3), Progress.builder().setRenderProgress('22000')),
+            new Crate(500, 900, new Loot(PISTOL_AMMO_LOOT, 10), Progress.builder().setRenderProgress('22000')),
+            new Crate(700, 900, new Loot(SMG_AMMO_LOOT, 50), Progress.builder().setRenderProgress('22000')),
+        ],
+        [ //23
+            new GunDrop(1000, 700, REMINGTON_870, 5, 1, 1, 1, 1, 1, 
+                Progress.builder().setRenderProgress('23000').setProgress2Active('23001')
+            ),
+            new Stick(1000, 600),
+            new Lighter(1000, 500),
+            new Crate(100, 100, new Loot(GRENADE_LOOT, 1), Progress.builder().setRenderProgress('23000')),
+            new Crate(100, 700, new Loot(BANDAGE_LOOT, 2), Progress.builder().setRenderProgress('23000')),
+            new Crate(1000, 100, new Loot(COIN_LOOT, 3), Progress.builder().setRenderProgress('23000')),
+        ],
+        [ //24
+
+        ],
+        [ //25
+
+        ],
+        [ //26
+
+        ],
+        [ //27
+
+        ],
+        [ //28
+
+        ],
+        [ //29
+
+        ],
+        [ //30
+
+        ],
+        [ //31
+
+        ],
+        [ //32
+
+        ],
+        [ //33
+
+        ],
+        [ //34
+
+        ],
+        [ //35
+
+        ],
+        [ //36
+
+        ],
+        [ //37
+
+        ],
+        [ //38
+
+        ],
+        [ //39
+
+        ],
+        [ //40
+
+        ],
+        [ //41
+
+        ],
+        [ //42
+            
+        ],
+        [ //43
+
+        ],
+        [ //44
+
+        ],
+        [ //45
+
+        ],
+        [ //46
+
+        ],
+        [ //47
+
+        ],
+        [ //48
+
+        ],
+        [ //49
+
+        ],
+        [ //50
+
+        ],
+        [ //51
+
+        ],
+        [ //52
+
+        ],
+        [ //53
+
+        ],
+        [ //54
+
+        ],
+        [ //55
+
+        ],
+        [ //56
+
+        ],
+        [ //57
+
+        ]
+    ])
+    .map(arr => arr.filter(int => int.difficulties.includes(getDifficulty())))
+    .forEach((arr, index) => interactablesMap.set(index + 1, arr))
+    return interactablesMap
+}
 
 // **********************************************************************************
 // **********************************************************************************

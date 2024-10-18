@@ -672,6 +672,7 @@ const equip = (item) => {
 
 const equipTorchFromInventory = (itemObj) => {
     if ( getEquippedTorchId() === itemObj.id ) return
+    unequipTorch()
     setEquippedTorchId(itemObj.id)
     equipTorch()
 }

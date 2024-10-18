@@ -1,10 +1,10 @@
 import { play } from './game.js'
 import { finishUp } from './finishup.js'
-import { managePause } from './actions.js'
+import { managePause, unequipTorch } from './actions.js'
 import { renderDesktop } from './computer.js'
 import { return2MainMenu } from './pause-menu.js'
 import { getPauseContainer, getPlayer } from './elements.js'
-import { addClass, appendAll, createAndAddClass } from './util.js'
+import { addClass, appendAll, createAndAddClass, removeAllClasses, removeClass, removeEquipped } from './util.js'
 import { loadGameFromSlot, prepareNewGameData } from './data-manager.js'
 import { getDifficulty, getHealth, getPlaythroughId, setPauseCause } from './variables.js'
 
@@ -16,6 +16,9 @@ export const manageGameOver = () => {
     const playerBody = getPlayer().firstElementChild.firstElementChild
     playerBody.style.transition = 'unset'
     addClass(getPlayer(), 'dead-player')
+    removeAllClasses(getPlayer(), 'aim', 'throwable-aim')
+    unequipTorch()
+    removeEquipped()
     appendAll(playerBody, createAndAddClass('div', 'left-leg'), createAndAddClass('div', 'right-leg'))
 }
 

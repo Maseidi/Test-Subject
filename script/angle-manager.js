@@ -14,6 +14,7 @@ import {
     setPlayerAngleState} from './variables.js'
 
 export const managePlayerAngle = () => {
+    
     if ( getAimMode() ) 
         manageAimModeAngle(getPlayer(), getPlayerAimAngle(), getPlayerAngle, setPlayerAngle, setPlayerAngleState)
     if ( !getGrabbed() ) manageNonAimModeAngle()

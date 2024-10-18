@@ -8,7 +8,6 @@ for ( let i = 0; i < 10; i++ )
         localStorage.setItem(`slot-${i+1}`, 'empty')
 
 // renderMainMenu()
-prepareNewGameData(difficulties.SURVIVAL)
-// loadGameFromSlot(2)
+prepareNewGameData(difficulties.MIDDLE)
 // loadGameFromSlot(1)
 play()

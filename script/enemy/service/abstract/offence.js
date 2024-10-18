@@ -1,5 +1,5 @@
-import { addAllClasses, addClass, removeClass } from '../../../util.js'
 import { getNoOffenseCounter } from '../../../variables.js'
+import { addAllClasses, removeClass } from '../../../util.js'
 import { damagePlayer, infectPlayer2SpecificVirus } from '../../../player-health.js'
 
 export class AbstractOffenceService {

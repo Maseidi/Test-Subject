@@ -397,10 +397,7 @@ export const spawnEnemy = (elem) => {
     enemyBody.style.backgroundColor = `${elem.virus}`
     defineComponents(elem, enemyBody)
     const vision = defineVision(elem)
-    appendAll(
-        enemyCollider, enemyBody, vision, 
-        createAndAddClass('div', `enemy-forward-detector`)
-    )
+    appendAll(enemyCollider, enemyBody, vision)
     const backwardDetector = defineBackwardDetector(elem)
     if ( backwardDetector ) enemyCollider.append(backwardDetector)
     enemy.append(enemyCollider)

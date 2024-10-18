@@ -1,6 +1,6 @@
 import { renderQuit } from './user-interface.js'
 import { getPauseContainer } from './elements.js'
-import { getElementInteractedWith } from './variables.js'
+import { getElementInteractedWith, setElementInteractedWith } from './variables.js'
 import { Bandage, Coin, KeyDrop, PistolAmmo, ShotgunShells } from './interactables.js'
 import { 
     addAllAttributes,
@@ -17,7 +17,9 @@ import {
     removeDescriptionEvent,
     renderBlocks,
     renderHeadingAndDescription,
-    useItemAtPosition } from './inventory.js'
+    useItemAtPosition, 
+    isEnoughSpace,
+    countItem} from './inventory.js'
 
 let stash = []
 export const setStash = (val) => {
@@ -164,11 +166,13 @@ const move2Stash = (object2Move, reduce) => {
 
 const move2Inventory = (object2Move, reduce) => {
     const index = stash.findIndex(x => x.id === object2Move.id)
-    const amount = stash[index].amount
+    const prePickupAmount = countItem(object2Move.name)
     pickupDrop(object2Element({...object2Move, amount: reduce}))
-    const left = Number(getElementInteractedWith().getAttribute('amount'))
-    if ( amount - reduce + left === 0 ) stash = stash.filter((item, idx) => idx !== index)
-    else stash[index] = {...object2Move, amount: amount - reduce + left}   
+    const postPickupAmount = countItem(object2Move.name)
+    const totalPickedUp = postPickupAmount - prePickupAmount
+    const amount = stash[index].amount
+    if ( totalPickedUp === amount ) stash = stash.filter((item, idx) => idx !== index)
+    else stash[index] = {...object2Move, amount: amount - totalPickedUp}    
     removeStash()
     renderStash()
 }

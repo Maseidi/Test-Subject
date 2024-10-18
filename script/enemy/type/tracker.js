@@ -4,7 +4,6 @@ import { TrackerLostService } from '../service/tracker/lost.js'
 import { TrackerChaseService } from '../service/tracker/chase.js'
 import { TrackerVisionService } from '../service/tracker/vision.js'
 import { TrackerMovemenetService } from '../service/tracker/movement.js'
-import { TrackerCollisionService } from '../service/tracker/collision.js'
 import { TrackerGuessSearchService } from '../service/tracker/guess-search.js'
 import { TrackerNotificationService } from '../service/tracker/notification.js'
 import { CHASE, GUESS_SEARCH, LOST, TRACKER } from '../enemy-constants.js'
@@ -24,7 +23,6 @@ export class Tracker extends AbstractEnemy {
         this.lostService = new TrackerLostService(this)
         this.visionService = new TrackerVisionService(this)
         this.movementService = new TrackerMovemenetService(this)
-        this.collisionService = new TrackerCollisionService(this)
         this.chaseService = new TrackerChaseService(this)
         this.guessSearchService = new TrackerGuessSearchService(this)
     }

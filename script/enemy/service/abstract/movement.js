@@ -37,10 +37,10 @@ export class AbstractMovementService {
 
     decideDirection(enemyWidth, destX, destY, destWidth) {
         let xMultiplier = null, yMultiplier = null
-        if ( this.enemy.x > destX + destWidth / 2 ) xMultiplier = -1
-        else if ( this.enemy.x + enemyWidth <= destX + destWidth / 2 ) xMultiplier = 1
-        if ( this.enemy.y > destY + destWidth / 2 ) yMultiplier = -1
-        else if ( this.enemy.y + enemyWidth <= destY + destWidth / 2 ) yMultiplier = 1
+        if ( this.enemy.x > destX + destWidth / 2 )                    xMultiplier = -1
+        else if ( this.enemy.x + enemyWidth <= destX + destWidth / 2 ) xMultiplier =  1
+        if ( this.enemy.y > destY + destWidth / 2 )                    yMultiplier = -1
+        else if ( this.enemy.y + enemyWidth <= destY + destWidth / 2 ) yMultiplier =  1
         return { xMultiplier, yMultiplier }
     }
 
@@ -105,9 +105,7 @@ export class AbstractMovementService {
     }
 
     distance2Target(target) {
-        const { x: enemyX, y: enemyY } = this.enemy.sprite.getBoundingClientRect()
-        const { x: targetX, y: targetY } = target.getBoundingClientRect()
-        return distance(enemyX, enemyY, targetX, targetY)
+        return distance(this.enemy.sprite, target)
     }
 
 }

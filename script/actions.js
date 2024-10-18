@@ -313,7 +313,7 @@ const removeUi = () => {
     getRoomNameContainer().style.opacity = '0'
     getDialogueContainer().style.opacity = '0'
     findHealtStatusChildByClassName('infected-container').style.opacity = '0'
-    if ( getElementInteractedWith()?.children[1] ) getElementInteractedWith().children[1].style.visibility = 'hidden'
+    if ( getElementInteractedWith()?.children[1] )      getElementInteractedWith().children[1].style.visibility = 'hidden'
     else if ( getElementInteractedWith()?.children[0] ) getElementInteractedWith().children[0].style.visibility = 'hidden'
 }
 
@@ -337,7 +337,7 @@ const showUi = () => {
     getRoomNameContainer().style.opacity = '1'
     getDialogueContainer().style.opacity = '1'
     findHealtStatusChildByClassName('infected-container').style.opacity = '1'
-    if ( getElementInteractedWith()?.children[1] ) getElementInteractedWith().children[1].style.visibility = 'visible'
+    if ( getElementInteractedWith()?.children[1] )      getElementInteractedWith().children[1].style.visibility = 'visible'
     else if ( getElementInteractedWith()?.children[0] ) getElementInteractedWith().children[0].style.visibility = 'visible'
 }
 
