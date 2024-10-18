@@ -472,7 +472,6 @@ export const initEnemies = () => {
 
         ],
         [ //25
-
             
         ],
         [ //26
@@ -625,7 +624,6 @@ export const initInteractables = () => {
 
         ],
         [ //12
-
         ],
         [ //13
 
@@ -643,7 +641,6 @@ export const initInteractables = () => {
 
         ],
         [ //18
-
         ],
         [ //19
 

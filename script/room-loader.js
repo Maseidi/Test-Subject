@@ -75,6 +75,7 @@ const renderRoom = () => {
     const room2Render = createAndAddClass(
         'div', 'room', `${getCurrentRoomId()}`, `${roomObject.section}`)
 
+    room2Render.style.backgroundColor = `${roomObject.bgColor}`
     room2Render.style.width =           `${roomObject.width}px`
     room2Render.style.height =          `${roomObject.height}px`
     room2Render.style.left =            `${getRoomLeft()}px`

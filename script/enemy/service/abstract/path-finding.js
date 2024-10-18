@@ -1,16 +1,17 @@
 import { getCurrentRoomSolid } from '../../../elements.js'
 import { collide, containsClass, getProperty } from '../../../util.js'
-import { CHASE, GUESS_SEARCH } from '../../enemy-constants.js'
+import { CHASE, GUESS_SEARCH, NO_OFFENCE } from '../../enemy-constants.js'
 
 export class AbstractPathFindingService {
     constructor(enemy) {
         this.enemy = enemy
-        this.shouldCalculatePathfinding = false
+        this.pathfindingCounter = 2
     }
 
     findPath() {
-        this.shouldCalculatePathfinding = !this.shouldCalculatePathfinding
-        if ( !this.shouldCalculatePathfinding ) return
+        this.pathfindingCounter++
+        if ( this.pathfindingCounter !== 3 ) return
+        this.pathfindingCounter = 0
         let wall =          this.#getWallInTheWay()
         if ( !wall ) wall = this.#findWall()
         if ( !wall ) {
@@ -29,7 +30,7 @@ export class AbstractPathFindingService {
     }
 
     #getWallInTheWay() {
-        if ( ![CHASE, GUESS_SEARCH].includes(this.enemy.state) ) return null
+        if ( ![CHASE, GUESS_SEARCH, NO_OFFENCE].includes(this.enemy.state) ) return null
         if ( !this.enemy.wallInTheWay || this.enemy.wallInTheWay === 'out-of-range' ) return null
         return this.enemy.wallInTheWay
     }
