@@ -103,7 +103,11 @@ export const createAndAddClass = (type, ...classNames) => {
     return elem
 }
 
-export const distance = (x1, y1, x2, y2) =>  Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2))
+export const distance = (first, second) =>  {
+    const { x: x1, y: y1 } = first.getBoundingClientRect()
+    const { x: x2, y: y2 } = second.getBoundingClientRect()
+    return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2))
+}
 
 export const isLowHealth = () => getHealth() <= 20
 
@@ -220,3 +224,12 @@ export const isAble2Interact = () =>
     !getPlayingDialogue() && 
     !getPopupContainer().firstElementChild &&
     getExistingEnemies(getEnemies().get(getCurrentRoomId())).length === 0
+
+export const decideDifficulty = (difficulty) => {
+    if ( difficulty === difficulties.MILD )        
+        return [difficulties.MILD, difficulties.MIDDLE, difficulties.SURVIVAL]
+    else if ( difficulty === difficulties.MIDDLE ) 
+        return [difficulties.MIDDLE, difficulties.SURVIVAL]
+    else                                           
+        return [difficulties.SURVIVAL]
+}    

@@ -252,7 +252,7 @@ const manageBullets = () => {
                 damagePlayer(Number(bullet.getAttribute('damage')))
                 if ( containsClass(bullet, 'scorcher-bullet') ) setPlayer2Fire()
                 if ( containsClass(bullet, 'stinger-bullet') ) poisonPlayer()
-                infectPlayer2SpecificVirus(bullet.getAttribute('virus'))    
+                infectPlayer2SpecificVirus(bullet.getAttribute('virus'))
             }
             bullet.remove()
             continue

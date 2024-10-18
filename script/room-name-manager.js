@@ -1,5 +1,5 @@
 import { getRoomNameContainer } from './elements.js'
-import { addAllAttributes, addClass, createAndAddClass, removeClass } from './util.js'
+import { addAllAttributes, addClass, createAndAddClass } from './util.js'
 
 export const renderRoomName = (name) => {
     if ( getRoomNameContainer().firstElementChild ) getRoomNameContainer().firstElementChild.remove()

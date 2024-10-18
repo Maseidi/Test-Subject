@@ -233,16 +233,16 @@ const addVendingMachineMessage = (input) => addMessage(input, getPauseContainer(
 
 const manageBuy = (itemObj) => {
     const loss = itemObj.price
-    const needSpace = itemObj.space
+    const needSpace2string = new Array(itemObj.space).fill('empty').join('')
     useInventoryResource('coin', loss)
     if ( itemObj.name === 'pouch' ) {
         upgradeInventory()
         submitPurchase(itemObj)
         return
     }
-    const freeSpace = getInventory().flat().filter(item => item === null).length
+    const inventory2string = getInventory().flat().map(item => item === null ? 'empty' : item).join('')
     pickupDrop(object2Element(new Coin(null, null, loss)))
-    if ( freeSpace >= needSpace ) {
+    if ( inventory2string.includes(needSpace2string) ) {
         useInventoryResource('coin', loss)
         let chosenItem = getShopItems()[itemObj.id]
         if ( isStatUpgrader(itemObj) ) chosenItem.price = 30

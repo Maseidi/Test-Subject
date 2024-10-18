@@ -3,7 +3,6 @@ import { NormalLostService } from '../service/normal/lost.js'
 import { NormalChaseService } from '../service/normal/chase.js'
 import { NormalReturnService } from '../service/normal/return.js'
 import { RangerShootingService } from '../service/ranger/shooting.js'
-import { RangerCollisionService } from '../service/ranger/collision.js'
 import { NormalGuessSearchService } from '../service/normal/guess-search.js'
 import { NormalInvestigationService } from '../service/normal/investigate.js'
 import { 
@@ -25,7 +24,6 @@ export class Ranger extends AbstractEnemy {
         const maxSpeed = 4 + Math.random()
         const vision = Math.floor(500 + Math.random() * 300)
         super(RANGER, 6, waypoint, health, damage, maxSpeed, vision, 2, loot, progress, virus, difficulties)
-        this.collisionService = new RangerCollisionService(this)
         this.investigationService = new NormalInvestigationService(this)
         this.chaseService = new NormalChaseService(this)
         this.shootingService = new RangerShootingService(this)

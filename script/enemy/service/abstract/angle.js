@@ -8,14 +8,14 @@ export class AbstractAngleService {
     }
 
     DETECTOR_MAP = new Map([
-        [0, {fwX: '-50%',  fwY: '0'    }],
-        [1, {fwX: '-100%', fwY: '0'    }],
-        [2, {fwX: '-100%', fwY: '-50%' }],
-        [3, {fwX: '-100%', fwY: '-100%'}],
-        [4, {fwX: '-50%',  fwY: '-100%'}],
-        [5, {fwX: '0',     fwY: '-100%'}],
-        [6, {fwX: '0',     fwY: '-50%' }],
-        [7, {fwX: '0',     fwY: '0'    }],
+        [0, {x: '-50%',  y: '-100%'}],
+        [1, {x: '0',     y: '-100%'}],
+        [2, {x: '0',     y: '-50%' }],
+        [3, {x: '0',     y: '0'    }],
+        [4, {x: '-50%',  y: '0'    }],
+        [5, {x: '-100%', y: '0'    }],
+        [6, {x: '-100%', y: '-50%' }],
+        [7, {x: '-100%', y: '-100%'}],
     ])
 
     calculateAngle = (x, y) => {
@@ -23,7 +23,7 @@ export class AbstractAngleService {
         const currAngle = this.enemy.angle || 0
         let newState = this.#getNewState(x, y, currState)
         if ( newState === currState ) return
-        this.updateDetectors(newState)
+        this.updateBackwardDetector(newState)
         let diff = newState - currState
         if (Math.abs(diff) > 4 && diff >= 0) diff = -(8 - diff)
         else if (Math.abs(diff) > 4 && diff < 0) diff = 8 - Math.abs(diff) 
@@ -48,24 +48,10 @@ export class AbstractAngleService {
         return result
     }
 
-    updateDetectors(state) {
-        const {fwX, fwY} = this.DETECTOR_MAP.get(state)
-        const {fwX: bwX, fwY: bwY} = this.DETECTOR_MAP.get((state + 4) % 8)
-        this.#updateForwardDetector(fwX, fwY)
-        this.#updateBackwardDetector(bwX, bwY)
-    }
-
-    #updateForwardDetector(x, y) {
-        this.#applyDetectorUpdate(this.enemy.sprite.firstElementChild.children[2], x, y)
-    }
-
-    #updateBackwardDetector(x, y) {
+    updateBackwardDetector(state) {
+        const {x, y} = this.DETECTOR_MAP.get(state)
         if ( [SPIKER, TRACKER].includes(this.enemy.type) ) return
-        this.#applyDetectorUpdate(this.enemy.sprite.firstElementChild.children[3], x, y)
-    }
-
-    #applyDetectorUpdate(detector, x, y) {
-        detector.style.transform = `translateX(${x}) translateY(${y})`
+        this.enemy.sprite.firstElementChild.children[2].style.transform = `translateX(${x}) translateY(${y})`
     }
 
     angle2Player() {

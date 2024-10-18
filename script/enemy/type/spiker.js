@@ -5,7 +5,6 @@ import { NormalChaseService } from '../service/normal/chase.js'
 import { NormalReturnService } from '../service/normal/return.js'
 import { SpikerVisionService } from '../service/spiker/vision.js'
 import { SpikerMovementService } from '../service/spiker/movement.js'
-import { SpikerCollisionService } from '../service/spiker/collision.js'
 import { NormalGuessSearchService } from '../service/normal/guess-search.js'
 import { SpikerInvestigationService } from '../service/spiker/investigate.js'
 import { 
@@ -17,7 +16,6 @@ import {
     NO_OFFENCE,
     SPIKER } from '../enemy-constants.js'
 import { getRoundsFinished } from '../../variables.js'
-import { SpikerAngleService } from '../service/spiker/angle.js'
 
 export class Spiker extends AbstractEnemy {
     constructor(level, waypoint, loot, progress, virus, difficulties) {
@@ -27,10 +25,8 @@ export class Spiker extends AbstractEnemy {
         const maxSpeed = 6 + Math.random()
         super(SPIKER, 6, waypoint, health, damage, maxSpeed, 400, maxSpeed, loot, progress, virus, difficulties)
         this.axis = Math.random() < 0.5 ? 1 : 2
-        this.angleService = new SpikerAngleService(this)
         this.visionService = new SpikerVisionService(this)
         this.movementService = new SpikerMovementService(this)
-        this.collisionService = new SpikerCollisionService(this)
         this.investigationService = new SpikerInvestigationService(this)
         this.chaseService = new NormalChaseService(this)
         this.guessSearchService = new NormalGuessSearchService(this)

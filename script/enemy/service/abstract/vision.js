@@ -5,6 +5,7 @@ import { INVESTIGATE, LOST, MOVE_TO_POSITION } from '../../enemy-constants.js'
 export class AbstractVisionService {
     constructor(enemy) {
         this.enemy = enemy
+        this.visionCounter = 1
     }
 
     playerSpotted() {
@@ -19,9 +20,8 @@ export class AbstractVisionService {
     }
 
     getWallInTheWay() {
-        this.enemy.wallCheckCounter = this.enemy.wallCheckCounter ?? 1
-        this.enemy.wallCheckCounter = this.enemy.wallCheckCounter + 1 === 21 ? 0 : this.enemy.wallCheckCounter + 1
-        if ( this.enemy.wallCheckCounter !== 20 ) return
+        this.visionCounter = this.visionCounter + 1 === 21 ? 0 : this.visionCounter + 1
+        if ( this.visionCounter !== 20 ) return
         const walls = getCurrentRoomSolid().filter(solid => !containsClass(solid, 'enemy-collider') )
         const vision = this.enemy.sprite.firstElementChild.children[1]
         for ( const component of vision.children ) {
@@ -31,7 +31,7 @@ export class AbstractVisionService {
             }
             for ( const wall of walls )
                 if ( collide(component, wall, 0) ) {
-                    this.enemy.wallInTheWay = wall.id
+                    this.enemy.wallInTheWay = wall
                     return
                 }
         }
@@ -44,7 +44,6 @@ export class AbstractVisionService {
     }
 
     isPlayerVisible() {
-        return false
         if ( this.enemy.wallInTheWay !== false ||
              ( [LOST, INVESTIGATE, MOVE_TO_POSITION].includes(this.enemy.state) 
              && this.enemy.isTransitioning === true ) ) return false

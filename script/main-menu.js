@@ -3,6 +3,7 @@ import { savedSlotContent } from './computer.js'
 import { getMainMenuEl, setMainMenuEl } from './elements.js'
 import { loadGameFromSlot, prepareNewGameData } from './data-manager.js'
 import { addClass, appendAll, createAndAddClass, difficulties, removeClass } from './util.js'
+import { renderMapMaker } from './mapMaker/map-maker.js'
 
 let isContinueIncluded = null
 export const renderMainMenu = () => {
@@ -30,7 +31,9 @@ const mainMenuHeader = () => {
 const options = () => {
     const options = createAndAddClass('div', 'main-menu-options')
     handleContinueOption(options)
-    appendAll(options, newGame(), loadGame(), lineBar())
+    appendAll(options, newGame(), loadGame())
+    handleMapMakerOption(options)
+    options.append(lineBar())
     return options
 }
 
@@ -112,6 +115,27 @@ const loadGame = () =>
         getDelay(2),
         getDuration(2)
     )
+
+const handleMapMakerOption = (options) => {
+    for ( let i = 0; i < 10; i++ ) {
+        const item = localStorage.getItem('slot-' + ( i + 1 ))
+        // if ( item !== 'empty' && JSON.parse(item)?.roundsFinished > 0 ) {
+        if ( true ) {
+            options.append(mapMakerOption())
+            break
+        }
+    }
+}
+
+const mapMakerOption = () => mainMenuOption(
+    'map maker', 
+    () => {
+        getMainMenuEl().remove()
+        renderMapMaker()
+    },
+    getDelay(3),
+    getDuration(3)
+)
 
 const lineBar = () => createAndAddClass('div', 'main-menu-options-bar')
 

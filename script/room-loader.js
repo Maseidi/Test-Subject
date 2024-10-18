@@ -75,6 +75,7 @@ const renderRoom = () => {
     const room2Render = createAndAddClass(
         'div', 'room', `${getCurrentRoomId()}`, `${roomObject.section}`)
 
+    room2Render.style.backgroundColor = `${roomObject.bgColor}`
     room2Render.style.width =           `${roomObject.width}px`
     room2Render.style.height =          `${roomObject.height}px`
     room2Render.style.left =            `${getRoomLeft()}px`
@@ -397,10 +398,7 @@ export const spawnEnemy = (elem) => {
     enemyBody.style.backgroundColor = `${elem.virus}`
     defineComponents(elem, enemyBody)
     const vision = defineVision(elem)
-    appendAll(
-        enemyCollider, enemyBody, vision, 
-        createAndAddClass('div', `enemy-forward-detector`)
-    )
+    appendAll(enemyCollider, enemyBody, vision)
     const backwardDetector = defineBackwardDetector(elem)
     if ( backwardDetector ) enemyCollider.append(backwardDetector)
     enemy.append(enemyCollider)

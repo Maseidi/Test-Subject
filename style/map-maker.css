@@ -1,0 +1,195 @@
+.map-maker-container {
+  width: 100vw;
+  height: 100vh;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.map-maker-contents {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  border: 1px solid wheat;
+  justify-content: space-between;
+}
+
+.attributes-sidebar {
+  width: 300px;  
+  height: 100%;
+  flex-shrink: 0;
+  border-right: 1px solid wheat;
+}
+
+.room-overview {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  scrollbar-width: thin;
+  scrollbar-color: wheat black;
+  padding: 100px 200px;
+}
+
+.tools-sidebar {
+  width: 250px;
+  height: 100%;
+  display: flex;
+  flex-shrink: 0;
+  flex-direction: column;
+  border-left: 1px solid wheat;
+}
+
+.sidebar-header {
+  color: white;
+  text-align: center;
+  padding-block: 10px;
+  letter-spacing: 2px;
+  background-color: black;
+  text-transform: uppercase;
+}
+
+.tool-group {
+  color: white;
+  display: flex;
+  letter-spacing: 1px;
+  padding: 10px;
+  align-items: center;
+  text-transform: capitalize;
+  justify-content: space-between;
+  background-color: rgb(220, 20, 60, 0.3);
+  border: 1px solid rgb(245, 222, 179, 0.3);
+}
+
+.tool-group:hover {
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.tool-group > img {
+  height: 25px;
+  display: block;
+  transition: 300ms;
+}
+
+.tools-container {
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.active-tool {
+  background-color: rgb(220, 20, 60, 0.7);
+}
+
+.active-tool > img {
+  transform: rotateZ(90deg);
+}
+
+.active-tool:hover {
+  background-color: rgb(220, 20, 60, 0.7);
+}
+
+.tool-contents-container {
+  display: flex;
+  flex-direction: column;
+}
+
+.add-item, .tool-content {
+  color: wheat;
+  text-align: center;
+  letter-spacing: 2px;
+  padding-block: 5px;
+}
+
+.add-item {
+  text-transform: uppercase;
+  background-color: rgb(0, 128, 0, 0.3);
+}
+
+.tool-content {
+  border: 1px solid wheat;
+  background-color: #2b2b2b;
+}
+
+.tool-content:hover {
+  background-color: rgb(255, 255, 255, 0.1);
+}
+
+.tool-content.selected {
+  color: black;
+  background-color: white;
+}
+
+.add-item:hover {
+  color: #2b2b2b;
+  background-color: rgb(173, 255, 47, 0.5);
+}
+
+.room-view {
+  position: relative;
+  background-color: lightgray;
+}
+
+.room-view > .top-wall,
+.room-view > .left-wall,
+.room-view > .right-wall,
+.room-view > .bottom-wall {
+  position: absolute;
+  border: 1px solid black;
+  background-color: grey;
+}
+
+.room-view > .top-wall:hover,
+.room-view > .left-wall:hover,
+.room-view > .right-wall:hover,
+.room-view > .bottom-wall:hover {
+  background-color: white;
+}
+
+.room-view > .top-wall {
+  left: 0;
+  top: -10px;
+  width: 100%;
+  height: 10px;
+}
+
+.room-view > .left-wall {
+  top: 0;
+  left: -10px;
+  width: 10px;
+  height: 100%;
+}
+
+.room-view > .bottom-wall {
+  left: 0;
+  width: 100%;
+  height: 10px;
+  bottom: -10px;
+}
+
+.room-view > .right-wall {
+  top: 0;
+  width: 10px;
+  right: -10px;
+  height: 100%;
+}
+
+.text-field-container {
+  display: flex;
+  padding: 10px;
+  color: wheat;
+  align-items: center;
+  text-transform: capitalize;
+  justify-content: space-between;
+}
+
+.text-field-container > input {
+  width: 150px;
+  padding: 5px;
+  border: unset;
+  outline: unset;
+  border-radius: 2px;
+  background-color: rgb(255, 255, 255, 0.5);
+}

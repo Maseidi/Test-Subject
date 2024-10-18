@@ -189,7 +189,7 @@ const manageInfectedState = () => {
     if ( isLowHealth() ) renderDangerStateEffect(renderHealthStatusChildByClassName, addClass)
 }
 
-export const infectPlayer2SpecificVirus = (virusName) => {    
+export const infectPlayer2SpecificVirus = (virusName) => {
     if ( getProgressValueByNumber(4000) ) activateAllProgresses('10000000')
     if ( getInfection().includes(virusName) ) return
     setInfection([...getInfection(), virusName])

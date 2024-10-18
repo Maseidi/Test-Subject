@@ -1,12 +1,11 @@
 import { SinglePointPath } from '../../path.js'
 import { getDifficulty } from '../../variables.js'
-import { difficulties as difficultyMap } from '../../util.js'
 import { AbstractAngleService } from '../service/abstract/angle.js'
 import { AbstractVisionService } from '../service/abstract/vision.js'
 import { AbstractInjuryService } from '../service/abstract/injury.js'
 import { AbstractOffenceService } from '../service/abstract/offence.js'
 import { AbstractMovementService } from '../service/abstract/movement.js'
-import { AbstractCollisionService } from '../service/abstract/collision.js'
+import { decideDifficulty, difficulties as difficultyMap } from '../../util.js'
 import { AbstractPathFindingService } from '../service/abstract/path-finding.js'
 import { AbstractNotificationService } from '../service/abstract/notification.js'
 
@@ -29,7 +28,7 @@ export class AbstractEnemy {
         this.killAll =             progress?.killAll ?? null
         this.x =                   waypoint.points[0].x ?? 0
         this.y =                   waypoint.points[0].y ?? 0        
-        this.difficulties =        difficulty ? this.decideDifficulty(difficulty) : 
+        this.difficulties =        difficulty ? decideDifficulty(difficulty) : 
                                    [difficultyMap.MILD, difficultyMap.MIDDLE, difficultyMap.SURVIVAL]
 
         this.angleService =        new AbstractAngleService(this)
@@ -39,17 +38,7 @@ export class AbstractEnemy {
         this.notificationService = new AbstractNotificationService(this)
         this.visionService =       new AbstractVisionService(this)
         this.movementService =     new AbstractMovementService(this)
-        this.collisionService =    new AbstractCollisionService(this)
         this.balanceStatsBasedOnDifficulty()
-    }
-
-    decideDifficulty(difficulty) {
-        if ( difficulty === difficultyMap.MILD )        
-            return [difficultyMap.MILD, difficultyMap.MIDDLE, difficultyMap.SURVIVAL]
-        else if ( difficulty === difficultyMap.MIDDLE ) 
-            return [difficultyMap.MIDDLE, difficultyMap.SURVIVAL]
-        else                                           
-            return [difficultyMap.SURVIVAL]
     }
 
     balanceStatsBasedOnDifficulty() {
@@ -65,7 +54,6 @@ export class AbstractEnemy {
         this.visionService.look4Player()
         this.injuryService.manageDamagedMode()
         this.injuryService.manageExplosionMode()
-        this.collisionService.manageCollision()
         this.manageState()
     }
     
