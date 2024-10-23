@@ -3,7 +3,6 @@ import { isThrowable } from './throwable-details.js'
 import { TRACKER } from './enemy/enemy-constants.js'
 import { removeThrowable } from './throwable-loader.js'
 import { manageAimModeAngle } from './angle-manager.js'
-import { activateAllProgresses } from './progress-manager.js'
 import { getGunDetail, getGunUpgradableDetail, isGun } from './gun-details.js'
 import { 
     calculateThrowableAmount,
@@ -155,7 +154,6 @@ const shoot = () => {
     }
     const totalAmmo = calculateTotalAmmo()
     let currMag = equipped.currmag
-    if ( currMag === 2 && totalAmmo > 0 ) activateAllProgresses('10000004') 
     if ( currMag === 0 ) {
         EMPTY_WEAPON.play()
         setShooting(false)

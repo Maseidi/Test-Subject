@@ -1,7 +1,6 @@
 import { healthManager } from './user-interface.js'
 import { CHASE, NO_OFFENCE } from './enemy/enemy-constants.js'
 import { getInventory, useInventoryResource } from './inventory.js'
-import { activateAllProgresses, getProgressValueByNumber } from './progress-manager.js'
 import { getCurrentRoomEnemies, getHealthStatusContainer, getMapEl, getPlayer } from './elements.js'
 import { 
     addClass,
@@ -190,7 +189,6 @@ const manageInfectedState = () => {
 }
 
 export const infectPlayer2SpecificVirus = (virusName) => {
-    if ( getProgressValueByNumber(4000) ) activateAllProgresses('10000000')
     if ( getInfection().includes(virusName) ) return
     setInfection([...getInfection(), virusName])
     renderVirusIcon(virusName)

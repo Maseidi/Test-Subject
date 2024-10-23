@@ -178,7 +178,7 @@ const initNewGameVariables = (difficulty) => {
         mapY :                 0,
         playerX :              750,
         playerY :              400,
-        currentRoomId :        12,
+        currentRoomId :        1,
         roomTop :              -500,
         roomLeft :             500,
         playerSpeed :          5,

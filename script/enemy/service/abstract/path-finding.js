@@ -5,13 +5,12 @@ import { CHASE, GUESS_SEARCH } from '../../enemy-constants.js'
 export class AbstractPathFindingService {
     constructor(enemy) {
         this.enemy = enemy
-        this.pathfindingCounter = 2
+        this.shouldCalculatePathfinding = false
     }
 
     findPath() {
-        this.pathfindingCounter++
-        if ( this.pathfindingCounter !== 3 ) return
-        this.pathfindingCounter = 0
+        this.shouldCalculatePathfinding = !this.shouldCalculatePathfinding
+        if ( !this.shouldCalculatePathfinding ) return
         let wall =          this.#getWallInTheWay()
         if ( !wall ) wall = this.#findWall()
         if ( !wall ) {

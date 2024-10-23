@@ -6,7 +6,6 @@ import { appendAll, createAndAddClass } from './util.js'
 import { countItem, useInventoryResource } from './inventory.js'
 import { loadGameFromSlot, saveAtSlot } from './data-manager.js'
 import { addMessage, itemNotification, renderQuit } from './user-interface.js'
-import { activateAllProgresses } from './progress-manager.js'
 
 export const turnOnComputer = () => {
     managePause()
@@ -102,7 +101,6 @@ const confirmSave = (slotNumber) => {
         addComputerMessage('Out of hard drive memory')
         return
     }
-    activateAllProgresses([9007])
     useInventoryResource('hardDrive', 1)
     saveAtSlot(slotNumber)
     closeSavePopup()

@@ -3,10 +3,10 @@ import { dropLoot } from './loot-manager.js'
 import { removeTorch } from './torch-loader.js'
 import { sources } from './dialogue-manager.js'
 import { loadCurrentRoom } from './room-loader.js'
-import { getEnemies, getLoaders, rooms } from './entities.js'
 import { getThrowableDetail } from './throwable-details.js'
+import { activateAllProgresses } from './progress-manager.js'
+import { getEnemies, getLoaders, rooms } from './entities.js'
 import { findEquippedTorchById, getInventory } from './inventory.js'
-import { activateAllProgresses, getProgressValueByNumber } from './progress-manager.js'
 import { damagePlayer, infectPlayer2SpecificVirus, poisonPlayer, setPlayer2Fire } from './player-health.js'
 import { 
     CHASE,
@@ -165,8 +165,8 @@ const handleEnemyInteractables = (int) => {
     const popup = int.firstElementChild
     const enemyElem = int.parentElement.parentElement
     const enemyObject = getEnemyObject(enemyElem)
-    if ( !getProgressValueByNumber('3002') ) removePopup(popup)
-    else if ( enemyObject.health === 0 )     removePopup(popup)
+    // if ( !getProgressValueByNumber('any') ) removePopup(popup)    
+    if ( enemyObject.health === 0 )          removePopup(popup)
     else if ( isEnemyNotified(enemyObject) ) removePopup(popup)
     else if ( !interactionPredicate(int) )   removePopup(popup)
     else                                     setAsInteractingObject(popup, int)
@@ -184,15 +184,7 @@ const hanldeRestOfInteractables = (int) => {
     const popup = int.children[1]
     handleStaticInteractablesIdealInteraction(int, popup)
     if ( !interactionPredicate(int) ) removePopup(popup)
-    else {
-        handleFirstTimeInteraction(int, 'stash', 10000005)    
-        handleFirstTimeInteraction(int, 'vendingMachine', 10000006)    
-        setAsInteractingObject(popup, int)
-    }                              
-}
-
-const handleFirstTimeInteraction = (int, name, progress2Active) => {
-    if ( getProgressValueByNumber(12015) && int.getAttribute('name') === name ) activateAllProgresses(progress2Active)
+    else setAsInteractingObject(popup, int)
 }
 
 const handleDoorWithCodeIdealInteraction = (int, popup) => {
