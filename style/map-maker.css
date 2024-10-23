@@ -19,6 +19,9 @@
   width: 300px;  
   height: 100%;
   flex-shrink: 0;
+  overflow: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
   border-right: 1px solid wheat;
 }
 
@@ -177,17 +180,17 @@
 }
 
 .text-field-container {
-  display: flex;
+  gap: 4px;
   padding: 10px;
+  display: flex;
   color: wheat;
-  align-items: center;
+  flex-direction: column;
   text-transform: capitalize;
-  justify-content: space-between;
 }
 
 .text-field-container > input {
-  width: 150px;
   padding: 5px;
+  width: 100%;
   border: unset;
   outline: unset;
   border-radius: 2px;

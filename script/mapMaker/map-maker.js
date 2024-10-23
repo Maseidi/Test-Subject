@@ -1,7 +1,7 @@
 import { Room } from '../room.js'
 import { renderRoomAttributes } from './attributes/room.js'
 import { addClass, appendAll, containsClass, createAndAddClass, removeClass } from '../util.js'
-import { getItemBeingModified, getRooms, setItemBeingModified } from './variables.js'
+import { getItemBeingModified, getRooms, setItemBeingModified, setRoomBeingMade } from './variables.js'
 import { 
     getRoomOverviewEl,
     getSelectedToolEl,
@@ -48,10 +48,10 @@ const toolsSidebar = () => {
 const createTools = (tools) => {
     Array.from([
         createTool('rooms'),
-        createTool('interactables'),
-        createTool('enemies'),
-        createTool('loaders'),
         createTool('walls'),
+        createTool('loaders'),
+        createTool('enemies'),
+        createTool('interactables'),
         createTool('popups'),
         createTool('dialogues'),
     ]).forEach(item => tools.append(item))
@@ -85,6 +85,18 @@ const activateTool = (tool, header) => {
     refreshTools(tool)
 }
 
+const refreshTools = (activeTool) => {
+    Array.from(getToolsEl().children[1].children)
+        .forEach(tool => {
+            if ( tool !== activeTool ) {
+                removeClass(tool, 'active-tool')
+                if ( tool.nextSibling && containsClass(tool.nextSibling, 'tool-contents-container') ) 
+                    tool.nextSibling.remove()
+            }
+        })
+}
+
+
 const getContents = (header) => {
     const contentsContainer = createAndAddClass('div', 'tool-contents-container')
     const addItem = createAndAddClass('div', 'add-item')
@@ -99,53 +111,13 @@ const getContents = (header) => {
 
 const createContents = (contentsContainer, header) => {
     if ( header === 'rooms' ) return addRoomContents(contentsContainer)
+    // else if ( header === 'walls' ) return addWallsContents(contentsContainer)
 }
 
 const addRoomContents = (contentsContainer) => {
     getRooms().forEach(room => {
         add2Contents(contentsContainer, null, room.label)
     })
-}
-
-const onAddItemClick = (e, header) => {
-    if ( header === 'rooms' ) addNewRoom(e.currentTarget.parentElement)
-}
-
-const addNewRoom = (contentsBar) => {
-    add2Contents(contentsBar, 'room')
-    initRoom(
-        {width: 500, height: 500, label: `room-${getRooms().length + 1}`, darkness: 9}
-    , true)
-    getRooms().push(getItemBeingModified())
-}
-
-const initRoom = (options, newRoom = false) => {
-    const { width, height, label, darkness, progress } = options
-    const room = createAndAddClass('div', 'room-view')
-    room.style.width = `${width}px`
-    room.style.height = `${height}px`
-    room.style.backgroundColor = `rgba(255, 255, 255, ${darkness/10})`
-    appendAll(room, 
-        createAndAddClass('div', 'top-wall'),   createAndAddClass('div', 'left-wall'), 
-        createAndAddClass('div', 'right-wall'), createAndAddClass('div', 'bottom-wall')
-    )
-    setElemBeingModified(room)
-    getRoomOverviewEl().firstElementChild?.remove()
-    getRoomOverviewEl().append(room)
-    if ( newRoom ) setItemBeingModified(new Room(getRooms().length + 1, width, height, label, darkness, progress))
-    else setItemBeingModified(options)
-    renderRoomAttributes()
-}
-
-const refreshTools = (activeTool) => {
-    Array.from(getToolsEl().children[1].children)
-        .forEach(tool => {
-            if ( tool !== activeTool ) {
-                removeClass(tool, 'active-tool')
-                if ( tool.nextSibling && containsClass(tool.nextSibling, 'tool-contents-container') ) 
-                    tool.nextSibling.remove()
-            }
-        })
 }
 
 const add2Contents = (contentsBar, prefix, label) => {
@@ -164,4 +136,46 @@ const selectContent = (contentsBar, selectedContent) => {
     Array.from(contentsBar.children).forEach(content => removeClass(content, 'selected'))
     addClass(selectedContent, 'selected')
     setSelectedToolEl(selectedContent)
+}
+
+const onAddItemClick = (e, header) => {
+    if ( header === 'rooms' ) addNewRoom(e.currentTarget.parentElement)
+    if ( header === 'walls' ) addNewWall(e.currentTarget.parentElement)    
+}
+
+const addNewRoom = (contentsBar) => {
+    add2Contents(contentsBar, 'room')
+    initRoom(
+        {width: 500, height: 500, label: `room-${getRooms().length + 1}`, 
+            darkness: 9, progress: {progress2Active: [], progress2Deactive: []}}
+    , true)
+    getRooms().push(getItemBeingModified())
+}
+
+const initRoom = (options, newRoom = false) => {
+    const { width, height, label, darkness, progress } = options
+    const room = createAndAddClass('div', 'room-view')
+    room.style.width = `${width}px`
+    room.style.height = `${height}px`
+    room.style.backgroundColor = `rgba(255, 255, 255, ${darkness/10})`
+    appendAll(room, 
+        createAndAddClass('div', 'top-wall'),   createAndAddClass('div', 'left-wall'), 
+        createAndAddClass('div', 'right-wall'), createAndAddClass('div', 'bottom-wall')
+    )
+    setElemBeingModified(room)
+    getRoomOverviewEl().firstElementChild?.remove()
+    getRoomOverviewEl().append(room)
+    if ( newRoom ) {
+        setItemBeingModified(new Room(getRooms().length + 1, width, height, label, darkness, progress))
+        setRoomBeingMade(getRooms().length + 1)
+    }
+    else {
+        setItemBeingModified(options)
+        setRoomBeingMade(options.id)
+    }
+    renderRoomAttributes()
+}
+
+const addNewWall = (contentsBar) => {
+    add2Contents(contentsBar, 'wall')
 }

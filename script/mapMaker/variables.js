@@ -1,3 +1,9 @@
+let roomBeingMade = null
+export const setRoomBeingMade = (val) => {
+    roomBeingMade = val
+}
+export const getRoomBeingMade = () => roomBeingMade
+
 let itemBeingModified = null
 export const setItemBeingModified = (val) => {
     itemBeingModified = val
