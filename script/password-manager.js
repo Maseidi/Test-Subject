@@ -6,9 +6,7 @@ import { quitPage, renderQuit } from './user-interface.js'
 import { createAndAddClass, getProperty } from './util.js'
 import { getElementInteractedWith, setPauseCause } from './variables.js'
 
-const passwordNames = [
-    'library-entrance'
-]
+const passwordNames = []
 
 let passwords = new Map([])
 export const setPasswords = (val) => {
