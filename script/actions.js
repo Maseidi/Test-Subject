@@ -400,14 +400,14 @@ const takeOutTorch = () => {
     renderTorch()
     const health = findEquippedTorchById().health
     const brightness = (health / 100 * 40)
-    renderShadow(Math.max(brightness + 20, rooms.get(getCurrentRoomId()).darkness * 10))
+    renderShadow(Math.max(brightness + 20, rooms.get(getCurrentRoomId()).brightness * 10))
 }
 
 export const unequipTorch = () => {
     removeClass(getPlayer(), 'torch')
     setEquippedTorchId(null)
     removeTorch()
-    renderShadow(rooms.get(getCurrentRoomId()).darkness * 10)
+    renderShadow(rooms.get(getCurrentRoomId()).brightness * 10)
 }
 
 export const wUp = () => disableDirection(setUpPressed, setDownPressed)

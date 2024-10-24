@@ -424,7 +424,7 @@ const manageTorch = () => {
     const torchOfInventory = findEquippedTorchById()
     torchOfInventory.health--
     const health = torchOfInventory.health
-    const roomBrightness = rooms.get(getCurrentRoomId()).darkness * 10
+    const roomBrightness = rooms.get(getCurrentRoomId()).brightness * 10
     if ( health === 0 ) killTorch(torchOfInventory.row, torchOfInventory.column, roomBrightness)
     else lightenEnvironment(health, roomBrightness)
     torchCounter = 0

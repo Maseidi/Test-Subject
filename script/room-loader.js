@@ -79,15 +79,16 @@ const renderRoom = () => {
     room2Render.style.height =          `${roomObject.height}px`
     room2Render.style.left =            `${getRoomLeft()}px`
     room2Render.style.top =             `${getRoomTop()}px`
-    calculateRoomBrightness(roomObject.darkness)
+    room2Render.style.background =      roomObject.background
+    calculateRoomBrightness(roomObject.brightness)
     setCurrentRoom(room2Render)
     getRoomContainer().append(room2Render)
 }
 
-const calculateRoomBrightness = (darkness) => {
+const calculateRoomBrightness = (roomBrightness) => {
     const equippedTorch = findEquippedTorchById()
     const brightness = equippedTorch ? (equippedTorch.health / 100 * 40) : Number.MIN_SAFE_INTEGER
-    renderShadow(Math.max(darkness * 10, brightness + 20))
+    renderShadow(Math.max(roomBrightness * 10, brightness + 20))
 }
 
 const manageRoomProgress = () => {
