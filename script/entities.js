@@ -2,6 +2,7 @@ import { Wall } from './wall.js'
 import { Room } from './room.js'
 import { Progress } from './progress.js'
 import { getDifficulty } from './variables.js'
+import { TopLoader } from './loader.js'
 
 
 // **********************************************************************************

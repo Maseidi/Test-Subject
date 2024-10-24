@@ -59,4 +59,11 @@ export const renderWallAttributes = () => {
             document.getElementById('top').value = ''
         })
     )
+
+    getAttributesEl().append(
+        textField('background', wall.background, (value) => {
+            wall.background = value
+            getElemBeingModified().style.background = value
+        }, 'text')
+    )
 }

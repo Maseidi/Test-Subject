@@ -1,7 +1,16 @@
 import { Room } from '../room.js'
+import { Wall } from '../wall.js'
+import { renderWallAttributes } from './attributes/wall.js'
 import { renderRoomAttributes } from './attributes/room.js'
 import { addClass, appendAll, containsClass, createAndAddClass, removeClass } from '../util.js'
-import { getItemBeingModified, getRoomBeingMade, getRooms, getWalls, setItemBeingModified, setRoomBeingMade } from './variables.js'
+import { 
+    getItemBeingModified,
+    getLoaders,
+    getRoomBeingMade,
+    getRooms,
+    getWalls,
+    setItemBeingModified,
+    setRoomBeingMade } from './variables.js'
 import { 
     getElemBeingModified,
     getRoomOverviewEl,
@@ -13,8 +22,8 @@ import {
     setRoomOverviewEl,
     setSelectedToolEl,
     setToolsEl } from './elements.js'
-import { Wall } from '../wall.js'
-import { renderWallAttributes } from './attributes/wall.js'
+import { TopLoader } from '../loader.js'
+import { renderLoaderAttributes } from './attributes/loader.js'
 
 export const renderMapMaker = () => {
     const root = document.getElementById('root')
@@ -117,6 +126,7 @@ const getContents = (header) => {
 const createContents = (contentsContainer, header) => {
     if ( header === 'rooms' ) return addRoomContents(contentsContainer)
     if ( header === 'walls' ) return addWallsContents(contentsContainer)
+    if ( header === 'loaders' ) return addLoaderContents(contentsContainer)    
 }
 
 const addRoomContents = (contentsContainer) => 
@@ -144,7 +154,21 @@ const onWallClick = (contentsContainer, index) => (e) => {
     selectContent(contentsContainer, e.currentTarget)
     initWall(getWalls().get(getRoomBeingMade())[index])
     setAsElemBeingModified(document.getElementById(`wall-${index}`))
-}  
+}
+
+const addLoaderContents = (contentsContainer) => {
+    Array.from((getLoaders().get(getRoomBeingMade()) || []))
+    .forEach((loader, index) => {
+        const content = add2Contents(contentsContainer, null, `loader-${index}`)
+        content.addEventListener('click', onLoaderClick(contentsContainer, index))
+    })
+}
+
+const onLoaderClick = (contentsContainer, index) => (e) => {
+    selectContent(contentsContainer, e.currentTarget)
+    initLoader(getLoaders().get(getRoomBeingMade())[index])
+    setAsElemBeingModified(document.getElementById(`loader-${index}`))
+}
 
 const add2Contents = (contentsBar, prefix, label, creatingNew = false) => {
     const newContent = createAndAddClass('div', 'tool-content')
@@ -163,7 +187,8 @@ const selectContent = (contentsBar, selectedContent) => {
 
 const onAddItemClick = (e, header) => {
     if ( header === 'rooms' ) addNewRoom(e.currentTarget.parentElement)
-    if ( header === 'walls' ) addNewWall(e.currentTarget.parentElement)    
+    if ( header === 'walls' ) addNewWall(e.currentTarget.parentElement)
+    if ( header === 'loaders' ) addNewLoader(e.currentTarget.parentElement)      
 }
 
 const addNewRoom = (contentsBar) => {
@@ -183,10 +208,6 @@ const initRoom = (options, newRoom = false) => {
     room.style.opacity = `${brightness/9}`
     room.style.backgroundColor = background
     room.style.position = `relative`
-    appendAll(room, 
-        createAndAddClass('div', 'top-wall'),   createAndAddClass('div', 'left-wall'), 
-        createAndAddClass('div', 'right-wall'), createAndAddClass('div', 'bottom-wall')
-    )
     setAsElemBeingModified(room)
     setRoomElBeingModified(room)
     getRoomOverviewEl().firstElementChild?.remove()
@@ -200,6 +221,7 @@ const initRoom = (options, newRoom = false) => {
         setRoomBeingMade(options.id)
     }
     renderWalls()
+    renderLoaders()
     renderRoomAttributes()
 }
 
@@ -209,35 +231,73 @@ const renderWalls = () =>
         getRoomOverviewEl().firstElementChild.append(wallEl)
     })
 
+const renderLoaders = () =>     
+    Array.from(getLoaders().get(getRoomBeingMade()) || []).forEach((loader, index) => {
+        const loaderEl = renderLoader(loader, index)
+        getRoomOverviewEl().firstElementChild.append(loaderEl)
+    })
+
 const addNewWall = (contentsBar) => {
     const content = add2Contents(contentsBar, 'wall', null, true)
-    initWall(new Wall(50, 50, 0, 0), true)
+    initWall(new Wall(50, 50, 0, 0, null, null, 'lightslategrey'), true)
     getWalls().set(getRoomBeingMade(), [...(getWalls().get(getRoomBeingMade()) || []), getItemBeingModified()])
     content.addEventListener('click', onWallClick(contentsBar, getWalls().get(getRoomBeingMade()).length - 1))
 }
 
 const initWall = (options, newWall) => {
-    const { width, height, left, top, right, bottom } = options
+    const { width, height, left, top, right, bottom, background } = options
     if ( newWall ) {
         const wall = renderWall(options, (getWalls().get(getRoomBeingMade()) || []).length)
         getRoomOverviewEl().firstElementChild.append(wall)
         setAsElemBeingModified(wall)
-        setItemBeingModified(new Wall(width, height, left, right, top, bottom))
+        setItemBeingModified(new Wall(width, height, left, right, top, bottom, background))
     } else setItemBeingModified(options)
     renderWallAttributes()
 }
 
 const renderWall = (options, index) => {
-    const { width, height, left, top, right, bottom } = options
+    const { width, height, left, top, right, bottom, background } = options
     const wall = createAndAddClass('div', 'wall')
     wall.style.width =                         `${width}px`
     wall.style.height =                        `${height}px`
+    wall.style.background =                     background
     if ( left !== null ) wall.style.left =     `${left}px`
     if ( top !== null ) wall.style.top =       `${top}px`
     if ( right !== null ) wall.style.right =   `${right}px`
     if ( bottom !== null ) wall.style.bottom = `${bottom}px`
     wall.id = `wall-${index}`
     return wall
+}
+
+const addNewLoader = (contentsBar) => {
+    const content = add2Contents(contentsBar, 'loader', null, true)
+    initLoader(new TopLoader(1, 100, 0), true)
+    getLoaders().set(getRoomBeingMade(), [...(getLoaders().get(getRoomBeingMade()) || []), getItemBeingModified()])
+    content.addEventListener('click', onLoaderClick(contentsBar, getLoaders().get(getRoomBeingMade()).length - 1))
+}
+
+const initLoader = (options, newLoader) => {
+    const { className, width, left, door } = options
+    if ( newLoader ) {
+        const loader = renderLoader(options, (getLoaders().get(getRoomBeingMade()) || []).length)
+        getRoomOverviewEl().firstElementChild.append(loader)
+        setAsElemBeingModified(loader)
+        setItemBeingModified(new TopLoader(className, width, left, door))
+    } else setItemBeingModified(options)
+    renderLoaderAttributes()
+}
+
+const renderLoader = (options, index) => {
+    const { width, height, left, top, right, bottom } = options
+    const loader = createAndAddClass('div', 'map-maker-loader')
+    loader.style.width =                              `${width}px`
+    loader.style.height =                             `${height}px`
+    if ( left !== null )        loader.style.left =   `${left}px`
+    else if ( right !== null )  loader.style.right =  `${right}px`
+    if ( top !== null )         loader.style.top =    `${top}px`
+    else if ( bottom !== null ) loader.style.bottom = `${bottom}px`
+    loader.id = `loader-${index}`
+    return loader
 }
 
 const setAsElemBeingModified = (elem) => {

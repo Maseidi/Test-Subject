@@ -116,6 +116,7 @@ const renderWalls = () => {
         wall.id = `wall-${index+1}`
         wall.style.width = `${elem.width}px`
         wall.style.height = `${elem.height}px`
+        wall.style.background = elem.background
         if ( elem.left !== null )        wall.style.left = `${elem.left}px`
         else if ( elem.right !== null )  wall.style.right = `${elem.right}px`
         if ( elem.top !== null )         wall.style.top = `${elem.top}px`

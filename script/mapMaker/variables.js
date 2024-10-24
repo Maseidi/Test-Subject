@@ -21,3 +21,9 @@ export const setWalls = (val) => {
     walls = val
 }
 export const getWalls = () => walls
+
+let loaders = new Map([])
+export const setLoaders = (val) => {
+    loaders = val
+}
+export const getLoaders = () => loaders
