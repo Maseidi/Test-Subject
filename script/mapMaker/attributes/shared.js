@@ -19,15 +19,28 @@ export const textField = (label, value, setValue, type = 'number', max = Number.
     const labelEl = document.createElement('label')
     labelEl.textContent = label
     labelEl.setAttribute('for', label)
-    const input = document.createElement('input')
+    const input = document.createElement(type === 'textarea' ? 'textarea' : 'input')
     addAllAttributes(input, 'type', type, 'min', min, 'max', max, 'name', label, 'id', label)
+    if ( type === 'textarea' ) input.setAttribute('rows', 15)
     input.value = value
-    input.addEventListener('change', (e) => setValue(e.target.value === '' ? null : e.target.value))
+    input.addEventListener('change', (e) => {
+        if ( type === 'number' ) setValue(Number(e.target.value === '' ? min : checkLimits(e.target.value, min, max)))
+        else setValue(e.target.value === '' ? null : e.target.value)
+    })
     appendAll(textFieldContainer, labelEl, input)
     return textFieldContainer
 }
 
+
+const checkLimits = (value, min, max) => {
+    if ( value < min ) return min
+    else if ( value > max ) return max
+    else return value
+}
+
 export const autocomplete = (label, value, setValue, options) => {
+    console.log(value);
+    
     const autocompleteContainer = createAndAddClass('div', 'input-container')
     const labelEl = document.createElement('label')
     labelEl.textContent = label

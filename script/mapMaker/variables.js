@@ -27,3 +27,9 @@ export const setLoaders = (val) => {
     loaders = val
 }
 export const getLoaders = () => loaders
+
+let interactables = new Map([])
+export const setInteractables = (val) => {
+    interactables = val
+}
+export const getInteractables = () => interactables

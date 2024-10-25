@@ -1,9 +1,14 @@
 import { Room } from '../room.js'
 import { Wall } from '../wall.js'
+import { TopLoader } from '../loader.js'
+import { PistolAmmo } from '../interactables.js'
 import { renderWallAttributes } from './attributes/wall.js'
 import { renderRoomAttributes } from './attributes/room.js'
+import { renderLoaderAttributes } from './attributes/loader.js'
+import { renderInteractableAttributes } from './attributes/interactable.js'
 import { addClass, appendAll, containsClass, createAndAddClass, removeClass } from '../util.js'
 import { 
+    getInteractables,
     getItemBeingModified,
     getLoaders,
     getRoomBeingMade,
@@ -22,8 +27,6 @@ import {
     setRoomOverviewEl,
     setSelectedToolEl,
     setToolsEl } from './elements.js'
-import { TopLoader } from '../loader.js'
-import { renderLoaderAttributes } from './attributes/loader.js'
 
 export const renderMapMaker = () => {
     const root = document.getElementById('root')
@@ -81,9 +84,7 @@ const createTool = (header) => {
     return tool
 }
 
-const onToolClick = (e, header) => {
-    activateTool(e.currentTarget, header)
-}
+const onToolClick = (e, header) => activateTool(e.currentTarget, header)
 
 const activateTool = (tool, header) => {
     if ( getRooms().length === 0 && header !== 'rooms' ) return
@@ -124,9 +125,10 @@ const getContents = (header) => {
 }
 
 const createContents = (contentsContainer, header) => {
-    if ( header === 'rooms' ) return addRoomContents(contentsContainer)
-    if ( header === 'walls' ) return addWallsContents(contentsContainer)
-    if ( header === 'loaders' ) return addLoaderContents(contentsContainer)    
+    if ( header === 'rooms' )         return addRoomContents(contentsContainer)
+    if ( header === 'walls' )         return addWallsContents(contentsContainer)
+    if ( header === 'loaders' )       return addLoaderContents(contentsContainer)
+    if ( header === 'interactables' ) return addInteractableContents(contentsContainer)    
 }
 
 const addRoomContents = (contentsContainer) => 
@@ -156,19 +158,31 @@ const onWallClick = (contentsContainer, index) => (e) => {
     setAsElemBeingModified(document.getElementById(`wall-${index}`))
 }
 
-const addLoaderContents = (contentsContainer) => {
+const addLoaderContents = (contentsContainer) =>
     Array.from((getLoaders().get(getRoomBeingMade()) || []))
-    .forEach((loader, index) => {
-        const content = add2Contents(contentsContainer, null, `loader-${index}`)
-        content.addEventListener('click', onLoaderClick(contentsContainer, index))
-    })
-}
+        .forEach((loader, index) => {
+            const content = add2Contents(contentsContainer, null, `loader-${index}`)
+            content.addEventListener('click', onLoaderClick(contentsContainer, index))
+        })
 
 const onLoaderClick = (contentsContainer, index) => (e) => {
     selectContent(contentsContainer, e.currentTarget)
     initLoader(getLoaders().get(getRoomBeingMade())[index])
     setAsElemBeingModified(document.getElementById(`loader-${index}`))
 }
+
+const addInteractableContents = (contentsContainer) => 
+    Array.from((getInteractables().get(getRoomBeingMade()) || []))
+        .forEach((interactable, index) => {
+            const content = add2Contents(contentsContainer, null, `interactable-${index}`)
+            content.addEventListener('click', onInteractableClick(contentsContainer, index))
+        })
+
+const onInteractableClick = (contentsContainer, index) => (e) => {
+    selectContent(contentsContainer, e.currentTarget)
+    initInteractable(getInteractables().get(getRoomBeingMade())[index])
+    setAsElemBeingModified(document.getElementById(`interactable-${index}`))
+}        
 
 const add2Contents = (contentsBar, prefix, label, creatingNew = false) => {
     const newContent = createAndAddClass('div', 'tool-content')
@@ -186,9 +200,10 @@ const selectContent = (contentsBar, selectedContent) => {
 }
 
 const onAddItemClick = (e, header) => {
-    if ( header === 'rooms' ) addNewRoom(e.currentTarget.parentElement)
-    if ( header === 'walls' ) addNewWall(e.currentTarget.parentElement)
-    if ( header === 'loaders' ) addNewLoader(e.currentTarget.parentElement)      
+    if ( header === 'rooms' )         addNewRoom(e.currentTarget.parentElement)
+    if ( header === 'walls' )         addNewWall(e.currentTarget.parentElement)
+    if ( header === 'loaders' )       addNewLoader(e.currentTarget.parentElement)
+    if ( header === 'interactables' ) addNewInteractable(e.currentTarget.parentElement)
 }
 
 const addNewRoom = (contentsBar) => {
@@ -204,10 +219,10 @@ const initRoom = (options, newRoom = false) => {
     const { width, height, label, brightness, progress, background } = options
     const room = createAndAddClass('div', 'room-view')
     room.style.width = `${width}px`
+    room.style.position = `relative`
     room.style.height = `${height}px`
     room.style.opacity = `${brightness/9}`
     room.style.backgroundColor = background
-    room.style.position = `relative`
     setAsElemBeingModified(room)
     setRoomElBeingModified(room)
     getRoomOverviewEl().firstElementChild?.remove()
@@ -222,6 +237,7 @@ const initRoom = (options, newRoom = false) => {
     }
     renderWalls()
     renderLoaders()
+    renderInteractables()
     renderRoomAttributes()
 }
 
@@ -236,6 +252,12 @@ const renderLoaders = () =>
         const loaderEl = renderLoader(loader, index)
         getRoomOverviewEl().firstElementChild.append(loaderEl)
     })
+
+const renderInteractables = () => 
+    Array.from(getInteractables().get(getRoomBeingMade()) || []).forEach((interactable, index) => {
+        const interactableEl = renderInteractable(interactable, index)
+        getRoomOverviewEl().firstElementChild.append(interactableEl)
+    }) 
 
 const addNewWall = (contentsBar) => {
     const content = add2Contents(contentsBar, 'wall', null, true)
@@ -300,8 +322,38 @@ const renderLoader = (options, index) => {
     return loader
 }
 
+const addNewInteractable = (contentsBar) => {
+    const content = add2Contents(contentsBar, 'interactable', null, true)
+    initInteractable(new PistolAmmo(0, 0, 10), true)
+    getInteractables().set(getRoomBeingMade(), [...(getInteractables().get(getRoomBeingMade()) || []), getItemBeingModified()])
+    content.addEventListener('click', onInteractableClick(contentsBar, getInteractables().get(getRoomBeingMade()).length - 1))
+}
+
+const initInteractable = (options, newInteractable) => {
+    if ( newInteractable ) {
+        const interactable = renderInteractable(options, (getInteractables().get(getRoomBeingMade()) || []).length)
+        getRoomOverviewEl().firstElementChild.append(interactable)
+        setAsElemBeingModified(interactable)
+        setItemBeingModified(new PistolAmmo(0, 0, 10))
+    } else setItemBeingModified(options)
+    renderInteractableAttributes()
+}
+
+const renderInteractable = (options, index) => {
+    const { width, left, top, name } = options
+    const interactable = createAndAddClass('div', 'map-maker-interactable')
+    interactable.style.width = `${width}px`
+    interactable.style.left =  `${left}px`
+    interactable.style.top =   `${top}px`
+    interactable.id = `interactable-${index}`
+    const image = new Image()
+    image.src = `./assets/images/${name}.png`
+    interactable.append(image)
+    return interactable
+}
+
 const setAsElemBeingModified = (elem) => {
     if ( getElemBeingModified() ) removeClass(getElemBeingModified(), 'in-modification')
     setElemBeingModified(elem)
-    addClass(getElemBeingModified(), 'in-modification')    
+    addClass(getElemBeingModified(), 'in-modification')
 }

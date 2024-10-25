@@ -8,14 +8,14 @@ export const renderRoomAttributes = () => {
 
     getAttributesEl().append(
         textField('width', room.width, (value) => {
-            room.width = Number(value)
+            room.width = value
             getElemBeingModified().style.width = `${value}px`
         })
     )
 
     getAttributesEl().append(
         textField('height', room.height, (value) => {
-            room.height = Number(value)
+            room.height = value
             getElemBeingModified().style.height = `${value}px`
         })
     )

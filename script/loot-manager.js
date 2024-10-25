@@ -114,7 +114,7 @@ const dropRandomLoot = (left, top, amount) => {
     .find(drop => drop)
 }
 
-const lootMap = new Map([
+export const lootMap = new Map([
     [STICK_LOOT, Stick],
     [SMG_AMMO_LOOT, SmgAmmo],        [COIN_LOOT, Coin],
     [PISTOL_AMMO_LOOT, PistolAmmo],  [ADRENALINE, Grenade],

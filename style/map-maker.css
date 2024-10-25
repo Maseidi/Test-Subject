@@ -31,7 +31,6 @@
   overflow: auto;
   scrollbar-width: thin;
   scrollbar-color: wheat black;
-  padding: 100px 200px;
 }
 
 .tools-sidebar {
@@ -128,6 +127,7 @@
 }
 
 .room-view {
+  margin: 75px 200px;
   position: relative;
   background-color: lightgray;
 }
@@ -160,7 +160,7 @@
   text-transform: capitalize;
 }
 
-.input-container > input, .input-container > select {
+.input-container > input, .input-container > select, .input-container > textarea {
   padding: 5px;
   width: 100%;
   border: unset;
@@ -178,4 +178,13 @@
 .map-maker-loader {
   position: absolute;
   background-color: blue;
+}
+
+.map-maker-interactable {
+  position: absolute;
+}
+
+.map-maker-interactable > img {
+  width: 100%;
+  display: block;
 }

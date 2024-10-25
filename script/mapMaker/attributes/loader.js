@@ -1,7 +1,7 @@
+import { Door } from '../../loader.js'
 import { getItemBeingModified } from '../variables.js'
 import { getAttributesEl, getElemBeingModified } from '../elements.js'
 import { autocomplete, checkbox, renderAttributes, textField } from './shared.js'
-import { Door } from '../../loader.js'
 
 export const renderLoaderAttributes = () => {
     const loader = getItemBeingModified()
@@ -9,7 +9,7 @@ export const renderLoaderAttributes = () => {
     const type = getType(loader)
 
     getAttributesEl().append(
-        textField('room to load', loader.className, (value) => loader.className = Number(value))
+        textField('room to load', loader.className, (value) => loader.className = value)
     )
 
     getAttributesEl().append(
@@ -31,11 +31,19 @@ export const renderLoaderAttributes = () => {
         getAttributesEl().append(
             textField('left', loader.left, (value) => setFieldAndStyle(loader, 'left', value))
         )
+
+        getAttributesEl().append(
+            textField('width', loader.width, (value) => setFieldAndStyle(loader, 'width', value))
+        )
     }
 
     if ( type === 'left-loader' || type === 'right-loader' ) {
         getAttributesEl().append(
             textField('top', loader.top, (value) => setFieldAndStyle(loader, 'top', value))
+        )
+
+        getAttributesEl().append(
+            textField('height', loader.height, (value) => setFieldAndStyle(loader, 'height', value))
         )
     }
 
