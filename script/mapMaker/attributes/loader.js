@@ -102,10 +102,10 @@ const getType = (loader) => {
 }
 
 const setLoaderSpacing = (loader, width, height, left, top, right, bottom) => {
-    setFieldAndStyle(loader, 'top', top)
-    setFieldAndStyle(loader, 'left', left)
-    setFieldAndStyle(loader, 'width', width)
-    setFieldAndStyle(loader, 'right', right)
+    setFieldAndStyle(loader, 'top',    top)
+    setFieldAndStyle(loader, 'left',   left)
+    setFieldAndStyle(loader, 'width',  width)
+    setFieldAndStyle(loader, 'right',  right)
     setFieldAndStyle(loader, 'height', height)
     setFieldAndStyle(loader, 'bottom', bottom)
 }

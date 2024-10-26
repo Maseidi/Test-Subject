@@ -23,7 +23,6 @@ import {
     getToolsEl,
     setElemBeingModified,
     setMapMakerEl,
-    setRoomElBeingModified,
     setRoomOverviewEl,
     setSelectedToolEl,
     setToolsEl } from './elements.js'
@@ -124,65 +123,51 @@ const getContents = (header) => {
     return contentsContainer
 }
 
-const createContents = (contentsContainer, header) => {
-    if ( header === 'rooms' )         return addRoomContents(contentsContainer)
-    if ( header === 'walls' )         return addWallsContents(contentsContainer)
-    if ( header === 'loaders' )       return addLoaderContents(contentsContainer)
-    if ( header === 'interactables' ) return addInteractableContents(contentsContainer)    
+const createContents = (contentsBar, header) => {
+    if ( header === 'rooms' )         return addRoomContents(contentsBar)
+    if ( header === 'walls' )         return addWallsContents(contentsBar)
+    if ( header === 'loaders' )       return addLoaderContents(contentsBar)
+    if ( header === 'interactables' ) return addInteractableContents(contentsBar)    
 }
 
-const addRoomContents = (contentsContainer) => 
+const addRoomContents = (contentsBar) => 
     getRooms().forEach(room => {
-        const content = add2Contents(contentsContainer, null, room.label)
+        const content = add2Contents(contentsBar, null, room.label)
         if ( room.label === getRooms().find(room => room.id === getRoomBeingMade())?.label ) {
-            selectContent(contentsContainer, content)
+            selectContent(contentsBar, content)
         }
-        content.addEventListener('click', onRoomClick(contentsContainer))
-    })
+        content.addEventListener('click', onRoomClick(contentsBar))
+    })    
 
-const onRoomClick = (contentsContainer) => (e) => {
-    selectContent(contentsContainer, e.currentTarget)
+const onRoomClick = (contentsBar) => (e) => {
+    selectContent(contentsBar, e.currentTarget)
     initRoom(getRooms().find(room => room.label === getSelectedToolEl().textContent))
 }
 
-const addWallsContents = (contentsContainer) => 
-    Array.from((getWalls().get(getRoomBeingMade()) || []))
-        .forEach((wall, index) => {
-            const content = add2Contents(contentsContainer, null, `wall-${index}`)
-            content.addEventListener('click', onWallClick(contentsContainer, index))
+const addWallsContents = (contentsBar) => addToolContents(contentsBar, getWalls(), 'wall', onWallClick)
+
+const onWallClick = (contentsBar, index) => onComponentClick(contentsBar, getWalls(), initWall, document.getElementById(`wall-${index}`), index)
+
+const addLoaderContents = (contentsBar) => addToolContents(contentsBar, getLoaders(), 'loader', onLoaderClick)
+
+const onLoaderClick = (contentsBar, index) => onComponentClick(contentsBar, getLoaders(), initLoader, document.getElementById(`loader-${index}`), index)
+
+const addInteractableContents = (contentsBar) => addToolContents(contentsBar, getInteractables(), 'interactable', onInteractableClick)
+
+const onInteractableClick = (contentsBar, index) => onComponentClick(contentsBar, getInteractables(), initInteractable, document.getElementById(`interactable-${index}`), index) 
+
+const addToolContents = (contentsBar, contentsMap, prefix, onCmpClick) =>     
+    Array.from((contentsMap.get(getRoomBeingMade()) || []))
+        .forEach((item, index) => {
+            const content = add2Contents(contentsBar, null, `${prefix}-${index}`)
+            content.addEventListener('click', onCmpClick(contentsBar, index))
         })
 
-const onWallClick = (contentsContainer, index) => (e) => {
-    selectContent(contentsContainer, e.currentTarget)
-    initWall(getWalls().get(getRoomBeingMade())[index])
-    setAsElemBeingModified(document.getElementById(`wall-${index}`))
-}
-
-const addLoaderContents = (contentsContainer) =>
-    Array.from((getLoaders().get(getRoomBeingMade()) || []))
-        .forEach((loader, index) => {
-            const content = add2Contents(contentsContainer, null, `loader-${index}`)
-            content.addEventListener('click', onLoaderClick(contentsContainer, index))
-        })
-
-const onLoaderClick = (contentsContainer, index) => (e) => {
-    selectContent(contentsContainer, e.currentTarget)
-    initLoader(getLoaders().get(getRoomBeingMade())[index])
-    setAsElemBeingModified(document.getElementById(`loader-${index}`))
-}
-
-const addInteractableContents = (contentsContainer) => 
-    Array.from((getInteractables().get(getRoomBeingMade()) || []))
-        .forEach((interactable, index) => {
-            const content = add2Contents(contentsContainer, null, `interactable-${index}`)
-            content.addEventListener('click', onInteractableClick(contentsContainer, index))
-        })
-
-const onInteractableClick = (contentsContainer, index) => (e) => {
-    selectContent(contentsContainer, e.currentTarget)
-    initInteractable(getInteractables().get(getRoomBeingMade())[index])
-    setAsElemBeingModified(document.getElementById(`interactable-${index}`))
-}        
+const onComponentClick = (contentsBar, contentsMap, initCallback, elem2Init, index) => (e) => {
+    selectContent(contentsBar, e.currentTarget)
+    initCallback(contentsMap.get(getRoomBeingMade())[index])
+    setAsElemBeingModified(elem2Init)
+}     
 
 const add2Contents = (contentsBar, prefix, label, creatingNew = false) => {
     const newContent = createAndAddClass('div', 'tool-content')
@@ -209,7 +194,7 @@ const onAddItemClick = (e, header) => {
 const addNewRoom = (contentsBar) => {
     const content = add2Contents(contentsBar, 'room', null, true)
     content.addEventListener('click', onRoomClick(contentsBar))
-    initRoom(
+    const room = initRoom(
         new Room(getRooms().length + 1, 500, 500, `room-${getRooms().length + 1}`)
     , true)
     getRooms().push(getItemBeingModified())
@@ -224,7 +209,6 @@ const initRoom = (options, newRoom = false) => {
     room.style.opacity = `${brightness/9}`
     room.style.backgroundColor = background
     setAsElemBeingModified(room)
-    setRoomElBeingModified(room)
     getRoomOverviewEl().firstElementChild?.remove()
     getRoomOverviewEl().append(room)
     if ( newRoom ) {
@@ -239,25 +223,20 @@ const initRoom = (options, newRoom = false) => {
     renderLoaders()
     renderInteractables()
     renderRoomAttributes()
+    return room
 }
 
-const renderWalls = () => 
-    Array.from(getWalls().get(getRoomBeingMade()) || []).forEach((wall, index) => {
-        const wallEl = renderWall(wall, index)
-        getRoomOverviewEl().firstElementChild.append(wallEl)
-    })
+const renderWalls = () => renderComponents(getWalls(), renderWall)
 
-const renderLoaders = () =>     
-    Array.from(getLoaders().get(getRoomBeingMade()) || []).forEach((loader, index) => {
-        const loaderEl = renderLoader(loader, index)
-        getRoomOverviewEl().firstElementChild.append(loaderEl)
-    })
+const renderLoaders = () => renderComponents(getLoaders(), renderLoader)
 
-const renderInteractables = () => 
-    Array.from(getInteractables().get(getRoomBeingMade()) || []).forEach((interactable, index) => {
-        const interactableEl = renderInteractable(interactable, index)
-        getRoomOverviewEl().firstElementChild.append(interactableEl)
-    }) 
+const renderInteractables = () => renderComponents(getInteractables(), renderInteractable)
+
+const renderComponents = (components, renderCallback) =>
+    Array.from(components.get(getRoomBeingMade()) || []).forEach((component, index) => {
+        const componentEl = renderCallback(component, index)
+        getRoomOverviewEl().firstElementChild.append(componentEl)
+    })
 
 const addNewWall = (contentsBar) => {
     const content = add2Contents(contentsBar, 'wall', null, true)

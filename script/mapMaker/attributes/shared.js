@@ -39,8 +39,6 @@ const checkLimits = (value, min, max) => {
 }
 
 export const autocomplete = (label, value, setValue, options) => {
-    console.log(value);
-    
     const autocompleteContainer = createAndAddClass('div', 'input-container')
     const labelEl = document.createElement('label')
     labelEl.textContent = label

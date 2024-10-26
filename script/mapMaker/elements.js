@@ -33,9 +33,3 @@ export const setSelectedToolEl = (val) => {
     selectedToolEl = val
 }
 export const getSelectedToolEl = () => selectedToolEl
-
-let roomElBeingModified = null
-export const setRoomElBeingModified = (val) => {
-    roomElBeingModified = val
-}
-export const getRoomElBeingModified = () => roomElBeingModified
