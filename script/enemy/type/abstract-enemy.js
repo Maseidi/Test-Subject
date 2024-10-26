@@ -26,8 +26,8 @@ export class AbstractEnemy {
         this.progress2Active =     progress?.progress2Active ?? []
         this.progress2Deactive =   progress?.progress2Deactive ?? []
         this.killAll =             progress?.killAll ?? null
-        this.x =                   waypoint.points[0].x ?? 0
-        this.y =                   waypoint.points[0].y ?? 0        
+        this.x =                   this.waypoint.points[0].x ?? 0
+        this.y =                   this.waypoint.points[0].y ?? 0
         this.difficulties =        difficulty ? decideDifficulty(difficulty) : 
                                    [difficultyMap.MILD, difficultyMap.MIDDLE, difficultyMap.SURVIVAL]
 

@@ -397,7 +397,7 @@ export const spawnEnemy = (elem) => {
     enemyBody.style.transform = `rotateZ(${elem.angle}deg)`
     if ( elem.type === SPIKER ) removeClass(enemyBody, 'body-transition')
     enemyBody.style.backgroundColor = `${elem.virus}`
-    defineComponents(elem, enemyBody)
+    defineEnemyComponents(elem, enemyBody)
     const vision = defineVision(elem)
     appendAll(enemyCollider, enemyBody, vision)
     const backwardDetector = defineBackwardDetector(elem)
@@ -481,7 +481,7 @@ const createPath = (elem, index) => {
     getCurrentRoom().append(path)
 }
 
-const defineComponents = (element, enemyBody) => {
+export const defineEnemyComponents = (element, enemyBody) => {
     for ( let componentNum = 1; componentNum < element.components; componentNum++ ) {
         const predicate = componentNum === element.components - 1 && element.type === SCORCHER
         const component = predicate ? addFireEffect() : document.createElement('div')

@@ -1,13 +1,18 @@
 import { Room } from '../room.js'
 import { Wall } from '../wall.js'
+import { Path, Point } from '../path.js'
 import { TopLoader } from '../loader.js'
 import { PistolAmmo } from '../interactables.js'
+import { Torturer } from '../enemy/type/normal-enemy.js'
+import { defineEnemyComponents } from '../room-loader.js'
 import { renderWallAttributes } from './attributes/wall.js'
 import { renderRoomAttributes } from './attributes/room.js'
+import { renderEnemyAttributes } from './attributes/enemy.js'
 import { renderLoaderAttributes } from './attributes/loader.js'
 import { renderInteractableAttributes } from './attributes/interactable.js'
 import { addClass, appendAll, containsClass, createAndAddClass, removeClass } from '../util.js'
 import { 
+    getEnemies,
     getInteractables,
     getItemBeingModified,
     getLoaders,
@@ -26,6 +31,7 @@ import {
     setRoomOverviewEl,
     setSelectedToolEl,
     setToolsEl } from './elements.js'
+import { TRACKER } from '../enemy/enemy-constants.js'
 
 export const renderMapMaker = () => {
     const root = document.getElementById('root')
@@ -126,8 +132,9 @@ const getContents = (header) => {
 const createContents = (contentsBar, header) => {
     if ( header === 'rooms' )         return addRoomContents(contentsBar)
     if ( header === 'walls' )         return addWallsContents(contentsBar)
+    if ( header === 'enemies' )       return addEnemyContents(contentsBar)
     if ( header === 'loaders' )       return addLoaderContents(contentsBar)
-    if ( header === 'interactables' ) return addInteractableContents(contentsBar)    
+    if ( header === 'interactables' ) return addInteractableContents(contentsBar)
 }
 
 const addRoomContents = (contentsBar) => 
@@ -154,7 +161,11 @@ const onLoaderClick = (contentsBar, index) => onComponentClick(contentsBar, getL
 
 const addInteractableContents = (contentsBar) => addToolContents(contentsBar, getInteractables(), 'interactable', onInteractableClick)
 
-const onInteractableClick = (contentsBar, index) => onComponentClick(contentsBar, getInteractables(), initInteractable, document.getElementById(`interactable-${index}`), index) 
+const onInteractableClick = (contentsBar, index) => onComponentClick(contentsBar, getInteractables(), initInteractable, document.getElementById(`interactable-${index}`), index)
+
+const addEnemyContents = (contentsBar) => addToolContents(contentsBar, getEnemies(), 'enemy', onEnemyClick)
+
+const onEnemyClick = (contentsBar, index) => onComponentClick(contentsBar, getEnemies(), initEnemy, document.getElementById(`enemy-${index}`), index)
 
 const addToolContents = (contentsBar, contentsMap, prefix, onCmpClick) =>     
     Array.from((contentsMap.get(getRoomBeingMade()) || []))
@@ -187,6 +198,7 @@ const selectContent = (contentsBar, selectedContent) => {
 const onAddItemClick = (e, header) => {
     if ( header === 'rooms' )         addNewRoom(e.currentTarget.parentElement)
     if ( header === 'walls' )         addNewWall(e.currentTarget.parentElement)
+    if ( header === 'enemies' )       addNewEnemy(e.currentTarget.parentElement)
     if ( header === 'loaders' )       addNewLoader(e.currentTarget.parentElement)
     if ( header === 'interactables' ) addNewInteractable(e.currentTarget.parentElement)
 }
@@ -222,6 +234,8 @@ const initRoom = (options, newRoom = false) => {
     renderWalls()
     renderLoaders()
     renderInteractables()
+    renderEnemies()
+    renderEnemyPaths()
     renderRoomAttributes()
     return room
 }
@@ -231,6 +245,16 @@ const renderWalls = () => renderComponents(getWalls(), renderWall)
 const renderLoaders = () => renderComponents(getLoaders(), renderLoader)
 
 const renderInteractables = () => renderComponents(getInteractables(), renderInteractable)
+
+const renderEnemies = () => renderComponents(getEnemies(), renderEnemy)
+
+const renderEnemyPaths = () => Array.from(getEnemies().get(getRoomBeingMade()) || []).forEach((enemy, enemyIndex) => renderEnemyPath(enemy, enemyIndex))
+
+const renderEnemyPath = (enemy, enemyIndex) => 
+    Array.from(enemy.waypoint.points).forEach((path, pathIndex) => {
+        const pointEl = createAndAddClass('div', `enemy-${enemyIndex}-path-${pathIndex}`, 'enemy-path')
+        getRoomOverviewEl().firstElementChild.append(pointEl)
+    })
 
 const renderComponents = (components, renderCallback) =>
     Array.from(components.get(getRoomBeingMade()) || []).forEach((component, index) => {
@@ -245,14 +269,13 @@ const addNewWall = (contentsBar) => {
     content.addEventListener('click', onWallClick(contentsBar, getWalls().get(getRoomBeingMade()).length - 1))
 }
 
-const initWall = (options, newWall) => {
-    const { width, height, left, top, right, bottom, background } = options
+const initWall = (wall, newWall) => {
+    setItemBeingModified(wall)
     if ( newWall ) {
-        const wall = renderWall(options, (getWalls().get(getRoomBeingMade()) || []).length)
-        getRoomOverviewEl().firstElementChild.append(wall)
-        setAsElemBeingModified(wall)
-        setItemBeingModified(new Wall(width, height, left, right, top, bottom, background))
-    } else setItemBeingModified(options)
+        const renderedWall = renderWall(wall, (getWalls().get(getRoomBeingMade()) || []).length)
+        getRoomOverviewEl().firstElementChild.append(renderedWall)
+        setAsElemBeingModified(renderedWall)
+    }
     renderWallAttributes()
 }
 
@@ -277,14 +300,13 @@ const addNewLoader = (contentsBar) => {
     content.addEventListener('click', onLoaderClick(contentsBar, getLoaders().get(getRoomBeingMade()).length - 1))
 }
 
-const initLoader = (options, newLoader) => {
-    const { className, width, left, door } = options
+const initLoader = (loader, newLoader) => {
+    setItemBeingModified(loader)
     if ( newLoader ) {
-        const loader = renderLoader(options, (getLoaders().get(getRoomBeingMade()) || []).length)
-        getRoomOverviewEl().firstElementChild.append(loader)
-        setAsElemBeingModified(loader)
-        setItemBeingModified(new TopLoader(className, width, left, door))
-    } else setItemBeingModified(options)
+        const renderedLoader = renderLoader(loader, (getLoaders().get(getRoomBeingMade()) || []).length)
+        getRoomOverviewEl().firstElementChild.append(renderedLoader)
+        setAsElemBeingModified(renderedLoader)
+    }
     renderLoaderAttributes()
 }
 
@@ -308,13 +330,13 @@ const addNewInteractable = (contentsBar) => {
     content.addEventListener('click', onInteractableClick(contentsBar, getInteractables().get(getRoomBeingMade()).length - 1))
 }
 
-const initInteractable = (options, newInteractable) => {
+const initInteractable = (interactable, newInteractable) => {
+    setItemBeingModified(interactable)
     if ( newInteractable ) {
-        const interactable = renderInteractable(options, (getInteractables().get(getRoomBeingMade()) || []).length)
-        getRoomOverviewEl().firstElementChild.append(interactable)
-        setAsElemBeingModified(interactable)
-        setItemBeingModified(new PistolAmmo(0, 0, 10))
-    } else setItemBeingModified(options)
+        const renderedInteractable = renderInteractable(interactable, (getInteractables().get(getRoomBeingMade()) || []).length)
+        getRoomOverviewEl().firstElementChild.append(renderedInteractable)
+        setAsElemBeingModified(renderedInteractable)
+    }
     renderInteractableAttributes()
 }
 
@@ -329,6 +351,36 @@ const renderInteractable = (options, index) => {
     image.src = `./assets/images/${name}.png`
     interactable.append(image)
     return interactable
+}
+
+const addNewEnemy = (contentsBar) => {
+    const content = add2Contents(contentsBar, 'enemy', null, true)
+    initEnemy(new Torturer(1), true)
+    getEnemies().set(getRoomBeingMade(), [...(getEnemies().get(getRoomBeingMade()) || []), getItemBeingModified()])
+    content.addEventListener('click', onEnemyClick(contentsBar, getEnemies().get(getRoomBeingMade()).length - 1))
+}
+
+const initEnemy = (enemy, newEnemy) => {
+    setItemBeingModified(enemy)
+    if ( newEnemy ) {
+        const renderedEnemy = renderEnemy(enemy, (getEnemies().get(getRoomBeingMade()) || []).length)
+        getRoomOverviewEl().firstElementChild.append(renderedEnemy)
+        setAsElemBeingModified(renderedEnemy)
+    }
+    renderEnemyAttributes()
+}
+
+const renderEnemy = (options, index) => {
+    const enemy = createAndAddClass('div', 'enemy')
+    const enemyCollider = createAndAddClass('div', 'enemy-collider', `${options.type}-collider`)
+    const enemyBody = createAndAddClass('div', 'enemy-body', `${options.type}-body`)
+    enemyBody.style.backgroundColor = `${options.virus}`
+    defineEnemyComponents(options, enemyBody)
+    appendAll(enemyCollider, enemyBody)
+    enemy.append(enemyCollider)
+    enemy.id = `enemy-${index}`
+    renderEnemyPath(options, index)
+    return enemy
 }
 
 const setAsElemBeingModified = (elem) => {

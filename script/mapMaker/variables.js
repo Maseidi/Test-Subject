@@ -33,3 +33,9 @@ export const setInteractables = (val) => {
     interactables = val
 }
 export const getInteractables = () => interactables
+
+let enemies = new Map([])
+export const setEnemies = (val) => {
+    enemies = val
+}
+export const getEnemies = () => enemies
