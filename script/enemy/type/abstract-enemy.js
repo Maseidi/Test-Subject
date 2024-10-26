@@ -11,7 +11,7 @@ import { AbstractNotificationService } from '../service/abstract/notification.js
 
 export class AbstractEnemy {
     constructor(type, components, waypoint, health, damage, 
-        maxSpeed, vision, acceleration, loot, progress, virus, difficulty) {
+        maxSpeed, vision, acceleration, loot, progress, virus, difficulty, level) {
         this.type =                type ?? null
         this.components =          components ?? 0
         this.waypoint =            waypoint ?? new SinglePointPath(0, 0)
@@ -30,6 +30,7 @@ export class AbstractEnemy {
         this.y =                   this.waypoint.points[0].y ?? 0
         this.difficulties =        difficulty ? decideDifficulty(difficulty) : 
                                    [difficultyMap.MILD, difficultyMap.MIDDLE, difficultyMap.SURVIVAL]
+        this.level =               level ?? 1                           
 
         this.angleService =        new AbstractAngleService(this)
         this.injuryService =       new AbstractInjuryService(this)

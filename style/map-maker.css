@@ -188,3 +188,12 @@
   width: 100%;
   display: block;
 }
+
+.enemy-path {
+  width: 5px;
+  height: 5px;
+  position: absolute;
+  border-radius: 50%;
+  background-color: gold;
+  border: 1px solid black;
+}

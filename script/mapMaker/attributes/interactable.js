@@ -1,9 +1,9 @@
 import { Progress } from '../../progress.js'
 import { getGunDetails, isGun } from '../../gun-details.js'
+import { difficulties as difficultyMap } from '../../util.js'
 import { Loot, NoteLoot, RANDOM, SingleLoot } from '../../loot.js'
 import { getAttributesEl, getElemBeingModified } from '../elements.js'
-import { decideDifficulty, difficulties as difficultyMap } from '../../util.js'
-import { autocomplete, checkbox, renderAttributes, textField } from './shared.js'
+import { autocomplete, checkbox, difficultyAutoComplete, handleLoot, renderAttributes, textField, updateMap } from './shared.js'
 import { getInteractables, getItemBeingModified, getRoomBeingMade, setItemBeingModified } from '../variables.js'
 import { 
     Adrenaline,
@@ -47,7 +47,7 @@ const interactables = [
     YellowVaccine, BlueVaccine
 ]
 
-const itemsMap1 = new Map([
+export const itemsMap1 = new Map([
     ['purplevaccine', PurpleVaccine], 
     ['smgAmmo', SmgAmmo],             ['coin', Coin],                   ['antidote', Antidote],
     ['bandage', Bandage],             ['rifleAmmo', RifleAmmo],         ['hardDrive', HardDrive], 
@@ -64,7 +64,7 @@ const itemsMap3 = new Map([
     ['armor', BodyArmor], ['lever', Lever], ['lighter', Lighter]
 ])
 
-const itemsMap4 = new Map([
+export const itemsMap4 = new Map([
     ['adrenaline', Adrenaline], ['luckpills', LuckPills], ['healthpotion', HealthPotion], ['energydrink', EnergyDrink]
 ])
 
@@ -78,13 +78,7 @@ export const renderInteractableAttributes = () => {
             let newInteractable = findInteractable(value, interactable)
             if ( !newInteractable ) return
             setItemBeingModified(newInteractable)
-            getInteractables().set(
-                getRoomBeingMade(), 
-                getInteractables().get(getRoomBeingMade())
-                .map((int, index) => 
-                    index === Number(getElemBeingModified().id.replace('interactable-', '')) ? newInteractable : int
-                )
-            )
+            updateMap(getInteractables(), newInteractable, 'interactable')
             getElemBeingModified().firstElementChild.src = `./assets/images/${value}.png`
             getElemBeingModified().style.width =           `${getItemBeingModified().width}px`
             renderInteractableAttributes()
@@ -219,109 +213,10 @@ export const renderInteractableAttributes = () => {
         }
     }
 
-    if ( !itemsMap2.has(name) && !itemsMap3.has(name) && !itemsMap4.has(name) && name !== 'note' && !name.includes('key') ) {
-        getAttributesEl().append(
-            autocomplete('render difficulty', parseDifficulty(interactable.difficulties), 
-                (value) => interactable.difficulties = decideDifficulty(value), 
-                [
-                    {label: 'mild',     value: difficultyMap.MILD},
-                    {label: 'middle',   value: difficultyMap.MIDDLE},
-                    {label: 'survival', value: difficultyMap.SURVIVAL}
-                ]
-            )
-        )
-    }
+    if ( !itemsMap2.has(name) && !itemsMap3.has(name) && !itemsMap4.has(name) && name !== 'note' && !name.includes('key') )
+        getAttributesEl().append(difficultyAutoComplete(interactable))
 
-    if ( name === 'crate' ) {
-        getAttributesEl().append(
-            checkbox('has loot', interactable['loot-name'], (value) => {
-                interactable['loot-data'] = null
-                interactable['loot-code'] = null
-                interactable['loot-active'] = null
-                interactable['loot-heading'] = null
-                interactable['loot-deactive'] = null
-                interactable['loot-description'] = null
-                if ( value ) {
-                    interactable['loot-name'] = RANDOM
-                    interactable['loot-amount'] = 1
-                }
-                else {
-                    interactable['loot-name'] = null
-                    interactable['loot-amount'] = null
-                }
-                renderInteractableAttributes()
-            })
-        )
-        
-        if ( interactable['loot-name'] ) {
-            getAttributesEl().append(
-                autocomplete('name', interactable['loot-name'], (value) => {
-                    let loot = findLoot(value, interactable)
-                    if ( !loot ) return
-                    interactable['loot-name'] = loot.name
-                    interactable['loot-amount'] = loot.amount
-                    interactable['loot-active'] = loot.progress2Active
-                    interactable['loot-deactive'] = loot.progress2Deactive
-                    if ( value === 'note' ) {
-                        interactable['loot-data'] = loot.data
-                        interactable['loot-code'] = loot.code
-                        interactable['loot-heading'] = loot.heading
-                        interactable['loot-description'] = loot.description
-                    } else {
-                        interactable['loot-data'] = null
-                        interactable['loot-code'] = null
-                        interactable['loot-heading'] = null
-                        interactable['loot-description'] = null
-                    }
-                    renderInteractableAttributes()
-                }, Array.from([
-                    {heading: 'random', name: 'random'},
-                    {heading: 'note', name: 'note'},
-                    ...[...itemsMap1.values()].map(Int => new Int()),
-                    ...[...getGunDetails().keys()].map(gunName => new GunDrop(0, 0, gunName, 0, 1, 1, 1, 1, 1)),
-                ]).map(item => ({label: item.heading || item.name, value: item.name})))
-            )
-
-            if ( !isGun(interactable['loot-name']) && name !== 'note' ) {
-                getAttributesEl().append(
-                    textField('loot amount', interactable['loot-amount'], 
-                        (value) => interactable['loot-amount'] = value, 'number', Number.MAX_SAFE_INTEGER, 1)
-                )
-            }
-
-            if ( interactable['loot-name'] === 'note' ) {
-                getAttributesEl().append(
-                    textField('loot heading', interactable['loot-heading'], 
-                        (value) => interactable['loot-heading'] = value, 'text')
-                )
-        
-                getAttributesEl().append(
-                    textField('loot description', interactable['loot-description'], 
-                        (value) => interactable['loot-description'] = value, 'text')
-                )
-        
-                getAttributesEl().append(
-                    textField('loot data', interactable['loot-data'], 
-                        (value) => interactable['loot-data'] = value, 'textarea')
-                )
-    
-                getAttributesEl().append(
-                    textField('loot code', interactable['loot-code'], 
-                        (value) => interactable['loot-code'] = value, 'text')
-                )
-            }
-
-            getAttributesEl().append(
-                textField('loot progress to active', interactable['loot-active'], 
-                    (value) => interactable['loot-active'] = value, 'number')
-            )
-
-            getAttributesEl().append(
-                textField('loot progress to deactive', interactable['loot-deactive'], 
-                    (value) => interactable['loot-deactive'] = value, 'number')
-            )
-        }
-    }
+    if ( name === 'crate' ) handleLoot(interactable, renderInteractableAttributes)
 
 }
 
@@ -335,7 +230,7 @@ const extractProgress = (interactable) => {
         .setOnExamineProgress2Active(onExamine)
 }
 
-const parseDifficulty = (difficulties) => {
+export const parseDifficulty = (difficulties) => {
     const map = new Map([
         [3, difficultyMap.MILD],
         [2, difficultyMap.MIDDLE],
@@ -380,22 +275,4 @@ const findInteractable = (name, interactable) => {
     if ( name === 'crate' )
         return new Crate(left, top, new Loot(RANDOM, 1, null), 
             extractProgress(interactable), parseDifficulty(difficulties)) 
-}
-
-const findLoot = (name, crate) => {
-    const { 'loot-amount': amount, 'loot-active': progress2Active, 'loot-deactive': progress2Deactive } = crate
-    const progress = {progress2Active, progress2Deactive}
-
-    if ( itemsMap1.has(name) || itemsMap4.has(name) || name.includes('ammo') )
-        return new Loot(name, amount, progress)
-
-    if ( name === 'random' ) 
-        return new Loot(name, amount, progress)
-
-    if ( isGun(name) )
-        return new SingleLoot(name, progress)
-
-    if ( name === 'note' ) 
-        return new NoteLoot('heading', 'description', 'data PLACE_CODE_HERE', 'dorm-code', progress)
-
 }

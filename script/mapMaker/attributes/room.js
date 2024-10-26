@@ -31,7 +31,6 @@ export const renderRoomAttributes = () => {
     getAttributesEl().append(
         textField('brightness', room.brightness, (value) => {
             room.brightness = value
-            getElemBeingModified().style.opacity = `${value/9}`
         }, 'number', 9, 1)
     )
 

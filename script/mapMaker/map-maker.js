@@ -1,6 +1,5 @@
 import { Room } from '../room.js'
 import { Wall } from '../wall.js'
-import { Path, Point } from '../path.js'
 import { TopLoader } from '../loader.js'
 import { PistolAmmo } from '../interactables.js'
 import { Torturer } from '../enemy/type/normal-enemy.js'
@@ -31,7 +30,6 @@ import {
     setRoomOverviewEl,
     setSelectedToolEl,
     setToolsEl } from './elements.js'
-import { TRACKER } from '../enemy/enemy-constants.js'
 
 export const renderMapMaker = () => {
     const root = document.getElementById('root')
@@ -218,7 +216,6 @@ const initRoom = (options, newRoom = false) => {
     room.style.width = `${width}px`
     room.style.position = `relative`
     room.style.height = `${height}px`
-    room.style.opacity = `${brightness/9}`
     room.style.backgroundColor = background
     setAsElemBeingModified(room)
     getRoomOverviewEl().firstElementChild?.remove()
@@ -252,7 +249,7 @@ const renderEnemyPaths = () => Array.from(getEnemies().get(getRoomBeingMade()) |
 
 const renderEnemyPath = (enemy, enemyIndex) => 
     Array.from(enemy.waypoint.points).forEach((path, pathIndex) => {
-        const pointEl = createAndAddClass('div', `enemy-${enemyIndex}-path-${pathIndex}`, 'enemy-path')
+        const pointEl = createAndAddClass('div', `enemy-${enemyIndex}-path`, `enemy-path-${pathIndex}`, 'enemy-path')
         getRoomOverviewEl().firstElementChild.append(pointEl)
     })
 
@@ -370,7 +367,7 @@ const initEnemy = (enemy, newEnemy) => {
     renderEnemyAttributes()
 }
 
-const renderEnemy = (options, index) => {
+export const renderEnemy = (options, index) => {
     const enemy = createAndAddClass('div', 'enemy')
     const enemyCollider = createAndAddClass('div', 'enemy-collider', `${options.type}-collider`)
     const enemyBody = createAndAddClass('div', 'enemy-body', `${options.type}-body`)
