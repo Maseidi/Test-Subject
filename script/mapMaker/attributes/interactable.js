@@ -71,8 +71,6 @@ export const itemsMap4 = new Map([
 
 export const renderInteractableAttributes = () => {
     const interactable = getItemBeingModified()
-    console.log(interactable);
-    
     const { name, left, top, amount } = interactable
     renderAttributes()
 

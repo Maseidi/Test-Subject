@@ -377,7 +377,7 @@ const initEnemy = (enemy, newEnemy) => {
     renderEnemyAttributes()
 }
 
-export const renderEnemy = (options, index) => {
+export const renderEnemy = (options, index, renderPath) => {
     const enemy = createAndAddClass('div', 'enemy')
     const enemyCollider = createAndAddClass('div', 'enemy-collider', `${options.type}-collider`)
     const enemyBody = createAndAddClass('div', 'enemy-body', `${options.type}-body`)

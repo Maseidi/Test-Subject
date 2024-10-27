@@ -14,6 +14,7 @@ import {
     STINGER,
     TORTURER,
     TRACKER } from '../../enemy/enemy-constants.js'
+import { addClass } from '../../util.js'
 
 export const renderEnemyAttributes = () => {
     const enemy = getItemBeingModified()
@@ -25,6 +26,7 @@ export const renderEnemyAttributes = () => {
             updateMap(getEnemies(), getItemBeingModified(), 'enemy')
             const index = Number(getElemBeingModified().id.replace('enemy-', ''))
             const newEnemy = renderEnemy(getItemBeingModified(), index)
+            addClass(newEnemy, 'in-modification')
             getElemBeingModified().parentElement.replaceChild(newEnemy, getElemBeingModified())
             setElemBeingModified(newEnemy)
         }, 

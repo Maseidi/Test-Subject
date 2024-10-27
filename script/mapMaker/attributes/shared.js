@@ -92,5 +92,5 @@ export const updateMap = (hashMap, item2update, prefix) =>
     hashMap.set(
         getRoomBeingMade(), 
         hashMap.get(getRoomBeingMade())
-        .map((item, index) => index === Number(getElemBeingModified().id.replace(`${prefix}-`, '')) ? item : item2update)
+        .map((item, index) => index === Number(getElemBeingModified().id.replace(`${prefix}-`, '')) ? item2update : item)
     )
