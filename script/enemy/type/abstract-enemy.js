@@ -22,7 +22,6 @@ export class AbstractEnemy {
         this.virus =               virus ?? ['red', 'green', 'yellow', 'blue', 'purple'][Math.floor(Math.random() * 5)]
         this.vision =              vision ?? 0
         this.acceleration =        acceleration ?? 0
-        this.loot =                loot ? initLootValues(this, loot) : null
         this.renderProgress =      progress?.renderProgress ?? String(Number.MAX_SAFE_INTEGER)
         this.progress2Active =     progress?.progress2Active ?? []
         this.progress2Deactive =   progress?.progress2Deactive ?? []
@@ -41,6 +40,10 @@ export class AbstractEnemy {
         this.visionService =       new AbstractVisionService(this)
         this.movementService =     new AbstractMovementService(this)
         this.balanceStatsBasedOnDifficulty()
+        if ( loot ) {
+            this.loot = {}
+            initLootValues(this.loot, loot)
+        }
     }
 
     balanceStatsBasedOnDifficulty() {

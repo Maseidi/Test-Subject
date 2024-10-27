@@ -1,9 +1,11 @@
-import { renderEnemy } from '../map-maker.js'
-import { manageLootAttribute } from './loot.js'
-import { buildEnemy } from '../../enemy/enemy-factory.js'
-import { getEnemies, getItemBeingModified, getRoomBeingMade, setItemBeingModified } from '../variables.js'
-import { getAttributesEl, getElemBeingModified, setElemBeingModified } from '../elements.js'
-import { autocomplete, difficultyAutoComplete, renderAttributes, textField, updateMap } from './shared.js'
+import { waypoints } from './waypoints.js'
+import { addClass } from '../../../util.js'
+import { renderEnemy } from '../../map-maker.js'
+import { manageLootAttribute } from '../loot.js'
+import { buildEnemy } from '../../../enemy/enemy-factory.js'
+import { getEnemies, getItemBeingModified, setItemBeingModified } from '../../variables.js'
+import { getAttributesEl, getElemBeingModified, setElemBeingModified } from '../../elements.js'
+import { autocomplete, difficultyAutoComplete, renderAttributes, textField, updateMap } from '../shared.js'
 import { 
     GRABBER,
     RANGER,
@@ -13,8 +15,7 @@ import {
     SPIKER,
     STINGER,
     TORTURER,
-    TRACKER } from '../../enemy/enemy-constants.js'
-import { addClass } from '../../util.js'
+    TRACKER } from '../../../enemy/enemy-constants.js'
 
 export const renderEnemyAttributes = () => {
     const enemy = getItemBeingModified()
@@ -34,6 +35,8 @@ export const renderEnemyAttributes = () => {
             .map(item => ({label: item, value: item}))
         )
     )
+
+    getAttributesEl().append(waypoints(enemy.waypoint.points))
 
     getAttributesEl().append(
         textField('level', enemy.level, (value) => enemy.level = value, 'number', 5, 1)

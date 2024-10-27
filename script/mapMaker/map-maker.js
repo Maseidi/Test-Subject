@@ -6,7 +6,7 @@ import { Torturer } from '../enemy/type/normal-enemy.js'
 import { defineEnemyComponents } from '../room-loader.js'
 import { renderWallAttributes } from './attributes/wall.js'
 import { renderRoomAttributes } from './attributes/room.js'
-import { renderEnemyAttributes } from './attributes/enemy.js'
+import { renderEnemyAttributes } from './attributes/enemy/enemy.js'
 import { renderLoaderAttributes } from './attributes/loader.js'
 import { renderInteractableAttributes } from './attributes/interactable.js'
 import { addClass, appendAll, containsClass, createAndAddClass, removeClass } from '../util.js'
@@ -117,14 +117,19 @@ const refreshTools = (activeTool) => {
 
 const getContents = (header) => {
     const contentsContainer = createAndAddClass('div', 'tool-contents-container')
-    const addItem = createAndAddClass('div', 'add-item')
-    const add = document.createElement('p')
-    add.textContent = 'add item'
-    addItem.append(add)
+    const addItem = addItemButton();
     addItem.addEventListener('click', (e) => onAddItemClick(e, header))
     appendAll(contentsContainer, addItem)
     createContents(contentsContainer, header)
     return contentsContainer
+}
+
+export const addItemButton = (textContent = 'add item') => {
+    const addItem = createAndAddClass('div', 'add-item')
+    const add = document.createElement('p')
+    add.textContent = textContent
+    addItem.append(add)
+    return addItem
 }
 
 const createContents = (contentsBar, header) => {
@@ -257,11 +262,15 @@ const renderEnemyPaths = () =>
     Array.from(getEnemies().get(getRoomBeingMade()) || [])
         .forEach((enemy, enemyIndex) => renderEnemyPath(enemy, enemyIndex))
 
-const renderEnemyPath = (enemy, enemyIndex) => 
-    Array.from(enemy.waypoint.points).forEach((path, pathIndex) => {
-        const pointEl = createAndAddClass('div', `enemy-${enemyIndex}-path`, `enemy-path-${pathIndex}`, 'enemy-path')
-        getRoomOverviewEl().firstElementChild.append(pointEl)
-    })
+export const renderEnemyPath = (enemy, enemyIndex) => 
+    Array.from(enemy.waypoint.points).forEach((point, pathIndex) => renderPoint(enemyIndex, pathIndex, point.x, point.y))
+
+export const renderPoint = (enemyIndex, pathIndex, x, y) => {
+    const pointEl = createAndAddClass('div', `enemy-${enemyIndex}-path`, `enemy-path-${pathIndex}`, 'enemy-path')
+    pointEl.style.left = `${x}px`
+    pointEl.style.top =  `${y}px`
+    getRoomOverviewEl().firstElementChild.append(pointEl)
+}
 
 const renderComponents = (components, renderCallback) =>
     Array.from(components.get(getRoomBeingMade()) || []).forEach((component, index) => {
@@ -386,6 +395,8 @@ export const renderEnemy = (options, index, renderPath) => {
     appendAll(enemyCollider, enemyBody)
     enemy.append(enemyCollider)
     enemy.id = `enemy-${index}`
+    enemy.style.left = `${options.waypoint.points[0].x}px`
+    enemy.style.top =  `${options.waypoint.points[0].y}px`
     if ( renderPath ) renderEnemyPath(options, index)
     return enemy
 }

@@ -1,4 +1,3 @@
-import { NOTE } from './loot.js'
 import { Wall } from './wall.js'
 import { isGun } from './gun-details.js'
 import { renderRoomName } from './room-name-manager.js'
@@ -15,6 +14,7 @@ import {
     TRACKER } from './enemy/enemy-constants.js'
 import { 
     addAllAttributes,
+    addAllClasses,
     addClass,
     addFireEffect,
     ANGLE_STATE_MAP,
@@ -106,7 +106,7 @@ const commitProgressChanges = (toChange, action) => {
 
     for ( const activator of toChange ) {
         if ( typeof activator === 'number' || typeof activator === 'string' ) action(activator)
-        else if ( getProgressValueByNumber(activator.condition) ) action(activator.value)
+        else if ( getProgressValueByNumber(activator.condition) )             action(activator.value)
     }
 }
 
@@ -412,10 +412,10 @@ export const spawnEnemy = (elem) => {
 
 const defineEnemy = (elem) => {
     initEnemyStats(elem)
-    const enemy = createAndAddClass('div', `${elem.type}`, 'enemy')
-    enemy.style.left = `${elem.x}px`
-    enemy.style.top = `${elem.y}px`
-    handleEnemyLoot(elem, enemy)
+    const enemy = object2Element(elem.loot)
+    addAllClasses(enemy, `${elem.type}`, 'enemy')
+    enemy.style.left =   `${elem.x}px`
+    enemy.style.top =    `${elem.y}px`
     return enemy
 }
 
@@ -429,50 +429,6 @@ const initEnemyStats = (element) => {
     element.pathFindingY = null
     element.currentSpeed = element.acceleration
     element.accelerationCounter = 0
-}
-
-const handleEnemyLoot = (element, enemy) => {
-    if ( !element.loot ) return    
-    const { 'loot-name': name, 'loot-active' : amount, 
-            'loot-active' : progress2Active, 'loot-deactive' : progress2Deactive } = element.loot
-
-    addAllAttributes(
-        enemy,
-        'loot-name',        name,
-        'loot-amount',      amount,
-        'loot-active',      progress2Active,
-        'loot-deactive',    progress2Deactive,
-    )
-    handleNoteLoot(element, enemy, name)
-    handleKeyLoot(element, enemy, name)
-}
-
-const handleNoteLoot = (element, enemy, name) => {
-    if ( name !== NOTE ) return
-    const { 'note-data' : data, 'note-code' : code, 
-            'note-heading' : heading, 'note-heading' : description } = element.loot
-
-    addAllAttributes(
-        enemy,
-        'note-data',        data,
-        'note-code',        code,
-        'note-heading',     heading,
-        'note-description', description
-    )
-}
-
-const handleKeyLoot = (element, enemy, name) => {
-    if ( !name.includes('key') ) return
-    const { 'key-code' : code, 'key-heading' : heading, 
-            'key-description' : description, 'key-unlocks' : unlocks } = element.loot
-
-    addAllAttributes(
-        enemy,
-        'key-code',        code,
-        'key-heading',     heading,
-        'key-unlocks',     unlocks,
-        'key-description', description,
-    )
 }
 
 const createPath = (elem, index) => {
