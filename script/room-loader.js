@@ -489,9 +489,9 @@ const createPath = (elem, index) => {
 
 export const defineEnemyComponents = (element, enemyBody) => {
     for ( let componentNum = 1; componentNum < element.components; componentNum++ ) {
-        const predicate = componentNum === element.components - 1 && element.type === SCORCHER
-        const component = predicate ? addFireEffect() : document.createElement('div')
-        if (!predicate) component.style.backgroundColor = `${element.virus}`
+        const isScorcherFireComponent = componentNum === element.components - 1 && element.type === SCORCHER
+        const component = isScorcherFireComponent ? addFireEffect() : document.createElement('div')
+        if (!isScorcherFireComponent) component.style.backgroundColor = `${element.virus}`
         addClass(component, `${element.type}-component`)
         enemyBody.append(component)
     }

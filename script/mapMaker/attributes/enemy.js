@@ -1,7 +1,7 @@
 import { renderEnemy } from '../map-maker.js'
 import { manageLootAttribute } from './loot.js'
 import { buildEnemy } from '../../enemy/enemy-factory.js'
-import { getEnemies, getItemBeingModified, setItemBeingModified } from '../variables.js'
+import { getEnemies, getItemBeingModified, getRoomBeingMade, setItemBeingModified } from '../variables.js'
 import { getAttributesEl, getElemBeingModified, setElemBeingModified } from '../elements.js'
 import { autocomplete, difficultyAutoComplete, renderAttributes, textField, updateMap } from './shared.js'
 import { 
@@ -25,7 +25,7 @@ export const renderEnemyAttributes = () => {
             setItemBeingModified(buildEnemy({...enemy, type: value}))
             updateMap(getEnemies(), getItemBeingModified(), 'enemy')
             const index = Number(getElemBeingModified().id.replace('enemy-', ''))
-            const newEnemy = renderEnemy(getItemBeingModified(), index)
+            const newEnemy = renderEnemy(getItemBeingModified(), index, false)
             addClass(newEnemy, 'in-modification')
             getElemBeingModified().parentElement.replaceChild(newEnemy, getElemBeingModified())
             setElemBeingModified(newEnemy)

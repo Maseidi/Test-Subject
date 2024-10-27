@@ -47,9 +47,9 @@ export const manageLootAttribute = (model, reRenderCallback, canHaveKeyAsLoot = 
                 ...[...getGunDetails().keys()].map(gunName => new GunDrop(0, 0, gunName, 0, 1, 1, 1, 1, 1)),
                 ...(canHaveKeyAsLoot ? [{heading: 'key', name: 'key'}] : [])
             ]).map(item => ({label: item.heading || item.name, value: item.name})))
-        )
+        )        
 
-        if ( !isGun(name) && name !== 'note' && name !== 'key' ) {
+        if ( !isGun(name) && name !== 'note' && name.includes('key') ) {
             getAttributesEl().append(
                 textField('loot amount', amount, 
                     (value) => model['loot-amount'] = value, 'number', Number.MAX_SAFE_INTEGER, 1)

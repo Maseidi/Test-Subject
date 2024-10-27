@@ -153,25 +153,25 @@ const addWallsContents = (contentsBar) =>
     addToolContents(contentsBar, getWalls(), 'wall', onWallClick)
 
 const onWallClick = (contentsBar, index) => 
-    onComponentClick(contentsBar, getWalls(), initWall, document.getElementById(`wall-${index}`), index)
+    onComponentClick(contentsBar, getWalls(), initWall, 'wall', index)
 
 const addLoaderContents = (contentsBar) => 
     addToolContents(contentsBar, getLoaders(), 'loader', onLoaderClick)
 
 const onLoaderClick = (contentsBar, index) => 
-    onComponentClick(contentsBar, getLoaders(), initLoader, document.getElementById(`loader-${index}`), index)
+    onComponentClick(contentsBar, getLoaders(), initLoader, 'loader', index)
 
 const addInteractableContents = (contentsBar) => 
     addToolContents(contentsBar, getInteractables(), 'interactable', onInteractableClick)
 
 const onInteractableClick = (contentsBar, index) => 
-    onComponentClick(contentsBar, getInteractables(), initInteractable, document.getElementById(`interactable-${index}`), index)
+    onComponentClick(contentsBar, getInteractables(), initInteractable, 'interactable', index)
 
 const addEnemyContents = (contentsBar) => 
     addToolContents(contentsBar, getEnemies(), 'enemy', onEnemyClick)
 
 const onEnemyClick = (contentsBar, index) => 
-    onComponentClick(contentsBar, getEnemies(), initEnemy, document.getElementById(`enemy-${index}`), index)
+    onComponentClick(contentsBar, getEnemies(), initEnemy, 'enemy', index)
 
 const addToolContents = (contentsBar, contentsMap, prefix, onCmpClick) =>     
     Array.from((contentsMap.get(getRoomBeingMade()) || []))
@@ -180,11 +180,11 @@ const addToolContents = (contentsBar, contentsMap, prefix, onCmpClick) =>
             content.addEventListener('click', onCmpClick(contentsBar, index))
         })
 
-const onComponentClick = (contentsBar, contentsMap, initCallback, elem2Init, index) => (e) => {
+const onComponentClick = (contentsBar, contentsMap, initCallback, prefix, index) => (e) => {
     selectContent(contentsBar, e.currentTarget)
     initCallback(contentsMap.get(getRoomBeingMade())[index])
-    setAsElemBeingModified(elem2Init)
-}     
+    setAsElemBeingModified(document.getElementById(prefix + '-' + index))
+}
 
 const add2Contents = (contentsBar, prefix, label, creatingNew = false) => {
     const newContent = createAndAddClass('div', 'tool-content')
@@ -370,7 +370,7 @@ const addNewEnemy = (contentsBar) => {
 const initEnemy = (enemy, newEnemy) => {
     setItemBeingModified(enemy)
     if ( newEnemy ) {
-        const renderedEnemy = renderEnemy(enemy, (getEnemies().get(getRoomBeingMade()) || []).length)
+        const renderedEnemy = renderEnemy(enemy, (getEnemies().get(getRoomBeingMade()) || []).length, newEnemy)
         getRoomOverviewEl().firstElementChild.append(renderedEnemy)
         setAsElemBeingModified(renderedEnemy)
     }
@@ -386,7 +386,7 @@ export const renderEnemy = (options, index, renderPath) => {
     appendAll(enemyCollider, enemyBody)
     enemy.append(enemyCollider)
     enemy.id = `enemy-${index}`
-    renderEnemyPath(options, index)
+    if ( renderPath ) renderEnemyPath(options, index)
     return enemy
 }
 
