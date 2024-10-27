@@ -8,6 +8,7 @@ import { AbstractMovementService } from '../service/abstract/movement.js'
 import { decideDifficulty, difficulties as difficultyMap } from '../../util.js'
 import { AbstractPathFindingService } from '../service/abstract/path-finding.js'
 import { AbstractNotificationService } from '../service/abstract/notification.js'
+import { initLootValues } from '../../loot.js'
 
 export class AbstractEnemy {
     constructor(type, components, waypoint, health, damage, 
@@ -21,7 +22,7 @@ export class AbstractEnemy {
         this.virus =               virus ?? ['red', 'green', 'yellow', 'blue', 'purple'][Math.floor(Math.random() * 5)]
         this.vision =              vision ?? 0
         this.acceleration =        acceleration ?? 0
-        this.loot =                loot ?? null
+        this.loot =                loot ? initLootValues(this, loot) : null
         this.renderProgress =      progress?.renderProgress ?? String(Number.MAX_SAFE_INTEGER)
         this.progress2Active =     progress?.progress2Active ?? []
         this.progress2Deactive =   progress?.progress2Deactive ?? []

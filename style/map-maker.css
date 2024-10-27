@@ -16,7 +16,7 @@
 }
 
 .attributes-sidebar {
-  width: 300px;  
+  width: 300px;
   height: 100%;
   flex-shrink: 0;
   overflow: auto;
@@ -91,7 +91,6 @@
 
 .tool-contents-container {
   display: flex;
-  margin-bottom: 50px;
   flex-direction: column;
 }
 
@@ -99,7 +98,7 @@
   color: wheat;
   text-align: center;
   letter-spacing: 2px;
-  padding-block: 5px;
+  padding-block: 10px;
 }
 
 .add-item {
@@ -170,7 +169,7 @@
 }
 
 .in-modification {
-  z-index: 2;
+  z-index: 100;
   outline: 2px solid red;
   border: 2px solid orange !important;
 }

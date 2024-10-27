@@ -433,7 +433,9 @@ const initEnemyStats = (element) => {
 
 const handleEnemyLoot = (element, enemy) => {
     if ( !element.loot ) return    
-    const { name, amount, progress2Active, progress2Deactive } = element.loot
+    const { 'loot-name': name, 'loot-active' : amount, 
+            'loot-active' : progress2Active, 'loot-deactive' : progress2Deactive } = element.loot
+
     addAllAttributes(
         enemy,
         'loot-name',        name,
@@ -447,7 +449,9 @@ const handleEnemyLoot = (element, enemy) => {
 
 const handleNoteLoot = (element, enemy, name) => {
     if ( name !== NOTE ) return
-    const { data, code, heading, description } = element.loot
+    const { 'note-data' : data, 'note-code' : code, 
+            'note-heading' : heading, 'note-heading' : description } = element.loot
+
     addAllAttributes(
         enemy,
         'note-data',        data,
@@ -459,7 +463,9 @@ const handleNoteLoot = (element, enemy, name) => {
 
 const handleKeyLoot = (element, enemy, name) => {
     if ( !name.includes('key') ) return
-    const { code, heading, description, unlocks } = element.loot
+    const { 'key-code' : code, 'key-heading' : heading, 
+            'key-description' : description, 'key-unlocks' : unlocks } = element.loot
+
     addAllAttributes(
         enemy,
         'key-code',        code,

@@ -1,10 +1,11 @@
 import { Progress } from '../../progress.js'
+import { Loot, RANDOM } from '../../loot.js'
+import { manageLootAttribute } from './loot.js'
 import { getGunDetails, isGun } from '../../gun-details.js'
 import { difficulties as difficultyMap } from '../../util.js'
-import { Loot, NoteLoot, RANDOM, SingleLoot } from '../../loot.js'
 import { getAttributesEl, getElemBeingModified } from '../elements.js'
-import { autocomplete, checkbox, difficultyAutoComplete, handleLoot, renderAttributes, textField, updateMap } from './shared.js'
-import { getInteractables, getItemBeingModified, getRoomBeingMade, setItemBeingModified } from '../variables.js'
+import { getInteractables, getItemBeingModified, setItemBeingModified } from '../variables.js'
+import { autocomplete, difficultyAutoComplete, renderAttributes, textField, updateMap } from './shared.js'
 import { 
     Adrenaline,
     Antidote,
@@ -70,6 +71,8 @@ export const itemsMap4 = new Map([
 
 export const renderInteractableAttributes = () => {
     const interactable = getItemBeingModified()
+    console.log(interactable);
+    
     const { name, left, top, amount } = interactable
     renderAttributes()
 
@@ -216,7 +219,7 @@ export const renderInteractableAttributes = () => {
     if ( !itemsMap2.has(name) && !itemsMap3.has(name) && !itemsMap4.has(name) && name !== 'note' && !name.includes('key') )
         getAttributesEl().append(difficultyAutoComplete(interactable))
 
-    if ( name === 'crate' ) handleLoot(interactable, renderInteractableAttributes)
+    if ( name === 'crate' ) manageLootAttribute(interactable, renderInteractableAttributes)
 
 }
 

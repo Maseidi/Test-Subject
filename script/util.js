@@ -232,4 +232,4 @@ export const decideDifficulty = (difficulty) => {
         return [difficulties.MIDDLE, difficulties.SURVIVAL]
     else                                           
         return [difficulties.SURVIVAL]
-}    
+}

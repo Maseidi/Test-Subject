@@ -1,4 +1,4 @@
-import { NOTE } from './loot.js'
+import { initLootValues } from './loot.js'
 import { getGunDetails } from './gun-details.js'
 import { decideDifficulty, difficulties as difficultyMap } from './util.js'
 
@@ -52,25 +52,8 @@ export class Speaker extends Interactable {
 export class Crate extends Interactable {
     constructor(left, top, loot, progress, difficulty) {
         super(35, left, top, 'crate', 'crate', 'Break', true, null, null, null, null, progress, difficulty)
-        if ( loot ) this.#initLootValues(loot)
+        if ( loot ) initLootValues(this, loot)
     }
-
-    #initLootValues(loot) {
-        this['loot-name'] =        loot.name              ?? null
-        this['loot-amount'] =      loot.amount            ?? 0
-        this['loot-active'] =      loot.progress2Active   ?? null
-        this['loot-deactive'] =    loot.progress2Deactive ?? null
-        this.#initNoteLootValues(loot)
-    }
-
-    #initNoteLootValues(loot) {
-        if ( loot.name === NOTE ) return
-        this['loot-data'] =        loot.data        ?? null
-        this['loot-code'] =        loot.code        ?? null
-        this['loot-heading'] =     loot.heading     ?? null
-        this['loot-description'] = loot.description ?? null
-    }
-
 }
 
 export class Lever extends Interactable {

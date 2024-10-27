@@ -73,3 +73,28 @@ export class KeyLoot extends SingleLoot {
         this.unlocks = unlocks
     }
 }
+
+export const initLootValues = (src, loot) => {
+    src['loot-name'] =        loot.name              ?? null
+    src['loot-amount'] =      loot.amount            ?? 0
+    src['loot-active'] =      loot.progress2Active   ?? null
+    src['loot-deactive'] =    loot.progress2Deactive ?? null
+    initNoteLootValues(src, loot)
+    initKeyLootValues(src, loot)
+}
+
+const initNoteLootValues = (src, loot) => {
+    if ( loot.name === NOTE ) return
+    src['note-data'] =        loot.data        ?? null
+    src['note-code'] =        loot.code        ?? null
+    src['note-heading'] =     loot.heading     ?? null
+    src['note-description'] = loot.description ?? null
+}
+
+const initKeyLootValues = (src, loot) => {
+    if ( !loot.name.includes('key') ) return
+    src['key-code'] =        loot.code        ?? null
+    src['key-heading'] =     loot.heading     ?? null
+    src['key-unlocks'] =     loot.unlocks     ?? null
+    src['key-description'] = loot.description ?? null 
+}

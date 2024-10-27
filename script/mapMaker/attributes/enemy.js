@@ -1,7 +1,9 @@
-import { getAttributesEl, getElemBeingModified, setElemBeingModified } from '../elements.js'
+import { renderEnemy } from '../map-maker.js'
+import { manageLootAttribute } from './loot.js'
 import { buildEnemy } from '../../enemy/enemy-factory.js'
 import { getEnemies, getItemBeingModified, setItemBeingModified } from '../variables.js'
-import { autocomplete, difficultyAutoComplete, handleLoot, renderAttributes, textField, updateMap } from './shared.js'
+import { getAttributesEl, getElemBeingModified, setElemBeingModified } from '../elements.js'
+import { autocomplete, difficultyAutoComplete, renderAttributes, textField, updateMap } from './shared.js'
 import { 
     GRABBER,
     RANGER,
@@ -12,7 +14,6 @@ import {
     STINGER,
     TORTURER,
     TRACKER } from '../../enemy/enemy-constants.js'
-import { renderEnemy } from '../map-maker.js'
 
 export const renderEnemyAttributes = () => {
     const enemy = getItemBeingModified()
@@ -26,13 +27,10 @@ export const renderEnemyAttributes = () => {
             const newEnemy = renderEnemy(getItemBeingModified(), index)
             getElemBeingModified().parentElement.replaceChild(newEnemy, getElemBeingModified())
             setElemBeingModified(newEnemy)
-        }, [
-            {label: 'Turturer',     value: TORTURER},     {label: 'Soul drinker', value: SOUL_DRINKER},
-            {label: 'Rock cruhser', value: ROCK_CRUSHER}, {label: 'Grabber',      value: GRABBER},
-            {label: 'Ranger',       value: RANGER},       {label: 'Scorcher',     value: SCORCHER},
-            {label: 'Spiker',       value: SPIKER},       {label: 'Stinger',      value: STINGER},
-            {label: 'Tracker',      value: TRACKER},
-        ])
+        }, 
+        [TORTURER, SOUL_DRINKER, ROCK_CRUSHER, GRABBER, RANGER, SCORCHER, SPIKER, STINGER, TRACKER]
+            .map(item => ({label: item, value: item}))
+        )
     )
 
     getAttributesEl().append(
@@ -70,6 +68,6 @@ export const renderEnemyAttributes = () => {
         }, ['red', 'green', 'yellow', 'blue', 'purple'].map(color => ({label: color, value: color})))
     )
 
-    handleLoot(enemy, renderEnemyAttributes)
+    manageLootAttribute(enemy, renderEnemyAttributes, true)
 
 }

@@ -149,21 +149,29 @@ const onRoomClick = (contentsBar) => (e) => {
     initRoom(getRooms().find(room => room.label === getSelectedToolEl().textContent))
 }
 
-const addWallsContents = (contentsBar) => addToolContents(contentsBar, getWalls(), 'wall', onWallClick)
+const addWallsContents = (contentsBar) => 
+    addToolContents(contentsBar, getWalls(), 'wall', onWallClick)
 
-const onWallClick = (contentsBar, index) => onComponentClick(contentsBar, getWalls(), initWall, document.getElementById(`wall-${index}`), index)
+const onWallClick = (contentsBar, index) => 
+    onComponentClick(contentsBar, getWalls(), initWall, document.getElementById(`wall-${index}`), index)
 
-const addLoaderContents = (contentsBar) => addToolContents(contentsBar, getLoaders(), 'loader', onLoaderClick)
+const addLoaderContents = (contentsBar) => 
+    addToolContents(contentsBar, getLoaders(), 'loader', onLoaderClick)
 
-const onLoaderClick = (contentsBar, index) => onComponentClick(contentsBar, getLoaders(), initLoader, document.getElementById(`loader-${index}`), index)
+const onLoaderClick = (contentsBar, index) => 
+    onComponentClick(contentsBar, getLoaders(), initLoader, document.getElementById(`loader-${index}`), index)
 
-const addInteractableContents = (contentsBar) => addToolContents(contentsBar, getInteractables(), 'interactable', onInteractableClick)
+const addInteractableContents = (contentsBar) => 
+    addToolContents(contentsBar, getInteractables(), 'interactable', onInteractableClick)
 
-const onInteractableClick = (contentsBar, index) => onComponentClick(contentsBar, getInteractables(), initInteractable, document.getElementById(`interactable-${index}`), index)
+const onInteractableClick = (contentsBar, index) => 
+    onComponentClick(contentsBar, getInteractables(), initInteractable, document.getElementById(`interactable-${index}`), index)
 
-const addEnemyContents = (contentsBar) => addToolContents(contentsBar, getEnemies(), 'enemy', onEnemyClick)
+const addEnemyContents = (contentsBar) => 
+    addToolContents(contentsBar, getEnemies(), 'enemy', onEnemyClick)
 
-const onEnemyClick = (contentsBar, index) => onComponentClick(contentsBar, getEnemies(), initEnemy, document.getElementById(`enemy-${index}`), index)
+const onEnemyClick = (contentsBar, index) => 
+    onComponentClick(contentsBar, getEnemies(), initEnemy, document.getElementById(`enemy-${index}`), index)
 
 const addToolContents = (contentsBar, contentsMap, prefix, onCmpClick) =>     
     Array.from((contentsMap.get(getRoomBeingMade()) || []))
@@ -245,7 +253,9 @@ const renderInteractables = () => renderComponents(getInteractables(), renderInt
 
 const renderEnemies = () => renderComponents(getEnemies(), renderEnemy)
 
-const renderEnemyPaths = () => Array.from(getEnemies().get(getRoomBeingMade()) || []).forEach((enemy, enemyIndex) => renderEnemyPath(enemy, enemyIndex))
+const renderEnemyPaths = () => 
+    Array.from(getEnemies().get(getRoomBeingMade()) || [])
+        .forEach((enemy, enemyIndex) => renderEnemyPath(enemy, enemyIndex))
 
 const renderEnemyPath = (enemy, enemyIndex) => 
     Array.from(enemy.waypoint.points).forEach((path, pathIndex) => {
