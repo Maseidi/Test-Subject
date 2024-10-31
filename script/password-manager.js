@@ -138,7 +138,7 @@ const decreaseDigit = (e) => {
 
 const updateDoorCodeValue = (digit, bar) => {
     const doorValue = getElementInteractedWith().getAttribute('value')
-    let newValue = ""
+    let newValue = ''
     for ( let i = 0; i < doorValue.length; i++ )
         newValue += ( i === digit ? bar.children[5].textContent : doorValue.charAt(i) ) 
     getElementInteractedWith().setAttribute('value', newValue)
@@ -153,7 +153,7 @@ const renderCheckBtn = () => {
         const targetValue = passwords.get(getElementInteractedWith().getAttribute('code'))
         const valueMap = Array.from(button.previousSibling.children)
             .map(elem => elem.firstElementChild.firstElementChild.children[5].textContent)
-        const value2check = Number(valueMap.join(""))
+        const value2check = Number(valueMap.join(''))
         if ( targetValue !== value2check ) return
         quitPage()
         toggleDoor(getElementInteractedWith()) 

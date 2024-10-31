@@ -222,3 +222,8 @@
 .remove-container > button > img {
   width: 20px;
 }
+
+.disabled-cancel:hover {
+  filter: unset !important;
+  box-shadow: unset !important;
+}

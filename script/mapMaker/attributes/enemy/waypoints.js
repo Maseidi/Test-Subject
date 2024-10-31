@@ -1,9 +1,9 @@
 import { Point } from '../../../path.js'
 import { textField } from '../shared.js'
 import { getElemBeingModified } from '../../elements.js'
-import { appendAll, createAndAddClass } from '../../../util.js'
-import { addItemButton, renderEnemyPath, renderPoint } from '../../map-maker.js'
 import { getItemBeingModified } from '../../variables.js'
+import { addClass, appendAll, createAndAddClass } from '../../../util.js'
+import { addItemButton, renderEnemyPath, renderPoint } from '../../map-maker.js'
 
 let currentEnemyIndex
 let waypointsContainer
@@ -46,7 +46,10 @@ const renderPointContainer = (innerValue, point, index) => {
     }, 'number'))
     const removeContainer = createAndAddClass('div', 'remove-container')
     const removeBtn = createAndAddClass('button', 'popup-cancel')
-    if ( index === 0 ) removeBtn.style.backgroundColor = 'grey'
+    if ( index === 0 ) {
+        removeBtn.style.backgroundColor = 'grey'
+        addClass(removeBtn, 'disabled-cancel')
+    }
     else {
         removeBtn.addEventListener('click', (e) => {
             innerValue.splice(index, 1)

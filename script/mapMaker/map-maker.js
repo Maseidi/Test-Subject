@@ -187,8 +187,8 @@ const addToolContents = (contentsBar, contentsMap, prefix, onCmpClick) =>
 
 const onComponentClick = (contentsBar, contentsMap, initCallback, prefix, index) => (e) => {
     selectContent(contentsBar, e.currentTarget)
-    initCallback(contentsMap.get(getRoomBeingMade())[index])
     setAsElemBeingModified(document.getElementById(prefix + '-' + index))
+    initCallback(contentsMap.get(getRoomBeingMade())[index])
 }
 
 const add2Contents = (contentsBar, prefix, label, creatingNew = false) => {

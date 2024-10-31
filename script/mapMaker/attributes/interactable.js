@@ -159,16 +159,6 @@ export const renderInteractableAttributes = () => {
 
     if ( name === 'note' ) {
         getAttributesEl().append(
-            textField('heading', interactable.heading, 
-                (value) => interactable.heading = value, 'text')
-        )
-
-        getAttributesEl().append(
-            textField('description', interactable.description, 
-                (value) => interactable.description = value, 'text')
-        )
-
-        getAttributesEl().append(
             textField('data', interactable.data, 
                 (value) => interactable.data = value, 'textarea')
         )

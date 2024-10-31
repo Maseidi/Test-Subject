@@ -157,7 +157,7 @@ const gunDetails = new Map([
         [1.8, 1.7, 1.6, 1.5, 1.4],
         [40, 50, 60, 70, 80],
         [0.15, 0.14, 0.13, 0.12, 0.11],
-        "An SMG with high damage and huge capacity.",
+        'An SMG with high damage and huge capacity.',
         23,
     )],
     [PPSH, new Gun(
