@@ -39,3 +39,15 @@ export const setEnemies = (val) => {
     enemies = val
 }
 export const getEnemies = () => enemies
+
+let popups = []
+export const setPopups = (val) => {
+    popups = val
+}
+export const getPopups = () => popups
+
+let dialogues = []
+export const setDialogues = (val) => {
+    dialogues = val
+}
+export const getDialogues = () => dialogues

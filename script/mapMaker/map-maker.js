@@ -1,20 +1,26 @@
 import { Room } from '../room.js'
 import { Wall } from '../wall.js'
 import { TopLoader } from '../loader.js'
+import { Popup } from '../popup-manager.js'
 import { PistolAmmo } from '../interactables.js'
+import { Dialogue } from '../dialogue-manager.js'
 import { Torturer } from '../enemy/type/normal-enemy.js'
 import { defineEnemyComponents } from '../room-loader.js'
 import { renderWallAttributes } from './attributes/wall.js'
 import { renderRoomAttributes } from './attributes/room.js'
-import { renderEnemyAttributes } from './attributes/enemy/enemy.js'
+import { renderPopupAttributes } from './attributes/popup.js'
 import { renderLoaderAttributes } from './attributes/loader.js'
+import { renderEnemyAttributes } from './attributes/enemy/enemy.js'
+import { renderDialogueAttributes } from './attributes/dialogue.js'
 import { renderInteractableAttributes } from './attributes/interactable.js'
 import { addClass, appendAll, containsClass, createAndAddClass, removeClass } from '../util.js'
 import { 
+    getDialogues,
     getEnemies,
     getInteractables,
     getItemBeingModified,
     getLoaders,
+    getPopups,
     getRoomBeingMade,
     getRooms,
     getWalls,
@@ -69,8 +75,8 @@ const createTools = (tools) => {
         createTool('rooms'),
         createTool('walls'),
         createTool('loaders'),
-        createTool('enemies'),
         createTool('interactables'),
+        createTool('enemies'),
         createTool('popups'),
         createTool('dialogues'),
     ]).forEach(item => tools.append(item))
@@ -90,7 +96,7 @@ const createTool = (header) => {
 const onToolClick = (e, header) => activateTool(e.currentTarget, header)
 
 const activateTool = (tool, header) => {
-    if ( getRooms().length === 0 && header !== 'rooms' ) return
+    if ( getRooms().length === 0 && !['rooms', 'dialogues', 'popups'].includes(header) ) return
     if ( !containsClass(tool, 'active-tool') ) {
         addClass(tool, 'active-tool')
         const contents = getContents(header)
@@ -132,13 +138,7 @@ export const addItemButton = (textContent = 'add item') => {
     return addItem
 }
 
-const createContents = (contentsBar, header) => {
-    if ( header === 'rooms' )         return addRoomContents(contentsBar)
-    if ( header === 'walls' )         return addWallsContents(contentsBar)
-    if ( header === 'enemies' )       return addEnemyContents(contentsBar)
-    if ( header === 'loaders' )       return addLoaderContents(contentsBar)
-    if ( header === 'interactables' ) return addInteractableContents(contentsBar)
-}
+const createContents = (contentsBar, header) => TOOL_MAP.get(header).contents(contentsBar)
 
 const addRoomContents = (contentsBar) => 
     getRooms().forEach(room => {
@@ -147,7 +147,19 @@ const addRoomContents = (contentsBar) =>
             selectContent(contentsBar, content)
         }
         content.addEventListener('click', onRoomClick(contentsBar))
-    })    
+    })
+
+const addPopupContents = (contentsBar) => 
+    getPopups().forEach((popup, index) => {
+        const content = add2Contents(contentsBar, null, `popup-${index + 1}`)
+        content.addEventListener('click', onPopupClick(contentsBar))
+    })
+
+const adddDialogueContents = (contentsBar) => 
+    getDialogues().forEach((dialogue, index) => {
+        const content = add2Contents(contentsBar, null, `dialogue-${index + 1}`)
+        content.addEventListener('click', onDialogueClick(contentsBar))
+    })
 
 const onRoomClick = (contentsBar) => (e) => {
     selectContent(contentsBar, e.currentTarget)
@@ -181,7 +193,7 @@ const onEnemyClick = (contentsBar, index) =>
 const addToolContents = (contentsBar, contentsMap, prefix, onCmpClick) =>     
     Array.from((contentsMap.get(getRoomBeingMade()) || []))
         .forEach((item, index) => {
-            const content = add2Contents(contentsBar, null, `${prefix}-${index}`)
+            const content = add2Contents(contentsBar, null, `${prefix}-${index + 1}`)
             content.addEventListener('click', onCmpClick(contentsBar, index))
         })
 
@@ -189,6 +201,21 @@ const onComponentClick = (contentsBar, contentsMap, initCallback, prefix, index)
     selectContent(contentsBar, e.currentTarget)
     setAsElemBeingModified(document.getElementById(prefix + '-' + index))
     initCallback(contentsMap.get(getRoomBeingMade())[index])
+    if ( prefix !== 'enemy' ) return
+    hidePaths()
+    Array.from(document.querySelectorAll(`.enemy-${index}-path`)).forEach(point => point.style.display = 'block')
+}
+
+const onPopupClick = (contentsBar) => (e) => {
+    selectContent(contentsBar, e.currentTarget)
+    const popupIndex = Array.from(contentsBar.children).findIndex(child => child === e.currentTarget)
+    initPopup(getPopups().find((popup, index) => index === popupIndex))
+}
+
+const onDialogueClick = (contentsBar) => (e) => {
+    selectContent(contentsBar, e.currentTarget)
+    const dialogueIndex = Array.from(contentsBar.children).findIndex(child => child === e.currentTarget)
+    initDialogue(getDialogues().find((dialogue, index) => index === dialogueIndex))
 }
 
 const add2Contents = (contentsBar, prefix, label, creatingNew = false) => {
@@ -206,20 +233,12 @@ const selectContent = (contentsBar, selectedContent) => {
     setSelectedToolEl(selectedContent)
 }
 
-const onAddItemClick = (e, header) => {
-    if ( header === 'rooms' )         addNewRoom(e.currentTarget.parentElement)
-    if ( header === 'walls' )         addNewWall(e.currentTarget.parentElement)
-    if ( header === 'enemies' )       addNewEnemy(e.currentTarget.parentElement)
-    if ( header === 'loaders' )       addNewLoader(e.currentTarget.parentElement)
-    if ( header === 'interactables' ) addNewInteractable(e.currentTarget.parentElement)
-}
+const onAddItemClick = (e, header) => TOOL_MAP.get(header).new(e.currentTarget.parentElement)
 
 const addNewRoom = (contentsBar) => {
     const content = add2Contents(contentsBar, 'room', null, true)
     content.addEventListener('click', onRoomClick(contentsBar))
-    const room = initRoom(
-        new Room(getRooms().length + 1, 500, 500, `room-${getRooms().length + 1}`)
-    , true)
+    initRoom(new Room(getRooms().length + 1, 500, 500, `room-${getRooms().length + 1}`), true)
     getRooms().push(getItemBeingModified())
 }
 
@@ -246,8 +265,8 @@ const initRoom = (options, newRoom = false) => {
     renderInteractables()
     renderEnemies()
     renderEnemyPaths()
+    hidePaths()
     renderRoomAttributes()
-    return room
 }
 
 const renderWalls = () => renderComponents(getWalls(), renderWall)
@@ -271,6 +290,9 @@ export const renderPoint = (enemyIndex, pathIndex, x, y) => {
     pointEl.style.top =  `${y}px`
     getRoomOverviewEl().firstElementChild.append(pointEl)
 }
+
+const hidePaths = () => 
+    Array.from(document.querySelectorAll('.enemy-path')).forEach(point => point.style.display = 'none')
 
 const renderComponents = (components, renderCallback) =>
     Array.from(components.get(getRoomBeingMade()) || []).forEach((component, index) => {
@@ -401,8 +423,65 @@ export const renderEnemy = (options, index, renderPath) => {
     return enemy
 }
 
+const addNewPopup = (contentsBar) => {
+    const content = add2Contents(contentsBar, 'popup', null, true)
+    content.addEventListener('click', onPopupClick(contentsBar))
+    initPopup(new Popup('This is a test popup'))
+    getPopups().push(getItemBeingModified())
+}
+
+const initPopup = (options) => {
+    setAsElemBeingModified(null)
+    setItemBeingModified(options)
+    renderPopupAttributes()
+}
+
+const addNewDialogue = (contentsBar) => {
+    const content = add2Contents(contentsBar, 'dialogue', null, true)
+    content.addEventListener('click', onDialogueClick(contentsBar))
+    initDialogue(new Dialogue('This is a test dialogue'))
+    getDialogues().push(getItemBeingModified())
+}
+
+const initDialogue = (options) => {
+    setAsElemBeingModified(null)
+    setItemBeingModified(options)
+    renderDialogueAttributes()
+}
+
+const TOOL_MAP = new Map([
+    ['rooms', {
+        new: addNewRoom,
+        contents: addRoomContents
+    }],
+    ['walls', {
+        new: addNewWall,
+        contents: addWallsContents
+    }],
+    ['enemies', {
+        new: addNewEnemy,
+        contents: addEnemyContents
+    }],
+    ['loaders', {
+        new: addNewLoader,
+        contents: addLoaderContents
+    }],
+    ['interactables', {
+        new: addNewInteractable,
+        contents: addInteractableContents
+    }],
+    ['popups', {
+        new: addNewPopup,
+        contents: addPopupContents
+    }],
+    ['dialogues', {
+        new: addNewDialogue,
+        contents: adddDialogueContents
+    }],
+])
+
 const setAsElemBeingModified = (elem) => {
     if ( getElemBeingModified() ) removeClass(getElemBeingModified(), 'in-modification')
     setElemBeingModified(elem)
-    addClass(getElemBeingModified(), 'in-modification')
+    if ( getElemBeingModified() ) addClass(getElemBeingModified(), 'in-modification')
 }
