@@ -1,6 +1,7 @@
 import { getAttributesEl } from '../elements.js'
-import { getItemBeingModified, getShop, setItemBeingModified } from '../variables.js'
-import { autocomplete, renderAttributes, textField, updateMap } from './shared.js'
+import { getGunDetails, isGun } from '../../gun-details.js'
+import { autocomplete, renderAttributes, input, deleteButton } from './shared.js'
+import { getItemBeingModified, getShop, setItemBeingModified, setShop } from '../variables.js'
 import { 
     AdrenalineShopItem,
     AntidoteShopItem,
@@ -26,7 +27,6 @@ import {
     SmgAmmoShopItem,
     StickShopItem,
     YellowVaccineShopItem } from '../../shop-item.js'
-import { getGunDetails, isGun } from '../../gun-details.js'
 
 export const renderShopItemAttributes = () => {
     renderAttributes()
@@ -48,7 +48,14 @@ export const renderShopItemAttributes = () => {
     )
 
     getAttributesEl().append(
-        textField('render progress', shopItem.renderProgress, (value) => shopItem.renderProgress = value)
+        input('render progress', shopItem.renderProgress, (value) => shopItem.renderProgress = value)
+    )
+
+    getAttributesEl().append(
+        deleteButton(() => {
+            const filteredItems = getShop().filter(item => item !== shopItem)
+            setShop(filteredItems)
+        })
     )
 
 }

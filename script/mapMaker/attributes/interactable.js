@@ -4,8 +4,8 @@ import { manageLootAttribute } from './loot.js'
 import { getGunDetails, isGun } from '../../gun-details.js'
 import { difficulties as difficultyMap } from '../../util.js'
 import { getAttributesEl, getElemBeingModified } from '../elements.js'
-import { getInteractables, getItemBeingModified, setItemBeingModified } from '../variables.js'
-import { autocomplete, difficultyAutoComplete, renderAttributes, textField, updateMap } from './shared.js'
+import { getInteractables, getItemBeingModified, getRoomBeingMade, setItemBeingModified } from '../variables.js'
+import { autocomplete, difficultyAutoComplete, renderAttributes, input, updateMap, deleteButton } from './shared.js'
 import { 
     Adrenaline,
     Antidote,
@@ -91,14 +91,14 @@ export const renderInteractableAttributes = () => {
     )
 
     getAttributesEl().append(
-        textField('left', left, (value) => {
+        input('left', left, (value) => {
             interactable.left = value
             getElemBeingModified().style.left = `${value}px`
         })
     )
 
     getAttributesEl().append(
-        textField('top', top, (value) => {
+        input('top', top, (value) => {
             interactable.top = value
             getElemBeingModified().style.top = `${value}px`
         })
@@ -107,98 +107,98 @@ export const renderInteractableAttributes = () => {
     if ( !itemsMap2.has(name) && !['stick', 'note', 'lighter', 'lever', 'crate', 'armor'].includes(name) && 
          !name.includes('key') && !isGun(name) ) 
         getAttributesEl().append(
-            textField('amount', amount, (value) => interactable.amount = value)
+            input('amount', amount, (value) => interactable.amount = value)
         )
 
     if ( isGun(name) ) {
         getAttributesEl().append(
-            textField('current magazine', interactable.currmag, (value) => interactable.currmag = value)
+            input('current magazine', interactable.currmag, (value) => interactable.currmag = value)
         )
 
         getAttributesEl().append(
-            textField('damage level', interactable.damageLvl, (value) => interactable.damageLvl = value, 'number', 5, 1)
+            input('damage level', interactable.damageLvl, (value) => interactable.damageLvl = value, 'number', 5, 1)
         )
 
         getAttributesEl().append(
-            textField('range level', interactable.rangeLvl, (value) => interactable.rangeLvl = value, 'number', 5, 1)
+            input('range level', interactable.rangeLvl, (value) => interactable.rangeLvl = value, 'number', 5, 1)
         )
 
         getAttributesEl().append(
-            textField('reload speed level', interactable.reloadspeedLvl, 
+            input('reload speed level', interactable.reloadspeedLvl, 
                 (value) => interactable.reloadspeedLvl = value, 'number', 5, 1)
         )
 
         getAttributesEl().append(
-            textField('magazine level', interactable.magazineLvl, 
+            input('magazine level', interactable.magazineLvl, 
                 (value) => interactable.magazineLvl = value, 'number', 5, 1)
         )
 
         getAttributesEl().append(
-            textField('fire rate level', interactable.fireratelvl, 
+            input('fire rate level', interactable.fireratelvl, 
                 (value) => interactable.fireratelvl = value, 'number', 5, 1)
         )
     }
 
     if ( name === 'stick' )
         getAttributesEl().append(
-            textField('health', interactable.health, 
+            input('health', interactable.health, 
                 (value) => interactable.health = value, 'number', 100, 1)
         )
 
     if ( name === 'note' || name.includes('key') ) {
         getAttributesEl().append(
-            textField('heading', interactable.heading, 
+            input('heading', interactable.heading, 
                 (value) => interactable.heading = value, 'text')
         )
 
         getAttributesEl().append(
-            textField('description', interactable.description, 
+            input('description', interactable.description, 
                 (value) => interactable.description = value, 'text')
         )
     }
 
     if ( name === 'note' ) {
         getAttributesEl().append(
-            textField('data', interactable.data, 
+            input('data', interactable.data, 
                 (value) => interactable.data = value, 'textarea')
         )
 
         getAttributesEl().append(
-            textField('code', interactable.code, 
+            input('code', interactable.code, 
                 (value) => interactable.code = value, 'text')
         )
     }
 
     if ( name.includes('key') )
         getAttributesEl().append(
-            textField('unlocks', interactable.unlocks, 
+            input('unlocks', interactable.unlocks, 
                 (value) => interactable.unlocks = value, 'text')
         )
     
     if ( !itemsMap2.has(name) ) {
         getAttributesEl().append(
-            textField('render progress', interactable.renderProgress, 
+            input('render progress', interactable.renderProgress, 
                 (value) => interactable.renderProgress = value, 'number')
         )
 
         getAttributesEl().append(
-            textField('progresses to active', interactable.progress2Active.join(','), 
+            input('progresses to active', interactable.progress2Active.join(','), 
                 (value) => interactable.progress2Active = value.split(','), 'text')
         )
 
         getAttributesEl().append(
-            textField('progresses to deactive', interactable.progress2Deactive.join(','), 
+            input('progresses to deactive', interactable.progress2Deactive.join(','), 
                 (value) => interactable.progress2Deactive = value.split(','), 'text')
         )
 
         getAttributesEl().append(
-            textField('kill all', interactable.killAll, 
+            input('kill all', interactable.killAll, 
                 (value) => interactable.killAll = value, 'number')
         )
 
         if ( name === 'note' ) {
             getAttributesEl().append(
-                textField('on examine progress to active', interactable.onexamine.join(','), 
+                input('on examine progress to active', interactable.onexamine.join(','), 
                     (value) => interactable.onexamine.split(',') = value, 'text')
             )
         }
@@ -208,6 +208,18 @@ export const renderInteractableAttributes = () => {
         getAttributesEl().append(difficultyAutoComplete(interactable))
 
     if ( name === 'crate' ) manageLootAttribute(interactable, renderInteractableAttributes)
+
+    getAttributesEl().append(
+        deleteButton(() => {
+            const currentRoomInteractables = getInteractables().get(getRoomBeingMade())
+            const filteredInteractables = 
+                currentRoomInteractables
+                .filter((item, index) => index !== Number(getElemBeingModified().id.replace(`interactable-`, '')))
+
+            getInteractables().set(getRoomBeingMade(), filteredInteractables)
+            getElemBeingModified().remove()
+        })
+    )
 
 }
 

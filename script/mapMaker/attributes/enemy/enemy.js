@@ -3,9 +3,9 @@ import { addClass } from '../../../util.js'
 import { renderEnemy } from '../../map-maker.js'
 import { manageLootAttribute } from '../loot.js'
 import { buildEnemy } from '../../../enemy/enemy-factory.js'
-import { getEnemies, getItemBeingModified, setItemBeingModified } from '../../variables.js'
+import { getEnemies, getItemBeingModified, getRoomBeingMade, setItemBeingModified } from '../../variables.js'
 import { getAttributesEl, getElemBeingModified, setElemBeingModified } from '../../elements.js'
-import { autocomplete, difficultyAutoComplete, renderAttributes, textField, updateMap } from '../shared.js'
+import { autocomplete, difficultyAutoComplete, renderAttributes, input, updateMap, deleteButton } from '../shared.js'
 import { 
     GRABBER,
     RANGER,
@@ -40,26 +40,26 @@ export const renderEnemyAttributes = () => {
     getAttributesEl().append(waypoints(enemy.waypoint.points))
 
     getAttributesEl().append(
-        textField('level', enemy.level, (value) => enemy.level = value, 'number', 5, 1)
+        input('level', enemy.level, (value) => enemy.level = value, 'number', 5, 1)
     )
 
     getAttributesEl().append(
-        textField('render progress', enemy.renderProgress, 
+        input('render progress', enemy.renderProgress, 
             (value) => enemy.renderProgress = value, 'number')
     )
 
     getAttributesEl().append(
-        textField('progresses to active', enemy.progress2Active.join(','), 
+        input('progresses to active', enemy.progress2Active.join(','), 
             (value) => enemy.progress2Active = value.split(','), 'text')
     )
 
     getAttributesEl().append(
-        textField('progresses to deactive', enemy.progress2Deactive.join(','), 
+        input('progresses to deactive', enemy.progress2Deactive.join(','), 
             (value) => enemy.progress2Deactive = value.split(','), 'text')
     )
 
     getAttributesEl().append(
-        textField('kill all', enemy.killAll, 
+        input('kill all', enemy.killAll, 
             (value) => enemy.killAll = value, 'number')
     )
 
@@ -75,5 +75,19 @@ export const renderEnemyAttributes = () => {
     )
 
     manageLootAttribute(enemy, renderEnemyAttributes, true)
+
+    getAttributesEl().append(
+        deleteButton(() => {
+            const enemyIndex = getElemBeingModified().id.replace(`enemy-`, '')
+            const currentRoomEnemies = getEnemies().get(getRoomBeingMade())
+            const filteredEnemies = 
+                currentRoomEnemies
+                .filter((item, index) => index !== Number(enemyIndex))
+
+            getEnemies().set(getRoomBeingMade(), filteredEnemies)
+            Array.from(document.querySelectorAll(`.enemy-${enemyIndex}-path`)).forEach(point => point.remove())
+            getElemBeingModified().remove()
+        })
+    )
 
 }

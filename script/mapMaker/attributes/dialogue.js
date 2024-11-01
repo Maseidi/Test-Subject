@@ -1,14 +1,14 @@
+import { getAttributesEl, getSelectedToolEl } from '../elements.js'
 import { sources } from '../../dialogue-manager.js'
-import { getAttributesEl } from '../elements.js'
-import { getItemBeingModified } from '../variables.js'
-import { autocomplete, renderAttributes, textField } from './shared.js'
+import { getDialogues, getItemBeingModified, setDialogues } from '../variables.js'
+import { autocomplete, renderAttributes, input, deleteButton } from './shared.js'
 
 export const renderDialogueAttributes = () => {
     const dialogue = getItemBeingModified()
     renderAttributes()
     
     getAttributesEl().append(
-        textField('message', dialogue.message, (value) => dialogue.message = value, 'text')
+        input('message', dialogue.message, (value) => dialogue.message = value, 'text')
     )
 
     getAttributesEl().append(
@@ -21,16 +21,23 @@ export const renderDialogueAttributes = () => {
     )
 
     getAttributesEl().append(
-        textField('render progress', dialogue.renderProgress, (value) => dialogue.renderProgress = value, 'number')
+        input('render progress', dialogue.renderProgress, (value) => dialogue.renderProgress = value, 'number')
     )
 
     getAttributesEl().append(
-        textField('progresses to active', 
+        input('progresses to active', 
             dialogue.progress2Active.join(','), (value) => dialogue.progress2Active = value.split(','), 'text')
     )
 
     getAttributesEl().append(
-        textField('duration (ms)', dialogue.duration, (value) => dialogue.duration = value, 'number', 30000)
+        input('duration (ms)', dialogue.duration, (value) => dialogue.duration = value, 'number', 30000)
+    )
+
+    getAttributesEl().append(
+        deleteButton(() => {
+            const filteredDialogues = getDialogues().filter(item => item !== dialogue)
+            setDialogues(filteredDialogues)
+        })
     )
 
 }

@@ -1,27 +1,27 @@
-import { getItemBeingModified} from '../variables.js'
-import { renderAttributes, textField } from './shared.js'
-import { getAttributesEl, getElemBeingModified, getSelectedToolEl } from '../elements.js'
+import { renderAttributes, input, deleteButton } from './shared.js'
+import { getAttributesEl, getElemBeingModified, getRoomOverviewEl, getSelectedToolEl } from '../elements.js'
+import { getEnemies, getInteractables, getItemBeingModified, getLoaders, getRooms, getWalls, setRooms} from '../variables.js'
 
 export const renderRoomAttributes = () => {
     const room = getItemBeingModified()
     renderAttributes()
 
     getAttributesEl().append(
-        textField('width', room.width, (value) => {
+        input('width', room.width, (value) => {
             room.width = value
             getElemBeingModified().style.width = `${value}px`
         })
     )
 
     getAttributesEl().append(
-        textField('height', room.height, (value) => {
+        input('height', room.height, (value) => {
             room.height = value
             getElemBeingModified().style.height = `${value}px`
         })
     )
 
     getAttributesEl().append(
-        textField('label', room.label, (value) => {
+        input('label', room.label, (value) => {
             if ( value === '' ) return
             room.label = value
             getSelectedToolEl().textContent = value
@@ -29,28 +29,41 @@ export const renderRoomAttributes = () => {
     )
 
     getAttributesEl().append(
-        textField('brightness', room.brightness, (value) => {
+        input('brightness', room.brightness, (value) => {
             room.brightness = value
         }, 'number', 9, 1)
     )
 
     getAttributesEl().append(
-        textField('progresses to active', progress2String(room.progress2Active), (value) => {
+        input('progresses to active', progress2String(room.progress2Active), (value) => {
             room.progress2Active = extractCondition(value)
         }, 'text')
     )
 
     getAttributesEl().append(
-        textField('progresses to deactive', progress2String(room.progress2Deactive), (value) => {
+        input('progresses to deactive', progress2String(room.progress2Deactive), (value) => {
             room.progress2Deactive = extractCondition(value)
         }, 'text')
     )
 
     getAttributesEl().append(
-        textField('background', room.background, (value) => {
+        input('background', room.background, (value) => {
             room.background = value
             getElemBeingModified().style.background = value
-        }, 'text')
+        }, 'color')
+    )
+
+    getAttributesEl().append(
+        deleteButton(() => {
+            const filteredRooms = getRooms().filter(item => item.id !== room.id)
+            setRooms(filteredRooms.map((item, index) => ({...item, id: index + 1})))
+            getInteractables().delete(room.id)
+            getWalls().delete(room.id)
+            getEnemies().delete(room.id)
+            getLoaders().delete(room.id)
+            getRoomOverviewEl().children[1].remove()
+            getElemBeingModified().remove()
+        })
     )
 }
 

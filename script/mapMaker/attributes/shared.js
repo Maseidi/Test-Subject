@@ -1,22 +1,22 @@
 import { createHeader } from '../map-maker.js'
 import { getRoomBeingMade } from '../variables.js'
 import { parseDifficulty } from './interactable.js'
-import { getAttributesEl, getElemBeingModified, getMapMakerEl, setAttributesEl } from '../elements.js'
-import { addAllAttributes, appendAll, createAndAddClass, decideDifficulty, difficulties } from '../../util.js'
+import { addAllAttributes, appendAll, containsClass, createAndAddClass, decideDifficulty, difficulties } from '../../util.js'
+import { getAttributesEl, getElemBeingModified, getMapMakerEl, getSelectedToolEl, setAttributesEl } from '../elements.js'
 
 export const renderAttributes = () => {
     if ( getAttributesEl() ) getAttributesEl().remove()
     getMapMakerEl().firstElementChild.prepend(attributesSidebar())
 }
 
-const attributesSidebar = () => {
+export const attributesSidebar = () => {
     const attributesSidebar = createAndAddClass('div', 'attributes-sidebar')
     attributesSidebar.append(createHeader('attributes'))
     setAttributesEl(attributesSidebar)
     return attributesSidebar
 }
 
-export const textField = (label, value, setValue, type = 'number', max = Number.MAX_SAFE_INTEGER, min = 0) => {
+export const input = (label, value, setValue, type = 'number', max = Number.MAX_SAFE_INTEGER, min = 0) => {
     const textFieldContainer = createAndAddClass('div', 'input-container')
     const labelEl = document.createElement('label')
     labelEl.textContent = label
@@ -94,3 +94,19 @@ export const updateMap = (hashMap, item2update, prefix) =>
         hashMap.get(getRoomBeingMade())
         .map((item, index) => index === Number(getElemBeingModified().id.replace(`${prefix}-`, '')) ? item2update : item)
     )
+
+export const deleteButton = (onClick) => {
+    const deleteNodeBtn = createAndAddClass('button', 'popup-cancel')
+    deleteNodeBtn.textContent = 'delete node'
+    deleteNodeBtn.addEventListener('click', () => {
+        onClick()
+        const previous = getSelectedToolEl().previousSibling
+        const next = getSelectedToolEl().nextSibling        
+        const tool = getSelectedToolEl().parentElement.previousSibling
+        getSelectedToolEl().remove()
+        if ( previous )                                      previous.click()
+        else if ( next && !containsClass(next, 'add-item') ) next.click()
+        else                                                 tool.click()
+    })
+    return deleteNodeBtn
+}

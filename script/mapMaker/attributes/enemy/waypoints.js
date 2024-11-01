@@ -1,5 +1,5 @@
 import { Point } from '../../../path.js'
-import { textField } from '../shared.js'
+import { input } from '../shared.js'
 import { getElemBeingModified } from '../../elements.js'
 import { getItemBeingModified } from '../../variables.js'
 import { addClass, appendAll, createAndAddClass } from '../../../util.js'
@@ -35,13 +35,13 @@ const renderWaypointsContents = (innerValue) => {
 const renderPointContainer = (innerValue, point, index) => {
     const pointContainer = createAndAddClass('div', 'point-container')
     const xContainer = createAndAddClass('div', 'coordinate-container')
-    xContainer.append(textField('x' + index, point.x, (value) => {
+    xContainer.append(input('x' + index, point.x, (value) => {
         innerValue[index].x = value
         document.querySelector(`.enemy-${currentEnemyIndex}-path.enemy-path-${index}`).style.left = `${value}px`
         if ( index === 0 ) getElemBeingModified().style.left = `${value}px`
     }, 'number'))
     const yContainer = createAndAddClass('div', 'coordinate-container')
-    yContainer.append(textField('y' + index, point.y, (value) => {
+    yContainer.append(input('y' + index, point.y, (value) => {
         innerValue[index].y = value
         document.querySelector(`.enemy-${currentEnemyIndex}-path.enemy-path-${index}`).style.top = `${value}px`
         if ( index === 0 ) getElemBeingModified().style.top = `${value}px`

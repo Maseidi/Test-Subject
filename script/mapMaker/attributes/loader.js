@@ -1,7 +1,7 @@
 import { Door } from '../../loader.js'
-import { getItemBeingModified } from '../variables.js'
 import { getAttributesEl, getElemBeingModified } from '../elements.js'
-import { autocomplete, checkbox, renderAttributes, textField } from './shared.js'
+import { getItemBeingModified, getLoaders, getRoomBeingMade } from '../variables.js'
+import { autocomplete, checkbox, renderAttributes, input, deleteButton } from './shared.js'
 
 export const renderLoaderAttributes = () => {
     const loader = getItemBeingModified()
@@ -9,7 +9,7 @@ export const renderLoaderAttributes = () => {
     const type = getType(loader)
 
     getAttributesEl().append(
-        textField('room to load', loader.className, (value) => loader.className = value)
+        input('room to load', loader.className, (value) => loader.className = value)
     )
 
     getAttributesEl().append(
@@ -29,21 +29,21 @@ export const renderLoaderAttributes = () => {
 
     if ( type === 'top-loader' || type === 'bottom-loader' ) {
         getAttributesEl().append(
-            textField('left', loader.left, (value) => setFieldAndStyle(loader, 'left', value))
+            input('left', loader.left, (value) => setFieldAndStyle(loader, 'left', value))
         )
 
         getAttributesEl().append(
-            textField('width', loader.width, (value) => setFieldAndStyle(loader, 'width', value))
+            input('width', loader.width, (value) => setFieldAndStyle(loader, 'width', value))
         )
     }
 
     if ( type === 'left-loader' || type === 'right-loader' ) {
         getAttributesEl().append(
-            textField('top', loader.top, (value) => setFieldAndStyle(loader, 'top', value))
+            input('top', loader.top, (value) => setFieldAndStyle(loader, 'top', value))
         )
 
         getAttributesEl().append(
-            textField('height', loader.height, (value) => setFieldAndStyle(loader, 'height', value))
+            input('height', loader.height, (value) => setFieldAndStyle(loader, 'height', value))
         )
     }
 
@@ -55,37 +55,49 @@ export const renderLoaderAttributes = () => {
         })
     )
 
-    if ( !loader.door ) return
+    if ( loader.door ) {
+        getAttributesEl().append(
+            input('door heading', loader.door.heading, (value) => loader.door.heading = value, 'text')
+        )
+    
+        getAttributesEl().append(
+            input('door popup', loader.door.popup, (value) => loader.door.popup = value, 'text')
+        )
+    
+        getAttributesEl().append(
+            input('door key', loader.door.key, (value) => loader.door.key = value, 'text')
+        )
+    
+        getAttributesEl().append(
+            input('door render progress', loader.door.renderProgress, (value) => loader.door.renderProgress = value, 'text')
+        )
+    
+        getAttributesEl().append(
+            input('door progresses to active', 
+                loader.door.progress2Active.join(','), 
+                (value) => loader.door.progress2Active = value.split(','), 
+                'text')
+        )
+    
+        getAttributesEl().append(
+            input('door kill all', loader.door.killAll, (value) => loader.door.killAll = value, 'text')
+        )
+    
+        getAttributesEl().append(
+            input('door code', loader.door.code, (value) => loader.door.code = value, 'text')
+        )
+    }
 
     getAttributesEl().append(
-        textField('door heading', loader.door.heading, (value) => loader.door.heading = value, 'text')
-    )
+        deleteButton(() => {
+            const currentRoomLoaders = getLoaders().get(getRoomBeingMade())
+            const filteredLoaders = 
+                currentRoomLoaders
+                .filter((item, index) => index !== Number(getElemBeingModified().id.replace(`loader-`, '')))
 
-    getAttributesEl().append(
-        textField('door popup', loader.door.popup, (value) => loader.door.popup = value, 'text')
-    )
-
-    getAttributesEl().append(
-        textField('door key', loader.door.key, (value) => loader.door.key = value, 'text')
-    )
-
-    getAttributesEl().append(
-        textField('door render progress', loader.door.renderProgress, (value) => loader.door.renderProgress = value, 'text')
-    )
-
-    getAttributesEl().append(
-        textField('door progresses to active', 
-            loader.door.progress2Active.join(','), 
-            (value) => loader.door.progress2Active = value.split(','), 
-            'text')
-    )
-
-    getAttributesEl().append(
-        textField('door kill all', loader.door.killAll, (value) => loader.door.killAll = value, 'text')
-    )
-
-    getAttributesEl().append(
-        textField('door code', loader.door.code, (value) => loader.door.code = value, 'text')
+            getLoaders().set(getRoomBeingMade(), filteredLoaders)
+            getElemBeingModified().remove()
+        })
     )
 
 }

@@ -30,6 +30,7 @@ import {
     setItemBeingModified,
     setRoomBeingMade } from './variables.js'
 import { 
+    getAttributesEl,
     getElemBeingModified,
     getRoomOverviewEl,
     getSelectedToolEl,
@@ -39,12 +40,13 @@ import {
     setRoomOverviewEl,
     setSelectedToolEl,
     setToolsEl } from './elements.js'
+import { attributesSidebar } from './attributes/shared.js'
 
 export const renderMapMaker = () => {
     const root = document.getElementById('root')
     const mapMakerContainer = createAndAddClass('div', 'map-maker-container')
     const mapMakerContents = createAndAddClass('div', 'map-maker-contents')
-    appendAll(mapMakerContents, roomOverview(), toolsSidebar())
+    appendAll(mapMakerContents, attributesSidebar(), roomOverview(), toolsSidebar())
     mapMakerContainer.append(mapMakerContents)
     setMapMakerEl(mapMakerContainer)
     root.append(mapMakerContainer)
@@ -100,6 +102,8 @@ const createTool = (header) => {
 const onToolClick = (e, header) => activateTool(e.currentTarget, header)
 
 const activateTool = (tool, header) => {
+    reRenderAttributes()
+    setAsElemBeingModified(null)
     if ( getRooms().length === 0 && !['rooms', 'dialogues', 'popups', 'shop'].includes(header) ) return
     if ( !containsClass(tool, 'active-tool') ) {
         addClass(tool, 'active-tool')
@@ -111,6 +115,11 @@ const activateTool = (tool, header) => {
         tool.nextSibling.remove()
     }
     refreshTools(tool)
+}
+
+const reRenderAttributes = () => {
+    if ( !getAttributesEl() ) return
+    Array.from(getAttributesEl().children).forEach((child, index) => index !== 0 && child.remove())
 }
 
 const refreshTools = (activeTool) => {
@@ -267,6 +276,7 @@ const initRoom = (options, newRoom = false) => {
     room.style.height = `${height}px`
     room.style.backgroundColor = background
     setAsElemBeingModified(room)
+    getRoomOverviewEl().children[1]?.remove()
     getRoomOverviewEl().firstElementChild?.remove()
     getRoomOverviewEl().append(room)
     if ( newRoom ) {
@@ -277,6 +287,7 @@ const initRoom = (options, newRoom = false) => {
         setItemBeingModified(options)
         setRoomBeingMade(options.id)
     }
+    renderCurrentRoomId()
     renderWalls()
     renderLoaders()
     renderInteractables()
@@ -284,6 +295,12 @@ const initRoom = (options, newRoom = false) => {
     renderEnemyPaths()
     hidePaths()
     renderRoomAttributes()
+}
+
+const renderCurrentRoomId = () => {
+    const roomId = createAndAddClass('div', 'room-id')
+    roomId.textContent = `room id: ${getRoomBeingMade()}`
+    getRoomOverviewEl().append(roomId)
 }
 
 const renderWalls = () => renderComponents(getWalls(), renderWall)

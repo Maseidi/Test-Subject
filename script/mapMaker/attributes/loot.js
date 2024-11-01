@@ -2,7 +2,7 @@ import { GunDrop } from '../../interactables.js'
 import { getAttributesEl } from '../elements.js'
 import { itemsMap1, itemsMap4 } from './interactable.js'
 import { getGunDetails, isGun } from '../../gun-details.js'
-import { autocomplete, checkbox, textField } from './shared.js'
+import { autocomplete, checkbox, input } from './shared.js'
 import { KeyLoot, Loot, NoteLoot, RANDOM, SingleLoot } from '../../loot.js'
 
 export const manageLootAttribute = (model, reRenderCallback, canHaveKeyAsLoot = false) => {
@@ -51,7 +51,7 @@ export const manageLootAttribute = (model, reRenderCallback, canHaveKeyAsLoot = 
 
         if ( !isGun(name) && name !== 'note' && !name.includes('key') ) {
             getAttributesEl().append(
-                textField('loot amount', amount, 
+                input('loot amount', amount, 
                     (value) => model['loot-amount'] = value, 'number', Number.MAX_SAFE_INTEGER, 1)
             )
         }
@@ -59,38 +59,38 @@ export const manageLootAttribute = (model, reRenderCallback, canHaveKeyAsLoot = 
         if ( name === 'note' ) {
             const { 'note-heading': heading, 'note-description': description, 'note-data': data, 'note-code': code } = model
             getAttributesEl().append(
-                textField('note heading', heading, (value) => model['note-heading'] = value, 'text')
+                input('note heading', heading, (value) => model['note-heading'] = value, 'text')
             )
     
             getAttributesEl().append(
-                textField('note description', description, (value) => model['note-description'] = value, 'text')
+                input('note description', description, (value) => model['note-description'] = value, 'text')
             )
     
             getAttributesEl().append(
-                textField('note data', data, (value) => model['note-data'] = value, 'textarea')
+                input('note data', data, (value) => model['note-data'] = value, 'textarea')
             )
 
             getAttributesEl().append(
-                textField('note code', code, (value) => model['note-code'] = value, 'text')
+                input('note code', code, (value) => model['note-code'] = value, 'text')
             )
         }        
 
         if ( name.includes('key') ) {
             const { 'key-heading': heading, 'key-description': description, 'key-unlocks': unlocks, 'key-code': code } = model
             getAttributesEl().append(
-                textField('key heading', heading, (value) => model['key-heading'] = value, 'text')
+                input('key heading', heading, (value) => model['key-heading'] = value, 'text')
             )
     
             getAttributesEl().append(
-                textField('key description', description, (value) => model['key-description'] = value, 'text')
+                input('key description', description, (value) => model['key-description'] = value, 'text')
             )
     
             getAttributesEl().append(
-                textField('key unlocks', unlocks, (value) => model['key-unlocks'] = value, 'textarea')
+                input('key unlocks', unlocks, (value) => model['key-unlocks'] = value, 'textarea')
             )
 
             getAttributesEl().append(
-                textField('key code', code, (value) => {
+                input('key code', code, (value) => {
                     model['key-code'] = value
                     model['loot-name'] = `key-${value}`
                 }, 'number', 15, 1)
@@ -98,11 +98,11 @@ export const manageLootAttribute = (model, reRenderCallback, canHaveKeyAsLoot = 
         }
 
         getAttributesEl().append(
-            textField('loot progress to active', active, (value) => model['loot-active'] = value, 'number')
+            input('loot progress to active', active, (value) => model['loot-active'] = value, 'number')
         )
 
         getAttributesEl().append(
-            textField('loot progress to deactive', deactive, (value) => model['loot-deactive'] = value, 'number')
+            input('loot progress to deactive', deactive, (value) => model['loot-deactive'] = value, 'number')
         )
     }
 }
