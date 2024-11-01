@@ -308,7 +308,7 @@ export const renderInteractables = () => renderComponents(getInteractables(), re
 
 export const renderEnemies = () => renderComponents(getEnemies(), renderEnemy)
 
-const renderEnemyPaths = () => 
+export const renderEnemyPaths = () =>
     Array.from(getMapWithArrayValuesByKey(getEnemies(), getRoomBeingMade()))
         .forEach((enemy, enemyIndex) => renderEnemyPath(enemy, enemyIndex))
 

@@ -2,7 +2,7 @@ import { waypoints } from './waypoints.js'
 import { manageLootAttribute } from '../loot.js'
 import { addClass, containsClass } from '../../../util.js'
 import { buildEnemy } from '../../../enemy/enemy-factory.js'
-import { addEnemyContents, renderEnemies, renderEnemy } from '../../map-maker.js'
+import { addEnemyContents, renderEnemies, renderEnemy, renderEnemyPaths } from '../../map-maker.js'
 import { getEnemies, getItemBeingModified, getRoomBeingMade, setItemBeingModified } from '../../variables.js'
 import { getAttributesEl, getElemBeingModified, getSelectedToolEl, setElemBeingModified } from '../../elements.js'
 import { autocomplete, difficultyAutoComplete, renderAttributes, input, updateMap, deleteButton } from '../shared.js'
@@ -92,6 +92,8 @@ export const renderEnemyAttributes = () => {
             getElemBeingModified().remove()
             Array.from(document.querySelectorAll('.enemy')).forEach(item => item.remove())
             renderEnemies()
+            Array.from(document.querySelectorAll('.enemy-path')).forEach(item => item.remove())
+            renderEnemyPaths()
             const parent = getSelectedToolEl().parentElement 
             Array.from(parent.children).filter(child => !containsClass(child, 'add-item')).forEach(child => child.remove())
             addEnemyContents(parent)
