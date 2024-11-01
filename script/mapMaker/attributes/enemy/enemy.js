@@ -30,6 +30,7 @@ export const renderEnemyAttributes = () => {
             addClass(newEnemy, 'in-modification')
             getElemBeingModified().parentElement.replaceChild(newEnemy, getElemBeingModified())
             setElemBeingModified(newEnemy)
+            renderEnemyAttributes()
         }, 
         [TORTURER, SOUL_DRINKER, ROCK_CRUSHER, GRABBER, RANGER, SCORCHER, SPIKER, STINGER, TRACKER]
             .map(item => ({label: item, value: item}))

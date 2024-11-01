@@ -156,7 +156,7 @@ export class Stick extends Drop {
 
 export class Lighter extends Drop {
     constructor(left, top, progress) {
-        super(15, left, top, 'lighter', 'lighter', 1, 1, 'Does its job just like any other lighter', null, progress)
+        super(15, left, top, 'lighter', 'lighter', 1, 1, 'Does its job just like any other lighter', 60, progress)
     }
 }
 

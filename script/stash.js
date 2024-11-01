@@ -28,11 +28,11 @@ export const setStash = (val) => {
 export const getStash = () => stash
 
 export const initStash = () => [
-    {...(new PistolAmmo(null, null, 20)),   id: 1},
-    {...(new Bandage(null, null, 1)),       id: 2},
-    {...(new ShotgunShells(null, null, 5)), id: 3},
-    {...(new Coin(null, null, 20)),         id: 4},
-    {...(new KeyDrop(null, null, 3, 'Museum key', 'Key that opens the museum gate', 'museum')), id: 5}
+    // {...(new PistolAmmo(null, null, 20)),   id: 1},
+    // {...(new Bandage(null, null, 1)),       id: 2},
+    // {...(new ShotgunShells(null, null, 5)), id: 3},
+    // {...(new Coin(null, null, 20)),         id: 4},
+    // {...(new KeyDrop(null, null, 3, 'Museum key', 'Key that opens the museum gate', 'museum')), id: 5}
 ]
 
 export const renderStash = () => {

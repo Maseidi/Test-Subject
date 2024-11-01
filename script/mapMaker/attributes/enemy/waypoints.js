@@ -4,6 +4,7 @@ import { getElemBeingModified } from '../../elements.js'
 import { getItemBeingModified } from '../../variables.js'
 import { addClass, appendAll, createAndAddClass } from '../../../util.js'
 import { addItemButton, renderEnemyPath, renderPoint } from '../../map-maker.js'
+import { TRACKER } from '../../../enemy/enemy-constants.js'
 
 let currentEnemyIndex
 let waypointsContainer
@@ -20,6 +21,7 @@ const renderWaypointsContents = (innerValue) => {
         const pointContainer = renderPointContainer(innerValue, point, index)
         waypointsContainer.append(pointContainer)
     })
+    if ( getItemBeingModified().type === TRACKER ) return
     const addItem = addItemButton('add point')
     addItem.addEventListener('click', (e) => {
         const newPoint = new Point(0, 0)

@@ -233,3 +233,5 @@ export const decideDifficulty = (difficulty) => {
     else                                           
         return [difficulties.SURVIVAL]
 }
+
+export const getMapWithArrayValuesByKey = (map, key) => map.get(key) || []

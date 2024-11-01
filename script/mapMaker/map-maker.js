@@ -3,17 +3,19 @@ import { Wall } from '../wall.js'
 import { TopLoader } from '../loader.js'
 import { Popup } from '../popup-manager.js'
 import { PistolAmmo } from '../interactables.js'
+import { BandageShopItem } from '../shop-item.js'
 import { Dialogue } from '../dialogue-manager.js'
 import { Torturer } from '../enemy/type/normal-enemy.js'
 import { defineEnemyComponents } from '../room-loader.js'
 import { renderWallAttributes } from './attributes/wall.js'
 import { renderRoomAttributes } from './attributes/room.js'
 import { renderPopupAttributes } from './attributes/popup.js'
+import { renderShopItemAttributes } from './attributes/shop.js'
 import { renderLoaderAttributes } from './attributes/loader.js'
 import { renderEnemyAttributes } from './attributes/enemy/enemy.js'
 import { renderDialogueAttributes } from './attributes/dialogue.js'
 import { renderInteractableAttributes } from './attributes/interactable.js'
-import { addClass, appendAll, containsClass, createAndAddClass, removeClass } from '../util.js'
+import { addClass, appendAll, containsClass, createAndAddClass, getMapWithArrayValuesByKey, removeClass } from '../util.js'
 import { 
     getDialogues,
     getEnemies,
@@ -23,6 +25,7 @@ import {
     getPopups,
     getRoomBeingMade,
     getRooms,
+    getShop,
     getWalls,
     setItemBeingModified,
     setRoomBeingMade } from './variables.js'
@@ -79,6 +82,7 @@ const createTools = (tools) => {
         createTool('enemies'),
         createTool('popups'),
         createTool('dialogues'),
+        createTool('shop'),
     ]).forEach(item => tools.append(item))
 }
 
@@ -96,7 +100,7 @@ const createTool = (header) => {
 const onToolClick = (e, header) => activateTool(e.currentTarget, header)
 
 const activateTool = (tool, header) => {
-    if ( getRooms().length === 0 && !['rooms', 'dialogues', 'popups'].includes(header) ) return
+    if ( getRooms().length === 0 && !['rooms', 'dialogues', 'popups', 'shop'].includes(header) ) return
     if ( !containsClass(tool, 'active-tool') ) {
         addClass(tool, 'active-tool')
         const contents = getContents(header)
@@ -155,10 +159,16 @@ const addPopupContents = (contentsBar) =>
         content.addEventListener('click', onPopupClick(contentsBar))
     })
 
-const adddDialogueContents = (contentsBar) => 
+const addDialogueContents = (contentsBar) => 
     getDialogues().forEach((dialogue, index) => {
         const content = add2Contents(contentsBar, null, `dialogue-${index + 1}`)
         content.addEventListener('click', onDialogueClick(contentsBar))
+    })
+
+const addShopContents = (contentsBar) => 
+    getShop().forEach((shopItem, index) => {
+        const content = add2Contents(contentsBar, null, `shop-item-${index + 1}`)
+        content.addEventListener('click', onShopItemClick(contentsBar))
     })
 
 const onRoomClick = (contentsBar) => (e) => {
@@ -191,19 +201,17 @@ const onEnemyClick = (contentsBar, index) =>
     onComponentClick(contentsBar, getEnemies(), initEnemy, 'enemy', index)
 
 const addToolContents = (contentsBar, contentsMap, prefix, onCmpClick) =>     
-    Array.from((contentsMap.get(getRoomBeingMade()) || []))
+    Array.from(getMapWithArrayValuesByKey(contentsMap, getRoomBeingMade()))
         .forEach((item, index) => {
             const content = add2Contents(contentsBar, null, `${prefix}-${index + 1}`)
             content.addEventListener('click', onCmpClick(contentsBar, index))
         })
 
 const onComponentClick = (contentsBar, contentsMap, initCallback, prefix, index) => (e) => {
+    hidePaths()
     selectContent(contentsBar, e.currentTarget)
     setAsElemBeingModified(document.getElementById(prefix + '-' + index))
     initCallback(contentsMap.get(getRoomBeingMade())[index])
-    if ( prefix !== 'enemy' ) return
-    hidePaths()
-    Array.from(document.querySelectorAll(`.enemy-${index}-path`)).forEach(point => point.style.display = 'block')
 }
 
 const onPopupClick = (contentsBar) => (e) => {
@@ -216,6 +224,12 @@ const onDialogueClick = (contentsBar) => (e) => {
     selectContent(contentsBar, e.currentTarget)
     const dialogueIndex = Array.from(contentsBar.children).findIndex(child => child === e.currentTarget)
     initDialogue(getDialogues().find((dialogue, index) => index === dialogueIndex))
+}
+
+const onShopItemClick = (contentsBar) => (e) => {
+    selectContent(contentsBar, e.currentTarget)
+    const shopItemIndex = Array.from(contentsBar.children).findIndex(child => child === e.currentTarget)
+    initShop(getShop().find((shopItem, index) => index === shopItemIndex))
 }
 
 const add2Contents = (contentsBar, prefix, label, creatingNew = false) => {
@@ -233,7 +247,10 @@ const selectContent = (contentsBar, selectedContent) => {
     setSelectedToolEl(selectedContent)
 }
 
-const onAddItemClick = (e, header) => TOOL_MAP.get(header).new(e.currentTarget.parentElement)
+const onAddItemClick = (e, header) => {
+    hidePaths()
+    return TOOL_MAP.get(header).new(e.currentTarget.parentElement)
+}
 
 const addNewRoom = (contentsBar) => {
     const content = add2Contents(contentsBar, 'room', null, true)
@@ -278,7 +295,7 @@ const renderInteractables = () => renderComponents(getInteractables(), renderInt
 const renderEnemies = () => renderComponents(getEnemies(), renderEnemy)
 
 const renderEnemyPaths = () => 
-    Array.from(getEnemies().get(getRoomBeingMade()) || [])
+    Array.from(getMapWithArrayValuesByKey(getEnemies(), getRoomBeingMade()))
         .forEach((enemy, enemyIndex) => renderEnemyPath(enemy, enemyIndex))
 
 export const renderEnemyPath = (enemy, enemyIndex) => 
@@ -295,7 +312,7 @@ const hidePaths = () =>
     Array.from(document.querySelectorAll('.enemy-path')).forEach(point => point.style.display = 'none')
 
 const renderComponents = (components, renderCallback) =>
-    Array.from(components.get(getRoomBeingMade()) || []).forEach((component, index) => {
+    Array.from(getMapWithArrayValuesByKey(components, getRoomBeingMade())).forEach((component, index) => {
         const componentEl = renderCallback(component, index)
         getRoomOverviewEl().firstElementChild.append(componentEl)
     })
@@ -303,14 +320,14 @@ const renderComponents = (components, renderCallback) =>
 const addNewWall = (contentsBar) => {
     const content = add2Contents(contentsBar, 'wall', null, true)
     initWall(new Wall(50, 50, 0, 0, null, null, 'lightslategrey'), true)
-    getWalls().set(getRoomBeingMade(), [...(getWalls().get(getRoomBeingMade()) || []), getItemBeingModified()])
+    getWalls().set(getRoomBeingMade(), [...(getMapWithArrayValuesByKey(getWalls(), getRoomBeingMade())), getItemBeingModified()])
     content.addEventListener('click', onWallClick(contentsBar, getWalls().get(getRoomBeingMade()).length - 1))
 }
 
 const initWall = (wall, newWall) => {
     setItemBeingModified(wall)
     if ( newWall ) {
-        const renderedWall = renderWall(wall, (getWalls().get(getRoomBeingMade()) || []).length)
+        const renderedWall = renderWall(wall, (getMapWithArrayValuesByKey(getWalls(), getRoomBeingMade())).length)
         getRoomOverviewEl().firstElementChild.append(renderedWall)
         setAsElemBeingModified(renderedWall)
     }
@@ -334,14 +351,14 @@ const renderWall = (options, index) => {
 const addNewLoader = (contentsBar) => {
     const content = add2Contents(contentsBar, 'loader', null, true)
     initLoader(new TopLoader(1, 100, 0), true)
-    getLoaders().set(getRoomBeingMade(), [...(getLoaders().get(getRoomBeingMade()) || []), getItemBeingModified()])
+    getLoaders().set(getRoomBeingMade(), [...(getMapWithArrayValuesByKey(getLoaders(), getRoomBeingMade())), getItemBeingModified()])
     content.addEventListener('click', onLoaderClick(contentsBar, getLoaders().get(getRoomBeingMade()).length - 1))
 }
 
 const initLoader = (loader, newLoader) => {
     setItemBeingModified(loader)
     if ( newLoader ) {
-        const renderedLoader = renderLoader(loader, (getLoaders().get(getRoomBeingMade()) || []).length)
+        const renderedLoader = renderLoader(loader, (getMapWithArrayValuesByKey(getLoaders(), getRoomBeingMade())).length)
         getRoomOverviewEl().firstElementChild.append(renderedLoader)
         setAsElemBeingModified(renderedLoader)
     }
@@ -364,14 +381,18 @@ const renderLoader = (options, index) => {
 const addNewInteractable = (contentsBar) => {
     const content = add2Contents(contentsBar, 'interactable', null, true)
     initInteractable(new PistolAmmo(0, 0, 10), true)
-    getInteractables().set(getRoomBeingMade(), [...(getInteractables().get(getRoomBeingMade()) || []), getItemBeingModified()])
+    getInteractables().set(getRoomBeingMade(), 
+        [...(getMapWithArrayValuesByKey(getInteractables(), getRoomBeingMade())), getItemBeingModified()])
+
     content.addEventListener('click', onInteractableClick(contentsBar, getInteractables().get(getRoomBeingMade()).length - 1))
 }
 
 const initInteractable = (interactable, newInteractable) => {
     setItemBeingModified(interactable)
     if ( newInteractable ) {
-        const renderedInteractable = renderInteractable(interactable, (getInteractables().get(getRoomBeingMade()) || []).length)
+        const renderedInteractable = renderInteractable(interactable, 
+            (getMapWithArrayValuesByKey(getInteractables(), getRoomBeingMade())).length)
+
         getRoomOverviewEl().firstElementChild.append(renderedInteractable)
         setAsElemBeingModified(renderedInteractable)
     }
@@ -394,17 +415,20 @@ const renderInteractable = (options, index) => {
 const addNewEnemy = (contentsBar) => {
     const content = add2Contents(contentsBar, 'enemy', null, true)
     initEnemy(new Torturer(1), true)
-    getEnemies().set(getRoomBeingMade(), [...(getEnemies().get(getRoomBeingMade()) || []), getItemBeingModified()])
+    getEnemies().set(getRoomBeingMade(), [...(getMapWithArrayValuesByKey(getEnemies(), getRoomBeingMade())), getItemBeingModified()])
     content.addEventListener('click', onEnemyClick(contentsBar, getEnemies().get(getRoomBeingMade()).length - 1))
 }
 
 const initEnemy = (enemy, newEnemy) => {
     setItemBeingModified(enemy)
+    let enemyIndex = (getMapWithArrayValuesByKey(getEnemies(), getRoomBeingMade())).findIndex(item => item === enemy)
     if ( newEnemy ) {
-        const renderedEnemy = renderEnemy(enemy, (getEnemies().get(getRoomBeingMade()) || []).length, newEnemy)
+        const renderedEnemy = renderEnemy(enemy, (getMapWithArrayValuesByKey(getEnemies(), getRoomBeingMade())).length, newEnemy)
         getRoomOverviewEl().firstElementChild.append(renderedEnemy)
         setAsElemBeingModified(renderedEnemy)
+        enemyIndex = (getMapWithArrayValuesByKey(getEnemies(), getRoomBeingMade())).length
     }
+    Array.from(document.querySelectorAll(`.enemy-${enemyIndex}-path`)).forEach(point => point.style.display = 'block')
     renderEnemyAttributes()
 }
 
@@ -449,6 +473,19 @@ const initDialogue = (options) => {
     renderDialogueAttributes()
 }
 
+const addNewShopItem = (contentsBar) => {
+    const content = add2Contents(contentsBar, 'shop-item', null, true)
+    content.addEventListener('click', onShopItemClick(contentsBar))
+    initShop(new BandageShopItem(1000))
+    getShop().push(getItemBeingModified())
+}
+
+const initShop = (options) => {
+    setAsElemBeingModified(null)
+    setItemBeingModified(options)
+    renderShopItemAttributes()
+}
+
 const TOOL_MAP = new Map([
     ['rooms', {
         new: addNewRoom,
@@ -476,7 +513,11 @@ const TOOL_MAP = new Map([
     }],
     ['dialogues', {
         new: addNewDialogue,
-        contents: adddDialogueContents
+        contents: addDialogueContents
+    }],
+    ['shop', {
+        new: addNewShopItem,
+        contents: addShopContents
     }],
 ])
 

@@ -51,3 +51,9 @@ export const setDialogues = (val) => {
     dialogues = val
 }
 export const getDialogues = () => dialogues
+
+let shop = []
+export const setShop = (val) => {
+    shop = val
+}
+export const getShop = () => shop
