@@ -1,6 +1,8 @@
+import { containsClass } from '../../util.js'
+import { addWallContents, renderWalls } from '../map-maker.js'
 import { renderAttributes, input, deleteButton } from './shared.js'
 import { getItemBeingModified, getRoomBeingMade, getWalls } from '../variables.js'
-import { getAttributesEl, getElemBeingModified } from '../elements.js'
+import { getAttributesEl, getElemBeingModified, getSelectedToolEl } from '../elements.js'
 
 export const renderWallAttributes = () => {
     const wall = getItemBeingModified()
@@ -76,6 +78,13 @@ export const renderWallAttributes = () => {
     
             getWalls().set(getRoomBeingMade(), filteredWalls)
             getElemBeingModified().remove()
+            Array.from(document.querySelectorAll('.wall')).forEach(item => item.remove())
+            renderWalls()
+            const parent = getSelectedToolEl().parentElement 
+            Array.from(parent.children).filter(child => !containsClass(child, 'add-item')).forEach(child => child.remove())
+            addWallContents(parent)
+            if ( parent.children.length === 1 ) parent.previousSibling.click()
+            else parent.firstElementChild.click()
         })
     )
 

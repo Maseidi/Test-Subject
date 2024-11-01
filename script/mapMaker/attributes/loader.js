@@ -1,5 +1,7 @@
 import { Door } from '../../loader.js'
-import { getAttributesEl, getElemBeingModified } from '../elements.js'
+import { containsClass } from '../../util.js'
+import { addLoaderContents, renderLoaders } from '../map-maker.js'
+import { getAttributesEl, getElemBeingModified, getSelectedToolEl } from '../elements.js'
 import { getItemBeingModified, getLoaders, getRoomBeingMade } from '../variables.js'
 import { autocomplete, checkbox, renderAttributes, input, deleteButton } from './shared.js'
 
@@ -97,6 +99,12 @@ export const renderLoaderAttributes = () => {
 
             getLoaders().set(getRoomBeingMade(), filteredLoaders)
             getElemBeingModified().remove()
+            renderLoaders()
+            const parent = getSelectedToolEl().parentElement 
+            Array.from(parent.children).filter(child => !containsClass(child, 'add-item')).forEach(child => child.remove())
+            addLoaderContents(parent)
+            if ( parent.children.length === 1 ) parent.previousSibling.click()
+            else parent.firstElementChild.click()
         })
     )
 

@@ -1,5 +1,7 @@
-import { getAttributesEl } from '../elements.js'
+import { containsClass } from '../../util.js'
+import { addShopContents } from '../map-maker.js'
 import { getGunDetails, isGun } from '../../gun-details.js'
+import { getAttributesEl, getSelectedToolEl } from '../elements.js'
 import { autocomplete, renderAttributes, input, deleteButton } from './shared.js'
 import { getItemBeingModified, getShop, setItemBeingModified, setShop } from '../variables.js'
 import { 
@@ -55,6 +57,11 @@ export const renderShopItemAttributes = () => {
         deleteButton(() => {
             const filteredItems = getShop().filter(item => item !== shopItem)
             setShop(filteredItems)
+            const parent = getSelectedToolEl().parentElement 
+            Array.from(parent.children).filter(child => !containsClass(child, 'add-item')).forEach(child => child.remove())
+            addShopContents(parent)
+            if ( parent.children.length === 1 ) parent.previousSibling.click()
+            else parent.firstElementChild.click()
         })
     )
 

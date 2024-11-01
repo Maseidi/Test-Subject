@@ -1,5 +1,7 @@
-import { getAttributesEl, getSelectedToolEl } from '../elements.js'
+import { containsClass } from '../../util.js'
 import { sources } from '../../dialogue-manager.js'
+import { addDialogueContents } from '../map-maker.js'
+import { getAttributesEl, getSelectedToolEl } from '../elements.js'
 import { getDialogues, getItemBeingModified, setDialogues } from '../variables.js'
 import { autocomplete, renderAttributes, input, deleteButton } from './shared.js'
 
@@ -8,7 +10,7 @@ export const renderDialogueAttributes = () => {
     renderAttributes()
     
     getAttributesEl().append(
-        input('message', dialogue.message, (value) => dialogue.message = value, 'text')
+        input('message', dialogue.message, (value) => dialogue.message = value, 'textarea')
     )
 
     getAttributesEl().append(
@@ -37,6 +39,11 @@ export const renderDialogueAttributes = () => {
         deleteButton(() => {
             const filteredDialogues = getDialogues().filter(item => item !== dialogue)
             setDialogues(filteredDialogues)
+            const parent = getSelectedToolEl().parentElement 
+            Array.from(parent.children).filter(child => !containsClass(child, 'add-item')).forEach(child => child.remove())
+            addDialogueContents(parent)
+            if ( parent.children.length === 1 ) parent.previousSibling.click()
+            else parent.firstElementChild.click()
         })
     )
 

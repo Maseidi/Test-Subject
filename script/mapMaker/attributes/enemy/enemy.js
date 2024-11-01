@@ -1,10 +1,10 @@
 import { waypoints } from './waypoints.js'
-import { addClass } from '../../../util.js'
-import { renderEnemy } from '../../map-maker.js'
 import { manageLootAttribute } from '../loot.js'
+import { addClass, containsClass } from '../../../util.js'
 import { buildEnemy } from '../../../enemy/enemy-factory.js'
+import { addEnemyContents, renderEnemies, renderEnemy } from '../../map-maker.js'
 import { getEnemies, getItemBeingModified, getRoomBeingMade, setItemBeingModified } from '../../variables.js'
-import { getAttributesEl, getElemBeingModified, setElemBeingModified } from '../../elements.js'
+import { getAttributesEl, getElemBeingModified, getSelectedToolEl, setElemBeingModified } from '../../elements.js'
 import { autocomplete, difficultyAutoComplete, renderAttributes, input, updateMap, deleteButton } from '../shared.js'
 import { 
     GRABBER,
@@ -70,7 +70,10 @@ export const renderEnemyAttributes = () => {
             enemy.virus = value
             const enemyBody = getElemBeingModified().firstElementChild.firstElementChild 
             enemyBody.style.backgroundColor = value
-            Array.from(enemyBody.children).forEach(component => component.style.backgroundColor = value)
+            Array.from(enemyBody.children)
+                .forEach(component => {
+                    if ( !containsClass(component, 'fire') ) component.style.backgroundColor = value
+                })         
         }, ['red', 'green', 'yellow', 'blue', 'purple'].map(color => ({label: color, value: color})))
     )
 
@@ -87,6 +90,13 @@ export const renderEnemyAttributes = () => {
             getEnemies().set(getRoomBeingMade(), filteredEnemies)
             Array.from(document.querySelectorAll(`.enemy-${enemyIndex}-path`)).forEach(point => point.remove())
             getElemBeingModified().remove()
+            Array.from(document.querySelectorAll('.enemy')).forEach(item => item.remove())
+            renderEnemies()
+            const parent = getSelectedToolEl().parentElement 
+            Array.from(parent.children).filter(child => !containsClass(child, 'add-item')).forEach(child => child.remove())
+            addEnemyContents(parent)
+            if ( parent.children.length === 1 ) parent.previousSibling.click()
+            else parent.firstElementChild.click()
         })
     )
 

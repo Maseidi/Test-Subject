@@ -1,4 +1,5 @@
-import { getAttributesEl } from '../elements.js'
+import { containsClass } from '../../util.js'
+import { getAttributesEl, getSelectedToolEl } from '../elements.js'
 import { renderAttributes, input, deleteButton } from './shared.js'
 import { getItemBeingModified, getPopups, setPopups } from '../variables.js'
 
@@ -7,7 +8,7 @@ export const renderPopupAttributes = () => {
     renderAttributes()
     
     getAttributesEl().append(
-        input('message', popup.message, (value) => popup.message = value, 'text')
+        input('message', popup.message, (value) => popup.message = value, 'textarea')
     )
 
     getAttributesEl().append(
@@ -27,6 +28,11 @@ export const renderPopupAttributes = () => {
         deleteButton(() => {
             const filteredPopups = getPopups().filter(item => item !== popup)
             setPopups(filteredPopups)
+            const parent = getSelectedToolEl().parentElement 
+            Array.from(parent.children).filter(child => !containsClass(child, 'add-item')).forEach(child => child.remove())
+            addWallContents(parent)
+            if ( parent.children.length === 1 ) parent.previousSibling.click()
+            else parent.firstElementChild.click()
         })
     )
 

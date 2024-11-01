@@ -1,3 +1,5 @@
+import { containsClass } from '../../util.js'
+import { addRoomContents } from '../map-maker.js'
 import { renderAttributes, input, deleteButton } from './shared.js'
 import { getAttributesEl, getElemBeingModified, getRoomOverviewEl, getSelectedToolEl } from '../elements.js'
 import { getEnemies, getInteractables, getItemBeingModified, getLoaders, getRooms, getWalls, setRooms} from '../variables.js'
@@ -63,6 +65,11 @@ export const renderRoomAttributes = () => {
             getLoaders().delete(room.id)
             getRoomOverviewEl().children[1].remove()
             getElemBeingModified().remove()
+            const parent = getSelectedToolEl().parentElement
+            Array.from(parent.children).filter(child => !containsClass(child, 'add-item')).forEach(child => child.remove())
+            addRoomContents(parent)
+            if ( parent.children.length === 1 ) parent.previousSibling.click()
+            else parent.firstElementChild.click()
         })
     )
 }

@@ -7,6 +7,7 @@ import { BandageShopItem } from '../shop-item.js'
 import { Dialogue } from '../dialogue-manager.js'
 import { Torturer } from '../enemy/type/normal-enemy.js'
 import { defineEnemyComponents } from '../room-loader.js'
+import { attributesSidebar } from './attributes/shared.js'
 import { renderWallAttributes } from './attributes/wall.js'
 import { renderRoomAttributes } from './attributes/room.js'
 import { renderPopupAttributes } from './attributes/popup.js'
@@ -40,7 +41,6 @@ import {
     setRoomOverviewEl,
     setSelectedToolEl,
     setToolsEl } from './elements.js'
-import { attributesSidebar } from './attributes/shared.js'
 
 export const renderMapMaker = () => {
     const root = document.getElementById('root')
@@ -153,28 +153,25 @@ export const addItemButton = (textContent = 'add item') => {
 
 const createContents = (contentsBar, header) => TOOL_MAP.get(header).contents(contentsBar)
 
-const addRoomContents = (contentsBar) => 
+export const addRoomContents = (contentsBar) => 
     getRooms().forEach(room => {
         const content = add2Contents(contentsBar, null, room.label)
-        if ( room.label === getRooms().find(room => room.id === getRoomBeingMade())?.label ) {
-            selectContent(contentsBar, content)
-        }
         content.addEventListener('click', onRoomClick(contentsBar))
     })
 
-const addPopupContents = (contentsBar) => 
+export const addPopupContents = (contentsBar) => 
     getPopups().forEach((popup, index) => {
         const content = add2Contents(contentsBar, null, `popup-${index + 1}`)
         content.addEventListener('click', onPopupClick(contentsBar))
     })
 
-const addDialogueContents = (contentsBar) => 
+export const addDialogueContents = (contentsBar) => 
     getDialogues().forEach((dialogue, index) => {
         const content = add2Contents(contentsBar, null, `dialogue-${index + 1}`)
         content.addEventListener('click', onDialogueClick(contentsBar))
     })
 
-const addShopContents = (contentsBar) => 
+export const addShopContents = (contentsBar) => 
     getShop().forEach((shopItem, index) => {
         const content = add2Contents(contentsBar, null, `shop-item-${index + 1}`)
         content.addEventListener('click', onShopItemClick(contentsBar))
@@ -185,25 +182,25 @@ const onRoomClick = (contentsBar) => (e) => {
     initRoom(getRooms().find(room => room.label === getSelectedToolEl().textContent))
 }
 
-const addWallsContents = (contentsBar) => 
+export const addWallContents = (contentsBar) => 
     addToolContents(contentsBar, getWalls(), 'wall', onWallClick)
 
 const onWallClick = (contentsBar, index) => 
     onComponentClick(contentsBar, getWalls(), initWall, 'wall', index)
 
-const addLoaderContents = (contentsBar) => 
+export const addLoaderContents = (contentsBar) => 
     addToolContents(contentsBar, getLoaders(), 'loader', onLoaderClick)
 
 const onLoaderClick = (contentsBar, index) => 
     onComponentClick(contentsBar, getLoaders(), initLoader, 'loader', index)
 
-const addInteractableContents = (contentsBar) => 
+export const addInteractableContents = (contentsBar) => 
     addToolContents(contentsBar, getInteractables(), 'interactable', onInteractableClick)
 
 const onInteractableClick = (contentsBar, index) => 
     onComponentClick(contentsBar, getInteractables(), initInteractable, 'interactable', index)
 
-const addEnemyContents = (contentsBar) => 
+export const addEnemyContents = (contentsBar) => 
     addToolContents(contentsBar, getEnemies(), 'enemy', onEnemyClick)
 
 const onEnemyClick = (contentsBar, index) => 
@@ -303,13 +300,13 @@ const renderCurrentRoomId = () => {
     getRoomOverviewEl().append(roomId)
 }
 
-const renderWalls = () => renderComponents(getWalls(), renderWall)
+export const renderWalls = () => renderComponents(getWalls(), renderWall)
 
-const renderLoaders = () => renderComponents(getLoaders(), renderLoader)
+export const renderLoaders = () => renderComponents(getLoaders(), renderLoader)
 
-const renderInteractables = () => renderComponents(getInteractables(), renderInteractable)
+export const renderInteractables = () => renderComponents(getInteractables(), renderInteractable)
 
-const renderEnemies = () => renderComponents(getEnemies(), renderEnemy)
+export const renderEnemies = () => renderComponents(getEnemies(), renderEnemy)
 
 const renderEnemyPaths = () => 
     Array.from(getMapWithArrayValuesByKey(getEnemies(), getRoomBeingMade()))
@@ -510,7 +507,7 @@ const TOOL_MAP = new Map([
     }],
     ['walls', {
         new: addNewWall,
-        contents: addWallsContents
+        contents: addWallContents
     }],
     ['enemies', {
         new: addNewEnemy,

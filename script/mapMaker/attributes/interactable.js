@@ -2,8 +2,9 @@ import { Progress } from '../../progress.js'
 import { Loot, RANDOM } from '../../loot.js'
 import { manageLootAttribute } from './loot.js'
 import { getGunDetails, isGun } from '../../gun-details.js'
-import { difficulties as difficultyMap } from '../../util.js'
-import { getAttributesEl, getElemBeingModified } from '../elements.js'
+import { containsClass, difficulties as difficultyMap } from '../../util.js'
+import { addInteractableContents, renderInteractables } from '../map-maker.js'
+import { getAttributesEl, getElemBeingModified, getSelectedToolEl } from '../elements.js'
 import { getInteractables, getItemBeingModified, getRoomBeingMade, setItemBeingModified } from '../variables.js'
 import { autocomplete, difficultyAutoComplete, renderAttributes, input, updateMap, deleteButton } from './shared.js'
 import { 
@@ -218,6 +219,13 @@ export const renderInteractableAttributes = () => {
 
             getInteractables().set(getRoomBeingMade(), filteredInteractables)
             getElemBeingModified().remove()
+            Array.from(document.querySelectorAll('.map-maker-interactable')).forEach(item => item.remove())
+            renderInteractables()
+            const parent = getSelectedToolEl().parentElement 
+            Array.from(parent.children).filter(child => !containsClass(child, 'add-item')).forEach(child => child.remove())
+            addInteractableContents(parent)
+            if ( parent.children.length === 1 ) parent.previousSibling.click()
+            else parent.firstElementChild.click()
         })
     )
 

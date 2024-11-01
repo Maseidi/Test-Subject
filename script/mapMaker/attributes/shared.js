@@ -98,15 +98,6 @@ export const updateMap = (hashMap, item2update, prefix) =>
 export const deleteButton = (onClick) => {
     const deleteNodeBtn = createAndAddClass('button', 'popup-cancel')
     deleteNodeBtn.textContent = 'delete node'
-    deleteNodeBtn.addEventListener('click', () => {
-        onClick()
-        const previous = getSelectedToolEl().previousSibling
-        const next = getSelectedToolEl().nextSibling        
-        const tool = getSelectedToolEl().parentElement.previousSibling
-        getSelectedToolEl().remove()
-        if ( previous )                                      previous.click()
-        else if ( next && !containsClass(next, 'add-item') ) next.click()
-        else                                                 tool.click()
-    })
+    deleteNodeBtn.addEventListener('click', onClick)
     return deleteNodeBtn
 }
