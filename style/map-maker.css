@@ -232,9 +232,11 @@
 .room-id {
   top: 0;
   left: 0;
+  z-index: 500;
   padding: 10px;
   color: wheat;
-  position: absolute;
+  position: sticky;
+  width: fit-content;
   background-color: black;
   text-transform: uppercase;
   border-bottom-right-radius: 5px;

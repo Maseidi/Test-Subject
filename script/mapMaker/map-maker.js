@@ -285,6 +285,7 @@ const initRoom = (options, newRoom = false) => {
         setRoomBeingMade(options.id)
     }
     renderCurrentRoomId()
+    getRoomOverviewEl().append(room)
     renderWalls()
     renderLoaders()
     renderInteractables()
@@ -319,7 +320,7 @@ export const renderPoint = (enemyIndex, pathIndex, x, y) => {
     const pointEl = createAndAddClass('div', `enemy-${enemyIndex}-path`, `enemy-path-${pathIndex}`, 'enemy-path')
     pointEl.style.left = `${x}px`
     pointEl.style.top =  `${y}px`
-    getRoomOverviewEl().firstElementChild.append(pointEl)
+    getRoomOverviewEl().children[1].append(pointEl)
 }
 
 const hidePaths = () => 
@@ -328,7 +329,7 @@ const hidePaths = () =>
 const renderComponents = (components, renderCallback) =>
     Array.from(getMapWithArrayValuesByKey(components, getRoomBeingMade())).forEach((component, index) => {
         const componentEl = renderCallback(component, index)
-        getRoomOverviewEl().firstElementChild.append(componentEl)
+        getRoomOverviewEl().children[1].append(componentEl)
     })
 
 const addNewWall = (contentsBar) => {
@@ -342,7 +343,7 @@ const initWall = (wall, newWall) => {
     setItemBeingModified(wall)
     if ( newWall ) {
         const renderedWall = renderWall(wall, (getMapWithArrayValuesByKey(getWalls(), getRoomBeingMade())).length)
-        getRoomOverviewEl().firstElementChild.append(renderedWall)
+        getRoomOverviewEl().children[1].append(renderedWall)
         setAsElemBeingModified(renderedWall)
     }
     renderWallAttributes()
@@ -373,7 +374,7 @@ const initLoader = (loader, newLoader) => {
     setItemBeingModified(loader)
     if ( newLoader ) {
         const renderedLoader = renderLoader(loader, (getMapWithArrayValuesByKey(getLoaders(), getRoomBeingMade())).length)
-        getRoomOverviewEl().firstElementChild.append(renderedLoader)
+        getRoomOverviewEl().children[1].append(renderedLoader)
         setAsElemBeingModified(renderedLoader)
     }
     renderLoaderAttributes()
@@ -407,7 +408,7 @@ const initInteractable = (interactable, newInteractable) => {
         const renderedInteractable = renderInteractable(interactable, 
             (getMapWithArrayValuesByKey(getInteractables(), getRoomBeingMade())).length)
 
-        getRoomOverviewEl().firstElementChild.append(renderedInteractable)
+        getRoomOverviewEl().children[1].append(renderedInteractable)
         setAsElemBeingModified(renderedInteractable)
     }
     renderInteractableAttributes()
@@ -438,7 +439,7 @@ const initEnemy = (enemy, newEnemy) => {
     let enemyIndex = (getMapWithArrayValuesByKey(getEnemies(), getRoomBeingMade())).findIndex(item => item === enemy)
     if ( newEnemy ) {
         const renderedEnemy = renderEnemy(enemy, (getMapWithArrayValuesByKey(getEnemies(), getRoomBeingMade())).length, newEnemy)
-        getRoomOverviewEl().firstElementChild.append(renderedEnemy)
+        getRoomOverviewEl().children[1].append(renderedEnemy)
         setAsElemBeingModified(renderedEnemy)
         enemyIndex = (getMapWithArrayValuesByKey(getEnemies(), getRoomBeingMade())).length
     }
