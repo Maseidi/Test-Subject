@@ -165,7 +165,7 @@ const shoot = () => {
     applyRecoil()
     addFireAnimation()
     notifyNearbyEnemies()
-    manageInteractivity()
+    managePenetration()
     useAmmoFromInventory(currMag, 0)
 }
 
@@ -192,7 +192,7 @@ const notifyNearbyEnemies = () => getCurrentRoomEnemies().forEach(elem => {
     else elem.notificationService.notifyEnemy(800)
 })
 
-const manageInteractivity = () => {
+const managePenetration = () => {
     if ( getTargets().length === 0 ) return
     for ( let i = 0; i < getTargets().length; i++ ) {
         const target = getTargets()[i]

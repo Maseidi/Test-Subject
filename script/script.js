@@ -8,6 +8,10 @@ for ( let i = 0; i < 10; i++ )
     if ( !localStorage.getItem(`slot-${i+1}`) ) 
         localStorage.setItem(`slot-${i+1}`, 'empty')
 
+for ( let i = 0; i < 5; i++ )
+    if ( !localStorage.getItem(`map-slot-${i+1}`) )
+        localStorage.setItem(`map-slot-${i+1}`, 'empty')
+
 // renderMainMenu()
 // prepareNewGameData(difficulties.MIDDLE)
 // loadGameFromSlot(1)

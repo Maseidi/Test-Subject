@@ -200,7 +200,7 @@ export const renderInteractableAttributes = () => {
         if ( name === 'note' ) {
             getAttributesEl().append(
                 input('on examine progress to active', interactable.onexamine.join(','), 
-                    (value) => interactable.onexamine.split(',') = value, 'text')
+                    (value) => interactable.onexamine = value.split(','), 'text')
             )
         }
     }

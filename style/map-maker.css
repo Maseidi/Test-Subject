@@ -131,7 +131,6 @@
 }
 
 .room-view {
-  margin: 75px 200px;
   position: relative;
   background-color: lightgray;
 }
@@ -240,4 +239,35 @@
   background-color: black;
   text-transform: uppercase;
   border-bottom-right-radius: 5px;
+}
+.map-maker-options {
+  left: 0;
+  bottom: 0;
+  z-index: 500;
+  text-transform: uppercase;
+  display: flex;
+  position: sticky;
+  gap: 5px;
+  color: wheat;
+  width: fit-content;
+}
+
+.map-maker-options > div {
+  padding: 10px;
+  background-color: black;
+  border: 1px solid wheat;
+  border-top-right-radius: 5px;
+}
+
+.map-maker-options > div:hover {
+  color: black;
+  border-color: black;
+}
+
+.map-maker-options > div:first-child:hover {
+  background-color: forestgreen;
+}
+
+.map-maker-options > div:nth-of-type(2):hover {
+  background-color: orange;
 }

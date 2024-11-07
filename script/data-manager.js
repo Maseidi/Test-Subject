@@ -246,7 +246,7 @@ const setVariables = (variables) => {
     setPlaythroughId(       variables.playthroughId)
 }
 
-export const saveAtSlot = (slotNumber) => {
+export const saveAtSlot = (slotNumber, mapMaker) => {
     setTimesSaved(getTimesSaved() + 1)
     savePasswords(    slotNumber)
     saveStats(        slotNumber)

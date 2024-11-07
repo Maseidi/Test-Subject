@@ -36,7 +36,7 @@ export const startUp = () => {
 
 const renderRoomNameContainer = () => renderContainer('room-name-container', setRoomNameContainer)
 
-const renderPauseContainer = () => renderContainer('pause-container', setPauseContainer)
+export const renderPauseContainer = () => renderContainer('pause-container', setPauseContainer)
 
 const renderPopupContainer = () => renderContainer('popupover-container', setPopupContainer)
 

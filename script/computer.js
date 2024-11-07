@@ -12,19 +12,19 @@ export const turnOnComputer = () => {
     renderDesktop()
 }
 
-export const renderDesktop = (load = false) => {
+export const renderDesktop = (load = false, mapMaker = false) => {
     const desktop = createAndAddClass('div', 'desktop', 'ui-theme')
     const content2Render = []
-    if ( !load ) content2Render.push(itemNotification('hardDrive'))
-    content2Render.push(contents(load))    
+    if ( !load && !mapMaker ) content2Render.push(itemNotification('hardDrive'))
+    content2Render.push(contents(load, mapMaker))
     appendAll(desktop, ...content2Render)
     getPauseContainer().append(desktop)
     renderQuit()
 }
 
-const contents = (load) => {
+const contents = (load, mapMaker) => {
     const content = createAndAddClass('div', 'desktop-content')
-    appendAll(content, title(), slots(load))
+    appendAll(content, title(), slots(load, mapMaker))
     return content
 }
 
@@ -34,22 +34,36 @@ const title = () => {
     return title
 }
 
-const slots = (load) => {
+const slots = (load, mapMaker) => {
     const slots = createAndAddClass('div', 'desktop-slots')
-    for ( let i = 0; i < 10; i++ ) {
-        const slotData = localStorage.getItem('slot-' + ( i + 1 ))
+    for ( let i = 0; i < (mapMaker ? 5 : 10); i++ ) {
+        const slotData = localStorage.getItem(mapMaker ? 'map-slot-' + (i + 1) : 'slot-' + ( i + 1 ))
         const isNotEmpty = slotData !== 'empty'
         const className = isNotEmpty ? 'desktop-slot' : 'desktop-empty-slot'
         const slot = createAndAddClass('div', className)
-        appendAll(slot, ...(isNotEmpty ? savedSlotContent(slotData) : noSaveData()))
-        if ( !load ) slot.addEventListener('click', () => renderSaveConfirmPopup(i + 1, isNotEmpty))
+        appendAll(slot, ...(isNotEmpty ? savedSlotContent(slotData, mapMaker) : noSaveData()))
+        if ( !load ) slot.addEventListener('click', () => renderSaveConfirmPopup(i + 1, isNotEmpty, mapMaker))
         if ( isNotEmpty && load ) slot.addEventListener('click', () => renderLoadConfirmPopup(i+1))    
         slots.append(slot)
     }
     return slots
 }
 
-export const savedSlotContent = (slotData) => {
+export const savedSlotContent = (slotData, mapMaker) => {
+    if ( mapMaker ) mapMakerSlotContent()
+    else gamePlaySlotContent(slotData)
+}
+
+const mapMakerSlotContent = (slotData) => {
+    const { timeStamp, rooms } = JSON.parse(slotData)
+    const timeStampEl = document.createElement('div')
+    timeStampEl.textContent = 'Date: ' + new Date(timeStamp).toLocaleString()
+    const roomsEl = document.createElement('div')
+    roomsEl.textContent = 'Total rooms: ' + rooms
+    return [timeStampEl, roomsEl]
+}
+
+const gamePlaySlotContent = (slotData) => {
     const { timeStamp, room, saves, difficulty, rounds } = JSON.parse(slotData)
     const timeStampEl = document.createElement('div')
     timeStampEl.textContent = 'Date: ' + new Date(timeStamp).toLocaleString()
@@ -70,7 +84,7 @@ const noSaveData = () => {
     return [content]
 }
 
-const renderSaveConfirmPopup = (slotNumber, isNotEmpty) => {    
+const renderSaveConfirmPopup = (slotNumber, isNotEmpty, mapMaker) => {
     const title = 
         isNotEmpty ? 'This might overwrite previous saved data. Do you wish to continue?' : 'Use this slot to save data?'
 
@@ -83,26 +97,32 @@ const renderSaveConfirmPopup = (slotNumber, isNotEmpty) => {
     cancel.addEventListener('click', closeSavePopup)
     cancel.textContent = 'cancel'
     const confirm = createAndAddClass('button', 'popup-confirm')
-    confirm.addEventListener('click', () => confirmSave(slotNumber))
-    const hardDriveAmount = document.createElement('p')
-    hardDriveAmount.textContent = 1
-    const hardDriveImage = document.createElement('img')
-    hardDriveImage.src = './assets/images/hardDrive.png'
-    const message = createAndAddClass('p', 'message')
-    appendAll(confirm, hardDriveAmount, hardDriveImage)
+    confirm.addEventListener('click', () => confirmSave(slotNumber, mapMaker))
+    if ( mapMaker ) {
+        const confirmMessage = document.createElement('p')
+        confirmMessage.textContent = 'confirm'
+        appendAll(confirm, confirmMessage)
+    } else {
+        const hardDriveAmount = document.createElement('p')
+        hardDriveAmount.textContent = 1
+        const hardDriveImage = document.createElement('img')
+        hardDriveImage.src = './assets/images/hardDrive.png'
+        appendAll(confirm, hardDriveAmount, hardDriveImage)
+    }
     appendAll(buttons, cancel, confirm)
+    const message = createAndAddClass('p', 'message')
     appendAll(savePopup, titleEl, buttons, message)
     savePopupContainer.append(savePopup)
     getPauseContainer().lastElementChild.append(savePopupContainer)
 }
 
-const confirmSave = (slotNumber) => {
-    if ( countItem('hardDrive') === 0 ) {
+const confirmSave = (slotNumber, mapMaker = false) => {
+    if ( !mapMaker && countItem('hardDrive') === 0 ) {
         addComputerMessage('Out of hard drive memory')
         return
     }
-    useInventoryResource('hardDrive', 1)
-    saveAtSlot(slotNumber)
+    if ( !mapMaker ) useInventoryResource('hardDrive', 1)
+    saveAtSlot(slotNumber, mapMaker)
     closeSavePopup()
     getPauseContainer().firstElementChild.remove()
     renderDesktop()

@@ -2,9 +2,11 @@ import { Room } from '../room.js'
 import { Wall } from '../wall.js'
 import { TopLoader } from '../loader.js'
 import { Popup } from '../popup-manager.js'
+import {renderDesktop} from '../computer.js';
 import { PistolAmmo } from '../interactables.js'
 import { BandageShopItem } from '../shop-item.js'
 import { Dialogue } from '../dialogue-manager.js'
+import {renderPauseContainer} from '../startup.js';
 import { Torturer } from '../enemy/type/normal-enemy.js'
 import { defineEnemyComponents } from '../room-loader.js'
 import { attributesSidebar } from './attributes/shared.js'
@@ -43,6 +45,7 @@ import {
     setToolsEl } from './elements.js'
 
 export const renderMapMaker = () => {
+    renderPauseContainer()
     const root = document.getElementById('root')
     const mapMakerContainer = createAndAddClass('div', 'map-maker-container')
     const mapMakerContents = createAndAddClass('div', 'map-maker-contents')
@@ -273,8 +276,7 @@ const initRoom = (options, newRoom = false) => {
     room.style.height = `${height}px`
     room.style.backgroundColor = background
     setAsElemBeingModified(room)
-    getRoomOverviewEl().children[1]?.remove()
-    getRoomOverviewEl().firstElementChild?.remove()
+    clearRoomOverview()
     getRoomOverviewEl().append(room)
     if ( newRoom ) {
         setItemBeingModified(new Room(getRooms().length + 1, width, height, label, brightness, progress))
@@ -284,8 +286,10 @@ const initRoom = (options, newRoom = false) => {
         setItemBeingModified(options)
         setRoomBeingMade(options.id)
     }
-    renderCurrentRoomId()
+    getRoomOverviewEl().append(renderCurrentRoomId())
     getRoomOverviewEl().append(room)
+    getRoomOverviewEl().append(renderOptions())
+    rePositionRoom()
     renderWalls()
     renderLoaders()
     renderInteractables()
@@ -295,10 +299,38 @@ const initRoom = (options, newRoom = false) => {
     renderRoomAttributes()
 }
 
+export const clearRoomOverview = () => {
+    getRoomOverviewEl().firstElementChild?.remove() // room-id
+    getRoomOverviewEl().firstElementChild?.remove() // room-view
+    getRoomOverviewEl().firstElementChild?.remove() // options
+}
+
 const renderCurrentRoomId = () => {
     const roomId = createAndAddClass('div', 'room-id')
     roomId.textContent = `room id: ${getRoomBeingMade()}`
-    getRoomOverviewEl().append(roomId)
+    return roomId
+}
+
+const rePositionRoom = () => {
+    const roomIdBottom = getRoomOverviewEl().firstElementChild.getBoundingClientRect().bottom
+    const optionsHeight = getRoomOverviewEl().lastElementChild.getBoundingClientRect().height
+    const overviewBottom = getRoomOverviewEl().getBoundingClientRect().bottom
+    const optionsTop = overviewBottom - optionsHeight
+    const roomHeight =   getRoomOverviewEl().children[1].getBoundingClientRect().height
+    const spaceLeft = optionsTop - roomIdBottom
+    if ( roomHeight >= spaceLeft ) getRoomOverviewEl().children[1].style.margin = '100px 200px'
+    else getRoomOverviewEl().children[1].style.margin = `${(spaceLeft - roomHeight) / 2}px 200px`
+}
+
+const renderOptions = () => {
+    const optionsContainer = createAndAddClass('div', 'map-maker-options')
+    const save = createAndAddClass('div', 'save-option')
+    save.addEventListener('click', () => renderDesktop(false, true))
+    save.textContent = 'save'
+    const play = createAndAddClass('div', 'play-option')
+    play.textContent = 'play'
+    appendAll(optionsContainer, save, play)
+    return optionsContainer
 }
 
 export const renderWalls = () => renderComponents(getWalls(), renderWall)
