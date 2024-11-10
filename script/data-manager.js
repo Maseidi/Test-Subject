@@ -172,7 +172,7 @@ const initConstants = () => {
     setAimMode(               false)
 }
 
-const initNewGameVariables = (difficulty) => {
+export const initNewGameVariables = (difficulty) => {
     const newGameVariables = {
         mapX :                 0,
         mapY :                 0,

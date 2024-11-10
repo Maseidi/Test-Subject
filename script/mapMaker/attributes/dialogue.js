@@ -2,8 +2,8 @@ import { containsClass } from '../../util.js'
 import { sources } from '../../dialogue-manager.js'
 import { addDialogueContents } from '../map-maker.js'
 import { getAttributesEl, getSelectedToolEl } from '../elements.js'
-import { getDialogues, getItemBeingModified, setDialogues } from '../variables.js'
 import { autocomplete, renderAttributes, input, deleteButton } from './shared.js'
+import { getDialogues, getItemBeingModified, setDialogues } from '../variables.js'
 
 export const renderDialogueAttributes = () => {
     const dialogue = getItemBeingModified()

@@ -1,8 +1,8 @@
 import { Door } from '../../loader.js'
 import { containsClass } from '../../util.js'
 import { addLoaderContents, renderLoaders } from '../map-maker.js'
-import { getAttributesEl, getElemBeingModified, getSelectedToolEl } from '../elements.js'
 import { getItemBeingModified, getLoaders, getRoomBeingMade } from '../variables.js'
+import { getAttributesEl, getElemBeingModified, getSelectedToolEl } from '../elements.js'
 import { autocomplete, checkbox, renderAttributes, input, deleteButton } from './shared.js'
 
 export const renderLoaderAttributes = () => {
@@ -99,6 +99,7 @@ export const renderLoaderAttributes = () => {
 
             getLoaders().set(getRoomBeingMade(), filteredLoaders)
             getElemBeingModified().remove()
+            Array.from(document.querySelectorAll('.map-maker-loader')).forEach(item => item.remove())
             renderLoaders()
             const parent = getSelectedToolEl().parentElement 
             Array.from(parent.children).filter(child => !containsClass(child, 'add-item')).forEach(child => child.remove())

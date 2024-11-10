@@ -43,9 +43,11 @@ import {
     setRoomOverviewEl,
     setSelectedToolEl,
     setToolsEl } from './elements.js'
+import { getPauseContainer } from '../elements.js';
+import { renderPauseMenu } from '../pause-menu.js';
 
 export const renderMapMaker = () => {
-    renderPauseContainer()
+    setupPause()
     const root = document.getElementById('root')
     const mapMakerContainer = createAndAddClass('div', 'map-maker-container')
     const mapMakerContents = createAndAddClass('div', 'map-maker-contents')
@@ -53,6 +55,18 @@ export const renderMapMaker = () => {
     mapMakerContainer.append(mapMakerContents)
     setMapMakerEl(mapMakerContainer)
     root.append(mapMakerContainer)
+}
+
+const setupPause = () => {
+    renderPauseContainer()
+    window.addEventListener('keydown', (e) => {
+        if ( e.code !== 'Escape' ) return
+        if ( getPauseContainer().lastElementChild ) getPauseContainer().lastElementChild.remove()
+        else {
+            renderPauseMenu()
+            getPauseContainer().lastElementChild.style.zIndex = 1000
+        }
+    })
 }
 
 export const createHeader = (textContent) => {
@@ -311,7 +325,7 @@ const renderCurrentRoomId = () => {
     return roomId
 }
 
-const rePositionRoom = () => {
+export const rePositionRoom = () => {
     const roomIdBottom = getRoomOverviewEl().firstElementChild.getBoundingClientRect().bottom
     const optionsHeight = getRoomOverviewEl().lastElementChild.getBoundingClientRect().height
     const overviewBottom = getRoomOverviewEl().getBoundingClientRect().bottom
@@ -366,7 +380,7 @@ const renderComponents = (components, renderCallback) =>
 
 const addNewWall = (contentsBar) => {
     const content = add2Contents(contentsBar, 'wall', null, true)
-    initWall(new Wall(50, 50, 0, 0, null, null, 'lightslategrey'), true)
+    initWall(new Wall(50, 50, 0, null, 0, null, 'lightslategrey'), true)
     getWalls().set(getRoomBeingMade(), [...(getMapWithArrayValuesByKey(getWalls(), getRoomBeingMade())), getItemBeingModified()])
     content.addEventListener('click', onWallClick(contentsBar, getWalls().get(getRoomBeingMade()).length - 1))
 }

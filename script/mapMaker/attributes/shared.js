@@ -1,8 +1,8 @@
 import { createHeader } from '../map-maker.js'
 import { getRoomBeingMade } from '../variables.js'
 import { parseDifficulty } from './interactable.js'
-import { addAllAttributes, appendAll, containsClass, createAndAddClass, decideDifficulty, difficulties } from '../../util.js'
-import { getAttributesEl, getElemBeingModified, getMapMakerEl, getSelectedToolEl, setAttributesEl } from '../elements.js'
+import { getAttributesEl, getElemBeingModified, getMapMakerEl, setAttributesEl } from '../elements.js'
+import { addAllAttributes, appendAll, createAndAddClass, decideDifficulty, difficulties } from '../../util.js'
 
 export const renderAttributes = () => {
     if ( getAttributesEl() ) getAttributesEl().remove()
@@ -25,7 +25,7 @@ export const input = (label, value, setValue, type = 'number', max = Number.MAX_
     addAllAttributes(input, 'type', type, 'min', min, 'max', max, 'name', label, 'id', label)
     if ( type === 'textarea' ) input.setAttribute('rows', 15)
     input.value = value
-    input.addEventListener('change', (e) => {
+    input.addEventListener('input', (e) => {
         if ( type === 'number' ) setValue(Number(e.target.value === '' ? min : checkLimits(e.target, min, max)))
         else setValue(e.target.value === '' ? null : e.target.value)
     })

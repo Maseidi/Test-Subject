@@ -4,8 +4,14 @@ import { managePause } from './actions.js'
 import { getPauseContainer } from './elements.js'
 import { appendAll, createAndAddClass } from './util.js'
 import { countItem, useInventoryResource } from './inventory.js'
-import { loadGameFromSlot, saveAtSlot } from './data-manager.js'
+import { initNewGameVariables, loadGameFromSlot, saveAtSlot } from './data-manager.js'
 import { addMessage, itemNotification, renderQuit } from './user-interface.js'
+import { getEnemies, getInteractables, getLoaders, getShop, getWalls } from './mapMaker/variables.js'
+import { setPasswords } from './password-manager.js'
+import { setEnemies, setInteractables, setLoaders } from './entities.js'
+import { setShopItems } from './shop-item.js'
+import { initProgress, setProgress } from './progress-manager.js'
+import { initStash, setStash } from './stash.js'
 
 export const turnOnComputer = () => {
     managePause()
@@ -122,10 +128,37 @@ const confirmSave = (slotNumber, mapMaker = false) => {
         return
     }
     if ( !mapMaker ) useInventoryResource('hardDrive', 1)
+    if ( mapMaker ) handleMapMakerData()
     saveAtSlot(slotNumber, mapMaker)
     closeSavePopup()
     getPauseContainer().firstElementChild.remove()
     renderDesktop()
+}
+
+const handleMapMakerData = () => {
+    handleMapMakerPasswords()
+    setInteractables(getInteractables())
+    setEnemies(getEnemies())
+    setLoaders(getLoaders())
+    setWalls(getWalls())
+    setShopItems(getShop())
+    setProgress(initProgress())
+    setStash(initStash())
+    initNewGameVariables()
+}
+
+const handleMapMakerPasswords = () => {
+    const passwords = []
+    for ( const [roomId, loadersOfRoom] of getLoaders().entries() ) {
+        for ( const loader of loadersOfRoom ) {
+            if ( loader.door && loader.door.code ) {
+                if ( !passwords.includes(loader.door.code) ) {
+                    passwords.push(loader.door.code)
+                }
+            }
+        }
+    }
+    setPasswords(passwords)
 }
 
 const addComputerMessage = (input) => 
