@@ -19,7 +19,7 @@ export const ENEMIES_BY_TYPE = new Map([
 ])
 
 export const buildEnemy = (data) => {
-    const { x, y, health, killAll, renderProgress, progress2Active, progress2Deactive, difficulties, damage } = data
+    const { x, y, health, killAll, renderProgress, progress2Active, progress2Deactive, difficulties, damage, level } = data    
 
     const progress = Progress.builder()
         .setKillAll(killAll)
@@ -30,19 +30,19 @@ export const buildEnemy = (data) => {
     if ( data.type === 'tracker' ) var enemy = buildTracker(data, progress)
     else {
         const { waypoint, loot, virus } = data
-        var enemy = new (ENEMIES_BY_TYPE.get(data.type))(null, waypoint, loot, progress, virus)
+        var enemy = new (ENEMIES_BY_TYPE.get(data.type))(level, waypoint, loot, progress, virus)
     }
 
     enemy.x = x
     enemy.y = y
-    enemy.health = health
-    enemy.damage = damage
     enemy.difficulties = difficulties
+    enemy.health = (level && !health) ? enemy.health : health
+    enemy.damage = (level && !damage) ? enemy.damage : damage
 
     return enemy
 }
 
 const buildTracker = (data, progress) => {
-    const { x, y, loot, virus } = data
-    return new Tracker(null, x, y, loot, progress, virus)
+    const { x, y, loot, virus, level } = data
+    return new Tracker(level, x, y, loot, progress, virus)
 }

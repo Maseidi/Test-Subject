@@ -17,16 +17,23 @@
 
 .attributes-sidebar {
   gap: 20px;
-  width: 300px;
+  width: 20%;
   height: 100%;
   padding: 10px;
-  flex-shrink: 0;
-  overflow: auto;
   display: flex;
-  flex-direction: column;
+  overflow: auto;
+  flex-shrink: 0;
   scrollbar-width: none;
+  flex-direction: column;
   -ms-overflow-style: none;
   border-right: 1px solid wheat;
+}
+
+.room-overview-container {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
 }
 
 .room-overview {
@@ -39,7 +46,7 @@
 }
 
 .tools-sidebar {
-  width: 250px;
+  width: 17%;
   height: 100%;
   display: flex;
   flex-shrink: 0;
@@ -131,6 +138,7 @@
 }
 
 .room-view {
+  margin: 50px 200px;
   position: relative;
   background-color: lightgray;
 }
@@ -162,8 +170,8 @@
 }
 
 .input-container > input, .input-container > select, .input-container > textarea {
-  padding: 5px;
   width: 100%;
+  padding: 5px;
   border: unset;
   outline: unset;
   border-radius: 2px;
@@ -240,16 +248,17 @@
   text-transform: uppercase;
   border-bottom-right-radius: 5px;
 }
+
 .map-maker-options {
   left: 0;
+  gap: 5px;
   bottom: 0;
   z-index: 500;
-  text-transform: uppercase;
   display: flex;
-  position: sticky;
-  gap: 5px;
   color: wheat;
+  position: absolute;
   width: fit-content;
+  text-transform: uppercase;
 }
 
 .map-maker-options > div {

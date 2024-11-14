@@ -25,7 +25,7 @@ export const input = (label, value, setValue, type = 'number', max = Number.MAX_
     addAllAttributes(input, 'type', type, 'min', min, 'max', max, 'name', label, 'id', label)
     if ( type === 'textarea' ) input.setAttribute('rows', 15)
     input.value = value
-    input.addEventListener('input', (e) => {
+    input.addEventListener('change', (e) => {
         if ( type === 'number' ) setValue(Number(e.target.value === '' ? min : checkLimits(e.target, min, max)))
         else setValue(e.target.value === '' ? null : e.target.value)
     })

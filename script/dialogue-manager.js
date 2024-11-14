@@ -1,4 +1,4 @@
-import { dialogues } from './entities.js'
+import { getDialogues } from './entities.js'
 import { setPlayingDialogue } from './variables.js'
 import { getDialogueContainer } from './elements.js'
 import { addAllAttributes, addClass, createAndAddClass } from './util.js'
@@ -19,7 +19,7 @@ export class Dialogue {
 }
 
 export const renderDialogue = (progress) => {
-    const dialogueObj = dialogues.find(dialogue => dialogue.renderProgress === progress)
+    const dialogueObj = getDialogues().find(dialogue => dialogue.renderProgress === progress)
     if ( !dialogueObj ) return
     displayDialogue(dialogueObj)
 }

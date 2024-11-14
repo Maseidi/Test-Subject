@@ -5,9 +5,9 @@ import { dropLoot } from './loot-manager.js'
 import { turnOnComputer } from './computer.js'
 import { centralizePlayer } from './startup.js'
 import { renderPauseMenu } from './pause-menu.js'
-import { getEnemies, rooms } from './entities.js'
 import { setupReload } from './weapon-manager.js'
 import { renderStore } from './vending-machine.js'
+import { getEnemies, getRooms } from './entities.js'
 import { isThrowable } from './throwable-details.js'
 import { renderThrowable } from './throwable-loader.js'
 import { renderPasswordInput } from './password-manager.js'
@@ -291,6 +291,7 @@ export const tabDown = () => {
 }
 
 export const managePause = () => {
+    if ( !getPlayer() ) return // for map-maker
     setPause(!getPause())
     if ( getPause() ) gamePaused()
     else gamePlaying()
@@ -400,14 +401,14 @@ const takeOutTorch = () => {
     renderTorch()
     const health = findEquippedTorchById().health
     const brightness = (health / 100 * 40)
-    renderShadow(Math.max(brightness + 20, rooms.get(getCurrentRoomId()).brightness * 10))
+    renderShadow(Math.max(brightness + 20, getRooms().get(getCurrentRoomId()).brightness * 10))
 }
 
 export const unequipTorch = () => {
     removeClass(getPlayer(), 'torch')
     setEquippedTorchId(null)
     removeTorch()
-    renderShadow(rooms.get(getCurrentRoomId()).brightness * 10)
+    renderShadow(getRooms().get(getCurrentRoomId()).brightness * 10)
 }
 
 export const wUp = () => disableDirection(setUpPressed, setDownPressed)

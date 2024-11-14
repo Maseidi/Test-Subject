@@ -5,7 +5,7 @@ import { sources } from './dialogue-manager.js'
 import { loadCurrentRoom } from './room-loader.js'
 import { getThrowableDetail } from './throwable-details.js'
 import { activateAllProgresses } from './progress-manager.js'
-import { getEnemies, getLoaders, rooms } from './entities.js'
+import { getEnemies, getLoaders, getRooms } from './entities.js'
 import { findEquippedTorchById, getInventory } from './inventory.js'
 import { damagePlayer, infectPlayer2SpecificVirus, poisonPlayer, setPlayer2Fire } from './player-health.js'
 import { 
@@ -103,7 +103,7 @@ const manageLoaders = () => {
 }
 
 const calculateNewRoomLeftAndTop = (prevLoader) => {
-    const newRoom = rooms.get(getCurrentRoomId())
+    const newRoom = getRooms().get(getCurrentRoomId())
     const loader = getLoaders().get(getCurrentRoomId()).find(loader => loader.className === prevRoomId)
        
     if ( loader.bottom !== null )
@@ -424,7 +424,7 @@ const manageTorch = () => {
     const torchOfInventory = findEquippedTorchById()
     torchOfInventory.health--
     const health = torchOfInventory.health
-    const roomBrightness = rooms.get(getCurrentRoomId()).brightness * 10
+    const roomBrightness = getRooms().get(getCurrentRoomId()).brightness * 10
     if ( health === 0 ) killTorch(torchOfInventory.row, torchOfInventory.column, roomBrightness)
     else lightenEnvironment(health, roomBrightness)
     torchCounter = 0

@@ -2,8 +2,8 @@ import { Wall } from './wall.js'
 import { isGun } from './gun-details.js'
 import { renderRoomName } from './room-name-manager.js'
 import { BottomLoader, LeftLoader, RightLoader, TopLoader } from './loader.js'
-import { getInteractables, rooms, walls, getEnemies, getLoaders } from './entities.js'
 import { countItem, findEquippedTorchById, updateInteractablePopup } from './inventory.js'
+import { getInteractables, getRooms, getWalls, getEnemies, getLoaders } from './entities.js'
 import { getCurrentRoomId, getRoomLeft, getRoomTop, setStunnedCounter } from './variables.js'
 import { activateAllProgresses, deactivateAllProgresses, getProgressValueByNumber } from './progress-manager.js'
 import { 
@@ -71,7 +71,7 @@ const initElements = () => {
 }
 
 const renderRoom = () => {
-    const roomObject = rooms.get(getCurrentRoomId())
+    const roomObject = getRooms().get(getCurrentRoomId())
     const room2Render = createAndAddClass(
         'div', 'room', `${getCurrentRoomId()}`, `${roomObject.section}`)
 
@@ -92,7 +92,7 @@ const calculateRoomBrightness = (roomBrightness) => {
 }
 
 const manageRoomProgress = () => {
-    const room = rooms.get(getCurrentRoomId())
+    const room = getRooms().get(getCurrentRoomId())
     commitProgressChanges(room.progress2Active,   activateAllProgresses  )
     commitProgressChanges(room.progress2Deactive, deactivateAllProgresses)
     renderRoomName(room.label)
@@ -111,7 +111,7 @@ const commitProgressChanges = (toChange, action) => {
 }
 
 const renderWalls = () => {
-    [...walls.get(getCurrentRoomId()), ...getSideWalls()].forEach((elem, index) => {
+    [...getWalls().get(getCurrentRoomId()), ...getSideWalls()].forEach((elem, index) => {
         const wall = createAndAddClass('div', 'solid', 'wall')
         wall.id = `wall-${index+1}`
         wall.style.width = `${elem.width}px`
@@ -169,7 +169,7 @@ const getSideWalls = () => {
 }
 
 const getAllLoaders = () => {
-    const { width, height } = rooms.get(getCurrentRoomId())
+    const { width, height } = getRooms().get(getCurrentRoomId())
     const top =    new TopLoader   (null, 100, width)
     const left =   new LeftLoader  (null, 100, height)
     const right =  new RightLoader (null, 100, height)

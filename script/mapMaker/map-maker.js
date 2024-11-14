@@ -1,24 +1,41 @@
 import { Room } from '../room.js'
 import { Wall } from '../wall.js'
+import { play } from '../game.js'
 import { TopLoader } from '../loader.js'
 import { Popup } from '../popup-manager.js'
-import {renderDesktop} from '../computer.js';
+import {renderDesktop} from '../computer.js'
 import { PistolAmmo } from '../interactables.js'
-import { BandageShopItem } from '../shop-item.js'
+import { initStash, setStash } from '../stash.js'
 import { Dialogue } from '../dialogue-manager.js'
-import {renderPauseContainer} from '../startup.js';
+import {renderPauseContainer} from '../startup.js'
+import { getPauseContainer } from '../elements.js'
+import { renderPauseMenu } from '../pause-menu.js'
+import { setPasswords } from '../password-manager.js'
 import { Torturer } from '../enemy/type/normal-enemy.js'
 import { defineEnemyComponents } from '../room-loader.js'
 import { attributesSidebar } from './attributes/shared.js'
 import { renderWallAttributes } from './attributes/wall.js'
 import { renderRoomAttributes } from './attributes/room.js'
+import { initInventory, setInventory } from '../inventory.js'
 import { renderPopupAttributes } from './attributes/popup.js'
 import { renderShopItemAttributes } from './attributes/shop.js'
 import { renderLoaderAttributes } from './attributes/loader.js'
+import { BandageShopItem, setShopItems } from '../shop-item.js'
+import { initProgress, setProgress } from '../progress-manager.js'
 import { renderEnemyAttributes } from './attributes/enemy/enemy.js'
 import { renderDialogueAttributes } from './attributes/dialogue.js'
+import { initConstants, initNewGameVariables } from '../data-manager.js'
 import { renderInteractableAttributes } from './attributes/interactable.js'
-import { addClass, appendAll, containsClass, createAndAddClass, getMapWithArrayValuesByKey, removeClass } from '../util.js'
+import { setCurrentRoomId, setDifficulty, setRoundsFinished } from '../variables.js'
+import { initEnemies, setDialogues, setInteractables, setLoaders, setPopups, setRooms, setWalls } from '../entities.js'
+import { 
+    addClass,
+    appendAll,
+    containsClass,
+    createAndAddClass,
+    difficulties,
+    getMapWithArrayValuesByKey,
+    removeClass } from '../util.js'
 import { 
     getDialogues,
     getEnemies,
@@ -33,8 +50,8 @@ import {
     setItemBeingModified,
     setRoomBeingMade } from './variables.js'
 import { 
-    getAttributesEl,
     getElemBeingModified,
+    getMapMakerEl,
     getRoomOverviewEl,
     getSelectedToolEl,
     getToolsEl,
@@ -43,30 +60,32 @@ import {
     setRoomOverviewEl,
     setSelectedToolEl,
     setToolsEl } from './elements.js'
-import { getPauseContainer } from '../elements.js';
-import { renderPauseMenu } from '../pause-menu.js';
 
+let pauseFn = null    
 export const renderMapMaker = () => {
-    setupPause()
+    renderPauseContainer()
+    setRoundsFinished(0)
+    setDifficulty(difficulties.MIDDLE)
     const root = document.getElementById('root')
     const mapMakerContainer = createAndAddClass('div', 'map-maker-container')
     const mapMakerContents = createAndAddClass('div', 'map-maker-contents')
     appendAll(mapMakerContents, attributesSidebar(), roomOverview(), toolsSidebar())
     mapMakerContainer.append(mapMakerContents)
     setMapMakerEl(mapMakerContainer)
+    setupPause()
     root.append(mapMakerContainer)
 }
 
 const setupPause = () => {
-    renderPauseContainer()
-    window.addEventListener('keydown', (e) => {
+    pauseFn = (e) => {
         if ( e.code !== 'Escape' ) return
         if ( getPauseContainer().lastElementChild ) getPauseContainer().lastElementChild.remove()
         else {
-            renderPauseMenu()
+            renderPauseMenu(true)
             getPauseContainer().lastElementChild.style.zIndex = 1000
         }
-    })
+    }
+    window.addEventListener('keydown', pauseFn, true)
 }
 
 export const createHeader = (textContent) => {
@@ -78,9 +97,11 @@ export const createHeader = (textContent) => {
 }
 
 const roomOverview = () => {
+    const content = createAndAddClass('div', 'room-overview-container')
     const roomOverview = createAndAddClass('div', 'room-overview')
     setRoomOverviewEl(roomOverview)
-    return roomOverview
+    content.append(roomOverview, renderOptions())
+    return content
 }
 
 const toolsSidebar = () => {
@@ -119,7 +140,6 @@ const createTool = (header) => {
 const onToolClick = (e, header) => activateTool(e.currentTarget, header)
 
 const activateTool = (tool, header) => {
-    reRenderAttributes()
     setAsElemBeingModified(null)
     if ( getRooms().length === 0 && !['rooms', 'dialogues', 'popups', 'shop'].includes(header) ) return
     if ( !containsClass(tool, 'active-tool') ) {
@@ -134,11 +154,6 @@ const activateTool = (tool, header) => {
     refreshTools(tool)
 }
 
-const reRenderAttributes = () => {
-    if ( !getAttributesEl() ) return
-    Array.from(getAttributesEl().children).forEach((child, index) => index !== 0 && child.remove())
-}
-
 const refreshTools = (activeTool) => {
     Array.from(getToolsEl().children[1].children)
         .forEach(tool => {
@@ -149,7 +164,6 @@ const refreshTools = (activeTool) => {
             }
         })
 }
-
 
 const getContents = (header) => {
     const contentsContainer = createAndAddClass('div', 'tool-contents-container')
@@ -292,31 +306,39 @@ const initRoom = (options, newRoom = false) => {
     setAsElemBeingModified(room)
     clearRoomOverview()
     getRoomOverviewEl().append(room)
-    if ( newRoom ) {
-        setItemBeingModified(new Room(getRooms().length + 1, width, height, label, brightness, progress))
-        setRoomBeingMade(getRooms().length + 1)
-    }
+    if ( newRoom ) setupNewRoom(width, height, label, brightness, progress, background)
     else {
         setItemBeingModified(options)
         setRoomBeingMade(options.id)
     }
-    getRoomOverviewEl().append(renderCurrentRoomId())
-    getRoomOverviewEl().append(room)
-    getRoomOverviewEl().append(renderOptions())
-    rePositionRoom()
-    renderWalls()
-    renderLoaders()
-    renderInteractables()
-    renderEnemies()
-    renderEnemyPaths()
-    hidePaths()
+    renderContents(room)
     renderRoomAttributes()
 }
 
 export const clearRoomOverview = () => {
     getRoomOverviewEl().firstElementChild?.remove() // room-id
     getRoomOverviewEl().firstElementChild?.remove() // room-view
-    getRoomOverviewEl().firstElementChild?.remove() // options
+}
+
+const setupNewRoom = (width, height, label, brightness, progress, background) => {
+    const newId = getRooms().length + 1
+    setItemBeingModified(new Room(newId, width, height, label, brightness, progress, background))
+    setRoomBeingMade(newId)
+    getWalls().set(newId, [])
+    getLoaders().set(newId, [])
+    getInteractables().set(newId, [])
+    getEnemies().set(newId, [])
+}
+
+const renderContents = (room) => {
+    getRoomOverviewEl().append(renderCurrentRoomId())
+    getRoomOverviewEl().append(room)
+    renderWalls()
+    renderLoaders()
+    renderInteractables()
+    renderEnemies()
+    renderEnemyPaths()
+    hidePaths()
 }
 
 const renderCurrentRoomId = () => {
@@ -325,26 +347,58 @@ const renderCurrentRoomId = () => {
     return roomId
 }
 
-export const rePositionRoom = () => {
-    const roomIdBottom = getRoomOverviewEl().firstElementChild.getBoundingClientRect().bottom
-    const optionsHeight = getRoomOverviewEl().lastElementChild.getBoundingClientRect().height
-    const overviewBottom = getRoomOverviewEl().getBoundingClientRect().bottom
-    const optionsTop = overviewBottom - optionsHeight
-    const roomHeight =   getRoomOverviewEl().children[1].getBoundingClientRect().height
-    const spaceLeft = optionsTop - roomIdBottom
-    if ( roomHeight >= spaceLeft ) getRoomOverviewEl().children[1].style.margin = '100px 200px'
-    else getRoomOverviewEl().children[1].style.margin = `${(spaceLeft - roomHeight) / 2}px 200px`
-}
-
 const renderOptions = () => {
     const optionsContainer = createAndAddClass('div', 'map-maker-options')
     const save = createAndAddClass('div', 'save-option')
     save.addEventListener('click', () => renderDesktop(false, true))
     save.textContent = 'save'
-    const play = createAndAddClass('div', 'play-option')
-    play.textContent = 'play'
-    appendAll(optionsContainer, save, play)
+    const playBtn = createAndAddClass('div', 'play-option')
+    playBtn.textContent = 'play'
+    playBtn.addEventListener('click', playTest)
+    appendAll(optionsContainer, save, playBtn)
     return optionsContainer
+}
+
+const playTest = () => {
+    if ( getRooms().length === 0 ) return
+    handlePasswords()
+    initNewGameVariables(difficulties.MILD)
+    initConstants()
+    setProgress(initProgress())
+    setInventory(initInventory())
+    setStash(initStash())
+    setShopItems(getShop())
+    setInteractables(getInteractables())
+    setLoaders(getLoaders())
+    setWalls(getWalls())
+    setRooms(handleRooms())
+    initEnemies(getEnemies())
+    setDialogues(getDialogues())
+    setPopups(getPopups())
+    setCurrentRoomId(getRoomBeingMade())
+    getMapMakerEl().remove()
+    window.removeEventListener('keydown', pauseFn, true)
+    play(true)
+}
+
+const handlePasswords = () => {
+    const passwords = []
+    for ( const [roomId, loadersOfRoom] of getLoaders().entries() ) {
+        for ( const loader of loadersOfRoom ) {
+            if ( loader.door && loader.door.code ) {
+                if ( !passwords.includes(loader.door.code) ) {
+                    passwords.push(loader.door.code)
+                }
+            }
+        }
+    }
+    setPasswords(passwords)
+}
+
+const handleRooms = () => {
+    const rooms = new Map()
+    getRooms().forEach(room => rooms.set(room.id, room))
+    return rooms
 }
 
 export const renderWalls = () => renderComponents(getWalls(), renderWall)

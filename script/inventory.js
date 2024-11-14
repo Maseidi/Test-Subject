@@ -197,7 +197,7 @@ const checkSpecialScenarios = () => {
 
 const handleVaccinePickup = (itemObj) => handleVaccineTransportation(itemObj, countItem(dropObject.name) !== 0, removeClass)
 
-export const updateInteractablePopups = () => getCurrentRoomInteractables().forEach(updateInteractablePopup)
+export const updateInteractablePopups = () => getCurrentRoomInteractables()?.forEach(updateInteractablePopup)
 
 export const updateInteractablePopup = (interactable) => {
     if ( Array.from(interactable.classList).includes('enemy-backward-detector') ) return

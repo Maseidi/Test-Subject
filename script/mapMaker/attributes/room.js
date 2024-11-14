@@ -1,5 +1,5 @@
 import { containsClass } from '../../util.js'
-import {addRoomContents, clearRoomOverview, rePositionRoom} from '../map-maker.js'
+import {addRoomContents, clearRoomOverview} from '../map-maker.js'
 import { renderAttributes, input, deleteButton } from './shared.js'
 import { getAttributesEl, getElemBeingModified, getRoomOverviewEl, getSelectedToolEl } from '../elements.js'
 import { getEnemies, getInteractables, getItemBeingModified, getLoaders, getRooms, getWalls, setRooms} from '../variables.js'
@@ -19,7 +19,6 @@ export const renderRoomAttributes = () => {
         input('height', room.height, (value) => {
             room.height = value
             getElemBeingModified().style.height = `${value}px`
-            rePositionRoom()
         }, 'number', 3000, 400)
     )
 

@@ -1,4 +1,4 @@
-import { popups } from './entities.js'
+import { getPopups } from './entities.js'
 import { getPopupContainer } from './elements.js'
 import { addAllAttributes, appendAll, createAndAddClass } from './util.js'
 
@@ -12,7 +12,7 @@ export class Popup {
 }
 
 export const renderPopup = (progress) => {
-    const popupObj = popups.find(popup => popup.renderProgress === progress)
+    const popupObj = getPopups().find(popup => popup.renderProgress === progress)
     if ( !popupObj ) return
     if ( getPopupContainer().firstElementChild ) getPopupContainer().firstElementChild.remove()
     const popup = createAndAddClass('div', 'ui-theme', 'hint-popup', 'animation')

@@ -40,7 +40,12 @@ export const renderEnemyAttributes = () => {
     getAttributesEl().append(waypoints(enemy.waypoint.points))
 
     getAttributesEl().append(
-        input('level', enemy.level, (value) => enemy.level = value, 'number', 5, 1)
+        input('level', enemy.level, (value) => {
+            enemy.health = null
+            enemy.damage = null
+            setItemBeingModified(buildEnemy({...enemy, level: value}))
+            updateMap(getEnemies(), getItemBeingModified(), 'enemy')
+        }, 'number', 5, 1)
     )
 
     getAttributesEl().append(

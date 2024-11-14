@@ -10,7 +10,7 @@ import {
     initEnemies,
     initInteractables,
     initLoaders,
-    rooms,
+    getRooms,
     setEnemies,
     setInteractables,
     setLoaders } from './entities.js'
@@ -139,7 +139,7 @@ const initNewGameEnemies = () => setEnemies(initEnemies())
 
 const initNewGameInteractables = () => setInteractables(initInteractables())
 
-const initConstants = () => {
+export const initConstants = () => {
     setUpPressed(             false)
     setDownPressed(           false)
     setLeftPressed(           false)
@@ -276,7 +276,7 @@ const saveMapAsString = (slotNumber, entityType, entities) => {
 const saveStats = (slotNumber) =>
     localStorage.setItem(`slot-${slotNumber}`, JSON.stringify({
         timeStamp: Date.now(),
-        room: rooms.get(getCurrentRoomId()).label,
+        room: getRooms().get(getCurrentRoomId()).label,
         saves: getTimesSaved(),
         difficulty: getDifficulty(),
         rounds: getRoundsFinished()
@@ -359,7 +359,7 @@ export const loadGameFromSlot = (slotNumber) => {
     initConstants()
     loadPasswords(    slotNumber)
     loadStats(        slotNumber)
-    laodProgress(     slotNumber)
+    loadProgress(     slotNumber)
     loadInteractables(slotNumber)
     loadEnemies(      slotNumber)
     loadVariables(    slotNumber)
@@ -386,7 +386,7 @@ const loadStats = (slotNumber) => {
     setRoundsFinished(rounds)
 }
 
-const laodProgress = (slotNumber) => simpleLoad(slotNumber, 'progress', setProgress)
+const loadProgress = (slotNumber) => simpleLoad(slotNumber, 'progress', setProgress)
 
 const simpleLoad = (slotNumber, postfix, setter) =>
     setter(JSON.parse(localStorage.getItem(`slot-${slotNumber}-${postfix}`)))

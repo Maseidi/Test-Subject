@@ -30,7 +30,7 @@ export class AbstractEnemy {
         this.y =                   this.waypoint.points[0].y ?? 0
         this.difficulties =        difficulty ? decideDifficulty(difficulty) : 
                                    [difficultyMap.MILD, difficultyMap.MIDDLE, difficultyMap.SURVIVAL]
-        this.level =               level ?? 1                           
+        this.level =               level ?? 1
 
         this.angleService =        new AbstractAngleService(this)
         this.injuryService =       new AbstractInjuryService(this)

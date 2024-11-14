@@ -30,7 +30,9 @@ const mainMenuHeader = () => {
 const options = () => {
     const options = createAndAddClass('div', 'main-menu-options')
     handleContinueOption(options)
-    appendAll(options, newGame(), loadGame(), lineBar())
+    appendAll(options, newGame(), loadGame())
+    handleMapMakerOption(options)
+    options.append(lineBar())
     return options
 }
 
@@ -53,6 +55,25 @@ const continueOption = () =>
         },
         getDelay(0),
         getDuration(0)
+    )
+    
+const handleMapMakerOption = (options) => {
+    for ( let i = 0; i < 5; i++ )
+        if ( localStorage.getItem('slot-' + ( i + 1 )) !== 'empty' ) {
+            if ( Number(JSON.parse(localStorage.getItem('slot-' + ( i + 1 ))).rounds) > 0 ) options.append(mapMaker())
+            break
+        }
+}
+    
+const mapMaker = () => 
+    mainMenuOption(
+        'map maker', 
+        (e) => {
+            addSelectedStyle(e.currentTarget)
+            refreshContents(mapMakerOptions())
+        },
+        getDelay(3),
+        getDuration(3)
     )    
 
 const getDelay = (number) => 2 + ( isContinueIncluded ? number : number - 1 ) * 0.1
@@ -144,19 +165,38 @@ const loadGameOptions = () => {
         const option = loadGameOption(i + 1)
         loadGameOptionsContainer.append(option)
     }
-    loadGameOptionsContainer.addEventListener('wheel', (e) => {
-        if ( e.deltaX !== 0 ) return
-        if ( e.deltaY > 0 ) loadGameOptionsContainer.scrollLeft += 100;
-        else loadGameOptionsContainer.scrollLeft -= 100;
-    }, {passive: true});
-
+    addWheelEvent(loadGameOptionsContainer)
     return loadGameOptionsContainer
+}
+
+const mapMakerOptions = () => {
+    const mapMakerOptionsContainer = createAndAddClass('div', 'load-game-options')
+    for ( let i = 0; i < 5; i++ ) {
+        const option = mapMakerOption(i + 1)
+        mapMakerOptionsContainer.append(option)
+    }
+    addWheelEvent(mapMakerOptionsContainer)
+    return mapMakerOptionsContainer
+}
+
+const addWheelEvent = (element) => {
+    element.addEventListener('wheel', (e) => {
+        if ( e.deltaX !== 0 ) return
+        if ( e.deltaY > 0 ) element.scrollLeft += 100;
+        else element.scrollLeft -= 100;
+    }, {passive: true});
 }
 
 const loadGameOption = (slotNumber) => {
     const slotData = localStorage.getItem('slot-' + slotNumber)
     if ( slotData === 'empty' ) return noSavedDataSlot()
     else return slotWithData(slotData, slotNumber)
+}
+
+const mapMakerOption = (slotNumber) => {
+    const slotData = localStorage.getItem('map-slot-' + slotNumber)
+    if ( slotData === 'empty' ) return noSavedDataSlot()
+    else return slotWithData(slotData, slotNumber, true)
 }
 
 const noSavedDataSlot = () => {    
@@ -171,8 +211,8 @@ const noSavedDataSlot = () => {
     return slot
 }
 
-const slotWithData = (slotData, slotNumber) => {
-    const elements = savedSlotContent(slotData)
+const slotWithData = (slotData, slotNumber, mapMaker) => {
+    const elements = savedSlotContent(slotData, mapMaker)
     const slot = createAndAddClass('div', 'load-game-option-full-slot')
     elements.forEach(elem => slot.append(elem))
     slot.addEventListener('click', () => playGameWithGivenData(() => loadGameFromSlot(slotNumber)))

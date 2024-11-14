@@ -357,3 +357,9 @@ export const setPlaythroughId = (val) => {
     playthroughId = val
 }
 export const getPlaythroughId = () => playthroughId
+
+let isMapMakerRoot = null
+export const setIsMapMakerRoot = (val) => {
+    isMapMakerRoot = val
+}
+export const getIsMapMakerRoot = () => isMapMakerRoot
