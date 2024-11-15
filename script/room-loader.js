@@ -123,7 +123,7 @@ const renderWalls = () => {
         else if ( elem.bottom !== null ) wall.style.bottom = `${elem.bottom}px`
         if ( !elem.side ) {
             createTrackers(wall, elem)
-            wall.setAttribute('side', false)  
+            wall.setAttribute('side', false)
         } else wall.setAttribute('side', true)    
         getCurrentRoom().append(wall)
         getCurrentRoomSolid().push(wall)
@@ -137,7 +137,7 @@ const getSideWalls = () => {
     let topOffset = 0
     top.forEach(topLoader => {
         const width = topLoader.left - topOffset
-        const wall = new Wall(width, 5, topOffset, null, 0, null, true)
+        const wall = new Wall(width, 5, topOffset, null, 0, null, null, true)
         topOffset = topLoader.left + topLoader.width
         result.push(wall)
     })
@@ -145,7 +145,7 @@ const getSideWalls = () => {
     let leftOffset = 0
     left.forEach(leftLoader => {
         const height = leftLoader.top - leftOffset
-        const wall = new Wall(5, height, 0, null, leftOffset, null, true)
+        const wall = new Wall(5, height, 0, null, leftOffset, null, null, true)
         leftOffset = leftLoader.top + leftLoader.height
         result.push(wall)
     })
@@ -153,7 +153,7 @@ const getSideWalls = () => {
     let rightOffset = 0
     right.forEach(rightLoader => {
         const height = rightLoader.top - rightOffset
-        const wall = new Wall(5, height, null, 0, rightOffset, null, true)
+        const wall = new Wall(5, height, null, 0, rightOffset, null, null, true)
         rightOffset = rightLoader.top + rightLoader.height
         result.push(wall)
     })
@@ -161,7 +161,7 @@ const getSideWalls = () => {
     let bottomOffset = 0
     bottom.forEach(bottomLoader => {
         const width = bottomLoader.left - bottomOffset
-        const wall = new Wall(width, 5, bottomOffset, null, null, 0, true)
+        const wall = new Wall(width, 5, bottomOffset, null, null, 0, null, true)
         bottomOffset = bottomLoader.left + bottomLoader.width
         result.push(wall)
     })

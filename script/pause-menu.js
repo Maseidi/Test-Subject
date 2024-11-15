@@ -1,15 +1,13 @@
 import { finishUp } from './finishup.js'
-import { getDialogues, getEnemies, getInteractables, getLoaders, getPopups, getRooms, getWalls } from './entities.js'
 import { renderDesktop } from './computer.js'
 import { renderMainMenu } from './main-menu.js'
 import { getPauseContainer } from './elements.js'
-import { getIsMapMakerRoot, setIsMapMakerRoot } from './variables.js'
-import { setDialogues, setEnemies, setInteractables, setLoaders, setPopups, setRooms, setShop, setWalls } from './mapMaker/variables.js'
 import { getMapMakerEl } from './mapMaker/elements.js'
 import { appendAll, createAndAddClass } from './util.js'
 import { renderMapMaker } from './mapMaker/map-maker.js'
 import { quitPage, renderQuit } from './user-interface.js'
-import { getShopItems } from './shop-item.js'
+import { getIsMapMakerRoot, setIsMapMakerRoot } from './variables.js'
+import { setDialogues, setEnemies, setInteractables, setLoaders, setPopups, setRooms, setShop, setWalls } from './mapMaker/variables.js'
 
 // NOTE: Map maker in arguments says that the pause menu is opened at map maker environment
 // NOTE: Variable isMapMakerRoot indicates that the game is being play tested through the map maker engine
@@ -28,16 +26,21 @@ const renderOptionsContainer = (mapMaker) => {
 }
 
 const renderOptions = (mapMaker) => {
+    const options = []
     const resume = createAndAddClass('div', 'common-option')
     resume.textContent = 'resume'
-    resume.addEventListener('click', quitPage)
+    if ( mapMaker ) resume.addEventListener('click', () => getPauseContainer().lastElementChild.remove()) 
+    else resume.addEventListener('click', quitPage)
+    options.push(resume)
     const loadGame = createAndAddClass('div', 'common-option')
     loadGame.textContent = 'load game'
-    const mainMenu = createAndAddClass('div', 'common-option')
+    if ( !getIsMapMakerRoot() ) options.push(loadGame)
     loadGame.addEventListener('click', () => renderDesktop(true))
+    const mainMenu = createAndAddClass('div', 'common-option')
     mainMenu.textContent = getIsMapMakerRoot() ? 'return to map maker' : 'return to main menu'
     mainMenu.addEventListener('click', () => renderConfirmReturn2MainMenu(mapMaker))
-    return [resume, loadGame, mainMenu]
+    options.push(mainMenu)
+    return options
 }
 
 const renderConfirmReturn2MainMenu = (mapMaker) => {
@@ -72,6 +75,14 @@ export const return2MainMenu = (mapMaker) => {
     if ( mapMaker ) {
         getPauseContainer().remove()
         getMapMakerEl().remove()
+        setRooms([])
+        setEnemies(new Map([]))
+        setWalls(new Map([]))
+        setInteractables(new Map([]))
+        setLoaders(new Map([]))
+        setDialogues([])
+        setPopups([])
+        setShop([])
     }
     else finishUp()
     renderMainMenu()
@@ -80,17 +91,5 @@ export const return2MainMenu = (mapMaker) => {
 const return2MapMaker = () => {
     setIsMapMakerRoot(false)
     finishUp()
-    initMapMakerDataWithGameData()
     renderMapMaker()
-}
-
-const initMapMakerDataWithGameData = () => {
-    setRooms([...getRooms().values()])
-    setWalls(getWalls())
-    setLoaders(getLoaders())
-    setInteractables(getInteractables())
-    setEnemies(getEnemies())
-    setDialogues(getDialogues())
-    setPopups(getPopups())
-    setShop(getShopItems())
 }

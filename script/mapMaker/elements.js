@@ -33,3 +33,9 @@ export const setSelectedToolEl = (val) => {
     selectedToolEl = val
 }
 export const getSelectedToolEl = () => selectedToolEl
+
+let spawnEl = null
+export const setSpawnEl = (val) => {
+    spawnEl = val
+}
+export const getSpawnEl = () => spawnEl

@@ -29,7 +29,7 @@ export const startUp = () => {
     renderUi()
     renderMap()
     renderRoomContainer()
-    renderPlayer()
+    getMapEl().append(renderPlayer())
     renderCurrentRoom()
     centralizePlayer()
 }
@@ -81,7 +81,7 @@ const renderRoomContainer = () => {
 
 const renderCurrentRoom = () => loadCurrentRoom()
 
-const renderPlayer = () => {
+export const renderPlayer = () => {
     const player = createAndAddClass('div', 'player')
     player.id = 'player'
     player.style.left = `${getPlayerX()}px`
@@ -98,7 +98,7 @@ const renderPlayer = () => {
     const rightHand = createAndAddClass('div', 'player-right-hand')
     playerBody.append(leftHand, playerHead, rightHand)
     setPlayer(player)
-    getMapEl().append(player)
+    return player
 }
 
 export const centralizePlayer = () => {

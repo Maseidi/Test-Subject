@@ -1,12 +1,59 @@
+import { getPlayer } from '../../elements.js'
 import { containsClass } from '../../util.js'
-import {addRoomContents, clearRoomOverview} from '../map-maker.js'
-import { renderAttributes, input, deleteButton } from './shared.js'
-import { getAttributesEl, getElemBeingModified, getRoomOverviewEl, getSelectedToolEl } from '../elements.js'
-import { getEnemies, getInteractables, getItemBeingModified, getLoaders, getRooms, getWalls, setRooms} from '../variables.js'
+import {addRoomContents, clearRoomOverview, renderSpawn} from '../map-maker.js'
+import { renderAttributes, input, deleteButton, checkbox } from './shared.js'
+import { getAttributesEl, getElemBeingModified, getRoomOverviewEl, getSelectedToolEl, getSpawnEl } from '../elements.js'
+import { getEnemies,
+    getInteractables,
+    getItemBeingModified,
+    getLoaders,
+    getRoomBeingMade,
+    getRooms,
+    getSpawnRoom,
+    getSpawnX,
+    getSpawnY,
+    getWalls,
+    setRooms,
+    setSpawnRoom,
+    setSpawnX,
+    setSpawnY } from '../variables.js'
 
 export const renderRoomAttributes = () => {
     const room = getItemBeingModified()
     renderAttributes()
+
+    const isThisSpawnRoom = getSpawnRoom() === getRoomBeingMade()
+
+    getAttributesEl().append(
+        checkbox('set as spawn room', isThisSpawnRoom, (value) => {
+            if ( value ) {
+                setSpawnRoom(getRoomBeingMade())
+                renderSpawn()
+            }
+            else {
+                setSpawnRoom(null)
+                getSpawnEl().remove()
+            }
+            renderRoomAttributes()
+        })
+    )
+
+    if ( isThisSpawnRoom ) {
+        getAttributesEl().append(
+            input('spawn x',
+                getSpawnX(), (value) => {
+                setSpawnX(value)
+                getSpawnEl().style.left = `${value}px`
+            }, 'number', room.width - 50, 20)
+        )
+    
+        getAttributesEl().append(
+            input('spawn y', getSpawnY(), (value) => {
+                setSpawnY(value)
+                getSpawnEl().style.top = `${value}px`
+            }, 'number', room.height - 50, 20)
+        )
+    }
 
     getAttributesEl().append(
         input('width', room.width, (value) => {

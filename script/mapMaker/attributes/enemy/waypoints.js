@@ -38,13 +38,19 @@ const renderPointContainer = (innerValue, point, index) => {
     xContainer.append(input('x' + index, point.x, (value) => {
         innerValue[index].x = value
         document.querySelector(`.enemy-${currentEnemyIndex}-path.enemy-path-${index}`).style.left = `${value}px`
-        if ( index === 0 ) getElemBeingModified().style.left = `${value}px`
+        if ( index === 0 ) {
+            getElemBeingModified().style.left = `${value}px`
+            getItemBeingModified().x = value
+        }
     }, 'number'))
     const yContainer = createAndAddClass('div', 'coordinate-container')
     yContainer.append(input('y' + index, point.y, (value) => {
         innerValue[index].y = value
         document.querySelector(`.enemy-${currentEnemyIndex}-path.enemy-path-${index}`).style.top = `${value}px`
-        if ( index === 0 ) getElemBeingModified().style.top = `${value}px`
+        if ( index === 0 ) {
+            getElemBeingModified().style.top = `${value}px`
+            getItemBeingModified().y = value
+        }
     }, 'number'))
     const removeContainer = createAndAddClass('div', 'remove-container')
     const removeBtn = createAndAddClass('button', 'popup-cancel')

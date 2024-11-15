@@ -7,7 +7,7 @@ import {renderDesktop} from '../computer.js'
 import { PistolAmmo } from '../interactables.js'
 import { initStash, setStash } from '../stash.js'
 import { Dialogue } from '../dialogue-manager.js'
-import {renderPauseContainer} from '../startup.js'
+import {renderPauseContainer, renderPlayer} from '../startup.js'
 import { getPauseContainer } from '../elements.js'
 import { renderPauseMenu } from '../pause-menu.js'
 import { setPasswords } from '../password-manager.js'
@@ -26,7 +26,7 @@ import { renderEnemyAttributes } from './attributes/enemy/enemy.js'
 import { renderDialogueAttributes } from './attributes/dialogue.js'
 import { initConstants, initNewGameVariables } from '../data-manager.js'
 import { renderInteractableAttributes } from './attributes/interactable.js'
-import { setCurrentRoomId, setDifficulty, setRoundsFinished } from '../variables.js'
+import { setCurrentRoomId, setDifficulty, setPlayerAngle, setRoomLeft, setRoundsFinished } from '../variables.js'
 import { initEnemies, setDialogues, setInteractables, setLoaders, setPopups, setRooms, setWalls } from '../entities.js'
 import { 
     addClass,
@@ -46,6 +46,9 @@ import {
     getRoomBeingMade,
     getRooms,
     getShop,
+    getSpawnRoom,
+    getSpawnX,
+    getSpawnY,
     getWalls,
     setItemBeingModified,
     setRoomBeingMade } from './variables.js'
@@ -59,6 +62,7 @@ import {
     setMapMakerEl,
     setRoomOverviewEl,
     setSelectedToolEl,
+    setSpawnEl,
     setToolsEl } from './elements.js'
 
 let pauseFn = null    
@@ -123,6 +127,7 @@ const createTools = (tools) => {
         createTool('popups'),
         createTool('dialogues'),
         createTool('shop'),
+        createTool('spawn'),
     ]).forEach(item => tools.append(item))
 }
 
@@ -339,6 +344,7 @@ const renderContents = (room) => {
     renderEnemies()
     renderEnemyPaths()
     hidePaths()
+    renderSpawn()
 }
 
 const renderCurrentRoomId = () => {
@@ -359,23 +365,24 @@ const renderOptions = () => {
     return optionsContainer
 }
 
-const playTest = () => {
-    if ( getRooms().length === 0 ) return
+export const playTest = () => {
+    if ( getRooms().length === 0 || !getSpawnRoom() ) return
+    const room = getRooms().find(item => item.id === getRoomBeingMade() )
     handlePasswords()
-    initNewGameVariables(difficulties.MILD)
+    initNewGameVariables(room.width - getSpawnX() + 250, room.height - getSpawnY() - 100, difficulties.MILD)
     initConstants()
     setProgress(initProgress())
     setInventory(initInventory())
     setStash(initStash())
-    setShopItems(getShop())
-    setInteractables(getInteractables())
-    setLoaders(getLoaders())
-    setWalls(getWalls())
+    setShopItems([...getShop()])
+    setInteractables(new Map(getInteractables().entries()))
+    setLoaders(new Map(getLoaders().entries()))
+    setWalls(new Map(getWalls().entries()))
     setRooms(handleRooms())
     initEnemies(getEnemies())
-    setDialogues(getDialogues())
-    setPopups(getPopups())
-    setCurrentRoomId(getRoomBeingMade())
+    setDialogues([...getDialogues()])
+    setPopups([...getPopups()])
+    setCurrentRoomId(getSpawnRoom())
     getMapMakerEl().remove()
     window.removeEventListener('keydown', pauseFn, true)
     play(true)
@@ -431,6 +438,16 @@ const renderComponents = (components, renderCallback) =>
         const componentEl = renderCallback(component, index)
         getRoomOverviewEl().children[1].append(componentEl)
     })
+
+export const renderSpawn = () => {
+    setPlayerAngle(0)
+    if ( getRoomBeingMade() !== getSpawnRoom() ) return
+    const spawn = renderPlayer()
+    spawn.style.left = `${getSpawnX()}px`
+    spawn.style.top = `${getSpawnY()}px`
+    getRoomOverviewEl().children[1].append(spawn)
+    setSpawnEl(spawn)
+}
 
 const addNewWall = (contentsBar) => {
     const content = add2Contents(contentsBar, 'wall', null, true)

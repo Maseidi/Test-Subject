@@ -57,3 +57,21 @@ export const setShop = (val) => {
     shop = val
 }
 export const getShop = () => shop
+
+let spawnRoom = null
+export const setSpawnRoom = (val) => {
+    spawnRoom = val
+}
+export const getSpawnRoom = () => spawnRoom
+
+let spawnX = 20
+export const setSpawnX = (val) => {
+    spawnX = val
+}
+export const getSpawnX = () => spawnX
+
+let spawnY = 20
+export const setSpawnY = (val) => {
+    spawnY = val
+}
+export const getSpawnY = () => spawnY

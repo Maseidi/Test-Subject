@@ -59,7 +59,7 @@ const add2Queue = (func, args) => {
 }
 
 // Note: Doors with kill all NEVER need a renderProgress property
-// Caution: Doors that need a key or code MUST have a renderProgress property!!
+// Caution: Doors that need a key or code MUST have a renderProgress property!
 const toggleDoors = (number, open = true) => 
     getCurrentRoomDoors()
         .filter(door => door.getAttribute('renderprogress') === number )

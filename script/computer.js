@@ -1,17 +1,11 @@
 import { play } from './game.js'
 import { finishUp } from './finishup.js'
 import { managePause } from './actions.js'
-import { setShopItems } from './shop-item.js'
-import { initStash, setStash } from './stash.js'
 import { getPauseContainer } from './elements.js'
-import { setPasswords } from './password-manager.js'
 import { appendAll, createAndAddClass } from './util.js'
+import { loadGameFromSlot, saveAtSlot } from './data-manager.js'
 import { countItem, useInventoryResource } from './inventory.js'
-import { initProgress, setProgress } from './progress-manager.js'
-import { setEnemies, setInteractables, setLoaders } from './entities.js'
 import { addMessage, itemNotification, renderQuit } from './user-interface.js'
-import { initNewGameVariables, loadGameFromSlot, saveAtSlot } from './data-manager.js'
-import { getEnemies, getInteractables, getLoaders, getShop, getWalls } from './mapMaker/variables.js'
 
 export const turnOnComputer = () => {
     managePause()

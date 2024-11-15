@@ -19,7 +19,7 @@ export const ENEMIES_BY_TYPE = new Map([
 ])
 
 export const buildEnemy = (data) => {
-    const { x, y, health, killAll, renderProgress, progress2Active, progress2Deactive, difficulties, damage, level } = data    
+    const { x, y, killAll, renderProgress, progress2Active, progress2Deactive, difficulties, level } = data    
 
     const progress = Progress.builder()
         .setKillAll(killAll)
@@ -36,8 +36,6 @@ export const buildEnemy = (data) => {
     enemy.x = x
     enemy.y = y
     enemy.difficulties = difficulties
-    enemy.health = (level && !health) ? enemy.health : health
-    enemy.damage = (level && !damage) ? enemy.damage : damage
 
     return enemy
 }

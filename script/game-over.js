@@ -6,7 +6,8 @@ import { return2MainMenu } from './pause-menu.js'
 import { getPauseContainer, getPlayer } from './elements.js'
 import { addClass, appendAll, createAndAddClass, removeAllClasses, removeClass, removeEquipped } from './util.js'
 import { loadGameFromSlot, prepareNewGameData } from './data-manager.js'
-import { getDifficulty, getHealth, getPlaythroughId, setPauseCause } from './variables.js'
+import { getDifficulty, getHealth, getIsMapMakerRoot, getPlaythroughId, setPauseCause } from './variables.js'
+import { playTest } from './mapMaker/map-maker.js'
 
 export const manageGameOver = () => {
     if ( getHealth() !== 0 ) return
@@ -29,14 +30,22 @@ const renderGameOverScreen = () => {
     title.textContent = 'You are dead'
     const continueOption = createAndAddClass('div', 'common-option')
     continueOption.textContent = 'continue'
-    continueOption.addEventListener('click', hasSaveInPlaythrogh() ? loadLatestSavedSlot : startNewGame)
+    continueOption.addEventListener('click', () => {
+        if ( getIsMapMakerRoot() ) {
+            finishUp()
+            playTest()
+        }
+        else if (hasSaveInPlaythrogh()) loadLatestSavedSlot()
+        else                            startNewGame()
+    })
     const loadGame = createAndAddClass('div', 'common-option')
     loadGame.addEventListener('click', () => renderDesktop(true))
     loadGame.textContent = 'load game'
     const mainMenu = createAndAddClass('div', 'common-option')
     mainMenu.textContent = 'return to main menu'
     mainMenu.addEventListener('click', return2MainMenu)
-    appendAll(gameOverContents, title, continueOption, loadGame, mainMenu)
+    appendAll(gameOverContents, title, continueOption)
+    if ( !getIsMapMakerRoot() ) appendAll(gameOverContents, loadGame, mainMenu) 
     gameOverContainer.append(gameOverContents)
     getPauseContainer().append(gameOverContainer)
 }
