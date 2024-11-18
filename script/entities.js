@@ -1,3 +1,4 @@
+import { buildEnemy } from './enemy/enemy-factory.js'
 import { getDifficulty } from './variables.js'
 
 let rooms = []
@@ -29,7 +30,7 @@ export const getEnemies = () => enemies
 export const initEnemies = (inputEnemies) => {
     const result = new Map([])
     for ( const [roomId, enemiesOfRoom] of inputEnemies.entries() ) {
-        result.set(roomId, enemiesOfRoom.filter(enemy => enemy.difficulties.includes(getDifficulty())))
+        result.set(roomId, enemiesOfRoom.map(enemy => buildEnemy(enemy)).filter(enemy => enemy.difficulties.includes(getDifficulty())))
     }
     setEnemies(result)
 }

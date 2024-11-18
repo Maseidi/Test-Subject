@@ -7,13 +7,11 @@ import {renderDesktop} from '../computer.js'
 import { PistolAmmo } from '../interactables.js'
 import { initStash, setStash } from '../stash.js'
 import { Dialogue } from '../dialogue-manager.js'
-import {renderPauseContainer, renderPlayer} from '../startup.js'
 import { getPauseContainer } from '../elements.js'
 import { renderPauseMenu } from '../pause-menu.js'
 import { setPasswords } from '../password-manager.js'
 import { Torturer } from '../enemy/type/normal-enemy.js'
 import { defineEnemyComponents } from '../room-loader.js'
-import { attributesSidebar } from './attributes/shared.js'
 import { renderWallAttributes } from './attributes/wall.js'
 import { renderRoomAttributes } from './attributes/room.js'
 import { initInventory, setInventory } from '../inventory.js'
@@ -21,12 +19,14 @@ import { renderPopupAttributes } from './attributes/popup.js'
 import { renderShopItemAttributes } from './attributes/shop.js'
 import { renderLoaderAttributes } from './attributes/loader.js'
 import { BandageShopItem, setShopItems } from '../shop-item.js'
+import {renderPauseContainer, renderPlayer} from '../startup.js'
 import { initProgress, setProgress } from '../progress-manager.js'
 import { renderEnemyAttributes } from './attributes/enemy/enemy.js'
 import { renderDialogueAttributes } from './attributes/dialogue.js'
 import { initConstants, initNewGameVariables } from '../data-manager.js'
 import { renderInteractableAttributes } from './attributes/interactable.js'
-import { setCurrentRoomId, setDifficulty, setPlayerAngle, setRoomLeft, setRoundsFinished } from '../variables.js'
+import { attributesSidebar, renderAttributes } from './attributes/shared.js'
+import { setCurrentRoomId, setDifficulty, setPlayerAngle, setRoundsFinished } from '../variables.js'
 import { initEnemies, setDialogues, setInteractables, setLoaders, setPopups, setRooms, setWalls } from '../entities.js'
 import { 
     addClass,
@@ -146,6 +146,7 @@ const onToolClick = (e, header) => activateTool(e.currentTarget, header)
 
 const activateTool = (tool, header) => {
     setAsElemBeingModified(null)
+    renderAttributes()
     if ( getRooms().length === 0 && !['rooms', 'dialogues', 'popups', 'shop'].includes(header) ) return
     if ( !containsClass(tool, 'active-tool') ) {
         addClass(tool, 'active-tool')
@@ -369,7 +370,7 @@ export const playTest = () => {
     if ( getRooms().length === 0 || !getSpawnRoom() ) return
     const room = getRooms().find(item => item.id === getRoomBeingMade() )
     handlePasswords()
-    initNewGameVariables(room.width - getSpawnX() + 250, room.height - getSpawnY() - 100, difficulties.MILD)
+    initNewGameVariables(room.width - getSpawnX() + 250, room.height - getSpawnY() - 100, difficulties.MIDDLE)
     initConstants()
     setProgress(initProgress())
     setInventory(initInventory())
@@ -389,12 +390,12 @@ export const playTest = () => {
 }
 
 const handlePasswords = () => {
-    const passwords = []
+    const passwords = new Map([])
     for ( const [roomId, loadersOfRoom] of getLoaders().entries() ) {
         for ( const loader of loadersOfRoom ) {
             if ( loader.door && loader.door.code ) {
-                if ( !passwords.includes(loader.door.code) ) {
-                    passwords.push(loader.door.code)
+                if ( !passwords.has(loader.door.code) ) {
+                    passwords.set(loader.door.code, Math.floor(Math.random() * 99900) + 100)
                 }
             }
         }

@@ -19,7 +19,7 @@ export const ENEMIES_BY_TYPE = new Map([
 ])
 
 export const buildEnemy = (data) => {
-    const { x, y, killAll, renderProgress, progress2Active, progress2Deactive, difficulties, level } = data    
+    const { x, y, killAll, renderProgress, progress2Active, progress2Deactive, difficulties, level } = data
 
     const progress = Progress.builder()
         .setKillAll(killAll)
