@@ -50,7 +50,7 @@ export const renderEnemyAttributes = () => {
 
     getAttributesEl().append(
         input('render progress', enemy.renderProgress, 
-            (value) => enemy.renderProgress = value, 'number')
+            (value) => enemy.renderProgress = String(value), 'number')
     )
 
     getAttributesEl().append(
@@ -65,7 +65,7 @@ export const renderEnemyAttributes = () => {
 
     getAttributesEl().append(
         input('kill all', enemy.killAll, 
-            (value) => enemy.killAll = value, 'number')
+            (value) => enemy.killAll = String(value), 'number')
     )
 
     getAttributesEl().append(difficultyAutoComplete(enemy))

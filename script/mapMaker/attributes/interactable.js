@@ -179,7 +179,7 @@ export const renderInteractableAttributes = () => {
     if ( !itemsMap2.has(name) ) {
         getAttributesEl().append(
             input('render progress', interactable.renderProgress, 
-                (value) => interactable.renderProgress = value, 'number')
+                (value) => interactable.renderProgress = String(value), 'number')
         )
 
         getAttributesEl().append(
@@ -194,7 +194,7 @@ export const renderInteractableAttributes = () => {
 
         getAttributesEl().append(
             input('kill all', interactable.killAll, 
-                (value) => interactable.killAll = value, 'number')
+                (value) => interactable.killAll = String(value), 'number')
         )
 
         if ( name === 'note' ) {
@@ -285,5 +285,5 @@ const findInteractable = (name, interactable) => {
 
     if ( name === 'crate' )
         return new Crate(left, top, new Loot(RANDOM, 1, null), 
-            extractProgress(interactable), parseDifficulty(difficulties)) 
+            extractProgress(interactable), parseDifficulty(difficulties))
 }

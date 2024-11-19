@@ -1,12 +1,12 @@
 import { Room } from '../room.js'
 import { Wall } from '../wall.js'
 import { play } from '../game.js'
-import { TopLoader } from '../loader.js'
+import { BottomLoader, Door, TopLoader } from '../loader.js'
 import { Popup } from '../popup-manager.js'
 import {renderDesktop} from '../computer.js'
 import { PistolAmmo } from '../interactables.js'
 import { initStash, setStash } from '../stash.js'
-import { Dialogue } from '../dialogue-manager.js'
+import { Dialogue, sources } from '../dialogue-manager.js'
 import { getPauseContainer } from '../elements.js'
 import { renderPauseMenu } from '../pause-menu.js'
 import { setPasswords } from '../password-manager.js'
@@ -70,6 +70,7 @@ export const renderMapMaker = () => {
     renderPauseContainer()
     setRoundsFinished(0)
     setDifficulty(difficulties.MIDDLE)
+    setRoomBeingMade(null)
     const root = document.getElementById('root')
     const mapMakerContainer = createAndAddClass('div', 'map-maker-container')
     const mapMakerContents = createAndAddClass('div', 'map-maker-contents')
@@ -147,7 +148,7 @@ const onToolClick = (e, header) => activateTool(e.currentTarget, header)
 const activateTool = (tool, header) => {
     setAsElemBeingModified(null)
     renderAttributes()
-    if ( getRooms().length === 0 && !['rooms', 'dialogues', 'popups', 'shop'].includes(header) ) return
+    if ( (getRooms().length === 0 || !getRoomBeingMade()) && !['rooms', 'dialogues', 'popups', 'shop'].includes(header) ) return
     if ( !containsClass(tool, 'active-tool') ) {
         addClass(tool, 'active-tool')
         const contents = getContents(header)
@@ -376,10 +377,10 @@ export const playTest = () => {
     setInventory(initInventory())
     setStash(initStash())
     setShopItems([...getShop()])
-    setInteractables(new Map(getInteractables().entries()))
-    setLoaders(new Map(getLoaders().entries()))
-    setWalls(new Map(getWalls().entries()))
-    setRooms(handleRooms())
+    handleInteractables()
+    handleLoaders()
+    setWalls(getWalls())
+    handleRooms()
     initEnemies(getEnemies())
     setDialogues([...getDialogues()])
     setPopups([...getPopups()])
@@ -403,10 +404,39 @@ const handlePasswords = () => {
     setPasswords(passwords)
 }
 
+const handleInteractables = () => {
+    const interactables = new Map([])
+    for ( const [roomId, interactablesOfRoom] of getInteractables().entries() ) {
+        const roomContainer = []
+        for ( const interactable of interactablesOfRoom ) {
+            roomContainer.push({...interactable})
+        }
+        interactables.set(roomId, roomContainer)
+    }
+    setInteractables(interactables)
+}
+
+const handleLoaders = () => {
+    const loaders = new Map([])
+    for ( const [roomId, loadersOfRoom] of getLoaders().entries() ) {
+        const roomContainer = []
+        for ( const loader of loadersOfRoom ) {
+            if ( loader.door ) {
+                const { heading, popup, key, renderProgress, progress2Active, killAll, code } = loader.door
+                const door = new Door(heading, popup, key, {renderProgress, progress2Active, killAll}, code)
+                loader.door = door
+            }
+            roomContainer.push(loader)
+        }
+        loaders.set(roomId, roomContainer)
+    }
+    setLoaders(loaders)
+}
+
 const handleRooms = () => {
     const rooms = new Map()
     getRooms().forEach(room => rooms.set(room.id, room))
-    return rooms
+    setRooms(rooms)
 }
 
 export const renderWalls = () => renderComponents(getWalls(), renderWall)
@@ -596,7 +626,7 @@ const initPopup = (options) => {
 const addNewDialogue = (contentsBar) => {
     const content = add2Contents(contentsBar, 'dialogue', null, true)
     content.addEventListener('click', onDialogueClick(contentsBar))
-    initDialogue(new Dialogue('This is a test dialogue'))
+    initDialogue(new Dialogue('This is a test dialogue', sources.MAIN))
     getDialogues().push(getItemBeingModified())
 }
 

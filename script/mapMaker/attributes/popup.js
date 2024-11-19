@@ -13,7 +13,7 @@ export const renderPopupAttributes = () => {
     )
 
     getAttributesEl().append(
-        input('render progress', popup.renderProgress, (value) => popup.renderProgress = value, 'number')
+        input('render progress', popup.renderProgress, (value) => popup.renderProgress = String(value), 'number')
     )
 
     getAttributesEl().append(

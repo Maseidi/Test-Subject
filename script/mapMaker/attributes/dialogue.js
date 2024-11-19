@@ -23,7 +23,7 @@ export const renderDialogueAttributes = () => {
     )
 
     getAttributesEl().append(
-        input('render progress', dialogue.renderProgress, (value) => dialogue.renderProgress = value, 'number')
+        input('render progress', dialogue.renderProgress, (value) => dialogue.renderProgress = String(value), 'number')
     )
 
     getAttributesEl().append(
