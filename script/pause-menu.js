@@ -4,7 +4,7 @@ import { renderMainMenu } from './main-menu.js'
 import { getPauseContainer } from './elements.js'
 import { getMapMakerEl } from './mapMaker/elements.js'
 import { appendAll, createAndAddClass } from './util.js'
-import { renderMapMaker } from './mapMaker/map-maker.js'
+import { pauseFn, renderMapMaker } from './mapMaker/map-maker.js'
 import { quitPage, renderQuit } from './user-interface.js'
 import { getIsMapMakerRoot, setIsMapMakerRoot } from './variables.js'
 import { setDialogues, setEnemies, setInteractables, setLoaders, setPopups, setRooms, setShop, setWalls } from './mapMaker/variables.js'
@@ -34,7 +34,7 @@ const renderOptions = (mapMaker) => {
     options.push(resume)
     const loadGame = createAndAddClass('div', 'common-option')
     loadGame.textContent = 'load game'
-    if ( !getIsMapMakerRoot() ) options.push(loadGame)
+    if ( !getIsMapMakerRoot() && !mapMaker ) options.push(loadGame)
     loadGame.addEventListener('click', () => renderDesktop(true))
     const mainMenu = createAndAddClass('div', 'common-option')
     mainMenu.textContent = getIsMapMakerRoot() ? 'return to map maker' : 'return to main menu'
@@ -73,6 +73,7 @@ const closeReturnPopup = () => {
 
 export const return2MainMenu = (mapMaker) => {
     if ( mapMaker ) {
+        window.removeEventListener('keydown', pauseFn, true)
         getPauseContainer().remove()
         getMapMakerEl().remove()
         setRooms([])

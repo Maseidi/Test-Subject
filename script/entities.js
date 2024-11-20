@@ -30,7 +30,9 @@ export const getEnemies = () => enemies
 export const initEnemies = (inputEnemies) => {
     const result = new Map([])
     for ( const [roomId, enemiesOfRoom] of inputEnemies.entries() ) {
-        result.set(roomId, enemiesOfRoom.map(enemy => buildEnemy(enemy)).filter(enemy => enemy.difficulties.includes(getDifficulty())))
+        result.set(roomId, enemiesOfRoom.map(enemy => buildEnemy(enemy))
+            .filter(enemy => enemy.difficulties.includes(getDifficulty()))
+        )
     }
     setEnemies(result)
 }
@@ -41,14 +43,14 @@ export const setInteractables = (val) => {
 }
 export const getInteractables = () => interactables
 
-export const initInteractables = () => {
-    const interactablesMap = new Map([])
-    Array.from(    
-        []
-    )
-    .map(arr => arr.filter(int => int.difficulties.includes(getDifficulty())))
-    .forEach((arr, index) => interactablesMap.set(index + 1, arr))
-    return interactablesMap
+export const initInteractables = (inputInteractables) => {
+    const result = new Map([])
+    for ( const [roomId, interactablesOfRoom] of inputInteractables.entries() ) {
+        result.set(roomId, interactablesOfRoom.map(int => ({...int}))
+            .filter(int => int.difficulties.includes(getDifficulty()))
+        )
+    }
+    setInteractables(result)
 }
 
 let dialogues = []

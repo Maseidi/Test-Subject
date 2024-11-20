@@ -13,7 +13,11 @@ import {
     getRooms,
     setEnemies,
     setInteractables,
-    setLoaders } from './entities.js'
+    setLoaders, 
+    getWalls,
+    getLoaders,
+    setRooms,
+    setWalls} from './entities.js'
 import { 
     getAdrenalinesDropped,
     getAimMode,
@@ -131,13 +135,9 @@ const initNewGameStash = () => setStash(initStash())
 const initNewGameShop = () => setShopItems(initShopItems())
 
 const initNewGameEntities = () => {
-    initNewGameEnemies()
-    initNewGameInteractables()
+    initEnemies()
+    initInteractables()
 }
-
-const initNewGameEnemies = () => setEnemies(initEnemies())
-
-const initNewGameInteractables = () => setInteractables(initInteractables())
 
 export const initConstants = () => {
     setUpPressed(             false)
@@ -172,15 +172,15 @@ export const initConstants = () => {
     setAimMode(               false)
 }
 
-export const initNewGameVariables = (spawnX = 0, spawnY = 500, difficulty) => {
+export const initNewGameVariables = (roomLeft = 0, roomTop = 500, difficulty) => {
     const newGameVariables = {
         mapX :                 0,
         mapY :                 0,
         playerX :              750,
         playerY :              400,
         currentRoomId :        1,
-        roomTop :              spawnY,
-        roomLeft :             spawnX,
+        roomTop,
+        roomLeft,
         playerSpeed :          5,
         maxStamina :           600,
         stamina :              600,
@@ -246,8 +246,11 @@ const setVariables = (variables) => {
     setPlaythroughId(       variables.playthroughId)
 }
 
-export const saveAtSlot = (slotNumber, mapMaker) => {
+export const saveAtSlot = (slotNumber) => {
     setTimesSaved(getTimesSaved() + 1)
+    saveRooms(        slotNumber)
+    saveWalls(        slotNumber)
+    saveLoaders(      slotNumber)
     savePasswords(    slotNumber)
     saveStats(        slotNumber)
     saveProgress(     slotNumber)
@@ -259,6 +262,12 @@ export const saveAtSlot = (slotNumber, mapMaker) => {
     saveStash(        slotNumber)
     localStorage.setItem('last-slot-used', slotNumber)
 }
+
+const saveRooms = (slotNumber) => saveMapAsString(slotNumber, 'rooms', getRooms())
+
+const saveWalls = (slotNumber) => saveMapAsString(slotNumber, 'walls', getWalls())
+
+const saveLoaders = (slotNumber) => saveMapAsString(slotNumber, 'loaders', getLoaders())
 
 const savePasswords = (slotNumber) => saveMapAsString(slotNumber, 'passwords', getPasswords())
 
@@ -357,7 +366,10 @@ const saveStash = (slotNumber) => simpleSave(slotNumber, 'stash', getStash())
 
 export const loadGameFromSlot = (slotNumber) => {
     initConstants()
+    loadRooms(        slotNumber)
     loadPasswords(    slotNumber)
+    loadLoaders(      slotNumber)
+    loadWalls(        slotNumber)
     loadStats(        slotNumber)
     loadProgress(     slotNumber)
     loadInteractables(slotNumber)
@@ -366,9 +378,14 @@ export const loadGameFromSlot = (slotNumber) => {
     loadShopItems(    slotNumber)
     loadInventory(    slotNumber)
     loadStash(        slotNumber)
-    setLoaders(       initLoaders())
     localStorage.setItem('last-slot-used', slotNumber)
 }
+
+const loadRooms = (slotNumber) => loadStringAsMap(slotNumber, 'rooms', setRooms)
+
+const loadWalls = (slotNumber) => loadStringAsMap(slotNumber, 'walls', setWalls)
+
+const loadLoaders = (slotNumber) => loadStringAsMap(slotNumber, 'loaders', setLoaders)
 
 const loadPasswords = (slotNumber) => loadStringAsMap(slotNumber, 'passwords', setPasswords, false)
 

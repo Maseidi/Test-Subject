@@ -51,7 +51,7 @@ export const renderLoaderAttributes = () => {
 
     getAttributesEl().append(
         checkbox('has door', loader.door, (value) => {
-            if ( value ) loader.door = new Door()
+            if ( value ) loader.door = new Door('heading', 'popup')
             else loader.door = null
             renderLoaderAttributes()
         })
@@ -59,11 +59,11 @@ export const renderLoaderAttributes = () => {
 
     if ( loader.door ) {
         getAttributesEl().append(
-            input('door heading', loader.door.heading, (value) => loader.door.heading = value, 'text')
+            input('door heading', loader.door.heading, (value) => loader.door.heading = value ?? 'heading', 'text')
         )
     
         getAttributesEl().append(
-            input('door popup', loader.door.popup, (value) => loader.door.popup = value, 'text')
+            input('door popup', loader.door.popup, (value) => loader.door.popup = value ?? 'popup', 'text')
         )
     
         getAttributesEl().append(

@@ -1,9 +1,9 @@
 import { Room } from '../room.js'
 import { Wall } from '../wall.js'
 import { play } from '../game.js'
-import { BottomLoader, Door, TopLoader } from '../loader.js'
 import { Popup } from '../popup-manager.js'
-import {renderDesktop} from '../computer.js'
+import { renderDesktop } from '../computer.js'
+import { Door, TopLoader } from '../loader.js'
 import { PistolAmmo } from '../interactables.js'
 import { initStash, setStash } from '../stash.js'
 import { Dialogue, sources } from '../dialogue-manager.js'
@@ -27,7 +27,7 @@ import { initConstants, initNewGameVariables } from '../data-manager.js'
 import { renderInteractableAttributes } from './attributes/interactable.js'
 import { attributesSidebar, renderAttributes } from './attributes/shared.js'
 import { setCurrentRoomId, setDifficulty, setPlayerAngle, setRoundsFinished } from '../variables.js'
-import { initEnemies, setDialogues, setInteractables, setLoaders, setPopups, setRooms, setWalls } from '../entities.js'
+import { initEnemies, initInteractables, setDialogues, setInteractables, setLoaders, setPopups, setRooms, setWalls } from '../entities.js'
 import { 
     addClass,
     appendAll,
@@ -65,7 +65,7 @@ import {
     setSpawnEl,
     setToolsEl } from './elements.js'
 
-let pauseFn = null    
+export let pauseFn = null    
 export const renderMapMaker = () => {
     renderPauseContainer()
     setRoundsFinished(0)
@@ -368,16 +368,16 @@ const renderOptions = () => {
 }
 
 export const playTest = () => {
-    if ( getRooms().length === 0 || !getSpawnRoom() ) return
-    const room = getRooms().find(item => item.id === getRoomBeingMade() )
+    if ( getRooms().length === 0 || !getSpawnRoom() || !getRoomBeingMade() ) return
+    
     handlePasswords()
-    initNewGameVariables(room.width - getSpawnX() + 250, room.height - getSpawnY() - 100, difficulties.MIDDLE)
+    initNewGameVariables(innerWidth / 2 - getSpawnX() - 20, innerHeight / 2 - getSpawnY() - 20, difficulties.MIDDLE)
     initConstants()
     setProgress(initProgress())
     setInventory(initInventory())
     setStash(initStash())
     setShopItems([...getShop()])
-    handleInteractables()
+    initInteractables(getInteractables())
     handleLoaders()
     setWalls(getWalls())
     handleRooms()
@@ -402,18 +402,6 @@ const handlePasswords = () => {
         }
     }
     setPasswords(passwords)
-}
-
-const handleInteractables = () => {
-    const interactables = new Map([])
-    for ( const [roomId, interactablesOfRoom] of getInteractables().entries() ) {
-        const roomContainer = []
-        for ( const interactable of interactablesOfRoom ) {
-            roomContainer.push({...interactable})
-        }
-        interactables.set(roomId, roomContainer)
-    }
-    setInteractables(interactables)
 }
 
 const handleLoaders = () => {

@@ -11,7 +11,7 @@ export class Room {
     }
 
     calculateBrightness(brightness) {
-        if ( brightness > 9 ) return 9
+        if ( brightness > 9 )      return 9
         else if ( brightness < 1 ) return 1
         return brightness
     }

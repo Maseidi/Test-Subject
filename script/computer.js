@@ -50,8 +50,8 @@ const slots = (load, mapMaker) => {
 }
 
 export const savedSlotContent = (slotData, mapMaker) => {
-    if ( mapMaker ) mapMakerSlotContent()
-    else gamePlaySlotContent(slotData)
+    if ( mapMaker ) return mapMakerSlotContent()
+    else return gamePlaySlotContent(slotData)
 }
 
 const mapMakerSlotContent = (slotData) => {
