@@ -6,12 +6,12 @@ import { renderDesktop } from '../computer.js'
 import { Door, TopLoader } from '../loader.js'
 import { PistolAmmo } from '../interactables.js'
 import { initStash, setStash } from '../stash.js'
-import { Dialogue, sources } from '../dialogue-manager.js'
 import { getPauseContainer } from '../elements.js'
 import { renderPauseMenu } from '../pause-menu.js'
 import { setPasswords } from '../password-manager.js'
 import { Torturer } from '../enemy/type/normal-enemy.js'
 import { defineEnemyComponents } from '../room-loader.js'
+import { Dialogue, sources } from '../dialogue-manager.js'
 import { renderWallAttributes } from './attributes/wall.js'
 import { renderRoomAttributes } from './attributes/room.js'
 import { initInventory, setInventory } from '../inventory.js'
@@ -26,8 +26,8 @@ import { renderDialogueAttributes } from './attributes/dialogue.js'
 import { initConstants, initNewGameVariables } from '../data-manager.js'
 import { renderInteractableAttributes } from './attributes/interactable.js'
 import { attributesSidebar, renderAttributes } from './attributes/shared.js'
-import { setCurrentRoomId, setDifficulty, setPlayerAngle, setRoundsFinished } from '../variables.js'
-import { initEnemies, initInteractables, setDialogues, setInteractables, setLoaders, setPopups, setRooms, setWalls } from '../entities.js'
+import { setCurrentRoomId, setPlayerAngle, setRoundsFinished } from '../variables.js'
+import { initEnemies, initInteractables, setDialogues, setLoaders, setPopups, setRooms, setWalls } from '../entities.js'
 import { 
     addClass,
     appendAll,
@@ -65,12 +65,10 @@ import {
     setSpawnEl,
     setToolsEl } from './elements.js'
 
-export let pauseFn = null    
+export let pauseFn = null
 export const renderMapMaker = () => {
     renderPauseContainer()
     setRoundsFinished(0)
-    setDifficulty(difficulties.MIDDLE)
-    setRoomBeingMade(null)
     const root = document.getElementById('root')
     const mapMakerContainer = createAndAddClass('div', 'map-maker-container')
     const mapMakerContents = createAndAddClass('div', 'map-maker-contents')
@@ -79,6 +77,10 @@ export const renderMapMaker = () => {
     setMapMakerEl(mapMakerContainer)
     setupPause()
     root.append(mapMakerContainer)
+    const roomsTool = mapMakerContents.children[2].children[1].firstElementChild    
+    roomsTool.click()
+    if ( !getRoomBeingMade() ) return
+    Array.from(roomsTool.nextSibling.children).find((item, index) => index + 1 === getRoomBeingMade()).click()
 }
 
 const setupPause = () => {
@@ -128,7 +130,6 @@ const createTools = (tools) => {
         createTool('popups'),
         createTool('dialogues'),
         createTool('shop'),
-        createTool('spawn'),
     ]).forEach(item => tools.append(item))
 }
 
@@ -368,10 +369,9 @@ const renderOptions = () => {
 }
 
 export const playTest = () => {
-    if ( getRooms().length === 0 || !getSpawnRoom() || !getRoomBeingMade() ) return
-    
+    if ( getRooms().length === 0 || !getSpawnRoom() ) return
     handlePasswords()
-    initNewGameVariables(innerWidth / 2 - getSpawnX() - 20, innerHeight / 2 - getSpawnY() - 20, difficulties.MIDDLE)
+    initNewGameVariables(getSpawnX(), getSpawnY(), difficulties.MIDDLE)
     initConstants()
     setProgress(initProgress())
     setInventory(initInventory())
@@ -412,7 +412,7 @@ const handleLoaders = () => {
             if ( loader.door ) {
                 const { heading, popup, key, renderProgress, progress2Active, killAll, code } = loader.door
                 const door = new Door(heading, popup, key, {renderProgress, progress2Active, killAll}, code)
-                loader.door = door
+                loader.door = {...door}
             }
             roomContainer.push(loader)
         }

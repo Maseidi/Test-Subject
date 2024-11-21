@@ -1,13 +1,13 @@
 import { play } from './game.js'
 import { finishUp } from './finishup.js'
-import { managePause, unequipTorch } from './actions.js'
 import { renderDesktop } from './computer.js'
-import { return2MainMenu } from './pause-menu.js'
-import { getPauseContainer, getPlayer } from './elements.js'
-import { addClass, appendAll, createAndAddClass, removeAllClasses, removeClass, removeEquipped } from './util.js'
-import { loadGameFromSlot, prepareNewGameData } from './data-manager.js'
-import { getDifficulty, getHealth, getIsMapMakerRoot, getPlaythroughId, setPauseCause } from './variables.js'
+import { return2MainMenu, return2MapMaker } from './pause-menu.js'
 import { playTest } from './mapMaker/map-maker.js'
+import { managePause, unequipTorch } from './actions.js'
+import { getPauseContainer, getPlayer } from './elements.js'
+import { loadGameFromSlot, prepareNewGameData } from './data-manager.js'
+import { addClass, appendAll, createAndAddClass, removeAllClasses, removeEquipped } from './util.js'
+import { getDifficulty, getHealth, getIsMapMakerRoot, getPlaythroughId, setPauseCause } from './variables.js'
 
 export const manageGameOver = () => {
     if ( getHealth() !== 0 ) return
@@ -45,7 +45,13 @@ const renderGameOverScreen = () => {
     mainMenu.textContent = 'return to main menu'
     mainMenu.addEventListener('click', return2MainMenu)
     appendAll(gameOverContents, title, continueOption)
-    if ( !getIsMapMakerRoot() ) appendAll(gameOverContents, loadGame, mainMenu) 
+    if ( !getIsMapMakerRoot() ) appendAll(gameOverContents, loadGame, mainMenu)
+    else {
+        const mapMaker = createAndAddClass('div', 'common-option')
+        mapMaker.textContent = 'return to map maker'
+        mapMaker.addEventListener('click', return2MapMaker)
+        gameOverContents.append(mapMaker)
+    }    
     gameOverContainer.append(gameOverContents)
     getPauseContainer().append(gameOverContainer)
 }

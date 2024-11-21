@@ -374,7 +374,6 @@ const getDescriptionContent = (interactable, needCode) => {
 
 const renderEnemies = () => {
     const currentRoomEnemies = getEnemies().get(getCurrentRoomId())
-    if ( !currentRoomEnemies ) return
     spawnEnemies(getExistingEnemies(indexEnemies(currentRoomEnemies)))
 }
 

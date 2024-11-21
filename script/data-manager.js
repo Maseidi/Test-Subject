@@ -172,15 +172,15 @@ export const initConstants = () => {
     setAimMode(               false)
 }
 
-export const initNewGameVariables = (roomLeft = 0, roomTop = 500, difficulty) => {
+export const initNewGameVariables = (spawnX = 20, spawnY = 20, difficulty) => {
     const newGameVariables = {
-        mapX :                 0,
-        mapY :                 0,
-        playerX :              750,
-        playerY :              400,
+        mapX :                 spawnX,
+        mapY :                 spawnY,
+        playerX :              2 * spawnX,
+        playerY :              2 * spawnY,
         currentRoomId :        1,
-        roomTop,
-        roomLeft,
+        roomTop :              spawnY,
+        roomLeft :             spawnX,
         playerSpeed :          5,
         maxStamina :           600,
         stamina :              600,

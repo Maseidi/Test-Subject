@@ -89,7 +89,7 @@ export const return2MainMenu = (mapMaker) => {
     renderMainMenu()
 }
 
-const return2MapMaker = () => {
+export const return2MapMaker = () => {
     setIsMapMakerRoot(false)
     finishUp()
     renderMapMaker()

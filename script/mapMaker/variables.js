@@ -10,49 +10,49 @@ export const setItemBeingModified = (val) => {
 }
 export const getItemBeingModified = () => itemBeingModified
 
-let rooms = []
+let rooms = null
 export const setRooms = (val) => {
     rooms = val
 }
 export const getRooms = () => rooms
 
-let walls = new Map([])
+let walls = null
 export const setWalls = (val) => {
     walls = val
 }
 export const getWalls = () => walls
 
-let loaders = new Map([])
+let loaders = null
 export const setLoaders = (val) => {
     loaders = val
 }
 export const getLoaders = () => loaders
 
-let interactables = new Map([])
+let interactables = null
 export const setInteractables = (val) => {
     interactables = val
 }
 export const getInteractables = () => interactables
 
-let enemies = new Map([])
+let enemies = null
 export const setEnemies = (val) => {
     enemies = val
 }
 export const getEnemies = () => enemies
 
-let popups = []
+let popups = null
 export const setPopups = (val) => {
     popups = val
 }
 export const getPopups = () => popups
 
-let dialogues = []
+let dialogues = null
 export const setDialogues = (val) => {
     dialogues = val
 }
 export const getDialogues = () => dialogues
 
-let shop = []
+let shop = null
 export const setShop = (val) => {
     shop = val
 }
@@ -64,14 +64,26 @@ export const setSpawnRoom = (val) => {
 }
 export const getSpawnRoom = () => spawnRoom
 
-let spawnX = 20
+let spawnX = null
 export const setSpawnX = (val) => {
     spawnX = val
 }
 export const getSpawnX = () => spawnX
 
-let spawnY = 20
+let spawnY = null
 export const setSpawnY = (val) => {
     spawnY = val
 }
 export const getSpawnY = () => spawnY
+
+let timesSaved = null
+export const setTimesSaved = (val) => {
+    timesSaved = val
+}
+export const getTimesSaved = () => timesSaved
+
+let slot = null
+export const setSlot = (val) => {
+    slot = val
+}
+export const getSlot = () => slot

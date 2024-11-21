@@ -1,7 +1,9 @@
 import { play } from './game.js'
 import { savedSlotContent } from './computer.js'
+import { renderMapMaker } from './mapMaker/map-maker.js'
 import { getMainMenuEl, setMainMenuEl } from './elements.js'
 import { loadGameFromSlot, prepareNewGameData } from './data-manager.js'
+import { loadMapMakerFromSlot, prepareNewMapMakerData } from './mapMaker/data-manager.js'
 import { addClass, appendAll, createAndAddClass, difficulties, removeClass } from './util.js'
 
 let isContinueIncluded = null
@@ -58,6 +60,9 @@ const continueOption = () =>
     )
     
 const handleMapMakerOption = (options) => {
+    options.append(mapMaker())
+    return
+    // TODO: Uncomment later
     for ( let i = 0; i < 5; i++ )
         if ( localStorage.getItem('slot-' + ( i + 1 )) !== 'empty' ) {
             if ( Number(JSON.parse(localStorage.getItem('slot-' + ( i + 1 ))).rounds) > 0 ) options.append(mapMaker())
@@ -140,7 +145,6 @@ const content = () => createAndAddClass('div', 'main-menu-content')
 
 const newGameOptions = () => {
     const newGameOptionsContainer = createAndAddClass('div', 'new-game-options')
-
     Array.from([
         newGameOption(difficulties.MILD), 
         newGameOption(difficulties.MIDDLE), 
@@ -149,7 +153,6 @@ const newGameOptions = () => {
         option.addEventListener('click', (e) => playGameWithGivenData(() => prepareNewGameData(e.target.textContent)))
         newGameOptionsContainer.append(option)
     })
-
     return newGameOptionsContainer
 }
 
@@ -171,12 +174,30 @@ const loadGameOptions = () => {
 
 const mapMakerOptions = () => {
     const mapMakerOptionsContainer = createAndAddClass('div', 'load-game-options')
+    mapMakerOptionsContainer.append(newMapMakerOption())
     for ( let i = 0; i < 5; i++ ) {
         const option = mapMakerOption(i + 1)
         mapMakerOptionsContainer.append(option)
     }
     addWheelEvent(mapMakerOptionsContainer)
     return mapMakerOptionsContainer
+}
+
+const newMapMakerOption = () => {
+    const slot = createAndAddClass('div', 'load-game-option-empty-slot', 'map-maker-new-game')
+    const word1 = document.createElement('p')
+    word1.textContent = 'start'
+    const word2 = document.createElement('p')
+    word2.textContent = 'new'
+    const word3 = document.createElement('p')
+    word3.textContent = 'map'
+    slot.append(word1, word2, word3)
+    slot.addEventListener('click', () => {
+        getMainMenuEl().remove()
+        prepareNewMapMakerData()
+        renderMapMaker()
+    })
+    return slot
 }
 
 const addWheelEvent = (element) => {
@@ -199,10 +220,10 @@ const mapMakerOption = (slotNumber) => {
     else return slotWithData(slotData, slotNumber, true)
 }
 
-const noSavedDataSlot = () => {    
+const noSavedDataSlot = () => {
     const slot = createAndAddClass('div', 'load-game-option-empty-slot')
     const word1 = document.createElement('p')
-    word1.textContent = 'No'
+    word1.textContent = 'no'
     const word2 = document.createElement('p')
     word2.textContent = 'saved'
     const word3 = document.createElement('p')
@@ -215,7 +236,8 @@ const slotWithData = (slotData, slotNumber, mapMaker) => {
     const elements = savedSlotContent(slotData, mapMaker)
     const slot = createAndAddClass('div', 'load-game-option-full-slot')
     elements.forEach(elem => slot.append(elem))
-    slot.addEventListener('click', () => playGameWithGivenData(() => loadGameFromSlot(slotNumber)))
+    if ( mapMaker ) slot.addEventListener('click', () => loadMapMakerWithGivenData(() => loadMapMakerFromSlot(slotNumber)))
+    else            slot.addEventListener('click', () => playGameWithGivenData(    () => loadGameFromSlot    (slotNumber)))
     return slot
 }
 
@@ -223,4 +245,10 @@ const playGameWithGivenData = (loader) => {
     getMainMenuEl().remove()
     loader()
     play()
+}
+
+const loadMapMakerWithGivenData = (loader) => {
+    getMainMenuEl().remove()
+    loader()
+    renderMapMaker()
 }

@@ -41,8 +41,7 @@
   height: 100%;
   overflow: auto;
   position: relative;
-  scrollbar-width: thin;
-  scrollbar-color: wheat black;
+  scrollbar-width: none;
 }
 
 .tools-sidebar {

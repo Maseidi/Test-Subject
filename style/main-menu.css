@@ -122,3 +122,11 @@
   cursor: pointer;
   justify-content: space-evenly;
 }
+
+.map-maker-new-game {
+  cursor: pointer;
+}
+
+.map-maker-new-game:hover {
+  background-color: rgb(245, 222, 179, 0.3);
+}

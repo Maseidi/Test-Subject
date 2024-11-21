@@ -3,9 +3,10 @@ import { finishUp } from './finishup.js'
 import { managePause } from './actions.js'
 import { getPauseContainer } from './elements.js'
 import { appendAll, createAndAddClass } from './util.js'
-import { loadGameFromSlot, saveAtSlot } from './data-manager.js'
 import { countItem, useInventoryResource } from './inventory.js'
+import { saveAtSlot as mapMakerSave } from './mapMaker/data-manager.js'
 import { addMessage, itemNotification, renderQuit } from './user-interface.js'
+import { loadGameFromSlot, saveAtSlot as gamePlaySave } from './data-manager.js'
 
 export const turnOnComputer = () => {
     managePause()
@@ -50,17 +51,21 @@ const slots = (load, mapMaker) => {
 }
 
 export const savedSlotContent = (slotData, mapMaker) => {
-    if ( mapMaker ) return mapMakerSlotContent()
+    if ( mapMaker ) return mapMakerSlotContent(slotData)
     else return gamePlaySlotContent(slotData)
 }
 
 const mapMakerSlotContent = (slotData) => {
-    const { timeStamp, rooms } = JSON.parse(slotData)
+    const { timeStamp, spawn, rooms, saves } = JSON.parse(slotData)
     const timeStampEl = document.createElement('div')
     timeStampEl.textContent = 'Date: ' + new Date(timeStamp).toLocaleString()
+    const savesEl = document.createElement('div')
+    savesEl.textContent = 'Saves: ' + saves
+    const spawnEl = document.createElement('div')
+    spawnEl.textContent = 'Spawn: ' + spawn
     const roomsEl = document.createElement('div')
     roomsEl.textContent = 'Total rooms: ' + rooms
-    return [timeStampEl, roomsEl]
+    return [timeStampEl, savesEl, spawnEl, roomsEl]
 }
 
 const gamePlaySlotContent = (slotData) => {
@@ -96,7 +101,7 @@ const renderSaveConfirmPopup = (slotNumber, isNotEmpty, mapMaker) => {
     const cancel = createAndAddClass('button', 'popup-cancel')
     cancel.addEventListener('click', closeSavePopup)
     cancel.textContent = 'cancel'
-    const confirm = createAndAddClass('button', 'popup-confirm')
+    const confirm = createAndAddClass('button', 'popup-confirm')    
     confirm.addEventListener('click', () => confirmSave(slotNumber, mapMaker))
     if ( mapMaker ) {
         const confirmMessage = document.createElement('p')
@@ -117,15 +122,15 @@ const renderSaveConfirmPopup = (slotNumber, isNotEmpty, mapMaker) => {
 }
 
 const confirmSave = (slotNumber, mapMaker = false) => {
-    if ( !mapMaker && countItem('hardDrive') === 0 ) {
-        addComputerMessage('Out of hard drive memory')
-        return
+    if ( mapMaker )  mapMakerSave(slotNumber)
+    else {
+        if ( countItem('hardDrive') === 0 ) addComputerMessage('Out of hard drive memory')
+        useInventoryResource('hardDrive', 1)
+        gamePlaySave(slotNumber) 
     }
-    if ( !mapMaker ) useInventoryResource('hardDrive', 1)
-    saveAtSlot(slotNumber, mapMaker)
     closeSavePopup()
     getPauseContainer().firstElementChild.remove()
-    renderDesktop()
+    renderDesktop(false, true)
 }
 
 const addComputerMessage = (input) => 
