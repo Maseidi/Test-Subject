@@ -19,14 +19,14 @@ import { renderPopupAttributes } from './attributes/popup.js'
 import { renderShopItemAttributes } from './attributes/shop.js'
 import { renderLoaderAttributes } from './attributes/loader.js'
 import { BandageShopItem, setShopItems } from '../shop-item.js'
-import {renderPauseContainer, renderPlayer} from '../startup.js'
+import { renderPauseContainer, renderPlayer} from '../startup.js'
 import { initProgress, setProgress } from '../progress-manager.js'
 import { renderEnemyAttributes } from './attributes/enemy/enemy.js'
 import { renderDialogueAttributes } from './attributes/dialogue.js'
 import { initConstants, initNewGameVariables } from '../data-manager.js'
 import { renderInteractableAttributes } from './attributes/interactable.js'
-import { attributesSidebar, renderAttributes } from './attributes/shared.js'
-import { setCurrentRoomId, setPlayerAngle, setRoundsFinished } from '../variables.js'
+import { attributesSidebar, autocomplete, renderAttributes } from './attributes/shared.js'
+import { getDifficulty, setCurrentRoomId, setDifficulty, setPlayerAngle, setRoundsFinished } from '../variables.js'
 import { initEnemies, initInteractables, setDialogues, setLoaders, setPopups, setRooms, setWalls } from '../entities.js'
 import { 
     addClass,
@@ -364,14 +364,22 @@ const renderOptions = () => {
     const playBtn = createAndAddClass('div', 'play-option')
     playBtn.textContent = 'play'
     playBtn.addEventListener('click', playTest)
-    appendAll(optionsContainer, save, playBtn)
+    const difficulty = 
+        autocomplete
+        (   
+            'difficulty', getDifficulty(), 
+            (val) => setDifficulty(val), 
+            [difficulties.MILD, difficulties.MIDDLE, difficulties.SURVIVAL].map(item => ({label: item, value: item}))
+        )
+    addClass(difficulty, 'room-overview-difficulty-autocomplete')
+    appendAll(optionsContainer, save, playBtn, difficulty)
     return optionsContainer
 }
 
 export const playTest = () => {
     if ( getRooms().length === 0 || !getSpawnRoom() ) return
     handlePasswords()
-    initNewGameVariables(getSpawnX(), getSpawnY(), difficulties.MIDDLE)
+    initNewGameVariables(getSpawnX(), getSpawnY(), getDifficulty())
     initConstants()
     setProgress(initProgress())
     setInventory(initInventory())

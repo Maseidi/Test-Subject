@@ -1,4 +1,5 @@
 import { play } from './game.js'
+import { setDifficulty } from './variables.js'
 import { savedSlotContent } from './computer.js'
 import { renderMapMaker } from './mapMaker/map-maker.js'
 import { getMainMenuEl, setMainMenuEl } from './elements.js'
@@ -195,6 +196,7 @@ const newMapMakerOption = () => {
     slot.addEventListener('click', () => {
         getMainMenuEl().remove()
         prepareNewMapMakerData()
+        setDifficulty(difficulties.MIDDLE)
         renderMapMaker()
     })
     return slot
@@ -250,5 +252,6 @@ const playGameWithGivenData = (loader) => {
 const loadMapMakerWithGivenData = (loader) => {
     getMainMenuEl().remove()
     loader()
+    setDifficulty(difficulties.MIDDLE)
     renderMapMaker()
 }

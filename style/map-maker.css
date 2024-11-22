@@ -279,3 +279,20 @@
 .map-maker-options > div:nth-of-type(2):hover {
   background-color: orange;
 }
+
+.room-overview-difficulty-autocomplete {
+  gap: 8px;
+  align-items: center;
+  flex-direction: row;
+  text-transform: uppercase;
+}
+
+.room-overview-difficulty-autocomplete:hover {
+  color: wheat !important;
+  border: 1px solid wheat !important;
+}
+
+.save-option, .play-option {
+  display: flex;
+  align-items: center;
+}

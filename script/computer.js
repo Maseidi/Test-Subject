@@ -37,6 +37,7 @@ const title = () => {
 
 const slots = (load, mapMaker) => {
     const slots = createAndAddClass('div', 'desktop-slots')
+    if ( mapMaker ) slots.style.height = 'max-content'
     for ( let i = 0; i < (mapMaker ? 5 : 10); i++ ) {
         const slotData = localStorage.getItem(mapMaker ? 'map-slot-' + (i + 1) : 'slot-' + ( i + 1 ))
         const isNotEmpty = slotData !== 'empty'
