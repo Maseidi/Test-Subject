@@ -16,7 +16,7 @@ export const renderPauseMenu = (mapMaker = false) => {
     background.style.padding = '100px'
     background.append(renderOptionsContainer(mapMaker))
     getPauseContainer().append(background)
-    renderQuit()
+    renderQuit(mapMaker)
 }
 
 const renderOptionsContainer = (mapMaker) => {
@@ -30,7 +30,7 @@ const renderOptions = (mapMaker) => {
     const resume = createAndAddClass('div', 'common-option')
     resume.textContent = 'resume'
     if ( mapMaker ) resume.addEventListener('click', () => getPauseContainer().lastElementChild.remove()) 
-    else resume.addEventListener('click', quitPage)
+    else resume.addEventListener('click', () => quitPage())
     options.push(resume)
     const loadGame = createAndAddClass('div', 'common-option')
     loadGame.textContent = 'load game'

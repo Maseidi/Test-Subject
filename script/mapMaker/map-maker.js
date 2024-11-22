@@ -411,10 +411,9 @@ const handleLoaders = () => {
         for ( const loader of loadersOfRoom ) {
             if ( loader.door ) {
                 const { heading, popup, key, renderProgress, progress2Active, killAll, code } = loader.door
-                const door = new Door(heading, popup, key, {renderProgress, progress2Active, killAll}, code)
-                loader.door = {...door}
+                var door = new Door(heading, popup, key, {renderProgress, progress2Active, killAll}, code)
             }
-            roomContainer.push(loader)
+            roomContainer.push({...loader, door})
         }
         loaders.set(roomId, roomContainer)
     }

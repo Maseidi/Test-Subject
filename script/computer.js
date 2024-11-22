@@ -20,7 +20,7 @@ export const renderDesktop = (load = false, mapMaker = false) => {
     content2Render.push(contents(load, mapMaker))
     appendAll(desktop, ...content2Render)
     getPauseContainer().append(desktop)
-    renderQuit()
+    renderQuit(mapMaker)
 }
 
 const contents = (load, mapMaker) => {

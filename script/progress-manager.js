@@ -66,16 +66,15 @@ const toggleDoors = (number, open = true) =>
         .forEach(door => toggleDoor(door, open))
 
 export const toggleDoor = (door, open = true) => {
-    const { renderprogress, ...rest } = element2Object(door)
-    if ( open ) {
-        addClass(door, 'open')        
-        const { progress2active, progress2deactive } = rest
-        if ( renderprogress )     activateAllProgresses(renderprogress)
-        if ( progress2active )    activateAllProgresses(progress2active)
-        if ( progress2deactive )  deactivateAllProgresses(progress2deactive)
+    if ( !open ) {
+        removeClass(door, 'open')
         return
     }
-    removeClass(door, 'open')
+    addClass(door, 'open')
+    const { renderprogress, progress2active, progress2deactive } = element2Object(door)
+    if ( renderprogress )     activateAllProgresses(renderprogress)
+    if ( progress2active )    activateAllProgresses(progress2active)
+    if ( progress2deactive )  deactivateAllProgresses(progress2deactive)
 }
 
 const getAliveEnemies = (needIndex = false) =>

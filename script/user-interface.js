@@ -1,20 +1,22 @@
 import { managePause } from './actions.js'
-import { isThrowable } from './throwable-details.js'
 import { getPauseContainer, getUiEl, setUiEl } from './elements.js'
-import { addClass, appendAll, containsClass, createAndAddClass, removeClass } from './util.js'
-import { 
+import {
     calculateThrowableAmount,
     calculateTotalAmmo,
     countItem,
     findEquippedWeaponById,
-    updateInteractablePopups } from './inventory.js'
-import { 
+    updateInteractablePopups
+} from './inventory.js'
+import { isThrowable } from './throwable-details.js'
+import { addClass, appendAll, containsClass, createAndAddClass, removeClass } from './util.js'
+import {
     getDraggedItem,
     getEquippedWeaponId,
     getHealth,
     getMaxHealth,
     getMaxStamina,
-    getStamina } from './variables.js'
+    getStamina
+} from './variables.js'
 
 export const renderUi = () => {
     renderBackground()
@@ -80,24 +82,24 @@ export const renderWeaponUi = () => {
 
 export const removeUi = () => getUiEl().remove()
 
-export const renderQuit = () => {
+export const renderQuit = (mapMaker = false) => {
     const quitContainer = createAndAddClass('div', 'quit')
     const quitBtn = document.createElement('p')
     quitBtn.textContent = 'esc'
     const quitText = document.createElement('p')
     quitText.textContent = 'quit'
     appendAll(quitContainer, quitBtn, quitText)
-    quitContainer.addEventListener('click', quitPage)
+    quitContainer.addEventListener('click', () => quitPage(mapMaker))
     getPauseContainer().lastElementChild.append(quitContainer)
 }
 
-export const quitPage = () => {
+export const quitPage = (mapMaker) => {
     if ( getDraggedItem() ) return
     const last = getPauseContainer().lastElementChild
     if ( Array.from(last.children).find(child => containsClass(child, 'popup-container')) ) return
     last.remove()
     updateInteractablePopups()
-    if ( getPauseContainer().children.length === 0 ) managePause()
+    if ( !mapMaker && getPauseContainer().children.length === 0 ) managePause()
 }
 
 export const itemNotification = (name) => {

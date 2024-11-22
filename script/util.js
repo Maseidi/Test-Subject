@@ -225,7 +225,8 @@ export const difficulties = {
 export const isAble2Interact = () => 
     !getPlayingDialogue() && 
     !getPopupContainer().firstElementChild &&
-    getExistingEnemies(getEnemies().get(getCurrentRoomId())).length === 0
+    !getEnemies().get(getCurrentRoomId())
+        .find(enemy => enemy.health !== 0 && (getProgressValueByNumber(enemy.renderProgress) || !enemy.killAll))
 
 export const decideDifficulty = (difficulty) => {
     if ( difficulty === difficulties.MILD )        
