@@ -108,7 +108,7 @@ export const damagePlayer = (damage) => {
     addAllClasses(getMapEl(), 'camera-shake', 'animation')
     getMapEl().addEventListener('animationend', () => removeAllClasses(getMapEl(), 'camera-shake', 'animation'))
     if ( getInventory().flat().find(item => item && item.name === 'armor') ) damage /= 2
-    let newHealth = getHealth() - damage
+    let newHealth = getHealth() - damage    
     newHealth = newHealth < 0 ? 0 : newHealth
     modifyHealth(newHealth)
     if ( isLowHealth() ) renderDangerStateEffect(renderHealthStatusChildByClassName, addClass)

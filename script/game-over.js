@@ -1,11 +1,11 @@
 import { play } from './game.js'
 import { finishUp } from './finishup.js'
 import { renderDesktop } from './computer.js'
-import { return2MainMenu, return2MapMaker } from './pause-menu.js'
 import { playTest } from './mapMaker/map-maker.js'
 import { managePause, unequipTorch } from './actions.js'
-import { getPauseContainer, getPlayer } from './elements.js'
+import { return2MainMenu, return2MapMaker } from './pause-menu.js'
 import { loadGameFromSlot, prepareNewGameData } from './data-manager.js'
+import { getGrabBar, getPauseContainer, getPlayer } from './elements.js'
 import { addClass, appendAll, createAndAddClass, removeAllClasses, removeEquipped } from './util.js'
 import { getDifficulty, getHealth, getIsMapMakerRoot, getPlaythroughId, setPauseCause } from './variables.js'
 
@@ -18,6 +18,7 @@ export const manageGameOver = () => {
     playerBody.style.transition = 'unset'
     addClass(getPlayer(), 'dead-player')
     removeAllClasses(getPlayer(), 'aim', 'throwable-aim')
+    getGrabBar().remove()
     unequipTorch()
     removeEquipped()
     appendAll(playerBody, createAndAddClass('div', 'left-leg'), createAndAddClass('div', 'right-leg'))

@@ -64,11 +64,11 @@ const renderConfirmReturn2MainMenu = (mapMaker) => {
     appendAll(buttons, cancel, confirm)
     appendAll(returnPopup, title, helper, buttons)
     returnPopupContainer.append(returnPopup)
-    getPauseContainer().firstElementChild.append(returnPopupContainer)
+    getPauseContainer().lastElementChild.append(returnPopupContainer)
 }
 
 const closeReturnPopup = () => {
-    getPauseContainer().firstElementChild.lastElementChild?.remove()
+    getPauseContainer().lastElementChild.lastElementChild?.remove()
 }
 
 export const return2MainMenu = (mapMaker) => {

@@ -114,7 +114,8 @@ export class GrabberGrabService {
             grabBar, 
             'first', first, 
             'second', second, 
-            'third', third
+            'third', third,
+            'damage', this.enemy.damage / 6
         )
         getPauseContainer().append(grabBar)
         setGrabBar(grabBar)

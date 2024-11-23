@@ -12,6 +12,7 @@ import { addClass, appendAll, containsClass, createAndAddClass, removeClass } fr
 import {
     getDraggedItem,
     getEquippedWeaponId,
+    getGrabbed,
     getHealth,
     getMaxHealth,
     getMaxStamina,
@@ -99,7 +100,8 @@ export const quitPage = (mapMaker) => {
     if ( Array.from(last.children).find(child => containsClass(child, 'popup-container')) ) return
     last.remove()
     updateInteractablePopups()
-    if ( !mapMaker && getPauseContainer().children.length === 0 ) managePause()
+    if ( !mapMaker && (getPauseContainer().children.length === 0 || getPauseContainer().children.length === 1 && getGrabbed()) ) 
+        managePause()
 }
 
 export const itemNotification = (name) => {
