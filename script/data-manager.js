@@ -174,8 +174,8 @@ export const initConstants = () => {
 
 export const initNewGameVariables = (spawnX = 20, spawnY = 20, difficulty) => {
     const newGameVariables = {
-        mapX :                 spawnX + 100,
-        mapY :                 spawnY + 500,
+        mapX :                 spawnX + 500,
+        mapY :                 spawnY + 200,
         playerX :              2 * spawnX,
         playerY :              2 * spawnY,
         currentRoomId :        1,

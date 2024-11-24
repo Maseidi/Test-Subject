@@ -18,7 +18,7 @@ export const manageGameOver = () => {
     playerBody.style.transition = 'unset'
     addClass(getPlayer(), 'dead-player')
     removeAllClasses(getPlayer(), 'aim', 'throwable-aim')
-    getGrabBar().remove()
+    getGrabBar()?.remove()
     unequipTorch()
     removeEquipped()
     appendAll(playerBody, createAndAddClass('div', 'left-leg'), createAndAddClass('div', 'right-leg'))
