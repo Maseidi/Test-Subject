@@ -1,12 +1,12 @@
 import { getEnemies } from './entities.js'
 import { removeWeapon } from './gun-loader.js'
 import { removeThrowable } from './throwable-loader.js'
+import { getProgressValueByNumber } from './progress-manager.js'
 import { getGunDetail, getGunUpgradableDetail } from './gun-details.js'
 import { getThrowableDetail, isThrowable } from './throwable-details.js'
 import { ADRENALINE, ENERGY_DRINK, HEALTH_POTION, LUCK_PILLS } from './loot.js'
 import { 
     getCurrentRoom,
-    getCurrentRoomEnemies,
     getCurrentRoomExplosions,
     getMapEl,
     getPlayer,
@@ -23,8 +23,6 @@ import {
     getThrowCounter,
     getUpPressed,
     setEntityId } from './variables.js'
-import { getProgressValueByNumber } from './progress-manager.js'
-import { getExistingEnemies } from './room-loader.js'
 
 export const collide = (first, second, offset) => {
     const firstBound = first.getBoundingClientRect()

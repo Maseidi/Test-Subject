@@ -72,14 +72,12 @@ const initElements = () => {
 
 const renderRoom = () => {
     const roomObject = getRooms().get(getCurrentRoomId())
-    const room2Render = createAndAddClass(
-        'div', 'room', `${getCurrentRoomId()}`, `${roomObject.section}`)
-
+    const room2Render = createAndAddClass('div', 'room', getCurrentRoomId())
     room2Render.style.width =           `${roomObject.width}px`
     room2Render.style.height =          `${roomObject.height}px`
     room2Render.style.left =            `${getRoomLeft()}px`
     room2Render.style.top =             `${getRoomTop()}px`
-    room2Render.style.background =      roomObject.background
+    room2Render.style.background =       roomObject.background
     calculateRoomBrightness(roomObject.brightness)
     setCurrentRoom(room2Render)
     getRoomContainer().append(room2Render)
@@ -276,9 +274,9 @@ export const renderInteractable = (interactable, index) => {
     const int = object2Element(interactable)    
     addClass(int, 'interactable')
     setInteractableId(interactable, int, index)
-    int.style.left = `${interactable.left}px`
-    int.style.top = `${interactable.top}px`
-    int.style.width = `${interactable.width}px`
+    int.style.left =   `${interactable.left}px`
+    int.style.top =    `${interactable.top}px`
+    int.style.width =  `${interactable.width}px`
     int.style.height = `${interactable.width}px`
     renderImage(int, interactable)
     renderPopUp(int, interactable)

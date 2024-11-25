@@ -1,6 +1,7 @@
 import { getCurrentRoomSolid } from '../../../elements.js'
-import { collide, containsClass, getProperty } from '../../../util.js'
 import { CHASE, GUESS_SEARCH } from '../../enemy-constants.js'
+import { collide, containsClass, getProperty } from '../../../util.js'
+import { getPlayerX, getPlayerY, getRoomLeft, getRoomTop } from '../../../variables.js'
 
 export class AbstractPathFindingService {
     constructor(enemy) {
@@ -17,7 +18,7 @@ export class AbstractPathFindingService {
             this.#addPathFinding(null, null)
             return
         }
-        
+
         const enemyWidth = getProperty(this.enemy.sprite, 'width', 'px')
         const { wallX, wallY, wallW, wallH } = this.#getWallCoordinates(wall)
         let enemyState = this.#getPositionState(this.enemy.x, this.enemy.y, enemyWidth, wallX, wallY, wallW, wallH)
@@ -29,8 +30,10 @@ export class AbstractPathFindingService {
     }
 
     #getWallInTheWay() {
-        if ( ![CHASE, GUESS_SEARCH].includes(this.enemy.state) ) return null
-        if ( !this.enemy.wallInTheWay || this.enemy.wallInTheWay === 'out-of-range' ) return null
+        if ( ![CHASE, GUESS_SEARCH].includes(this.enemy.state) )                     return null
+        if ( this.enemy.destX !== Math.floor(getPlayerX() - getRoomLeft()) )         return null
+        if ( this.enemy.destY !== Math.floor(getPlayerY() - getRoomTop()) )          return null
+        if ( !this.enemy.wallInTheWay || this.enemy.wallInTheWay === 'out-of-range') return null
         return this.enemy.wallInTheWay
     }
 
@@ -47,9 +50,9 @@ export class AbstractPathFindingService {
     }
 
     #getWallCoordinates(wall) {
-        const wallX = getProperty(wall, 'left', 'px')
-        const wallY = getProperty(wall, 'top', 'px')
-        const wallW = getProperty(wall, 'width', 'px')
+        const wallX = getProperty(wall, 'left',   'px')
+        const wallY = getProperty(wall, 'top',    'px')
+        const wallW = getProperty(wall, 'width',  'px')
         const wallH = getProperty(wall, 'height', 'px')
         return { wallX, wallY, wallW, wallH }
     }

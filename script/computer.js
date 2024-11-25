@@ -123,15 +123,24 @@ const renderSaveConfirmPopup = (slotNumber, isNotEmpty, mapMaker) => {
 }
 
 const confirmSave = (slotNumber, mapMaker = false) => {
-    if ( mapMaker )  mapMakerSave(slotNumber)
-    else {
-        if ( countItem('hardDrive') === 0 ) addComputerMessage('Out of hard drive memory')
-        useInventoryResource('hardDrive', 1)
-        gamePlaySave(slotNumber) 
+    if ( mapMaker )  {
+        mapMakerSave(slotNumber)
+        reRenderDesktop(mapMaker)
+        return
     }
+    if ( countItem('hardDrive') === 0 ) {
+        addComputerMessage('Out of hard drive memory')
+        return
+    }
+    useInventoryResource('hardDrive', 1)
+    gamePlaySave(slotNumber)
+    reRenderDesktop(mapMaker) 
+}
+
+const reRenderDesktop = (mapMaker) => {
     closeSavePopup()
     getPauseContainer().firstElementChild.remove()
-    renderDesktop(false, true)
+    renderDesktop(false, mapMaker)
 }
 
 const addComputerMessage = (input) => 

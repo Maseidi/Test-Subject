@@ -419,9 +419,9 @@ const handleLoaders = () => {
         for ( const loader of loadersOfRoom ) {
             if ( loader.door ) {
                 const { heading, popup, key, renderProgress, progress2Active, killAll, code } = loader.door
-                var door = new Door(heading, popup, key, {renderProgress, progress2Active, killAll}, code)
-            }
-            roomContainer.push({...loader, door})
+                const door = new Door(heading, popup, key, {renderProgress, progress2Active, killAll}, code)
+                roomContainer.push({...loader, door})
+            } else roomContainer.push({...loader})
         }
         loaders.set(roomId, roomContainer)
     }
@@ -498,9 +498,9 @@ const renderWall = (options, index) => {
     wall.style.width =                         `${width}px`
     wall.style.height =                        `${height}px`
     wall.style.background =                     background
-    if ( left !== null ) wall.style.left =     `${left}px`
-    if ( top !== null ) wall.style.top =       `${top}px`
-    if ( right !== null ) wall.style.right =   `${right}px`
+    if ( left !== null )   wall.style.left =   `${left}px`
+    if ( top !== null )    wall.style.top =    `${top}px`
+    if ( right !== null )  wall.style.right =  `${right}px`
     if ( bottom !== null ) wall.style.bottom = `${bottom}px`
     wall.id = `wall-${index}`
     return wall
@@ -645,38 +645,14 @@ const initShop = (options) => {
 }
 
 const TOOL_MAP = new Map([
-    ['rooms', {
-        new: addNewRoom,
-        contents: addRoomContents
-    }],
-    ['walls', {
-        new: addNewWall,
-        contents: addWallContents
-    }],
-    ['enemies', {
-        new: addNewEnemy,
-        contents: addEnemyContents
-    }],
-    ['loaders', {
-        new: addNewLoader,
-        contents: addLoaderContents
-    }],
-    ['interactables', {
-        new: addNewInteractable,
-        contents: addInteractableContents
-    }],
-    ['popups', {
-        new: addNewPopup,
-        contents: addPopupContents
-    }],
-    ['dialogues', {
-        new: addNewDialogue,
-        contents: addDialogueContents
-    }],
-    ['shop', {
-        new: addNewShopItem,
-        contents: addShopContents
-    }],
+    ['rooms',         { new: addNewRoom,         contents: addRoomContents }],
+    ['walls',         { new: addNewWall,         contents: addWallContents }],
+    ['shop',          { new: addNewShopItem,     contents: addShopContents }],
+    ['enemies',       { new: addNewEnemy,        contents: addEnemyContents }],
+    ['popups',        { new: addNewPopup,        contents: addPopupContents }],
+    ['loaders',       { new: addNewLoader,       contents: addLoaderContents }],
+    ['dialogues',     { new: addNewDialogue,     contents: addDialogueContents }],
+    ['interactables', { new: addNewInteractable, contents: addInteractableContents }],
 ])
 
 const setAsElemBeingModified = (elem) => {

@@ -30,10 +30,10 @@ const move = () => {
     if ( getDownPressed() )  changePosition(setMapY, getMapY, setPlayerY, getPlayerY, -speed)
     if ( getLeftPressed() )  changePosition(setMapX, getMapX, setPlayerX, getPlayerX, speed)
     if ( getRightPressed() ) changePosition(setMapX, getMapX, setPlayerX, getPlayerX, -speed)
-    getMapEl().style.left = `${getMapX()}px`
-    getMapEl().style.top = `${getMapY()}px`
+    getMapEl().style.left =  `${getMapX()}px`
+    getMapEl().style.top =   `${getMapY()}px`
     getPlayer().style.left = `${getPlayerX()}px`
-    getPlayer().style.top = `${getPlayerY()}px`
+    getPlayer().style.top =  `${getPlayerY()}px`
 }
 
 const changePosition = (setMap, getMap, setPlayer, getPlayer, speed) => {
