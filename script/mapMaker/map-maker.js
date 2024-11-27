@@ -395,6 +395,7 @@ export const playTest = () => {
     setCurrentRoomId(getSpawnRoom())
     getMapMakerEl().remove()
     window.removeEventListener('keydown', pauseFn, true)
+    getPauseContainer()?.remove()
     play(true)
 }
 

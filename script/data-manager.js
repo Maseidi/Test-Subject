@@ -1,24 +1,25 @@
 import { buildEnemy } from './enemy/enemy-factory.js'
-import { getStash, initStash, setStash } from './stash.js'
-import { getInventory, initInventory, setInventory } from './inventory.js'
-import { getShopItems, initShopItems, setShopItems } from './shop-item.js'
-import { getProgress, initProgress, setProgress } from './progress-manager.js'
-import { getPasswords, initPasswords, setPasswords } from './password-manager.js'
-import { 
+import {
     getEnemies,
     getInteractables,
+    getLoaders,
+    getRooms,
+    getWalls,
     initEnemies,
     initInteractables,
     initLoaders,
-    getRooms,
     setEnemies,
     setInteractables,
-    setLoaders, 
-    getWalls,
-    getLoaders,
+    setLoaders,
     setRooms,
-    setWalls} from './entities.js'
-import { 
+    setWalls
+} from './entities.js'
+import { getInventory, initInventory, setInventory } from './inventory.js'
+import { getPasswords, initPasswords, setPasswords } from './password-manager.js'
+import { getProgress, initProgress, setProgress } from './progress-manager.js'
+import { getShopItems, initShopItems, setShopItems } from './shop-item.js'
+import { getStash, initStash, setStash } from './stash.js'
+import {
     getAdrenalinesDropped,
     getAimMode,
     getBurning,
@@ -109,8 +110,9 @@ import {
     setThrowCounter,
     setTimesSaved,
     setUpPressed,
-    setWaitingFunctions, 
-    setWeaponWheel } from './variables.js'
+    setWaitingFunctions,
+    setWeaponWheel
+} from './variables.js'
 
 export const prepareNewGameData = (difficulty) => {
     initPasswords()
@@ -174,8 +176,8 @@ export const initConstants = () => {
 
 export const initNewGameVariables = (spawnX = 20, spawnY = 20, difficulty) => {
     const newGameVariables = {
-        mapX :                 spawnX + 500,
-        mapY :                 spawnY + 200,
+        mapX :                 2 * spawnX - 750,
+        mapY :                 2 * spawnY - 400,
         playerX :              2 * spawnX,
         playerY :              2 * spawnY,
         currentRoomId :        1,

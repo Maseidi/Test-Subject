@@ -44,14 +44,14 @@ export const renderRoomAttributes = () => {
                 getSpawnX(), (value) => {
                 setSpawnX(value)
                 getSpawnEl().style.left = `${value}px`
-            }, 'number', room.width - 50, 20)
+            }, 'number', () => room.width - 50, 20)
         )
     
         getAttributesEl().append(
             input('spawn y', getSpawnY(), (value) => {
                 setSpawnY(value)
                 getSpawnEl().style.top = `${value}px`
-            }, 'number', room.height - 50, 20)
+            }, 'number', () => room.height - 50, 20)
         )
     }
 

@@ -73,6 +73,7 @@ export class AbstractInjuryService {
         updateKillAllDoors()
         updateKillAllInteractables()
         this.removePopup()
+        this.enemy.sprite.style.zIndex = '34'
     }
 
     removePopup() {

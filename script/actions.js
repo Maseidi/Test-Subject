@@ -14,7 +14,7 @@ import { renderPasswordInput } from './password-manager.js'
 import { removeTorch, renderTorch } from './torch-loader.js'
 import { renderUi, renderWeaponUi, quitPage } from './user-interface.js'
 import { heal, damagePlayer, findHealtStatusChildByClassName } from './player-health.js'
-import { activateAllProgresses, deactivateAllProgresses, getProgress } from './progress-manager.js'
+import { activateAllProgresses, deactivateAllProgresses, getProgress, getProgressValueByNumber } from './progress-manager.js'
 import { 
     getDialogueContainer,
     getGrabBar,
@@ -265,6 +265,7 @@ const toggleLever = () => {
 }
 
 const stealthKill = () => {
+    if ( !getProgressValueByNumber('3002') ) return
     const intObj = element2Object(getElementInteractedWith())
     const neededVaccine = intObj.popup
     if ( countItem(neededVaccine) === 0 ) return

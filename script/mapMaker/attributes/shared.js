@@ -36,9 +36,11 @@ export const input = (label, value, setValue, type = 'number', max = Number.MAX_
 
 const checkLimits = (target, min, max) => {
     const value = target.value
+    const innerMin = typeof min === 'function' ? min() : min
+    const innerMax = typeof max === 'function' ? max() : max
     const finalValue = (() => {
-        if ( value < min ) return min
-        else if ( value > max ) return max
+        if ( value < innerMin ) return innerMin
+        else if ( value > innerMax ) return innerMax
         else return value
     })()
     target.value = finalValue
