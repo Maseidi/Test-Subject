@@ -1,10 +1,10 @@
-import { Point } from '../../../path.js'
 import { input } from '../shared.js'
+import { Point } from '../../../path.js'
 import { getElemBeingModified } from '../../elements.js'
 import { getItemBeingModified } from '../../variables.js'
+import { TRACKER } from '../../../enemy/enemy-constants.js'
 import { addClass, appendAll, createAndAddClass } from '../../../util.js'
 import { addItemButton, renderEnemyPath, renderPoint } from '../../map-maker.js'
-import { TRACKER } from '../../../enemy/enemy-constants.js'
 
 let currentEnemyIndex
 let waypointsContainer

@@ -36,6 +36,7 @@ export const buildEnemy = (data) => {
     enemy.x = x
     enemy.y = y
     enemy.difficulties = difficulties
+    if ( data.health === 0 ) enemy.health = 0
 
     return enemy
 }
