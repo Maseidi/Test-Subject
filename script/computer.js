@@ -7,6 +7,7 @@ import { countItem, useInventoryResource } from './inventory.js'
 import { saveAtSlot as mapMakerSave } from './mapMaker/data-manager.js'
 import { addMessage, itemNotification, renderQuit } from './user-interface.js'
 import { loadGameFromSlot, saveAtSlot as gamePlaySave } from './data-manager.js'
+import { activateAllProgresses, getProgressValueByNumber } from './progress-manager.js'
 
 export const turnOnComputer = () => {
     managePause()
@@ -114,6 +115,8 @@ const renderSaveConfirmPopup = (slotNumber, isNotEmpty, mapMaker) => {
         const hardDriveImage = document.createElement('img')
         hardDriveImage.src = './assets/images/hardDrive.png'
         appendAll(confirm, hardDriveAmount, hardDriveImage)
+        if ( getProgressValueByNumber('1000002') ) return
+        activateAllProgresses('1000003')
     }
     appendAll(buttons, cancel, confirm)
     const message = createAndAddClass('p', 'message')

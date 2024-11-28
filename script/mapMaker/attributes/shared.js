@@ -16,7 +16,7 @@ export const attributesSidebar = () => {
     return attributesSidebar
 }
 
-export const input = (label, value, setValue, type = 'number', max = Number.MAX_SAFE_INTEGER, min = 0) => {
+export const input = (label, value, setValue, type = 'number', max = Number.MAX_SAFE_INTEGER, min = 0, step = 1) => {
     const textFieldContainer = createAndAddClass('div', 'input-container')
     const labelEl = document.createElement('label')
     labelEl.textContent = label
@@ -24,6 +24,7 @@ export const input = (label, value, setValue, type = 'number', max = Number.MAX_
     const input = document.createElement(type === 'textarea' ? 'textarea' : 'input')
     addAllAttributes(input, 'type', type, 'min', min, 'max', max, 'name', label, 'id', label)
     if ( type === 'textarea' ) input.setAttribute('rows', 15)
+    if ( type === 'number' ) input.setAttribute('step', step)    
     input.value = value
     input.addEventListener('change', (e) => {
         if ( type === 'number' ) setValue(Number(e.target.value === '' ? min : checkLimits(e.target, min, max)))

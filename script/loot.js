@@ -92,7 +92,7 @@ const initNoteLootValues = (src, loot) => {
 }
 
 const initKeyLootValues = (src, loot) => {
-    if ( !loot.name.includes('key') ) return
+    if ( !loot.name?.includes('key') ) return
     src['key-code'] =        loot.code        ?? null
     src['key-heading'] =     loot.heading     ?? null
     src['key-unlocks'] =     loot.unlocks     ?? null

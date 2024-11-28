@@ -120,8 +120,10 @@ export class AbstractPathFindingService {
             case 31:
                 this.#addPathFinding(wallX - 50, wallY - 50)
                 break
-            case 32:    
-                if ( trackerMap.has('tl') && trackerMap.has('bl') ) {
+            case 32:
+                if      (!trackerMap.has('tl') ) this.#addPathFinding(wallX - 50, wallY + wallH + 50)
+                else if (!trackerMap.has('bl') ) this.#addPathFinding(wallX - 50, wallY - 50)
+                else if ( trackerMap.has('tl') && trackerMap.has('bl') ) {
                     if ( Math.random() < 0.5 ) {
                         if ( this.enemy.pathFindingX === wallX - 50 && this.enemy.pathFindingY === wallY - 50 ) return
                         this.#addPathFinding(wallX - 50, wallY + wallH + 50)
@@ -129,9 +131,7 @@ export class AbstractPathFindingService {
                     } 
                     if ( this.enemy.pathFindingX === wallX - 50 && this.enemy.pathFindingY === wallY + wallH + 50 ) return
                     this.#addPathFinding(wallX - 50, wallY - 50)
-                } 
-                else if ( !trackerMap.has('tl') ) this.#addPathFinding(wallX - 50, wallY + wallH + 50)
-                else if ( !trackerMap.has('bl') ) this.#addPathFinding(wallX - 50, wallY - 50)
+                }
                 break
             case 23:
             case 33:
@@ -170,8 +170,10 @@ export class AbstractPathFindingService {
             case 13:
                 this.#addPathFinding(wallX - 50, wallY - 50)
                 break
-            case 23:    
-                if ( trackerMap.has('tl') && trackerMap.has('tr') ) {
+            case 23:
+                if      (!trackerMap.has('tl') ) this.#addPathFinding(wallX + wallW + 50, wallY - 50)
+                else if (!trackerMap.has('tr') ) this.#addPathFinding(wallX - 50, wallY - 50)   
+                else if ( trackerMap.has('tl') && trackerMap.has('tr') ) {
                     if ( Math.random() < 0.5 ) {
                         if ( this.enemy.pathFindingX === wallX - 50 && this.enemy.pathFindingY === wallY - 50 ) return
                         this.#addPathFinding(wallX + wallW + 50, wallY - 50)
@@ -179,9 +181,7 @@ export class AbstractPathFindingService {
                     }
                     if ( this.enemy.pathFindingX === wallX + wallW + 50 && this.enemy.pathFindingY === wallY - 50) return
                     this.#addPathFinding(wallX - 50, wallY - 50)
-                }    
-                else if ( !trackerMap.has('tl') ) this.#addPathFinding(wallX + wallW + 50, wallY - 50)
-                else if ( !trackerMap.has('tr') ) this.#addPathFinding(wallX - 50, wallY - 50)
+                }
                 break
             case 32:
             case 33:
@@ -198,8 +198,10 @@ export class AbstractPathFindingService {
             case 12:
                 this.#addPathFinding(wallX - 50, wallY + wallH + 50)
                 break
-            case 21:    
-                if ( trackerMap.has('bl') && trackerMap.has('br') ) {
+            case 21:
+                if      (!trackerMap.has('bl') ) this.#addPathFinding(wallX + wallW + 50, wallY + wallH + 50)
+                else if (!trackerMap.has('br') ) this.#addPathFinding(wallX - 50, wallY + wallH + 50) 
+                else if ( trackerMap.has('bl') && trackerMap.has('br') ) {
                     if ( Math.random() < 0.5 ) {
                         if ( this.enemy.pathFindingX === wallX - 50 && this.enemy.pathFindingY === wallY + wallH + 50 ) return
                         this.#addPathFinding(wallX + wallW + 50, wallY + wallH + 50)
@@ -208,8 +210,6 @@ export class AbstractPathFindingService {
                     if ( this.enemy.pathFindingX === wallX + wallW + 50 && this.enemy.pathFindingY === wallY + wallH + 50) return
                     this.#addPathFinding(wallX - 50, wallY + wallH + 50)
                 } 
-                else if ( !trackerMap.has('bl') ) this.#addPathFinding(wallX + wallW + 50, wallY + wallH + 50)
-                else if ( !trackerMap.has('br') ) this.#addPathFinding(wallX - 50, wallY + wallH + 50)
                 break
             case 31:
             case 32:
@@ -248,8 +248,10 @@ export class AbstractPathFindingService {
             case 21:
                 this.#addPathFinding(wallX + wallW + 50, wallY - 50)
                 break
-            case 12:    
-                if ( trackerMap.has('bl') && trackerMap.has('br') ) {
+            case 12:
+                if      (!trackerMap.has('tr') ) this.#addPathFinding(wallX + wallW + 50, wallY + wallH + 50)
+                else if (!trackerMap.has('br') ) this.#addPathFinding(wallX + wallW + 50, wallY - 50) 
+                else if ( trackerMap.has('bl') && trackerMap.has('br') ) {
                     if ( Math.random() < 0.5 ) {
                         if ( this.enemy.pathFindingX === wallX + wallW + 50 && this.enemy.pathFindingY === wallY + wallH + 50 ) return
                         this.#addPathFinding(wallX + wallW + 50, wallY - 50)
@@ -258,8 +260,6 @@ export class AbstractPathFindingService {
                     if ( this.enemy.pathFindingX === wallX + wallW + 50 && this.enemy.pathFindingY === wallY - 50) return
                     this.#addPathFinding(wallX + wallW + 50, wallY + wallH + 50)
                 } 
-                else if ( !trackerMap.has('tr') ) this.#addPathFinding(wallX + wallW + 50, wallY + wallH + 50)
-                else if ( !trackerMap.has('br') ) this.#addPathFinding(wallX + wallW + 50, wallY - 50)
                 break
             case 13:
             case 23:

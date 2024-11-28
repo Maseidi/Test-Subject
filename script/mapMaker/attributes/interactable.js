@@ -49,7 +49,7 @@ const interactables = [
     YellowVaccine, BlueVaccine
 ]
 
-export const itemsMap1 = new Map([
+const itemsMap1 = new Map([
     ['purplevaccine', PurpleVaccine], 
     ['smgAmmo', SmgAmmo],             ['coin', Coin],                   ['antidote', Antidote],
     ['bandage', Bandage],             ['rifleAmmo', RifleAmmo],         ['hardDrive', HardDrive], 
@@ -66,7 +66,7 @@ const itemsMap3 = new Map([
     ['armor', BodyArmor], ['lever', Lever], ['lighter', Lighter]
 ])
 
-export const itemsMap4 = new Map([
+const itemsMap4 = new Map([
     ['adrenaline', Adrenaline], ['luckpills', LuckPills], ['healthpotion', HealthPotion], ['energydrink', EnergyDrink]
 ])
 

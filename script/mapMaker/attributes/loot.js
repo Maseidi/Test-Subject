@@ -1,6 +1,6 @@
+import { lootMap } from '../../loot-manager.js'
 import { GunDrop } from '../../interactables.js'
 import { getAttributesEl } from '../elements.js'
-import { itemsMap1, itemsMap4 } from './interactable.js'
 import { getGunDetails, isGun } from '../../gun-details.js'
 import { autocomplete, checkbox, input } from './shared.js'
 import { KeyLoot, Loot, NoteLoot, RANDOM, SingleLoot } from '../../loot.js'
@@ -43,11 +43,11 @@ export const manageLootAttribute = (model, reRenderCallback, canHaveKeyAsLoot = 
             }, Array.from([
                 {heading: 'random', name: 'random'},
                 {heading: 'note', name: 'note'},
-                ...[...itemsMap1.values()].map(Int => new Int()),
+                ...[...lootMap.entries()].map(([name, Instance]) => ({heading: new Instance().heading, name: name})),
                 ...[...getGunDetails().keys()].map(gunName => new GunDrop(0, 0, gunName, 0, 1, 1, 1, 1, 1)),
                 ...(canHaveKeyAsLoot ? [{heading: 'key', name: 'key'}] : [])
             ]).map(item => ({label: item.heading || item.name, value: item.name})))
-        )        
+        )
 
         if ( !isGun(name) && name !== 'note' && !name.includes('key') ) {
             getAttributesEl().append(
@@ -132,9 +132,9 @@ const resetNoteLootValues = (model) => {
 
 const findLoot = (name, src) => {
     const { 'loot-amount': amount, 'loot-active': progress2Active, 'loot-deactive': progress2Deactive } = src
-    const progress = {progress2Active, progress2Deactive}
+    const progress = {progress2Active, progress2Deactive}    
 
-    if ( itemsMap1.has(name) || itemsMap4.has(name) || name.includes('ammo') || name === 'random' )
+    if ( lootMap.has(name) || name === 'random' )
         return new Loot(name, amount, progress)
 
     if ( isGun(name) ) return new SingleLoot(name, progress)

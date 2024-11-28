@@ -8,7 +8,6 @@ import { AbstractMovementService } from '../service/abstract/movement.js'
 import { decideDifficulty, difficulties as difficultyMap } from '../../util.js'
 import { AbstractPathFindingService } from '../service/abstract/path-finding.js'
 import { AbstractNotificationService } from '../service/abstract/notification.js'
-import { initLootValues } from '../../loot.js'
 
 export class AbstractEnemy {
     constructor(type, components, waypoint, health, damage, 
@@ -28,10 +27,10 @@ export class AbstractEnemy {
         this.killAll =             progress?.killAll ?? null
         this.x =                   this.waypoint.points[0].x ?? 0
         this.y =                   this.waypoint.points[0].y ?? 0
+        this.level =               level ?? 1
+        this.loot =                loot  ?? {} 
         this.difficulties =        difficulty ? decideDifficulty(difficulty) : 
                                    [difficultyMap.MILD, difficultyMap.MIDDLE, difficultyMap.SURVIVAL]
-        this.level =               level ?? 1
-
         this.angleService =        new AbstractAngleService(this)
         this.injuryService =       new AbstractInjuryService(this)
         this.offenceService =      new AbstractOffenceService(this)
@@ -40,10 +39,6 @@ export class AbstractEnemy {
         this.visionService =       new AbstractVisionService(this)
         this.movementService =     new AbstractMovementService(this)
         this.balanceStatsBasedOnDifficulty()
-        if ( loot ) {
-            this.loot = {}
-            initLootValues(this.loot, loot)
-        }
     }
 
     balanceStatsBasedOnDifficulty() {

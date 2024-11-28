@@ -1,6 +1,6 @@
 import { NOTE } from './loot.js'
 import { renderGun } from './gun-loader.js'
-import { getInteractables } from './entities.js'
+import { getInteractables, getPopups } from './entities.js'
 import { renderStats } from './gun-examine.js'
 import { useLuckPills } from './weapon-manager.js'
 import { useEnergyDrink } from './player-sprint.js'
@@ -13,7 +13,7 @@ import { getGunDetails, isGun } from './gun-details.js'
 import { equipTorch, unequipTorch } from './actions.js'
 import { quitPage, renderQuit } from './user-interface.js'
 import { useAntidote, useBandage, useHealthPotion, useVaccine } from './player-health.js'
-import { activateAllProgresses, deactivateAllProgresses, toggleDoor } from './progress-manager.js'
+import { activateAllProgresses, deactivateAllProgresses, getProgressValueByNumber, toggleDoor } from './progress-manager.js'
 import { 
     getCurrentRoomEnemies,
     getCurrentRoomInteractables,
@@ -58,6 +58,7 @@ import {
     getPause, 
     getEquippedTorchId,
     setEquippedTorchId} from './variables.js'
+import { Popup } from './popup-manager.js'
 
 export const MAX_PACKSIZE = {
     coin: 50,
@@ -111,6 +112,10 @@ export const pickupDrop = (drop) => {
     checkSpecialScenarios()
     handleVaccinePickup(dropObject)
     updateInteractablePopups()
+    if ( getProgressValueByNumber('1000001') ) return
+    if ( countItem('bandage') === 0 )          return
+    getPopups().push(new Popup('<span>H</span> Use bandage to heal', {renderProgress: '1000001'}, 3000))
+    activateAllProgresses('1000001')
 }
 
 const searchPack = () => {
@@ -182,11 +187,13 @@ const checkSpecialScenarios = () => {
     const { amount, progress2active, progress2deactive, id, name } = dropObject
     
     if ( amount === 0 ) {
-        if ( progress2active )   activateAllProgresses  (progress2active)
-        if ( progress2deactive ) deactivateAllProgresses(progress2deactive)
-        if ( name === 'bandage' ) activateAllProgresses('10000002')
-        if ( name === 'stick' && countItem('lighter') > 0 || name === 'lighter' && countItem('stick') > 0 )
-            activateAllProgresses('10000003')
+        if ( progress2active )    activateAllProgresses  (progress2active)
+        if ( progress2deactive )  deactivateAllProgresses(progress2deactive)
+        if ( name === 'stick' && countItem('lighter') > 0 || name === 'lighter' && countItem('stick') > 0 ) {
+            if ( getProgressValueByNumber('1000000') ) return
+            getPopups().push(new Popup('<span>Q</span> Light up torch', {renderProgress: '1000000'}, 3000))
+            activateAllProgresses('1000000')
+        }
     }
     if ( ( isThrowable(name) && !getWeaponWheel().includes(id) ) ||
          ( isGun(name) && amount === 0 ) ) updateWeaponWheel()

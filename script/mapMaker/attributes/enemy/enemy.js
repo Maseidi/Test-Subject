@@ -45,7 +45,7 @@ export const renderEnemyAttributes = () => {
             enemy.damage = null
             setItemBeingModified(buildEnemy({...enemy, level: value}))
             updateMap(getEnemies(), getItemBeingModified(), 'enemy')
-        }, 'number', 5, 1)
+        }, 'number', 5, 0.1, 0.1)
     )
 
     getAttributesEl().append(
@@ -82,7 +82,7 @@ export const renderEnemyAttributes = () => {
         }, ['red', 'green', 'yellow', 'blue', 'purple'].map(color => ({label: color, value: color})))
     )
 
-    manageLootAttribute(enemy, renderEnemyAttributes, true)
+    manageLootAttribute(enemy.loot, renderEnemyAttributes, true)
 
     getAttributesEl().append(
         deleteButton(() => {

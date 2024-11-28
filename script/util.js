@@ -1,19 +1,17 @@
-import { getEnemies } from './entities.js'
 import { removeWeapon } from './gun-loader.js'
 import { removeThrowable } from './throwable-loader.js'
-import { getProgressValueByNumber } from './progress-manager.js'
 import { getGunDetail, getGunUpgradableDetail } from './gun-details.js'
 import { getThrowableDetail, isThrowable } from './throwable-details.js'
 import { ADRENALINE, ENERGY_DRINK, HEALTH_POTION, LUCK_PILLS } from './loot.js'
 import { 
     getCurrentRoom,
+    getCurrentRoomEnemies,
     getCurrentRoomExplosions,
     getMapEl,
     getPlayer,
     getPopupContainer,
     getShadowContainer } from './elements.js'
 import { 
-    getCurrentRoomId,
     getDownPressed,
     getEntityId,
     getHealth,
@@ -223,8 +221,7 @@ export const difficulties = {
 export const isAble2Interact = () => 
     !getPlayingDialogue() && 
     !getPopupContainer().firstElementChild &&
-    !getEnemies().get(getCurrentRoomId())
-        .find(enemy => enemy.health !== 0 && (getProgressValueByNumber(enemy.renderProgress) || !enemy.killAll))
+    !getCurrentRoomEnemies().find(enemy => enemy.health !== 0)
 
 export const decideDifficulty = (difficulty) => {
     if ( difficulty === difficulties.MILD )        

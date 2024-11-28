@@ -265,7 +265,7 @@ const toggleLever = () => {
 }
 
 const stealthKill = () => {
-    if ( !getProgressValueByNumber('3002') ) return
+    // if ( !getProgressValueByNumber('3002') ) return
     const intObj = element2Object(getElementInteractedWith())
     const neededVaccine = intObj.popup
     if ( countItem(neededVaccine) === 0 ) return

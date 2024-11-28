@@ -165,7 +165,7 @@ const handleEnemyInteractables = (int) => {
     const popup = int.firstElementChild
     const enemyElem = int.parentElement.parentElement
     const enemyObject = getEnemyObject(enemyElem)
-    if ( !getProgressValueByNumber('3002') ) removePopup(popup)
+    // if ( !getProgressValueByNumber('3002') ) removePopup(popup)
     if ( enemyObject.health === 0 )          removePopup(popup)
     else if ( isEnemyNotified(enemyObject) ) removePopup(popup)
     else if ( !interactionPredicate(int) )   removePopup(popup)
