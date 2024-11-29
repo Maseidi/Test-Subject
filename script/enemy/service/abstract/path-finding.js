@@ -1,24 +1,14 @@
 import { getCurrentRoomSolid } from '../../../elements.js'
-import { CHASE, GUESS_SEARCH } from '../../enemy-constants.js'
 import { collide, containsClass, getProperty } from '../../../util.js'
-import { getPlayerX, getPlayerY, getRoomLeft, getRoomTop } from '../../../variables.js'
 
 export class AbstractPathFindingService {
     constructor(enemy) {
         this.enemy = enemy
-        this.shouldCalculatePathfinding = false
     }
 
     findPath() {
-        this.shouldCalculatePathfinding = !this.shouldCalculatePathfinding
-        if ( !this.shouldCalculatePathfinding ) return
-        let wall =          this.#getWallInTheWay()
-        if ( !wall ) wall = this.#findWall()
-        if ( !wall ) {
-            this.#addPathFinding(null, null)
-            return
-        }
-
+        const wall = this.#findWall()
+        if ( !wall ) return
         const enemyWidth = getProperty(this.enemy.sprite, 'width', 'px')
         const { wallX, wallY, wallW, wallH } = this.#getWallCoordinates(wall)
         let enemyState = this.#getPositionState(this.enemy.x, this.enemy.y, enemyWidth, wallX, wallY, wallW, wallH)
@@ -27,14 +17,6 @@ export class AbstractPathFindingService {
         const trackerMap = new Map([])
         Array.from(wall.children).forEach(tracker => trackerMap.set(tracker.classList[0], tracker))
         this.#managePathFindingState(enemyState, destState, trackerMap, wallX, wallY, wallW, wallH)
-    }
-
-    #getWallInTheWay() {
-        if ( ![CHASE, GUESS_SEARCH].includes(this.enemy.state) )                     return null
-        if ( this.enemy.destX !== Math.floor(getPlayerX() - getRoomLeft()) )         return null
-        if ( this.enemy.destY !== Math.floor(getPlayerY() - getRoomTop()) )          return null
-        if ( !this.enemy.wallInTheWay || this.enemy.wallInTheWay === 'out-of-range') return null
-        return this.enemy.wallInTheWay
     }
 
     #findWall() {        

@@ -9,6 +9,10 @@
   position: absolute;
 }
 
+.room {
+  overflow: hidden;
+}
+
 .wall {
   border: 1px solid black;
 }

@@ -117,10 +117,10 @@ const dropRandomLoot = (left, top, amount) => {
 export const lootMap = new Map([
     [STICK_LOOT, Stick],
     [SMG_AMMO_LOOT, SmgAmmo],        [COIN_LOOT, Coin],
-    [PISTOL_AMMO_LOOT, PistolAmmo],  [ADRENALINE, Grenade],
-    [HEALTH_POTION, Grenade],        [ENERGY_DRINK, Grenade],
+    [PISTOL_AMMO_LOOT, PistolAmmo],  [ADRENALINE, Adrenaline],
     [BANDAGE_LOOT, Bandage],         [ANTIDOTE_LOOT, Antidote],
-    [LUCK_PILLS, Grenade],           [RED_VACCINE, RedVaccine],
+    [LUCK_PILLS, LuckPills],         [RED_VACCINE, RedVaccine],
+    [HEALTH_POTION, HealthPotion],   [ENERGY_DRINK, EnergyDrink],
     [GRENADE_LOOT, Grenade],         [FLASHBANG_LOOT, Flashbang],
     [MAGNUM_AMMO_LOOT, MagnumAmmo],  [HARDDRIVE_LOOT, HardDrive],
     [BLUE_VACCINE, BlueVaccine],     [GREEN_VACCINE, GreenVaccine],

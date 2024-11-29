@@ -116,7 +116,7 @@ const renderSaveConfirmPopup = (slotNumber, isNotEmpty, mapMaker) => {
         hardDriveImage.src = './assets/images/hardDrive.png'
         appendAll(confirm, hardDriveAmount, hardDriveImage)
         if ( getProgressValueByNumber('1000002') ) return
-        activateAllProgresses('1000003')
+        activateAllProgresses('1000002')
     }
     appendAll(buttons, cancel, confirm)
     const message = createAndAddClass('p', 'message')

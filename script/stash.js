@@ -1,5 +1,6 @@
 import { renderQuit } from './user-interface.js'
 import { getPauseContainer } from './elements.js'
+import { Bandage, Coin, KeyDrop, PistolAmmo, ShotgunShells, SmgAmmo } from './interactables.js'
 import { 
     addAllAttributes,
     addClass,
@@ -7,6 +8,7 @@ import {
     containsClass,
     createAndAddClass,
     element2Object,
+    nextId,
     object2Element } from './util.js'
 import { 
     renderDescriptionEvent,
@@ -24,7 +26,14 @@ export const setStash = (val) => {
 }
 export const getStash = () => stash
 
-export const initStash = () => []
+export const initStash = () => [
+    {...new KeyDrop(0, 0, 2, 'Museum key', 'Key that unlocks the museum entrance', 'Museum'), id: nextId()},
+    {...new SmgAmmo(0, 0, 90), id: nextId()},
+    {...new PistolAmmo(0, 0, 30), id: nextId()},
+    {...new ShotgunShells(0, 0, 20), id: nextId()},
+    {...new Bandage(0, 0, 3), id: nextId()},
+    {...new Coin(0, 0, 30), id: nextId()}
+]
 
 export const renderStash = () => {
     renderBackground()
@@ -163,7 +172,7 @@ const move2Inventory = (object2Move, reduce) => {
     const totalPickedUp = postPickupAmount - prePickupAmount
     const amount = stash[index].amount
     if ( totalPickedUp === amount ) stash = stash.filter((item, idx) => idx !== index)
-    else stash[index] = {...object2Move, amount: amount - totalPickedUp}    
+    else stash[index] = {...object2Move, amount: amount - totalPickedUp}
     removeStash()
     renderStash()
 }

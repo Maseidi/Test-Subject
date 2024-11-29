@@ -80,7 +80,7 @@ export const renderRoomAttributes = () => {
     getAttributesEl().append(
         input('brightness', room.brightness, (value) => {
             room.brightness = value
-        }, 'number', 9, 1)
+        }, 'number', 10, 1)
     )
 
     getAttributesEl().append(

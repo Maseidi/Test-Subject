@@ -4,9 +4,9 @@ import { removeTorch } from './torch-loader.js'
 import { sources } from './dialogue-manager.js'
 import { loadCurrentRoom } from './room-loader.js'
 import { getThrowableDetail } from './throwable-details.js'
-import { getEnemies, getLoaders, getRooms } from './entities.js'
 import { findEquippedTorchById, getInventory } from './inventory.js'
-import { activateAllProgresses, getProgressValueByNumber } from './progress-manager.js'
+import { getEnemies, getLoaders, getPopups, getRooms } from './entities.js'
+import { activateAllProgresses, getProgress, getProgressValueByNumber } from './progress-manager.js'
 import { damagePlayer, infectPlayer2SpecificVirus, poisonPlayer, setPlayer2Fire } from './player-health.js'
 import { 
     CHASE,
@@ -41,7 +41,6 @@ import {
     getPlayer, 
     getCurrentRoomPoisons,
     getCurrentRoomThrowables,
-    getMapEl, 
     getCurrentRoomExplosions,
     getSpeaker,
     getRoomNameContainer,
@@ -69,6 +68,7 @@ import {
     getEquippedTorchId,
     getPlayingDialogue,
     setPlayingDialogue } from './variables.js'
+import { Popup } from './popup-manager.js'
 
 export const manageEntities = () => {
     manageSolidObjects()
@@ -159,13 +159,21 @@ const interactionPredicate = (int) => collide(getPlayer().firstElementChild, int
 const setAsInteractingObject = (popup, int) => {
     showPopup(popup)
     setElementInteractedWith(int)
+    if ( !getProgressValueByNumber('8013') ) return
+    if ( int.getAttribute('name') === 'stash' && !getProgressValueByNumber('1000003') ) {
+        getPopups().push(new Popup('Use stash to manage your items in a much more organized environment', {renderProgress: '1000003'}, 3000))
+        activateAllProgresses('1000003')
+    } else if ( int.getAttribute('name') === 'vendingMachine' && !getProgressValueByNumber('1000004') ) {
+        getPopups().push(new Popup('Use vending machine to buy/sell items or upgrade your gear', {renderProgress: '1000004'}, 3000))
+        activateAllProgresses('1000004')
+    }
 }
 
 const handleEnemyInteractables = (int) => {
     const popup = int.firstElementChild
     const enemyElem = int.parentElement.parentElement
     const enemyObject = getEnemyObject(enemyElem)
-    // if ( !getProgressValueByNumber('3002') ) removePopup(popup)
+    if ( !getProgressValueByNumber('3002') ) removePopup(popup)
     if ( enemyObject.health === 0 )          removePopup(popup)
     else if ( isEnemyNotified(enemyObject) ) removePopup(popup)
     else if ( !interactionPredicate(int) )   removePopup(popup)
