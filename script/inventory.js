@@ -190,9 +190,10 @@ const checkSpecialScenarios = () => {
         if ( progress2active )    activateAllProgresses  (progress2active)
         if ( progress2deactive )  deactivateAllProgresses(progress2deactive)
         if ( name === 'stick' && countItem('lighter') > 0 || name === 'lighter' && countItem('stick') > 0 ) {
-            if ( getProgressValueByNumber('1000000') ) return
-            getPopups().push(new Popup('<span>Q</span> Light up torch', {renderProgress: '1000000'}, 3000))
-            activateAllProgresses('1000000')
+            if ( !getProgressValueByNumber('1000000') ) {
+                getPopups().push(new Popup('<span>Q</span> Light up torch', {renderProgress: '1000000'}, 3000))
+                activateAllProgresses('1000000')
+            }
         }
     }
     if ( ( isThrowable(name) && !getWeaponWheel().includes(id) ) ||
