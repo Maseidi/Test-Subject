@@ -33,7 +33,7 @@
 
 .active-popup {
   animation-duration: 300ms;
-  animation-name: activePopup;
+  animation-name: active-popup;
   animation-fill-mode: forwards;
   animation-direction: alternate;
 }

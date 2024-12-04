@@ -434,13 +434,13 @@
 .grabber-collider > div:nth-of-type(1) > .attack,
 .scorcher-collider > div:nth-of-type(1) > .attack {
   animation-duration: 600ms;
-  animation-name: normalAttack;
+  animation-name: normal-attack;
   animation-direction: alternate;
 }
 
 .stinger-collider > div:nth-of-type(1) > .attack {
   animation-duration: 600ms;
-  animation-name: stingerAttack;
+  animation-name: stinger-attack;
   animation-duration: alternate;
 }
 
@@ -451,19 +451,19 @@
 }
 
 .grab > .enemy-collider > .enemy-body > div:nth-of-type(1) {
-  animation-name: leftGrabAttack;
+  animation-name: left-grab-attack;
 }
 
 .grab > .enemy-collider > .enemy-body > div:nth-of-type(2) {
-  animation-name: rightGrabAttack;
+  animation-name: right-grab-attack;
 }
 
 .grab > .stinger-collider > .enemy-body > div:nth-of-type(1) {
-  animation-name: stingerLeftGrabAttack !important;
+  animation-name: stinger-left-grab-attack !important;
 }
 
 .grab > .stinger-collider > .enemy-body > div:nth-of-type(2) {
-  animation-name: stingerRightGrabAttack !important;
+  animation-name: stinger-right-grab-attack !important;
 }
 
 .path-point {

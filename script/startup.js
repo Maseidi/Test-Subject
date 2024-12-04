@@ -3,7 +3,7 @@ import { renderUi } from './user-interface.js'
 import { loadCurrentRoom } from './room-loader.js'
 import { renderVirusIcon } from './player-health.js'
 import { appendAll, createAndAddClass } from './util.js'
-import { getInfection, getMapX, getMapY, getPlayerAngle, getPlayerX, getPlayerY } from './variables.js'
+import { getInfection, getPlayerAngle, getPlayerX, getPlayerY, setMapX, setMapY } from './variables.js'
 import { 
     getHealthStatusContainer,
     getMapEl,
@@ -67,8 +67,6 @@ const renderContainer = (className, setter) => {
 const renderMap = () => {
     const root = document.getElementById('root')
     const map = createAndAddClass('div', 'map')
-    map.style.left = `${getMapX()}px`
-    map.style.top = `${getMapY()}px`
     setMapEl(map)
     root.append(map)
 }
@@ -102,7 +100,10 @@ export const renderPlayer = () => {
 }
 
 export const centralizePlayer = () => {
-    const xDiff = getMapX() + getPlayerX() - window.innerWidth / 2 + 12
-    const yDiff = getMapY() + getPlayerY() - window.innerHeight / 2 + 12
-    getMapEl().style.transform = `translateX(${-xDiff}px) translateY(${-yDiff}px)`
+    const xDiff = getPlayerX() - window.innerWidth / 2 + 12
+    const yDiff = getPlayerY() - window.innerHeight / 2 + 12
+    getMapEl().style.left = `${-xDiff}px`
+    getMapEl().style.top = `${-yDiff}px`
+    setMapX(-xDiff)
+    setMapY(-yDiff)
 }

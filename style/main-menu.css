@@ -106,6 +106,7 @@
   color: wheat;
   display: flex;
   flex-shrink: 0;
+  text-align: center;
   align-items: center;
   letter-spacing: 4px;
   flex-direction: column;

@@ -1,5 +1,5 @@
-import { buildEnemy } from './enemy/enemy-factory.js'
 import { getDifficulty } from './variables.js'
+import { buildEnemy } from './enemy/enemy-factory.js'
 
 let rooms = []
 export const setRooms = (val) => {

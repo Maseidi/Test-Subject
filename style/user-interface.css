@@ -163,7 +163,7 @@
   align-items: center;
   text-transform: capitalize;
   animation-duration: 200ms;
-  animation-name: grabBarMessage;
+  animation-name: grab-bar-message;
   animation-direction: alternate;
   animation-iteration-count: infinite;
 }
@@ -351,8 +351,8 @@
 }
 
 .common-popup > .common-buttons {
-    display: flex;
-    justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
 }
 
 .common-options {

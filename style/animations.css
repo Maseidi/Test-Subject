@@ -1,4 +1,4 @@
-@keyframes normalAttack {
+@keyframes normal-attack {
   50% {
     top: 10px;
     left: 60%;
@@ -11,7 +11,7 @@
   }
 }
 
-@keyframes leftGrabAttack {
+@keyframes left-grab-attack {
   100% {
     top: 5px;
     left: 80%;
@@ -19,7 +19,7 @@
   }
 }
 
-@keyframes rightGrabAttack {
+@keyframes right-grab-attack {
   100% {
     top: 5px;
     right: 80%;
@@ -27,7 +27,7 @@
   }
 }
 
-@keyframes stingerAttack {
+@keyframes stinger-attack {
   50% {
     top: 10px;
     left: 60%;
@@ -40,14 +40,14 @@
   }
 }
 
-@keyframes stingerLeftGrabAttack {
+@keyframes stinger-left-grab-attack {
   100% {
     top: 10px;
     transform: rotateZ(-40deg);
   }
 }
 
-@keyframes stingerRightGrabAttack {
+@keyframes stinger-right-grab-attack {
   100% {
     top: 10px;
     transform: rotateZ(40deg);
@@ -255,7 +255,7 @@
   }
 }
 
-@keyframes grabBarMessage {
+@keyframes grab-bar-message {
   0% {
     transform: scale(1) skewX(40deg);
   }
@@ -320,7 +320,7 @@
   }
 }
 
-@keyframes activePopup {
+@keyframes active-popup {
   0% {
     opacity: 0;
     bottom: calc(100% - 20px);

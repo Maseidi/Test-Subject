@@ -1,4 +1,4 @@
-import { removeDrop } from './inventory.js'
+import { MAX_PACKSIZE, removeDrop } from './inventory.js'
 import { renderInteractable } from './room-loader.js'
 import { element2Object, isStatUpgrader, nextId } from './util.js'
 import { getCurrentRoomSolid, setCurrentRoomSolid } from './elements.js'
@@ -71,7 +71,7 @@ export const dropLoot = (rootElem, isEnemy) => {
         'loot-active': progress2Active, 'loot-deactive': progress2Deactive } = root
 
     let loot
-    if ( decision === RANDOM ) loot = dropRandomLoot(left, top, amount)
+    if ( decision === RANDOM ) loot = dropRandomLoot(left, top)
     else if ( !decision ) loot = null
     else if ( decision === NOTE ) {
         const { 'note-heading': heading, 'note-description' : description, 'note-data' : data, 'note-code' : code } = root
@@ -92,7 +92,7 @@ export const dropLoot = (rootElem, isEnemy) => {
     renderInteractable(interactable)
 }
 
-const dropRandomLoot = (left, top, amount) => {
+const dropRandomLoot = (left, top) => {
     return [
         {obj: SmgAmmo, chance: 0.3},         {obj: Coin, chance: 0.4},
         {obj: PistolAmmo, chance: 0.5},      {obj: null, chance: 0.1},
@@ -110,7 +110,7 @@ const dropRandomLoot = (left, top, amount) => {
     ]
     .sort(() => Math.random() - 0.5)
     .filter((item) => !item.predicate || item.predicate() < 10)
-    .map((item) => decideItemDrop(item.obj, item.chance, left, top, amount))
+    .map((item) => decideItemDrop(item.obj, item.chance, left, top, Math.floor(Math.random() * MAX_PACKSIZE[new item.obj().name]) + 1))
     .find(drop => drop)
 }
 
@@ -145,6 +145,7 @@ const dropDeterminedLoot = (decision, left, top, amount) => {
 
 const decideItemDrop = (drop, chance, left, top, amount) => {
     if ( !drop ) return null
+    if ( drop.name === 'coin' && amount > 5 ) amount = 5
     if ( Math.random() < chance ) var result = new drop(left, top, amount)
     Array.from([
         {expected: LUCK_PILLS,    setter: setLuckPillsDropped,     getter: getLuckPillsDropped},

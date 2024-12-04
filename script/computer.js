@@ -46,7 +46,7 @@ const slots = (load, mapMaker) => {
         const slot = createAndAddClass('div', className)
         appendAll(slot, ...(isNotEmpty ? savedSlotContent(slotData, mapMaker) : noSaveData()))
         if ( !load ) slot.addEventListener('click', () => renderSaveConfirmPopup(i + 1, isNotEmpty, mapMaker))
-        if ( isNotEmpty && load ) slot.addEventListener('click', () => renderLoadConfirmPopup(i+1))    
+        if ( isNotEmpty && load ) slot.addEventListener('click', () => renderLoadConfirmPopup(i+1))
         slots.append(slot)
     }
     return slots
@@ -115,20 +115,21 @@ const renderSaveConfirmPopup = (slotNumber, isNotEmpty, mapMaker) => {
         const hardDriveImage = document.createElement('img')
         hardDriveImage.src = './assets/images/hardDrive.png'
         appendAll(confirm, hardDriveAmount, hardDriveImage)
-        if ( getProgressValueByNumber('1000002') ) return
-        activateAllProgresses('1000002')
-    }
+        if ( !getProgressValueByNumber('1000002') ) {
+            activateAllProgresses('1000002')
+        }
+    }    
     appendAll(buttons, cancel, confirm)
     const message = createAndAddClass('p', 'message')
     appendAll(savePopup, titleEl, buttons, message)
     savePopupContainer.append(savePopup)
-    getPauseContainer().lastElementChild.append(savePopupContainer)
+    getPauseContainer().lastElementChild.append(savePopupContainer)    
 }
 
 const confirmSave = (slotNumber, mapMaker = false) => {
     if ( mapMaker )  {
         mapMakerSave(slotNumber)
-        reRenderDesktop(mapMaker)
+        reRenderDesktop(true)
         return
     }
     if ( countItem('hardDrive') === 0 ) {
@@ -137,7 +138,7 @@ const confirmSave = (slotNumber, mapMaker = false) => {
     }
     useInventoryResource('hardDrive', 1)
     gamePlaySave(slotNumber)
-    reRenderDesktop(mapMaker) 
+    reRenderDesktop(false) 
 }
 
 const reRenderDesktop = (mapMaker) => {
