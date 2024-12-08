@@ -402,7 +402,7 @@ const renderPrice = (weaponObj, name) => {
 
 const upgradePopup = (e) => {
     const itemObj = element2Object(e.currentTarget)
-    const popupContainer = createAndAddClass('div', 'popup-container', 'ui-theme')
+    const popupContainer = createAndAddClass('div', 'deal-popup-container', 'popup-container', 'ui-theme')
     const popup = createAndAddClass('div', 'upgrade-popup')
     const title = createAndAddClass('h2', 'deal-popup-title')
     title.textContent = `Purchase upgrade?`

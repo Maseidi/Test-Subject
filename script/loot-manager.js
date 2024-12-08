@@ -110,7 +110,7 @@ const dropRandomLoot = (left, top) => {
     ]
     .sort(() => Math.random() - 0.5)
     .filter((item) => !item.predicate || item.predicate() < 10)
-    .map((item) => decideItemDrop(item.obj, item.chance, left, top, Math.floor(Math.random() * MAX_PACKSIZE[new item.obj().name]) + 1))
+    .map((item) => decideItemDrop(item.obj, item.chance, left, top, Math.floor(Math.random() * (item.obj ? MAX_PACKSIZE[new item.obj().name] : 1)) + 1))
     .find(drop => drop)
 }
 

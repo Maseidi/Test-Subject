@@ -1,10 +1,10 @@
+import { renderDialogue } from './dialogue-manager.js'
+import { getCurrentRoomDoors } from './elements.js'
+import { getEnemies, getInteractables } from './entities.js'
 import { getDoorObject } from './loader.js'
 import { renderPopup } from './popup-manager.js'
-import { getCurrentRoomDoors } from './elements.js'
-import { renderDialogue } from './dialogue-manager.js'
-import { getEnemies, getInteractables } from './entities.js'
-import { addClass, element2Object, removeClass } from './util.js'
 import { renderInteractable, spawnEnemy } from './room-loader.js'
+import { addClass, element2Object, removeClass } from './util.js'
 import { getCurrentRoomId, getPause, getWaitingFunctions, setWaitingFunctions } from './variables.js'
 
 let progress = null
@@ -88,7 +88,7 @@ export const updateKillAllDoors = () => {
     const aliveEnemies = getAliveEnemies()
     getCurrentRoomDoors().forEach(door => {
         const killAll = door.getAttribute('killAll')
-        if ( !killAll || aliveEnemies.find(enemy => (!enemy.killAll || Number(enemy.renderProgress) <= Number(killAll)))) 
+        if ( !killAll || aliveEnemies.find(enemy => (!enemy.killAll && Number(enemy.renderProgress) <= Number(killAll)))) 
             return
         door.removeAttribute('killAll')
         getDoorObject(door).killAll = null
@@ -124,7 +124,7 @@ export const updateKillAllInteractables = () => {
     const aliveEnemies = getAliveEnemies()
     getInteractables().get(getCurrentRoomId()).forEach((int, index) => {
         if ( !int.killAll ) return
-        if ( aliveEnemies.find(enemy => (!enemy.killAll || Number(enemy.renderProgress) <= Number(int.killAll)) ) ) return
+        if ( aliveEnemies.find(enemy => (!enemy.killAll && Number(enemy.renderProgress) <= Number(int.killAll)) ) ) return
         int.killAll = null
         int.renderProgress = String(Number.MAX_SAFE_INTEGER)
         renderInteractable(int, index)

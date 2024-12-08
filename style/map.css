@@ -133,7 +133,7 @@
 .shadow {
   top: 0;
   left: 0;
-  z-index: 35;
+  z-index: 38;
   width: 100vw;
   height: 100vh;
   position: fixed;
