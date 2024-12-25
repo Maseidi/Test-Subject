@@ -27,8 +27,8 @@ export class AbstractNotificationService {
         if ( distance(getPlayer(), this.enemy.sprite) <= dist ) {
             this.switch2ChaseMode()
             this.updateDestination2Player()
+            this.notifyNearbyEnemies()
         }
-        this.notifyNearbyEnemies()
     }
 
     switch2ChaseMode() {

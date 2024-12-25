@@ -1,5 +1,6 @@
 import { getRoundsFinished } from './variables.js'
 import { 
+    AK_47,
     ARCTIC_WARFERE,
     BENELLI_M4,
     GLOCK,
@@ -129,7 +130,6 @@ const gunDetails = new Map([
         'A handgun with a clip capacity that barely makes you think of reloading',
         13,
     )],
-
     [MP5K, new Gun(
         'mp5k',
         'smgAmmo',
@@ -190,7 +190,6 @@ const gunDetails = new Map([
         'The insane fire rate and reload speed make up for its low damage',
         21,
     )],
-
     [REMINGTON_870, new Gun(
         'remington 870',
         'shotgunShells',
@@ -236,14 +235,13 @@ const gunDetails = new Map([
         'An automatic shotgun with an insane fire rate and magazine capacity',
         50,
     )],
-    
     [ARCTIC_WARFERE, new Gun(
         'arctic warfare',
         'rifleAmmo',
         16,
         'darkgray',
         'red',
-        2,
+        3,
         [500, 600, 700, 800, 900],
         [650, 700, 750, 800, 850],
         [5, 4.4, 3.8, 3.2, 2.6],
@@ -281,7 +279,22 @@ const gunDetails = new Map([
         [1.8, 1.6, 1.5, 1.4, 1.2],
         'Sniper rifle with the most balanced stats possible',
         70,
-    )]
+    )],
+    [AK_47, new Gun(
+        'AK-47',
+        'rifleAmmo',
+        14,
+        'lightgray',
+        'blue',
+        3,
+        [200, 300, 400, 500, 600],
+        [500, 550, 600, 650, 700],
+        [2.5, 2.1, 1.7, 1.3, 0.9],
+        [10, 15, 20, 25, 30],
+        [0.15, 0.14, 0.13, 0.12, 0.11],
+        'Fast and reliable rifle ideal for dealing massive amounts of damage in a short amount of time',
+        60,
+    )],
 ])
 
 export const getGunDetails = () => gunDetails

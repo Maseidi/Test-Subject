@@ -30,7 +30,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-flow: row-reverse wrap;
+  flex-direction: row-reverse;
 }
 
 .inventory-container {
