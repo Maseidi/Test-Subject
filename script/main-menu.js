@@ -60,16 +60,7 @@ const continueOption = () =>
         getDuration(0)
     )
     
-const handleMapMakerOption = (options) => {
-    options.append(mapMaker())
-    return
-    // TODO: Uncomment later
-    for ( let i = 0; i < 5; i++ )
-        if ( localStorage.getItem('slot-' + ( i + 1 )) !== 'empty' ) {
-            if ( Number(JSON.parse(localStorage.getItem('slot-' + ( i + 1 ))).rounds) > 0 ) options.append(mapMaker())
-            break
-        }
-}
+const handleMapMakerOption = (options) => options.append(mapMaker())
     
 const mapMaker = () => 
     mainMenuOption(
