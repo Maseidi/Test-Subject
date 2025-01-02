@@ -26,14 +26,7 @@ export const setStash = (val) => {
 }
 export const getStash = () => stash
 
-export const initStash = () => [
-    {...new KeyDrop(0, 0, 2, 'Museum key', 'Key that unlocks the museum entrance', 'Museum'), id: nextId()},
-    {...new SmgAmmo(0, 0, 90), id: nextId()},
-    {...new PistolAmmo(0, 0, 30), id: nextId()},
-    {...new ShotgunShells(0, 0, 20), id: nextId()},
-    {...new Bandage(0, 0, 3), id: nextId()},
-    {...new Coin(0, 0, 30), id: nextId()}
-]
+export const initStash = () => []
 
 export const renderStash = () => {
     renderBackground()
@@ -156,8 +149,8 @@ const moveItem = (e) => {
     else move2Inventory(object2Move, reduce)
 }
 
-const move2Stash = (object2Move, reduce) => {
-    searchPack(object2Move, reduce)
+export const move2Stash = (object2Move, reduce) => {
+    add2Stash(object2Move, reduce)
     useItemAtPosition(object2Move.row, object2Move.column, reduce)
     handleEquippableDrop(object2Move)
     removeStash()
@@ -177,7 +170,7 @@ const move2Inventory = (object2Move, reduce) => {
     renderStash()
 }
 
-const searchPack = (object2Move, reduce) => {
+export const add2Stash = (object2Move, reduce) => {
     let index = stash.findIndex(x => x.name === object2Move.name)
     if ( index === -1 ) stash.push({...object2Move, amount: reduce})
     else stash[index] = {...object2Move, amount: stash[index].amount + reduce}    

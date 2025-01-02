@@ -3,7 +3,7 @@ import { isGun } from '../../../gun-details.js'
 import { dropLoot } from '../../../loot-manager.js'
 import { CHASE, STUNNED } from '../../enemy-constants.js'
 import { getCurrentRoomInteractables, setCurrentRoomInteractables } from '../../../elements.js'
-import { getAnimatedLimbs, getCriticalChance, getCurrentRoomId, setAnimatedLimbs } from '../../../variables.js'
+import { getAnimatedLimbs, getCriticalChance, getCurrentRoomId, getIsSurvival, setAnimatedLimbs } from '../../../variables.js'
 import { 
     addAllAttributes,
     addAllClasses,
@@ -18,6 +18,8 @@ import {
     updateKillAllDoors,
     updateKillAllEnemies,
     updateKillAllInteractables } from '../../../progress-manager.js'
+import { getCurrentChaosEnemies, getCurrentChaosSpawned, setCurrentChaosEnemies } from '../../../survival/variables.js'
+import { endChaos } from '../../../survival/chaos-manager.js'
 
 export class AbstractInjuryService {
     constructor(enemy) {
@@ -74,6 +76,9 @@ export class AbstractInjuryService {
         updateKillAllInteractables()
         this.removePopup()
         this.enemy.sprite.style.zIndex = '34'
+        if ( getIsSurvival() && getCurrentChaosEnemies() === getCurrentChaosSpawned() && !getEnemies().get(1).find(enemy => enemy.health !== 0) ) {
+            endChaos()
+        }
     }
 
     removePopup() {

@@ -1,13 +1,27 @@
 import { getDifficulty } from './variables.js'
 import { buildEnemy } from './enemy/enemy-factory.js'
+import { Room } from './room.js'
+import { Wall } from './wall.js'
 
-let rooms = []
+let rooms = new Map([]) 
 export const setRooms = (val) => {
     rooms = val
 }
 export const getRooms = () => rooms
 
-let walls = new Map([])
+let walls = new Map([
+    [1, [
+        new Wall(200, 200, 200, null, 200),
+        new Wall(200, 200, 200, null, null, 200),
+        new Wall(100, 500, 800, null, null, 500),
+        new Wall(200, 200, null, 200, 200),
+        new Wall(200, 200, null, 200, null, 200),
+        new Wall(100, 500, null, 800, 500),
+        new Wall(500, 100, 1000, null, 200),
+        new Wall(500, 100, null, 1000, null, 200),
+        ]
+    ]
+]) 
 export const setWalls = (val) => {
     walls = val
 }
@@ -19,7 +33,7 @@ export const setLoaders = (val) => {
 }
 export const getLoaders = () => loaders
 
-export const initLoaders = () => new Map([])
+export const initLoaders = () => new Map([[1, []]])
 
 let enemies = new Map([])
 export const setEnemies = (val) => {

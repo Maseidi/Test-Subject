@@ -1,6 +1,5 @@
 import { getRoundsFinished } from './variables.js'
 import { 
-    AK_47,
     ARCTIC_WARFERE,
     BENELLI_M4,
     GLOCK,
