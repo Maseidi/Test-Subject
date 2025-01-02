@@ -363,3 +363,9 @@ export const setIsMapMakerRoot = (val) => {
     isMapMakerRoot = val
 }
 export const getIsMapMakerRoot = () => isMapMakerRoot
+
+let isSurvival = null
+export const setIsSurvival = (val) => {
+    isSurvival = val
+}
+export const getIsSurvival = () => isSurvival

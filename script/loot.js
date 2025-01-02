@@ -28,7 +28,6 @@ export const P90 = 'p90'
 export const PPSH = 'ppsh'
 export const MP5K = 'mp5k'
 export const SPAS = 'spas'
-export const AK_47 = 'ak47'
 export const M1911 = 'm1911'
 export const GLOCK = 'glock'
 export const MAUSER = 'mauser'
@@ -42,10 +41,10 @@ export const PARKER_HALE_M_85 = 'parkerhalem85'
 
 export class Loot {
     constructor(name, amount, progress) {
-        this.name =              name                        ?? null
         this.amount =            amount                      ?? 0
         this.progress2Active =   progress?.progress2Active   ?? []
         this.progress2Deactive = progress?.progress2Deactive ?? []
+        this['loot-name'] =      name                        ?? null
     }
 }
 

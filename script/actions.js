@@ -86,7 +86,9 @@ import {
     getEquippedTorchId,
     getWaitingFunctions,
     setWaitingFunctions,
-    getRefillStamina } from './variables.js'
+    getRefillStamina, 
+    getIsSurvival} from './variables.js'
+import { startChaos } from './survival/chaos-manager.js'
 
 export const wDown = () => enableDirection(getUpPressed, getDownPressed, setUpPressed, setDownPressed)
 
@@ -248,14 +250,14 @@ const openPause = (cause, func) => {
     func()
 }
 
-const toggleLever = () => {
+const toggleLever = () => {    
     const toggle1 = getElementInteractedWith().getAttribute('progress2Active')
     const toggle2 = getElementInteractedWith().getAttribute('progress2Deactive')
-    
     if ( !getProgress()[toggle1] ) {
         activateAllProgresses(toggle1)
         deactivateAllProgresses(toggle2)
         getElementInteractedWith().firstElementChild.style.transform = `scale(-1, 1)`
+        if ( getIsSurvival() ) startChaos()
     }
     else {
         activateAllProgresses(toggle2)
@@ -317,6 +319,7 @@ const removeUi = () => {
     findHealtStatusChildByClassName('infected-container').style.opacity = '0'
     if ( getElementInteractedWith()?.children[1] )      getElementInteractedWith().children[1].style.visibility = 'hidden'
     else if ( getElementInteractedWith()?.children[0] ) getElementInteractedWith().children[0].style.visibility = 'hidden'
+    if ( document.querySelector('.chaos-container') ) document.querySelector('.chaos-container').style.display = 'none'
 }
 
 const gamePlaying = () => {
@@ -341,6 +344,7 @@ const showUi = () => {
     findHealtStatusChildByClassName('infected-container').style.opacity = '1'
     if ( getElementInteractedWith()?.children[1] )      getElementInteractedWith().children[1].style.visibility = 'visible'
     else if ( getElementInteractedWith()?.children[0] ) getElementInteractedWith().children[0].style.visibility = 'visible'
+    if ( document.querySelector('.chaos-container') ) document.querySelector('.chaos-container').style.display = 'block'
 }
 
 const resumePlayerActions = () => {

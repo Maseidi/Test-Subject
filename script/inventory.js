@@ -1,4 +1,4 @@
-import { NOTE } from './loot.js'
+import { GLOCK, NOTE } from './loot.js'
 import { renderGun } from './gun-loader.js'
 import { getInteractables, getPopups } from './entities.js'
 import { renderStats } from './gun-examine.js'
@@ -59,6 +59,7 @@ import {
     getEquippedTorchId,
     setEquippedTorchId} from './variables.js'
 import { Popup } from './popup-manager.js'
+import { GunDrop, PistolAmmo } from './interactables.js'
 
 export const MAX_PACKSIZE = {
     coin: 50,
@@ -93,7 +94,7 @@ export const getInventory = () => inventory
 
 export const initInventory = () =>
     [
-        [null, null, null, null],
+        [new PistolAmmo(null, null, 30), null, null, null],
         [null, null, null, null],
         ['locked', 'locked', 'locked', 'locked'],
         ['locked', 'locked', 'locked', 'locked'],

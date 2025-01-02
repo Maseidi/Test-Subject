@@ -70,7 +70,7 @@ export const dropLoot = (rootElem, isEnemy) => {
         'loot-name': decision, 'loot-amount': amount, 
         'loot-active': progress2Active, 'loot-deactive': progress2Deactive } = root
 
-    let loot
+    let loot    
     if ( decision === RANDOM ) loot = dropRandomLoot(left, top)
     else if ( !decision ) loot = null
     else if ( decision === NOTE ) {
@@ -95,8 +95,8 @@ export const dropLoot = (rootElem, isEnemy) => {
 const dropRandomLoot = (left, top) => {
     return [
         {obj: SmgAmmo, chance: 0.3},         {obj: Coin, chance: 0.4},
-        {obj: PistolAmmo, chance: 0.5},      {obj: null, chance: 0.1},
-        {obj: PurpleVaccine, chance: 0.1},   {obj: Stick, chance: 0.1},
+        {obj: PistolAmmo, chance: 0.5},      {obj: null, chance: 0.5},
+        {obj: PurpleVaccine, chance: 0.1},   {obj: Stick, chance: 0},
         {obj: Bandage, chance: 0.1},         {obj: Antidote, chance: 0.1},
         {obj: Grenade, chance: 0.01},        {obj: Flashbang, chance: 0.01},
         {obj: MagnumAmmo, chance: 0.02},     {obj: HardDrive, chance: 0.04},
@@ -145,7 +145,7 @@ const dropDeterminedLoot = (decision, left, top, amount) => {
 
 const decideItemDrop = (drop, chance, left, top, amount) => {
     if ( !drop ) return null
-    if ( drop.name === 'coin' && amount > 5 ) amount = 5
+    if ( new drop().name === 'coin' && amount > 2 ) amount = 2
     if ( Math.random() < chance ) var result = new drop(left, top, amount)
     Array.from([
         {expected: LUCK_PILLS,    setter: setLuckPillsDropped,     getter: getLuckPillsDropped},

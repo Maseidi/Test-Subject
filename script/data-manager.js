@@ -14,11 +14,15 @@ import {
     setRooms,
     setWalls
 } from './entities.js'
+import { GunDrop, Lever, PC, Stash, VendingMachine } from './interactables.js'
 import { getInventory, initInventory, setInventory } from './inventory.js'
+import { GLOCK } from './loot.js'
 import { getPasswords, initPasswords, setPasswords } from './password-manager.js'
 import { getProgress, initProgress, setProgress } from './progress-manager.js'
+import { Room } from './room.js'
 import { getShopItems, initShopItems, setShopItems } from './shop-item.js'
 import { getStash, initStash, setStash } from './stash.js'
+import { getChaos, setChaos, setEnemyId, setSpawnCounter } from './survival/variables.js'
 import {
     getAdrenalinesDropped,
     getAimMode,
@@ -115,16 +119,19 @@ import {
 } from './variables.js'
 
 export const prepareNewGameData = (difficulty) => {
+    initRooms()
     initPasswords()
     initNewGameLoaders()
     initNewGameProgress()
     initNewGameInventory()
     initNewGameStash()
     initNewGameShop()
-    initNewGameVariables(difficulty)
+    initNewGameVariables(undefined, undefined, difficulty)
     initNewGameEntities()
     initConstants()
 }
+
+const initRooms = () => setRooms(new Map([[1, new Room(1, 3000, 2000, 'Main Hall', 10)]]))
 
 const initNewGameLoaders = () => setLoaders(initLoaders())
 
@@ -137,8 +144,8 @@ const initNewGameStash = () => setStash(initStash())
 const initNewGameShop = () => setShopItems(initShopItems())
 
 const initNewGameEntities = () => {
-    initEnemies()
-    initInteractables()
+    initEnemies(new Map([[1, []]]))
+    initInteractables(new Map([[1, [new PC(20, 20), new Stash(2900, 1950), new VendingMachine(2950, 50), new Lever(1400, 1000), new GunDrop(1400, 1200, GLOCK, 10, 1, 1, 1, 1, 1)]]]))
 }
 
 export const initConstants = () => {
@@ -174,7 +181,7 @@ export const initConstants = () => {
     setAimMode(               false)
 }
 
-export const initNewGameVariables = (spawnX = 20, spawnY = 20, difficulty) => {
+export const initNewGameVariables = (spawnX = 1500, spawnY = 1000, difficulty) => {
     const newGameVariables = {
         mapX :                 0,
         mapY :                 0,
@@ -206,6 +213,9 @@ export const initNewGameVariables = (spawnX = 20, spawnY = 20, difficulty) => {
         roundsFinished :       0,
         timesSaved:            0,
         playthroughId:         Date.now(),
+        enemyId:               0,
+        spawnCounter:          0,
+        chaos:                 0,
         difficulty,
     }
     setVariables(newGameVariables)
@@ -246,6 +256,9 @@ const setVariables = (variables) => {
     setDifficulty(          variables.difficulty)
     setTimesSaved(          variables.timesSaved)
     setPlaythroughId(       variables.playthroughId)
+    setEnemyId(             variables.enemyId)
+    setSpawnCounter(        variables.spawnCounter)
+    setChaos(               variables.chaos)
 }
 
 export const saveAtSlot = (slotNumber) => {
@@ -356,7 +369,8 @@ const saveVariables = (slotNumber) => {
         roundsFinished :       getRoundsFinished(),
         timesSaved:            getTimesSaved(),
         difficulty:            getDifficulty(),
-        playthroughId:         getPlaythroughId()
+        playthroughId:         getPlaythroughId(),
+        chaos:                 getChaos()
     }))
 }
 

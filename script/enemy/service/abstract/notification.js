@@ -1,6 +1,6 @@
 import { distance, getProperty } from '../../../util.js'
 import { getCurrentRoomEnemies, getPlayer } from '../../../elements.js'
-import { getNoOffenseCounter, getPlayerX, getPlayerY, getRoomLeft, getRoomTop } from '../../../variables.js'
+import { getIsSurvival, getNoOffenseCounter, getPlayerX, getPlayerY, getRoomLeft, getRoomTop } from '../../../variables.js'
 import { CHASE, GO_FOR_RANGED, GRAB, NO_OFFENCE, STAND_AND_WATCH, STUNNED, TRACKER } from '../../enemy-constants.js'
 
 export class AbstractNotificationService {
@@ -23,6 +23,7 @@ export class AbstractNotificationService {
     }
 
     notifyEnemy(dist) {
+        if ( getIsSurvival() && this.enemy.type !== TRACKER ) this.updateDestination2Player()
         if ( [STUNNED, STAND_AND_WATCH, GRAB].includes(this.enemy.state) ) return
         if ( distance(getPlayer(), this.enemy.sprite) <= dist ) {
             this.switch2ChaseMode()

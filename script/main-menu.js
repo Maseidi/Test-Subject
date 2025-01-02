@@ -33,7 +33,7 @@ const mainMenuHeader = () => {
 const options = () => {
     const options = createAndAddClass('div', 'main-menu-options')
     handleContinueOption(options)
-    appendAll(options, newGame(), loadGame())
+    appendAll(options, loadGame())
     handleMapMakerOption(options)
     options.append(lineBar())
     return options
@@ -94,17 +94,6 @@ const mainMenuOption = (textContent, onClick, delay, duration) => {
     return option
 }
 
-const newGame = () => 
-    mainMenuOption(
-        'new game', 
-        (e) => {
-            addSelectedStyle(e.currentTarget)
-            refreshContents(newGameOptions())
-        },
-        getDelay(1),
-        getDuration(1)
-    )
-
 const addSelectedStyle = (elem) => {
     Array.from(getMainMenuEl().children[1].children)
         .forEach(child => removeClass(child, 'selected-main-menu-option'))
@@ -122,7 +111,7 @@ const renderNewContent = (content) => getMainMenuEl().children[2].append(content
 
 const loadGame = () => 
     mainMenuOption(
-        'load game', 
+        'survival', 
         (e) => {
             addSelectedStyle(e.currentTarget)
             refreshContents(loadGameOptions())
@@ -135,27 +124,9 @@ const lineBar = () => createAndAddClass('div', 'main-menu-options-bar')
 
 const content = () => createAndAddClass('div', 'main-menu-content')
 
-const newGameOptions = () => {
-    const newGameOptionsContainer = createAndAddClass('div', 'new-game-options')
-    Array.from([
-        newGameOption(difficulties.MILD), 
-        newGameOption(difficulties.MIDDLE), 
-        newGameOption(difficulties.SURVIVAL)
-    ]).forEach(option => {
-        option.addEventListener('click', (e) => playGameWithGivenData(() => prepareNewGameData(e.target.textContent)))
-        newGameOptionsContainer.append(option)
-    })
-    return newGameOptionsContainer
-}
-
-const newGameOption = (difficulty) => {
-    const option = document.createElement('p')
-    option.textContent = difficulty
-    return option
-}
-
 const loadGameOptions = () => {
     const loadGameOptionsContainer = createAndAddClass('div', 'load-game-options')
+    loadGameOptionsContainer.append(newGameOption())
     for ( let i = 0; i < 10; i++ ) {
         const option = loadGameOption(i + 1)
         loadGameOptionsContainer.append(option)
@@ -173,6 +144,23 @@ const mapMakerOptions = () => {
     }
     addWheelEvent(mapMakerOptionsContainer)
     return mapMakerOptionsContainer
+}
+
+const newGameOption = () => {
+    const slot = createAndAddClass('div', 'load-game-option-empty-slot', 'map-maker-new-game')
+    const word1 = document.createElement('p')
+    word1.textContent = 'start'
+    const word2 = document.createElement('p')
+    word2.textContent = 'new'
+    const word3 = document.createElement('p')
+    word3.textContent = 'game'
+    slot.append(word1, word2, word3)
+    slot.addEventListener('click', () => {
+        getMainMenuEl().remove()
+        prepareNewGameData(difficulties.MIDDLE)
+        play(false, true)
+    })
+    return slot
 }
 
 const newMapMakerOption = () => {

@@ -376,3 +376,22 @@
   border: 1px solid wheat;
   background-color: rgb(245, 222, 179, 0.1);
 }
+
+.chaos-container {
+  left: 50%;
+  top: 200px;
+  opacity: 0;
+  color: wheat;
+  position: fixed;
+  padding: 10px 10px;
+  border-radius: 5px;
+  letter-spacing: 10px;
+  animation-name: fade-in;
+  border: 2px solid wheat;
+  text-transform: uppercase;
+  animation-duration: 300ms;
+  transform: translateX(-50%);
+  animation-fill-mode: forwards;
+  animation-direction: alternate;
+  background-color: black !important;
+}

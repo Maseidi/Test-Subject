@@ -1,5 +1,6 @@
 import { getCurrentRoomSolid, getPlayer } from '../../../elements.js'
 import { collide, containsClass, getProperty } from '../../../util.js'
+import { getIsSurvival } from '../../../variables.js'
 import { INVESTIGATE, LOST, MOVE_TO_POSITION } from '../../enemy-constants.js'
 
 export class AbstractVisionService {
@@ -44,6 +45,7 @@ export class AbstractVisionService {
     }
 
     isPlayerVisible() {
+        if ( getIsSurvival() ) return true
         if ( this.enemy.wallInTheWay !== false ||
              ( [LOST, INVESTIGATE, MOVE_TO_POSITION].includes(this.enemy.state) 
              && this.enemy.isTransitioning === true ) ) return false

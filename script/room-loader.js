@@ -4,9 +4,10 @@ import { renderRoomName } from './room-name-manager.js'
 import { BottomLoader, LeftLoader, RightLoader, TopLoader } from './loader.js'
 import { countItem, findEquippedTorchById, updateInteractablePopup } from './inventory.js'
 import { getInteractables, getRooms, getWalls, getEnemies, getLoaders } from './entities.js'
-import { getCurrentRoomId, getRoomLeft, getRoomTop, setStunnedCounter } from './variables.js'
+import { getCurrentRoomId, getIsSurvival, getRoomLeft, getRoomTop, setStunnedCounter } from './variables.js'
 import { activateAllProgresses, deactivateAllProgresses, getProgressValueByNumber } from './progress-manager.js'
 import { 
+    CHASE,
     LOST,
     MOVE_TO_POSITION,
     SCORCHER,
@@ -264,7 +265,7 @@ const addPosition = (doorElem, input, direction, className, type) => {
     doorElem.style[direction] = `${output}px`
 }
 
-const renderInteractables = () => 
+export const renderInteractables = () => 
     getInteractables().get(getCurrentRoomId())
         .forEach((interactable, index) => renderInteractable(interactable, index))
 
@@ -420,6 +421,7 @@ const initEnemyStats = (element) => {
     element.angle = Math.ceil(Math.random() * 8) * 45 - 180
     element.angleState = ANGLE_STATE_MAP.get(element.angle)
     element.state = element.type === TRACKER ? LOST : MOVE_TO_POSITION
+    element.state = getIsSurvival() ? CHASE : element.state
     element.investigationCounter = 0
     element.pathPoint = 0
     element.pathFindingX = null

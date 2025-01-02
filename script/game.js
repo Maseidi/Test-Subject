@@ -5,15 +5,18 @@ import { manageEntities } from './entity-manager.js'
 import { managePlayerAngle } from './angle-manager.js'
 import { manageHealthStatus } from './player-health.js'
 import { manageWeaponActions } from './weapon-manager.js'
+import { manageSpawns } from './survival/spawn-manager.js'
 import { managePlayerMovement } from './player-movement.js'
-import { getPause, setGameId, setIsMapMakerRoot } from './variables.js'
+import { getIsSurvival, getPause, setGameId, setIsMapMakerRoot, setIsSurvival } from './variables.js'
 
-export const play = (mapMaker = false) => {
+export const play = (mapMaker = false, survival = false) => {
     setIsMapMakerRoot(mapMaker)
+    setIsSurvival(survival)
     startUp()
 
     const gameId = window.setInterval(() => {
         if ( getPause() ) return
+        if ( getIsSurvival() ) manageSpawns()
         manageSprint()
         manageGameOver()
         managePlayerAngle()
@@ -24,5 +27,4 @@ export const play = (mapMaker = false) => {
     }, 1000 / 60)
 
     setGameId(gameId)
-
 }
