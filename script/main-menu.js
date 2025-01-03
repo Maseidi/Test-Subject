@@ -225,7 +225,7 @@ const slotWithData = (slotData, slotNumber, mapMaker) => {
 const playGameWithGivenData = (loader) => {
     getMainMenuEl().remove()
     loader()
-    play()
+    play(false, true)
 }
 
 const loadMapMakerWithGivenData = (loader) => {

@@ -1,13 +1,13 @@
-import { play } from './game.js'
-import { finishUp } from './finishup.js'
 import { managePause } from './actions.js'
+import { saveAtSlot as gamePlaySave, loadGameFromSlot } from './data-manager.js'
 import { getPauseContainer } from './elements.js'
-import { appendAll, createAndAddClass } from './util.js'
+import { finishUp } from './finishup.js'
+import { play } from './game.js'
 import { countItem, useInventoryResource } from './inventory.js'
 import { saveAtSlot as mapMakerSave } from './mapMaker/data-manager.js'
-import { addMessage, itemNotification, renderQuit } from './user-interface.js'
-import { loadGameFromSlot, saveAtSlot as gamePlaySave } from './data-manager.js'
 import { activateAllProgresses, getProgressValueByNumber } from './progress-manager.js'
+import { addMessage, itemNotification, renderQuit } from './user-interface.js'
+import { appendAll, createAndAddClass } from './util.js'
 
 export const turnOnComputer = () => {
     managePause()
@@ -178,5 +178,5 @@ const closeLoadPopup = () => getPauseContainer().lastElementChild.lastElementChi
 const confirmSlotLoad = (slotNumber) => {
     finishUp()
     loadGameFromSlot(slotNumber)
-    play()
+    play(false, true)
 }
