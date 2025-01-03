@@ -44,11 +44,7 @@ const renderGameOverScreen = () => {
             finishUp()
             playTest()
         }
-        else if ( getIsSurvival() ) {
-            finishUp()
-            prepareNewGameData(difficulties.MILD)
-            play(false, true)
-        }
+        else if ( getIsSurvival() ) playWithGivenData(() => prepareNewGameData(getDifficulty()))
         else if (hasSaveInPlaythrogh() ) loadLatestSavedSlot()
         else                             startNewGame()
     })
@@ -84,5 +80,5 @@ const startNewGame = () => playWithGivenData(() => prepareNewGameData(getDifficu
 const playWithGivenData = (loader) => {
     finishUp()
     loader()
-    play()
+    play(false, true)
 }

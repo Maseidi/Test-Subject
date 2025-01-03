@@ -145,7 +145,7 @@ const dropDeterminedLoot = (decision, left, top, amount) => {
 
 const decideItemDrop = (drop, chance, left, top, amount) => {
     if ( !drop ) return null
-    if ( new drop().name === 'coin' && amount > 2 ) amount = 2
+    if ( new drop().name === 'coin' ) amount = (amount % 2) + 1
     if ( Math.random() < chance ) var result = new drop(left, top, amount)
     Array.from([
         {expected: LUCK_PILLS,    setter: setLuckPillsDropped,     getter: getLuckPillsDropped},

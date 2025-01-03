@@ -15,6 +15,7 @@ import {
     FlashbangShopItem,
     getShopItems,
     GreenVaccineShopItem,
+    GrenadeShopItem,
     GunShopItem,
     HardDriveShopItem,
     HealthPotionShopItem,
@@ -50,7 +51,7 @@ export const startChaos = () => {
     setChaos(getChaos() + 1)
     setCurrentChaosEnemies(4 + getChaos())
     setCurrentChaosSpawned(0)
-    getEnemies().get(1).forEach(enemy => enemy.sprite.remove())
+    getEnemies().get(1).forEach(enemy => enemy?.sprite?.remove())
     setEnemies(new Map([[1, []]]))
     getCurrentRoomInteractables().forEach(int => int.remove())
     setInteractables(new Map([[1, [...getInteractables().get(1).filter((item, index) => index < 3 || isGun(item.name))]]]))
@@ -83,48 +84,52 @@ const updateShop = () => {
     const chaos = getChaos()
     const vendingMachine = getShopItems()
     if ( chaos % 10 === 1 ) {
-        vendingMachine.push(new RedVaccineShopItem())
+        manageRepeatedItem(RedVaccineShopItem)
     }
     if ( chaos % 10 === 2 ) {
-        vendingMachine.push(new BandageShopItem())
-        vendingMachine.push(new BlueVaccineShopItem())
+        manageRepeatedItem(BandageShopItem)
+        manageRepeatedItem(BlueVaccineShopItem)
         if ( chaos > 10 ) vendingMachine.push(new HealthPotionShopItem())
     }
     if ( chaos % 10 === 3 ) {
-        vendingMachine.push(new HardDriveShopItem())
-        vendingMachine.push(new FlashbangShopItem())
-        vendingMachine.push(new YellowVaccineShopItem())
+        manageRepeatedItem(HardDriveShopItem)
+        manageRepeatedItem(FlashbangShopItem)
+        manageRepeatedItem(YellowVaccineShopItem)
     }
     if ( chaos % 10 === 4 ) {
-        vendingMachine.push(new BandageShopItem())
-        vendingMachine.push(new GreenVaccineShopItem())
+        manageRepeatedItem(BandageShopItem)
+        manageRepeatedItem(GreenVaccineShopItem)
         if ( chaos > 10 ) vendingMachine.push(new EnergyDrinkShopItem())
     }
     if ( chaos % 10 === 5 ) {
-        vendingMachine.push(new PurpleVaccineShopItem())
+        manageRepeatedItem(PurpleVaccineShopItem)
     }
     if ( chaos % 10 === 6 ) {
-        vendingMachine.push(new BandageShopItem())
-        vendingMachine.push(new HardDriveShopItem())
-        vendingMachine.push(new RedVaccineShopItem())
+        manageRepeatedItem(BandageShopItem)
+        manageRepeatedItem(HardDriveShopItem)
+        manageRepeatedItem(RedVaccineShopItem)
     }
     if ( chaos % 10 === 7 ) {
-        vendingMachine.push(new BlueVaccineShopItem())
+        manageRepeatedItem(BlueVaccineShopItem)
     }
     if ( chaos % 10 === 8 ) {
-        vendingMachine.push(new BandageShopItem())
-        vendingMachine.push(new GreenVaccineShopItem())
-        vendingMachine.push(new YellowVaccineShopItem())
+        manageRepeatedItem(BandageShopItem)
+        manageRepeatedItem(GrenadeShopItem)
+        manageRepeatedItem(YellowVaccineShopItem)
         if ( chaos > 10 ) vendingMachine.push(new LuckPillsShopItem())
     }
     if ( chaos % 10 === 9 ) {
-        vendingMachine.push(new HardDriveShopItem())
-        vendingMachine.push(new GreenVaccineShopItem())
+        manageRepeatedItem(HardDriveShopItem)
+        manageRepeatedItem(GreenVaccineShopItem)
     }
     if ( chaos % 10 === 0 ) {
-        if ( chaos < 80 ) vendingMachine.push(new Pouch())
-        vendingMachine.push(new BandageShopItem())
-        vendingMachine.push(new PurpleVaccineShopItem())
+        if ( chaos < 80 ) {
+            console.log('here');
+            vendingMachine.push(new Pouch())
+            console.log(vendingMachine);
+        }
+        manageRepeatedItem(BandageShopItem)
+        manageRepeatedItem(PurpleVaccineShopItem)
         if ( chaos > 10 ) vendingMachine.push(new AdrenalineShopItem())
     }
 
@@ -144,9 +149,15 @@ const updateShop = () => {
     if ( chaos === 26 )  vendingMachine.push(new GunShopItem(P90))
     if ( chaos === 28 )  vendingMachine.push(new GunShopItem(REMINGTON_1858))
 
-    vendingMachine.push(new PistolAmmoShopItem())
-    if ( chaos % 2 === 0 ) vendingMachine.push(new SmgAmmoShopItem())
-    if ( chaos % 3 === 0 ) vendingMachine.push(new ShotgunShellsShopItem())
-    if ( chaos % 4 === 0 ) vendingMachine.push(new RifleAmmoShopItem())
-    if ( chaos % 5 === 0 ) vendingMachine.push(new MagnumAmmoShopItem())
+    manageRepeatedItem(PistolAmmoShopItem)
+    if ( chaos % 2 === 0 ) manageRepeatedItem(SmgAmmoShopItem)
+    if ( chaos % 3 === 0 ) manageRepeatedItem(ShotgunShellsShopItem)
+    if ( chaos % 4 === 0 ) manageRepeatedItem(RifleAmmoShopItem)
+    if ( chaos % 5 === 0 ) manageRepeatedItem(MagnumAmmoShopItem)
+}
+
+const manageRepeatedItem = (Item) => {
+    const instance = new Item()
+    if ( getShopItems().find(item => !item.sold && item.name === instance.name) ) return
+    getShopItems().push(instance)
 }
