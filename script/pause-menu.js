@@ -42,7 +42,7 @@ const renderOptions = (mapMaker) => {
     options.push(mainMenu)
     return options
 }
-
+    
 const renderConfirmReturn2MainMenu = (mapMaker) => {
     const returnPopupContainer = createAndAddClass('div', 'common-popup-container', 'ui-theme', 'popup-container')
     const returnPopup = createAndAddClass('div', 'common-popup')

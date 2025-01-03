@@ -56,7 +56,7 @@ const spawnLocations = [
 export const manageSpawns = () => {
     const chaos = getChaos()    
     if ( getCurrentChaosSpawned() >= getCurrentChaosEnemies() ) return
-    if ( getEnemies().get(1).filter(enemy => enemy.health !== 0) >= 40 ) return
+    if ( getEnemies().get(1).filter(enemy => enemy.health !== 0).length >= 50 ) return
     setSpawnCounter(getSpawnCounter() + 1)
     if ( getSpawnCounter() !== 60 ) return
     setSpawnCounter(-1)

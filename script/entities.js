@@ -9,19 +9,7 @@ export const setRooms = (val) => {
 }
 export const getRooms = () => rooms
 
-let walls = new Map([
-    [1, [
-        new Wall(200, 200, 200, null, 200),
-        new Wall(200, 200, 200, null, null, 200),
-        new Wall(100, 500, 800, null, null, 500),
-        new Wall(200, 200, null, 200, 200),
-        new Wall(200, 200, null, 200, null, 200),
-        new Wall(100, 500, null, 800, 500),
-        new Wall(500, 100, 1000, null, 200),
-        new Wall(500, 100, null, 1000, null, 200),
-        ]
-    ]
-]) 
+let walls = new Map([])
 export const setWalls = (val) => {
     walls = val
 }
