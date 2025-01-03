@@ -6,11 +6,13 @@ import { managePause, unequipTorch } from './actions.js'
 import { return2MainMenu, return2MapMaker } from './pause-menu.js'
 import { loadGameFromSlot, prepareNewGameData } from './data-manager.js'
 import { getGrabBar, getPauseContainer, getPlayer } from './elements.js'
-import { addClass, appendAll, createAndAddClass, removeAllClasses, removeEquipped } from './util.js'
-import { getDifficulty, getHealth, getIsMapMakerRoot, getPlaythroughId, setPauseCause } from './variables.js'
+import { addClass, appendAll, createAndAddClass, difficulties, removeAllClasses, removeEquipped } from './util.js'
+import { getDifficulty, getHealth, getIsMapMakerRoot, getIsSurvival, getPlaythroughId, setPauseCause } from './variables.js'
+import { getChaos } from './survival/variables.js'
 
 export const manageGameOver = () => {
     if ( getHealth() !== 0 ) return
+    removeSavedSurvivals()
     setTimeout(() => renderGameOverScreen(), 1000)
     setPauseCause('game-over')
     managePause()
@@ -24,29 +26,41 @@ export const manageGameOver = () => {
     appendAll(playerBody, createAndAddClass('div', 'left-leg'), createAndAddClass('div', 'right-leg'))
 }
 
+const removeSavedSurvivals = () => {
+    for ( let i = 0; i < 10; i++ )
+        if ( localStorage.getItem(`slot-${i+1}`) !== 'empty' && JSON.parse(localStorage.getItem(`slot-${i+1}`)).playthroughId === getPlaythroughId() ) 
+            localStorage.setItem(`slot-${i+1}`, 'empty')
+}
+
 const renderGameOverScreen = () => {
     const gameOverContainer = createAndAddClass('div', 'full', 'ui-theme', 'game-over')
     const gameOverContents = createAndAddClass('div', 'game-over-contents', 'common-options')
     const title = document.createElement('h1')
-    title.textContent = 'You are dead'
+    title.textContent = getIsSurvival() ? `you survived ${getChaos()} ${getChaos() === 1 ? 'round' : 'rounds'}` : 'You are dead'
     const continueOption = createAndAddClass('div', 'common-option')
-    continueOption.textContent = 'continue'
+    continueOption.textContent = getIsSurvival() ? `try again` : 'continue'
     continueOption.addEventListener('click', () => {
         if ( getIsMapMakerRoot() ) {
             finishUp()
             playTest()
         }
-        else if (hasSaveInPlaythrogh()) loadLatestSavedSlot()
-        else                            startNewGame()
+        else if ( getIsSurvival() ) {
+            finishUp()
+            prepareNewGameData(difficulties.MILD)
+            play(false, true)
+        }
+        else if (hasSaveInPlaythrogh() ) loadLatestSavedSlot()
+        else                             startNewGame()
     })
     const loadGame = createAndAddClass('div', 'common-option')
     loadGame.addEventListener('click', () => renderDesktop(true))
     loadGame.textContent = 'load game'
     const mainMenu = createAndAddClass('div', 'common-option')
     mainMenu.textContent = 'return to main menu'
-    mainMenu.addEventListener('click', return2MainMenu)
+    mainMenu.addEventListener('click', () => return2MainMenu())
     appendAll(gameOverContents, title, continueOption)
-    if ( !getIsMapMakerRoot() ) appendAll(gameOverContents, loadGame, mainMenu)
+    if ( getIsSurvival() )           appendAll(gameOverContents, mainMenu)    
+    else if ( !getIsMapMakerRoot() ) appendAll(gameOverContents, loadGame, mainMenu)
     else {
         const mapMaker = createAndAddClass('div', 'common-option')
         mapMaker.textContent = 'return to map maker'

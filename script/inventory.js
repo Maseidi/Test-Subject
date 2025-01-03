@@ -94,7 +94,7 @@ export const getInventory = () => inventory
 
 export const initInventory = () =>
     [
-        [new PistolAmmo(null, null, 30), null, null, null],
+        [null, null, null, null],
         [null, null, null, null],
         ['locked', 'locked', 'locked', 'locked'],
         ['locked', 'locked', 'locked', 'locked'],
@@ -105,8 +105,8 @@ export const initInventory = () =>
 let dropElem
 let dropObject
 export const pickupDrop = (drop) => {
-    if ( containsClass(drop.lastElementChild, 'not-ideal') ) return
-    dropElem = drop    
+    if ( drop.lastElementChild && containsClass(drop.lastElementChild, 'not-ideal') ) return
+    dropElem = drop
     dropObject = element2Object(dropElem)
     searchPack()
     searchEmpty()

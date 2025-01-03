@@ -1,6 +1,6 @@
 import { add2Stash } from '../stash.js'
 import { isGun } from '../gun-details.js'
-import { createAndAddClass } from '../util.js'
+import { createAndAddClass, nextId } from '../util.js'
 import { Coin, Lever } from '../interactables.js'
 import { getCurrentRoomInteractables } from '../elements.js'
 import { renderInteractable, renderInteractables } from '../room-loader.js'
@@ -50,19 +50,21 @@ export const startChaos = () => {
     setChaos(getChaos() + 1)
     setCurrentChaosEnemies(4 + getChaos())
     setCurrentChaosSpawned(0)
-    renderchaosPopup()
+    getEnemies().get(1).forEach(enemy => enemy.sprite.remove())
+    setEnemies(new Map([[1, []]]))
     getCurrentRoomInteractables().forEach(int => int.remove())
     setInteractables(new Map([[1, [...getInteractables().get(1).filter((item, index) => index < 3 || isGun(item.name))]]]))
     renderInteractables()
+    renderchaosPopup()
     setEnemies(new Map([[1, []]]))
 }
 
 export const endChaos = () => {
-    getEnemies().get(1).forEach(enemy => enemy.sprite.remove())
-    setEnemies(new Map([[1, []]]))
-    renderInteractable(new Lever(1400, 1000))
+    const lever = new Lever(1400, 1000)
+    renderInteractable(lever)
+    setInteractables(new Map([[1, [...getInteractables().get(1), lever]]]))
     renderchaosPopup('end')
-    add2Stash(new Coin(), Math.min(20, getChaos()))
+    add2Stash({...new Coin(), id: nextId()}, Math.min(20, getChaos()))
     updateShop()
 }
 
@@ -81,60 +83,51 @@ const updateShop = () => {
     const chaos = getChaos()
     const vendingMachine = getShopItems()
     if ( chaos % 10 === 1 ) {
-        vendingMachine.push(new PistolAmmoShopItem())
         vendingMachine.push(new RedVaccineShopItem())
     }
     if ( chaos % 10 === 2 ) {
         vendingMachine.push(new BandageShopItem())
-        vendingMachine.push(new SmgAmmoShopItem())
         vendingMachine.push(new BlueVaccineShopItem())
         if ( chaos > 10 ) vendingMachine.push(new HealthPotionShopItem())
     }
     if ( chaos % 10 === 3 ) {
         vendingMachine.push(new HardDriveShopItem())
         vendingMachine.push(new FlashbangShopItem())
-        vendingMachine.push(new ShotgunShellsShopItem())
         vendingMachine.push(new YellowVaccineShopItem())
     }
     if ( chaos % 10 === 4 ) {
         vendingMachine.push(new BandageShopItem())
-        vendingMachine.push(new RifleAmmoShopItem())
         vendingMachine.push(new GreenVaccineShopItem())
         if ( chaos > 10 ) vendingMachine.push(new EnergyDrinkShopItem())
     }
     if ( chaos % 10 === 5 ) {
-        vendingMachine.push(new MagnumAmmoShopItem())
         vendingMachine.push(new PurpleVaccineShopItem())
     }
     if ( chaos % 10 === 6 ) {
         vendingMachine.push(new BandageShopItem())
         vendingMachine.push(new HardDriveShopItem())
-        vendingMachine.push(new PistolAmmoShopItem())
         vendingMachine.push(new RedVaccineShopItem())
     }
     if ( chaos % 10 === 7 ) {
-        vendingMachine.push(new SmgAmmoShopItem())
         vendingMachine.push(new BlueVaccineShopItem())
     }
     if ( chaos % 10 === 8 ) {
         vendingMachine.push(new BandageShopItem())
         vendingMachine.push(new GreenVaccineShopItem())
         vendingMachine.push(new YellowVaccineShopItem())
-        vendingMachine.push(new ShotgunShellsShopItem())
         if ( chaos > 10 ) vendingMachine.push(new LuckPillsShopItem())
     }
     if ( chaos % 10 === 9 ) {
         vendingMachine.push(new HardDriveShopItem())
-        vendingMachine.push(new RifleAmmoShopItem())
         vendingMachine.push(new GreenVaccineShopItem())
     }
     if ( chaos % 10 === 0 ) {
-        vendingMachine.push(new Pouch())
+        if ( chaos < 80 ) vendingMachine.push(new Pouch())
         vendingMachine.push(new BandageShopItem())
-        vendingMachine.push(new MagnumAmmoShopItem())
         vendingMachine.push(new PurpleVaccineShopItem())
         if ( chaos > 10 ) vendingMachine.push(new AdrenalineShopItem())
     }
+
     if ( chaos === 20 )  vendingMachine.push(new ArmorShopItem())
     if ( chaos === 2 )   vendingMachine.push(new GunShopItem(MP5K))
     if ( chaos === 4 )   vendingMachine.push(new GunShopItem(REMINGTON_870))
@@ -150,4 +143,10 @@ const updateShop = () => {
     if ( chaos === 24 )  vendingMachine.push(new GunShopItem(PARKER_HALE_M_85))
     if ( chaos === 26 )  vendingMachine.push(new GunShopItem(P90))
     if ( chaos === 28 )  vendingMachine.push(new GunShopItem(REMINGTON_1858))
+
+    vendingMachine.push(new PistolAmmoShopItem())
+    if ( chaos % 2 === 0 ) vendingMachine.push(new SmgAmmoShopItem())
+    if ( chaos % 3 === 0 ) vendingMachine.push(new ShotgunShellsShopItem())
+    if ( chaos % 4 === 0 ) vendingMachine.push(new RifleAmmoShopItem())
+    if ( chaos % 5 === 0 ) vendingMachine.push(new MagnumAmmoShopItem())
 }

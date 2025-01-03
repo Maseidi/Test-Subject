@@ -18,8 +18,8 @@ import {
     setRooms,
     setWalls
 } from './entities.js'
-import { GunDrop, Lever, PC, Stash, VendingMachine } from './interactables.js'
-import { getInventory, initInventory, setInventory } from './inventory.js'
+import { GunDrop, Lever, PC, PistolAmmo, Stash, VendingMachine } from './interactables.js'
+import { getInventory, initInventory, pickupDrop, setInventory } from './inventory.js'
 import { GLOCK } from './loot.js'
 import { getPasswords, initPasswords, setPasswords } from './password-manager.js'
 import { getProgress, initProgress, setProgress } from './progress-manager.js'
@@ -27,6 +27,7 @@ import { Room } from './room.js'
 import { getShopItems, initShopItems, setShopItems } from './shop-item.js'
 import { getStash, initStash, setStash } from './stash.js'
 import { getChaos, setChaos, setEnemyId, setSpawnCounter } from './survival/variables.js'
+import { object2Element } from './util.js'
 import {
     getAdrenalinesDropped,
     getAimMode,
@@ -41,6 +42,7 @@ import {
     getHealth,
     getHealthPotionsDropped,
     getInfection,
+    getIsSurvival,
     getLuckPillsDropped,
     getMapX,
     getMapY,
@@ -121,9 +123,11 @@ import {
     setWaitingFunctions,
     setWeaponWheel
 } from './variables.js'
+import { Wall } from './wall.js'
 
 export const prepareNewGameData = (difficulty) => {
     initRooms()
+    initWalls()
     initPasswords()
     initNewGameLoaders()
     initNewGameProgress()
@@ -133,9 +137,24 @@ export const prepareNewGameData = (difficulty) => {
     initNewGameVariables(undefined, undefined, difficulty)
     initNewGameEntities()
     initConstants()
+    pickupDrop(object2Element(new PistolAmmo(null, null, 30)))
 }
 
 const initRooms = () => setRooms(new Map([[1, new Room(1, 3000, 2000, 'Main Hall', 10)]]))
+
+const initWalls = () => setWalls(new Map([
+    [1, [
+        new Wall(200, 200, 200, null, 200),
+        new Wall(200, 200, 200, null, null, 200),
+        new Wall(100, 500, 800, null, null, 500),
+        new Wall(200, 200, null, 200, 200),
+        new Wall(200, 200, null, 200, null, 200),
+        new Wall(100, 500, null, 800, 500),
+        new Wall(500, 100, 1000, null, 200),
+        new Wall(500, 100, null, 1000, null, 200),
+        ]
+    ]
+]) )
 
 const initNewGameLoaders = () => setLoaders(initLoaders())
 
