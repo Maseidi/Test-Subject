@@ -14,7 +14,7 @@ import {
     MOVE_TO_POSITION,
     NO_OFFENCE,
     RANGER } from '../enemy-constants.js'
-import { getRoundsFinished } from '../../variables.js'
+import { getIsSurvival, getRoundsFinished } from '../../variables.js'
 
 export class Ranger extends AbstractEnemy {
     constructor(level, waypoint, loot, progress, virus, difficulties) {
@@ -39,6 +39,10 @@ export class Ranger extends AbstractEnemy {
                 this.investigationService.handleInvestigationState()
                 break
             case CHASE:
+                if ( getIsSurvival() && this.wallInTheWay !== false ) {
+                    this.chaseService.handleChaseState()
+                    return
+                }
                 if ( Math.random() < 0.008 ) this.state = GO_FOR_RANGED
             case NO_OFFENCE:
                 this.chaseService.handleChaseState()

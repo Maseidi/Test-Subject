@@ -2,12 +2,13 @@ import { add2Stash } from '../stash.js'
 import { isGun } from '../gun-details.js'
 import { createAndAddClass, nextId } from '../util.js'
 import { Coin, Lever } from '../interactables.js'
-import { getCurrentRoomInteractables } from '../elements.js'
 import { renderInteractable, renderInteractables } from '../room-loader.js'
 import { getEnemies, getInteractables, setEnemies, setInteractables } from '../entities.js'
-import { getChaos, setChaos, setCurrentChaosEnemies, setCurrentChaosSpawned, setEnemyId, setSpawnCounter } from './variables.js'
+import { getChaos, getRandomizedWeapons, setChaos, setCurrentChaosEnemies, setCurrentChaosSpawned, setEnemyId, setSpawnCounter } from './variables.js'
+import { getCurrentRoomInteractables, setCurrentRoomBullets, setCurrentRoomEnemies, setCurrentRoomExplosions, setCurrentRoomFlames, setCurrentRoomInteractables, setCurrentRoomPoisons, setCurrentRoomThrowables } from '../elements.js'
 import { 
     AdrenalineShopItem,
+    AntidoteShopItem,
     ArmorShopItem,
     BandageShopItem,
     BlueVaccineShopItem,
@@ -51,13 +52,25 @@ export const startChaos = () => {
     setChaos(getChaos() + 1)
     setCurrentChaosEnemies(4 + getChaos())
     setCurrentChaosSpawned(0)
-    getEnemies().get(1).forEach(enemy => enemy?.sprite?.remove())
-    setEnemies(new Map([[1, []]]))
-    getCurrentRoomInteractables().forEach(int => int.remove())
-    setInteractables(new Map([[1, [...getInteractables().get(1).filter((item, index) => index < 3 || isGun(item.name))]]]))
+    resetRoom()
     renderInteractables()
     renderchaosPopup()
+}
+
+const resetRoom = () => {
+    setCurrentRoomFlames([])
+    setCurrentRoomBullets([])
+    setCurrentRoomPoisons([])
+    setCurrentRoomEnemies([])
+    setCurrentRoomExplosions([])
+    setCurrentRoomThrowables([])
+
+    getEnemies().get(1).forEach(enemy => enemy?.sprite?.remove())
     setEnemies(new Map([[1, []]]))
+
+    setInteractables(new Map([[1, [...getInteractables().get(1).filter((item, index) => index < 3 || isGun(item.name))]]]))
+    getCurrentRoomInteractables().forEach(int => int.remove())
+    setCurrentRoomInteractables([])
 }
 
 export const endChaos = () => {
@@ -65,7 +78,7 @@ export const endChaos = () => {
     renderInteractable(lever)
     setInteractables(new Map([[1, [...getInteractables().get(1), lever]]]))
     renderchaosPopup('end')
-    add2Stash({...new Coin(), id: nextId()}, Math.min(20, getChaos()))
+    add2Stash(new Coin(), Math.min(20, getChaos()))
     updateShop()
 }
 
@@ -111,6 +124,7 @@ const updateShop = () => {
     }
     if ( chaos % 10 === 7 ) {
         manageRepeatedItem(BlueVaccineShopItem)
+        manageRepeatedItem(AntidoteShopItem)
     }
     if ( chaos % 10 === 8 ) {
         manageRepeatedItem(BandageShopItem)
@@ -123,38 +137,25 @@ const updateShop = () => {
         manageRepeatedItem(GreenVaccineShopItem)
     }
     if ( chaos % 10 === 0 ) {
-        if ( chaos < 80 ) {
-            console.log('here');
-            vendingMachine.push(new Pouch())
-            console.log(vendingMachine);
-        }
+        if ( chaos < 80 ) vendingMachine.push(new Pouch())
         manageRepeatedItem(BandageShopItem)
         manageRepeatedItem(PurpleVaccineShopItem)
         if ( chaos > 10 ) vendingMachine.push(new AdrenalineShopItem())
     }
 
     if ( chaos === 20 )  vendingMachine.push(new ArmorShopItem())
-    if ( chaos === 2 )   vendingMachine.push(new GunShopItem(MP5K))
-    if ( chaos === 4 )   vendingMachine.push(new GunShopItem(REMINGTON_870))
-    if ( chaos === 6 )   vendingMachine.push(new GunShopItem(ARCTIC_WARFERE))
-    if ( chaos === 8 )   vendingMachine.push(new GunShopItem(M1911))
-    if ( chaos === 10 )  vendingMachine.push(new GunShopItem(UZI))
-    if ( chaos === 12 )  vendingMachine.push(new GunShopItem(SPAS))
-    if ( chaos === 14 )  vendingMachine.push(new GunShopItem(STEYR_SSG_69))
-    if ( chaos === 16 )  vendingMachine.push(new GunShopItem(REVOLVER))
-    if ( chaos === 18 )  vendingMachine.push(new GunShopItem(MAUSER))
-    if ( chaos === 20 )  vendingMachine.push(new GunShopItem(PPSH))
-    if ( chaos === 22 )  vendingMachine.push(new GunShopItem(BENELLI_M4))
-    if ( chaos === 24 )  vendingMachine.push(new GunShopItem(PARKER_HALE_M_85))
-    if ( chaos === 26 )  vendingMachine.push(new GunShopItem(P90))
-    if ( chaos === 28 )  vendingMachine.push(new GunShopItem(REMINGTON_1858))
 
+    addWeapon2Shop()
     manageRepeatedItem(PistolAmmoShopItem)
     if ( chaos % 2 === 0 ) manageRepeatedItem(SmgAmmoShopItem)
     if ( chaos % 3 === 0 ) manageRepeatedItem(ShotgunShellsShopItem)
     if ( chaos % 4 === 0 ) manageRepeatedItem(RifleAmmoShopItem)
     if ( chaos % 5 === 0 ) manageRepeatedItem(MagnumAmmoShopItem)
 }
+
+const addWeapon2Shop = () => getRandomizedWeapons().forEach((item, index) => {
+    if ( index * 2 === getChaos() ) getShopItems().push(new GunShopItem(item))
+})
 
 const manageRepeatedItem = (Item) => {
     const instance = new Item()

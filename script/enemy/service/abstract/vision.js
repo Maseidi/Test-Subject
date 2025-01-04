@@ -1,6 +1,6 @@
+import { getIsSurvival } from '../../../variables.js'
 import { getCurrentRoomSolid, getPlayer } from '../../../elements.js'
 import { collide, containsClass, getProperty } from '../../../util.js'
-import { getIsSurvival } from '../../../variables.js'
 import { INVESTIGATE, LOST, MOVE_TO_POSITION } from '../../enemy-constants.js'
 
 export class AbstractVisionService {

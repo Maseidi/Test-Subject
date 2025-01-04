@@ -1,3 +1,4 @@
+import { getIsSurvival } from '../../../variables.js'
 import { AbstractVisionService } from '../abstract/vision.js'
 
 export class SpikerVisionService extends AbstractVisionService {
@@ -6,6 +7,7 @@ export class SpikerVisionService extends AbstractVisionService {
     }
 
     isPlayerVisible() {
+        if ( getIsSurvival() ) return true
         return this.enemy.wallInTheWay === false
     }
 

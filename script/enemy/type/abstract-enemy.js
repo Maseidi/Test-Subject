@@ -1,4 +1,5 @@
 import { SinglePointPath } from '../../path.js'
+import { RANGER, SCORCHER, STINGER } from '../enemy-constants.js'
 import { getDifficulty, getIsSurvival } from '../../variables.js'
 import { AbstractAngleService } from '../service/abstract/angle.js'
 import { AbstractVisionService } from '../service/abstract/vision.js'
@@ -51,7 +52,7 @@ export class AbstractEnemy {
 
     behave() {
         if ( this.health === 0 ) return
-        if ( !getIsSurvival() ) this.visionService.look4Player()
+        if ( !getIsSurvival() || [RANGER, SCORCHER, STINGER].includes(this.type) ) this.visionService.look4Player()
         this.injuryService.manageDamagedMode()
         this.injuryService.manageExplosionMode()
         this.manageState()
