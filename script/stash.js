@@ -158,7 +158,7 @@ export const move2Stash = (object2Move, reduce) => {
 }
 
 const move2Inventory = (object2Move, reduce) => {
-    const index = stash.findIndex(x => x.id === object2Move.id)
+    const index = stash.findIndex(x => x.name === object2Move.name)
     const prePickupAmount = countItem(object2Move.name)
     pickupDrop(object2Element({...object2Move, amount: reduce}))
     const postPickupAmount = countItem(object2Move.name)

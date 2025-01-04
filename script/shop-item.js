@@ -104,7 +104,7 @@ export class FlashbangShopItem extends ShopItem {
 export class Pouch extends ShopItem {
     constructor(renderProgress) {
         super({name: 'pouch', heading: 'pouch', description: 'Increases your carry capacity by 2 slots', 
-            renderProgress: renderProgress}, 1, 5)
+            renderProgress: renderProgress ?? Number.MAX_SAFE_INTEGER}, 1, 5)
     }
 }
 

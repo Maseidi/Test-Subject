@@ -27,3 +27,9 @@ export const setCurrentChaosSpawned = (val) => {
     currentChaosSpawned = val
 }
 export const getCurrentChaosSpawned = () => currentChaosSpawned
+
+let randomizedWeapons = null
+export const setRandomizedWeapons = (val) => {
+    randomizedWeapons = val
+}
+export const getRandomizedWeapons = () => randomizedWeapons

@@ -2,13 +2,13 @@ import { play } from './game.js'
 import { finishUp } from './finishup.js'
 import { renderDesktop } from './computer.js'
 import { playTest } from './mapMaker/map-maker.js'
+import { getChaos } from './survival/variables.js'
 import { managePause, unequipTorch } from './actions.js'
 import { return2MainMenu, return2MapMaker } from './pause-menu.js'
 import { loadGameFromSlot, prepareNewGameData } from './data-manager.js'
 import { getGrabBar, getPauseContainer, getPlayer } from './elements.js'
-import { addClass, appendAll, createAndAddClass, difficulties, removeAllClasses, removeEquipped } from './util.js'
+import { addClass, appendAll, createAndAddClass, removeAllClasses, removeEquipped } from './util.js'
 import { getDifficulty, getHealth, getIsMapMakerRoot, getIsSurvival, getPlaythroughId, setPauseCause } from './variables.js'
-import { getChaos } from './survival/variables.js'
 
 export const manageGameOver = () => {
     if ( getHealth() !== 0 ) return
@@ -28,7 +28,7 @@ export const manageGameOver = () => {
 
 const removeSavedSurvivals = () => {
     for ( let i = 0; i < 10; i++ )
-        if ( localStorage.getItem(`slot-${i+1}`) !== 'empty' && JSON.parse(localStorage.getItem(`slot-${i+1}`)).playthroughId === getPlaythroughId() ) 
+        if ( JSON.parse(localStorage.getItem(`slot-${i+1}-variables`))?.playthroughId === getPlaythroughId() ) 
             localStorage.setItem(`slot-${i+1}`, 'empty')
 }
 

@@ -11,7 +11,15 @@ import { Stinger } from '../enemy/type/stinger.js'
 import { Scorcher } from '../enemy/type/scorcher.js'
 import { RockCrusher, SoulDrinker, Torturer } from '../enemy/type/normal-enemy.js'
 import { getPlayerX, getPlayerY, getRoomLeft, getRoomTop } from '../variables.js'
-import { getChaos, getCurrentChaosEnemies, getCurrentChaosSpawned, getEnemyId, getSpawnCounter, setCurrentChaosSpawned, setEnemyId, setSpawnCounter } from './variables.js'
+import { 
+    getChaos,
+    getCurrentChaosEnemies,
+    getCurrentChaosSpawned,
+    getEnemyId,
+    getSpawnCounter,
+    setCurrentChaosSpawned,
+    setEnemyId,
+    setSpawnCounter } from './variables.js'
 
 const spawnLocations = [
   { x: 100, y: 100 },
@@ -67,7 +75,7 @@ export const manageSpawns = () => {
         return dist > 1500 && dist < 2000
     }).sort(() => Math.random() - 0.5)[0]
     
-    const level = Math.min(chaos / 10 + 0.4, 5)
+    const level = Math.min(chaos / 10, 5)
 
     let enemy
     const chance = Math.random()

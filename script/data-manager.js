@@ -1,4 +1,14 @@
+import { Wall } from './wall.js'
+import { Room } from './room.js'
+import { object2Element } from './util.js'
 import { buildEnemy } from './enemy/enemy-factory.js'
+import { getStash, initStash, setStash } from './stash.js'
+import { getShopItems, initShopItems, setShopItems } from './shop-item.js'
+import { getProgress, initProgress, setProgress } from './progress-manager.js'
+import { getPasswords, initPasswords, setPasswords } from './password-manager.js'
+import { getInventory, initInventory, pickupDrop, setInventory } from './inventory.js'
+import { getChaos, getRandomizedWeapons, setChaos, setEnemyId, setRandomizedWeapons, setSpawnCounter } from './survival/variables.js'
+import { GunDrop, Lever, PC, PistolAmmo, Stash, VendingMachine } from './interactables.js'
 import {
     getDialogues,
     getEnemies,
@@ -18,16 +28,22 @@ import {
     setRooms,
     setWalls
 } from './entities.js'
-import { GunDrop, Lever, PC, PistolAmmo, Stash, VendingMachine } from './interactables.js'
-import { getInventory, initInventory, pickupDrop, setInventory } from './inventory.js'
-import { GLOCK } from './loot.js'
-import { getPasswords, initPasswords, setPasswords } from './password-manager.js'
-import { getProgress, initProgress, setProgress } from './progress-manager.js'
-import { Room } from './room.js'
-import { getShopItems, initShopItems, setShopItems } from './shop-item.js'
-import { getStash, initStash, setStash } from './stash.js'
-import { getChaos, setChaos, setEnemyId, setSpawnCounter } from './survival/variables.js'
-import { object2Element } from './util.js'
+import { 
+    ARCTIC_WARFERE,
+    BENELLI_M4,
+    GLOCK,
+    M1911,
+    MAUSER,
+    MP5K,
+    P90,
+    PARKER_HALE_M_85,
+    PPSH,
+    REMINGTON_1858,
+    REMINGTON_870,
+    REVOLVER,
+    SPAS,
+    STEYR_SSG_69,
+    UZI } from './loot.js'
 import {
     getAdrenalinesDropped,
     getAimMode,
@@ -42,7 +58,6 @@ import {
     getHealth,
     getHealthPotionsDropped,
     getInfection,
-    getIsSurvival,
     getLuckPillsDropped,
     getMapX,
     getMapY,
@@ -123,7 +138,6 @@ import {
     setWaitingFunctions,
     setWeaponWheel
 } from './variables.js'
-import { Wall } from './wall.js'
 
 export const prepareNewGameData = (difficulty) => {
     initRooms()
@@ -239,10 +253,17 @@ export const initNewGameVariables = (spawnX = 1500, spawnY = 1000, difficulty) =
         enemyId:               0,
         spawnCounter:          0,
         chaos:                 0,
+        randomizedWeapons:     getRandomWeaponOrder(),
         difficulty,
     }
     setVariables(newGameVariables)
 }
+
+const getRandomWeaponOrder = () => 
+    [
+        MP5K, REMINGTON_870, ARCTIC_WARFERE, M1911, UZI, SPAS, STEYR_SSG_69, 
+        REVOLVER, MAUSER, PPSH, BENELLI_M4, PARKER_HALE_M_85, P90, REMINGTON_1858
+    ].sort(() => Math.random() - 0.5)
 
 const setVariables = (variables) => {
     setMapX(                variables.mapX)
@@ -282,6 +303,7 @@ const setVariables = (variables) => {
     setEnemyId(             variables.enemyId)
     setSpawnCounter(        variables.spawnCounter)
     setChaos(               variables.chaos)
+    setRandomizedWeapons(   variables.randomizedWeapons)
 }
 
 export const saveAtSlot = (slotNumber) => {
@@ -395,7 +417,8 @@ const saveVariables = (slotNumber) => {
         timesSaved:            getTimesSaved(),
         difficulty:            getDifficulty(),
         playthroughId:         getPlaythroughId(),
-        chaos:                 getChaos()
+        chaos:                 getChaos(),
+        randomizedWeapons:     getRandomizedWeapons()
     }))
 }
 

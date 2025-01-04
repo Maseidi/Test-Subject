@@ -1,6 +1,6 @@
 import { manageAimModeAngle } from '../../../angle-manager.js'
-import { getCurrentRoom, getCurrentRoomBullets } from '../../../elements.js'
 import { CHASE, STAND_AND_WATCH, STUNNED } from '../../enemy-constants.js'
+import { getCurrentRoom, getCurrentRoomBullets } from '../../../elements.js'
 import { getGrabbed, getPlayerX, getPlayerY, getRoomLeft, getRoomTop, getStunnedCounter } from '../../../variables.js'
 import { 
     addAllAttributes,
@@ -29,7 +29,7 @@ export class RangerShootingService {
             this.enemy.notificationService.notifyEnemy(Number.MAX_SAFE_INTEGER)
         let shootCounter = this.enemy.shootCounter || 0
         shootCounter++
-        if ( shootCounter === 3 * this.fireRate ) {            
+        if ( shootCounter === 3 * this.fireRate ) {
             const d = this.enemy.movementService.distance2Player()
             if ( getGrabbed() ) this.enemy.state = STAND_AND_WATCH
             else if ( getStunnedCounter() > 0 ) this.enemy.state = STUNNED
