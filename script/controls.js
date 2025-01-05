@@ -46,7 +46,7 @@ const keyDown = (e) => {
             case 'Digit3':
             case 'Digit4':
                 weaponSlotDown(e.key)
-                break  
+                break
             case 'ShiftLeft':
                 shiftDown()
                 break

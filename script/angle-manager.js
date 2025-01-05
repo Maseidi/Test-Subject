@@ -48,12 +48,10 @@ const manageNonAimModeAngle = () => {
     const newState = getNewState()
     replaceForwardDetector(newState)
     if ( getAimMode() ) return
-    const angleState = getPlayerAngleState()
-    const angle = getPlayerAngle()
-    let diff = newState - angleState
+    let diff = newState - getPlayerAngleState()
     if (Math.abs(diff) > 4 && diff >= 0) diff = -(8 - diff)
     else if (Math.abs(diff) > 4 && diff < 0) diff = 8 - Math.abs(diff)  
-    setPlayerAngle(angle + diff * 45)
+    setPlayerAngle(getPlayerAngle() + diff * 45)
     getPlayer().firstElementChild.firstElementChild.style.transform = `rotateZ(${getPlayerAngle()}deg)`
     setPlayerAngleState(newState)
 }

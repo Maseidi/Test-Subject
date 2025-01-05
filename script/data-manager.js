@@ -1,16 +1,20 @@
 import { buildEnemy } from './enemy/enemy-factory.js'
 import {
+    getDialogues,
     getEnemies,
     getInteractables,
     getLoaders,
+    getPopups,
     getRooms,
     getWalls,
     initEnemies,
     initInteractables,
     initLoaders,
+    setDialogues,
     setEnemies,
     setInteractables,
     setLoaders,
+    setPopups,
     setRooms,
     setWalls
 } from './entities.js'
@@ -262,6 +266,8 @@ export const saveAtSlot = (slotNumber) => {
     saveShopItems(    slotNumber)
     saveInventory(    slotNumber)
     saveStash(        slotNumber)
+    saveDialogues(    slotNumber)
+    savePopups(       slotNumber)
     localStorage.setItem('last-slot-used', slotNumber)
 }
 
@@ -366,6 +372,10 @@ const saveInventory = (slotNumber) => simpleSave(slotNumber, 'inventory', getInv
 
 const saveStash = (slotNumber) => simpleSave(slotNumber, 'stash', getStash())
 
+const saveDialogues = (slotNumber) => simpleSave(slotNumber, 'dialogues', getDialogues())
+
+const savePopups = (slotNumber) => simpleSave(slotNumber, 'popups', getPopups())
+
 export const loadGameFromSlot = (slotNumber) => {
     initConstants()
     loadRooms(        slotNumber)
@@ -380,6 +390,8 @@ export const loadGameFromSlot = (slotNumber) => {
     loadShopItems(    slotNumber)
     loadInventory(    slotNumber)
     loadStash(        slotNumber)
+    loadDialogues(    slotNumber)
+    loadPopups(    slotNumber)
     localStorage.setItem('last-slot-used', slotNumber)
 }
 
@@ -428,3 +440,7 @@ const loadShopItems = (slotNumber) => simpleLoad(slotNumber, 'shop-items', setSh
 const loadInventory = (slotNumber) => simpleLoad(slotNumber, 'inventory', setInventory)
 
 const loadStash = (slotNumber) => simpleLoad(slotNumber, 'stash', setStash)
+
+const loadDialogues = (slotNumber) => simpleLoad(slotNumber, 'dialogues', setDialogues)
+
+const loadPopups = (slotNumber) => simpleLoad(slotNumber, 'popups', setPopups)
