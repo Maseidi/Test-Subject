@@ -30,21 +30,6 @@ import {
     ShotgunShellsShopItem,
     SmgAmmoShopItem,
     YellowVaccineShopItem } from '../shop-item.js'
-import { 
-    ARCTIC_WARFERE,
-    BENELLI_M4,
-    M1911,
-    MAUSER,
-    MP5K,
-    P90,
-    PARKER_HALE_M_85,
-    PPSH,
-    REMINGTON_1858,
-    REMINGTON_870,
-    REVOLVER,
-    SPAS,
-    STEYR_SSG_69,
-    UZI } from '../loot.js'
 
 export const startChaos = () => {
     setEnemyId(0)
@@ -154,7 +139,7 @@ const updateShop = () => {
 }
 
 const addWeapon2Shop = () => getRandomizedWeapons().forEach((item, index) => {
-    if ( index * 2 === getChaos() ) getShopItems().push(new GunShopItem(item))
+    if ( (index + 1) * 2 === getChaos() ) getShopItems().push(new GunShopItem(item))
 })
 
 const manageRepeatedItem = (Item) => {
