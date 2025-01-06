@@ -54,7 +54,6 @@ export class AbstractEnemy {
         if ( this.health === 0 ) return
         if ( !getIsSurvival() || [RANGER, SCORCHER, STINGER].includes(this.type) ) this.visionService.look4Player()
         this.injuryService.manageDamagedMode()
-        this.injuryService.manageExplosionMode()
         this.manageState()
     }
     

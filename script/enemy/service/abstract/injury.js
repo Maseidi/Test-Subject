@@ -24,7 +24,6 @@ import { endChaos } from '../../../survival/chaos-manager.js'
 export class AbstractInjuryService {
     constructor(enemy) {
         this.enemy = enemy
-        this.enemy.explosionCounter = 0
         this.enemy.damagedCounter = 0
     }
 
@@ -114,12 +113,6 @@ export class AbstractInjuryService {
         if ( this.enemy.damagedCounter !== 6 ) return
         removeClass(this.enemy.sprite.firstElementChild.firstElementChild, 'damaged')
         this.enemy.damagedCounter = 0
-    }
-
-    manageExplosionMode() {
-        if ( this.enemy.explosionCounter === 0 ) return
-        this.enemy.explosionCounter += 1
-        if ( this.enemy.explosionCounter === 100 ) this.enemy.explosionCounter = 0
     }
 
 }
