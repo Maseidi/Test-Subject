@@ -4,6 +4,7 @@ import { GrabberGrabService } from '../service/grabber/grab.js'
 import { NormalChaseService } from '../service/normal/chase.js'
 import { NormalReturnService } from '../service/normal/return.js'
 import { GrabberInjuryService } from '../service/grabber/injury.js'
+import { getIsSurvival, getRoundsFinished } from '../../variables.js'
 import { ScorcherMovementService } from '../service/scorcher/movement.js'
 import { ScorcherShootingService } from '../service/scorcher/shooting.js'
 import { NormalGuessSearchService } from '../service/normal/guess-search.js'
@@ -18,7 +19,6 @@ import {
     MOVE_TO_POSITION,
     NO_OFFENCE,
     SCORCHER } from '../enemy-constants.js'
-import { getIsSurvival, getRoundsFinished } from '../../variables.js'
 
 export class Scorcher extends AbstractEnemy {
     constructor(level, waypoint, loot, progress, virus, difficulties) {

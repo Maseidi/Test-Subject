@@ -1,6 +1,6 @@
-import { GLOCK, NOTE } from './loot.js'
+import { NOTE } from './loot.js'
+import { Popup } from './popup-manager.js'
 import { renderGun } from './gun-loader.js'
-import { getInteractables, getPopups } from './entities.js'
 import { renderStats } from './gun-examine.js'
 import { useLuckPills } from './weapon-manager.js'
 import { useEnergyDrink } from './player-sprint.js'
@@ -12,6 +12,7 @@ import { renderThrowable } from './throwable-loader.js'
 import { getGunDetails, isGun } from './gun-details.js'
 import { equipTorch, unequipTorch } from './actions.js'
 import { quitPage, renderQuit } from './user-interface.js'
+import { getInteractables, getPopups } from './entities.js'
 import { useAntidote, useBandage, useHealthPotion, useVaccine } from './player-health.js'
 import { activateAllProgresses, deactivateAllProgresses, getProgressValueByNumber, toggleDoor } from './progress-manager.js'
 import { 
@@ -58,8 +59,6 @@ import {
     getPause, 
     getEquippedTorchId,
     setEquippedTorchId} from './variables.js'
-import { Popup } from './popup-manager.js'
-import { GunDrop, PistolAmmo } from './interactables.js'
 
 export const MAX_PACKSIZE = {
     coin: 50,

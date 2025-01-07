@@ -1,13 +1,13 @@
 import { SinglePointPath } from '../../path.js'
 import { AbstractEnemy } from './abstract-enemy.js'
+import { getRoundsFinished } from '../../variables.js'
 import { TrackerLostService } from '../service/tracker/lost.js'
 import { TrackerChaseService } from '../service/tracker/chase.js'
 import { TrackerVisionService } from '../service/tracker/vision.js'
 import { TrackerMovemenetService } from '../service/tracker/movement.js'
+import { CHASE, GUESS_SEARCH, LOST, TRACKER } from '../enemy-constants.js'
 import { TrackerGuessSearchService } from '../service/tracker/guess-search.js'
 import { TrackerNotificationService } from '../service/tracker/notification.js'
-import { CHASE, GUESS_SEARCH, LOST, TRACKER } from '../enemy-constants.js'
-import { getRoundsFinished } from '../../variables.js'
 
 export class Tracker extends AbstractEnemy {
     constructor(level, x, y, loot, progress, virus, difficulties) {

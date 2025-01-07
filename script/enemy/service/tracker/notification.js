@@ -1,5 +1,5 @@
-import { getNoOffenseCounter } from '../../../variables.js'
 import { GUESS_SEARCH } from '../../enemy-constants.js'
+import { getNoOffenseCounter } from '../../../variables.js'
 import { AbstractNotificationService } from '../abstract/notification.js'
 
 export class TrackerNotificationService extends AbstractNotificationService {

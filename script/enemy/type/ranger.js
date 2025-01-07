@@ -3,6 +3,7 @@ import { NormalLostService } from '../service/normal/lost.js'
 import { NormalChaseService } from '../service/normal/chase.js'
 import { NormalReturnService } from '../service/normal/return.js'
 import { RangerShootingService } from '../service/ranger/shooting.js'
+import { getIsSurvival, getRoundsFinished } from '../../variables.js'
 import { NormalGuessSearchService } from '../service/normal/guess-search.js'
 import { NormalInvestigationService } from '../service/normal/investigate.js'
 import { 
@@ -14,7 +15,6 @@ import {
     MOVE_TO_POSITION,
     NO_OFFENCE,
     RANGER } from '../enemy-constants.js'
-import { getIsSurvival, getRoundsFinished } from '../../variables.js'
 
 export class Ranger extends AbstractEnemy {
     constructor(level, waypoint, loot, progress, virus, difficulties) {

@@ -378,20 +378,35 @@
 }
 
 .chaos-container {
+  gap: 20px;
   left: 50%;
   top: 200px;
   opacity: 0;
+  padding: 20px;
+  display: flex;
   color: wheat;
   position: fixed;
-  padding: 10px 10px;
-  border-radius: 5px;
-  letter-spacing: 10px;
+  text-align: center;
+  border-radius: 10px;
+  letter-spacing: 5px;
+  flex-direction: column;
   animation-name: fade-in;
   border: 2px solid wheat;
-  text-transform: uppercase;
   animation-duration: 300ms;
+  text-transform: capitalize;
   transform: translateX(-50%);
   animation-fill-mode: forwards;
   animation-direction: alternate;
   background-color: black !important;
+}
+
+.chaos-container-coin {
+  gap: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.chaos-container-coin > img {
+  width: 25px;
+  display: block;
 }

@@ -1,4 +1,5 @@
 import { AbstractEnemy } from './abstract-enemy.js'
+import { getRoundsFinished } from '../../variables.js'
 import { NormalLostService } from '../service/normal/lost.js'
 import { GrabberGrabService } from '../service/grabber/grab.js'
 import { NormalChaseService } from '../service/normal/chase.js'
@@ -16,7 +17,6 @@ import {
     LOST,
     MOVE_TO_POSITION,
     NO_OFFENCE } from '../enemy-constants.js'
-import { getRoundsFinished } from '../../variables.js'
 
 export class Grabber extends AbstractEnemy {
     constructor(level, path, loot, progress, virus, difficulties) {

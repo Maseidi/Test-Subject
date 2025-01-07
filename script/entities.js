@@ -1,7 +1,5 @@
 import { getDifficulty } from './variables.js'
 import { buildEnemy } from './enemy/enemy-factory.js'
-import { Room } from './room.js'
-import { Wall } from './wall.js'
 
 let rooms = new Map([]) 
 export const setRooms = (val) => {
@@ -9,11 +7,15 @@ export const setRooms = (val) => {
 }
 export const getRooms = () => rooms
 
+export const initRooms = () => new Map([])
+
 let walls = new Map([])
 export const setWalls = (val) => {
     walls = val
 }
 export const getWalls = () => walls
+
+export const initWalls = () => new Map([])
 
 let loaders = new Map([])
 export const setLoaders = (val) => {

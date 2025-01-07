@@ -1,11 +1,26 @@
 import { add2Stash } from '../stash.js'
 import { isGun } from '../gun-details.js'
-import { createAndAddClass, nextId } from '../util.js'
 import { Coin, Lever } from '../interactables.js'
+import { appendAll, createAndAddClass } from '../util.js'
 import { renderInteractable, renderInteractables } from '../room-loader.js'
 import { getEnemies, getInteractables, setEnemies, setInteractables } from '../entities.js'
-import { getChaos, getRandomizedWeapons, setChaos, setCurrentChaosEnemies, setCurrentChaosSpawned, setEnemyId, setSpawnCounter } from './variables.js'
-import { getCurrentRoomInteractables, setCurrentRoomBullets, setCurrentRoomEnemies, setCurrentRoomExplosions, setCurrentRoomFlames, setCurrentRoomInteractables, setCurrentRoomPoisons, setCurrentRoomThrowables } from '../elements.js'
+import { 
+    getChaos,
+    getRandomizedWeapons,
+    setChaos,
+    setCurrentChaosEnemies,
+    setCurrentChaosSpawned,
+    setEnemyId,
+    setSpawnCounter } from './variables.js'
+import { 
+    getCurrentRoomInteractables,
+    setCurrentRoomBullets,
+    setCurrentRoomEnemies,
+    setCurrentRoomExplosions,
+    setCurrentRoomFlames,
+    setCurrentRoomInteractables,
+    setCurrentRoomPoisons,
+    setCurrentRoomThrowables } from '../elements.js'
 import { 
     AdrenalineShopItem,
     AntidoteShopItem,
@@ -74,6 +89,17 @@ const renderchaosPopup = (type = 'start') => {
     const text1 = document.createElement('p')
     text1.textContent = type === 'start' ? `Chaos ${getChaos()}` : 'Chaos survived!'
     container.append(text1)
+    if ( type === 'end' ) {
+        const coinContainer = createAndAddClass('div', 'chaos-container-coin')
+        const amount = document.createElement('p')
+        amount.textContent = `${getChaos()}`
+        const coinImg = new Image()
+        coinImg.src = './assets/images/coin.png'
+        const text2 = document.createElement('p')
+        text2.textContent = ' added to stash'
+        appendAll(coinContainer, amount, coinImg, text2)
+        container.append(coinContainer)
+    }
     document.querySelector('body').append(container)
     setTimeout(() => container.remove(), 3000)
 }

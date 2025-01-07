@@ -1,3 +1,4 @@
+import { Popup } from './popup-manager.js'
 import { unequipTorch } from './actions.js'
 import { dropLoot } from './loot-manager.js'
 import { removeTorch } from './torch-loader.js'
@@ -6,7 +7,7 @@ import { loadCurrentRoom } from './room-loader.js'
 import { getThrowableDetail } from './throwable-details.js'
 import { findEquippedTorchById, getInventory } from './inventory.js'
 import { getEnemies, getLoaders, getPopups, getRooms } from './entities.js'
-import { activateAllProgresses, getProgress, getProgressValueByNumber } from './progress-manager.js'
+import { activateAllProgresses, getProgressValueByNumber } from './progress-manager.js'
 import { damagePlayer, infectPlayer2SpecificVirus, poisonPlayer, setPlayer2Fire } from './player-health.js'
 import { 
     CHASE,
@@ -68,7 +69,6 @@ import {
     getEquippedTorchId,
     getPlayingDialogue,
     setPlayingDialogue } from './variables.js'
-import { Popup } from './popup-manager.js'
 
 export const manageEntities = () => {
     manageSolidObjects()

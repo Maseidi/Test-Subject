@@ -1,4 +1,5 @@
 import { AbstractEnemy } from './abstract-enemy.js'
+import { getRoundsFinished } from '../../variables.js'
 import { NormalLostService } from '../service/normal/lost.js'
 import { NormalChaseService } from '../service/normal/chase.js'
 import { NormalReturnService } from '../service/normal/return.js'
@@ -14,7 +15,6 @@ import {
     ROCK_CRUSHER, 
     SOUL_DRINKER, 
     TORTURER} from '../enemy-constants.js'
-import { getRoundsFinished } from '../../variables.js'
 
 class NormalEnemy extends AbstractEnemy {
     constructor(type, components, waypoint, health, damage, maxSpeed, 

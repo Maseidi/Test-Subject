@@ -387,7 +387,7 @@ export const getExistingEnemies = (enemies) => enemies.filter(enemy =>
 
 const spawnEnemies = (enemies) => enemies.forEach(elem => spawnEnemy(elem))
 
-export const spawnEnemy = (elem) => {
+export const spawnEnemy = (elem) => {    
     const enemy = defineEnemy(elem)
     createPath(elem, elem.index)
     const enemyCollider = createAndAddClass('div', 'enemy-collider', `${elem.type}-collider`)

@@ -9,8 +9,8 @@ import { Tracker } from '../enemy/type/tracker.js'
 import { Grabber } from '../enemy/type/grabber.js'
 import { Stinger } from '../enemy/type/stinger.js'
 import { Scorcher } from '../enemy/type/scorcher.js'
-import { RockCrusher, SoulDrinker, Torturer } from '../enemy/type/normal-enemy.js'
 import { getPlayerX, getPlayerY, getRoomLeft, getRoomTop } from '../variables.js'
+import { RockCrusher, SoulDrinker, Torturer } from '../enemy/type/normal-enemy.js'
 import { 
     getChaos,
     getCurrentChaosEnemies,
@@ -62,23 +62,26 @@ const spawnLocations = [
 ];
 
 export const manageSpawns = () => {
-    const chaos = getChaos()    
     if ( getCurrentChaosSpawned() >= getCurrentChaosEnemies() ) return
     if ( getEnemies().get(1).filter(enemy => enemy.health !== 0).length >= 50 ) return
+    
     setSpawnCounter(getSpawnCounter() + 1)
     if ( getSpawnCounter() !== 60 ) return
     setSpawnCounter(-1)
+    
     const playerX = getPlayerX() - getRoomLeft()
     const playerY = getPlayerY() - getRoomTop()
+    
     const {x, y} = spawnLocations.filter(({x, y}) => {
         const dist = distanceFormula(playerX, playerY, x, y)
         return dist > 1500 && dist < 2000
     }).sort(() => Math.random() - 0.5)[0]
     
-    const level = Math.min(chaos / 10, 5)
-
     let enemy
+    const chaos = getChaos()
+    const level = Math.min(chaos / 10, 5)
     const chance = Math.random()
+
     if ( chaos < 3 ) {
         enemy = new Torturer(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
     } else if ( chaos < 6 ) {
@@ -134,6 +137,7 @@ export const manageSpawns = () => {
         else if ( chance < 0.88 ) enemy = new Scorcher(level, x, y, new Loot(RANDOM, 1))
         else enemy = new Stinger(level, x, y, new Loot(RANDOM, 1))
     }
+
     enemy.index = getEnemyId()
     spawnEnemy(enemy)
     getEnemies().set(1, [...getEnemies().get(1), enemy])

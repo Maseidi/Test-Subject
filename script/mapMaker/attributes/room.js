@@ -1,7 +1,6 @@
-import { getPlayer } from '../../elements.js'
 import { containsClass } from '../../util.js'
-import {addRoomContents, clearRoomOverview, renderSpawn} from '../map-maker.js'
 import { renderAttributes, input, deleteButton, checkbox } from './shared.js'
+import {addRoomContents, clearRoomOverview, renderSpawn} from '../map-maker.js'
 import { getAttributesEl, getElemBeingModified, getRoomOverviewEl, getSelectedToolEl, getSpawnEl } from '../elements.js'
 import { getEnemies,
     getInteractables,

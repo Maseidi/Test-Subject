@@ -7,6 +7,7 @@ import { managePause, unequipTorch } from './actions.js'
 import { return2MainMenu, return2MapMaker } from './pause-menu.js'
 import { loadGameFromSlot, prepareNewGameData } from './data-manager.js'
 import { getGrabBar, getPauseContainer, getPlayer } from './elements.js'
+import { loadSurvivalFromSlot, prepareNewSurvivalData } from './survival/data-manager.js'
 import { addClass, appendAll, createAndAddClass, removeAllClasses, removeEquipped } from './util.js'
 import { getDifficulty, getHealth, getIsMapMakerRoot, getIsSurvival, getPlaythroughId, setPauseCause } from './variables.js'
 
@@ -27,9 +28,30 @@ export const manageGameOver = () => {
 }
 
 const removeSavedSurvivals = () => {
+    let deletedAnySlots = false
     for ( let i = 0; i < 10; i++ )
-        if ( JSON.parse(localStorage.getItem(`slot-${i+1}-variables`))?.playthroughId === getPlaythroughId() ) 
-            localStorage.setItem(`slot-${i+1}`, 'empty')
+        if ( JSON.parse(localStorage.getItem(`survival-slot-${i+1}-variables`))?.playthroughId === getPlaythroughId() ) {
+            localStorage.setItem(`survival-slot-${i+1}`, 'empty')
+            deletedAnySlots = true
+        }
+
+    if ( deletedAnySlots ) chooseLatestSlotByTimeStamp()
+}
+
+const chooseLatestSlotByTimeStamp = () => {
+    const latestSlot = Array.from({length: 20}).map((item, index) => {
+        if ( index < 10 ) {
+            const currentSurvivalSlot = localStorage.getItem(`survival-slot-${index + 1}`)
+            if ( currentSurvivalSlot !== 'empty' ) return {...JSON.parse(currentSurvivalSlot), slot: `survival-${index + 1}`}
+        } else {
+            const currentMainGameSlot = localStorage.getItem(`slot-${index - 9}`)
+            if ( currentMainGameSlot !== 'empty' ) return {...JSON.parse(currentMainGameSlot), slot: `main-game-${index - 9}`}
+        }
+        return 'empty'
+    }).filter(item => item !== 'empty').sort((a, b) => b.timeStamp - a.timeStamp)[0]
+    
+    if ( latestSlot ) localStorage.setItem('last-slot-used', latestSlot.slot)
+    else localStorage.removeItem('last-slot-used')
 }
 
 const renderGameOverScreen = () => {
@@ -44,9 +66,9 @@ const renderGameOverScreen = () => {
             finishUp()
             playTest()
         }
-        else if ( getIsSurvival() ) playWithGivenData(() => prepareNewGameData(getDifficulty()))
-        else if (hasSaveInPlaythrogh() ) loadLatestSavedSlot()
-        else                             startNewGame()
+        else if ( getIsSurvival() )       playWithGivenData(prepareNewSurvivalData)
+        else if ( hasSaveInPlaythrogh() ) loadLatestSavedSlot()
+        else                              startNewGame()
     })
     const loadGame = createAndAddClass('div', 'common-option')
     loadGame.addEventListener('click', () => renderDesktop(true))
@@ -62,7 +84,7 @@ const renderGameOverScreen = () => {
         mapMaker.textContent = 'return to map maker'
         mapMaker.addEventListener('click', return2MapMaker)
         gameOverContents.append(mapMaker)
-    }    
+    }
     gameOverContainer.append(gameOverContents)
     getPauseContainer().append(gameOverContainer)
 }
@@ -73,12 +95,16 @@ const hasSaveInPlaythrogh = () =>
         .map((item, index) => JSON.parse(localStorage.getItem(`slot-${index+1}-variables`)))
         .find(item => item?.playthroughId === getPlaythroughId())
 
-const loadLatestSavedSlot = () => playWithGivenData(() => loadGameFromSlot(Number(localStorage.getItem('last-slot-used'))))
+const loadLatestSavedSlot = () => playWithGivenData(() => {
+    const latestSlot = localStorage.getItem('last-slot-used')
+    if ( latestSlot.includes('main-game') ) loadGameFromSlot(Number(latestSlot.replace('main-game-', '')))
+    else loadSurvivalFromSlot(Number(latestSlot.replace('survival-', '')))
+})
 
 const startNewGame = () => playWithGivenData(() => prepareNewGameData(getDifficulty()))
 
 const playWithGivenData = (loader) => {
     finishUp()
     loader()
-    play(false, true)
+    play(false, getIsSurvival())
 }

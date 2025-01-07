@@ -1,5 +1,6 @@
-import { MAX_PACKSIZE, removeDrop } from './inventory.js'
+import { getInteractables } from './entities.js'
 import { renderInteractable } from './room-loader.js'
+import { MAX_PACKSIZE, removeDrop } from './inventory.js'
 import { element2Object, isStatUpgrader, nextId } from './util.js'
 import { getCurrentRoomSolid, setCurrentRoomSolid } from './elements.js'
 import { 
@@ -61,7 +62,6 @@ import {
     SMG_AMMO_LOOT, 
     STICK_LOOT, 
     YELLOW_VACCINE } from './loot.js'
-import { getInteractables } from './entities.js'
 
 export const dropLoot = (rootElem, isEnemy) => {
     const root = element2Object(rootElem)

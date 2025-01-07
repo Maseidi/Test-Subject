@@ -1,4 +1,4 @@
-let chaos = 1
+let chaos = null
 export const setChaos = (val) => {
     chaos = val
 }

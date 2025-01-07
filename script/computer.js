@@ -1,19 +1,23 @@
-import { managePause } from './actions.js'
-import { saveAtSlot as gamePlaySave, loadGameFromSlot } from './data-manager.js'
-import { getPauseContainer } from './elements.js'
-import { finishUp } from './finishup.js'
 import { play } from './game.js'
-import { countItem, useInventoryResource } from './inventory.js'
-import { saveAtSlot as mapMakerSave } from './mapMaker/data-manager.js'
-import { activateAllProgresses, getProgressValueByNumber } from './progress-manager.js'
-import { addMessage, itemNotification, renderQuit } from './user-interface.js'
+import { finishUp } from './finishup.js'
+import { managePause } from './actions.js'
+import { getIsSurvival } from './variables.js'
+import { getPauseContainer } from './elements.js'
 import { appendAll, createAndAddClass } from './util.js'
+import { saveMapMakerAtSlot } from './mapMaker/data-manager.js'
+import { countItem, useInventoryResource } from './inventory.js'
+import { loadGameFromSlot, saveGameAtSlot } from './data-manager.js'
+import { addMessage, itemNotification, renderQuit } from './user-interface.js'
+import { loadSurvivalFromSlot, saveSurvivalAtSlot } from './survival/data-manager.js'
+import { activateAllProgresses, getProgressValueByNumber } from './progress-manager.js'
 
 export const turnOnComputer = () => {
     managePause()
     renderDesktop()
 }
 
+// NOTE: Map maker in arguments says that the pause menu is opened at map maker environment
+// NOTE: Variable isMapMakerRoot indicates that the game is being play tested through the map maker engine
 export const renderDesktop = (load = false, mapMaker = false) => {
     const desktop = createAndAddClass('div', 'desktop', 'ui-theme')
     const content2Render = []
@@ -40,11 +44,11 @@ const slots = (load, mapMaker) => {
     const slots = createAndAddClass('div', 'desktop-slots')
     if ( mapMaker ) slots.style.height = 'max-content'
     for ( let i = 0; i < (mapMaker ? 5 : 10); i++ ) {
-        const slotData = localStorage.getItem(mapMaker ? 'map-slot-' + (i + 1) : 'slot-' + ( i + 1 ))
+        const slotData = localStorage.getItem(mapMaker ? 'map-slot-' + (i + 1) :  getIsSurvival() ? 'survival-slot-' + (i + 1) : 'slot-' + ( i + 1 ))
         const isNotEmpty = slotData !== 'empty'
         const className = isNotEmpty ? 'desktop-slot' : 'desktop-empty-slot'
         const slot = createAndAddClass('div', className)
-        appendAll(slot, ...(isNotEmpty ? savedSlotContent(slotData, mapMaker) : noSaveData()))
+        appendAll(slot, ...(isNotEmpty ? savedSlotContent(slotData, mapMaker, getIsSurvival()) : noSaveData()))
         if ( !load ) slot.addEventListener('click', () => renderSaveConfirmPopup(i + 1, isNotEmpty, mapMaker))
         if ( isNotEmpty && load ) slot.addEventListener('click', () => renderLoadConfirmPopup(i+1))
         slots.append(slot)
@@ -52,8 +56,9 @@ const slots = (load, mapMaker) => {
     return slots
 }
 
-export const savedSlotContent = (slotData, mapMaker) => {
+export const savedSlotContent = (slotData, mapMaker, survival) => {
     if ( mapMaker ) return mapMakerSlotContent(slotData)
+    else if ( survival ) return survivalSlotContent(slotData)    
     else return gamePlaySlotContent(slotData)
 }
 
@@ -68,6 +73,17 @@ const mapMakerSlotContent = (slotData) => {
     const roomsEl = document.createElement('div')
     roomsEl.textContent = 'Total rooms: ' + rooms
     return [timeStampEl, savesEl, spawnEl, roomsEl]
+}
+
+const survivalSlotContent = (slotData) => {
+    const { timeStamp, saves, chaos } = JSON.parse(slotData)
+    const timeStampEl = document.createElement('div')
+    timeStampEl.textContent = 'Date: ' + new Date(timeStamp).toLocaleString()
+    const savesEl = document.createElement('div')
+    savesEl.textContent = 'Saves: ' + saves
+    const chaosEl = document.createElement('div')
+    chaosEl.textContent = 'Chaos: ' + chaos
+    return [timeStampEl, savesEl, chaosEl]
 }
 
 const gamePlaySlotContent = (slotData) => {
@@ -128,7 +144,7 @@ const renderSaveConfirmPopup = (slotNumber, isNotEmpty, mapMaker) => {
 
 const confirmSave = (slotNumber, mapMaker = false) => {
     if ( mapMaker )  {
-        mapMakerSave(slotNumber)
+        saveMapMakerAtSlot(slotNumber)
         reRenderDesktop(true)
         return
     }
@@ -137,7 +153,8 @@ const confirmSave = (slotNumber, mapMaker = false) => {
         return
     }
     useInventoryResource('hardDrive', 1)
-    gamePlaySave(slotNumber)
+    if ( getIsSurvival() ) saveSurvivalAtSlot(slotNumber)
+    else                   saveGameAtSlot(slotNumber)
     reRenderDesktop(false) 
 }
 
@@ -177,6 +194,11 @@ const closeLoadPopup = () => getPauseContainer().lastElementChild.lastElementChi
 
 const confirmSlotLoad = (slotNumber) => {
     finishUp()
+    if ( getIsSurvival() ) {
+        loadSurvivalFromSlot(slotNumber)
+        play(false, true)
+        return
+    }
     loadGameFromSlot(slotNumber)
-    play(false, true)
+    play()
 }

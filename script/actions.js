@@ -14,7 +14,7 @@ import { renderPasswordInput } from './password-manager.js'
 import { removeTorch, renderTorch } from './torch-loader.js'
 import { renderUi, renderWeaponUi, quitPage } from './user-interface.js'
 import { heal, damagePlayer, findHealtStatusChildByClassName } from './player-health.js'
-import { activateAllProgresses, deactivateAllProgresses, getProgress, getProgressValueByNumber } from './progress-manager.js'
+import { activateAllProgresses, deactivateAllProgresses, getProgress } from './progress-manager.js'
 import { 
     getDialogueContainer,
     getGrabBar,
@@ -250,7 +250,7 @@ const openPause = (cause, func) => {
     func()
 }
 
-const toggleLever = () => {    
+const toggleLever = () => {
     const toggle1 = getElementInteractedWith().getAttribute('progress2Active')
     const toggle2 = getElementInteractedWith().getAttribute('progress2Deactive')
     if ( !getProgress()[toggle1] ) {

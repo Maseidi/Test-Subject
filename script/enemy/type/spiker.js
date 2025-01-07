@@ -1,5 +1,6 @@
 import { getProperty } from '../../util.js'
 import { AbstractEnemy } from './abstract-enemy.js'
+import { getRoundsFinished } from '../../variables.js'
 import { SpikerLostService } from '../service/spiker/lost.js'
 import { NormalChaseService } from '../service/normal/chase.js'
 import { NormalReturnService } from '../service/normal/return.js'
@@ -15,7 +16,6 @@ import {
     MOVE_TO_POSITION,
     NO_OFFENCE,
     SPIKER } from '../enemy-constants.js'
-import { getRoundsFinished } from '../../variables.js'
 
 export class Spiker extends AbstractEnemy {
     constructor(level, waypoint, loot, progress, virus, difficulties) {

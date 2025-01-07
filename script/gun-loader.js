@@ -1,7 +1,7 @@
 import { getPlayer } from './elements.js'
+import { findEquippedWeaponById } from './inventory.js'
 import { getGunUpgradableDetail, getGunDetails } from './gun-details.js'
 import { appendAll, createAndAddClass, findAttachmentsOnPlayer } from './util.js'
-import { findEquippedWeaponById } from './inventory.js'
 
 export const renderGun = () => {
     const equippedWeapon = findEquippedWeaponById()

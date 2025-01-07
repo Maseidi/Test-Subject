@@ -46,7 +46,7 @@ export const prepareNewMapMakerData = () => {
   setTimesSaved(0)
 }
 
-export const saveAtSlot = (slotNumber) => {
+export const saveMapMakerAtSlot = (slotNumber) => {
   setTimesSaved(getTimesSaved() + 1)
   saveStats(        slotNumber)
   saveRooms(        slotNumber)

@@ -1,5 +1,7 @@
 import { managePause } from './actions.js'
+import { isThrowable } from './throwable-details.js'
 import { getPauseContainer, getUiEl, setUiEl } from './elements.js'
+import { addClass, appendAll, containsClass, createAndAddClass, removeClass } from './util.js'
 import {
     calculateThrowableAmount,
     calculateTotalAmmo,
@@ -7,8 +9,6 @@ import {
     findEquippedWeaponById,
     updateInteractablePopups
 } from './inventory.js'
-import { isThrowable } from './throwable-details.js'
-import { addClass, appendAll, containsClass, createAndAddClass, removeClass } from './util.js'
 import {
     getDraggedItem,
     getEquippedWeaponId,

@@ -67,23 +67,22 @@ const renderConfirmReturn2MainMenu = (mapMaker) => {
     getPauseContainer().lastElementChild.append(returnPopupContainer)
 }
 
-const closeReturnPopup = () => {
-    getPauseContainer().lastElementChild.lastElementChild?.remove()
-}
+const closeReturnPopup = () => getPauseContainer().lastElementChild.lastElementChild?.remove()
 
 export const return2MainMenu = (mapMaker) => {
+    setRooms([])
+    setEnemies(new Map([]))
+    setWalls(new Map([]))
+    setInteractables(new Map([]))
+    setLoaders(new Map([]))
+    setDialogues([])
+    setPopups([])
+    setShop([])
+
     if ( mapMaker ) {
         window.removeEventListener('keydown', pauseFn, true)
         getPauseContainer().remove()
         getMapMakerEl().remove()
-        setRooms([])
-        setEnemies(new Map([]))
-        setWalls(new Map([]))
-        setInteractables(new Map([]))
-        setLoaders(new Map([]))
-        setDialogues([])
-        setPopups([])
-        setShop([])
     }
     else finishUp()
     renderMainMenu()

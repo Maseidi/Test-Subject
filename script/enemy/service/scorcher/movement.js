@@ -1,6 +1,6 @@
 import { setPlayer2Fire } from '../../../player-health.js'
-import { addClass, collide, isThrowing } from '../../../util.js'
 import { CHASE, NO_OFFENCE } from '../../enemy-constants.js'
+import { addClass, collide, isThrowing } from '../../../util.js'
 import { AbstractMovementService } from '../abstract/movement.js'
 import { getCurrentRoom, getCurrentRoomFlames, getPlayer } from '../../../elements.js'
 

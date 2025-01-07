@@ -1,6 +1,6 @@
 import { collide } from '../../../util.js'
-import { getPlayer } from '../../../elements.js'
 import { LOST } from '../../enemy-constants.js'
+import { getPlayer } from '../../../elements.js'
 import { AbstractMovementService } from '../abstract/movement.js'
 
 export class TrackerMovemenetService extends AbstractMovementService {

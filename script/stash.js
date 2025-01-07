@@ -1,6 +1,5 @@
 import { renderQuit } from './user-interface.js'
 import { getPauseContainer } from './elements.js'
-import { Bandage, Coin, KeyDrop, PistolAmmo, ShotgunShells, SmgAmmo } from './interactables.js'
 import { 
     addAllAttributes,
     addClass,
@@ -8,7 +7,6 @@ import {
     containsClass,
     createAndAddClass,
     element2Object,
-    nextId,
     object2Element } from './util.js'
 import { 
     renderDescriptionEvent,

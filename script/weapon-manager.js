@@ -107,7 +107,6 @@ export const setupReload = () => {
     if ( isThrowable(equipped.name) ) return
     if ( equipped.currmag === getGunUpgradableDetail(equipped.name, 'magazine', equipped.magazinelvl) ) return
     if ( calculateTotalAmmo() === 0 ) return
-    if ( getShooting() ) return
     setReloading(true)
 }
 

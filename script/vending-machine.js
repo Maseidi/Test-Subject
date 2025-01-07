@@ -1,13 +1,13 @@
 import { Progress } from './progress.js'
-import { Coin, Drop } from './interactables.js'
-import { addMessage, itemNotification, renderQuit } from './user-interface.js'
-import { getPauseContainer } from './elements.js'
 import { renderStats } from './gun-examine.js'
+import { Coin, Drop } from './interactables.js'
+import { getPauseContainer } from './elements.js'
 import { isThrowable } from './throwable-details.js'
 import { getProgressValueByNumber } from './progress-manager.js'
 import { getShopItems, getShopItemsWithId } from './shop-item.js'
-import { ADRENALINE, ENERGY_DRINK, HEALTH_POTION, LUCK_PILLS } from './loot.js'
+import { addMessage, itemNotification, renderQuit } from './user-interface.js'
 import { getGunUpgradableDetail, getGunDetails, isGun } from './gun-details.js'
+import { ADRENALINE, ENERGY_DRINK, HEALTH_POTION, LUCK_PILLS } from './loot.js'
 import { 
     getAdrenalinesDropped,
     getEnergyDrinksDropped,
@@ -34,8 +34,7 @@ import {
     element2Object,
     isStatUpgrader,
     nextId,
-    object2Element, 
-    removeClass} from './util.js'
+    object2Element } from './util.js'
 
 let page = 1
 export const renderStore = () => {

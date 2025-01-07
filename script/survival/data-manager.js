@@ -1,9 +1,14 @@
-import { buildEnemy } from './enemy/enemy-factory.js'
-import { getStash, initStash, setStash } from './stash.js'
-import { getInventory, initInventory, setInventory } from './inventory.js'
-import { getShopItems, initShopItems, setShopItems } from './shop-item.js'
-import { getProgress, initProgress, setProgress } from './progress-manager.js'
-import { getPasswords, initPasswords, setPasswords } from './password-manager.js'
+import { Wall } from '../wall.js'
+import { Room } from '../room.js'
+import { buildEnemy } from '../enemy/enemy-factory.js'
+import { difficulties, object2Element } from '../util.js'
+import { getStash, initStash, setStash } from '../stash.js'
+import { getShopItems, initShopItems, setShopItems } from '../shop-item.js'
+import { getProgress, initProgress, setProgress } from '../progress-manager.js'
+import { getPasswords, initPasswords, setPasswords } from '../password-manager.js'
+import { getInventory, initInventory, pickupDrop, setInventory } from '../inventory.js'
+import { GunDrop, Lever, PC, PistolAmmo, Stash, VendingMachine } from '../interactables.js'
+import { getChaos, getRandomizedWeapons, setChaos, setRandomizedWeapons } from './variables.js'
 import {
     getDialogues,
     getEnemies,
@@ -15,16 +20,28 @@ import {
     initEnemies,
     initInteractables,
     initLoaders,
-    initRooms,
-    initWalls,
-    setDialogues,
     setEnemies,
     setInteractables,
     setLoaders,
-    setPopups,
     setRooms,
     setWalls
-} from './entities.js'
+} from '../entities.js'
+import { 
+    ARCTIC_WARFERE,
+    BENELLI_M4,
+    GLOCK,
+    M1911,
+    MAUSER,
+    MP5K,
+    P90,
+    PARKER_HALE_M_85,
+    PPSH,
+    REMINGTON_1858,
+    REMINGTON_870,
+    REVOLVER,
+    SPAS,
+    STEYR_SSG_69,
+    UZI } from '../loot.js'
 import {
     getAdrenalinesDropped,
     getAimMode,
@@ -118,35 +135,52 @@ import {
     setUpPressed,
     setWaitingFunctions,
     setWeaponWheel
-} from './variables.js'
+} from '../variables.js'
 
-export const prepareNewGameData = (difficulty) => {
-    initNewGameVariables(undefined, undefined, difficulty)
+export const prepareNewSurvivalData = () => {
+    initNewSurvivalVariables(undefined, undefined, difficulties.MIDDLE)
     initRooms()
     initWalls()
     initPasswords()
-    initNewGameLoaders()
-    initNewGameProgress()
-    initNewGameInventory()
-    initNewGameStash()
-    initNewGameShop()
-    initNewGameEntities()
+    initNewSurvivalLoaders()
+    initNewSurvivalProgress()
+    initNewSurvivalInventory()
+    initNewSurvivalStash()
+    initNewSurvivalShop()
+    initNewSurvivalEntities()
     initConstants()
+    pickupDrop(object2Element(new PistolAmmo(null, null, 30)))
 }
 
-const initNewGameLoaders = () => setLoaders(initLoaders())
+const initRooms = () => setRooms(new Map([[1, new Room(1, 3000, 2000, 'Main Hall', 10)]]))
 
-const initNewGameProgress = () => setProgress(initProgress())
+const initWalls = () => setWalls(new Map([
+    [1, [
+        new Wall(200, 200, 200, null, 200),
+        new Wall(200, 200, 200, null, null, 200),
+        new Wall(100, 500, 800, null, null, 500),
+        new Wall(200, 200, null, 200, 200),
+        new Wall(200, 200, null, 200, null, 200),
+        new Wall(100, 500, null, 800, 500),
+        new Wall(500, 100, 1000, null, 200),
+        new Wall(500, 100, null, 1000, null, 200),
+        ]
+    ]
+]) )
 
-const initNewGameInventory = () => setInventory(initInventory())
+const initNewSurvivalLoaders = () => setLoaders(initLoaders())
 
-const initNewGameStash = () => setStash(initStash())
+const initNewSurvivalProgress = () => setProgress(initProgress())
 
-const initNewGameShop = () => setShopItems(initShopItems())
+const initNewSurvivalInventory = () => setInventory(initInventory())
 
-const initNewGameEntities = () => {
-    initEnemies(new Map())
-    initInteractables(new Map())
+const initNewSurvivalStash = () => setStash(initStash())
+
+const initNewSurvivalShop = () => setShopItems(initShopItems())
+
+const initNewSurvivalEntities = () => {
+    initEnemies(new Map([[1, []]]))
+    initInteractables(new Map([[1, [new PC(20, 20), new Stash(100, 20), new VendingMachine(200, 20), new Lever(1400, 1000), new GunDrop(1400, 1200, GLOCK, 10, 1, 1, 1, 1, 1)]]]))
 }
 
 export const initConstants = () => {
@@ -182,8 +216,8 @@ export const initConstants = () => {
     setAimMode(               false)
 }
 
-export const initNewGameVariables = (spawnX = 200, spawnY = 600, difficulty) => {
-    const newGameVariables = {
+export const initNewSurvivalVariables = (spawnX = 1500, spawnY = 1000, difficulty) => {
+    const NewSurvivalVariables = {
         mapX :                 0,
         mapY :                 0,
         playerX :              2 * spawnX,
@@ -214,10 +248,18 @@ export const initNewGameVariables = (spawnX = 200, spawnY = 600, difficulty) => 
         roundsFinished :       0,
         timesSaved:            0,
         playthroughId:         Date.now(),
+        chaos:                 0,
+        randomizedWeapons:     getRandomWeaponOrder(),
         difficulty,
     }
-    setVariables(newGameVariables)
+    setVariables(NewSurvivalVariables)
 }
+
+const getRandomWeaponOrder = () => 
+    [
+        MP5K, REMINGTON_870, ARCTIC_WARFERE, M1911, UZI, SPAS, STEYR_SSG_69, 
+        REVOLVER, MAUSER, PPSH, BENELLI_M4, PARKER_HALE_M_85, P90, REMINGTON_1858
+    ].sort(() => Math.random() - 0.5)
 
 const setVariables = (variables) => {
     setMapX(                variables.mapX)
@@ -254,9 +296,11 @@ const setVariables = (variables) => {
     setDifficulty(          variables.difficulty)
     setTimesSaved(          variables.timesSaved)
     setPlaythroughId(       variables.playthroughId)
+    setChaos(               variables.chaos)
+    setRandomizedWeapons(   variables.randomizedWeapons)
 }
 
-export const saveGameAtSlot = (slotNumber) => {
+export const saveSurvivalAtSlot = (slotNumber) => {
     setTimesSaved(getTimesSaved() + 1)
     saveRooms(        slotNumber)
     saveWalls(        slotNumber)
@@ -272,7 +316,7 @@ export const saveGameAtSlot = (slotNumber) => {
     saveStash(        slotNumber)
     saveDialogues(    slotNumber)
     savePopups(       slotNumber)
-    localStorage.setItem('last-slot-used', 'main-game-' + slotNumber)
+    localStorage.setItem('last-slot-used', 'survival-' + slotNumber)
 }
 
 const saveRooms = (slotNumber) => saveMapAsString(slotNumber, 'rooms', getRooms())
@@ -291,16 +335,14 @@ const saveMapAsString = (slotNumber, entityType, entities) => {
             [key] : entitiesOfKey
         }
     }
-    localStorage.setItem(`slot-${slotNumber}-${entityType}`, JSON.stringify(data2save))
+    localStorage.setItem(`survival-slot-${slotNumber}-${entityType}`, JSON.stringify(data2save))
 }
 
 const saveStats = (slotNumber) =>
-    localStorage.setItem(`slot-${slotNumber}`, JSON.stringify({
+    localStorage.setItem(`survival-slot-${slotNumber}`, JSON.stringify({
         timeStamp: Date.now(),
-        room: getRooms().get(getCurrentRoomId()).label,
         saves: getTimesSaved(),
-        difficulty: getDifficulty(),
-        rounds: getRoundsFinished()
+        chaos: getChaos(),
     }))
 
 const saveProgress = (slotNumber) => simpleSave(slotNumber, 'progress', getProgress())
@@ -308,7 +350,7 @@ const saveProgress = (slotNumber) => simpleSave(slotNumber, 'progress', getProgr
 const saveInteractables = (slotNumber) => saveMapAsString(slotNumber, 'interactables', getInteractables())
 
 const simpleSave = (slotNumber, postfix, data2save) => 
-    localStorage.setItem(`slot-${slotNumber}-${postfix}`, JSON.stringify(data2save))
+    localStorage.setItem(`survival-slot-${slotNumber}-${postfix}`, JSON.stringify(data2save))
 
 const saveEnemies = (slotNumber) => {
     let data2save = {}
@@ -329,11 +371,11 @@ const saveEnemies = (slotNumber) => {
         }
     }
 
-    localStorage.setItem(`slot-${slotNumber}-enemies`, JSON.stringify(data2save))
+    localStorage.setItem(`survival-slot-${slotNumber}-enemies`, JSON.stringify(data2save))
 }
 
 const saveVariables = (slotNumber) => {
-    localStorage.setItem(`slot-${slotNumber}-variables`, JSON.stringify({
+    localStorage.setItem(`survival-slot-${slotNumber}-variables`, JSON.stringify({
         mapX :                 getMapX(),
         mapY :                 getMapY(),
         playerX :              getPlayerX(),
@@ -367,6 +409,8 @@ const saveVariables = (slotNumber) => {
         timesSaved:            getTimesSaved(),
         difficulty:            getDifficulty(),
         playthroughId:         getPlaythroughId(),
+        chaos:                 getChaos(),
+        randomizedWeapons:     getRandomizedWeapons()
     }))
 }
 
@@ -380,7 +424,7 @@ const saveDialogues = (slotNumber) => simpleSave(slotNumber, 'dialogues', getDia
 
 const savePopups = (slotNumber) => simpleSave(slotNumber, 'popups', getPopups())
 
-export const loadGameFromSlot = (slotNumber) => {
+export const loadSurvivalFromSlot = (slotNumber) => {
     initConstants()
     loadRooms(        slotNumber)
     loadPasswords(    slotNumber)
@@ -394,9 +438,7 @@ export const loadGameFromSlot = (slotNumber) => {
     loadShopItems(    slotNumber)
     loadInventory(    slotNumber)
     loadStash(        slotNumber)
-    loadDialogues(    slotNumber)
-    loadPopups(       slotNumber)
-    localStorage.setItem('last-slot-used', 'main-game-' + slotNumber)
+    localStorage.setItem('last-slot-used', 'survival-' + slotNumber)
 }
 
 const loadRooms = (slotNumber) => loadStringAsMap(slotNumber, 'rooms', setRooms)
@@ -409,42 +451,36 @@ const loadPasswords = (slotNumber) => loadStringAsMap(slotNumber, 'passwords', s
 
 const loadStringAsMap = (slotNumber, entityType, setter, toNumber = true) => {
     const data2Load = new Map([])
-    const data = JSON.parse(localStorage.getItem(`slot-${slotNumber}-${entityType}`))
+    const data = JSON.parse(localStorage.getItem(`survival-slot-${slotNumber}-${entityType}`))
     Object.getOwnPropertyNames(data).forEach(name => data2Load.set(toNumber ? Number(name) : name, data[name]))
     setter(data2Load)
 }
 
 const loadStats = (slotNumber) => {
-    const { saves, difficulty, rounds } = JSON.parse(localStorage.getItem(`slot-${slotNumber}`))
+    const { saves } = JSON.parse(localStorage.getItem(`survival-slot-${slotNumber}`))
     setTimesSaved(saves)
-    setDifficulty(difficulty)
-    setRoundsFinished(rounds)
 }
 
 const loadProgress = (slotNumber) => simpleLoad(slotNumber, 'progress', setProgress)
 
 const simpleLoad = (slotNumber, postfix, setter) =>
-    setter(JSON.parse(localStorage.getItem(`slot-${slotNumber}-${postfix}`)))
+    setter(JSON.parse(localStorage.getItem(`survival-slot-${slotNumber}-${postfix}`)))
 
 const loadInteractables = (slotNumber) => loadStringAsMap(slotNumber, 'interactables', setInteractables)
 
 const loadEnemies = (slotNumber) => {
     const data2Load = new Map([])
-    const data = JSON.parse(localStorage.getItem(`slot-${slotNumber}-enemies`))
+    const data = JSON.parse(localStorage.getItem(`survival-slot-${slotNumber}-enemies`))
     Object.getOwnPropertyNames(data).forEach(name => {
         data2Load.set(Number(name), data[name].map(enemy => buildEnemy(enemy)))
     })
     setEnemies(data2Load)
 }
 
-const loadVariables = (slotNumber) => setVariables(JSON.parse(localStorage.getItem(`slot-${slotNumber}-variables`)))
+const loadVariables = (slotNumber) => setVariables(JSON.parse(localStorage.getItem(`survival-slot-${slotNumber}-variables`)))
 
 const loadShopItems = (slotNumber) => simpleLoad(slotNumber, 'shop-items', setShopItems)
 
 const loadInventory = (slotNumber) => simpleLoad(slotNumber, 'inventory', setInventory)
 
 const loadStash = (slotNumber) => simpleLoad(slotNumber, 'stash', setStash)
-
-const loadDialogues = (slotNumber) => simpleLoad(slotNumber, 'dialogues', setDialogues)
-
-const loadPopups = (slotNumber) => simpleLoad(slotNumber, 'popups', setPopups)
