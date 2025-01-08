@@ -24,7 +24,7 @@ export class Scorcher extends AbstractEnemy {
     constructor(level, waypoint, loot, progress, virus, difficulties) {
         const base = level + (getRoundsFinished() * 5)
         const health = Math.floor(base * 135 + Math.random() * 15)
-        const damage = Math.floor(base * 15 + Math.random() * 10)
+        const damage = Math.floor(base * 10 + Math.random() * 10)
         const maxSpeed = 2.5 + Math.random()
         super(SCORCHER, 5, waypoint, health, damage, maxSpeed, 600, 1.1, loot, progress, virus, difficulties, level)
         this.injuryService = new GrabberInjuryService(this)

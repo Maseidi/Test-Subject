@@ -157,7 +157,7 @@ const buyPopup = (e) => {
     renderDealPopup(itemObj, 'Purchase item?', isGun(itemObj.name) || itemObj.name === 'pouch', renderConfirmBuyBtn)
 }
 
-export const renderDealPopup = (itemObj, title, headingPredicate, confirmCb) => {
+const renderDealPopup = (itemObj, title, headingPredicate, confirmCb) => {
     const popupContainer = createAndAddClass('div', 'deal-popup-container', 'popup-container', 'ui-theme')
     const popup = createAndAddClass('div', 'deal-popup')
     const titleEl = createAndAddClass('h2', 'deal-popup-title')
@@ -239,10 +239,11 @@ const manageBuy = (itemObj) => {
         submitPurchase(itemObj)
         return
     }
-    const inventory2string = getInventory().flat().map(item => item === null ? 'empty' : item).join('')
-    pickupDrop(object2Element(new Coin(null, null, loss)))
+
+    const inventory2string = getInventory().flat()
+        .map((item, index) => item === null ? (index % 4 === 3 ? 'emptyend' : 'empty') : item).join('')
+
     if ( inventory2string.includes(needSpace2string) ) {
-        useInventoryResource('coin', loss)
         let chosenItem = getShopItems()[itemObj.id]
         if ( isStatUpgrader(itemObj) ) chosenItem.price = 30
         if ( itemObj.name === 'armor' ) chosenItem.price = 50
@@ -257,11 +258,12 @@ const manageBuy = (itemObj) => {
         submitPurchase(itemObj)
         return
     }
+    pickupDrop(object2Element(new Coin(null, null, loss)))
     addVendingMachineMessage('No enough space')
 }
 
 const handleNewWeapnPurchase = (purchasedItem, name) => {
-    if ( !isGun(name) ) return purchasedItem 
+    if ( !isGun(name) ) return purchasedItem
     return {
         ...purchasedItem,
         id: nextId(),
