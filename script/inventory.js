@@ -58,7 +58,11 @@ import {
     getShooting, 
     getPause, 
     getEquippedTorchId,
-    setEquippedTorchId} from './variables.js'
+    setEquippedTorchId,
+    getPlayerSpeed,
+    getMaxHealth,
+    getCriticalChance,
+    getMaxStamina} from './variables.js'
 
 export const MAX_PACKSIZE = {
     coin: 50,
@@ -386,7 +390,7 @@ const inventoryEvents = () => {
 
 export const renderDescriptionEvent = (item) => {
     const itemObj = element2Object(item)
-    item.addEventListener('mousemove', renderDescriptionContent, true)
+    item.addEventListener('mouseenter', renderDescriptionContent, true)
     item.heading = `${itemObj.heading}`
     item.description = `${itemObj.description}`
     item.isNote = itemObj.name === NOTE
@@ -394,17 +398,31 @@ export const renderDescriptionEvent = (item) => {
 }
 
 const renderDescriptionContent = (e) => {
+    if ( e.target !== e.currentTarget ) return
     const descContainer = getPauseContainer().firstElementChild.firstElementChild.children[1]
-    const { heading, description, isNote, isExamined } = e.target
-    if ( heading )     descContainer.firstElementChild.textContent = isNote && !isExamined ? 'Note' : heading
-    if ( description ) descContainer.children[1].textContent = isNote && !isExamined ? '????' : description
+    const { heading, description, isNote, isExamined } = e.currentTarget
+    if ( heading ) descContainer.firstElementChild.textContent = isNote && !isExamined ? 'Note' : heading
+    if ( description ) {
+        let desc = description
+        if ( isNote && !isExamined ) desc = '????'
+        if ( heading === 'adrenaline' )
+            desc = description + `. Current Movement Speed: ${getPlayerSpeed().toFixed(1)}, Lvl ${Math.ceil((getPlayerSpeed() - 5) * 10)}`
+        if ( heading === 'health potion' )
+            desc = description + `. Current Max Health: ${getMaxHealth()}, Lvl ${(getMaxHealth() - 100) / 10}`
+        if ( heading === 'luck pills' )
+            desc = description + `. Current Critical Chance: ${(getCriticalChance() * 100).toFixed(1)}%, Lvl ${((getCriticalChance() * 100 - 1) / 1.9).toFixed()}`
+        if ( heading === 'energy drink' )
+            desc = description + `. Current Max Stamina: ${getMaxStamina()}, Lvl ${(getMaxStamina() - 600) / 60}`
+        descContainer.children[1].textContent = desc
+    }
 }
 
 export const removeDescriptionEvent = (item) => {
     item.addEventListener('mouseleave', removeDescriptionContent, true)
 }
 
-const removeDescriptionContent = () => {
+const removeDescriptionContent = (e) => {
+    if ( e.target !== e.currentTarget ) return
     const descContainer = getPauseContainer().firstElementChild.firstElementChild.children[1]
     descContainer.firstElementChild.textContent = ``
     descContainer.children[1].textContent = ``

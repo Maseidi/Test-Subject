@@ -196,28 +196,28 @@ export class KeyDrop extends Drop {
 export class Adrenaline extends Drop {
     constructor(left, top, amount, progress) {
         super(10, left, top, 'adrenaline', 'adrenaline', amount, 1, 
-            'Increases max speed by 0.1 units. (Default speed is 5 units)', 20, progress)
+            'Increases movement speed by 0.1 units', 20, progress)
     }
 }
 
 export class HealthPotion extends Drop {
     constructor(left, top, amount, progress) {
         super(5, left, top, 'healthpotion', 'health potion', amount, 1, 
-            'Refills health completely and increases max health by 10 units. (Default health is 100 units)', 20, progress)
+            'Refills health completely and increases max health by 10 units', 20, progress)
     }
 }
 
 export class LuckPills extends Drop {
     constructor(left, top, amount, progress) {
         super(15, left, top, 'luckpills', 'luck pills', amount, 1, 
-            'Increases critical chance by 1.9%. (Default critical chance is 1%)', 20, progress)
+            'Increases critical chance by 1.9%', 20, progress)
     }
 }
 
 export class EnergyDrink extends Drop {
     constructor(left, top, amount, progress) {
         super(15, left, top, 'energydrink', 'energy drink', amount, 1, 
-            'Refills stamina completely and increases max stamina by 60 units. (Default stamina is 600 units)', 20, progress)
+            'Refills stamina completely and increases max stamina by 60 units', 20, progress)
     }
 }
 
