@@ -407,6 +407,7 @@ const explodePlayer = (explosion) => {
 
 const explodeEnemies = (explosion) => {
     for ( const enemy of getCurrentRoomEnemies() ) {
+        if ( enemy.health === 0 ) continue
         if ( !collide(enemy.sprite, explosion, 0) ) continue
         enemy.injuryService.damageEnemy('grenade', Math.min(getThrowableDetail('grenade', 'damage'), enemy.health))
     }

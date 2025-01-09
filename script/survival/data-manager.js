@@ -137,7 +137,9 @@ import {
     setWeaponWheel
 } from '../variables.js'
 
+let startingPistol = null
 export const prepareNewSurvivalData = () => {
+    startingPistol = getRandomStartingPistol()
     initNewSurvivalVariables(undefined, undefined, difficulties.MIDDLE)
     initRooms()
     initWalls()
@@ -180,7 +182,7 @@ const initNewSurvivalShop = () => setShopItems(initShopItems())
 
 const initNewSurvivalEntities = () => {
     initEnemies(new Map([[1, []]]))
-    initInteractables(new Map([[1, [new PC(20, 20), new Stash(100, 20), new VendingMachine(200, 20), new Lever(1400, 1000), new GunDrop(1400, 1200, GLOCK, 10, 1, 1, 1, 1, 1)]]]))
+    initInteractables(new Map([[1, [new PC(20, 20), new Stash(100, 20), new VendingMachine(200, 20), new Lever(1400, 1000), new GunDrop(1400, 1200, startingPistol, 10, 1, 1, 1, 1, 1)]]]))
 }
 
 export const initConstants = () => {
@@ -255,11 +257,16 @@ export const initNewSurvivalVariables = (spawnX = 1500, spawnY = 1000, difficult
     setVariables(NewSurvivalVariables)
 }
 
+const getRandomStartingPistol = () => 
+    [
+        GLOCK, M1911, MAUSER 
+    ].sort(() => Math.random() - 0.5)[0]
+
 const getRandomWeaponOrder = () => 
     [
-        MP5K, REMINGTON_870, ARCTIC_WARFERE, M1911, UZI, SPAS, STEYR_SSG_69, 
+        GLOCK, MP5K, REMINGTON_870, ARCTIC_WARFERE, M1911, UZI, SPAS, STEYR_SSG_69, 
         REVOLVER, MAUSER, PPSH, BENELLI_M4, PARKER_HALE_M_85, P90, REMINGTON_1858
-    ].sort(() => Math.random() - 0.5)
+    ].filter(item => item !== startingPistol).sort(() => Math.random() - 0.5)
 
 const setVariables = (variables) => {
     setMapX(                variables.mapX)

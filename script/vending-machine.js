@@ -4,7 +4,7 @@ import { Coin, Drop } from './interactables.js'
 import { getPauseContainer } from './elements.js'
 import { isThrowable } from './throwable-details.js'
 import { getProgressValueByNumber } from './progress-manager.js'
-import { getShopItems, getShopItemsWithId } from './shop-item.js'
+import { getShopItems, getShopItemsWithId, GunShopItem } from './shop-item.js'
 import { addMessage, itemNotification, renderQuit } from './user-interface.js'
 import { getGunUpgradableDetail, getGunDetails, isGun } from './gun-details.js'
 import { ADRENALINE, ENERGY_DRINK, HEALTH_POTION, LUCK_PILLS } from './loot.js'
@@ -510,6 +510,9 @@ const manageSell = (itemObj) => {
         handleEquippableDrop(itemObj)
         removeStore()
         renderStore()
+        if ( isGun(itemObj.name) && !getShopItems().find(item => !item.sold && item.name === itemObj.name) ) 
+            getShopItems().push(new GunShopItem(itemObj.name))
+
         return
     }
     addVendingMachineMessage('No enough space') 

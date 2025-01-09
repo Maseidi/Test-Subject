@@ -82,60 +82,60 @@ export const manageSpawns = () => {
     const level = Math.min(chaos / 10, 5)
     const chance = Math.random()
 
-    if ( chaos < 3 ) {
+    if ( chaos < 2 ) {
         enemy = new Torturer(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
-    } else if ( chaos < 6 ) {
-        if ( chance < 0.5) enemy = new Torturer(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
-        else enemy = new SoulDrinker(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
-    } else if ( chaos < 9 ) {
-        if ( chance < 0.3) enemy = new Torturer(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
-        else if ( chance < 0.7 ) enemy = new SoulDrinker(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
-        else enemy = new RockCrusher(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
-    } else if ( chaos < 12 ) {
-        if ( chance < 0.25) enemy = new Torturer(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
-        else if ( chance < 0.5 ) enemy = new SoulDrinker(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
+    } else if ( chaos < 4 ) {
+        if ( chance < 0.50 )      enemy = new Torturer(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
+        else                      enemy = new SoulDrinker(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
+    } else if ( chaos < 7 ) {
+        if      ( chance < 0.30 ) enemy = new Torturer(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
+        else if ( chance < 0.70 ) enemy = new SoulDrinker(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
+        else                      enemy = new RockCrusher(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
+    } else if ( chaos < 11 ) {
+        if      ( chance < 0.25 ) enemy = new Torturer(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
+        else if ( chance < 0.50 ) enemy = new SoulDrinker(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
         else if ( chance < 0.75 ) enemy = new RockCrusher(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
-        else enemy = new Ranger(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
-    } else if ( chaos < 15 ) {
-        if ( chance < 0.2) enemy = new Torturer(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
-        else if ( chance < 0.4 ) enemy = new SoulDrinker(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
-        else if ( chance < 0.6 ) enemy = new RockCrusher(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
-        else if ( chance < 0.8 ) enemy = new Ranger(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
-        else enemy = new Spiker(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
-    } else if ( chaos < 18 ) {
-        if ( chance < 0.18) enemy = new Torturer(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
+        else                      enemy = new Ranger(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
+    } else if ( chaos < 16 ) {
+        if      ( chance < 0.20 ) enemy = new Torturer(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
+        else if ( chance < 0.40 ) enemy = new SoulDrinker(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
+        else if ( chance < 0.60 ) enemy = new RockCrusher(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
+        else if ( chance < 0.80 ) enemy = new Ranger(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
+        else                      enemy = new Spiker(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
+    } else if ( chaos < 22 ) {
+        if      ( chance < 0.18 ) enemy = new Torturer(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
         else if ( chance < 0.36 ) enemy = new SoulDrinker(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
         else if ( chance < 0.54 ) enemy = new RockCrusher(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
         else if ( chance < 0.72 ) enemy = new Ranger(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
-        else if ( chance < 0.9 ) enemy = new Spiker(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
-        else enemy = new Tracker(level, x, y, new Loot(RANDOM, 1))
-    } else if ( chaos < 21 ) {
-        if ( chance < 0.14) enemy = new Torturer(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
+        else if ( chance < 0.90 ) enemy = new Spiker(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
+        else                      enemy = new Tracker(level, x, y, new Loot(RANDOM, 1))
+    } else if ( chaos < 29 ) {
+        if      ( chance < 0.14 ) enemy = new Torturer(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
         else if ( chance < 0.28 ) enemy = new SoulDrinker(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
         else if ( chance < 0.42 ) enemy = new RockCrusher(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
         else if ( chance < 0.56 ) enemy = new Ranger(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
         else if ( chance < 0.70 ) enemy = new Spiker(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
         else if ( chance < 0.84 ) enemy = new Tracker(level, x, y, new Loot(RANDOM, 1))
-        else enemy = new Grabber(level, x, y, new Loot(RANDOM, 1))
-    } else if ( chaos < 24 ) {
-        if ( chance < 0.12) enemy = new Torturer(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
+        else                      enemy = new Grabber(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
+    } else if ( chaos < 38 ) {
+        if      ( chance < 0.12 ) enemy = new Torturer(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
         else if ( chance < 0.25 ) enemy = new SoulDrinker(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
         else if ( chance < 0.37 ) enemy = new RockCrusher(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
-        else if ( chance < 0.5 ) enemy = new Ranger(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
+        else if ( chance < 0.50 ) enemy = new Ranger(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
         else if ( chance < 0.62 ) enemy = new Spiker(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
         else if ( chance < 0.75 ) enemy = new Tracker(level, x, y, new Loot(RANDOM, 1))
-        else if ( chance < 0.87 ) enemy = new Grabber(level, x, y, new Loot(RANDOM, 1))
-        else enemy = new Scorcher(level, x, y, new Loot(RANDOM, 1))
-    } else if ( chaos < 27 ) {
-        if ( chance < 0.11) enemy = new Torturer(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
+        else if ( chance < 0.87 ) enemy = new Grabber(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
+        else                      enemy = new Scorcher(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
+    } else if ( chaos < 48 ) {
+        if      ( chance < 0.11 ) enemy = new Torturer(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
         else if ( chance < 0.22 ) enemy = new SoulDrinker(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
         else if ( chance < 0.33 ) enemy = new RockCrusher(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
         else if ( chance < 0.44 ) enemy = new Ranger(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
         else if ( chance < 0.55 ) enemy = new Spiker(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
         else if ( chance < 0.66 ) enemy = new Tracker(level, x, y, new Loot(RANDOM, 1))
-        else if ( chance < 0.77 ) enemy = new Grabber(level, x, y, new Loot(RANDOM, 1))
-        else if ( chance < 0.88 ) enemy = new Scorcher(level, x, y, new Loot(RANDOM, 1))
-        else enemy = new Stinger(level, x, y, new Loot(RANDOM, 1))
+        else if ( chance < 0.77 ) enemy = new Grabber(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
+        else if ( chance < 0.88 ) enemy = new Scorcher(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
+        else                      enemy = new Stinger(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
     }
 
     enemy.index = getEnemyId()

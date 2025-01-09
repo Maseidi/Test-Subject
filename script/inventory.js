@@ -62,7 +62,8 @@ import {
     getPlayerSpeed,
     getMaxHealth,
     getCriticalChance,
-    getMaxStamina} from './variables.js'
+    getMaxStamina,
+    getIsSurvival } from './variables.js'
 
 export const MAX_PACKSIZE = {
     coin: 50,
@@ -116,10 +117,7 @@ export const pickupDrop = (drop) => {
     checkSpecialScenarios()
     handleVaccinePickup(dropObject)
     updateInteractablePopups()
-    if ( getProgressValueByNumber('1000001') ) return
-    if ( countItem('bandage') === 0 )          return
-    getPopups().push(new Popup('<span>H</span> Use bandage to heal', {renderProgress: '1000001'}, 3000))
-    activateAllProgresses('1000001')
+    if ( !getIsSurvival() ) handleBandageFirstTimePickup()
 }
 
 const searchPack = () => {
@@ -218,6 +216,13 @@ export const updateInteractablePopup = (interactable) => {
     const popup = interactable.lastElementChild
     if ( isEnoughSpace(name, space) ) removeClass(popup, 'not-ideal')
     else addClass(popup, 'not-ideal')
+}
+
+const handleBandageFirstTimePickup = () => {
+    if ( getProgressValueByNumber('1000001') ) return
+    if ( countItem('bandage') === 0 )          return
+    getPopups().push(new Popup('<span>H</span> Use bandage to heal', {renderProgress: '1000001'}, 3000))
+    activateAllProgresses('1000001')
 }
 
 const ammo4Equipped = () => {
@@ -430,10 +435,8 @@ const removeDescriptionContent = (e) => {
 
 const optionsEvents = (item) => item.addEventListener('click', addOptionsEvent, true)
 
-const addOptionsEvent = (e) => {    
-    const target = !containsClass(e.target, 'block') ? !containsClass(e.target.parentElement, 'block') ? 
-                   e.target.parentElement.parentElement : e.target.parentElement : e.target
-
+const addOptionsEvent = (e) => {
+    const target = e.currentTarget
     const options = createAndAddClass('div', 'options')
     renderOptions(target, options)
     target.addEventListener('mouseleave', () => options.remove())
@@ -539,7 +542,7 @@ const getReplacementState = (item, destObj, srcObj) => {
                 possible = false
                 break
             }
-        if ( possible ) return 1    
+        if ( possible ) return 1
     } else if ( item !== null && item === 'taken' ) {
         let possible = true
         for ( let k = destObj.column + 1; k < destObj.column + srcObj.space; k++ )
@@ -547,7 +550,7 @@ const getReplacementState = (item, destObj, srcObj) => {
                 possible = false 
                 break
             }
-        if ( possible ) return 2    
+        if ( possible ) return 2
     } else if ( item === null ) {
         let possible = true
         let itemCount = 0
@@ -669,7 +672,7 @@ const USE_MAP = new Map([
 const use = (item) => {
     const itemObj = element2Object(item)
     let itemFromInventory = inventory[itemObj.row][itemObj.column]
-    if ( useKey(itemFromInventory) ) return
+    if ( isUsableKey(itemFromInventory) ) return
     getPauseContainer().firstElementChild.remove()
     USE_MAP.get(itemFromInventory.name)(itemFromInventory)
     if ( itemFromInventory.amount === 0 ) {
@@ -679,7 +682,7 @@ const use = (item) => {
     renderInventory()
 }
 
-const useKey = (itemObj) => {
+const isUsableKey = (itemObj) => {
     if ( !itemObj.name.includes('key') ) return false
     const neededKey = getElementInteractedWith()?.getAttribute('key')
     if ( !neededKey || itemObj.unlocks !== neededKey ) return true
