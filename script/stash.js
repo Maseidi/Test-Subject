@@ -47,26 +47,21 @@ const inventoryEvents = () => {
         .forEach((item) => {
             renderDescriptionEvent(item)
             removeDescriptionEvent(item)
-            addMoveItemEvent(item, 'to-stash')
+            addMoveItemEvent(item)
             removeMove2StashPopupEvent(item)
         })
 }
 
-const addMoveItemEvent = (item, type) => {    
-    item.setAttribute('type', type)
+const addMoveItemEvent = (item) => {
+    if ( containsClass(item, 'stash-item-selector') ) item.parentElement.setAttribute('type', 'to-inventory')
+    else item.setAttribute('type', 'to-stash')
     item.addEventListener('click', applyItemMovement)
 }
 
 const applyItemMovement = (e) => {
-    const target = e.target
-    const targetParent = target.parentElement
-    if ( !containsClass(target, 'block') && !containsClass(target, 'stash-item-selector') ) return
-    const elem = containsClass(target, 'stash-item-selector') ? targetParent : target
-    if ( containsClass(target, 'stash-item-selector') ) {
-        targetParent.setAttribute('type', 'to-inventory')
-        targetParent.children[3]?.remove()
-    }
-    const itemObj = element2Object(elem)
+    const target = containsClass(e.currentTarget, 'stash-item-selector') ? e.currentTarget.parentElement : e.currentTarget
+    if ( doesPopupAlreadyExists(target) ) return
+    const itemObj = element2Object(target)    
     const move = renderMoveComponent(itemObj)
     const number = createAndAddClass('div', 'number')
     const chevLeft = renderChevLeft()
@@ -79,8 +74,11 @@ const applyItemMovement = (e) => {
     const bigger = renderBiggerSteps()
     appendAll(concan, confirm, bigger)
     appendAll(move, number, concan)
-    elem.append(move)
+    target.append(move)
 }
+
+const doesPopupAlreadyExists = (parent) => 
+    Array.from(parent.children).find(child => containsClass(child, 'move-to-inventory') || containsClass(child, 'move-to-stash'))
 
 const removeMove2StashPopupEvent = (item) => item.addEventListener('mouseleave', (e) => e.target.children[2]?.remove())  
 
@@ -204,7 +202,7 @@ const renderStashItems = () => {
         else amount.textContent = `${item.amount}`
         appendAll(specs, title, amount)
         appendAll(stashItem, img, specs)
-        addMoveItemEvent(selector, 'to-inventory')        
+        addMoveItemEvent(selector)        
         removeMove2InventoryPopupEvent(stashItem)
         stashItems.append(stashItem)
     })

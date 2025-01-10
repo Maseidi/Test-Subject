@@ -1,6 +1,6 @@
 import { initLootValues } from './loot.js'
 import { getGunDetails } from './gun-details.js'
-import { decideDifficulty, difficulties as difficultyMap } from './util.js'
+import { getDifficultyList, difficulties as difficultyMap } from './util.js'
 
 class Interactable {
     constructor(width, left, top, name, heading, popup, solid, amount, space, description, price, progress, difficulty) {
@@ -20,7 +20,7 @@ class Interactable {
         this.progress2Active =   progress?.progress2Active          ?? []
         this.progress2Deactive = progress?.progress2Deactive        ?? []
         this.onexamine =         progress?.onExamineProgress2Active ?? []
-        this.difficulties =      difficulty ? decideDifficulty(difficulty) : 
+        this.difficulties =      difficulty ? getDifficultyList(difficulty) : 
                                  [difficultyMap.MILD, difficultyMap.MIDDLE, difficultyMap.SURVIVAL]
     }
 }

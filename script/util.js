@@ -229,12 +229,12 @@ export const isAble2Interact = () =>
     !getPopupContainer().firstElementChild &&
     !getCurrentRoomEnemies().find(enemy => enemy.health !== 0)
 
-export const decideDifficulty = (difficulty) => {
-    if ( difficulty === difficulties.MILD )        
+export const getDifficultyList = (difficulty) => {
+    if ( difficulty === difficulties.MILD )
         return [difficulties.MILD, difficulties.MIDDLE, difficulties.SURVIVAL]
     else if ( difficulty === difficulties.MIDDLE ) 
         return [difficulties.MIDDLE, difficulties.SURVIVAL]
-    else                                           
+    else
         return [difficulties.SURVIVAL]
 }
 

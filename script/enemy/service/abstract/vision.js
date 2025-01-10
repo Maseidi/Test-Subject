@@ -1,7 +1,7 @@
 import { getIsSurvival } from '../../../variables.js'
 import { getCurrentRoomSolid, getPlayer } from '../../../elements.js'
 import { collide, containsClass, getProperty } from '../../../util.js'
-import { INVESTIGATE, LOST, MOVE_TO_POSITION } from '../../enemy-constants.js'
+import { INVESTIGATE, LOST, MOVE_TO_POSITION, RANGER, SCORCHER, STINGER } from '../../enemy-constants.js'
 
 export class AbstractVisionService {
     constructor(enemy) {
@@ -16,6 +16,7 @@ export class AbstractVisionService {
     }
 
     look4Player() {
+        if ( getIsSurvival() && ![RANGER, SCORCHER, STINGER].includes(this.type) ) return
         this.getWallInTheWay()
         this.vision2Player()
     }

@@ -2,7 +2,7 @@ import { createHeader } from '../map-maker.js'
 import { getRoomBeingMade } from '../variables.js'
 import { parseDifficulty } from './interactable.js'
 import { getAttributesEl, getElemBeingModified, getMapMakerEl, setAttributesEl } from '../elements.js'
-import { addAllAttributes, appendAll, createAndAddClass, decideDifficulty, difficulties } from '../../util.js'
+import { addAllAttributes, appendAll, createAndAddClass, getDifficultyList, difficulties } from '../../util.js'
 
 export const renderAttributes = () => {
     if ( getAttributesEl() ) getAttributesEl().remove()
@@ -69,7 +69,7 @@ export const autocomplete = (label, value, setValue, options) => {
 
 export const difficultyAutoComplete = (model) => {
     return autocomplete('render difficulty', parseDifficulty(model.difficulties), 
-        (value) => model.difficulties = decideDifficulty(value), 
+        (value) => model.difficulties = getDifficultyList(value), 
         [
             {label: 'mild',     value: difficulties.MILD},
             {label: 'middle',   value: difficulties.MIDDLE},

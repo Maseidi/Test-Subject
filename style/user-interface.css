@@ -238,9 +238,9 @@
 .room-name-popup > span,
 .dialogue > span {
   opacity: 0;
+  animation-name: fade-in;
   animation-fill-mode: forwards;
   animation-direction: alternate;
-  animation-name: fade-in;
 }
 
 .room-name-popup > span {

@@ -1,13 +1,12 @@
 import { SinglePointPath } from '../../path.js'
-import { RANGER, SCORCHER, STINGER } from '../enemy-constants.js'
-import { getDifficulty, getIsSurvival } from '../../variables.js'
+import { getDifficulty } from '../../variables.js'
 import { AbstractAngleService } from '../service/abstract/angle.js'
-import { AbstractVisionService } from '../service/abstract/vision.js'
 import { AbstractInjuryService } from '../service/abstract/injury.js'
+import { AbstractVisionService } from '../service/abstract/vision.js'
 import { AbstractOffenceService } from '../service/abstract/offence.js'
 import { AbstractMovementService } from '../service/abstract/movement.js'
-import { decideDifficulty, difficulties as difficultyMap } from '../../util.js'
 import { AbstractPathFindingService } from '../service/abstract/path-finding.js'
+import { difficulties as difficultyMap, getDifficultyList } from '../../util.js'
 import { AbstractNotificationService } from '../service/abstract/notification.js'
 
 export class AbstractEnemy {
@@ -30,8 +29,8 @@ export class AbstractEnemy {
         this.y =                   this.waypoint.points[0].y ?? 0
         this.level =               level ?? 1
         this.loot =                loot  ?? {} 
-        this.difficulties =        difficulty ? decideDifficulty(difficulty) : 
-                                   [difficultyMap.MILD, difficultyMap.MIDDLE, difficultyMap.SURVIVAL]
+        this.difficulties =        difficulty ? getDifficultyList(difficulty) : getDifficultyList(difficultyMap.MILD)
+        this.balanceStatsBasedOnDifficulty()
         this.angleService =        new AbstractAngleService(this)
         this.injuryService =       new AbstractInjuryService(this)
         this.offenceService =      new AbstractOffenceService(this)
@@ -39,7 +38,6 @@ export class AbstractEnemy {
         this.notificationService = new AbstractNotificationService(this)
         this.visionService =       new AbstractVisionService(this)
         this.movementService =     new AbstractMovementService(this)
-        this.balanceStatsBasedOnDifficulty()
     }
 
     balanceStatsBasedOnDifficulty() {
@@ -52,7 +50,7 @@ export class AbstractEnemy {
 
     behave() {
         if ( this.health === 0 ) return
-        if ( !getIsSurvival() || [RANGER, SCORCHER, STINGER].includes(this.type) ) this.visionService.look4Player()
+        this.visionService.look4Player()
         this.injuryService.manageDamagedMode()
         this.manageState()
     }

@@ -92,7 +92,7 @@ const renderchaosPopup = (type = 'start') => {
     if ( type === 'end' ) {
         const coinContainer = createAndAddClass('div', 'chaos-container-coin')
         const amount = document.createElement('p')
-        amount.textContent = `${getChaos()}`
+        amount.textContent = `${Math.min(20, getChaos())}`
         const coinImg = new Image()
         coinImg.src = './assets/images/coin.png'
         const text2 = document.createElement('p')
