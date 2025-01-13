@@ -16,7 +16,7 @@ export class AbstractVisionService {
     }
 
     look4Player() {
-        if ( getIsSurvival() && ![RANGER, SCORCHER, STINGER].includes(this.type) ) return
+        if ( getIsSurvival() && ![RANGER, SCORCHER, STINGER].includes(this.enemy.type) ) return
         this.getWallInTheWay()
         this.vision2Player()
     }

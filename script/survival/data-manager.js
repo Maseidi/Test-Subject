@@ -154,7 +154,7 @@ export const prepareNewSurvivalData = () => {
     pickupDrop(object2Element(new PistolAmmo(null, null, 30)))
 }
 
-const initRooms = () => setRooms(new Map([[1, new Room(1, 3000, 2000, 'Main Hall', 10)]]))
+const initRooms = () => setRooms(new Map([[1, new Room(1, 3000, 2000, 'Main Hall', 10, null, '#9ea395')]]))
 
 const initWalls = () => setWalls(new Map([
     [1, [
