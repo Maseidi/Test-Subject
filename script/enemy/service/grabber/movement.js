@@ -9,11 +9,14 @@ export class GrabberMovementService extends AbstractMovementService {
     }
 
     playerInRange() {
-        if ( ( this.enemy.state !== CHASE && this.enemy.state !== NO_OFFENCE ) || !collide(this.enemy.sprite, getPlayer(), 0) ) 
+        if (
+            (this.enemy.state !== CHASE && this.enemy.state !== NO_OFFENCE) ||
+            !collide(this.enemy.sprite, getPlayer(), 0)
+        )
             return false
-        if ( this.enemy.state === CHASE ) {
+        if (this.enemy.state === CHASE) {
             const decision = Math.random()
-            if ( isThrowing() || decision < 0.2 ) {
+            if (isThrowing() || decision < 0.2) {
                 this.enemy.offenceService.hitPlayer()
                 return
             }
@@ -21,5 +24,4 @@ export class GrabberMovementService extends AbstractMovementService {
         }
         return true
     }
-
 }

@@ -1,7 +1,27 @@
-import { damagePlayer } from '../../../player-health.js'
 import { manageAimModeAngle } from '../../../angle-manager.js'
 import { getCurrentRoomEnemies, getGrabBar, getPauseContainer, getPlayer, setGrabBar } from '../../../elements.js'
-import { 
+import { damagePlayer } from '../../../player-health.js'
+import {
+    addAllAttributes,
+    addClass,
+    appendAll,
+    createAndAddClass,
+    exitAimModeAnimation,
+    getProperty,
+    isMoving,
+    removeClass,
+    removeEquipped,
+} from '../../../util.js'
+import {
+    getPlayerAngle,
+    getSprintPressed,
+    setAimMode,
+    setGrabbed,
+    setNoOffenseCounter,
+    setPlayerAngle,
+    setPlayerAngleState,
+} from '../../../variables.js'
+import {
     GO_FOR_RANGED,
     GRAB,
     INVESTIGATE,
@@ -10,25 +30,8 @@ import {
     SCORCHER,
     STAND_AND_WATCH,
     STINGER,
-    TRACKER } from '../../enemy-constants.js'
-import { 
-    addAllAttributes,
-    addClass,
-    appendAll,
-    createAndAddClass,
-    exitAimModeAnimation,
-    getProperty,
-    isMoving,
-    removeClass, 
-    removeEquipped} from '../../../util.js'
-import { 
-    getPlayerAngle,
-    getSprintPressed,
-    setAimMode,
-    setGrabbed,
-    setNoOffenseCounter,
-    setPlayerAngle,
-    setPlayerAngleState } from '../../../variables.js'
+    TRACKER,
+} from '../../enemy-constants.js'
 
 export class GrabberGrabService {
     constructor(enemy) {
@@ -39,16 +42,19 @@ export class GrabberGrabService {
         setNoOffenseCounter(0)
         const slider = getGrabBar().lastElementChild
         const percent = getProperty(slider, 'left', '%')
-        if ( percent >= 100 ) this.releasePlayer()
+        if (percent >= 100) this.releasePlayer()
         slider.style.left = `${percent + 0.7}%`
-        const current = 10 * ( percent + 0.7 )
+        const current = 10 * (percent + 0.7)
         this.#processPart(current, 'first')
         this.#processPart(current, 'second')
         this.#processPart(current, 'third')
     }
 
     #processPart(current, part) {
-        if ( current > Number(getGrabBar().getAttribute(part)) + 100 && getGrabBar().getAttribute(`${part}-done`) !== 'true' ) {
+        if (
+            current > Number(getGrabBar().getAttribute(part)) + 100 &&
+            getGrabBar().getAttribute(`${part}-done`) !== 'true'
+        ) {
             addClass(getGrabBar(), `${part}-fail`)
             damagePlayer(this.enemy.damage / 6)
             getGrabBar().setAttribute(`${part}-done`, true)
@@ -60,29 +66,27 @@ export class GrabberGrabService {
         exitAimModeAnimation()
         removeEquipped()
         damagePlayer(this.enemy.damage / 2)
-        if ( getSprintPressed() ) removeClass(getPlayer(), 'run')
-        if ( isMoving() ) removeClass(getPlayer(), 'walk')
+        if (getSprintPressed()) removeClass(getPlayer(), 'run')
+        if (isMoving()) removeClass(getPlayer(), 'walk')
         addClass(this.enemy.sprite.firstElementChild.firstElementChild, 'no-transition')
         addClass(getPlayer().firstElementChild.firstElementChild, 'no-transition')
 
         const angle2Player = this.enemy.angleService.angle2Player()
         manageAimModeAngle(
-            this.enemy.sprite, 
-            angle2Player, 
-            () => this.enemy.angle, 
-            (val) => this.enemy.angle = val, 
-            (val) => this.enemy.angleState = val
+            this.enemy.sprite,
+            angle2Player,
+            () => this.enemy.angle,
+            val => (this.enemy.angle = val),
+            val => (this.enemy.angleState = val),
         )
 
-        const angle2Enemy = -Math.sign(angle2Player) * ( 180 - Math.abs(angle2Player) )
-        manageAimModeAngle(
-            getPlayer(), angle2Enemy, getPlayerAngle, setPlayerAngle, setPlayerAngleState 
-        )
+        const angle2Enemy = -Math.sign(angle2Player) * (180 - Math.abs(angle2Player))
+        manageAimModeAngle(getPlayer(), angle2Enemy, getPlayerAngle, setPlayerAngle, setPlayerAngleState)
 
         addClass(this.enemy.sprite, 'grab')
         setGrabbed(true)
         getCurrentRoomEnemies().forEach(elem => {
-            if ( [RANGER, STINGER, SCORCHER].includes(elem.type) && elem.state === GO_FOR_RANGED ) return
+            if ([RANGER, STINGER, SCORCHER].includes(elem.type) && elem.state === GO_FOR_RANGED) return
             else elem.state = STAND_AND_WATCH
         })
         this.enemy.state = GRAB
@@ -110,25 +114,19 @@ export class GrabberGrabService {
         button.textContent = 'f'
         appendAll(messageContainer, message, button)
         appendAll(grabBar, firstElem, secondElem, thirdElem, messageContainer, slider)
-        addAllAttributes(
-            grabBar, 
-            'first', first, 
-            'second', second, 
-            'third', third,
-            'damage', this.enemy.damage / 6
-        )
+        addAllAttributes(grabBar, 'first', first, 'second', second, 'third', third, 'damage', this.enemy.damage / 6)
         getPauseContainer().append(grabBar)
         setGrabBar(grabBar)
     }
 
     releasePlayer() {
-        if ( getSprintPressed() ) addClass(getPlayer(), 'run')
-        if ( isMoving() ) addClass(getPlayer(), 'walk')    
+        if (getSprintPressed()) addClass(getPlayer(), 'run')
+        if (isMoving()) addClass(getPlayer(), 'walk')
         removeClass(this.enemy.sprite.firstElementChild.firstElementChild, 'no-transition')
         removeClass(getPlayer().firstElementChild.firstElementChild, 'no-transition')
         removeClass(this.enemy.sprite, 'grab')
         setGrabbed(false)
-        getCurrentRoomEnemies().forEach(elem => elem.state = elem.type === TRACKER ? INVESTIGATE : NO_OFFENCE)
+        getCurrentRoomEnemies().forEach(elem => (elem.state = elem.type === TRACKER ? INVESTIGATE : NO_OFFENCE))
         setNoOffenseCounter(1)
         this.removeQte()
     }
@@ -136,5 +134,4 @@ export class GrabberGrabService {
     removeQte() {
         getPauseContainer().firstElementChild.remove()
     }
-
 }

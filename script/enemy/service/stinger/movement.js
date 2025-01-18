@@ -1,8 +1,8 @@
-import { poisonPlayer } from '../../../player-health.js'
-import { CHASE, NO_OFFENCE } from '../../enemy-constants.js'
-import { addClass, collide, isThrowing } from '../../../util.js'
-import { AbstractMovementService } from '../abstract/movement.js'
 import { getCurrentRoom, getCurrentRoomPoisons, getPlayer } from '../../../elements.js'
+import { poisonPlayer } from '../../../player-health.js'
+import { addClass, collide, isThrowing } from '../../../util.js'
+import { CHASE, NO_OFFENCE } from '../../enemy-constants.js'
+import { AbstractMovementService } from '../abstract/movement.js'
 
 export class StingerMovementService extends AbstractMovementService {
     constructor(enemy) {
@@ -11,14 +11,14 @@ export class StingerMovementService extends AbstractMovementService {
 
     displaceEnemy() {
         this.enemy.poisonCounter = this.enemy.poisonCounter || 0
-        if ( this.enemy.poisonCounter === 900 ) this.addPoison()
+        if (this.enemy.poisonCounter === 900) this.addPoison()
         this.enemy.poisonCounter += 1
         this.enemy.pathFindingService.findPath()
         this.move2Destination()
     }
 
     addPoison() {
-        if ( getCurrentRoomPoisons().length >= 10 ) return
+        if (getCurrentRoomPoisons().length >= 10) return
         const poison = document.createElement('img')
         addClass(poison, 'poison')
         poison.src = `../assets/images/poison.png`
@@ -31,20 +31,21 @@ export class StingerMovementService extends AbstractMovementService {
     }
 
     playerInRange() {
-        if ( ( this.enemy.state !== CHASE && this.enemy.state !== NO_OFFENCE ) || 
-             !collide(this.enemy.sprite, getPlayer(), 0) ) 
+        if (
+            (this.enemy.state !== CHASE && this.enemy.state !== NO_OFFENCE) ||
+            !collide(this.enemy.sprite, getPlayer(), 0)
+        )
             return false
-        if ( this.enemy.state === CHASE ) {
+        if (this.enemy.state === CHASE) {
             const decision = Math.random()
-            if ( isThrowing() || decision < 0.5 ) {
-                if ( Math.random() < 0.5 ) poisonPlayer()
+            if (isThrowing() || decision < 0.5) {
+                if (Math.random() < 0.5) poisonPlayer()
                 this.enemy.offenceService.hitPlayer()
                 return
             }
-            if ( Math.random() < 0.5 ) poisonPlayer()
+            if (Math.random() < 0.5) poisonPlayer()
             this.enemy.grabService.grabPlayer()
         }
         return true
     }
-
 }

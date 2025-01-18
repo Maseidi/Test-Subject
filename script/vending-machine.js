@@ -1,40 +1,43 @@
-import { Progress } from './progress.js'
+import { getPauseContainer } from './elements.js'
+import { getGunDetails, getGunUpgradableDetail, isGun } from './gun-details.js'
 import { renderStats } from './gun-examine.js'
 import { Coin, Drop } from './interactables.js'
-import { getPauseContainer } from './elements.js'
-import { isThrowable } from './throwable-details.js'
-import { getProgressValueByNumber } from './progress-manager.js'
-import { getShopItems, getShopItemsWithId, GunShopItem } from './shop-item.js'
-import { addMessage, itemNotification, renderQuit } from './user-interface.js'
-import { getGunUpgradableDetail, getGunDetails, isGun } from './gun-details.js'
-import { ADRENALINE, ENERGY_DRINK, HEALTH_POTION, LUCK_PILLS } from './loot.js'
-import { 
-    getAdrenalinesDropped,
-    getEnergyDrinksDropped,
-    getHealthPotionsDropped,
-    getElementInteractedWith,
-    getLuckPillsDropped,
-    setAdrenalinesDropped,
-    setEnergyDrinksDropped,
-    setHealthPotionsDropped,
-    setLuckPillsDropped } from './variables.js'
-import { 
-    MAX_PACKSIZE,
+import {
     countItem,
     getInventory,
     handleEquippableDrop,
+    MAX_PACKSIZE,
     pickupDrop,
     upgradeInventory,
     upgradeWeaponStat,
-    useInventoryResource } from './inventory.js'
-import { 
+    useInventoryResource,
+} from './inventory.js'
+import { ADRENALINE, ENERGY_DRINK, HEALTH_POTION, LUCK_PILLS } from './loot.js'
+import { getProgressValueByNumber } from './progress-manager.js'
+import { Progress } from './progress.js'
+import { getShopItems, getShopItemsWithId, GunShopItem } from './shop-item.js'
+import { isThrowable } from './throwable-details.js'
+import { addMessage, itemNotification, renderQuit } from './user-interface.js'
+import {
     addClass,
     appendAll,
     createAndAddClass,
     element2Object,
     isStatUpgrader,
     nextId,
-    object2Element } from './util.js'
+    object2Element,
+} from './util.js'
+import {
+    getAdrenalinesDropped,
+    getElementInteractedWith,
+    getEnergyDrinksDropped,
+    getHealthPotionsDropped,
+    getLuckPillsDropped,
+    setAdrenalinesDropped,
+    setEnergyDrinksDropped,
+    setHealthPotionsDropped,
+    setLuckPillsDropped,
+} from './variables.js'
 
 let page = 1
 export const renderStore = () => {
@@ -58,17 +61,17 @@ const renderCoins = () => getPauseContainer().firstElementChild.append(itemNotif
 const renderPagination = () => {
     const paginationContainer = createAndAddClass('div', 'pagination-container')
     const buy = createAndAddClass('div', 'buy-page')
-    if ( page === 1 ) addClass(buy, 'active-page')
+    if (page === 1) addClass(buy, 'active-page')
     buy.textContent = `buy`
     buy.setAttribute('page', 1)
     buy.addEventListener('click', changePage)
     const upgrade = createAndAddClass('div', 'upgrade-page')
-    if ( page === 2 ) addClass(upgrade, 'active-page')
+    if (page === 2) addClass(upgrade, 'active-page')
     upgrade.textContent = `upgrade`
     upgrade.setAttribute('page', 2)
     upgrade.addEventListener('click', changePage)
     const sell = createAndAddClass('div', 'sell-page')
-    if ( page === 3 ) addClass(sell, 'active-page')
+    if (page === 3) addClass(sell, 'active-page')
     sell.textContent = `sell`
     sell.setAttribute('page', 3)
     sell.addEventListener('click', changePage)
@@ -76,7 +79,7 @@ const renderPagination = () => {
     getPauseContainer().firstElementChild.append(paginationContainer)
 }
 
-const changePage = (e) => {
+const changePage = e => {
     const pageNum = Number(e.target.getAttribute('page'))
     page = pageNum
     removeStore()
@@ -89,7 +92,7 @@ const renderPageContainer = () => {
 }
 
 const renderBuy = () => {
-    if ( page !== 1 ) return
+    if (page !== 1) return
     const buy = createAndAddClass('div', 'buy')
     const items = renderBuyItems()
     appendAll(buy, ...items)
@@ -100,12 +103,12 @@ const renderBuyItems = () => {
     const statUpgraderLimitRunner = statUpgraderOffLimit()
     return getShopItemsWithId()
         .filter(item => !item.sold && getProgressValueByNumber(item.renderProgress) && statUpgraderLimitRunner(item))
-        .map((item) => {
+        .map(item => {
             const buyItem = object2Element(item)
             addClass(buyItem, 'buy-item')
             const wrapper = createAndAddClass('div', 'buy-wrapper')
             const img = createAndAddClass('img', 'buy-item-img')
-            img.src = `../assets/images/${item.name}.png` 
+            img.src = `../assets/images/${item.name}.png`
             const name = createAndAddClass('p', 'buy-item-name')
             name.textContent = `${item.heading}`
             const amount = createAndAddClass('p', 'buy-item-amount')
@@ -113,7 +116,7 @@ const renderBuyItems = () => {
             const price = createAndAddClass('p', 'buy-item-price')
             price.textContent = `${item.price}`
             const buyItemCoin = createAndAddClass('img', 'buy-item-coin')
-            buyItemCoin.src = `../assets/images/coin.png` 
+            buyItemCoin.src = `../assets/images/coin.png`
             const info = createAndAddClass('div', 'info')
             const left = createAndAddClass('div', 'left')
             const right = createAndAddClass('div', 'right')
@@ -124,7 +127,7 @@ const renderBuyItems = () => {
             appendAll(wrapper, img, info)
             appendAll(buyItem, wrapper)
             return buyItem
-    })
+        })
 }
 
 const statUpgraderOffLimit = () => {
@@ -132,19 +135,19 @@ const statUpgraderOffLimit = () => {
     let healthCounter = 0
     let energyCounter = 0
     let luckCounter = 0
-    return (item) => {
-        if ( !isStatUpgrader(item) ) {
+    return item => {
+        if (!isStatUpgrader(item)) {
             return true
-        } else if ( item.name === ADRENALINE && adrenalineCounter < 10 - getAdrenalinesDropped() ) {
+        } else if (item.name === ADRENALINE && adrenalineCounter < 10 - getAdrenalinesDropped()) {
             adrenalineCounter++
             return true
-        } else if ( item.name === HEALTH_POTION && healthCounter < 10 - getHealthPotionsDropped() ) {
+        } else if (item.name === HEALTH_POTION && healthCounter < 10 - getHealthPotionsDropped()) {
             healthCounter++
             return true
-        } else if ( item.name === ENERGY_DRINK && energyCounter < 10 - getEnergyDrinksDropped() ) {
+        } else if (item.name === ENERGY_DRINK && energyCounter < 10 - getEnergyDrinksDropped()) {
             energyCounter++
             return true
-        } else if ( item.name === LUCK_PILLS && luckCounter < 10 - getLuckPillsDropped() ) {
+        } else if (item.name === LUCK_PILLS && luckCounter < 10 - getLuckPillsDropped()) {
             luckCounter++
             return true
         }
@@ -152,7 +155,7 @@ const statUpgraderOffLimit = () => {
     }
 }
 
-const buyPopup = (e) => {
+const buyPopup = e => {
     const itemObj = element2Object(e.currentTarget)
     renderDealPopup(itemObj, 'Purchase item?', isGun(itemObj.name) || itemObj.name === 'pouch', renderConfirmBuyBtn)
 }
@@ -186,72 +189,93 @@ const renderDealPopup = (itemObj, title, headingPredicate, confirmCb) => {
 const renderCancelBtn = () => {
     const cancel = createAndAddClass('button', 'popup-cancel')
     cancel.textContent = `cancel`
-    cancel.addEventListener('click', (e) => e.target.parentElement.parentElement.parentElement.remove())
+    cancel.addEventListener('click', e => e.target.parentElement.parentElement.parentElement.remove())
     return cancel
 }
 
 const renderExamineBtn = (itemObj, btnContainer) => {
-    if ( !isGun(itemObj.name) ) return
+    if (!isGun(itemObj.name)) return
     const examine = createAndAddClass('button', 'popup-examine')
     examine.textContent = `examine`
-    const weapon = getInventory().flat().find(item => item && item.name === itemObj.name)
-    examine.addEventListener('click', () => renderStats( weapon || {
-        ...getGunDetails().get(itemObj.name), 
-        name: itemObj.name, damagelvl: 1, fireratelvl: 1, reloadspeedlvl: 1, magazinelvl:1, rangelvl: 1
-    }))
+    const weapon = getInventory()
+        .flat()
+        .find(item => item && item.name === itemObj.name)
+    examine.addEventListener('click', () =>
+        renderStats(
+            weapon || {
+                ...getGunDetails().get(itemObj.name),
+                name: itemObj.name,
+                damagelvl: 1,
+                fireratelvl: 1,
+                reloadspeedlvl: 1,
+                magazinelvl: 1,
+                rangelvl: 1,
+            },
+        ),
+    )
     btnContainer.append(examine)
 }
 
-const renderConfirmBuyBtn = (itemObj) => 
-    renderConfirmBtn(
-        itemObj.price, 
-        () => {
-            if ( !checkEnoughCoins(itemObj) ) return
-            manageBuy(itemObj)
-        }
-    )
+const renderConfirmBuyBtn = itemObj =>
+    renderConfirmBtn(itemObj.price, () => {
+        if (!checkEnoughCoins(itemObj)) return
+        manageBuy(itemObj)
+    })
 
 const renderConfirmBtn = (price, cb, priceUnit = 'coin') => {
     const confirm = createAndAddClass('button', 'popup-confirm')
     const img = document.createElement('img')
     img.src = `../assets/images/${priceUnit}.png`
     const p = document.createElement('p')
-    p.textContent = `${price}` 
+    p.textContent = `${price}`
     appendAll(confirm, img, p)
     confirm.addEventListener('click', cb)
     return confirm
 }
 
-const checkEnoughCoins = (itemObj) => {
+const checkEnoughCoins = itemObj => {
     const result = countItem('coin') >= itemObj.price
-    if ( !result ) addVendingMachineMessage('no enough cash')
+    if (!result) addVendingMachineMessage('no enough cash')
     return result
 }
 
-const addVendingMachineMessage = (input) => addMessage(input, getPauseContainer().firstElementChild.children[4].firstElementChild)
+const addVendingMachineMessage = input =>
+    addMessage(input, getPauseContainer().firstElementChild.children[4].firstElementChild)
 
-const manageBuy = (itemObj) => {
+const manageBuy = itemObj => {
     const loss = itemObj.price
     const needSpace2string = new Array(itemObj.space).fill('empty').join('')
     useInventoryResource('coin', loss)
-    if ( itemObj.name === 'pouch' ) {
+    if (itemObj.name === 'pouch') {
         upgradeInventory()
         submitPurchase(itemObj)
         return
     }
 
-    const inventory2string = getInventory().flat()
-        .map((item, index) => item === null ? (index % 4 === 3 ? 'emptyend' : 'empty') : item).join('')
+    const inventory2string = getInventory()
+        .flat()
+        .map((item, index) => (item === null ? (index % 4 === 3 ? 'emptyend' : 'empty') : item))
+        .join('')
 
-    if ( inventory2string.includes(needSpace2string) ) {
+    if (inventory2string.includes(needSpace2string)) {
         let chosenItem = getShopItems()[itemObj.id]
-        if ( isStatUpgrader(itemObj) ) chosenItem.price = 30
-        if ( itemObj.name === 'armor' ) chosenItem.price = 50
+        if (isStatUpgrader(itemObj)) chosenItem.price = 30
+        if (itemObj.name === 'armor') chosenItem.price = 50
         const { width, left, top, name, heading, amount, space, description, price } = chosenItem
 
-        let purchasedItem = new Drop(width, left, top, name, heading, amount, 
-                                     space, description, price / amount, Progress.builder().setRenderProgress(String(Number.MAX_SAFE_INTEGER)))
-                                     
+        let purchasedItem = new Drop(
+            width,
+            left,
+            top,
+            name,
+            heading,
+            amount,
+            space,
+            description,
+            price / amount,
+            Progress.builder().setRenderProgress(String(Number.MAX_SAFE_INTEGER)),
+        )
+
         purchasedItem = handleNewWeapnPurchase(purchasedItem, itemObj.name)
         purchasedItem = handleNewThrowablePurchase(purchasedItem, itemObj.name)
         pickupDrop(object2Element(purchasedItem))
@@ -263,41 +287,41 @@ const manageBuy = (itemObj) => {
 }
 
 const handleNewWeapnPurchase = (purchasedItem, name) => {
-    if ( !isGun(name) ) return purchasedItem
+    if (!isGun(name)) return purchasedItem
     return {
         ...purchasedItem,
         id: nextId(),
-        currmag: 0, 
-        damagelvl: 1, 
-        rangelvl: 1, 
-        reloadspeedlvl: 1, 
-        magazinelvl: 1, 
-        fireratelvl: 1, 
-        ammotype: getGunDetails().get(name).ammotype
+        currmag: 0,
+        damagelvl: 1,
+        rangelvl: 1,
+        reloadspeedlvl: 1,
+        magazinelvl: 1,
+        fireratelvl: 1,
+        ammotype: getGunDetails().get(name).ammotype,
     }
 }
 
 const handleNewThrowablePurchase = (purchasedItem, name) => {
-    if ( !isThrowable(name) ) return purchasedItem
+    if (!isThrowable(name)) return purchasedItem
     return { ...purchasedItem, id: nextId() }
 }
 
-const submitPurchase = (itemObj) => {
+const submitPurchase = itemObj => {
     getShopItems()[itemObj.id].sold = true
     handleStatUpgrader(itemObj)
     removeStore()
     renderStore()
 }
 
-const handleStatUpgrader = (itemObj) => {
-    if ( itemObj.name === ADRENALINE )         setAdrenalinesDropped(getAdrenalinesDropped()     + 1)    
-    else if ( itemObj.name === HEALTH_POTION ) setHealthPotionsDropped(getHealthPotionsDropped() + 1)    
-    else if ( itemObj.name === ENERGY_DRINK )  setEnergyDrinksDropped(getEnergyDrinksDropped()   + 1)    
-    else if ( itemObj.name === LUCK_PILLS )    setLuckPillsDropped(getLuckPillsDropped()         + 1)
+const handleStatUpgrader = itemObj => {
+    if (itemObj.name === ADRENALINE) setAdrenalinesDropped(getAdrenalinesDropped() + 1)
+    else if (itemObj.name === HEALTH_POTION) setHealthPotionsDropped(getHealthPotionsDropped() + 1)
+    else if (itemObj.name === ENERGY_DRINK) setEnergyDrinksDropped(getEnergyDrinksDropped() + 1)
+    else if (itemObj.name === LUCK_PILLS) setLuckPillsDropped(getLuckPillsDropped() + 1)
 }
 
 const renderUpgrade = () => {
-    if ( page !== 2 ) return
+    if (page !== 2) return
     const upgrade = createAndAddClass('div', 'upgrade')
     const left = createAndAddClass('div', 'upgrade-left')
     const items = renderUpgradeItems()
@@ -311,24 +335,24 @@ const renderUpgrade = () => {
 
 const renderUpgradeItems = () => {
     return getInventory()
-    .flat()
-    .filter((block => isGun(block?.name)))
-    .map((weapon) => {
-        const weapon2Upgrade = object2Element(weapon)
-        addClass(weapon2Upgrade, 'upgrade-item')
-        const wrapper = createAndAddClass('div', 'upgrade-wrapper')
-        const img = createAndAddClass('img', 'upgrade-item-img')
-        img.src = `../assets/images/${weapon.name}.png` 
-        const name = createAndAddClass('p', 'upgrade-item-name')
-        name.textContent = `${weapon.heading}`
-        appendAll(wrapper, img, name)
-        appendAll(weapon2Upgrade, wrapper)
-        weapon2Upgrade.addEventListener('click', renderGunDetails)
-        return weapon2Upgrade
-    })
+        .flat()
+        .filter(block => isGun(block?.name))
+        .map(weapon => {
+            const weapon2Upgrade = object2Element(weapon)
+            addClass(weapon2Upgrade, 'upgrade-item')
+            const wrapper = createAndAddClass('div', 'upgrade-wrapper')
+            const img = createAndAddClass('img', 'upgrade-item-img')
+            img.src = `../assets/images/${weapon.name}.png`
+            const name = createAndAddClass('p', 'upgrade-item-name')
+            name.textContent = `${weapon.heading}`
+            appendAll(wrapper, img, name)
+            appendAll(weapon2Upgrade, wrapper)
+            weapon2Upgrade.addEventListener('click', renderGunDetails)
+            return weapon2Upgrade
+        })
 }
 
-const renderGunDetails = (e) => {
+const renderGunDetails = e => {
     const weaponObj = element2Object(e.currentTarget)
     const upgradeRight = document.querySelector('.upgrade-right')
     upgradeRight.innerHTML = ``
@@ -351,14 +375,14 @@ const renderDetail = (weaponObj, name) => {
     const price = renderPrice(weaponObj, name)
     appendAll(lower, levels, values, price)
     appendAll(upgradeDetailComponent, title, lower)
-    if ( weaponObj[`${name.replace(' ', '')}lvl`] !== 5 ) upgradeDetailComponent.addEventListener('click', upgradePopup)
+    if (weaponObj[`${name.replace(' ', '')}lvl`] !== 5) upgradeDetailComponent.addEventListener('click', upgradePopup)
     return upgradeDetailComponent
 }
 
 const renderLevel = (weaponObj, name) => {
     const levels = createAndAddClass('div', 'upgrade-detail-level')
     const currLvl = weaponObj[`${name.replace(' ', '')}lvl`]
-    if ( currLvl === 5 ) levels.textContent = `Max Lvl.`
+    if (currLvl === 5) levels.textContent = `Max Lvl.`
     else {
         const current = document.createElement('p')
         current.textContent = `Lvl.${currLvl}`
@@ -374,8 +398,7 @@ const renderLevel = (weaponObj, name) => {
 const renderValue = (weaponObj, name) => {
     const values = createAndAddClass('div', 'upgrade-detail-value')
     const currLvl = weaponObj[`${name.replace(' ', '')}lvl`]
-    if ( currLvl === 5 ) 
-        values.textContent = `${getGunUpgradableDetail(weaponObj.name, name.replace(' ', ''), currLvl)}`
+    if (currLvl === 5) values.textContent = `${getGunUpgradableDetail(weaponObj.name, name.replace(' ', ''), currLvl)}`
     else {
         const current = document.createElement('p')
         current.textContent = `${getGunUpgradableDetail(weaponObj.name, name.replace(' ', ''), currLvl)}`
@@ -390,18 +413,18 @@ const renderValue = (weaponObj, name) => {
 
 const renderPrice = (weaponObj, name) => {
     const price = createAndAddClass('div', 'upgrade-detail-price')
-    const currLvl = weaponObj[`${name.replace(' ', '')}lvl`]        
-    if ( currLvl !== 5 ) {
+    const currLvl = weaponObj[`${name.replace(' ', '')}lvl`]
+    if (currLvl !== 5) {
         const img = document.createElement('img')
         img.src = `../assets/images/coin.png`
         const value = createAndAddClass('p', 'upgrade-stat-price-value')
         value.textContent = `${Math.pow(currLvl, 2) + 2}`
-        appendAll(price, img, value)  
+        appendAll(price, img, value)
     }
     return price
 }
 
-const upgradePopup = (e) => {
+const upgradePopup = e => {
     const itemObj = element2Object(e.currentTarget)
     const popupContainer = createAndAddClass('div', 'deal-popup-container', 'popup-container', 'ui-theme')
     const popup = createAndAddClass('div', 'upgrade-popup')
@@ -411,35 +434,32 @@ const upgradePopup = (e) => {
     const cancel = renderCancelBtn(itemObj)
     btnContainer.append(cancel)
     const confirm = renderUpgradeConfirmBtn({
-        ...itemObj, 
+        ...itemObj,
         cost: e.currentTarget.children[1].children[2].children[1].textContent,
-        stat: e.currentTarget.firstElementChild.textContent
+        stat: e.currentTarget.firstElementChild.textContent,
     })
     btnContainer.append(confirm)
     const message = createAndAddClass('p', 'message')
     appendAll(
-        popup, 
-        title, 
+        popup,
+        title,
         e.currentTarget.firstElementChild.cloneNode(true),
-        e.currentTarget.children[1].firstElementChild.cloneNode(true), 
-        e.currentTarget.children[1].children[1].cloneNode(true), 
+        e.currentTarget.children[1].firstElementChild.cloneNode(true),
+        e.currentTarget.children[1].children[1].cloneNode(true),
         btnContainer,
-        message
+        message,
     )
     popupContainer.append(popup)
     getPauseContainer().firstElementChild.append(popupContainer)
 }
 
-const renderUpgradeConfirmBtn = (itemObj) => 
-    renderConfirmBtn(
-        itemObj.cost, 
-        () => {
-            if ( !checkEnoughCoins({price: itemObj.cost}) ) return
-            manageUpgrade(itemObj)
-        }
-    )
+const renderUpgradeConfirmBtn = itemObj =>
+    renderConfirmBtn(itemObj.cost, () => {
+        if (!checkEnoughCoins({ price: itemObj.cost })) return
+        manageUpgrade(itemObj)
+    })
 
-const manageUpgrade = (itemObj) => {
+const manageUpgrade = itemObj => {
     useInventoryResource('coin', itemObj.cost)
     const stat = itemObj.stat.replace(' ', '')
     upgradeWeaponStat(itemObj.name, stat)
@@ -447,23 +467,28 @@ const manageUpgrade = (itemObj) => {
     renderStore()
     const newElem = object2Element(itemObj)
     newElem.setAttribute(stat.concat('lvl'), itemObj[stat.concat('lvl')] + 1)
-    const e = {currentTarget: newElem}
+    const e = { currentTarget: newElem }
     renderGunDetails(e)
 }
 
 const renderSell = () => {
-    if ( page !== 3 ) return
+    if (page !== 3) return
     const sell = createAndAddClass('div', 'sell')
     getInventory()
         .flat()
-        .filter(item => item && !['coin', 'note', 'lighter'].includes(item.name) && 
-                        !item.name?.includes('key') && item.amount === (MAX_PACKSIZE[item.name] ?? 1) )
+        .filter(
+            item =>
+                item &&
+                !['coin', 'note', 'lighter'].includes(item.name) &&
+                !item.name?.includes('key') &&
+                item.amount === (MAX_PACKSIZE[item.name] ?? 1),
+        )
         .forEach(item => {
             const sellItem = object2Element(item)
             addClass(sellItem, 'sell-item')
             const wrapper = createAndAddClass('div', 'sell-wrapper')
             const img = createAndAddClass('img', 'sell-item-img')
-            img.src = `../assets/images/${item.name}.png` 
+            img.src = `../assets/images/${item.name}.png`
             const name = createAndAddClass('p', 'sell-item-name')
             name.textContent = `${item.heading}`
             const amount = createAndAddClass('p', 'sell-item-amount')
@@ -471,7 +496,7 @@ const renderSell = () => {
             const price = createAndAddClass('p', 'sell-item-price')
             price.textContent = `${item.price * item.amount}`
             const sellItemCoin = createAndAddClass('img', 'sell-item-coin')
-            sellItemCoin.src = `../assets/images/coin.png` 
+            sellItemCoin.src = `../assets/images/coin.png`
             const info = createAndAddClass('div', 'info')
             const left = createAndAddClass('div', 'left')
             const right = createAndAddClass('div', 'right')
@@ -486,36 +511,32 @@ const renderSell = () => {
     getPauseContainer().firstElementChild.children[2].append(sell)
 }
 
-const sellPopup = (e) => {
+const sellPopup = e => {
     const itemObj = element2Object(e.currentTarget)
     renderDealPopup(itemObj, 'Sell item?', isGun(itemObj.name), renderConfirmSellBtn)
 }
 
-const renderConfirmSellBtn = (itemObj) => 
-    renderConfirmBtn(
-        itemObj.price * itemObj.amount,
-        () => manageSell(itemObj) 
-    )
+const renderConfirmSellBtn = itemObj => renderConfirmBtn(itemObj.price * itemObj.amount, () => manageSell(itemObj))
 
-const manageSell = (itemObj) => {
+const manageSell = itemObj => {
     const gain = itemObj.price * itemObj.amount
     const gainSpace = itemObj.space
     pickupDrop(object2Element(new Coin(null, null, gain)))
     let left = getElementInteractedWith().getAttribute('amount')
-    useInventoryResource('coin', gain-left)
+    useInventoryResource('coin', gain - left)
     left -= gainSpace * 50
-    if ( left <= 0 ) {
+    if (left <= 0) {
         useInventoryResource(itemObj.name, itemObj.amount)
         pickupDrop(object2Element(new Coin(null, null, gain)))
         handleEquippableDrop(itemObj)
         removeStore()
         renderStore()
-        if ( isGun(itemObj.name) && !getShopItems().find(item => !item.sold && item.name === itemObj.name) ) 
+        if (isGun(itemObj.name) && !getShopItems().find(item => !item.sold && item.name === itemObj.name))
             getShopItems().push(new GunShopItem(itemObj.name))
 
         return
     }
-    addVendingMachineMessage('No enough space') 
+    addVendingMachineMessage('No enough space')
 }
 
 const removeStore = () => {

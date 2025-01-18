@@ -1,10 +1,5 @@
 import { addControls } from './controls.js'
-import { renderUi } from './user-interface.js'
-import { loadCurrentRoom } from './room-loader.js'
-import { renderVirusIcon } from './player-health.js'
-import { appendAll, createAndAddClass } from './util.js'
-import { getInfection, getPlayerAngle, getPlayerX, getPlayerY, setMapX, setMapY } from './variables.js'
-import { 
+import {
     getHealthStatusContainer,
     getMapEl,
     getShadowContainer,
@@ -15,8 +10,14 @@ import {
     setPlayer,
     setPopupContainer,
     setRoomContainer,
-    setRoomNameContainer, 
-    setShadowContainer } from './elements.js'
+    setRoomNameContainer,
+    setShadowContainer,
+} from './elements.js'
+import { renderVirusIcon } from './player-health.js'
+import { loadCurrentRoom } from './room-loader.js'
+import { renderUi } from './user-interface.js'
+import { appendAll, createAndAddClass } from './util.js'
+import { getInfection, getPlayerAngle, getPlayerX, getPlayerY, setMapX, setMapY } from './variables.js'
 
 export const startUp = () => {
     addControls()

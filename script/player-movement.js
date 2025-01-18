@@ -1,6 +1,6 @@
-import { isLowHealth, isMoving } from './util.js'
 import { getMapEl, getPlayer } from './elements.js'
-import { 
+import { isLowHealth, isMoving } from './util.js'
+import {
     getAimMode,
     getAllowMove,
     getDownPressed,
@@ -15,25 +15,26 @@ import {
     getSprint,
     getUpPressed,
     setMapX,
-    setMapY, 
-    setPlayerSpeed, 
-    setPlayerX, 
-    setPlayerY} from './variables.js'
+    setMapY,
+    setPlayerSpeed,
+    setPlayerX,
+    setPlayerY,
+} from './variables.js'
 
 export const managePlayerMovement = () => {
-    if ( isMoving() && getAllowMove() && !getGrabbed() ) move()
+    if (isMoving() && getAllowMove() && !getGrabbed()) move()
 }
 
 const move = () => {
     let speed = normalizeSpeed()
-    if ( getUpPressed() )    changePosition(setMapY, getMapY, setPlayerY, getPlayerY, speed)
-    if ( getDownPressed() )  changePosition(setMapY, getMapY, setPlayerY, getPlayerY, -speed)
-    if ( getLeftPressed() )  changePosition(setMapX, getMapX, setPlayerX, getPlayerX, speed)
-    if ( getRightPressed() ) changePosition(setMapX, getMapX, setPlayerX, getPlayerX, -speed)
-    getMapEl().style.left =  `${getMapX()}px`
-    getMapEl().style.top =   `${getMapY()}px`
+    if (getUpPressed()) changePosition(setMapY, getMapY, setPlayerY, getPlayerY, speed)
+    if (getDownPressed()) changePosition(setMapY, getMapY, setPlayerY, getPlayerY, -speed)
+    if (getLeftPressed()) changePosition(setMapX, getMapX, setPlayerX, getPlayerX, speed)
+    if (getRightPressed()) changePosition(setMapX, getMapX, setPlayerX, getPlayerX, -speed)
+    getMapEl().style.left = `${getMapX()}px`
+    getMapEl().style.top = `${getMapY()}px`
     getPlayer().style.left = `${getPlayerX()}px`
-    getPlayer().style.top =  `${getPlayerY()}px`
+    getPlayer().style.top = `${getPlayerY()}px`
 }
 
 const changePosition = (setMap, getMap, setPlayer, getPlayer, speed) => {
@@ -46,15 +47,19 @@ const normalizeSpeed = () => {
     speed = getSprint() ? 2 * getPlayerSpeed() : getPlayerSpeed()
     speed = getAimMode() ? speed / 3 : speed
     speed = !getAimMode() && isLowHealth() ? speed / 1.25 : speed
-    if ((getUpPressed() && getLeftPressed()) || (getUpPressed() && getRightPressed()) || 
-        (getDownPressed() && getLeftPressed()) || (getDownPressed() && getRightPressed()) ) {
-            speed /= 1.41
+    if (
+        (getUpPressed() && getLeftPressed()) ||
+        (getUpPressed() && getRightPressed()) ||
+        (getDownPressed() && getLeftPressed()) ||
+        (getDownPressed() && getRightPressed())
+    ) {
+        speed /= 1.41
     }
     return speed
 }
 
-export const useAdrenaline = (adrenaline) => {
-    if ( getPlayerSpeed() === 6 ) return
+export const useAdrenaline = adrenaline => {
+    if (getPlayerSpeed() === 6) return
     setPlayerSpeed(getPlayerSpeed() + 0.1 >= 6 ? 6 : getPlayerSpeed() + 0.1)
     adrenaline.amount -= 1
 }

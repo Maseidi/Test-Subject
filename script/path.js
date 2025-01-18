@@ -19,10 +19,7 @@ export class SinglePointPath extends Path {
 
 export class DoublePointPath extends Path {
     constructor(x1, y1, x2, y2) {
-        super([
-            new Point(x1, y1),
-            new Point(x2, y2)
-        ])
+        super([new Point(x1, y1), new Point(x2, y2)])
     }
 }
 
@@ -40,12 +37,7 @@ export class HorDoublePointPath extends DoublePointPath {
 
 export class RectPath extends Path {
     constructor(x, y, width, height) {
-        super([
-            new Point(x, y),
-            new Point(x + width, y),
-            new Point(x + width, y + height),
-            new Point(x, y + height)
-        ])
+        super([new Point(x, y), new Point(x + width, y), new Point(x + width, y + height), new Point(x, y + height)])
     }
 }
 

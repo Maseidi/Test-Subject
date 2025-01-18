@@ -1,6 +1,6 @@
-import { getNoOffenseCounter } from '../../../variables.js'
-import { addAllClasses, removeClass } from '../../../util.js'
 import { damagePlayer, infectPlayer2SpecificVirus } from '../../../player-health.js'
+import { addAllClasses, removeClass } from '../../../util.js'
+import { getNoOffenseCounter } from '../../../variables.js'
 
 export class AbstractOffenceService {
     constructor(enemy) {
@@ -9,7 +9,7 @@ export class AbstractOffenceService {
 
     hitPlayer() {
         const arm = this.enemy.sprite.firstElementChild.firstElementChild.firstElementChild
-        if ( getNoOffenseCounter() === 0 ) addAllClasses(arm, 'attack', 'animation')
+        if (getNoOffenseCounter() === 0) addAllClasses(arm, 'attack', 'animation')
         damagePlayer(this.enemy.damage)
         arm.addEventListener('animationend', () => removeClass(arm, 'attack', 'animation'))
         this.infectPlayer()
@@ -18,5 +18,4 @@ export class AbstractOffenceService {
     infectPlayer() {
         infectPlayer2SpecificVirus(this.enemy.virus)
     }
-
 }

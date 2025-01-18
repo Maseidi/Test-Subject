@@ -1,10 +1,10 @@
+import { getPauseContainer } from './elements.js'
+import { getGunDetails, getGunUpgradableDetail } from './gun-details.js'
 import { getInventory } from './inventory.js'
 import { renderQuit } from './user-interface.js'
-import { getPauseContainer } from './elements.js'
 import { addClass, appendAll, createAndAddClass } from './util.js'
-import { getGunUpgradableDetail, getGunDetails } from './gun-details.js'
 
-export const renderStats = (itemObj) => {
+export const renderStats = itemObj => {
     const weaponStatsContainer = createAndAddClass('div', 'weapon-stats-container', 'ui-theme')
     const weaponStats = createAndAddClass('div', 'weapon-stats')
     const imgContainer = createAndAddClass('div', 'weapon-stats-img-container')
@@ -38,11 +38,11 @@ const createStat = (itemObj, name) => {
     const value = createAndAddClass('div', 'value')
     value.textContent = `${getValue(itemObj, name)}`
     const lower = createAndAddClass('div', 'lower')
-    for ( let i = 1; i <= 5; i++ ) {
+    for (let i = 1; i <= 5; i++) {
         const level = document.createElement('div')
-        if ( i <= itemObj[name.replace(' ', '').concat('lvl')] ) addClass(level, 'active')
-        else addClass(level, 'inactive')   
-        lower.append(level) 
+        if (i <= itemObj[name.replace(' ', '').concat('lvl')]) addClass(level, 'active')
+        else addClass(level, 'inactive')
+        lower.append(level)
     }
     appendAll(upperRight, statLvl, value)
     appendAll(upper, statName, upperRight)
@@ -51,16 +51,18 @@ const createStat = (itemObj, name) => {
 }
 
 const getValue = (itemObj, name) => {
-    let weapon = getInventory().flat().find(item => item && item.name === itemObj.name)
-    if ( !weapon ) 
+    let weapon = getInventory()
+        .flat()
+        .find(item => item && item.name === itemObj.name)
+    if (!weapon)
         weapon = {
-            name: itemObj.name, 
-            currmag: 0, 
-            damagelvl: 1, 
-            rangelvl: 1, 
-            reloadspeedlvl: 1, 
-            magazinelvl: 1, 
-            fireratelvl: 1
+            name: itemObj.name,
+            currmag: 0,
+            damagelvl: 1,
+            rangelvl: 1,
+            reloadspeedlvl: 1,
+            magazinelvl: 1,
+            fireratelvl: 1,
         }
     return getGunUpgradableDetail(weapon.name, name.replace(' ', ''), weapon[name.replace(' ', '').concat('lvl')])
 }

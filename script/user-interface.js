@@ -1,14 +1,14 @@
 import { managePause } from './actions.js'
-import { isThrowable } from './throwable-details.js'
 import { getPauseContainer, getUiEl, setUiEl } from './elements.js'
-import { addClass, appendAll, containsClass, createAndAddClass, removeClass } from './util.js'
 import {
     calculateThrowableAmount,
     calculateTotalAmmo,
     countItem,
     findEquippedWeaponById,
-    updateInteractablePopups
+    updateInteractablePopups,
 } from './inventory.js'
+import { isThrowable } from './throwable-details.js'
+import { addClass, appendAll, containsClass, createAndAddClass, removeClass } from './util.js'
 import {
     getDraggedItem,
     getEquippedWeaponId,
@@ -16,7 +16,7 @@ import {
     getHealth,
     getMaxHealth,
     getMaxStamina,
-    getStamina
+    getStamina,
 } from './variables.js'
 
 export const renderUi = () => {
@@ -42,7 +42,7 @@ const renderHealthBar = () => {
     healthManager(getHealth())
 }
 
-export const healthManager = (inputHealth) => 
+export const healthManager = inputHealth =>
     abstractManager(inputHealth, getUiEl().firstElementChild.firstElementChild, getMaxHealth())
 
 const renderStaminaBar = () => {
@@ -54,28 +54,28 @@ const renderStaminaBar = () => {
     staminaManager(getStamina())
 }
 
-export const staminaManager = (inputStamina) => 
+export const staminaManager = inputStamina =>
     abstractManager(inputStamina, getUiEl().children[1].firstElementChild, getMaxStamina())
 
-const abstractManager = (input, elem, max) => elem.style.width = `${input / max * 100}%`
+const abstractManager = (input, elem, max) => (elem.style.width = `${(input / max) * 100}%`)
 
 export const renderWeaponUi = () => {
-    if ( getUiEl().children[2] ) getUiEl().children[2].remove() 
-    if ( !getEquippedWeaponId() ) return
+    if (getUiEl().children[2]) getUiEl().children[2].remove()
+    if (!getEquippedWeaponId()) return
     const equippedWeapon = findEquippedWeaponById()
-    const throwable = isThrowable(equippedWeapon.name) 
+    const throwable = isThrowable(equippedWeapon.name)
     const weaponContainer = createAndAddClass('div', 'weapon-container')
     const weaponIcon = createAndAddClass('img', 'weapon-icon')
     weaponIcon.src = `../assets/images/${equippedWeapon.name}.png`
     addClass(weaponIcon, 'weapon-icon')
     const ammoCount = createAndAddClass('div', 'ammo-count')
-    if ( !throwable ) {
+    if (!throwable) {
         var mag = document.createElement('p')
         mag.textContent = `${equippedWeapon.currmag}`
     }
     const total = document.createElement('p')
     total.textContent = throwable ? calculateThrowableAmount() : calculateTotalAmmo()
-    if ( !throwable )  ammoCount.append(mag)
+    if (!throwable) ammoCount.append(mag)
     ammoCount.append(total)
     appendAll(weaponContainer, weaponIcon, ammoCount)
     getUiEl().append(weaponContainer)
@@ -94,17 +94,20 @@ export const renderQuit = (mapMaker = false) => {
     getPauseContainer().lastElementChild.append(quitContainer)
 }
 
-export const quitPage = (mapMaker) => {
-    if ( getDraggedItem() ) return
+export const quitPage = mapMaker => {
+    if (getDraggedItem()) return
     const last = getPauseContainer().lastElementChild
-    if ( Array.from(last.children).find(child => containsClass(child, 'popup-container')) ) return
+    if (Array.from(last.children).find(child => containsClass(child, 'popup-container'))) return
     last.remove()
     updateInteractablePopups()
-    if ( !mapMaker && (getPauseContainer().children.length === 0 || getPauseContainer().children.length === 1 && getGrabbed()) ) 
+    if (
+        !mapMaker &&
+        (getPauseContainer().children.length === 0 || (getPauseContainer().children.length === 1 && getGrabbed()))
+    )
         managePause()
 }
 
-export const itemNotification = (name) => {
+export const itemNotification = name => {
     const container = createAndAddClass('div', 'item-container')
     const item = createAndAddClass('img', 'item-img')
     item.src = `../assets/images/${name}.png`

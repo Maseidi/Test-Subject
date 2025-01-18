@@ -12,5 +12,4 @@ export class TrackerVisionService extends AbstractVisionService {
     vision2Player() {
         return
     }
-
 }

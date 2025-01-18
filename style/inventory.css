@@ -1,323 +1,323 @@
 .inventory-ui,
 .weapon-stats-container,
 .note-container {
-  top: 0;
-  width: 100%;
-  height: 100%;
-  color: white;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    color: white;
 }
 
 .note {
-  top: 50%;
-  left: 50%;
-  width: 500px;
-  height: 600px;
-  color: #2b2b2b;
-  line-height: 31px;
-  position: absolute;
-  padding: 30px 50px;
-  background-size: cover;
-  transform: translateX(-50%) translateY(-50%);
-  background-image: url("../assets/images/note.png");
+    top: 50%;
+    left: 50%;
+    width: 500px;
+    height: 600px;
+    color: #2b2b2b;
+    line-height: 31px;
+    position: absolute;
+    padding: 30px 50px;
+    background-size: cover;
+    transform: translateX(-50%) translateY(-50%);
+    background-image: url('../assets/images/note.png');
 }
 
 .note-data {
-  font-family: kalam;
+    font-family: kalam;
 }
 
 .inventory-ui {
-  gap: 50px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: row-reverse;
+    gap: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row-reverse;
 }
 
 .inventory-container {
-  display: flex;
-  flex-direction: column;
+    display: flex;
+    flex-direction: column;
 }
 
 .inventory {
-  width: 400px;
-  display: flex;
-  position: relative;
-  flex-flow: row wrap;
+    width: 400px;
+    display: flex;
+    position: relative;
+    flex-flow: row wrap;
 }
 
 .block {
-  height: 70px;
-  display: flex;
-  position: relative;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  background-color: rgba(245, 222, 179, 0.1);
+    height: 70px;
+    display: flex;
+    position: relative;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background-color: rgba(245, 222, 179, 0.1);
 }
 
 .options {
-  top: 0;
-  left: 100%;
-  z-index: 20;
-  width: 100px;
-  position: absolute;
-  animation-duration: 100ms;
-  text-transform: capitalize;
-  animation-direction: alternate;
-  animation-name: options-animation;
+    top: 0;
+    left: 100%;
+    z-index: 20;
+    width: 100px;
+    position: absolute;
+    animation-duration: 100ms;
+    text-transform: capitalize;
+    animation-direction: alternate;
+    animation-name: options-animation;
 }
 
 .options > div {
-  width: 100%;
-  position: relative;
-  padding: 2px 0 2px 5px;
-  background-color: rgb(0, 0, 0);
-  color: rgba(255, 255, 255, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.7);
+    width: 100%;
+    position: relative;
+    padding: 2px 0 2px 5px;
+    background-color: rgb(0, 0, 0);
+    color: rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.7);
 }
 
 .block:hover::after,
 .weapon-wheel > div:hover:after,
 .options > div:hover::after {
-  opacity: 1;
+    opacity: 1;
 }
 
 .options > div::after {
-  background-color: rgba(255, 255, 255, 0.3) !important;
+    background-color: rgba(255, 255, 255, 0.3) !important;
 }
 
 .block::after,
 .weapon-wheel > div::after,
 .options > div::after {
-  top: 0;
-  left: 0;
-  opacity: 0;
-  content: "";
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  background-color: rgba(255, 255, 255, 0.1);
+    top: 0;
+    left: 0;
+    opacity: 0;
+    content: '';
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
 .block > img {
-  height: 80%;
-  max-width: 90%;
+    height: 80%;
+    max-width: 90%;
 }
 
 .block > .amount {
-  right: 0;
-  bottom: 0;
-  z-index: 10;
-  padding: 5px;
-  color: white;
-  position: absolute;
-  background-color: black;
+    right: 0;
+    bottom: 0;
+    z-index: 10;
+    padding: 5px;
+    color: white;
+    position: absolute;
+    background-color: black;
 }
 
 .description {
-  width: 400px;
-  height: 100px;
-  padding: 20px 0;
+    width: 400px;
+    height: 100px;
+    padding: 20px 0;
 }
 
 .description > h2 {
-  color: white;
-  text-transform: capitalize;
+    color: white;
+    text-transform: capitalize;
 }
 
 .description > p {
-  font-size: 16px;
-  margin-top: 10px;
-  line-height: 25px;
-  color: rgba(255, 255, 255, 0.5);
+    font-size: 16px;
+    margin-top: 10px;
+    line-height: 25px;
+    color: rgba(255, 255, 255, 0.5);
 }
 
 .weapon-wheel-container {
-  width: 800px;
-  height: 240px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    width: 800px;
+    height: 240px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .weapon-wheel {
-  position: relative;
+    position: relative;
 }
 
 .weapon-wheel > div {
-  height: 70px;
-  position: absolute;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+    height: 70px;
+    position: absolute;
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 div.selectable-slot {
-  background-color: rgb(34, 139, 34, 0.3);
+    background-color: rgb(34, 139, 34, 0.3);
 }
 
 .weapon-wheel > div > img {
-  height: 100%;
+    height: 100%;
 }
 
 .weapon-wheel > div > p {
-  left: 0;
-  bottom: 0;
-  color: white;
-  font-size: 14px;
-  padding: 2px 5px;
-  position: absolute;
-  background-color: rgb(119, 136, 153, 0.9);
+    left: 0;
+    bottom: 0;
+    color: white;
+    font-size: 14px;
+    padding: 2px 5px;
+    position: absolute;
+    background-color: rgb(119, 136, 153, 0.9);
 }
 
 .weapon-wheel > div:nth-of-type(1) {
-  left: 50%;
-  top: -120px;
-  transform: translateX(-50%);
+    left: 50%;
+    top: -120px;
+    transform: translateX(-50%);
 }
 
 .weapon-wheel > div:nth-of-type(2) {
-  top: 50%;
-  left: -120px;
-  transform: translateY(-50%) translateX(calc(-100% + 70px));
+    top: 50%;
+    left: -120px;
+    transform: translateY(-50%) translateX(calc(-100% + 70px));
 }
 
 .weapon-wheel > div:nth-of-type(3) {
-  left: 50%;
-  bottom: -120px;
-  transform: translateX(-50%);
+    left: 50%;
+    bottom: -120px;
+    transform: translateX(-50%);
 }
 
 .weapon-wheel > div:nth-of-type(4) {
-  top: 50%;
-  right: -120px;
-  transform: translateY(-50%) translateX(calc(100% - 70px));
+    top: 50%;
+    right: -120px;
+    transform: translateY(-50%) translateX(calc(100% - 70px));
 }
 
 .grid {
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 60;
-  display: flex;
-  position: absolute;
-  flex-flow: row wrap;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 60;
+    display: flex;
+    position: absolute;
+    flex-flow: row wrap;
 }
 
 .grid > div {
-  width: 25%;
-  height: 70px;
-  border: 1px solid white;
+    width: 25%;
+    height: 70px;
+    border: 1px solid white;
 }
 
 .grid > div:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
 .combine {
-  position: relative;
+    position: relative;
 }
 
 .combine::after {
-  opacity: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  color: wheat;
-  transition: 300ms;
-  content: "COMBINE";
-  align-items: center;
-  justify-content: center;
-  background-color: rgb(34, 139, 34, 0.5);
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    color: wheat;
+    transition: 300ms;
+    content: 'COMBINE';
+    align-items: center;
+    justify-content: center;
+    background-color: rgb(34, 139, 34, 0.5);
 }
 
 .combine:hover::after {
-  opacity: 1;
+    opacity: 1;
 }
 
 .weapon-stats-container {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: rgb(245, 222, 179, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: rgb(245, 222, 179, 0.8);
 }
 
 .weapon-stats {
-  width: 700px;
-  padding: 50px;
-  border-radius: 5px;
-  position: relative;
-  height: fit-content;
-  border: 1px solid #f5deb3;
-  background-color: rgb(0, 0, 0, 0.5);
+    width: 700px;
+    padding: 50px;
+    border-radius: 5px;
+    position: relative;
+    height: fit-content;
+    border: 1px solid #f5deb3;
+    background-color: rgb(0, 0, 0, 0.5);
 }
 
 .weapon-stats-img-container {
-  left: 50%;
-  height: 70px;
-  position: absolute;
-  bottom: calc(100% + 20px);
-  transform: translateX(-50%);
+    left: 50%;
+    height: 70px;
+    position: absolute;
+    bottom: calc(100% + 20px);
+    transform: translateX(-50%);
 }
 
 .weapon-stats-img-container > img {
-  height: 100%;
+    height: 100%;
 }
 
 .weapon-stats-name {
-  font-size: 35px;
-  font-weight: bold;
-  text-align: center;
-  text-transform: uppercase;
+    font-size: 35px;
+    font-weight: bold;
+    text-align: center;
+    text-transform: uppercase;
 }
 
 .weapon-stats-desc {
-  margin: 20px auto;
+    margin: 20px auto;
 }
 
 .stat-container {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 .upper-right {
-  width: 200px;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+    width: 200px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
 .upper {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
 .stat-name {
-  text-transform: capitalize;
+    text-transform: capitalize;
 }
 
 .lower {
-  gap: 10px;
-  width: 100%;
-  height: 45px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
+    gap: 10px;
+    width: 100%;
+    height: 45px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .active,
 .inactive {
-  height: 50%;
-  border-radius: 2px;
-  width: calc(100% / 5);
+    height: 50%;
+    border-radius: 2px;
+    width: calc(100% / 5);
 }
 
 .active {
-  background: linear-gradient(to right, #ff8008, #ffc837);
+    background: linear-gradient(to right, #ff8008, #ffc837);
 }
 
 .inactive {
-  background: linear-gradient(to right, #536976, #292e49);
-  opacity: 0.7;
+    background: linear-gradient(to right, #536976, #292e49);
+    opacity: 0.7;
 }

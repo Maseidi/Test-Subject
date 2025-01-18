@@ -1,18 +1,19 @@
-import { healthManager } from './user-interface.js'
+import { getCurrentRoomEnemies, getHealthStatusContainer, getMapEl, getPlayer } from './elements.js'
 import { CHASE, NO_OFFENCE } from './enemy/enemy-constants.js'
 import { getInventory, useInventoryResource } from './inventory.js'
-import { getCurrentRoomEnemies, getHealthStatusContainer, getMapEl, getPlayer } from './elements.js'
-import { 
+import { healthManager } from './user-interface.js'
+import {
+    addAllClasses,
     addClass,
     addFireEffect,
-    isLowHealth,
-    removeClass,
-    findAttachmentsOnPlayer,
+    containsClass,
     createAndAddClass,
-    addAllClasses,
-    removeAllClasses, 
-    containsClass } from './util.js'
-import { 
+    findAttachmentsOnPlayer,
+    isLowHealth,
+    removeAllClasses,
+    removeClass,
+} from './util.js'
+import {
     getBurning,
     getDownPressed,
     getExplosionDamageCounter,
@@ -31,10 +32,11 @@ import {
     setInfection,
     setLeftPressed,
     setMaxHealth,
-    setNoOffenseCounter, 
-    setPoisoned, 
+    setNoOffenseCounter,
+    setPoisoned,
     setRightPressed,
-    setUpPressed } from './variables.js'
+    setUpPressed,
+} from './variables.js'
 
 export const manageHealthStatus = () => {
     manageBurningState()
@@ -44,9 +46,9 @@ export const manageHealthStatus = () => {
 }
 
 const manageBurningState = () => {
-    if ( getBurning() === 0 ) return
+    if (getBurning() === 0) return
     setBurning(getBurning() + 1)
-    if ( getBurning() === 900 ) {
+    if (getBurning() === 900) {
         setBurning(0)
         findAttachmentsOnPlayer('fire').remove()
         return
@@ -54,37 +56,39 @@ const manageBurningState = () => {
     let newHealth = getHealth() - 0.02
     newHealth = newHealth < 0 ? 0 : newHealth
     modifyHealth(newHealth)
-    if ( isLowHealth() ) renderDangerStateEffect(renderHealthStatusChildByClassName, addClass)
+    if (isLowHealth()) renderDangerStateEffect(renderHealthStatusChildByClassName, addClass)
 }
 
 const managePoisonedState = () => {
-    if ( !getPoisoned() ) return
+    if (!getPoisoned()) return
     let newHealth = getHealth() - 0.01
     newHealth = newHealth < 0 ? 0 : newHealth
     modifyHealth(newHealth)
-    if ( isLowHealth() ) renderDangerStateEffect(renderHealthStatusChildByClassName, addClass)
+    if (isLowHealth()) renderDangerStateEffect(renderHealthStatusChildByClassName, addClass)
 }
 
 export const heal = () => {
-    if ( getHealth() === getMaxHealth() ) return
-    const bandage = getInventory().flat().find(x => x && x.name === 'bandage')
-    if ( !bandage ) return
+    if (getHealth() === getMaxHealth()) return
+    const bandage = getInventory()
+        .flat()
+        .find(x => x && x.name === 'bandage')
+    if (!bandage) return
     let newHealth = Math.min(getHealth() + getMaxHealth() / 5, getMaxHealth())
     useInventoryResource('bandage', 1)
     modifyHealth(newHealth)
-    if ( !isLowHealth() ) renderDangerStateEffect(removeHealthStatusChildByClassName, removeClass)
+    if (!isLowHealth()) renderDangerStateEffect(removeHealthStatusChildByClassName, removeClass)
 }
 
-export const useBandage = (bandage) => {
-    if ( getHealth() === getMaxHealth() ) return
+export const useBandage = bandage => {
+    if (getHealth() === getMaxHealth()) return
     let newHealth = Math.min(getHealth() + getMaxHealth() / 5, getMaxHealth())
     bandage.amount -= 1
     modifyHealth(newHealth)
-    if ( !isLowHealth() ) renderDangerStateEffect(removeHealthStatusChildByClassName, removeClass)
+    if (!isLowHealth()) renderDangerStateEffect(removeHealthStatusChildByClassName, removeClass)
 }
 
-export const useAntidote = (antidote) => {
-    if ( !getPoisoned() ) return
+export const useAntidote = antidote => {
+    if (!getPoisoned()) return
     antidote.amount -= 1
     setPoisoned(false)
     removeHealthStatusChildByClassName('poisoned-container')
@@ -92,10 +96,10 @@ export const useAntidote = (antidote) => {
 }
 
 const manageDizziness = () => {
-    if ( getLeftPressed() )       negateDirection(setRightPressed, setLeftPressed)
-    else if ( getRightPressed() ) negateDirection(setLeftPressed,  setRightPressed)
-    if ( getDownPressed() )       negateDirection(setUpPressed,    setDownPressed)
-    else if ( getUpPressed() )    negateDirection(setDownPressed,  setUpPressed)
+    if (getLeftPressed()) negateDirection(setRightPressed, setLeftPressed)
+    else if (getRightPressed()) negateDirection(setLeftPressed, setRightPressed)
+    if (getDownPressed()) negateDirection(setUpPressed, setDownPressed)
+    else if (getUpPressed()) negateDirection(setDownPressed, setUpPressed)
 }
 
 const negateDirection = (setOppositeDir, setDir) => {
@@ -103,26 +107,31 @@ const negateDirection = (setOppositeDir, setDir) => {
     setDir(false)
 }
 
-export const damagePlayer = (damage) => {
-    if ( getNoOffenseCounter() !== 0 ) return
+export const damagePlayer = damage => {
+    if (getNoOffenseCounter() !== 0) return
     addAllClasses(getMapEl(), 'camera-shake', 'animation')
     getMapEl().addEventListener('animationend', () => removeAllClasses(getMapEl(), 'camera-shake', 'animation'))
-    if ( getInventory().flat().find(item => item && item.name === 'armor') ) damage /= 2
+    if (
+        getInventory()
+            .flat()
+            .find(item => item && item.name === 'armor')
+    )
+        damage /= 2
     let newHealth = getHealth() - damage
     newHealth = newHealth < 0 ? 0 : newHealth
     modifyHealth(newHealth)
-    if ( isLowHealth() ) renderDangerStateEffect(renderHealthStatusChildByClassName, addClass)
+    if (isLowHealth()) renderDangerStateEffect(renderHealthStatusChildByClassName, addClass)
     noOffenceAllEnemies()
 }
 
 const noOffenceAllEnemies = () => {
     getCurrentRoomEnemies()
-        .filter(elem => elem.state === CHASE )
-        .forEach(elem => elem.state = NO_OFFENCE)
+        .filter(elem => elem.state === CHASE)
+        .forEach(elem => (elem.state = NO_OFFENCE))
     setNoOffenseCounter(1)
 }
 
-const modifyHealth = (val) => {
+const modifyHealth = val => {
     setHealth(val)
     healthManager(getHealth())
 }
@@ -133,69 +142,69 @@ const renderDangerStateEffect = (lowHealthContainerCallbackFn, classCallbackFn) 
     classCallbackFn(getMapEl(), 'low-health')
 }
 
-const renderHealthStatusChildByClassName = (className) => {
-    if ( findHealtStatusChildByClassName(className) ) return
+const renderHealthStatusChildByClassName = className => {
+    if (findHealtStatusChildByClassName(className)) return
     getHealthStatusContainer().append(createAndAddClass('div', className, 'animation'))
 }
 
-const removeHealthStatusChildByClassName = (className) => findHealtStatusChildByClassName(className)?.remove()
+const removeHealthStatusChildByClassName = className => findHealtStatusChildByClassName(className)?.remove()
 
-export const findHealtStatusChildByClassName = (className) =>
+export const findHealtStatusChildByClassName = className =>
     Array.from(getHealthStatusContainer().children).find(child => containsClass(child, className))
 
 export const setPlayer2Fire = () => {
     const wasBurninig = getBurning() > 0
     setBurning(1)
-    if ( wasBurninig ) return
+    if (wasBurninig) return
     const fire = addFireEffect()
     getPlayer().firstElementChild.firstElementChild.append(fire)
 }
 
 export const poisonPlayer = () => {
-    if ( getPoisoned() ) return
+    if (getPoisoned()) return
     setPoisoned(true)
     renderHealthStatusChildByClassName('poisoned-container')
     manageDizziness()
 }
 
 const manageExplosionDamagedState = () => {
-    if ( getExplosionDamageCounter() === 0 ) return
+    if (getExplosionDamageCounter() === 0) return
     setExplosionDamageCounter(getExplosionDamageCounter() + 1)
-    if ( getExplosionDamageCounter() === 100 ) setExplosionDamageCounter(0)
+    if (getExplosionDamageCounter() === 100) setExplosionDamageCounter(0)
 }
 
-export const useHealthPotion = (potion) => {
-    if ( getMaxHealth() === 200 ) return
+export const useHealthPotion = potion => {
+    if (getMaxHealth() === 200) return
     setMaxHealth(getMaxHealth() + 10)
     modifyHealth(getMaxHealth())
-    if ( !isLowHealth() ) renderDangerStateEffect(removeHealthStatusChildByClassName, removeClass)
+    if (!isLowHealth()) renderDangerStateEffect(removeHealthStatusChildByClassName, removeClass)
     potion.amount -= 1
     clearAllInfection()
 }
 
 const clearAllInfection = () => {
     setInfection([])
-    const infectedContainer = findHealtStatusChildByClassName('infected-container')    
+    const infectedContainer = findHealtStatusChildByClassName('infected-container')
     const virusBar = infectedContainer.firstElementChild
     Array.from(virusBar.children).forEach(virus => virus.remove())
 }
 
 const manageInfectedState = () => {
-    if ( getInfection().length === 0 ) return
-    let newHealth = getHealth() - ( 0.002 * getInfection().length )
+    if (getInfection().length === 0) return
+    let newHealth = getHealth() - 0.002 * getInfection().length
     newHealth = newHealth < 0 ? 0 : newHealth
     modifyHealth(newHealth)
-    if ( isLowHealth() ) renderDangerStateEffect(renderHealthStatusChildByClassName, addClass)
+    if (isLowHealth()) renderDangerStateEffect(renderHealthStatusChildByClassName, addClass)
 }
 
-export const infectPlayer2SpecificVirus = (virusName) => {
-    if ( getInfection().includes(virusName) ) return
+export const infectPlayer2SpecificVirus = virusName => {
+    if (getInfection().includes(virusName)) return
     setInfection([...getInfection(), virusName])
     renderVirusIcon(virusName)
 }
 
-export const renderVirusIcon = (virusName) => {
-    const infectedContainer = findHealtStatusChildByClassName('infected-container')    
+export const renderVirusIcon = virusName => {
+    const infectedContainer = findHealtStatusChildByClassName('infected-container')
     const virusBar = infectedContainer.firstElementChild
     const virusIcon = document.createElement('img')
     virusIcon.src = `/assets/images/${virusName}virus.png`
@@ -203,14 +212,14 @@ export const renderVirusIcon = (virusName) => {
     virusBar.append(virusIcon)
 }
 
-export const useVaccine = (vaccine) => {
+export const useVaccine = vaccine => {
     const antivirus = vaccine.name.replace('vaccine', '')
-    if ( !getInfection().includes(antivirus) ) return 
+    if (!getInfection().includes(antivirus)) return
     setInfection(getInfection().filter(virus => virus !== antivirus))
-    const infectedContainer = findHealtStatusChildByClassName('infected-container')    
+    const infectedContainer = findHealtStatusChildByClassName('infected-container')
     const virusBar = infectedContainer.firstElementChild
     Array.from(virusBar.children).forEach(virus => {
-        if ( virus.src.includes(antivirus) ) virus.remove()
+        if (virus.src.includes(antivirus)) virus.remove()
     })
     vaccine.amount -= 1
 }

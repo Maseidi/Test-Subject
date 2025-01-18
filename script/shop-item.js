@@ -1,7 +1,7 @@
-import { Progress } from './progress.js'
 import { getGunDetails } from './gun-details.js'
-import { 
+import {
     Adrenaline,
+    Antidote,
     Bandage,
     BlueVaccine,
     BodyArmor,
@@ -9,8 +9,10 @@ import {
     Flashbang,
     GreenVaccine,
     Grenade,
+    GunDrop,
     HardDrive,
     HealthPotion,
+    Lighter,
     LuckPills,
     MagnumAmmo,
     PistolAmmo,
@@ -20,23 +22,22 @@ import {
     ShotgunShells,
     SmgAmmo,
     Stick,
-    GunDrop, 
-    YellowVaccine, 
-    Antidote,
-    Lighter} from './interactables.js'
+    YellowVaccine,
+} from './interactables.js'
+import { Progress } from './progress.js'
 
 class ShopItem {
     constructor(drop, amount, price) {
-        this.width =          drop.width          ?? 0
-        this.name =           drop.name           ?? null
-        this.heading =        drop.heading        ?? null
-        this.popup =          drop.popup          ?? null
-        this.space =          drop.space          ?? null
-        this.description =    drop.description    ?? null
+        this.width = drop.width ?? 0
+        this.name = drop.name ?? null
+        this.heading = drop.heading ?? null
+        this.popup = drop.popup ?? null
+        this.space = drop.space ?? null
+        this.description = drop.description ?? null
         this.renderProgress = drop.renderProgress ?? null
-        this.amount =         amount              ?? 0
-        this.price =          price               ?? 0
-        this.sold =           false
+        this.amount = amount ?? 0
+        this.price = price ?? 0
+        this.sold = false
     }
 }
 
@@ -72,7 +73,7 @@ export class MagnumAmmoShopItem extends ShopItem {
 
 export class SmgAmmoShopItem extends ShopItem {
     constructor(renderProgress) {
-        super(new SmgAmmo(null, null, null, Progress.builder().setRenderProgress(renderProgress)), 90, 1,false)
+        super(new SmgAmmo(null, null, null, Progress.builder().setRenderProgress(renderProgress)), 90, 1, false)
     }
 }
 
@@ -84,8 +85,11 @@ export class RifleAmmoShopItem extends ShopItem {
 
 export class GunShopItem extends ShopItem {
     constructor(name, renderProgress) {
-        super(new GunDrop(null, null, name, 0, 1, 1, 1, 1, 1, 
-            Progress.builder().setRenderProgress(renderProgress)), 1, getGunDetails().get(name).price)
+        super(
+            new GunDrop(null, null, name, 0, 1, 1, 1, 1, 1, Progress.builder().setRenderProgress(renderProgress)),
+            1,
+            getGunDetails().get(name).price,
+        )
     }
 }
 
@@ -103,8 +107,16 @@ export class FlashbangShopItem extends ShopItem {
 
 export class Pouch extends ShopItem {
     constructor(renderProgress) {
-        super({name: 'pouch', heading: 'pouch', description: 'Increases your carry capacity by 2 slots', 
-            renderProgress: renderProgress ?? Number.MAX_SAFE_INTEGER}, 1, 5)
+        super(
+            {
+                name: 'pouch',
+                heading: 'pouch',
+                description: 'Increases your carry capacity by 2 slots',
+                renderProgress: renderProgress ?? Number.MAX_SAFE_INTEGER,
+            },
+            1,
+            5,
+        )
     }
 }
 
@@ -187,11 +199,11 @@ export class LighterShopItem extends ShopItem {
 }
 
 let shopItems = null
-export const setShopItems = (val) => {
+export const setShopItems = val => {
     shopItems = val
 }
 export const getShopItems = () => shopItems
 
-export const getShopItemsWithId = () => shopItems.map((item, index) => ({...item, id:index}))
+export const getShopItemsWithId = () => shopItems.map((item, index) => ({ ...item, id: index }))
 
 export const initShopItems = () => []

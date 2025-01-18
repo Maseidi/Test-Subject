@@ -1,4 +1,4 @@
-import { 
+import {
     aDown,
     aimAngle,
     aUp,
@@ -20,12 +20,13 @@ import {
     tabDown,
     wDown,
     weaponSlotDown,
-    wUp } from './actions.js'
+    wUp,
+} from './actions.js'
 
-const keyDown = (e) => {
+const keyDown = e => {
     e.preventDefault()
-    if ( !e.repeat ) {
-        switch ( e.code ) {
+    if (!e.repeat) {
+        switch (e.code) {
             case 'KeyW':
                 wDown()
                 break
@@ -52,7 +53,7 @@ const keyDown = (e) => {
                 break
             case 'KeyF':
                 fDown()
-                break   
+                break
             case 'Tab':
                 tabDown()
                 break
@@ -64,7 +65,7 @@ const keyDown = (e) => {
                 break
             case 'KeyH':
                 hDown()
-                break  
+                break
             case 'KeyQ':
                 qDown()
                 break
@@ -72,8 +73,8 @@ const keyDown = (e) => {
     }
 }
 
-const keyUp = (e) => {
-    switch ( e.code ) {
+const keyUp = e => {
+    switch (e.code) {
         case 'KeyW':
             wUp()
             break
@@ -88,24 +89,24 @@ const keyUp = (e) => {
             break
         case 'ShiftLeft':
             shiftUp()
-            break                      
+            break
     }
 }
 
 export const addControls = () => {
-    window.addEventListener('keydown',   keyDown,      true)
-    window.addEventListener('keyup',     keyUp,        true)
-    window.addEventListener('mousemove', aimAngle,     true)
-    window.addEventListener('mousedown', clickDown,    true)
-    window.addEventListener('mouseup',   clickUp,      true)
-    window.addEventListener('resize',    resizeWindow, true)
+    window.addEventListener('keydown', keyDown, true)
+    window.addEventListener('keyup', keyUp, true)
+    window.addEventListener('mousemove', aimAngle, true)
+    window.addEventListener('mousedown', clickDown, true)
+    window.addEventListener('mouseup', clickUp, true)
+    window.addEventListener('resize', resizeWindow, true)
 }
 
 export const removeControls = () => {
-    window.removeEventListener('keydown',   keyDown,      true)
-    window.removeEventListener('keyup',     keyUp,        true)
-    window.removeEventListener('mousemove', aimAngle,     true)
-    window.removeEventListener('mousedown', clickDown,    true)
-    window.removeEventListener('mouseup',   clickUp,      true)
-    window.removeEventListener('resize',    resizeWindow, true)
+    window.removeEventListener('keydown', keyDown, true)
+    window.removeEventListener('keyup', keyUp, true)
+    window.removeEventListener('mousemove', aimAngle, true)
+    window.removeEventListener('mousedown', clickDown, true)
+    window.removeEventListener('mouseup', clickUp, true)
+    window.removeEventListener('resize', resizeWindow, true)
 }

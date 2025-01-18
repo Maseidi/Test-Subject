@@ -1,6 +1,6 @@
 import { managePause } from './actions.js'
-import { getDoorObject } from './loader.js'
 import { getPauseContainer } from './elements.js'
+import { getDoorObject } from './loader.js'
 import { toggleDoor } from './progress-manager.js'
 import { quitPage, renderQuit } from './user-interface.js'
 import { createAndAddClass, getProperty } from './util.js'
@@ -9,32 +9,32 @@ import { getElementInteractedWith, setPauseCause } from './variables.js'
 const passwordNames = []
 
 let passwords = new Map([])
-export const setPasswords = (val) => {
+export const setPasswords = val => {
     passwords = val
 }
 export const getPasswords = () => passwords
 
-export const initPasswords = () => 
+export const initPasswords = () =>
     passwordNames.forEach(name => passwords.set(name, Math.floor(Math.random() * 99900) + 100))
 
 export const renderPasswordInput = () => {
     const code = getElementInteractedWith().getAttribute('code')
-    if ( !passwords.get(code) ) return
+    if (!passwords.get(code)) return
     const value = getElementInteractedWith().getAttribute('value')
     const digits = passwords.get(code).toString().length
     managePause()
     setPauseCause('password')
     const passWrapper = createAndAddClass('div', 'password-wrapper', 'ui-theme')
     const passContainer = createAndAddClass('div', 'password-container')
-    for ( let i = 0; i < digits; i++ ) {
+    for (let i = 0; i < digits; i++) {
         const currentDigit = Number(value.charAt(i))
         const digitContainer = createAndAddClass('div', 'digit-container')
         const digitBarContainer = createAndAddClass('div', 'digit-bar-container')
-        const digitBar = createAndAddClass('div', 'digit-bar')        
+        const digitBar = createAndAddClass('div', 'digit-bar')
         digitBar.style.top = `-500px`
         const before = calculateBefore(currentDigit)
         const after = calculateAfter(currentDigit)
-        for ( let j = 0; j < 10; j++ ) {
+        for (let j = 0; j < 10; j++) {
             const digitBarItem = createAndAddClass('div', 'digit-bar-item')
             digitBarItem.textContent = j < 5 ? before[j] : j > 5 ? after[j - 6] : currentDigit
             digitBar.append(digitBarItem)
@@ -48,22 +48,22 @@ export const renderPasswordInput = () => {
     renderQuit()
 }
 
-const calculateBefore = (end) => {
+const calculateBefore = end => {
     let limiter = end - 1
     const result = []
-    for ( let j = 0; j < 5; j++ ) {
-        if ( limiter === -1 ) limiter = 9
+    for (let j = 0; j < 5; j++) {
+        if (limiter === -1) limiter = 9
         result.push(limiter)
         limiter = limiter - 1
     }
     return result.reverse()
 }
 
-const calculateAfter = (start) => {
+const calculateAfter = start => {
     let limiter = start + 1
     const result = []
-    for ( let j = 0; j < 4; j++ ) {
-        if ( limiter === 10 ) limiter = 0
+    for (let j = 0; j < 4; j++) {
+        if (limiter === 10) limiter = 0
         result.push(limiter)
         limiter = limiter + 1
     }
@@ -82,15 +82,12 @@ const renderIncreaseBtn = (digit, bar) => {
 }
 
 let allowIncrease = true
-const increaseDigit = (e) => {
-    if ( !allowIncrease || !allowDecrease ) return
+const increaseDigit = e => {
+    if (!allowIncrease || !allowDecrease) return
     const { digit, bar } = e.currentTarget
     const currTop = getProperty(bar, 'top', 'px')
     allowIncrease = false
-    bar.animate([
-        {top: currTop + 'px'},
-        {top: (currTop + 100) + 'px'}
-    ], {
+    bar.animate([{ top: currTop + 'px' }, { top: currTop + 100 + 'px' }], {
         duration: 500,
     }).addEventListener('finish', () => {
         const last = bar.lastElementChild
@@ -115,15 +112,12 @@ const renderDecreaseBtn = (digit, bar) => {
 }
 
 let allowDecrease = true
-const decreaseDigit = (e) => {
-    if ( !allowDecrease || !allowIncrease ) return
+const decreaseDigit = e => {
+    if (!allowDecrease || !allowIncrease) return
     const { digit, bar } = e.currentTarget
     const currTop = getProperty(bar, 'top', 'px')
     allowDecrease = false
-    bar.animate([
-        {top: currTop + 'px'},
-        {top: (currTop - 100) + 'px'}
-    ], {
+    bar.animate([{ top: currTop + 'px' }, { top: currTop - 100 + 'px' }], {
         duration: 500,
     }).addEventListener('finish', () => {
         const first = bar.firstElementChild
@@ -139,8 +133,8 @@ const decreaseDigit = (e) => {
 const updateDoorCodeValue = (digit, bar) => {
     const doorValue = getElementInteractedWith().getAttribute('value')
     let newValue = ''
-    for ( let i = 0; i < doorValue.length; i++ )
-        newValue += ( i === digit ? bar.children[5].textContent : doorValue.charAt(i) ) 
+    for (let i = 0; i < doorValue.length; i++)
+        newValue += i === digit ? bar.children[5].textContent : doorValue.charAt(i)
     getElementInteractedWith().setAttribute('value', newValue)
     const doorObj = getDoorObject(getElementInteractedWith())
     doorObj.value = newValue
@@ -151,12 +145,13 @@ const renderCheckBtn = () => {
     button.textContent = 'check'
     button.addEventListener('click', () => {
         const targetValue = passwords.get(getElementInteractedWith().getAttribute('code'))
-        const valueMap = Array.from(button.previousSibling.children)
-            .map(elem => elem.firstElementChild.firstElementChild.children[5].textContent)
+        const valueMap = Array.from(button.previousSibling.children).map(
+            elem => elem.firstElementChild.firstElementChild.children[5].textContent,
+        )
         const value2check = Number(valueMap.join(''))
-        if ( targetValue !== value2check ) return
+        if (targetValue !== value2check) return
         quitPage()
-        toggleDoor(getElementInteractedWith()) 
+        toggleDoor(getElementInteractedWith())
     })
     return button
 }

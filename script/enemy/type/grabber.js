@@ -1,14 +1,5 @@
-import { AbstractEnemy } from './abstract-enemy.js'
 import { getRoundsFinished } from '../../variables.js'
-import { NormalLostService } from '../service/normal/lost.js'
-import { GrabberGrabService } from '../service/grabber/grab.js'
-import { NormalChaseService } from '../service/normal/chase.js'
-import { NormalReturnService } from '../service/normal/return.js'
-import { GrabberInjuryService } from '../service/grabber/injury.js'
-import { GrabberMovementService } from '../service/grabber/movement.js'
-import { NormalGuessSearchService } from '../service/normal/guess-search.js'
-import { NormalInvestigationService } from '../service/normal/investigate.js'
-import { 
+import {
     CHASE,
     GRAB,
     GRABBER,
@@ -16,11 +7,21 @@ import {
     INVESTIGATE,
     LOST,
     MOVE_TO_POSITION,
-    NO_OFFENCE } from '../enemy-constants.js'
+    NO_OFFENCE,
+} from '../enemy-constants.js'
+import { GrabberGrabService } from '../service/grabber/grab.js'
+import { GrabberInjuryService } from '../service/grabber/injury.js'
+import { GrabberMovementService } from '../service/grabber/movement.js'
+import { NormalChaseService } from '../service/normal/chase.js'
+import { NormalGuessSearchService } from '../service/normal/guess-search.js'
+import { NormalInvestigationService } from '../service/normal/investigate.js'
+import { NormalLostService } from '../service/normal/lost.js'
+import { NormalReturnService } from '../service/normal/return.js'
+import { AbstractEnemy } from './abstract-enemy.js'
 
 export class Grabber extends AbstractEnemy {
     constructor(level, path, loot, progress, virus, difficulties) {
-        const base = level + (getRoundsFinished() * 5)
+        const base = level + getRoundsFinished() * 5
         const health = Math.floor(base * 100 + Math.random() * 50)
         const damage = Math.floor(base * 10 + Math.random() * 10)
         const maxSpeed = 3 + Math.random()
@@ -36,7 +37,7 @@ export class Grabber extends AbstractEnemy {
     }
 
     manageState() {
-        switch ( this.state ) {
+        switch (this.state) {
             case INVESTIGATE:
                 this.investigationService.handleInvestigationState()
                 break
@@ -46,7 +47,7 @@ export class Grabber extends AbstractEnemy {
                 break
             case GUESS_SEARCH:
                 this.guessSearchService.handleGuessSearchState()
-                break    
+                break
             case LOST:
                 this.lostService.handleLostState()
                 break
@@ -58,5 +59,4 @@ export class Grabber extends AbstractEnemy {
                 break
         }
     }
-
 }

@@ -1,25 +1,18 @@
 import { getProperty } from '../../util.js'
-import { AbstractEnemy } from './abstract-enemy.js'
 import { getRoundsFinished } from '../../variables.js'
-import { SpikerLostService } from '../service/spiker/lost.js'
+import { CHASE, GUESS_SEARCH, INVESTIGATE, LOST, MOVE_TO_POSITION, NO_OFFENCE, SPIKER } from '../enemy-constants.js'
 import { NormalChaseService } from '../service/normal/chase.js'
-import { NormalReturnService } from '../service/normal/return.js'
-import { SpikerVisionService } from '../service/spiker/vision.js'
-import { SpikerMovementService } from '../service/spiker/movement.js'
 import { NormalGuessSearchService } from '../service/normal/guess-search.js'
+import { NormalReturnService } from '../service/normal/return.js'
 import { SpikerInvestigationService } from '../service/spiker/investigate.js'
-import { 
-    CHASE,
-    GUESS_SEARCH,
-    INVESTIGATE,
-    LOST,
-    MOVE_TO_POSITION,
-    NO_OFFENCE,
-    SPIKER } from '../enemy-constants.js'
+import { SpikerLostService } from '../service/spiker/lost.js'
+import { SpikerMovementService } from '../service/spiker/movement.js'
+import { SpikerVisionService } from '../service/spiker/vision.js'
+import { AbstractEnemy } from './abstract-enemy.js'
 
 export class Spiker extends AbstractEnemy {
     constructor(level, waypoint, loot, progress, virus, difficulties) {
-        const base = level + (getRoundsFinished() * 5)
+        const base = level + getRoundsFinished() * 5
         const health = Math.floor(base * 25 + Math.random() * 5)
         const damage = Math.floor(base * 5 + Math.random() * 5)
         const maxSpeed = 6 + Math.random()
@@ -37,7 +30,7 @@ export class Spiker extends AbstractEnemy {
     manageState() {
         this.handleRotation()
         this.handleAxis()
-        switch ( this.state ) {
+        switch (this.state) {
             case INVESTIGATE:
                 this.investigationService.handleInvestigationState()
                 break
@@ -50,7 +43,7 @@ export class Spiker extends AbstractEnemy {
                 break
             case LOST:
                 this.lostService.handleLostState()
-                break    
+                break
             case MOVE_TO_POSITION:
                 this.returnService.handleMove2PositionState()
                 break
@@ -58,24 +51,22 @@ export class Spiker extends AbstractEnemy {
     }
 
     handleRotation() {
-        const angle = getProperty(this.sprite.firstElementChild.firstElementChild, 
-            'transform', 'rotateZ(', 'deg)') || 0
+        const angle = getProperty(this.sprite.firstElementChild.firstElementChild, 'transform', 'rotateZ(', 'deg)') || 0
         let newAngle = Number(angle) + 5
-        if ( newAngle > 360 ) newAngle = 0
+        if (newAngle > 360) newAngle = 0
         this.sprite.firstElementChild.firstElementChild.style.transform = `rotateZ(${newAngle}deg)`
     }
 
     handleAxis() {
         this.axisCounter = this.axisCounter || 0
         this.axisCounter++
-        if ( this.axisCounter !== 60 ) return
-        if ( this.prevX === this.x && this.prevY === this.y ) {
-            if ( this.axis === 1 ) this.axis = 2
-            else                   this.axis = 1
+        if (this.axisCounter !== 60) return
+        if (this.prevX === this.x && this.prevY === this.y) {
+            if (this.axis === 1) this.axis = 2
+            else this.axis = 1
         }
         this.prevX = this.x
         this.prevY = this.y
         this.axisCounter = 0
     }
-
 }

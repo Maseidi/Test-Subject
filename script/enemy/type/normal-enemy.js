@@ -1,27 +1,53 @@
-import { AbstractEnemy } from './abstract-enemy.js'
 import { getRoundsFinished } from '../../variables.js'
-import { NormalLostService } from '../service/normal/lost.js'
-import { NormalChaseService } from '../service/normal/chase.js'
-import { NormalReturnService } from '../service/normal/return.js'
-import { NormalGuessSearchService } from '../service/normal/guess-search.js'
-import { NormalInvestigationService } from '../service/normal/investigate.js'
-import { 
+import {
     CHASE,
     GUESS_SEARCH,
     INVESTIGATE,
     LOST,
     MOVE_TO_POSITION,
-    NO_OFFENCE, 
-    ROCK_CRUSHER, 
-    SOUL_DRINKER, 
-    TORTURER} from '../enemy-constants.js'
+    NO_OFFENCE,
+    ROCK_CRUSHER,
+    SOUL_DRINKER,
+    TORTURER,
+} from '../enemy-constants.js'
+import { NormalChaseService } from '../service/normal/chase.js'
+import { NormalGuessSearchService } from '../service/normal/guess-search.js'
+import { NormalInvestigationService } from '../service/normal/investigate.js'
+import { NormalLostService } from '../service/normal/lost.js'
+import { NormalReturnService } from '../service/normal/return.js'
+import { AbstractEnemy } from './abstract-enemy.js'
 
 class NormalEnemy extends AbstractEnemy {
-    constructor(type, components, waypoint, health, damage, maxSpeed, 
-                vision, acceleration, loot, progress, virus, difficulties, level) {
-        
-        super(type, components, waypoint, health, damage, maxSpeed, 
-              vision, acceleration, loot, progress, virus, difficulties, level)
+    constructor(
+        type,
+        components,
+        waypoint,
+        health,
+        damage,
+        maxSpeed,
+        vision,
+        acceleration,
+        loot,
+        progress,
+        virus,
+        difficulties,
+        level,
+    ) {
+        super(
+            type,
+            components,
+            waypoint,
+            health,
+            damage,
+            maxSpeed,
+            vision,
+            acceleration,
+            loot,
+            progress,
+            virus,
+            difficulties,
+            level,
+        )
 
         this.investigationService = new NormalInvestigationService(this)
         this.chaseService = new NormalChaseService(this)
@@ -31,7 +57,7 @@ class NormalEnemy extends AbstractEnemy {
     }
 
     manageState() {
-        switch ( this.state ) {
+        switch (this.state) {
             case INVESTIGATE:
                 this.investigationService.handleInvestigationState()
                 break
@@ -41,7 +67,7 @@ class NormalEnemy extends AbstractEnemy {
                 break
             case GUESS_SEARCH:
                 this.guessSearchService.handleGuessSearchState()
-                break    
+                break
             case LOST:
                 this.lostService.handleLostState()
                 break
@@ -50,12 +76,11 @@ class NormalEnemy extends AbstractEnemy {
                 break
         }
     }
-
 }
 
 export class Torturer extends NormalEnemy {
     constructor(level, waypoint, loot, progress, virus, difficulties) {
-        const base = level + (getRoundsFinished() * 5)
+        const base = level + getRoundsFinished() * 5
         const health = Math.floor(base * 180 + Math.random() * 20)
         const damage = Math.floor(base * 10 + Math.random() * 10)
         const maxSpeed = 3.5 + Math.random()
@@ -65,7 +90,7 @@ export class Torturer extends NormalEnemy {
 
 export class SoulDrinker extends NormalEnemy {
     constructor(level, waypoint, loot, progress, virus, difficulties) {
-        const base = level + (getRoundsFinished() * 5)
+        const base = level + getRoundsFinished() * 5
         const health = Math.floor(base * 90 + Math.random() * 15)
         const damage = Math.floor(base * 5 + Math.random() * 5)
         const maxSpeed = 4.5 + Math.random()
@@ -75,7 +100,7 @@ export class SoulDrinker extends NormalEnemy {
 
 export class RockCrusher extends NormalEnemy {
     constructor(level, waypoint, loot, progress, virus, difficulties) {
-        const base = level + (getRoundsFinished() * 5)
+        const base = level + getRoundsFinished() * 5
         const health = Math.floor(base * 360 + Math.random() * 45)
         const damage = Math.floor(base * 30 + Math.random() * 20)
         const maxSpeed = 2.5 + Math.random()

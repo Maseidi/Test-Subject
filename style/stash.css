@@ -1,161 +1,161 @@
 .stash-ui {
-  top: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  padding: 0 100px;
-  align-items: center;
-  flex-direction: row-reverse;
-  justify-content: space-between;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    padding: 0 100px;
+    align-items: center;
+    flex-direction: row-reverse;
+    justify-content: space-between;
 }
 
 .stash-items-container {
-  width: 550px;
-  height: 550px;
-  position: relative;
-  border-radius: 5px;
-  border: 1px solid rgb(245, 222, 179, 0.8);
+    width: 550px;
+    height: 550px;
+    position: relative;
+    border-radius: 5px;
+    border: 1px solid rgb(245, 222, 179, 0.8);
 }
 
 .stash-items {
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 }
 
 .stash-items > div:nth-last-of-type(1) {
-  margin-bottom: 50px;
+    margin-bottom: 50px;
 }
 
 .stash-items::-webkit-scrollbar {
-  display: none;
+    display: none;
 }
 
 .stash-item {
-  width: 100%;
-  height: 60px;
-  padding: 10px;
-  display: flex;
-  position: relative;
-  flex-direction: row;
-  align-items: center;
-  text-transform: capitalize;
-  justify-content: space-between;
-  color: rgba(255, 255, 255, 0.7);
-  background-color: rgb(0, 0, 0, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.7);
+    width: 100%;
+    height: 60px;
+    padding: 10px;
+    display: flex;
+    position: relative;
+    flex-direction: row;
+    align-items: center;
+    text-transform: capitalize;
+    justify-content: space-between;
+    color: rgba(255, 255, 255, 0.7);
+    background-color: rgb(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.7);
 }
 
 .stash-item-selector {
-  top: 0;
-  left: 0;
-  opacity: 0;
-  width: 100%;
-  height: 100%;
-  position: absolute;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    width: 100%;
+    height: 100%;
+    position: absolute;
 }
 
 .stash-item:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
 .stash-item > img {
-  height: 100%;
+    height: 100%;
 }
 
 .specs {
-  width: 220px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+    width: 220px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .stash-items-container::after {
-  left: 0;
-  font-size: 40px;
-  content: "Stash";
-  position: absolute;
-  letter-spacing: 2px;
-  bottom: calc(100% + 10px);
-  color: rgb(245, 222, 179, 0.8);
+    left: 0;
+    font-size: 40px;
+    content: 'Stash';
+    position: absolute;
+    letter-spacing: 2px;
+    bottom: calc(100% + 10px);
+    color: rgb(245, 222, 179, 0.8);
 }
 
 .move-to-stash,
 .move-to-inventory {
-  gap: 10px;
-  z-index: 20;
-  opacity: 0.9;
-  padding: 10px;
-  display: flex;
-  width: fit-content;
-  position: absolute;
-  border-radius: 5px;
-  align-items: center;
-  flex-direction: column;
-  justify-content: center;
-  animation-duration: 200ms;
-  animation-direction: alternate;
-  background-color: rgb(0, 0, 0);
-  color: rgba(255, 255, 255, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.5);
+    gap: 10px;
+    z-index: 20;
+    opacity: 0.9;
+    padding: 10px;
+    display: flex;
+    width: fit-content;
+    position: absolute;
+    border-radius: 5px;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    animation-duration: 200ms;
+    animation-direction: alternate;
+    background-color: rgb(0, 0, 0);
+    color: rgba(255, 255, 255, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.5);
 }
 
 .move-to-stash {
-  top: 80%;
-  animation-name: move-to-stash-popup-animation;
+    top: 80%;
+    animation-name: move-to-stash-popup-animation;
 }
 
 .move-to-inventory {
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-  animation-name: move-to-inventory-popup-animation;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    animation-name: move-to-inventory-popup-animation;
 }
 
 .number {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .confirm-bigger {
-  gap: 10px;
-  width: 100%;
-  display: flex;
-  font-size: 14px;
-  flex-direction: row;
-  align-items: center;
-  letter-spacing: 1.5px;
-  text-transform: capitalize;
-  justify-content: space-between;
+    gap: 10px;
+    width: 100%;
+    display: flex;
+    font-size: 14px;
+    flex-direction: row;
+    align-items: center;
+    letter-spacing: 1.5px;
+    text-transform: capitalize;
+    justify-content: space-between;
 }
 
 .confirm {
-  padding: 5px;
-  border-radius: 5px;
-  background-color: forestgreen;
+    padding: 5px;
+    border-radius: 5px;
+    background-color: forestgreen;
 }
 
 .bigger {
-  gap: 5px;
-  display: flex;
-  overflow: hidden;
-  border-radius: 5px;
-  align-items: center;
-  flex-direction: row;
-  justify-content: space-between;
+    gap: 5px;
+    display: flex;
+    overflow: hidden;
+    border-radius: 5px;
+    align-items: center;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
 .bigger > div {
-  padding: 5px;
-  background-color: brown;
+    padding: 5px;
+    background-color: brown;
 }
 
 .confirm:hover,
 .bigger > div:hover {
-  filter: brightness(150%);
+    filter: brightness(150%);
 }

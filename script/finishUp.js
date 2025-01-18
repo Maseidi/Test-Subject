@@ -1,6 +1,5 @@
 import { removeControls } from './controls.js'
-import { getGameId, setGameId } from './variables.js'
-import { 
+import {
     getCurrentRoom,
     getDialogueContainer,
     getHealthStatusContainer,
@@ -20,9 +19,11 @@ import {
     setPlayer,
     setPopupContainer,
     setRoomContainer,
-    setRoomNameContainer, 
+    setRoomNameContainer,
     setShadowContainer,
-    setUiEl } from './elements.js'
+    setUiEl,
+} from './elements.js'
+import { getGameId, setGameId } from './variables.js'
 
 export const finishUp = () => {
     removeControls()

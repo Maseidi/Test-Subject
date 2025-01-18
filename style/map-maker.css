@@ -1,298 +1,302 @@
 .map-maker-container {
-  width: 100vw;
-  height: 100vh;
-  padding: 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    width: 100vw;
+    height: 100vh;
+    padding: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .map-maker-contents {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  border: 1px solid wheat;
-  justify-content: space-between;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    border: 1px solid wheat;
+    justify-content: space-between;
 }
 
 .attributes-sidebar {
-  gap: 20px;
-  width: 20%;
-  height: 100%;
-  padding: 10px;
-  display: flex;
-  overflow: auto;
-  flex-shrink: 0;
-  scrollbar-width: none;
-  flex-direction: column;
-  -ms-overflow-style: none;
-  border-right: 1px solid wheat;
+    gap: 20px;
+    width: 20%;
+    height: 100%;
+    padding: 10px;
+    display: flex;
+    overflow: auto;
+    flex-shrink: 0;
+    scrollbar-width: none;
+    flex-direction: column;
+    -ms-overflow-style: none;
+    border-right: 1px solid wheat;
 }
 
 .room-overview-container {
-  width: 100%;
-  height: 100%;
-  overflow: hidden;
-  position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    position: relative;
 }
 
 .room-overview {
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  position: relative;
-  scrollbar-width: none;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    position: relative;
+    scrollbar-width: none;
 }
 
 .tools-sidebar {
-  width: 17%;
-  height: 100%;
-  display: flex;
-  flex-shrink: 0;
-  flex-direction: column;
-  border-left: 1px solid wheat;
+    width: 17%;
+    height: 100%;
+    display: flex;
+    flex-shrink: 0;
+    flex-direction: column;
+    border-left: 1px solid wheat;
 }
 
 .sidebar-header {
-  color: white;
-  text-align: center;
-  padding-block: 10px;
-  letter-spacing: 2px;
-  background-color: black;
-  text-transform: uppercase;
+    color: white;
+    text-align: center;
+    padding-block: 10px;
+    letter-spacing: 2px;
+    background-color: black;
+    text-transform: uppercase;
 }
 
 .tool-group {
-  color: white;
-  display: flex;
-  padding: 10px;
-  align-items: center;
-  letter-spacing: 1px;
-  text-transform: capitalize;
-  justify-content: space-between;
-  background-color: rgb(220, 20, 60, 0.1);
-  border: 1px solid rgb(245, 222, 179, 0.3);
+    color: white;
+    display: flex;
+    padding: 10px;
+    align-items: center;
+    letter-spacing: 1px;
+    text-transform: capitalize;
+    justify-content: space-between;
+    background-color: rgb(220, 20, 60, 0.1);
+    border: 1px solid rgb(245, 222, 179, 0.3);
 }
 
 .tool-group:hover {
-  background-color: rgba(255, 255, 255, 0.2);
+    background-color: rgba(255, 255, 255, 0.2);
 }
 
 .tool-group > img {
-  height: 25px;
-  display: block;
-  transition: 300ms;
+    height: 25px;
+    display: block;
+    transition: 300ms;
 }
 
 .tools-container {
-  width: 100%;
-  height: 100%;
-  overflow: auto;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 }
 
 .active-tool {
-  background-color: rgb(220, 20, 60, 0.7);
+    background-color: rgb(220, 20, 60, 0.7);
 }
 
 .active-tool > img {
-  transform: rotateZ(90deg);
+    transform: rotateZ(90deg);
 }
 
 .tool-contents-container {
-  display: flex;
-  flex-direction: column;
+    display: flex;
+    flex-direction: column;
 }
 
-.add-item, .tool-content {
-  color: wheat;
-  text-align: center;
-  letter-spacing: 2px;
-  padding-block: 10px;
+.add-item,
+.tool-content {
+    color: wheat;
+    text-align: center;
+    letter-spacing: 2px;
+    padding-block: 10px;
 }
 
 .add-item {
-  text-transform: uppercase;
-  background-color: rgb(0, 128, 0, 0.3);
+    text-transform: uppercase;
+    background-color: rgb(0, 128, 0, 0.3);
 }
 
 .tool-content {
-  border: 1px solid wheat;
-  background-color: #2b2b2b;
+    border: 1px solid wheat;
+    background-color: #2b2b2b;
 }
 
 .tool-content:hover {
-  background-color: rgb(255, 255, 255, 0.1);
+    background-color: rgb(255, 255, 255, 0.1);
 }
 
 .tool-content.selected {
-  color: black;
-  background-color: white;
+    color: black;
+    background-color: white;
 }
 
 .add-item:hover {
-  color: #2b2b2b;
-  background-color: rgb(173, 255, 47, 0.5);
+    color: #2b2b2b;
+    background-color: rgb(173, 255, 47, 0.5);
 }
 
 .room-view {
-  margin: 50px 200px;
-  position: relative;
-  background-color: lightgray;
+    margin: 50px 200px;
+    position: relative;
+    background-color: lightgray;
 }
 
 .room-view > .wall {
-  position: absolute;
-  border: 1px solid black;
+    position: absolute;
+    border: 1px solid black;
 }
 
 .room-view > .wall:hover {
-  background-color: white;
+    background-color: white;
 }
 
 .input-container {
-  gap: 4px;
-  display: flex;
-  color: wheat;
-  flex-direction: column;
-  text-transform: capitalize;
+    gap: 4px;
+    display: flex;
+    color: wheat;
+    flex-direction: column;
+    text-transform: capitalize;
 }
 
 .checkbox-container {
-  gap: 20px;
-  color: wheat;
-  display: flex;
-  align-items: center;
-  flex-direction: row;
-  text-transform: capitalize;
+    gap: 20px;
+    color: wheat;
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    text-transform: capitalize;
 }
 
-.input-container > input, .input-container > select, .input-container > textarea {
-  width: 100%;
-  padding: 5px;
-  border: unset;
-  outline: unset;
-  border-radius: 2px;
-  background-color: rgb(255, 255, 255, 0.5);
+.input-container > input,
+.input-container > select,
+.input-container > textarea {
+    width: 100%;
+    padding: 5px;
+    border: unset;
+    outline: unset;
+    border-radius: 2px;
+    background-color: rgb(255, 255, 255, 0.5);
 }
 
 .in-modification {
-  z-index: 100;
-  outline: 2px solid red;
-  border: 2px solid orange !important;
+    z-index: 100;
+    outline: 2px solid red;
+    border: 2px solid orange !important;
 }
 
 .map-maker-loader {
-  position: absolute;
-  background-color: blue;
+    position: absolute;
+    background-color: blue;
 }
 
 .map-maker-interactable {
-  position: absolute;
+    position: absolute;
 }
 
 .map-maker-interactable > img {
-  width: 100%;
-  display: block;
+    width: 100%;
+    display: block;
 }
 
 .enemy-path {
-  width: 5px;
-  height: 5px;
-  position: absolute;
-  border-radius: 50%;
-  background-color: gold;
-  border: 1px solid black;
+    width: 5px;
+    height: 5px;
+    position: absolute;
+    border-radius: 50%;
+    background-color: gold;
+    border: 1px solid black;
 }
 
 .waypoints-container {
-  gap: 10px;
-  display: flex;
-  margin-block: 20px;
-  flex-direction: column;
+    gap: 10px;
+    display: flex;
+    margin-block: 20px;
+    flex-direction: column;
 }
 
 .point-container {
-  gap: 10px;
-  display: flex;
-  flex-direction: row;
-  align-items: flex-end;
+    gap: 10px;
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
 }
 
 .remove-container > button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .remove-container > button > img {
-  width: 20px;
+    width: 20px;
 }
 
 .disabled-cancel:hover {
-  filter: unset !important;
-  box-shadow: unset !important;
+    filter: unset !important;
+    box-shadow: unset !important;
 }
 
 .room-id {
-  top: 0;
-  left: 0;
-  z-index: 500;
-  padding: 10px;
-  color: wheat;
-  position: sticky;
-  width: fit-content;
-  background-color: black;
-  text-transform: uppercase;
-  border-bottom-right-radius: 5px;
+    top: 0;
+    left: 0;
+    z-index: 500;
+    padding: 10px;
+    color: wheat;
+    position: sticky;
+    width: fit-content;
+    background-color: black;
+    text-transform: uppercase;
+    border-bottom-right-radius: 5px;
 }
 
 .map-maker-options {
-  left: 0;
-  gap: 5px;
-  bottom: 0;
-  z-index: 500;
-  display: flex;
-  color: wheat;
-  position: absolute;
-  width: fit-content;
-  text-transform: uppercase;
+    left: 0;
+    gap: 5px;
+    bottom: 0;
+    z-index: 500;
+    display: flex;
+    color: wheat;
+    position: absolute;
+    width: fit-content;
+    text-transform: uppercase;
 }
 
 .map-maker-options > div {
-  padding: 10px;
-  background-color: black;
-  border: 1px solid wheat;
-  border-top-right-radius: 5px;
+    padding: 10px;
+    background-color: black;
+    border: 1px solid wheat;
+    border-top-right-radius: 5px;
 }
 
 .map-maker-options > div:hover {
-  color: black;
-  border-color: black;
+    color: black;
+    border-color: black;
 }
 
 .map-maker-options > div:first-child:hover {
-  background-color: forestgreen;
+    background-color: forestgreen;
 }
 
 .map-maker-options > div:nth-of-type(2):hover {
-  background-color: orange;
+    background-color: orange;
 }
 
 .room-overview-difficulty-autocomplete {
-  gap: 8px;
-  align-items: center;
-  flex-direction: row;
-  text-transform: uppercase;
+    gap: 8px;
+    align-items: center;
+    flex-direction: row;
+    text-transform: uppercase;
 }
 
 .room-overview-difficulty-autocomplete:hover {
-  color: wheat !important;
-  border: 1px solid wheat !important;
+    color: wheat !important;
+    border: 1px solid wheat !important;
 }
 
-.save-option, .play-option {
-  display: flex;
-  align-items: center;
+.save-option,
+.play-option {
+    display: flex;
+    align-items: center;
 }

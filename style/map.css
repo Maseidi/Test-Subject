@@ -1,122 +1,122 @@
 .map {
-  background-color: #2b2b2b;
+    background-color: #2b2b2b;
 }
 
 .loader,
 .solid,
 .map,
 .room {
-  position: absolute;
+    position: absolute;
 }
 
 .wall {
-  border: 1px solid black;
+    border: 1px solid black;
 }
 
 .door {
-  background-color: black;
+    background-color: black;
 }
 
 .tl,
 .bl,
 .tr,
 .br {
-  width: 10px;
-  height: 10px;
-  position: absolute;
+    width: 10px;
+    height: 10px;
+    position: absolute;
 }
 
 .tl {
-  top: -50px;
-  left: -50px;
+    top: -50px;
+    left: -50px;
 }
 
 .tr {
-  top: -50px;
-  right: -50px;
+    top: -50px;
+    right: -50px;
 }
 
 .bl {
-  left: -50px;
-  bottom: -50px;
+    left: -50px;
+    bottom: -50px;
 }
 
 .br {
-  right: -50px;
-  bottom: -50px;
+    right: -50px;
+    bottom: -50px;
 }
 
 .low-health {
-  filter: grayscale(50%);
+    filter: grayscale(50%);
 }
 
 .flame {
-  width: 30px;
-  height: 25px;
-  position: absolute;
+    width: 30px;
+    height: 25px;
+    position: absolute;
 }
 
 .poison {
-  width: 60px;
-  height: 50px;
-  position: absolute;
+    width: 60px;
+    height: 50px;
+    position: absolute;
 }
 
 .flashbang {
-  top: 0;
-  left: 0;
-  z-index: 60;
-  width: 100%;
-  height: 100%;
-  position: fixed;
-  animation-duration: 1s;
-  animation-name: fade-out;
-  background-color: white;
-  animation-iteration-count: 1;
-  animation-fill-mode: forwards;
-  animation-direction: alternate;
-  animation-timing-function: linear;
+    top: 0;
+    left: 0;
+    z-index: 60;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    animation-duration: 1s;
+    animation-name: fade-out;
+    background-color: white;
+    animation-iteration-count: 1;
+    animation-fill-mode: forwards;
+    animation-direction: alternate;
+    animation-timing-function: linear;
 }
 
 .explosion {
-  width: 10px;
-  z-index: 40;
-  position: absolute;
+    width: 10px;
+    z-index: 40;
+    position: absolute;
 }
 
 .explosion > img {
-  width: 100%;
+    width: 100%;
 }
 
 .explosion-shake {
-  filter: blur(1px);
-  animation-duration: 200ms;
-  animation-iteration-count: 1;
-  animation-direction: alternate;
-  animation-name: camera-explosion;
-  animation-timing-function: linear;
+    filter: blur(1px);
+    animation-duration: 200ms;
+    animation-iteration-count: 1;
+    animation-direction: alternate;
+    animation-name: camera-explosion;
+    animation-timing-function: linear;
 }
 
 .door {
-  transition: 600ms;
-  position: absolute;
-  border: 1px solid black;
+    transition: 600ms;
+    position: absolute;
+    border: 1px solid black;
 }
 
 .ver-1.open {
-  transform: translateY(-100%);
+    transform: translateY(-100%);
 }
 
 .ver-2.open {
-  transform: translateY(100%);
+    transform: translateY(100%);
 }
 
 .hor-1.open {
-  transform: translateX(-100%);
+    transform: translateX(-100%);
 }
 
 .hor-2.open {
-  transform: translateX(100%);
+    transform: translateX(100%);
 }
 
 .ver-1.open > div,
@@ -127,22 +127,22 @@
 .hor-2.open > div,
 .hor-3.open > div,
 .hor-4.open > div {
-  display: none;
+    display: none;
 }
 
 .shadow {
-  top: 0;
-  left: 0;
-  z-index: 38;
-  width: 100vw;
-  height: 100vh;
-  position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 38;
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
 }
 
 .camera-shake {
-  animation-name: camshake;
-  animation-duration: 200ms;
-  animation-iteration-count: 1;
-  animation-direction: alternate;
-  animation-timing-function: linear;
+    animation-name: camshake;
+    animation-duration: 200ms;
+    animation-iteration-count: 1;
+    animation-direction: alternate;
+    animation-timing-function: linear;
 }

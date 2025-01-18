@@ -1,17 +1,17 @@
 import { getLoaders } from './entities.js'
-import { getCurrentRoomId } from './variables.js'
 import { getPasswords } from './password-manager.js'
+import { getCurrentRoomId } from './variables.js'
 
 class Loader {
     constructor(className, width, height, left, top, right, bottom, door) {
         this.className = className ?? null
-        this.width =     width     ?? 0
-        this.height =    height    ?? 0
-        this.left =      left      ?? null
-        this.top =       top       ?? null
-        this.right =     right     ?? null
-        this.bottom =    bottom    ?? null
-        this.door =      door      ?? null
+        this.width = width ?? 0
+        this.height = height ?? 0
+        this.left = left ?? null
+        this.top = top ?? null
+        this.right = right ?? null
+        this.bottom = bottom ?? null
+        this.door = door ?? null
     }
 }
 
@@ -41,27 +41,31 @@ export class BottomLoader extends Loader {
 
 export class Door {
     constructor(heading, popup, key, progress, code) {
-        this.name =            'door'
-        this.heading =         heading                   ?? null
-        this.popup =           popup                     ?? null
-        this.key =             key                       ?? null
-        this.renderProgress =  progress?.renderProgress  ?? null
+        this.name = 'door'
+        this.heading = heading ?? null
+        this.popup = popup ?? null
+        this.key = key ?? null
+        this.renderProgress = progress?.renderProgress ?? null
         this.progress2Active = progress?.progress2Active ?? []
-        this.killAll =         progress?.killAll         ?? null
-        this.type =            Math.random() < 0.5       ? 1 : 2
-        this.code =            code                      ?? null
+        this.killAll = progress?.killAll ?? null
+        this.type = Math.random() < 0.5 ? 1 : 2
+        this.code = code ?? null
 
-        this.value = code ? (() => {
-            let result = ''
-            for ( let i = 0; i < getPasswords().get(code).toString().length; i++ ) result += '0'
-            return result
-        })() : ''
+        this.value = code
+            ? (() => {
+                  let result = ''
+                  for (let i = 0; i < getPasswords().get(code).toString().length; i++) result += '0'
+                  return result
+              })()
+            : ''
     }
 }
 
-export const getDoorObject = (doorElem) => {
+export const getDoorObject = doorElem => {
     const loaderElem = doorElem.nextSibling
     const loaderClass = Number(loaderElem.classList[0])
-    const loaderObj = getLoaders().get(getCurrentRoomId()).find(loader => loader.className === loaderClass)
+    const loaderObj = getLoaders()
+        .get(getCurrentRoomId())
+        .find(loader => loader.className === loaderClass)
     return loaderObj.door
 }

@@ -1,119 +1,119 @@
 .enemy {
-  z-index: 36;
-  position: absolute;
+    z-index: 36;
+    position: absolute;
 }
 
 .enemy-collider {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .torturer-collider,
 .grabber-collider,
 .scorcher-collider {
-  width: 37px;
-  height: 37px;
+    width: 37px;
+    height: 37px;
 }
 
 .soul-drinker-collider {
-  width: 28px;
-  height: 28px;
+    width: 28px;
+    height: 28px;
 }
 
 .rock-crusher-collider {
-  width: 46px;
-  height: 46px;
+    width: 46px;
+    height: 46px;
 }
 
 .tracker-collider {
-  width: 45px;
-  height: 45px;
+    width: 45px;
+    height: 45px;
 }
 
 .ranger-collider {
-  width: 32px;
-  height: 32px;
+    width: 32px;
+    height: 32px;
 }
 
 .spiker-collider {
-  width: 27px;
-  height: 27px;
+    width: 27px;
+    height: 27px;
 }
 
 .stinger-collider {
-  width: 50px;
-  height: 50px;
+    width: 50px;
+    height: 50px;
 }
 
 .vision {
-  top: 50%;
-  left: 50%;
-  width: 1px;
-  position: absolute;
-  transform-origin: top;
-  transform: translateX(-50%) translateY(-50%);
+    top: 50%;
+    left: 50%;
+    width: 1px;
+    position: absolute;
+    transform-origin: top;
+    transform: translateX(-50%) translateY(-50%);
 }
 
 .vision > div {
-  width: 100%;
-  height: 2%;
+    width: 100%;
+    height: 2%;
 }
 
 .enemy-backward-detector {
-  top: 50%;
-  left: 50%;
-  width: 100%;
-  height: 100%;
-  position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    position: absolute;
 }
 
 .enemy-backward-detector {
-  z-index: 37;
+    z-index: 37;
 }
 
 .enemy-collider > div:nth-of-type(1) {
-  position: absolute;
-  border: 1px solid black;
+    position: absolute;
+    border: 1px solid black;
 }
 
 .torturer-collider > div:nth-of-type(1),
 .grabber-collider > div:nth-of-type(1),
 .scorcher-collider > div:nth-of-type(1) {
-  width: 25px;
-  height: 14px;
+    width: 25px;
+    height: 14px;
 }
 
 .soul-drinker-collider > div:nth-of-type(1) {
-  width: 22px;
-  height: 10px;
+    width: 22px;
+    height: 10px;
 }
 
 .rock-crusher-collider > div:nth-of-type(1) {
-  width: 32px;
-  height: 24px;
+    width: 32px;
+    height: 24px;
 }
 
 .tracker-collider > div:nth-of-type(1) {
-  width: 23px;
-  height: 17px;
+    width: 23px;
+    height: 17px;
 }
 
 .ranger-collider > div:nth-of-type(1) {
-  width: 21px;
-  height: 16px;
+    width: 21px;
+    height: 16px;
 }
 
 .spiker-collider > div:nth-of-type(1) {
-  width: 15px;
-  height: 15px;
-  border-radius: 50%;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
 }
 
 .stinger-collider > div:nth-of-type(1) {
-  width: 20px;
-  height: 25px;
-  border-radius: 2px;
+    width: 20px;
+    height: 25px;
+    border-radius: 2px;
 }
 
 .torturer-collider > div:nth-of-type(1) > div:nth-of-type(1),
@@ -132,161 +132,161 @@
 .scorcher-collider > div:nth-of-type(1) > div:nth-of-type(2),
 .stinger-collider > div:nth-of-type(1) > div:nth-of-type(1),
 .stinger-collider > div:nth-of-type(1) > div:nth-of-type(2) {
-  position: absolute;
-  border-radius: 1px;
-  filter: brightness(66%);
-  border: 1px solid black;
+    position: absolute;
+    border-radius: 1px;
+    filter: brightness(66%);
+    border: 1px solid black;
 }
 
 .torturer-collider > div:nth-of-type(1) > div:nth-of-type(1),
 .torturer-collider > div:nth-of-type(1) > div:nth-of-type(2) {
-  top: 2px;
-  width: 6px;
-  height: 16px;
+    top: 2px;
+    width: 6px;
+    height: 16px;
 }
 
 .scorcher-collider > div:nth-of-type(1) > div:nth-of-type(1),
 .scorcher-collider > div:nth-of-type(1) > div:nth-of-type(2) {
-  top: 2px;
-  width: 6px;
-  height: 22px;
-  border-radius: 5px;
+    top: 2px;
+    width: 6px;
+    height: 22px;
+    border-radius: 5px;
 }
 
 .grabber-collider > div:nth-of-type(1) > div:nth-of-type(1),
 .grabber-collider > div:nth-of-type(1) > div:nth-of-type(2) {
-  top: 2px;
-  width: 7px;
-  height: 22px;
+    top: 2px;
+    width: 7px;
+    height: 22px;
 }
 
 .grabber-collider > div:nth-of-type(1) > div:nth-of-type(1) {
-  border-bottom-right-radius: 10px;
+    border-bottom-right-radius: 10px;
 }
 
 .grabber-collider > div:nth-of-type(1) > div:nth-of-type(2) {
-  border-bottom-left-radius: 10px;
+    border-bottom-left-radius: 10px;
 }
 
 .soul-drinker-collider > div:nth-of-type(1) > div:nth-of-type(1),
 .soul-drinker-collider > div:nth-of-type(1) > div:nth-of-type(2) {
-  top: 2px;
-  width: 4px;
-  height: 16px;
+    top: 2px;
+    width: 4px;
+    height: 16px;
 }
 
 .rock-crusher-collider > div:nth-of-type(1) > div:nth-of-type(1),
 .rock-crusher-collider > div:nth-of-type(1) > div:nth-of-type(2) {
-  top: 6px;
-  width: 8px;
-  height: 28px;
+    top: 6px;
+    width: 8px;
+    height: 28px;
 }
 
 .tracker-collider > div:nth-of-type(1) > div:nth-of-type(1),
 .tracker-collider > div:nth-of-type(1) > div:nth-of-type(2) {
-  top: -8px;
-  width: 6px;
-  height: 38px;
+    top: -8px;
+    width: 6px;
+    height: 38px;
 }
 
 .tracker-collider > div:nth-of-type(1) > div:nth-of-type(1) {
-  border-top-left-radius: 7px;
-  border-bottom-right-radius: 7px;
+    border-top-left-radius: 7px;
+    border-bottom-right-radius: 7px;
 }
 
 .tracker-collider > div:nth-of-type(1) > div:nth-of-type(2) {
-  border-top-right-radius: 7px;
-  border-bottom-left-radius: 7px;
+    border-top-right-radius: 7px;
+    border-bottom-left-radius: 7px;
 }
 
 .ranger-collider > div:nth-of-type(1) > div:nth-of-type(1),
 .ranger-collider > div:nth-of-type(1) > div:nth-of-type(2) {
-  top: 2px;
-  width: 6px;
-  height: 21px;
+    top: 2px;
+    width: 6px;
+    height: 21px;
 }
 
 .stinger-collider > div:nth-of-type(1) > div:nth-of-type(1),
 .stinger-collider > div:nth-of-type(1) > div:nth-of-type(2) {
-  width: 5px;
-  height: 15px;
+    width: 5px;
+    height: 15px;
 }
 
 .enemy-collider > div:nth-of-type(1) > div:nth-of-type(1) {
-  left: 100%;
+    left: 100%;
 }
 
 .stinger-collider > div:nth-of-type(1) > div:nth-of-type(1) {
-  transform: rotateZ(-60deg);
-  border-top-left-radius: 50%;
-  border-top-right-radius: 50%;
+    transform: rotateZ(-60deg);
+    border-top-left-radius: 50%;
+    border-top-right-radius: 50%;
 }
 
 .stinger-collider > div:nth-of-type(1) > div:nth-of-type(1)::after,
 .stinger-collider > div:nth-of-type(1) > div:nth-of-type(2)::after {
-  top: 100%;
-  content: "";
-  width: 100%;
-  height: 200%;
-  display: block;
-  position: absolute;
-  background-color: inherit;
-  border: 1px solid black;
-  border-top: unset !important;
+    top: 100%;
+    content: '';
+    width: 100%;
+    height: 200%;
+    display: block;
+    position: absolute;
+    background-color: inherit;
+    border: 1px solid black;
+    border-top: unset !important;
 }
 
 .stinger-collider > div:nth-of-type(1) > div:nth-of-type(1)::after {
-  border-bottom-left-radius: 50px;
-  transform: rotateZ(60deg) translateX(-13px) translateY(6px);
+    border-bottom-left-radius: 50px;
+    transform: rotateZ(60deg) translateX(-13px) translateY(6px);
 }
 
 .stinger-collider > div:nth-of-type(1) > div:nth-of-type(2)::after {
-  border-bottom-right-radius: 50px;
-  transform: rotateZ(-60deg) translateX(13px) translateY(6px);
+    border-bottom-right-radius: 50px;
+    transform: rotateZ(-60deg) translateX(13px) translateY(6px);
 }
 
 .spiker-collider > div:nth-of-type(1) > div:nth-of-type(1) {
-  width: 0;
-  left: 50%;
-  height: 0;
-  bottom: 100%;
-  position: absolute;
-  border-bottom: 5px solid white;
-  border-left: 5px solid transparent;
-  border-right: 5px solid transparent;
-  background-color: transparent !important;
-  transform: translateY(-3px) translateX(-50%);
+    width: 0;
+    left: 50%;
+    height: 0;
+    bottom: 100%;
+    position: absolute;
+    border-bottom: 5px solid white;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    background-color: transparent !important;
+    transform: translateY(-3px) translateX(-50%);
 }
 
 .enemy-collider > div:nth-of-type(1) > div:nth-of-type(2) {
-  right: 100%;
+    right: 100%;
 }
 
 .stinger-collider > div:nth-of-type(1) > div:nth-of-type(2) {
-  transform: rotateZ(60deg);
-  border-top-right-radius: 50%;
-  border-top-left-radius: 50%;
+    transform: rotateZ(60deg);
+    border-top-right-radius: 50%;
+    border-top-left-radius: 50%;
 }
 
 .ranger-collider > div:nth-of-type(1) > div:nth-of-type(1) {
-  border-bottom-right-radius: 10px;
+    border-bottom-right-radius: 10px;
 }
 
 .ranger-collider > div:nth-of-type(1) > div:nth-of-type(2) {
-  border-bottom-left-radius: 10px;
+    border-bottom-left-radius: 10px;
 }
 
 .spiker-collider > div:nth-of-type(1) > div:nth-of-type(2) {
-  width: 0;
-  height: 0;
-  left: 50%;
-  top: 100%;
-  position: absolute;
-  border-top: 5px solid white;
-  border-left: 5px solid transparent;
-  border-right: 5px solid transparent;
-  background-color: transparent !important;
-  transform: translateY(3px) translateX(-50%);
+    width: 0;
+    height: 0;
+    left: 50%;
+    top: 100%;
+    position: absolute;
+    border-top: 5px solid white;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    background-color: transparent !important;
+    transform: translateY(3px) translateX(-50%);
 }
 
 .torturer-collider > div:nth-of-type(1) > div:nth-of-type(3),
@@ -297,13 +297,13 @@
 .grabber-collider > div:nth-of-type(1) > div:nth-of-type(3),
 .scorcher-collider > div:nth-of-type(1) > div:nth-of-type(3),
 .stinger-collider > div:nth-of-type(1) > div:nth-of-type(3) {
-  top: 50%;
-  left: 50%;
-  position: absolute;
-  border-radius: 50%;
-  border: 1px solid black;
-  filter: brightness(33%);
-  transform: translateX(-50%) translateY(-50%);
+    top: 50%;
+    left: 50%;
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid black;
+    filter: brightness(33%);
+    transform: translateX(-50%) translateY(-50%);
 }
 
 .torturer-collider > div:nth-of-type(1) > div:nth-of-type(3),
@@ -311,119 +311,119 @@
 .grabber-collider > div:nth-of-type(1) > div:nth-of-type(3),
 .ranger-collider > div:nth-of-type(1) > div:nth-of-type(3),
 .stinger-collider > div:nth-of-type(1) > div:nth-of-type(3) {
-  width: 8px;
-  height: 8px;
+    width: 8px;
+    height: 8px;
 }
 
 .soul-drinker-collider > div:nth-of-type(1) > div:nth-of-type(3) {
-  width: 5px;
-  height: 5px;
+    width: 5px;
+    height: 5px;
 }
 
 .rock-crusher-collider > div:nth-of-type(1) > div:nth-of-type(3) {
-  width: 10px;
-  height: 10px;
+    width: 10px;
+    height: 10px;
 }
 
 .tracker-collider > div:nth-of-type(1) > div:nth-of-type(3) {
-  width: 7px;
-  height: 7px;
+    width: 7px;
+    height: 7px;
 }
 
 .spiker-collider > div:nth-of-type(1) > div:nth-of-type(3) {
-  width: 0;
-  top: 50%;
-  height: 0;
-  right: 100%;
-  position: absolute;
-  border-right: 5px solid white;
-  border-top: 5px solid transparent;
-  border-bottom: 5px solid transparent;
-  background-color: transparent !important;
-  transform: translateX(-3px) translateY(-50%);
+    width: 0;
+    top: 50%;
+    height: 0;
+    right: 100%;
+    position: absolute;
+    border-right: 5px solid white;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    background-color: transparent !important;
+    transform: translateX(-3px) translateY(-50%);
 }
 
 .ranger-collider > div:nth-of-type(1) > div:nth-of-type(4) {
-  position: absolute;
-  left: 50%;
-  bottom: 100%;
-  width: 4px;
-  height: 14px;
-  transform: translateX(-50%);
-  border: 1px solid black;
+    position: absolute;
+    left: 50%;
+    bottom: 100%;
+    width: 4px;
+    height: 14px;
+    transform: translateX(-50%);
+    border: 1px solid black;
 }
 
 .spiker-collider > div:nth-of-type(1) > div:nth-of-type(4) {
-  width: 0;
-  top: 50%;
-  height: 0;
-  left: 100%;
-  position: absolute;
-  border-left: 5px solid white;
-  border-top: 5px solid transparent;
-  border-bottom: 5px solid transparent;
-  background-color: transparent !important;
-  transform: translateX(3px) translateY(-50%);
+    width: 0;
+    top: 50%;
+    height: 0;
+    left: 100%;
+    position: absolute;
+    border-left: 5px solid white;
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+    background-color: transparent !important;
+    transform: translateX(3px) translateY(-50%);
 }
 
 .ranger-collider > div:nth-of-type(1) > div:nth-of-type(5) {
-  left: 50%;
-  top: -18px;
-  width: 8px;
-  height: 8px;
-  position: absolute;
-  border-radius: 50%;
-  border: 1px solid black;
-  transform: translateX(-50%);
+    left: 50%;
+    top: -18px;
+    width: 8px;
+    height: 8px;
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid black;
+    transform: translateX(-50%);
 }
 
 .spiker-collider > div:nth-of-type(1) > div:nth-of-type(5) {
-  top: 50%;
-  left: 50%;
-  width: 50%;
-  height: 50%;
-  border-radius: 50%;
-  position: absolute;
-  border: 1px solid black;
-  background-color: white !important;
-  transform: translateX(-50%) translateY(-50%);
+    top: 50%;
+    left: 50%;
+    width: 50%;
+    height: 50%;
+    border-radius: 50%;
+    position: absolute;
+    border: 1px solid black;
+    background-color: white !important;
+    transform: translateX(-50%) translateY(-50%);
 }
 
 .ranger-bullet,
 .scorcher-bullet,
 .stinger-bullet {
-  width: 8px;
-  height: 8px;
-  position: absolute;
-  border-radius: 50%;
-  border: 1px solid black;
+    width: 8px;
+    height: 8px;
+    position: absolute;
+    border-radius: 50%;
+    border: 1px solid black;
 }
 
 .stinger-collider > div:nth-of-type(1) > div:nth-of-type(4) {
-  left: 50%;
-  width: 5px;
-  height: 14px;
-  bottom: 100%;
-  position: absolute;
-  border: 1px solid black;
-  transform: translateX(-50%);
+    left: 50%;
+    width: 5px;
+    height: 14px;
+    bottom: 100%;
+    position: absolute;
+    border: 1px solid black;
+    transform: translateX(-50%);
 }
 
 .stinger-collider > div:nth-of-type(1) > div:nth-of-type(4)::after {
-  left: 50%;
-  width: 7px;
-  content: "";
-  height: 7px;
-  bottom: 100%;
-  border-radius: 50%;
-  position: absolute;
-  border: 1px solid black;
-  transform: translateX(-50%);
-  background-color: rgb(177, 151, 5);
+    left: 50%;
+    width: 7px;
+    content: '';
+    height: 7px;
+    bottom: 100%;
+    border-radius: 50%;
+    position: absolute;
+    border: 1px solid black;
+    transform: translateX(-50%);
+    background-color: rgb(177, 151, 5);
 }
 
 .body-transition {
-  transition: 300ms;
+    transition: 300ms;
 }
 
 .torturer-collider > div:nth-of-type(1) > .attack,
@@ -433,90 +433,88 @@
 .ranger-collider > div:nth-of-type(1) > .attack,
 .grabber-collider > div:nth-of-type(1) > .attack,
 .scorcher-collider > div:nth-of-type(1) > .attack {
-  animation-duration: 600ms;
-  animation-name: normal-attack;
-  animation-direction: alternate;
+    animation-duration: 600ms;
+    animation-name: normal-attack;
+    animation-direction: alternate;
 }
 
 .stinger-collider > div:nth-of-type(1) > .attack {
-  animation-duration: 600ms;
-  animation-name: stinger-attack;
-  animation-duration: alternate;
+    animation-duration: 600ms;
+    animation-name: stinger-attack;
+    animation-duration: alternate;
 }
 
 .grab > .enemy-collider > .enemy-body > div:nth-of-type(1),
 .grab > .enemy-collider > .enemy-body > div:nth-of-type(2) {
-  animation-duration: 200ms;
-  animation-fill-mode: forwards;
+    animation-duration: 200ms;
+    animation-fill-mode: forwards;
 }
 
 .grab > .enemy-collider > .enemy-body > div:nth-of-type(1) {
-  animation-name: left-grab-attack;
+    animation-name: left-grab-attack;
 }
 
 .grab > .enemy-collider > .enemy-body > div:nth-of-type(2) {
-  animation-name: right-grab-attack;
+    animation-name: right-grab-attack;
 }
 
 .grab > .stinger-collider > .enemy-body > div:nth-of-type(1) {
-  animation-name: stinger-left-grab-attack !important;
+    animation-name: stinger-left-grab-attack !important;
 }
 
 .grab > .stinger-collider > .enemy-body > div:nth-of-type(2) {
-  animation-name: stinger-right-grab-attack !important;
+    animation-name: stinger-right-grab-attack !important;
 }
 
 .path-point {
-  width: 10px;
-  height: 10px;
-  position: absolute;
+    width: 10px;
+    height: 10px;
+    position: absolute;
 }
 
 .damaged,
 .damaged > div {
-  filter: brightness(1000%);
-  background-color: white !important;
+    filter: brightness(1000%);
+    background-color: white !important;
 }
 
 .no-transition {
-  transition: 0s !important;
+    transition: 0s !important;
 }
 
 .fire {
-  left: 50%;
-  width: 200%;
-  bottom: 100%;
-  height: 200%;
-  position: absolute;
-  transform: translateX(-50%);
+    left: 50%;
+    width: 200%;
+    bottom: 100%;
+    height: 200%;
+    position: absolute;
+    transform: translateX(-50%);
 }
 
 .buffer {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  left: 0;
-  top: 0;
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
 }
 
 .enemy-damage-container {
-  top: 0;
-  left: 50%;
-  color: black;
-  font-weight: bold;
-  position: absolute;
-  transform: translateX(-50%);
-  text-shadow: -1px 1px 0 #fff, 1px 1px 0 #fff, 1px -1px 0 #fff,
-    -1px -1px 0 #fff;
+    top: 0;
+    left: 50%;
+    color: black;
+    font-weight: bold;
+    position: absolute;
+    transform: translateX(-50%);
+    text-shadow: -1px 1px 0 #fff, 1px 1px 0 #fff, 1px -1px 0 #fff, -1px -1px 0 #fff;
 }
 
 .critical {
-  font-size: 30px;
+    font-size: 30px;
 }
 
 .yellow {
-  text-shadow: -1px 1px 0 #000, 1px 1px 0 #000, 1px -1px 0 #000,
-    -1px -1px 0 #000;
+    text-shadow: -1px 1px 0 #000, 1px 1px 0 #000, 1px -1px 0 #000, -1px -1px 0 #000;
 }
 
 .enemy-damage-container-1,
@@ -525,42 +523,42 @@
 .enemy-damage-container-4,
 .enemy-damage-container-5,
 .enemy-damage-container-6 {
-  animation-duration: 1s;
-  animation-fill-mode: forwards;
-  animation-direction: alternate;
+    animation-duration: 1s;
+    animation-fill-mode: forwards;
+    animation-direction: alternate;
 }
 
 .enemy-damage-container-1 {
-  animation-name: container-1;
+    animation-name: container-1;
 }
 
 .enemy-damage-container-2 {
-  animation-name: container-2;
+    animation-name: container-2;
 }
 
 .enemy-damage-container-3 {
-  animation-name: container-3;
+    animation-name: container-3;
 }
 
 .enemy-damage-container-4 {
-  animation-name: container-4;
+    animation-name: container-4;
 }
 
 .enemy-damage-container-5 {
-  animation-name: container-5;
+    animation-name: container-5;
 }
 
 .enemy-damage-container-6 {
-  animation-name: container-6;
+    animation-name: container-6;
 }
 
 .dead {
-  animation-duration: 1s;
-  animation-name: corpse;
-  animation-fill-mode: forwards;
-  animation-direction: alternate;
+    animation-duration: 1s;
+    animation-name: corpse;
+    animation-fill-mode: forwards;
+    animation-direction: alternate;
 }
 
 .popup > div > img {
-  width: 30px;
+    width: 30px;
 }

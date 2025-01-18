@@ -1,5 +1,5 @@
-import { GUESS_SEARCH } from '../../enemy-constants.js'
 import { getNoOffenseCounter } from '../../../variables.js'
+import { GUESS_SEARCH } from '../../enemy-constants.js'
 import { AbstractNotificationService } from '../abstract/notification.js'
 
 export class TrackerNotificationService extends AbstractNotificationService {
@@ -8,9 +8,8 @@ export class TrackerNotificationService extends AbstractNotificationService {
     }
 
     switch2ChaseMode() {
-        if ( getNoOffenseCounter() !== 0 ) return
+        if (getNoOffenseCounter() !== 0) return
         this.enemy.state = GUESS_SEARCH
         this.enemy.guessCounter = 1
     }
-
 }

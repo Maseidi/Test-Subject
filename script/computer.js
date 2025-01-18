@@ -1,15 +1,15 @@
-import { play } from './game.js'
-import { finishUp } from './finishup.js'
 import { managePause } from './actions.js'
-import { getIsSurvival } from './variables.js'
-import { getPauseContainer } from './elements.js'
-import { appendAll, createAndAddClass } from './util.js'
-import { saveMapMakerAtSlot } from './mapMaker/data-manager.js'
-import { countItem, useInventoryResource } from './inventory.js'
 import { loadGameFromSlot, saveGameAtSlot } from './data-manager.js'
-import { addMessage, itemNotification, renderQuit } from './user-interface.js'
-import { loadSurvivalFromSlot, saveSurvivalAtSlot } from './survival/data-manager.js'
+import { getPauseContainer } from './elements.js'
+import { finishUp } from './finishup.js'
+import { play } from './game.js'
+import { countItem, useInventoryResource } from './inventory.js'
+import { saveMapMakerAtSlot } from './mapMaker/data-manager.js'
 import { activateAllProgresses, getProgressValueByNumber } from './progress-manager.js'
+import { loadSurvivalFromSlot, saveSurvivalAtSlot } from './survival/data-manager.js'
+import { addMessage, itemNotification, renderQuit } from './user-interface.js'
+import { appendAll, createAndAddClass } from './util.js'
+import { getIsSurvival } from './variables.js'
 
 export const turnOnComputer = () => {
     managePause()
@@ -21,7 +21,7 @@ export const turnOnComputer = () => {
 export const renderDesktop = (load = false, mapMaker = false) => {
     const desktop = createAndAddClass('div', 'desktop', 'ui-theme')
     const content2Render = []
-    if ( !load && !mapMaker ) content2Render.push(itemNotification('hardDrive'))
+    if (!load && !mapMaker) content2Render.push(itemNotification('hardDrive'))
     content2Render.push(contents(load, mapMaker))
     appendAll(desktop, ...content2Render)
     getPauseContainer().append(desktop)
@@ -42,27 +42,29 @@ const title = () => {
 
 const slots = (load, mapMaker) => {
     const slots = createAndAddClass('div', 'desktop-slots')
-    if ( mapMaker ) slots.style.height = 'max-content'
-    for ( let i = 0; i < (mapMaker ? 5 : 10); i++ ) {
-        const slotData = localStorage.getItem(mapMaker ? 'map-slot-' + (i + 1) :  getIsSurvival() ? 'survival-slot-' + (i + 1) : 'slot-' + ( i + 1 ))
+    if (mapMaker) slots.style.height = 'max-content'
+    for (let i = 0; i < (mapMaker ? 5 : 10); i++) {
+        const slotData = localStorage.getItem(
+            mapMaker ? 'map-slot-' + (i + 1) : getIsSurvival() ? 'survival-slot-' + (i + 1) : 'slot-' + (i + 1),
+        )
         const isNotEmpty = slotData !== 'empty'
         const className = isNotEmpty ? 'desktop-slot' : 'desktop-empty-slot'
         const slot = createAndAddClass('div', className)
         appendAll(slot, ...(isNotEmpty ? savedSlotContent(slotData, mapMaker, getIsSurvival()) : noSaveData()))
-        if ( !load ) slot.addEventListener('click', () => renderSaveConfirmPopup(i + 1, isNotEmpty, mapMaker))
-        if ( isNotEmpty && load ) slot.addEventListener('click', () => renderLoadConfirmPopup(i+1))
+        if (!load) slot.addEventListener('click', () => renderSaveConfirmPopup(i + 1, isNotEmpty, mapMaker))
+        if (isNotEmpty && load) slot.addEventListener('click', () => renderLoadConfirmPopup(i + 1))
         slots.append(slot)
     }
     return slots
 }
 
 export const savedSlotContent = (slotData, mapMaker, survival) => {
-    if ( mapMaker ) return mapMakerSlotContent(slotData)
-    else if ( survival ) return survivalSlotContent(slotData)    
+    if (mapMaker) return mapMakerSlotContent(slotData)
+    else if (survival) return survivalSlotContent(slotData)
     else return gamePlaySlotContent(slotData)
 }
 
-const mapMakerSlotContent = (slotData) => {
+const mapMakerSlotContent = slotData => {
     const { timeStamp, spawn, rooms, saves } = JSON.parse(slotData)
     const timeStampEl = document.createElement('div')
     timeStampEl.textContent = 'Date: ' + new Date(timeStamp).toLocaleString()
@@ -75,7 +77,7 @@ const mapMakerSlotContent = (slotData) => {
     return [timeStampEl, savesEl, spawnEl, roomsEl]
 }
 
-const survivalSlotContent = (slotData) => {
+const survivalSlotContent = slotData => {
     const { timeStamp, saves, chaos } = JSON.parse(slotData)
     const timeStampEl = document.createElement('div')
     timeStampEl.textContent = 'Date: ' + new Date(timeStamp).toLocaleString()
@@ -86,7 +88,7 @@ const survivalSlotContent = (slotData) => {
     return [timeStampEl, savesEl, chaosEl]
 }
 
-const gamePlaySlotContent = (slotData) => {
+const gamePlaySlotContent = slotData => {
     const { timeStamp, room, saves, difficulty, rounds } = JSON.parse(slotData)
     const timeStampEl = document.createElement('div')
     timeStampEl.textContent = 'Date: ' + new Date(timeStamp).toLocaleString()
@@ -108,8 +110,9 @@ const noSaveData = () => {
 }
 
 const renderSaveConfirmPopup = (slotNumber, isNotEmpty, mapMaker) => {
-    const title = 
-        isNotEmpty ? 'This might overwrite previous saved data. Do you wish to continue?' : 'Use this slot to save data?'
+    const title = isNotEmpty
+        ? 'This might overwrite previous saved data. Do you wish to continue?'
+        : 'Use this slot to save data?'
 
     const savePopupContainer = createAndAddClass('div', 'common-popup-container', 'ui-theme', 'popup-container')
     const savePopup = createAndAddClass('div', 'common-popup')
@@ -119,9 +122,9 @@ const renderSaveConfirmPopup = (slotNumber, isNotEmpty, mapMaker) => {
     const cancel = createAndAddClass('button', 'popup-cancel')
     cancel.addEventListener('click', closeSavePopup)
     cancel.textContent = 'cancel'
-    const confirm = createAndAddClass('button', 'popup-confirm')    
+    const confirm = createAndAddClass('button', 'popup-confirm')
     confirm.addEventListener('click', () => confirmSave(slotNumber, mapMaker))
-    if ( mapMaker ) {
+    if (mapMaker) {
         const confirmMessage = document.createElement('p')
         confirmMessage.textContent = 'confirm'
         appendAll(confirm, confirmMessage)
@@ -131,45 +134,45 @@ const renderSaveConfirmPopup = (slotNumber, isNotEmpty, mapMaker) => {
         const hardDriveImage = document.createElement('img')
         hardDriveImage.src = './assets/images/hardDrive.png'
         appendAll(confirm, hardDriveAmount, hardDriveImage)
-        if ( !getProgressValueByNumber('1000002') ) {
+        if (!getProgressValueByNumber('1000002')) {
             activateAllProgresses('1000002')
         }
-    }    
+    }
     appendAll(buttons, cancel, confirm)
     const message = createAndAddClass('p', 'message')
     appendAll(savePopup, titleEl, buttons, message)
     savePopupContainer.append(savePopup)
-    getPauseContainer().lastElementChild.append(savePopupContainer)    
+    getPauseContainer().lastElementChild.append(savePopupContainer)
 }
 
 const confirmSave = (slotNumber, mapMaker = false) => {
-    if ( mapMaker )  {
+    if (mapMaker) {
         saveMapMakerAtSlot(slotNumber)
         reRenderDesktop(true)
         return
     }
-    if ( countItem('hardDrive') === 0 ) {
+    if (countItem('hardDrive') === 0) {
         addComputerMessage('Out of hard drive memory')
         return
     }
     useInventoryResource('hardDrive', 1)
-    if ( getIsSurvival() ) saveSurvivalAtSlot(slotNumber)
-    else                   saveGameAtSlot(slotNumber)
-    reRenderDesktop(false) 
+    if (getIsSurvival()) saveSurvivalAtSlot(slotNumber)
+    else saveGameAtSlot(slotNumber)
+    reRenderDesktop(false)
 }
 
-const reRenderDesktop = (mapMaker) => {
+const reRenderDesktop = mapMaker => {
     closeSavePopup()
     getPauseContainer().firstElementChild.remove()
     renderDesktop(false, mapMaker)
 }
 
-const addComputerMessage = (input) => 
+const addComputerMessage = input =>
     addMessage(input, getPauseContainer().lastElementChild.lastElementChild.firstElementChild)
 
 const closeSavePopup = () => getPauseContainer().lastElementChild.lastElementChild.remove()
 
-const renderLoadConfirmPopup = (slotNumber) => {
+const renderLoadConfirmPopup = slotNumber => {
     const loadPopupContainer = createAndAddClass('div', 'common-popup-container', 'ui-theme', 'popup-container')
     const loadPopup = createAndAddClass('div', 'common-popup')
     const title = createAndAddClass('p', 'load-title')
@@ -192,9 +195,9 @@ const renderLoadConfirmPopup = (slotNumber) => {
 
 const closeLoadPopup = () => getPauseContainer().lastElementChild.lastElementChild?.remove()
 
-const confirmSlotLoad = (slotNumber) => {
+const confirmSlotLoad = slotNumber => {
     finishUp()
-    if ( getIsSurvival() ) {
+    if (getIsSurvival()) {
         loadSurvivalFromSlot(slotNumber)
         play(false, true)
         return

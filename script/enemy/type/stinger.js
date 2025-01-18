@@ -1,15 +1,5 @@
-import { AbstractEnemy } from './abstract-enemy.js'
-import { NormalLostService } from '../service/normal/lost.js'
-import { GrabberGrabService } from '../service/grabber/grab.js'
-import { NormalChaseService } from '../service/normal/chase.js'
-import { NormalReturnService } from '../service/normal/return.js'
-import { GrabberInjuryService } from '../service/grabber/injury.js'
 import { getIsSurvival, getRoundsFinished } from '../../variables.js'
-import { StingerMovementService } from '../service/stinger/movement.js'
-import { StingerShootingService } from '../service/stinger/shooting.js'
-import { NormalGuessSearchService } from '../service/normal/guess-search.js'
-import { NormalInvestigationService } from '../service/normal/investigate.js'
-import { 
+import {
     CHASE,
     GO_FOR_RANGED,
     GRAB,
@@ -18,11 +8,22 @@ import {
     LOST,
     MOVE_TO_POSITION,
     NO_OFFENCE,
-    STINGER } from '../enemy-constants.js'
+    STINGER,
+} from '../enemy-constants.js'
+import { GrabberGrabService } from '../service/grabber/grab.js'
+import { GrabberInjuryService } from '../service/grabber/injury.js'
+import { NormalChaseService } from '../service/normal/chase.js'
+import { NormalGuessSearchService } from '../service/normal/guess-search.js'
+import { NormalInvestigationService } from '../service/normal/investigate.js'
+import { NormalLostService } from '../service/normal/lost.js'
+import { NormalReturnService } from '../service/normal/return.js'
+import { StingerMovementService } from '../service/stinger/movement.js'
+import { StingerShootingService } from '../service/stinger/shooting.js'
+import { AbstractEnemy } from './abstract-enemy.js'
 
 export class Stinger extends AbstractEnemy {
     constructor(level, waypoint, loot, progress, virus, difficulties) {
-        const base = level + (getRoundsFinished() * 5)
+        const base = level + getRoundsFinished() * 5
         const health = Math.floor(base * 85 + Math.random() * 5)
         const damage = Math.floor(base * 15 + Math.random() * 15)
         const maxSpeed = 2.75 + Math.random()
@@ -40,16 +41,16 @@ export class Stinger extends AbstractEnemy {
 
     manageState() {
         this.shootingService.transferEnemy(false)
-        switch ( this.state ) {
+        switch (this.state) {
             case INVESTIGATE:
                 this.investigationService.handleInvestigationState()
                 break
             case CHASE:
-                if ( getIsSurvival() && this.wallInTheWay !== false ) {
+                if (getIsSurvival() && this.wallInTheWay !== false) {
                     this.chaseService.handleChaseState()
                     return
                 }
-                if ( Math.random() < 0.002 ) this.state = GO_FOR_RANGED
+                if (Math.random() < 0.002) this.state = GO_FOR_RANGED
             case NO_OFFENCE:
                 this.chaseService.handleChaseState()
                 break
@@ -58,7 +59,7 @@ export class Stinger extends AbstractEnemy {
                 break
             case GUESS_SEARCH:
                 this.guessSearchService.handleGuessSearchState()
-                break    
+                break
             case LOST:
                 this.lostService.handleLostState()
                 break
@@ -70,5 +71,4 @@ export class Stinger extends AbstractEnemy {
                 break
         }
     }
-
 }

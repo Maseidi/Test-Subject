@@ -1,341 +1,342 @@
 .player {
-  z-index: 35;
-  position: absolute;
+    z-index: 35;
+    position: absolute;
 }
 
 .player-collider {
-  width: 34px;
-  height: 34px;
-  display: flex;
-  position: relative;
-  align-items: center;
-  justify-content: center;
+    width: 34px;
+    height: 34px;
+    display: flex;
+    position: relative;
+    align-items: center;
+    justify-content: center;
 }
 
 .player-body {
-  width: 22px;
-  height: 12px;
-  display: flex;
-  transition: 300ms;
-  border-radius: 1px;
-  position: relative;
-  align-items: center;
-  justify-content: center;
-  background-color: green;
-  border: 1px solid black;
+    width: 22px;
+    height: 12px;
+    display: flex;
+    transition: 300ms;
+    border-radius: 1px;
+    position: relative;
+    align-items: center;
+    justify-content: center;
+    background-color: green;
+    border: 1px solid black;
 }
 
 .player-head {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background-color: black;
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background-color: black;
 }
 
 .player-left-hand,
 .player-right-hand {
-  top: 1px;
-  width: 5px;
-  height: 14px;
-  position: absolute;
-  border-radius: 1px;
-  background-color: wheat;
-  border: 1px solid black;
+    top: 1px;
+    width: 5px;
+    height: 14px;
+    position: absolute;
+    border-radius: 1px;
+    background-color: wheat;
+    border: 1px solid black;
 }
 
 .player-left-hand {
-  left: 100%;
+    left: 100%;
 }
 
 .player-right-hand {
-  right: 100%;
+    right: 100%;
 }
 
 .walk > .player-collider > .player-body > .player-left-hand,
 .walk > .player-collider > .player-body > .player-right-hand,
 .run > .player-collider > .player-body > .player-left-hand,
 .run > .player-collider > .player-body > .player-right-hand {
-  animation-name: walk;
-  animation-fill-mode: both;
-  animation-timing-function: linear;
-  animation-iteration-count: infinite;
+    animation-name: walk;
+    animation-fill-mode: both;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
 }
 
 .player-left-hand {
-  animation-direction: alternate;
+    animation-direction: alternate;
 }
 
 .player-right-hand {
-  animation-direction: alternate-reverse;
+    animation-direction: alternate-reverse;
 }
 
 .torch > .player-collider > .player-body > .player-right-hand {
-  height: 14px !important;
-  animation-duration: 0s !important;
+    height: 14px !important;
+    animation-duration: 0s !important;
 }
 
 .walk > .player-collider > .player-body > .player-left-hand,
 .walk > .player-collider > .player-body > .player-right-hand {
-  animation-duration: 600ms;
+    animation-duration: 600ms;
 }
 
 .run > .player-collider > .player-body > .player-left-hand,
 .run > .player-collider > .player-body > .player-right-hand {
-  animation-duration: 300ms;
+    animation-duration: 300ms;
 }
 
 .low-health-player.walk > .player-collider > .player-body > .player-left-hand,
 .low-health-player.walk > .player-collider > .player-body > .player-right-hand {
-  animation-duration: 800ms !important;
+    animation-duration: 800ms !important;
 }
 
 .low-health-player.run > .player-collider > .player-body > .player-left-hand,
 .low-health-player.run > .player-collider > .player-body > .player-right-hand {
-  animation-duration: 400ms !important;
+    animation-duration: 400ms !important;
 }
 
 .player-collider > .forward-detector {
-  width: 4px;
-  height: 4px;
-  position: absolute;
+    width: 4px;
+    height: 4px;
+    position: absolute;
 }
 
 .aim > .player-collider > .player-body > .player-left-hand {
-  right: 2px;
-  left: unset;
-  transform: rotateZ(40deg);
+    right: 2px;
+    left: unset;
+    transform: rotateZ(40deg);
 }
 
 .throwable-aim > .player-collider > .player-body > .player-left-hand {
-  right: 2px;
-  height: 14px;
+    right: 2px;
+    height: 14px;
 }
 
 .aim > .player-collider > .player-body > .player-right-hand {
-  left: 2px;
-  right: unset;
-  transform: rotateZ(-40deg);
+    left: 2px;
+    right: unset;
+    transform: rotateZ(-40deg);
 }
 
 .throwable-aim > .player-collider > .player-body > .player-right-hand {
-  top: -8px;
-  z-index: 90;
-  transform: rotateZ(-5deg);
+    top: -8px;
+    z-index: 90;
+    transform: rotateZ(-5deg);
 }
 
 .aim > .player-collider > .player-body > .player-left-hand,
 .aim > .player-collider > .player-body > .player-right-hand {
-  top: 2px;
-  height: 20px;
-  border-radius: 2px;
+    top: 2px;
+    height: 20px;
+    border-radius: 2px;
 }
 
 .aim > .player-collider > .player-body,
 .throwable-aim > .player-collider > .player-body {
-  transition: 0ms !important;
+    transition: 0ms !important;
 }
 
 .gun {
-  left: 50%;
-  top: 15px;
-  width: 4px;
-  z-index: 70;
-  position: absolute;
-  border: 1px solid black;
-  transform: translateX(-50%);
-  transform-style: preserve-3d;
+    left: 50%;
+    top: 15px;
+    width: 4px;
+    z-index: 70;
+    position: absolute;
+    border: 1px solid black;
+    transform: translateX(-50%);
+    transform-style: preserve-3d;
 }
 
 .throwable {
-  top: 0px;
-  z-index: 70;
-  left: -3px;
-  position: absolute;
+    top: 0px;
+    z-index: 70;
+    left: -3px;
+    position: absolute;
 }
 
 .throwable-img {
-  top: -20px;
-  left: -5px;
-  width: 10px;
-  position: absolute;
-  transform: rotateZ(-5deg);
+    top: -20px;
+    left: -5px;
+    width: 10px;
+    position: absolute;
+    transform: rotateZ(-5deg);
 }
 
 .torch-img {
-  top: 8px;
-  width: 30px;
-  left: -100%;
-  position: absolute;
-  transform: rotateZ(180deg) translateX(-2px);
+    top: 8px;
+    width: 30px;
+    left: -100%;
+    position: absolute;
+    transform: rotateZ(180deg) translateX(-2px);
 }
 
 .laser,
 .throwable-laser {
-  top: 0;
-  left: 50%;
-  width: 0.25px;
-  position: absolute;
+    top: 0;
+    left: 50%;
+    width: 0.25px;
+    position: absolute;
 }
 
 .laser {
-  transform: translateX(-50%) translateZ(-10px);
+    transform: translateX(-50%) translateZ(-10px);
 }
 
 .gun-fire {
-  top: 100%;
-  left: 50%;
-  height: 20px;
-  position: absolute;
-  transform: translateX(-50%);
+    top: 100%;
+    left: 50%;
+    height: 20px;
+    position: absolute;
+    transform: translateX(-50%);
 }
 
 .throwable-laser {
-  transform-origin: top;
-  transform: translateX(-50%) translateZ(-10px) rotateZ(-5deg);
+    transform-origin: top;
+    transform: translateX(-50%) translateZ(-10px) rotateZ(-5deg);
 }
 
 .laser > div,
 .throwable-laser > div {
-  height: 1%;
-  width: 100%;
+    height: 1%;
+    width: 100%;
 }
 
 .throwable-item {
-  width: 10px;
-  position: absolute;
+    width: 10px;
+    position: absolute;
 }
 
 .throwable-image {
-  width: 100%;
+    width: 100%;
 }
 
 .throw-target {
-  top: 300px;
-  left: 22px;
-  width: 10px;
-  height: 10px;
-  position: absolute;
+    top: 300px;
+    left: 22px;
+    width: 10px;
+    height: 10px;
+    position: absolute;
 }
 
 .top-collider,
 .right-collider,
 .left-collider,
 .bottom-collider {
-  position: absolute;
+    position: absolute;
 }
 
 .top-collider,
 .bottom-collider {
-  width: 1px;
-  height: 5px;
+    width: 1px;
+    height: 5px;
 }
 
 .left-collider,
 .right-collider {
-  width: 5px;
-  height: 1px;
+    width: 5px;
+    height: 1px;
 }
 
 .top-collider {
-  left: 50%;
-  bottom: 100%;
-  transform: translateX(-50%);
+    left: 50%;
+    bottom: 100%;
+    transform: translateX(-50%);
 }
 
 .bottom-collider {
-  top: 100%;
-  left: 50%;
-  transform: translateX(-50%);
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
 }
 
 .left-collider {
-  top: 50%;
-  right: 100%;
-  transform: translateY(-50%);
+    top: 50%;
+    right: 100%;
+    transform: translateY(-50%);
 }
 
 .right-collider {
-  top: 50%;
-  left: 100%;
-  transform: translateY(-50%);
+    top: 50%;
+    left: 100%;
+    transform: translateY(-50%);
 }
 
 .low-health-container,
 .poisoned-container,
 .infected-container {
-  top: 0;
-  left: 0;
-  z-index: 60;
-  width: 100vw;
-  height: 100vh;
-  position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 60;
+    width: 100vw;
+    height: 100vh;
+    position: absolute;
 }
 
 .low-health-container,
 .poisoned-container {
-  animation-name: alert;
-  animation-duration: 1s;
-  animation-direction: alternate;
-  animation-iteration-count: infinite;
+    animation-name: alert;
+    animation-duration: 1s;
+    animation-direction: alternate;
+    animation-iteration-count: infinite;
 }
 
 .low-health-container {
-  background-color: red;
+    background-color: red;
 }
 
 .poisoned-container {
-  background-color: green;
+    background-color: green;
 }
 
 .infected-container > div {
-  gap: 10px;
-  left: 10px;
-  bottom: 10px;
-  display: flex;
-  position: absolute;
+    gap: 10px;
+    left: 10px;
+    bottom: 10px;
+    display: flex;
+    position: absolute;
 }
 
 .infected-container > div > img {
-  width: 50px;
-  animation-duration: 30s;
-  animation-name: rotation;
-  animation-direction: alternate;
-  animation-iteration-count: infinite;
+    width: 50px;
+    animation-duration: 30s;
+    animation-name: rotation;
+    animation-direction: alternate;
+    animation-iteration-count: infinite;
 }
 
 .dead-player > .player-collider > .player-body {
-  width: 14px;
-  height: 16px;
+    width: 14px;
+    height: 16px;
 }
 
 .dead-player > .player-collider > .player-body > .player-left-hand,
 .dead-player > .player-collider > .player-body > .player-right-hand {
-  top: 70%;
-  height: 16px;
+    top: 70%;
+    height: 16px;
 }
 
 .dead-player > .player-collider > .player-body > .player-head {
-  top: 85%;
-  width: 7px;
-  height: 7px;
-  position: absolute;
+    top: 85%;
+    width: 7px;
+    height: 7px;
+    position: absolute;
 }
 
-.left-leg, .right-leg {
-  width: 5px;
-  height: 16px;
-  bottom: 100%;
-  position: absolute;
-  border: 1px solid black;
-  background-color: brown;
-  border-top-left-radius: 1px;
-  border-top-right-radius: 1px;
+.left-leg,
+.right-leg {
+    width: 5px;
+    height: 16px;
+    bottom: 100%;
+    position: absolute;
+    border: 1px solid black;
+    background-color: brown;
+    border-top-left-radius: 1px;
+    border-top-right-radius: 1px;
 }
 
 .right-leg {
-  right: 0;
+    right: 0;
 }
 
 .left-leg {
-  left: 0;
+    left: 0;
 }

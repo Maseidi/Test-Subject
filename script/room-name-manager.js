@@ -1,11 +1,11 @@
 import { getRoomNameContainer } from './elements.js'
-import { addAllAttributes, addClass, createAndAddClass, removeClass } from './util.js'
+import { addAllAttributes, addClass, createAndAddClass } from './util.js'
 
-export const renderRoomName = (name) => {
-    if ( getRoomNameContainer().firstElementChild ) getRoomNameContainer().firstElementChild.remove()
+export const renderRoomName = name => {
+    if (getRoomNameContainer().firstElementChild) getRoomNameContainer().firstElementChild.remove()
     const roomNamePopup = createAndAddClass('div', 'room-name-popup', 'ui-theme', 'room-name-animation', 'animation')
     const chars = name.split('')
-    for ( let i = 0; i < chars.length; i++ ) {
+    for (let i = 0; i < chars.length; i++) {
         const char = chars[i]
         const charEl = document.createElement('span')
         addClass(charEl, 'animation')

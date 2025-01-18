@@ -10,5 +10,4 @@ export class TrackerChaseService extends NormalChaseService {
         this.enemy.state = GUESS_SEARCH
         this.enemy.guessCounter = 1
     }
-
 }

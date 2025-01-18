@@ -1,8 +1,8 @@
-import { collide } from '../../../util.js'
-import { LOST } from '../../enemy-constants.js'
 import { getPlayer } from '../../../elements.js'
-import { AbstractMovementService } from '../abstract/movement.js'
+import { collide } from '../../../util.js'
 import { getNoOffenseCounter } from '../../../variables.js'
+import { LOST } from '../../enemy-constants.js'
+import { AbstractMovementService } from '../abstract/movement.js'
 
 export class TrackerMovemenetService extends AbstractMovementService {
     constructor(enemy) {
@@ -10,10 +10,9 @@ export class TrackerMovemenetService extends AbstractMovementService {
     }
 
     playerInRange() {
-        if ( !collide(this.enemy.sprite, getPlayer(), 0) ) return false
-        if ( getNoOffenseCounter() === 0 ) this.enemy.offenceService.hitPlayer()
+        if (!collide(this.enemy.sprite, getPlayer(), 0)) return false
+        if (getNoOffenseCounter() === 0) this.enemy.offenceService.hitPlayer()
         this.enemy.state = LOST
         return true
     }
-
 }

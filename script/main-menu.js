@@ -1,12 +1,12 @@
-import { play } from './game.js'
-import { setDifficulty } from './variables.js'
 import { savedSlotContent } from './computer.js'
-import { renderMapMaker } from './mapMaker/map-maker.js'
-import { getMainMenuEl, setMainMenuEl } from './elements.js'
 import { loadGameFromSlot, prepareNewGameData } from './data-manager.js'
+import { getMainMenuEl, setMainMenuEl } from './elements.js'
+import { play } from './game.js'
 import { loadMapMakerFromSlot, prepareNewMapMakerData } from './mapMaker/data-manager.js'
+import { renderMapMaker } from './mapMaker/map-maker.js'
 import { loadSurvivalFromSlot, prepareNewSurvivalData } from './survival/data-manager.js'
 import { addClass, appendAll, createAndAddClass, difficulties, removeClass } from './util.js'
+import { setDifficulty } from './variables.js'
 
 let isContinueIncluded = null
 export const renderMainMenu = () => {
@@ -21,7 +21,7 @@ const mainMenuHeader = () => {
     const gameTitle = createAndAddClass('div', 'game-title')
     const gameName = 'test subject'
     const chars = gameName.split('')
-    for ( let i = 0; i < chars.length; i++ ) {
+    for (let i = 0; i < chars.length; i++) {
         const char = chars[i]
         const charEl = document.createElement('span')
         charEl.textContent = char
@@ -41,114 +41,113 @@ const options = () => {
     return options
 }
 
-const handleContinueOption = (options) => {
-    for ( let i = 0; i < 10; i++ ) {
-        if ( localStorage.getItem('slot-' + ( i + 1 )) !== 'empty' || 
-             localStorage.getItem('survival-slot-' + ( i + 1 )) !== 'empty' ) {
-                
-                options.append(continueOption())
-                isContinueIncluded = true
-                break
+const handleContinueOption = options => {
+    for (let i = 0; i < 10; i++) {
+        if (
+            localStorage.getItem('slot-' + (i + 1)) !== 'empty' ||
+            localStorage.getItem('survival-slot-' + (i + 1)) !== 'empty'
+        ) {
+            options.append(continueOption())
+            isContinueIncluded = true
+            break
         }
     }
     isContinueIncluded = false
 }
 
-const continueOption = () => 
+const continueOption = () =>
     mainMenuOption(
-        'continue', 
-        (e) => {
+        'continue',
+        e => {
             addSelectedStyle(e.currentTarget)
             loadLatestSavedSlot()
         },
         getDelay(0),
-        getDuration(0)
+        getDuration(0),
     )
-    
-const handleMapMakerOption = (options) => options.append(mapMaker())
-    
-const mapMaker = () => 
+
+const handleMapMakerOption = options => options.append(mapMaker())
+
+const mapMaker = () =>
     mainMenuOption(
-        'map maker', 
-        (e) => {
+        'map maker',
+        e => {
             addSelectedStyle(e.currentTarget)
             refreshContents(mapMakerOptions())
         },
         getDelay(4),
-        getDuration(4)
-    )    
+        getDuration(4),
+    )
 
-const getDelay = (number) => 2 + ( isContinueIncluded ? number : number - 1 ) * 0.1
+const getDelay = number => 2 + (isContinueIncluded ? number : number - 1) * 0.1
 
-const getDuration = (number) => 0.5 + ( isContinueIncluded ? number : number - 1 ) * 0.25
+const getDuration = number => 0.5 + (isContinueIncluded ? number : number - 1) * 0.25
 
-const loadLatestSavedSlot = () => playWithGivenData(() => {
-    const latestSlot = localStorage.getItem('last-slot-used')
-    if ( latestSlot.includes('main-game') ) loadGameFromSlot(Number(latestSlot.replace('main-game-', '')))
-    else loadSurvivalFromSlot(Number(latestSlot.replace('survival-', '')))
-}, localStorage.getItem('last-slot-used').includes('survival'))
+const loadLatestSavedSlot = () =>
+    playWithGivenData(() => {
+        const latestSlot = localStorage.getItem('last-slot-used')
+        if (latestSlot.includes('main-game')) loadGameFromSlot(Number(latestSlot.replace('main-game-', '')))
+        else loadSurvivalFromSlot(Number(latestSlot.replace('survival-', '')))
+    }, localStorage.getItem('last-slot-used').includes('survival'))
 
 const mainMenuOption = (textContent, onClick, delay, duration) => {
     const option = createAndAddClass('div', 'main-menu-option')
     option.textContent = textContent
-    option.addEventListener('animationend', 
-        () => {
-            option.style.cursor = 'pointer'
-            option.addEventListener('click', onClick)
-        }
-    )
+    option.addEventListener('animationend', () => {
+        option.style.cursor = 'pointer'
+        option.addEventListener('click', onClick)
+    })
     option.style.animationDelay = delay + 's'
     option.style.animationDuration = duration + 's'
     return option
 }
 
-const newGame = () => 
+const newGame = () =>
     mainMenuOption(
-        'new game', 
-        (e) => {
+        'new game',
+        e => {
             addSelectedStyle(e.currentTarget)
             refreshContents(newGameOptions())
         },
         getDelay(1),
-        getDuration(1)
+        getDuration(1),
     )
 
-const addSelectedStyle = (elem) => {
-    Array.from(getMainMenuEl().children[1].children)
-        .forEach(child => removeClass(child, 'selected-main-menu-option'))
+const addSelectedStyle = elem => {
+    Array.from(getMainMenuEl().children[1].children).forEach(child => removeClass(child, 'selected-main-menu-option'))
     addClass(elem, 'selected-main-menu-option')
 }
 
-const refreshContents = (content) => {
+const refreshContents = content => {
     clearContent()
     renderNewContent(content)
 }
 
 const clearContent = () => Array.from(getMainMenuEl().children[2].children).forEach(child => child.remove())
 
-const renderNewContent = (content) => getMainMenuEl().children[2].append(content)
+const renderNewContent = content => getMainMenuEl().children[2].append(content)
 
-const loadGame = () => 
+const loadGame = () =>
     mainMenuOption(
-        'load game', 
-        (e) => {
+        'load game',
+        e => {
             addSelectedStyle(e.currentTarget)
             refreshContents(loadGameOptions())
         },
         getDelay(2),
-        getDuration(2)
+        getDuration(2),
     )
 
-const survival = () => 
+const survival = () =>
     mainMenuOption(
-        'survival', 
-        (e) => {
+        'survival',
+        e => {
             addSelectedStyle(e.currentTarget)
             refreshContents(survivalOptions())
         },
         getDelay(3),
-        getDuration(3)
-    )   
+        getDuration(3),
+    )
 
 const lineBar = () => createAndAddClass('div', 'main-menu-options-bar')
 
@@ -157,17 +156,17 @@ const content = () => createAndAddClass('div', 'main-menu-content')
 const newGameOptions = () => {
     const newGameOptionsContainer = createAndAddClass('div', 'new-game-options')
     Array.from([
-        newGameOption(difficulties.MILD), 
-        newGameOption(difficulties.MIDDLE), 
-        newGameOption(difficulties.SURVIVAL)
+        newGameOption(difficulties.MILD),
+        newGameOption(difficulties.MIDDLE),
+        newGameOption(difficulties.SURVIVAL),
     ]).forEach(option => {
-        option.addEventListener('click', (e) => playWithGivenData(() => prepareNewGameData(e.target.textContent)))
+        option.addEventListener('click', e => playWithGivenData(() => prepareNewGameData(e.target.textContent)))
         newGameOptionsContainer.append(option)
     })
     return newGameOptionsContainer
 }
 
-const newGameOption = (difficulty) => {
+const newGameOption = difficulty => {
     const option = document.createElement('p')
     option.textContent = difficulty
     return option
@@ -175,7 +174,7 @@ const newGameOption = (difficulty) => {
 
 const loadGameOptions = () => {
     const loadGameOptionsContainer = createAndAddClass('div', 'load-game-options')
-    for ( let i = 0; i < 10; i++ ) {
+    for (let i = 0; i < 10; i++) {
         const option = loadGameOption(i + 1)
         loadGameOptionsContainer.append(option)
     }
@@ -186,7 +185,7 @@ const loadGameOptions = () => {
 const survivalOptions = () => {
     const survivalContainer = createAndAddClass('div', 'load-game-options')
     survivalContainer.append(newSurvivalOption())
-    for ( let i = 0; i < 10; i++ ) {
+    for (let i = 0; i < 10; i++) {
         const option = survivalOption(i + 1)
         survivalContainer.append(option)
     }
@@ -197,7 +196,7 @@ const survivalOptions = () => {
 const mapMakerOptions = () => {
     const mapMakerOptionsContainer = createAndAddClass('div', 'load-game-options')
     mapMakerOptionsContainer.append(newMapMakerOption())
-    for ( let i = 0; i < 5; i++ ) {
+    for (let i = 0; i < 5; i++) {
         const option = mapMakerOption(i + 1)
         mapMakerOptionsContainer.append(option)
     }
@@ -236,29 +235,33 @@ const newSurvivalOption = () => {
     return slot
 }
 
-const addWheelEvent = (element) => {
-    element.addEventListener('wheel', (e) => {
-        if ( e.deltaX !== 0 ) return
-        if ( e.deltaY > 0 ) element.scrollLeft += 100;
-        else element.scrollLeft -= 100;
-    }, {passive: true});
+const addWheelEvent = element => {
+    element.addEventListener(
+        'wheel',
+        e => {
+            if (e.deltaX !== 0) return
+            if (e.deltaY > 0) element.scrollLeft += 100
+            else element.scrollLeft -= 100
+        },
+        { passive: true },
+    )
 }
 
-const loadGameOption = (slotNumber) => {
+const loadGameOption = slotNumber => {
     const slotData = localStorage.getItem('slot-' + slotNumber)
-    if ( slotData === 'empty' ) return noSavedDataSlot()
+    if (slotData === 'empty') return noSavedDataSlot()
     else return slotWithData(slotData, slotNumber)
 }
 
-const mapMakerOption = (slotNumber) => {
+const mapMakerOption = slotNumber => {
     const slotData = localStorage.getItem('map-slot-' + slotNumber)
-    if ( slotData === 'empty' ) return noSavedDataSlot()
+    if (slotData === 'empty') return noSavedDataSlot()
     else return slotWithData(slotData, slotNumber, true)
 }
 
-const survivalOption = (slotNumber) => {
+const survivalOption = slotNumber => {
     const slotData = localStorage.getItem('survival-slot-' + slotNumber)
-    if ( slotData === 'empty' ) return noSavedDataSlot()
+    if (slotData === 'empty') return noSavedDataSlot()
     else return slotWithData(slotData, slotNumber, false, true)
 }
 
@@ -278,8 +281,10 @@ const slotWithData = (slotData, slotNumber, mapMaker, survival) => {
     const elements = savedSlotContent(slotData, mapMaker, survival)
     const slot = createAndAddClass('div', 'load-game-option-full-slot')
     elements.forEach(elem => slot.append(elem))
-    if ( mapMaker ) slot.addEventListener('click', () => loadMapMakerWithGivenData(() => loadMapMakerFromSlot(slotNumber)))
-    else if ( survival ) slot.addEventListener('click', () => playWithGivenData(() => loadSurvivalFromSlot(slotNumber), true))
+    if (mapMaker)
+        slot.addEventListener('click', () => loadMapMakerWithGivenData(() => loadMapMakerFromSlot(slotNumber)))
+    else if (survival)
+        slot.addEventListener('click', () => playWithGivenData(() => loadSurvivalFromSlot(slotNumber), true))
     else slot.addEventListener('click', () => playWithGivenData(() => loadGameFromSlot(slotNumber)))
     return slot
 }
@@ -290,7 +295,7 @@ const playWithGivenData = (loader, survival = false) => {
     play(false, survival)
 }
 
-const loadMapMakerWithGivenData = (loader) => {
+const loadMapMakerWithGivenData = loader => {
     getMainMenuEl().remove()
     loader()
     setDifficulty(difficulties.MIDDLE)

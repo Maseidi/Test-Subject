@@ -1,8 +1,8 @@
-import { staminaManager } from './user-interface.js'
-import { TRACKER } from './enemy/enemy-constants.js'
-import { addClass, isMoving, removeClass } from './util.js'
 import { getCurrentRoomEnemies, getPlayer } from './elements.js'
-import { 
+import { TRACKER } from './enemy/enemy-constants.js'
+import { staminaManager } from './user-interface.js'
+import { addClass, isMoving, removeClass } from './util.js'
+import {
     getAimMode,
     getAllowMove,
     getGrabbed,
@@ -15,21 +15,24 @@ import {
     setMaxStamina,
     setRefillStamina,
     setSprint,
-    setStamina } from './variables.js'
+    setStamina,
+} from './variables.js'
 
 export const manageSprint = () => {
-    if ( getSprintPressed() && !getAimMode() && isMoving() && !getGrabbed()) {
-        if ( !getRefillStamina() && getAllowMove()) {
+    if (getSprintPressed() && !getAimMode() && isMoving() && !getGrabbed()) {
+        if (!getRefillStamina() && getAllowMove()) {
             handleSprintAndStamina(true, addClass, -2, getRefillStamina())
-            if ( getStamina() <= 0 ) handleSprintAndStamina(getSprint(), removeClass, -getStamina(), true)
+            if (getStamina() <= 0) handleSprintAndStamina(getSprint(), removeClass, -getStamina(), true)
             return
         }
         handleSprintAndStamina(false, removeClass, 1, getRefillStamina())
-        if ( getStamina() >= getMaxStamina() ) handleSprintAndStamina(getSprint(), null, getMaxStamina() - getStamina(), false)    
+        if (getStamina() >= getMaxStamina())
+            handleSprintAndStamina(getSprint(), null, getMaxStamina() - getStamina(), false)
         return
-    } 
+    }
     handleSprintAndStamina(false, removeClass, 1, getRefillStamina())
-    if ( getStamina() >= getMaxStamina() ) handleSprintAndStamina(getSprint(), null, getMaxStamina() - getStamina(), getRefillStamina())
+    if (getStamina() >= getMaxStamina())
+        handleSprintAndStamina(getSprint(), null, getMaxStamina() - getStamina(), getRefillStamina())
 }
 
 const handleSprintAndStamina = (sprint, animator, stamina, refill) => {
@@ -38,17 +41,16 @@ const handleSprintAndStamina = (sprint, animator, stamina, refill) => {
     setStamina(getStamina() + stamina)
     setRefillStamina(refill)
     staminaManager(getStamina())
-    if ( sprint ) 
+    if (sprint)
         getCurrentRoomEnemies().forEach(elem => {
-            if ( elem.type === TRACKER ) {
-                if ( getNoOffenseCounter() === 0 ) elem.notificationService.notifyEnemy(1500)
-            }
-            else elem.notificationService.notifyEnemy(400)
+            if (elem.type === TRACKER) {
+                if (getNoOffenseCounter() === 0) elem.notificationService.notifyEnemy(1500)
+            } else elem.notificationService.notifyEnemy(400)
         })
 }
 
-export const useEnergyDrink = (energydrink) => {
-    if ( getMaxStamina() === 1200 ) return
+export const useEnergyDrink = energydrink => {
+    if (getMaxStamina() === 1200) return
     setMaxStamina(getMaxStamina() + 60)
     setStamina(getMaxStamina())
     energydrink.amount -= 1

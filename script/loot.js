@@ -41,10 +41,10 @@ export const PARKER_HALE_M_85 = 'parkerhalem85'
 
 export class Loot {
     constructor(name, amount, progress) {
-        this.amount =            amount                      ?? 0
-        this.progress2Active =   progress?.progress2Active   ?? []
+        this.amount = amount ?? 0
+        this.progress2Active = progress?.progress2Active ?? []
         this.progress2Deactive = progress?.progress2Deactive ?? []
-        this['loot-name'] =      name                        ?? null
+        this['loot-name'] = name ?? null
     }
 }
 
@@ -75,26 +75,26 @@ export class KeyLoot extends SingleLoot {
 }
 
 export const initLootValues = (src, loot) => {
-    src['loot-name'] =        loot.name              ?? null
-    src['loot-amount'] =      loot.amount            ?? 0
-    src['loot-active'] =      loot.progress2Active   ?? null
-    src['loot-deactive'] =    loot.progress2Deactive ?? null
+    src['loot-name'] = loot.name ?? null
+    src['loot-amount'] = loot.amount ?? 0
+    src['loot-active'] = loot.progress2Active ?? null
+    src['loot-deactive'] = loot.progress2Deactive ?? null
     initNoteLootValues(src, loot)
     initKeyLootValues(src, loot)
 }
 
 const initNoteLootValues = (src, loot) => {
-    if ( loot.name === NOTE ) return
-    src['note-data'] =        loot.data        ?? null
-    src['note-code'] =        loot.code        ?? null
-    src['note-heading'] =     loot.heading     ?? null
+    if (loot.name === NOTE) return
+    src['note-data'] = loot.data ?? null
+    src['note-code'] = loot.code ?? null
+    src['note-heading'] = loot.heading ?? null
     src['note-description'] = loot.description ?? null
 }
 
 const initKeyLootValues = (src, loot) => {
-    if ( !loot.name?.includes('key') ) return
-    src['key-code'] =        loot.code        ?? null
-    src['key-heading'] =     loot.heading     ?? null
-    src['key-unlocks'] =     loot.unlocks     ?? null
-    src['key-description'] = loot.description ?? null 
+    if (!loot.name?.includes('key')) return
+    src['key-code'] = loot.code ?? null
+    src['key-heading'] = loot.heading ?? null
+    src['key-unlocks'] = loot.unlocks ?? null
+    src['key-description'] = loot.description ?? null
 }

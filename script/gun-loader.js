@@ -1,6 +1,6 @@
 import { getPlayer } from './elements.js'
+import { getGunDetails, getGunUpgradableDetail } from './gun-details.js'
 import { findEquippedWeaponById } from './inventory.js'
-import { getGunUpgradableDetail, getGunDetails } from './gun-details.js'
 import { appendAll, createAndAddClass, findAttachmentsOnPlayer } from './util.js'
 
 export const renderGun = () => {
@@ -18,9 +18,9 @@ export const renderGun = () => {
 const renderLaser = (name, rangeLevel, color) => {
     const laser = createAndAddClass('div', 'laser')
     laser.style.height = `${getGunUpgradableDetail(name, 'range', rangeLevel)}px`
-    for ( let i = 0; i < 100; i++ ) {
+    for (let i = 0; i < 100; i++) {
         const part = document.createElement('div')
-        part.style.opacity = `${(100 - (0.9 * i))/100}`
+        part.style.opacity = `${(100 - 0.9 * i) / 100}`
         part.style.backgroundColor = color
         laser.append(part)
     }

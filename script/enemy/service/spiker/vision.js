@@ -7,8 +7,7 @@ export class SpikerVisionService extends AbstractVisionService {
     }
 
     isPlayerVisible() {
-        if ( getIsSurvival() ) return true
+        if (getIsSurvival()) return true
         return this.enemy.wallInTheWay === false
     }
-
 }

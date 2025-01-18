@@ -8,7 +8,6 @@ export class GrabberInjuryService extends AbstractInjuryService {
 
     killEnemy() {
         super.killEnemy()
-        if ( this.enemy.state === GRAB ) this.enemy.grabService.releasePlayer()
+        if (this.enemy.state === GRAB) this.enemy.grabService.releasePlayer()
     }
-
 }

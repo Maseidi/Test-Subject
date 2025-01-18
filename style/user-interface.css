@@ -1,412 +1,404 @@
 .ui-theme {
-  left: 0;
-  z-index: 70;
-  position: fixed;
-  backdrop-filter: blur(3.3px);
-  background: rgba(0, 0, 0, 0.67);
-  -webkit-backdrop-filter: blur(3.3px);
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    left: 0;
+    z-index: 70;
+    position: fixed;
+    backdrop-filter: blur(3.3px);
+    background: rgba(0, 0, 0, 0.67);
+    -webkit-backdrop-filter: blur(3.3px);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
 }
 
 .full {
-  top: 0;
-  left: 0;
-  width: 100%;
-  z-index: 70;
-  height: 100%;
-  position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 70;
+    height: 100%;
+    position: fixed;
 }
 
 .ui {
-  top: 10px;
-  gap: 20px;
-  display: flex;
-  width: max-content;
-  padding: 20px 30px;
-  height: fit-content;
-  flex-direction: column;
-  border-radius: 0 5px 5px 0;
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.9);
+    top: 10px;
+    gap: 20px;
+    display: flex;
+    width: max-content;
+    padding: 20px 30px;
+    height: fit-content;
+    flex-direction: column;
+    border-radius: 0 5px 5px 0;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.9);
 }
 
 .health-bar,
 .stamina-bar {
-  height: 8px;
-  transform: skewX(-40deg);
-  backdrop-filter: blur(3.3px);
-  box-shadow: 1px 1px 10px white;
-  -webkit-backdrop-filter: blur(3.3px);
-  background-color: rgba(255, 255, 255, 0.5);
+    height: 8px;
+    transform: skewX(-40deg);
+    backdrop-filter: blur(3.3px);
+    box-shadow: 1px 1px 10px white;
+    -webkit-backdrop-filter: blur(3.3px);
+    background-color: rgba(255, 255, 255, 0.5);
 }
 
 .health,
 .stamina {
-  width: 100%;
-  height: 100%;
+    width: 100%;
+    height: 100%;
 }
 
 .health {
-  transition: 300ms;
-  background: linear-gradient(to right, #cb2d3e, #ef473a);
+    transition: 300ms;
+    background: linear-gradient(to right, #cb2d3e, #ef473a);
 }
 
 .stamina {
-  background: linear-gradient(to right, #4776e6, #8e54e9);
+    background: linear-gradient(to right, #4776e6, #8e54e9);
 }
 
 .weapon-container {
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .weapon-icon {
-  opacity: 0.5;
-  height: 50px;
+    opacity: 0.5;
+    height: 50px;
 }
 
 .ammo-count {
-  gap: 20px;
-  color: wheat;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
+    gap: 20px;
+    color: wheat;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
 .quit {
-  gap: 20px;
-  right: 100px;
-  bottom: 30px;
-  padding: 5px;
-  display: flex;
-  color: wheat;
-  position: fixed;
-  transition: 100ms;
-  width: fit-content;
-  flex-direction: row;
-  align-items: center;
-  justify-content: left;
+    gap: 20px;
+    right: 100px;
+    bottom: 30px;
+    padding: 5px;
+    display: flex;
+    color: wheat;
+    position: fixed;
+    transition: 100ms;
+    width: fit-content;
+    flex-direction: row;
+    align-items: center;
+    justify-content: left;
 }
 
 .quit:hover {
-  background-color: rgba(255, 255, 255, 0.15);
+    background-color: rgba(255, 255, 255, 0.15);
 }
 
 .quit > p:nth-of-type(1) {
-  padding: 2px 7px;
-  border: 1px solid wheat;
-  text-transform: uppercase;
+    padding: 2px 7px;
+    border: 1px solid wheat;
+    text-transform: uppercase;
 }
 
 .quit > p:nth-of-type(2) {
-  text-transform: capitalize;
+    text-transform: capitalize;
 }
 
 .grab-bar {
-  left: 50%;
-  width: 30%;
-  z-index: 40;
-  bottom: 40%;
-  height: 16px;
-  position: fixed;
-  border: 3px solid wheat;
-  backdrop-filter: blur(3.3px);
-  box-shadow: 1px 1px 10px darkmagenta;
-  transform: translateX(-50%) skewX(-40deg);
-  background: linear-gradient(to right, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7));
+    left: 50%;
+    width: 30%;
+    z-index: 40;
+    bottom: 40%;
+    height: 16px;
+    position: fixed;
+    border: 3px solid wheat;
+    backdrop-filter: blur(3.3px);
+    box-shadow: 1px 1px 10px darkmagenta;
+    transform: translateX(-50%) skewX(-40deg);
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.7));
 }
 
 .grab-bar > .breakpoint {
-  width: 10%;
-  height: 100%;
-  position: absolute;
-  background: linear-gradient(to right, rgb(255, 165, 0), rgb(255, 203, 107));
+    width: 10%;
+    height: 100%;
+    position: absolute;
+    background: linear-gradient(to right, rgb(255, 165, 0), rgb(255, 203, 107));
 }
 
 .first-ok > div:nth-of-type(1),
 .second-ok > div:nth-of-type(2),
 .third-ok > div:nth-of-type(3) {
-  background: linear-gradient(
-    to right,
-    rgb(34, 139, 34),
-    rgb(45, 183, 45)
-  ) !important;
+    background: linear-gradient(to right, rgb(34, 139, 34), rgb(45, 183, 45)) !important;
 }
 
 .first-fail > div:nth-of-type(1),
 .second-fail > div:nth-of-type(2),
 .third-fail > div:nth-of-type(3) {
-  background: linear-gradient(
-    to right,
-    rgb(220, 20, 60),
-    rgb(220, 68, 99)
-  ) !important;
+    background: linear-gradient(to right, rgb(220, 20, 60), rgb(220, 68, 99)) !important;
 }
 
 .grab-bar > .slider {
-  top: 50%;
-  width: 1%;
-  height: 200%;
-  position: absolute;
-  background-color: wheat;
-  transform: translateY(-50%);
+    top: 50%;
+    width: 1%;
+    height: 200%;
+    position: absolute;
+    background-color: wheat;
+    transform: translateY(-50%);
 }
 
 .grab-bar-message-container {
-  gap: 5px;
-  bottom: 30px;
-  display: flex;
-  color: white;
-  position: absolute;
-  align-items: center;
-  text-transform: capitalize;
-  animation-duration: 200ms;
-  animation-name: grab-bar-message;
-  animation-direction: alternate;
-  animation-iteration-count: infinite;
+    gap: 5px;
+    bottom: 30px;
+    display: flex;
+    color: white;
+    position: absolute;
+    align-items: center;
+    text-transform: capitalize;
+    animation-duration: 200ms;
+    animation-name: grab-bar-message;
+    animation-direction: alternate;
+    animation-iteration-count: infinite;
 }
 
 .grab-bar-btn {
-  padding: 1px 5px 0 5px;
-  border: 1px solid white;
+    padding: 1px 5px 0 5px;
+    border: 1px solid white;
 }
 
 .hint-popup {
-  gap: 10px;
-  top: 10px;
-  left: 100%;
-  z-index: 65;
-  width: 500px;
-  padding: 20px;
-  line-height: 30px;
-  border-radius: 5px;
-  letter-spacing: 2px;
-  text-align: justify;
-  animation-duration: 300ms;
-  animation-direction: alternate;
-  animation-name: popup-animation;
-  transform: translateX(calc(-100% - 10px));
-  box-shadow: 5px 5px 25px rgba(0, 0, 0, 0.9);
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.9);
+    gap: 10px;
+    top: 10px;
+    left: 100%;
+    z-index: 65;
+    width: 500px;
+    padding: 20px;
+    line-height: 30px;
+    border-radius: 5px;
+    letter-spacing: 2px;
+    text-align: justify;
+    animation-duration: 300ms;
+    animation-direction: alternate;
+    animation-name: popup-animation;
+    transform: translateX(calc(-100% - 10px));
+    box-shadow: 5px 5px 25px rgba(0, 0, 0, 0.9);
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.9);
 }
 
 .hint-popup > p {
-  color: wheat;
+    color: wheat;
 }
 
 .hint-popup > p > span {
-  padding: 2px 5px;
-  border: 1px solid wheat;
+    padding: 2px 5px;
+    border: 1px solid wheat;
 }
 
 .hint-popup > span {
-  padding: 5px;
-  color: white;
-  align-self: end;
-  transition: 300ms;
-  width: max-content;
-  text-transform: capitalize;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
-  border-bottom: 1px solid white;
+    padding: 5px;
+    color: white;
+    align-self: end;
+    transition: 300ms;
+    width: max-content;
+    text-transform: capitalize;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom: 1px solid white;
 }
 
 .hint-popup > span:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.1);
 }
 
 .room-name-animation {
-  animation-duration: 500ms;
-  animation-direction: alternate;
-  animation-name: room-name-popup;
+    animation-duration: 500ms;
+    animation-direction: alternate;
+    animation-name: room-name-popup;
 }
 
 .room-name-popup {
-  left: 100%;
-  bottom: 10px;
-  padding: 20px;
-  color: wheat;
-  width: max-content;
-  border-top-left-radius: 5px;
-  transform: translateX(-100%);
-  border-bottom-left-radius: 5px;
-  box-shadow: 0 0 10px rgba(255, 255, 255, 0.9);
+    left: 100%;
+    bottom: 10px;
+    padding: 20px;
+    color: wheat;
+    width: max-content;
+    border-top-left-radius: 5px;
+    transform: translateX(-100%);
+    border-bottom-left-radius: 5px;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.9);
 }
 
 .room-name-popup > span,
 .dialogue > span {
-  opacity: 0;
-  animation-name: fade-in;
-  animation-fill-mode: forwards;
-  animation-direction: alternate;
+    opacity: 0;
+    animation-name: fade-in;
+    animation-fill-mode: forwards;
+    animation-direction: alternate;
 }
 
 .room-name-popup > span {
-  margin-left: 2px;
-  margin-right: 2px;
-  animation-duration: 300ms;
+    margin-left: 2px;
+    margin-right: 2px;
+    animation-duration: 300ms;
 }
 
 .dialogue {
-  top: 0;
-  z-index: 50;
-  padding: 10px;
-  color: white;
-  position: fixed;
-  border-radius: 2px;
-  letter-spacing: 2px;
-  border: 1px solid white;
-  box-shadow: 0 0 5px black;
-  transform: translateY(-100%);
-  background-color: lightblue;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
+    top: 0;
+    z-index: 50;
+    padding: 10px;
+    color: white;
+    position: fixed;
+    border-radius: 2px;
+    letter-spacing: 2px;
+    border: 1px solid white;
+    box-shadow: 0 0 5px black;
+    transform: translateY(-100%);
+    background-color: lightblue;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
 }
 
 .dialogue-animation {
-  animation-duration: 400ms;
-  animation-fill-mode: forwards;
-  animation-direction: alternate;
-  animation-name: dialogue-animation;
+    animation-duration: 400ms;
+    animation-fill-mode: forwards;
+    animation-direction: alternate;
+    animation-name: dialogue-animation;
 }
 
 .dialogue > span {
-  animation-duration: 10ms;
+    animation-duration: 10ms;
 }
 
 .fade-out {
-  animation-name: fade-out;
-  animation-fill-mode: forwards;
-  animation-direction: alternate;
+    animation-name: fade-out;
+    animation-fill-mode: forwards;
+    animation-direction: alternate;
 }
 
 .item-container {
-  gap: 30px;
-  top: 20px;
-  left: 40px;
-  z-index: 80;
-  display: flex;
-  color: wheat;
-  position: fixed;
-  align-items: center;
-  justify-content: space-between;
+    gap: 30px;
+    top: 20px;
+    left: 40px;
+    z-index: 80;
+    display: flex;
+    color: wheat;
+    position: fixed;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .item-img {
-  width: 40px;
+    width: 40px;
 }
 
 .popup-cancel:hover,
 .popup-confirm:hover,
 .popup-examine:hover {
-  color: white;
-  filter: brightness(110%);
-  box-shadow: 5px 5px 25px white;
+    color: white;
+    filter: brightness(110%);
+    box-shadow: 5px 5px 25px white;
 }
 
 .popup-cancel:hover {
-  background-color: crimson;
+    background-color: crimson;
 }
 
 .popup-cancel,
 .popup-confirm,
 .popup-examine {
-  border: none;
-  padding: 10px;
-  color: white;
-  border-radius: 3px;
-  letter-spacing: 2px;
-  text-transform: capitalize;
+    border: none;
+    padding: 10px;
+    color: white;
+    border-radius: 3px;
+    letter-spacing: 2px;
+    text-transform: capitalize;
 }
 
 .popup-cancel {
-  color: lightgrey;
-  background-color: darkred;
+    color: lightgrey;
+    background-color: darkred;
 }
 
 .common-popup-container {
-  top: 0;
-  left: 0;
-  z-index: 85;
-  width: 100%;
-  height: 100%;
-  position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 85;
+    width: 100%;
+    height: 100%;
+    position: fixed;
 }
 
 .common-popup {
-  top: 50%;
-  left: 50%;
-  gap: 20px;
-  display: flex;
-  padding: 20px;
-  color: wheat;
-  position: absolute;
-  text-align: center;
-  border-radius: 5px;
-  letter-spacing: 1px;
-  flex-direction: column;
-  border: 1px solid wheat;
-  transform: translateX(-50%) translateY(-50%);
+    top: 50%;
+    left: 50%;
+    gap: 20px;
+    display: flex;
+    padding: 20px;
+    color: wheat;
+    position: absolute;
+    text-align: center;
+    border-radius: 5px;
+    letter-spacing: 1px;
+    flex-direction: column;
+    border: 1px solid wheat;
+    transform: translateX(-50%) translateY(-50%);
 }
 
 .common-popup > .common-buttons {
-  display: flex;
-  justify-content: space-between;
+    display: flex;
+    justify-content: space-between;
 }
 
 .common-options {
-  gap: 10px;
-  display: flex;
-  color: wheat;
-  letter-spacing: 3px;
-  flex-direction: column;
-  text-transform: capitalize;
+    gap: 10px;
+    display: flex;
+    color: wheat;
+    letter-spacing: 3px;
+    flex-direction: column;
+    text-transform: capitalize;
 }
 
 .common-options > .common-option {
-  padding: 10px;
-  transition: 100ms;
-  border: 1px solid transparent;
+    padding: 10px;
+    transition: 100ms;
+    border: 1px solid transparent;
 }
 
 .common-options > .common-option:hover {
-  font-weight: bold;
-  padding-left: 30px;
-  border: 1px solid wheat;
-  background-color: rgb(245, 222, 179, 0.1);
+    font-weight: bold;
+    padding-left: 30px;
+    border: 1px solid wheat;
+    background-color: rgb(245, 222, 179, 0.1);
 }
 
 .chaos-container {
-  gap: 20px;
-  left: 50%;
-  top: 200px;
-  opacity: 0;
-  padding: 20px;
-  display: flex;
-  color: wheat;
-  position: fixed;
-  text-align: center;
-  border-radius: 10px;
-  letter-spacing: 5px;
-  flex-direction: column;
-  animation-name: fade-in;
-  border: 2px solid wheat;
-  animation-duration: 300ms;
-  text-transform: capitalize;
-  transform: translateX(-50%);
-  animation-fill-mode: forwards;
-  animation-direction: alternate;
-  background-color: black !important;
+    gap: 20px;
+    left: 50%;
+    top: 200px;
+    opacity: 0;
+    padding: 20px;
+    display: flex;
+    color: wheat;
+    position: fixed;
+    text-align: center;
+    border-radius: 10px;
+    letter-spacing: 5px;
+    flex-direction: column;
+    animation-name: fade-in;
+    border: 2px solid wheat;
+    animation-duration: 300ms;
+    text-transform: capitalize;
+    transform: translateX(-50%);
+    animation-fill-mode: forwards;
+    animation-direction: alternate;
+    background-color: black !important;
 }
 
 .chaos-container-coin {
-  gap: 10px;
-  display: flex;
-  align-items: center;
+    gap: 10px;
+    display: flex;
+    align-items: center;
 }
 
 .chaos-container-coin > img {
-  width: 25px;
-  display: block;
+    width: 25px;
+    display: block;
 }

@@ -1,11 +1,11 @@
+import { addAllAttributes, appendAll, createAndAddClass, difficulties, getDifficultyList } from '../../util.js'
+import { getAttributesEl, getElemBeingModified, getMapMakerEl, setAttributesEl } from '../elements.js'
 import { createHeader } from '../map-maker.js'
 import { getRoomBeingMade } from '../variables.js'
 import { parseDifficulty } from './interactable.js'
-import { getAttributesEl, getElemBeingModified, getMapMakerEl, setAttributesEl } from '../elements.js'
-import { addAllAttributes, appendAll, createAndAddClass, getDifficultyList, difficulties } from '../../util.js'
 
 export const renderAttributes = () => {
-    if ( getAttributesEl() ) getAttributesEl().remove()
+    if (getAttributesEl()) getAttributesEl().remove()
     getMapMakerEl().firstElementChild.prepend(attributesSidebar())
 }
 
@@ -23,25 +23,24 @@ export const input = (label, value, setValue, type = 'number', max = Number.MAX_
     labelEl.setAttribute('for', label)
     const input = document.createElement(type === 'textarea' ? 'textarea' : 'input')
     addAllAttributes(input, 'type', type, 'min', min, 'max', max, 'name', label, 'id', label)
-    if ( type === 'textarea' ) input.setAttribute('rows', 15)
-    if ( type === 'number' ) input.setAttribute('step', step)    
+    if (type === 'textarea') input.setAttribute('rows', 15)
+    if (type === 'number') input.setAttribute('step', step)
     input.value = value
-    input.addEventListener('change', (e) => {
-        if ( type === 'number' ) setValue(Number(e.target.value === '' ? min : checkLimits(e.target, min, max)))
+    input.addEventListener('change', e => {
+        if (type === 'number') setValue(Number(e.target.value === '' ? min : checkLimits(e.target, min, max)))
         else setValue(e.target.value === '' ? null : e.target.value)
     })
     appendAll(textFieldContainer, labelEl, input)
     return textFieldContainer
 }
 
-
 const checkLimits = (target, min, max) => {
     const value = target.value
     const innerMin = typeof min === 'function' ? min() : min
     const innerMax = typeof max === 'function' ? max() : max
     const finalValue = (() => {
-        if ( value < innerMin ) return innerMin
-        else if ( value > innerMax ) return innerMax
+        if (value < innerMin) return innerMin
+        else if (value > innerMax) return innerMax
         else return value
     })()
     target.value = finalValue
@@ -59,22 +58,24 @@ export const autocomplete = (label, value, setValue, options) => {
         const option = document.createElement('option')
         option.value = o.value
         option.textContent = o.label
-        if ( value === o.value ) option.setAttribute('selected', true)
+        if (value === o.value) option.setAttribute('selected', true)
         select.append(option)
     })
-    select.addEventListener('change', (e) => setValue(e.target.value))
+    select.addEventListener('change', e => setValue(e.target.value))
     appendAll(autocompleteContainer, labelEl, select)
     return autocompleteContainer
 }
 
-export const difficultyAutoComplete = (model) => {
-    return autocomplete('render difficulty', parseDifficulty(model.difficulties), 
-        (value) => model.difficulties = getDifficultyList(value), 
+export const difficultyAutoComplete = model => {
+    return autocomplete(
+        'render difficulty',
+        parseDifficulty(model.difficulties),
+        value => (model.difficulties = getDifficultyList(value)),
         [
-            {label: 'mild',     value: difficulties.MILD},
-            {label: 'middle',   value: difficulties.MIDDLE},
-            {label: 'survival', value: difficulties.SURVIVAL}
-        ]
+            { label: 'mild', value: difficulties.MILD },
+            { label: 'middle', value: difficulties.MIDDLE },
+            { label: 'survival', value: difficulties.SURVIVAL },
+        ],
     )
 }
 
@@ -85,20 +86,23 @@ export const checkbox = (label, value, setValue) => {
     labelEl.setAttribute('for', label)
     const checkbox = document.createElement('input')
     addAllAttributes(checkbox, 'type', 'checkbox', 'name', label, 'id', label)
-    if ( value ) checkbox.setAttribute('checked', true)
-    checkbox.addEventListener('change', (e) => setValue(e.target.checked))
+    if (value) checkbox.setAttribute('checked', true)
+    checkbox.addEventListener('change', e => setValue(e.target.checked))
     appendAll(checkboxContainer, labelEl, checkbox)
     return checkboxContainer
 }
 
-export const updateMap = (hashMap, item2update, prefix) => 
+export const updateMap = (hashMap, item2update, prefix) =>
     hashMap.set(
-        getRoomBeingMade(), 
-        hashMap.get(getRoomBeingMade())
-        .map((item, index) => index === Number(getElemBeingModified().id.replace(`${prefix}-`, '')) ? item2update : item)
+        getRoomBeingMade(),
+        hashMap
+            .get(getRoomBeingMade())
+            .map((item, index) =>
+                index === Number(getElemBeingModified().id.replace(`${prefix}-`, '')) ? item2update : item,
+            ),
     )
 
-export const deleteButton = (onClick) => {
+export const deleteButton = onClick => {
     const deleteNodeBtn = createAndAddClass('button', 'popup-cancel')
     deleteNodeBtn.textContent = 'delete node'
     deleteNodeBtn.addEventListener('click', onClick)

@@ -1,7 +1,13 @@
-import { RangerShootingService } from '../ranger/shooting.js'
 import { getCurrentRoom, getCurrentRoomBullets } from '../../../elements.js'
+import {
+    addAllAttributes,
+    angleOf2Points,
+    calculateBulletSpeed,
+    createAndAddClass,
+    getProperty,
+} from '../../../util.js'
 import { getPlayerX, getPlayerY, getRoomLeft, getRoomTop } from '../../../variables.js'
-import { addAllAttributes, angleOf2Points, calculateBulletSpeed, createAndAddClass, getProperty } from '../../../util.js'
+import { RangerShootingService } from '../ranger/shooting.js'
 
 export class StingerShootingService extends RangerShootingService {
     constructor(enemy) {
@@ -10,9 +16,9 @@ export class StingerShootingService extends RangerShootingService {
     }
 
     shoot() {
-        const { x: srcX, y: srcY } = { 
-            x: getProperty(this.enemy.sprite, 'left', 'px') + 25, 
-            y: getProperty(this.enemy.sprite, 'top', 'px') + 25 
+        const { x: srcX, y: srcY } = {
+            x: getProperty(this.enemy.sprite, 'left', 'px') + 25,
+            y: getProperty(this.enemy.sprite, 'top', 'px') + 25,
         }
         const { x: destX, y: destY } = { x: getPlayerX() - getRoomLeft() + 17, y: getPlayerY() - getRoomTop() + 17 }
         const deg = angleOf2Points(srcX, srcY, destX, destY)
@@ -22,11 +28,15 @@ export class StingerShootingService extends RangerShootingService {
         const { speedX, speedY } = calculateBulletSpeed(deg, slope, diffY, diffX, 10)
         const bullet = createAndAddClass('div', 'stinger-bullet')
         addAllAttributes(
-            bullet, 
-            'speed-x', speedX, 
-            'speed-y', speedY, 
-            'damage',  this.enemy.damage,
-            'virus',   this.enemy.virus
+            bullet,
+            'speed-x',
+            speedX,
+            'speed-y',
+            speedY,
+            'damage',
+            this.enemy.damage,
+            'virus',
+            this.enemy.virus,
         )
         bullet.style.left = `${srcX}px`
         bullet.style.top = `${srcY}px`
@@ -35,5 +45,4 @@ export class StingerShootingService extends RangerShootingService {
         getCurrentRoomBullets().push(bullet)
         this.enemy.movementService.resetAcceleration()
     }
-
 }

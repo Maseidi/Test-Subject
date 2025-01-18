@@ -1,25 +1,33 @@
-import { isGun } from '../../../gun-details.js'
+import { getCurrentRoomInteractables, setCurrentRoomInteractables } from '../../../elements.js'
 import { getEnemies } from '../../../entities.js'
+import { isGun } from '../../../gun-details.js'
 import { dropLoot } from '../../../loot-manager.js'
-import { CHASE, STUNNED } from '../../enemy-constants.js'
+import {
+    activateAllProgresses,
+    deactivateAllProgresses,
+    updateKillAllDoors,
+    updateKillAllEnemies,
+    updateKillAllInteractables,
+} from '../../../progress-manager.js'
 import { endChaos } from '../../../survival/chaos-manager.js'
 import { getCurrentChaosEnemies, getCurrentChaosSpawned } from '../../../survival/variables.js'
-import { getCurrentRoomInteractables, setCurrentRoomInteractables } from '../../../elements.js'
-import { getAnimatedLimbs, getCriticalChance, getCurrentRoomId, getIsSurvival, setAnimatedLimbs } from '../../../variables.js'
-import { 
+import {
     addAllAttributes,
     addAllClasses,
     addClass,
     containsClass,
     createAndAddClass,
     removeAllClasses,
-    removeClass } from '../../../util.js'
-import { 
-    activateAllProgresses,
-    deactivateAllProgresses,
-    updateKillAllDoors,
-    updateKillAllEnemies,
-    updateKillAllInteractables } from '../../../progress-manager.js'
+    removeClass,
+} from '../../../util.js'
+import {
+    getAnimatedLimbs,
+    getCriticalChance,
+    getCurrentRoomId,
+    getIsSurvival,
+    setAnimatedLimbs,
+} from '../../../variables.js'
+import { CHASE, STUNNED } from '../../enemy-constants.js'
 
 export class AbstractInjuryService {
     constructor(enemy) {
@@ -28,11 +36,11 @@ export class AbstractInjuryService {
     }
 
     damageEnemy(name, damage, antivirus) {
-        if ( isGun(name) && this.enemy.virus === antivirus ) {
+        if (isGun(name) && this.enemy.virus === antivirus) {
             damage *= 1.2
             var sameVirus = this.enemy.virus
         }
-        if ( Math.random() <= getCriticalChance() ) {
+        if (Math.random() <= getCriticalChance()) {
             damage *= 2
             var critical = true
         }
@@ -40,19 +48,19 @@ export class AbstractInjuryService {
         const enemyHealth = this.enemy.health
         const newHealth = enemyHealth - damage
         this.enemy.health = newHealth
-        if ( newHealth <= 0 ) this.killEnemy()
+        if (newHealth <= 0) this.killEnemy()
         else {
             addClass(this.enemy.sprite.firstElementChild.firstElementChild, 'damaged')
             this.enemy.damagedCounter = 1
-            if ( this.enemy.state === STUNNED ) this.enemy.state = CHASE
+            if (this.enemy.state === STUNNED) this.enemy.state = CHASE
         }
     }
 
     addDamagePopup(damage, critical, virus) {
         const damageEl = createAndAddClass('p', 'enemy-damage-container')
-        if ( critical ) addClass(damageEl, 'critical')
-        if ( virus ) damageEl.style.color = virus
-        if ( virus === 'yellow' ) addClass(damageEl, 'yellow')
+        if (critical) addClass(damageEl, 'critical')
+        if (virus) damageEl.style.color = virus
+        if (virus === 'yellow') addClass(damageEl, 'yellow')
         damageEl.textContent = Math.floor(damage)
         addAllClasses(damageEl, `enemy-damage-container-${Math.ceil(Math.random() * 6)}`, 'animation')
         this.enemy.sprite.append(damageEl)
@@ -61,9 +69,11 @@ export class AbstractInjuryService {
 
     killEnemy() {
         addAllAttributes(
-            this.enemy.sprite, 
-            'left', Number(this.enemy.sprite.style.left.replace('px', '')), 
-            'top', Number(this.enemy.sprite.style.top.replace('px', ''))
+            this.enemy.sprite,
+            'left',
+            Number(this.enemy.sprite.style.left.replace('px', '')),
+            'top',
+            Number(this.enemy.sprite.style.top.replace('px', '')),
         )
         dropLoot(this.enemy.sprite, true)
         this.deathAnimation()
@@ -75,7 +85,13 @@ export class AbstractInjuryService {
         updateKillAllInteractables()
         this.removePopup()
         this.enemy.sprite.style.zIndex = '34'
-        if ( getIsSurvival() && getCurrentChaosEnemies() === getCurrentChaosSpawned() && !getEnemies().get(1).find(enemy => enemy.health !== 0) ) {
+        if (
+            getIsSurvival() &&
+            getCurrentChaosEnemies() === getCurrentChaosSpawned() &&
+            !getEnemies()
+                .get(1)
+                .find(enemy => enemy.health !== 0)
+        ) {
             endChaos()
         }
     }
@@ -91,28 +107,27 @@ export class AbstractInjuryService {
         const body = this.enemy.sprite.firstElementChild.firstElementChild
         removeAllClasses(body, 'body-transition', 'no-transition')
         Array.from(body.children).forEach(limb => {
-            if ( containsClass(limb, 'fire') ) limb.style.opacity = 0
-            const animatedLimb = limb.animate([
-                {transform: 'rotateZ(0deg)'},
-                {transform: `rotateZ(${Math.floor((Math.random() * 360) - 180)}deg)`}
-            ], {
-                duration: 500,
-                fill: 'forwards'
-            })
+            if (containsClass(limb, 'fire')) limb.style.opacity = 0
+            const animatedLimb = limb.animate(
+                [{ transform: 'rotateZ(0deg)' }, { transform: `rotateZ(${Math.floor(Math.random() * 360 - 180)}deg)` }],
+                {
+                    duration: 500,
+                    fill: 'forwards',
+                },
+            )
             addClass(limb, 'animation')
             setAnimatedLimbs([...getAnimatedLimbs(), animatedLimb])
             animatedLimb.addEventListener('finish', () => {
-                setAnimatedLimbs(getAnimatedLimbs().filter(elem => elem !== animatedLimb))                
+                setAnimatedLimbs(getAnimatedLimbs().filter(elem => elem !== animatedLimb))
             })
         })
     }
 
     manageDamagedMode() {
-        if ( this.enemy.damagedCounter === 0 ) return
+        if (this.enemy.damagedCounter === 0) return
         this.enemy.damagedCounter += 1
-        if ( this.enemy.damagedCounter !== 6 ) return
+        if (this.enemy.damagedCounter !== 6) return
         removeClass(this.enemy.sprite.firstElementChild.firstElementChild, 'damaged')
         this.enemy.damagedCounter = 0
     }
-
 }
