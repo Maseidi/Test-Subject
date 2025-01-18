@@ -126,7 +126,7 @@ export const manageSpawns = () => {
         else if ( chance < 0.75 ) enemy = new Tracker(level, x, y, new Loot(RANDOM, 1))
         else if ( chance < 0.87 ) enemy = new Grabber(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
         else                      enemy = new Scorcher(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
-    } else if ( chaos < 48 ) {
+    } else {
         if      ( chance < 0.11 ) enemy = new Torturer(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
         else if ( chance < 0.22 ) enemy = new SoulDrinker(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
         else if ( chance < 0.33 ) enemy = new RockCrusher(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))

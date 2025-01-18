@@ -18,6 +18,7 @@ export class ScorcherMovementService extends AbstractMovementService {
     }
 
     addFlame() {
+        if ( getCurrentRoomFlames().length >= 10 ) return
         const flame = document.createElement('img')
         addClass(flame, 'flame')
         flame.src = `../assets/images/fire.gif`

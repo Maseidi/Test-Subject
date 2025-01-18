@@ -18,6 +18,7 @@ export class StingerMovementService extends AbstractMovementService {
     }
 
     addPoison() {
+        if ( getCurrentRoomPoisons().length >= 10 ) return
         const poison = document.createElement('img')
         addClass(poison, 'poison')
         poison.src = `../assets/images/poison.png`
