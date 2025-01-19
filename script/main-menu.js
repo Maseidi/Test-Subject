@@ -33,10 +33,10 @@ const mainMenuHeader = () => {
 
 const options = () => {
     const options = createAndAddClass('div', 'main-menu-options')
-    handleContinueOption(options)
-    appendAll(options, survival())
+    // handleContinueOption(options)
+    // appendAll(options, survival())
     // appendAll(options, newGame(), loadGame(), survival())
-    // handleMapMakerOption(options)
+    handleMapMakerOption(options)
     options.append(lineBar())
     return options
 }

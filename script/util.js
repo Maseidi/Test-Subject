@@ -10,6 +10,7 @@ import {
 import { getGunDetail, getGunUpgradableDetail } from './gun-details.js'
 import { removeWeapon } from './gun-loader.js'
 import { ADRENALINE, ENERGY_DRINK, HEALTH_POTION, LUCK_PILLS } from './loot.js'
+import { playExplosion } from './sound-manager.js'
 import { getThrowableDetail, isThrowable } from './throwable-details.js'
 import { removeThrowable } from './throwable-loader.js'
 import {
@@ -201,6 +202,7 @@ export const addExplosion = (left, top) => {
     explosion.style.top = `${top}px`
     explosion.setAttribute('time', 0)
     explosion.append(explosionImage)
+    playExplosion()
     getCurrentRoom().append(explosion)
     addAllClasses(getMapEl(), 'explosion-shake', 'animation')
     getMapEl().addEventListener('animationend', () => removeAllClasses(getMapEl(), 'explosion-shake', 'animation'))

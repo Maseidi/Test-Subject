@@ -15,6 +15,7 @@ import {
 } from './elements.js'
 import { renderVirusIcon } from './player-health.js'
 import { loadCurrentRoom } from './room-loader.js'
+import { playFootstep } from './sound-manager.js'
 import { renderUi } from './user-interface.js'
 import { appendAll, createAndAddClass } from './util.js'
 import { getInfection, getPlayerAngle, getPlayerX, getPlayerY, setMapX, setMapY } from './variables.js'
@@ -93,6 +94,7 @@ export const renderPlayer = () => {
     const dialogueContainer = createAndAddClass('div', 'player-dialouge-container')
     appendAll(playerCollider, playerBody, forwardDetector, dialogueContainer)
     const leftHand = createAndAddClass('div', 'player-left-hand')
+    leftHand.addEventListener('animationiteration', playFootstep)
     const playerHead = createAndAddClass('div', 'player-head')
     const rightHand = createAndAddClass('div', 'player-right-hand')
     playerBody.append(leftHand, playerHead, rightHand)

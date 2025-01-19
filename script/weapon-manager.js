@@ -17,6 +17,7 @@ import {
     useInventoryResource,
 } from './inventory.js'
 import { dropLoot } from './loot-manager.js'
+import { playBreakCrate, playEmptyWeapon, playGunShot, playReload } from './sound-manager.js'
 import { isThrowable } from './throwable-details.js'
 import { removeThrowable } from './throwable-loader.js'
 import {
@@ -66,8 +67,6 @@ import {
     setWeaponWheel,
 } from './variables.js'
 
-const EMPTY_WEAPON = new Audio('../assets/audio/empty-weapon.mp3')
-
 let equipped
 export const manageWeaponActions = () => {
     equipped = findEquippedWeaponById()
@@ -112,6 +111,7 @@ export const setupReload = () => {
     if (isThrowable(equipped.name)) return
     if (equipped.currmag === getGunUpgradableDetail(equipped.name, 'magazine', equipped.magazinelvl)) return
     if (calculateTotalAmmo() === 0) return
+    if (!getReloading()) playReload(equipped)
     setReloading(true)
 }
 
@@ -159,12 +159,13 @@ const shoot = () => {
     const totalAmmo = calculateTotalAmmo()
     let currMag = equipped.currmag
     if (currMag === 0) {
-        EMPTY_WEAPON.play()
+        playEmptyWeapon()
         setShooting(false)
         if (totalAmmo === 0) return
         setupReload()
         return
     }
+    playGunShot(equipped.name)
     currMag--
     applyRecoil()
     addFireAnimation()
@@ -206,7 +207,10 @@ const managePenetration = () => {
         if (containsClass(element, 'enemy') && enemy?.health > 0 && absoluteDamage >= 10) {
             enemy.injuryService.damageEnemy(equipped.name, absoluteDamage, getGunDetail(equipped.name, 'antivirus'))
         }
-        if (target?.getAttribute('name') === 'crate' && absoluteDamage >= 10) dropLoot(target)
+        if (target?.getAttribute('name') === 'crate' && absoluteDamage >= 10) {
+            playBreakCrate()
+            dropLoot(target)
+        }
     }
 }
 

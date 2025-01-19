@@ -27,6 +27,13 @@ import { renderPasswordInput } from './password-manager.js'
 import { renderPauseMenu } from './pause-menu.js'
 import { damagePlayer, findHealtStatusChildByClassName, heal } from './player-health.js'
 import { activateAllProgresses, deactivateAllProgresses, getProgress } from './progress-manager.js'
+import {
+    getPlayingEquipSoundEffect,
+    getPlayingSoundEffects,
+    playBreakCrate,
+    playEquip,
+    setPlayingSoundEffects,
+} from './sound-manager.js'
 import { centralizePlayer } from './startup.js'
 import { renderStash } from './stash.js'
 import { startChaos } from './survival/chaos-manager.js'
@@ -146,25 +153,24 @@ const exitAim = () => {
 
 export const weaponSlotDown = key => {
     if (getPause() || getReloading() || getShooting() || getGrabbed()) return
+    const newId = getWeaponWheel()[Number(key) - 1]
+    if (getEquippedWeaponId() === newId) return
+    getPlayingEquipSoundEffect()?.pause()
+    setPlayingSoundEffects(getPlayingSoundEffects().filter(effect => effect !== getPlayingEquipSoundEffect()))
     removeEquipped()
-    if (getWeaponWheel()[Number(key) - 1] === getEquippedWeaponId()) unEquipWeapon()
-    else equipWeapon(key)
+    equipWeapon(newId)
 }
 
-const unEquipWeapon = () => {
-    setEquippedWeaponId(null)
-    setAimMode(false)
-    exitAimModeAnimation()
-    renderWeaponUi()
-    if (isMoving()) addClass(getPlayer(), 'walk')
-}
-
-const equipWeapon = key => {
-    setEquippedWeaponId(getWeaponWheel()[Number(key) - 1])
+const equipWeapon = id => {
+    setEquippedWeaponId(id)
     renderWeaponUi()
     unequipTorch()
     setEquippedTorchId(null)
-    if (getEquippedWeaponId()) setShootCounter(getEquippedItemDetail(findEquippedWeaponById(), 'firerate') * 60)
+    if (getEquippedWeaponId()) {
+        const equipped = findEquippedWeaponById()
+        setShootCounter(getEquippedItemDetail(equipped, 'firerate') * 60)
+        playEquip(equipped.name)
+    }
     if (getEquippedWeaponId() && getAimMode()) equipWeaponOnAimMode()
     else equipNothing()
 }
@@ -246,7 +252,10 @@ const openStash = () => openPause('stash', renderStash)
 
 const openVendingMachine = () => openPause('store', renderStore)
 
-const breakCrate = () => dropLoot(getElementInteractedWith())
+const breakCrate = () => {
+    playBreakCrate()
+    dropLoot(getElementInteractedWith())
+}
 
 const openPause = (cause, func) => {
     setPauseCause(cause)
@@ -307,6 +316,7 @@ const gamePaused = () => {
     removeAllClasses(getPlayer(), 'run', 'walk')
     stopAnimations()
     removeUi()
+    getPlayingSoundEffects().forEach(effect => effect.pause())
 }
 
 const stopAnimations = () => {
@@ -332,6 +342,7 @@ const gamePlaying = () => {
     resumePlayerActions()
     getWaitingFunctions().forEach(elem => elem.fn(...elem.args))
     setWaitingFunctions([])
+    getPlayingSoundEffects().forEach(effect => effect.play())
 }
 
 const resumeAnimations = () => {
