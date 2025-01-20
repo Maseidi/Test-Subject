@@ -6,7 +6,6 @@ import {
     clickUp,
     dDown,
     dUp,
-    eDown,
     escapeDown,
     fDown,
     hDown,
@@ -20,6 +19,7 @@ import {
     tabDown,
     wDown,
     weaponSlotDown,
+    wheelChange,
     wUp,
 } from './actions.js'
 
@@ -38,9 +38,6 @@ const keyDown = e => {
                 break
             case 'KeyD':
                 dDown()
-                break
-            case 'KeyE':
-                eDown()
                 break
             case 'Digit1':
             case 'Digit2':
@@ -100,6 +97,7 @@ export const addControls = () => {
     window.addEventListener('mousedown', clickDown, true)
     window.addEventListener('mouseup', clickUp, true)
     window.addEventListener('resize', resizeWindow, true)
+    window.addEventListener('wheel', wheelChange, true)
 }
 
 export const removeControls = () => {
@@ -109,4 +107,5 @@ export const removeControls = () => {
     window.removeEventListener('mousedown', clickDown, true)
     window.removeEventListener('mouseup', clickUp, true)
     window.removeEventListener('resize', resizeWindow, true)
+    window.removeEventListener('wheel', wheelChange, true)
 }

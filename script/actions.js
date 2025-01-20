@@ -88,6 +88,7 @@ import {
     setLeftPressed,
     setMouseX,
     setMouseY,
+    setNoAimAfterThrow,
     setPause,
     setPauseCause,
     setPlayerAimAngle,
@@ -117,18 +118,8 @@ const enableDirection = (getPressed, getOppositePressed, setPressed, setOpposite
     if (!getAimMode() && !getPause() && !getGrabbed()) addClass(getPlayer(), 'walk')
 }
 
-export const eDown = () => {
-    if (getPause() || getGrabbed() || isThrowing() || !getEquippedWeaponId()) return
-    toggleWeaponAim()
-}
-
-const toggleWeaponAim = () => {
-    setAimMode(!getAimMode())
-    if (getAimMode()) aimWeapon()
-    else exitAim()
-}
-
 const aimWeapon = () => {
+    setAimMode(true)
     removeAllClasses(getPlayer(), 'walk', 'run')
     const equipped = findEquippedWeaponById()
     if (isGun(equipped.name)) aimGun()
@@ -145,7 +136,8 @@ const aimThrowable = () => {
     renderThrowable()
 }
 
-const exitAim = () => {
+export const exitAim = () => {
+    setAimMode(false)
     exitAimModeAnimation()
     removeEquipped()
     if (isMoving()) addClass(getPlayer(), 'walk')
@@ -482,11 +474,63 @@ const manageDragItem = event => {
 }
 
 export const clickDown = event => {
-    if (event.buttons === 1) setShootPressed(true)
+    // left click
+    if (event.button === 0) setShootPressed(true)
+    // right click
+    else if (event.button === 2) {
+        if (getGrabbed() || !getEquippedWeaponId()) return
+        if (isThrowing()) {
+            setNoAimAfterThrow(false)
+            return
+        }
+        if (getPause()) {
+            setWaitingFunctions(getWaitingFunctions().filter(item => item.id !== 'aim-waiting-function'))
+        } else aimWeapon()
+    }
 }
 
 export const clickUp = event => {
-    if (event.buttons === 0) setShootPressed(false)
+    // left click
+    if (event.button === 0) setShootPressed(false)
+    // right click
+    else if (event.button === 2) {
+        if (getGrabbed() || !getEquippedWeaponId()) return
+        if (isThrowing()) {
+            setNoAimAfterThrow(true)
+            return
+        }
+        if (getPause()) {
+            setWaitingFunctions([...getWaitingFunctions(), { fn: exitAim, args: [], id: 'aim-waiting-function' }])
+        } else exitAim()
+    }
+}
+
+export const wheelChange = event => {
+    if (getEquippedWeaponId() === null) {
+        const wheelIndex = getWeaponWheel().findIndex(weapon => weapon !== null)
+        if (wheelIndex !== -1) weaponSlotDown(wheelIndex + 1)
+        return
+    }
+    const index = getWeaponWheel().findIndex(weaponId => weaponId === getEquippedWeaponId())
+
+    if (event.deltaY > 0)
+        var wheelMap = {
+            0: [1, 2, 3],
+            1: [2, 3, 0],
+            2: [3, 0, 1],
+            3: [0, 1, 2],
+        }
+    else
+        var wheelMap = {
+            0: [3, 2, 1],
+            1: [0, 3, 2],
+            2: [1, 0, 3],
+            3: [2, 1, 0],
+        }
+
+    const newIndex = wheelMap[index].find(item => getWeaponWheel()[item] !== null)
+    if (newIndex === undefined) return
+    weaponSlotDown(newIndex + 1)
 }
 
 export const resizeWindow = () => centralizePlayer()

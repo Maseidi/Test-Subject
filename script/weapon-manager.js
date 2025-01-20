@@ -1,3 +1,4 @@
+import { exitAim } from './actions.js'
 import { manageAimModeAngle } from './angle-manager.js'
 import {
     getCurrentRoom,
@@ -40,6 +41,7 @@ import {
     getAimMode,
     getCriticalChance,
     getEquippedWeaponId,
+    getNoAimAfterThrow,
     getNoOffenseCounter,
     getPlayerAimAngle,
     getPlayerAngle,
@@ -254,7 +256,13 @@ const throwAnimation = () => {
     animateThrow(rightHand, 29, 29, '', '')
     if (getThrowCounter() === 29) throwable.style.top = ''
     if (getThrowCounter() > 0 && getThrowCounter() <= 28) throwable.style.top = `${throwableTop + 1}px`
-    if (getThrowCounter() === 60) setThrowCounter(0)
+    if (getThrowCounter() === 60) {
+        setThrowCounter(0)
+        if (getNoAimAfterThrow()) {
+            exitAim()
+            return
+        }
+    }
 }
 
 const animateThrow = (hand, start, end, height, top) => {

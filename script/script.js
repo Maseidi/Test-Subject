@@ -9,3 +9,4 @@ for (let i = 0; i < 10; i++)
     if (!localStorage.getItem(`survival-slot-${i + 1}`)) localStorage.setItem(`survival-slot-${i + 1}`, 'empty')
 
 renderMainMenu()
+window.addEventListener('contextmenu', e => e.preventDefault())

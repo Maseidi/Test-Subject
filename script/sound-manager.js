@@ -50,7 +50,7 @@ export const playReload = equipped => {
 
 export const playEquip = name => {
     const gunShot = new Audio(`../assets/audio/weapon/equip/${name}.mp3`)
-    playingEquipSoundEffect = gunShot
+    setPlayingEquipSoundEffect(gunShot)
     gunShot.volume = 0.5
     playSound(gunShot)
 }
