@@ -53,6 +53,7 @@ import {
     YELLOW_VACCINE,
 } from './loot.js'
 import { renderInteractable } from './room-loader.js'
+import { playBreakCrate } from './sound-manager.js'
 import { element2Object, isStatUpgrader, nextId } from './util.js'
 import {
     getAdrenalinesDropped,
@@ -92,7 +93,10 @@ export const dropLoot = (rootElem, isEnemy) => {
         } = root
         loot = new KeyDrop(left, top, code, heading, description, unlocks)
     } else loot = dropDeterminedLoot(decision, left, top, amount)
-    if (!isEnemy) removeDrop(rootElem)
+    if (!isEnemy) {
+        removeDrop(rootElem)
+        playBreakCrate()
+    }
     else setCurrentRoomSolid(getCurrentRoomSolid().filter(solid => solid !== rootElem.firstElementChild))
     if (!loot) return
     let interactable = { ...loot, left: left, top: top, id: nextId() }

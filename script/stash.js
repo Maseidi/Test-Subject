@@ -9,6 +9,7 @@ import {
     renderHeadingAndDescription,
     useItemAtPosition,
 } from './inventory.js'
+import { addHoverSoundEffect, playClickSoundEffect } from './sound-manager.js'
 import { renderQuit } from './user-interface.js'
 import {
     addAllAttributes,
@@ -61,6 +62,7 @@ const addMoveItemEvent = item => {
 }
 
 const applyItemMovement = e => {
+    playClickSoundEffect()
     const target = containsClass(e.currentTarget, 'stash-item-selector')
         ? e.currentTarget.parentElement
         : e.currentTarget
@@ -97,13 +99,22 @@ const renderMoveComponent = itemObj => {
 const renderChevLeft = () => {
     const chevLeft = document.createElement('img')
     chevLeft.src = '../assets/images/chev-left.png'
+    addHoverSoundEffect(chevLeft)
     chevLeft.addEventListener('click', reduceNumber)
     return chevLeft
 }
 
-const addNumber = e => setParams(e.target, 1)
+const addNumber = e => {
+    e.stopPropagation()
+    playClickSoundEffect()
+    setParams(e.target, 1)
+}
 
-const reduceNumber = e => setParams(e.target, -1)
+const reduceNumber = e => {
+    e.stopPropagation()
+    playClickSoundEffect()
+    setParams(e.target, -1)
+}
 
 const setParams = (elem, multiply) => {
     let numberElem = elem.parentElement.children[1]
@@ -127,6 +138,7 @@ const applyNewValue = (elem, diff, max) => {
 const renderChevRight = () => {
     const chevRight = document.createElement('img')
     chevRight.src = '../assets/images/chev-right.png'
+    addHoverSoundEffect(chevRight)
     chevRight.addEventListener('click', addNumber)
     return chevRight
 }
@@ -139,6 +151,8 @@ const renderConfirm = () => {
 }
 
 const moveItem = e => {
+    e.stopPropagation()
+    playClickSoundEffect()
     const elem2Move = e.target.parentElement.parentElement.parentElement
     const object2Move = element2Object(elem2Move)
     const reduce = Number(e.target.parentElement.parentElement.firstElementChild.children[1].textContent)

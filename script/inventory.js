@@ -23,6 +23,7 @@ import {
     toggleDoor,
 } from './progress-manager.js'
 import { renderInteractable } from './room-loader.js'
+import { addHoverSoundEffect, playClickSoundEffect } from './sound-manager.js'
 import { isThrowable } from './throwable-details.js'
 import { renderThrowable } from './throwable-loader.js'
 import { quitPage, renderQuit } from './user-interface.js'
@@ -464,6 +465,7 @@ const removeDescriptionContent = e => {
 const optionsEvents = item => item.addEventListener('click', addOptionsEvent, true)
 
 const addOptionsEvent = e => {
+    playClickSoundEffect()
     const target = e.currentTarget
     const options = createAndAddClass('div', 'options')
     renderOptions(target, options)
@@ -557,6 +559,7 @@ const renderGrid = () => {
 }
 
 const checkReplace = e => {
+    playClickSoundEffect()
     const destObj = element2Object(e.target)
     const item = inventory[destObj.row][destObj.column]
     if (item === 'locked') return
@@ -778,12 +781,14 @@ const shortcut = item => {
     Array.from(weaponWheel.children).forEach((slot, index) => {
         addClass(slot, 'selectable-slot')
         addAllAttributes(slot, 'selected-weapon', item.id, 'slot-num', index)
+        addHoverSoundEffect(slot)
         slot.addEventListener('click', selectAsSlot)
     })
     item.children[2].remove()
 }
 
 const selectAsSlot = e => {
+    playClickSoundEffect()
     const targetSlotNum = Number(e.target.getAttribute('slot-num'))
     const slotWeaponId = getWeaponWheel()[targetSlotNum]
     const selectedId = Number(e.target.getAttribute('selected-weapon'))
@@ -899,7 +904,9 @@ const OPTIONS = new Map([
 const createOption = (options, text) => {
     const elem = document.createElement('div')
     elem.textContent = `${text}`
-    elem.addEventListener('click', () => {
+    elem.addEventListener('click', (e) => {
+        e.stopPropagation()
+        playClickSoundEffect()
         OPTIONS.get(text)(options.parentElement)
     })
     options.append(elem)

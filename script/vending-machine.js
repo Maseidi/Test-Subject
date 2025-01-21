@@ -16,6 +16,7 @@ import { ADRENALINE, ENERGY_DRINK, HEALTH_POTION, LUCK_PILLS } from './loot.js'
 import { getProgressValueByNumber } from './progress-manager.js'
 import { Progress } from './progress.js'
 import { getShopItems, getShopItemsWithId, GunShopItem } from './shop-item.js'
+import { addHoverSoundEffect, playClickSoundEffect, playTrade, playUpgrade } from './sound-manager.js'
 import { isThrowable } from './throwable-details.js'
 import { addMessage, itemNotification, renderQuit } from './user-interface.js'
 import {
@@ -64,22 +65,26 @@ const renderPagination = () => {
     if (page === 1) addClass(buy, 'active-page')
     buy.textContent = `buy`
     buy.setAttribute('page', 1)
+    addHoverSoundEffect(buy)
     buy.addEventListener('click', changePage)
     const upgrade = createAndAddClass('div', 'upgrade-page')
     if (page === 2) addClass(upgrade, 'active-page')
     upgrade.textContent = `upgrade`
     upgrade.setAttribute('page', 2)
+    addHoverSoundEffect(upgrade)
     upgrade.addEventListener('click', changePage)
     const sell = createAndAddClass('div', 'sell-page')
     if (page === 3) addClass(sell, 'active-page')
     sell.textContent = `sell`
     sell.setAttribute('page', 3)
+    addHoverSoundEffect(sell)
     sell.addEventListener('click', changePage)
     appendAll(paginationContainer, buy, upgrade, sell)
     getPauseContainer().firstElementChild.append(paginationContainer)
 }
 
 const changePage = e => {
+    playClickSoundEffect()
     const pageNum = Number(e.target.getAttribute('page'))
     page = pageNum
     removeStore()
@@ -156,6 +161,7 @@ const statUpgraderOffLimit = () => {
 }
 
 const buyPopup = e => {
+    playClickSoundEffect()
     const itemObj = element2Object(e.currentTarget)
     renderDealPopup(itemObj, 'Purchase item?', isGun(itemObj.name) || itemObj.name === 'pouch', renderConfirmBuyBtn)
 }
@@ -189,7 +195,11 @@ const renderDealPopup = (itemObj, title, headingPredicate, confirmCb) => {
 const renderCancelBtn = () => {
     const cancel = createAndAddClass('button', 'popup-cancel')
     cancel.textContent = `cancel`
-    cancel.addEventListener('click', e => e.target.parentElement.parentElement.parentElement.remove())
+    addHoverSoundEffect(cancel)
+    cancel.addEventListener('click', e => {
+        playClickSoundEffect()
+        e.target.parentElement.parentElement.parentElement.remove()
+    })
     return cancel
 }
 
@@ -200,7 +210,9 @@ const renderExamineBtn = (itemObj, btnContainer) => {
     const weapon = getInventory()
         .flat()
         .find(item => item && item.name === itemObj.name)
-    examine.addEventListener('click', () =>
+    addHoverSoundEffect(examine)
+    examine.addEventListener('click', () => {
+        playClickSoundEffect()
         renderStats(
             weapon || {
                 ...getGunDetails().get(itemObj.name),
@@ -211,8 +223,8 @@ const renderExamineBtn = (itemObj, btnContainer) => {
                 magazinelvl: 1,
                 rangelvl: 1,
             },
-        ),
-    )
+        )
+    })
     btnContainer.append(examine)
 }
 
@@ -229,7 +241,11 @@ const renderConfirmBtn = (price, cb, priceUnit = 'coin') => {
     const p = document.createElement('p')
     p.textContent = `${price}`
     appendAll(confirm, img, p)
-    confirm.addEventListener('click', cb)
+    addHoverSoundEffect(confirm)
+    confirm.addEventListener('click', () => {
+        playClickSoundEffect()
+        cb()
+    })
     return confirm
 }
 
@@ -309,6 +325,7 @@ const handleNewThrowablePurchase = (purchasedItem, name) => {
 const submitPurchase = itemObj => {
     getShopItems()[itemObj.id].sold = true
     handleStatUpgrader(itemObj)
+    playTrade()
     removeStore()
     renderStore()
 }
@@ -353,6 +370,7 @@ const renderUpgradeItems = () => {
 }
 
 const renderGunDetails = e => {
+    playClickSoundEffect()
     const weaponObj = element2Object(e.currentTarget)
     const upgradeRight = document.querySelector('.upgrade-right')
     upgradeRight.innerHTML = ``
@@ -375,7 +393,9 @@ const renderDetail = (weaponObj, name) => {
     const price = renderPrice(weaponObj, name)
     appendAll(lower, levels, values, price)
     appendAll(upgradeDetailComponent, title, lower)
-    if (weaponObj[`${name.replace(' ', '')}lvl`] !== 5) upgradeDetailComponent.addEventListener('click', upgradePopup)
+    if (weaponObj[`${name.replace(' ', '')}lvl`] !== 5) {
+        upgradeDetailComponent.addEventListener('click', upgradePopup)
+    }
     return upgradeDetailComponent
 }
 
@@ -425,6 +445,7 @@ const renderPrice = (weaponObj, name) => {
 }
 
 const upgradePopup = e => {
+    playClickSoundEffect()
     const itemObj = element2Object(e.currentTarget)
     const popupContainer = createAndAddClass('div', 'deal-popup-container', 'popup-container', 'ui-theme')
     const popup = createAndAddClass('div', 'upgrade-popup')
@@ -460,6 +481,7 @@ const renderUpgradeConfirmBtn = itemObj =>
     })
 
 const manageUpgrade = itemObj => {
+    playUpgrade()
     useInventoryResource('coin', itemObj.cost)
     const stat = itemObj.stat.replace(' ', '')
     upgradeWeaponStat(itemObj.name, stat)
@@ -512,6 +534,7 @@ const renderSell = () => {
 }
 
 const sellPopup = e => {
+    playClickSoundEffect()
     const itemObj = element2Object(e.currentTarget)
     renderDealPopup(itemObj, 'Sell item?', isGun(itemObj.name), renderConfirmSellBtn)
 }
@@ -534,6 +557,7 @@ const manageSell = itemObj => {
         if (isGun(itemObj.name) && !getShopItems().find(item => !item.sold && item.name === itemObj.name))
             getShopItems().push(new GunShopItem(itemObj.name))
 
+        playTrade()
         return
     }
     addVendingMachineMessage('No enough space')

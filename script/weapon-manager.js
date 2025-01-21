@@ -18,7 +18,7 @@ import {
     useInventoryResource,
 } from './inventory.js'
 import { dropLoot } from './loot-manager.js'
-import { playBreakCrate, playEmptyWeapon, playGunShot, playReload } from './sound-manager.js'
+import { playEmptyWeapon, playGunShot, playReload } from './sound-manager.js'
 import { isThrowable } from './throwable-details.js'
 import { removeThrowable } from './throwable-loader.js'
 import {
@@ -209,10 +209,7 @@ const managePenetration = () => {
         if (containsClass(element, 'enemy') && enemy?.health > 0 && absoluteDamage >= 10) {
             enemy.injuryService.damageEnemy(equipped.name, absoluteDamage, getGunDetail(equipped.name, 'antivirus'))
         }
-        if (target?.getAttribute('name') === 'crate' && absoluteDamage >= 10) {
-            playBreakCrate()
-            dropLoot(target)
-        }
+        if (target?.getAttribute('name') === 'crate' && absoluteDamage >= 10) dropLoot(target)
     }
 }
 

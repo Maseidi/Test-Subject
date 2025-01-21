@@ -6,6 +6,7 @@ import { play } from './game.js'
 import { countItem, useInventoryResource } from './inventory.js'
 import { saveMapMakerAtSlot } from './mapMaker/data-manager.js'
 import { activateAllProgresses, getProgressValueByNumber } from './progress-manager.js'
+import { addHoverSoundEffect, playClickSoundEffect } from './sound-manager.js'
 import { loadSurvivalFromSlot, saveSurvivalAtSlot } from './survival/data-manager.js'
 import { addMessage, itemNotification, renderQuit } from './user-interface.js'
 import { appendAll, createAndAddClass } from './util.js'
@@ -51,8 +52,14 @@ const slots = (load, mapMaker) => {
         const className = isNotEmpty ? 'desktop-slot' : 'desktop-empty-slot'
         const slot = createAndAddClass('div', className)
         appendAll(slot, ...(isNotEmpty ? savedSlotContent(slotData, mapMaker, getIsSurvival()) : noSaveData()))
-        if (!load) slot.addEventListener('click', () => renderSaveConfirmPopup(i + 1, isNotEmpty, mapMaker))
-        if (isNotEmpty && load) slot.addEventListener('click', () => renderLoadConfirmPopup(i + 1))
+        if (!load) slot.addEventListener('click', () => {
+            playClickSoundEffect()
+            renderSaveConfirmPopup(i + 1, isNotEmpty, mapMaker)
+        })
+        if (isNotEmpty && load) slot.addEventListener('click', () => {
+            playClickSoundEffect()
+            renderLoadConfirmPopup(i + 1)
+        })
         slots.append(slot)
     }
     return slots
@@ -120,10 +127,18 @@ const renderSaveConfirmPopup = (slotNumber, isNotEmpty, mapMaker) => {
     titleEl.textContent = title
     const buttons = createAndAddClass('div', 'common-buttons')
     const cancel = createAndAddClass('button', 'popup-cancel')
-    cancel.addEventListener('click', closeSavePopup)
+    addHoverSoundEffect(cancel)
+    cancel.addEventListener('click', () => {
+        playClickSoundEffect()
+        closeSavePopup()
+    })
     cancel.textContent = 'cancel'
     const confirm = createAndAddClass('button', 'popup-confirm')
-    confirm.addEventListener('click', () => confirmSave(slotNumber, mapMaker))
+    addHoverSoundEffect(confirm)
+    confirm.addEventListener('click', () => {
+        playClickSoundEffect()
+        confirmSave(slotNumber, mapMaker)
+    })
     if (mapMaker) {
         const confirmMessage = document.createElement('p')
         confirmMessage.textContent = 'confirm'
@@ -181,11 +196,19 @@ const renderLoadConfirmPopup = slotNumber => {
     helper.textContent = 'All unsaved progress will be lost'
     const buttons = createAndAddClass('div', 'common-buttons')
     const cancel = createAndAddClass('button', 'popup-cancel')
-    cancel.addEventListener('click', closeLoadPopup)
+    addHoverSoundEffect(cancel)
+    cancel.addEventListener('click', () => {
+        playClickSoundEffect()
+        closeLoadPopup()
+    })
     cancel.textContent = 'cancel'
     const confirm = createAndAddClass('button', 'popup-confirm')
     confirm.textContent = 'yes'
-    confirm.addEventListener('click', () => confirmSlotLoad(slotNumber))
+    addHoverSoundEffect(confirm)
+    confirm.addEventListener('click', () => {
+        playClickSoundEffect()
+        confirmSlotLoad(slotNumber)
+    })
     getPauseContainer().append(loadPopup)
     appendAll(buttons, cancel, confirm)
     appendAll(loadPopup, title, helper, buttons)

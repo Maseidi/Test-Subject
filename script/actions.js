@@ -16,6 +16,7 @@ import {
     findEquippedTorchById,
     findEquippedWeaponById,
     getInventory,
+    isEnoughSpace,
     pickupDrop,
     removeInventory,
     renderInventory,
@@ -30,8 +31,8 @@ import { activateAllProgresses, deactivateAllProgresses, getProgress } from './p
 import {
     getPlayingEquipSoundEffect,
     getPlayingSoundEffects,
-    playBreakCrate,
     playEquip,
+    playPickup,
     setPlayingSoundEffects,
 } from './sound-manager.js'
 import { centralizePlayer } from './startup.js'
@@ -207,9 +208,12 @@ const startSprint = () => {
 export const fDown = () => {
     if (getGrabbed()) breakFree()
     else if (getElementInteractedWith()) {
-        const { name, amount } = element2Object(getElementInteractedWith())
+        const { name, amount, space } = element2Object(getElementInteractedWith())
         if (getPause() || !getElementInteractedWith()) return
-        if (amount) pickupDrop(getElementInteractedWith())
+        if (amount) {
+            if ( isEnoughSpace(name, space) ) playPickup(name)
+            pickupDrop(getElementInteractedWith())
+        }
         if (getShooting() || getReloading()) return
         if (name === 'lever') toggleLever()
         if (name === 'crate') breakCrate()
@@ -245,7 +249,6 @@ const openStash = () => openPause('stash', renderStash)
 const openVendingMachine = () => openPause('store', renderStore)
 
 const breakCrate = () => {
-    playBreakCrate()
     dropLoot(getElementInteractedWith())
 }
 

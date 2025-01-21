@@ -4,6 +4,7 @@ import { getMainMenuEl, setMainMenuEl } from './elements.js'
 import { play } from './game.js'
 import { loadMapMakerFromSlot, prepareNewMapMakerData } from './mapMaker/data-manager.js'
 import { renderMapMaker } from './mapMaker/map-maker.js'
+import { addHoverSoundEffect, playClickSoundEffect } from './sound-manager.js'
 import { loadSurvivalFromSlot, prepareNewSurvivalData } from './survival/data-manager.js'
 import { addClass, appendAll, createAndAddClass, difficulties, removeClass } from './util.js'
 import { setDifficulty } from './variables.js'
@@ -33,10 +34,10 @@ const mainMenuHeader = () => {
 
 const options = () => {
     const options = createAndAddClass('div', 'main-menu-options')
-    // handleContinueOption(options)
-    // appendAll(options, survival())
+    handleContinueOption(options)
+    appendAll(options, survival())
     // appendAll(options, newGame(), loadGame(), survival())
-    handleMapMakerOption(options)
+    // handleMapMakerOption(options)
     options.append(lineBar())
     return options
 }
@@ -72,6 +73,7 @@ const mapMaker = () =>
     mainMenuOption(
         'map maker',
         e => {
+            playClickSoundEffect()
             addSelectedStyle(e.currentTarget)
             refreshContents(mapMakerOptions())
         },
@@ -94,6 +96,7 @@ const mainMenuOption = (textContent, onClick, delay, duration) => {
     const option = createAndAddClass('div', 'main-menu-option')
     option.textContent = textContent
     option.addEventListener('animationend', () => {
+        addHoverSoundEffect(option)
         option.style.cursor = 'pointer'
         option.addEventListener('click', onClick)
     })
@@ -106,6 +109,7 @@ const newGame = () =>
     mainMenuOption(
         'new game',
         e => {
+            playClickSoundEffect()
             addSelectedStyle(e.currentTarget)
             refreshContents(newGameOptions())
         },
@@ -131,6 +135,7 @@ const loadGame = () =>
     mainMenuOption(
         'load game',
         e => {
+            playClickSoundEffect()
             addSelectedStyle(e.currentTarget)
             refreshContents(loadGameOptions())
         },
@@ -142,6 +147,7 @@ const survival = () =>
     mainMenuOption(
         'survival',
         e => {
+            playClickSoundEffect()
             addSelectedStyle(e.currentTarget)
             refreshContents(survivalOptions())
         },
@@ -160,7 +166,11 @@ const newGameOptions = () => {
         newGameOption(difficulties.MIDDLE),
         newGameOption(difficulties.SURVIVAL),
     ]).forEach(option => {
-        option.addEventListener('click', e => playWithGivenData(() => prepareNewGameData(e.target.textContent)))
+        addHoverSoundEffect(option)
+        option.addEventListener('click', e => {
+            playClickSoundEffect()
+            playWithGivenData(() => prepareNewGameData(e.target.textContent))
+        })
         newGameOptionsContainer.append(option)
     })
     return newGameOptionsContainer
@@ -213,7 +223,9 @@ const newMapMakerOption = () => {
     const word3 = document.createElement('p')
     word3.textContent = 'map'
     slot.append(word1, word2, word3)
+    addHoverSoundEffect(slot)
     slot.addEventListener('click', () => {
+        playClickSoundEffect()
         getMainMenuEl().remove()
         prepareNewMapMakerData()
         setDifficulty(difficulties.MIDDLE)
@@ -231,7 +243,11 @@ const newSurvivalOption = () => {
     const word3 = document.createElement('p')
     word3.textContent = 'game'
     slot.append(word1, word2, word3)
-    slot.addEventListener('click', () => playWithGivenData(prepareNewSurvivalData, true))
+    addHoverSoundEffect(slot)
+    slot.addEventListener('click', () => {
+        playClickSoundEffect()
+        playWithGivenData(prepareNewSurvivalData, true)
+    })
     return slot
 }
 
@@ -281,11 +297,22 @@ const slotWithData = (slotData, slotNumber, mapMaker, survival) => {
     const elements = savedSlotContent(slotData, mapMaker, survival)
     const slot = createAndAddClass('div', 'load-game-option-full-slot')
     elements.forEach(elem => slot.append(elem))
+    addHoverSoundEffect(slot)
     if (mapMaker)
-        slot.addEventListener('click', () => loadMapMakerWithGivenData(() => loadMapMakerFromSlot(slotNumber)))
+        slot.addEventListener('click', () => {
+            playClickSoundEffect()
+            loadMapMakerWithGivenData(() => loadMapMakerFromSlot(slotNumber))
+        })
     else if (survival)
-        slot.addEventListener('click', () => playWithGivenData(() => loadSurvivalFromSlot(slotNumber), true))
-    else slot.addEventListener('click', () => playWithGivenData(() => loadGameFromSlot(slotNumber)))
+        slot.addEventListener('click', () => {
+            playClickSoundEffect()
+            playWithGivenData(() => loadSurvivalFromSlot(slotNumber), true)
+        })
+    else
+        slot.addEventListener('click', () => {
+            playClickSoundEffect()
+            playWithGivenData(() => loadGameFromSlot(slotNumber))
+        })
     return slot
 }
 

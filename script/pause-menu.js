@@ -14,6 +14,7 @@ import {
     setShop,
     setWalls,
 } from './mapMaker/variables.js'
+import { addHoverSoundEffect, playClickSoundEffect } from './sound-manager.js'
 import { quitPage, renderQuit } from './user-interface.js'
 import { appendAll, createAndAddClass } from './util.js'
 import { getIsMapMakerRoot, setIsMapMakerRoot } from './variables.js'
@@ -38,16 +39,33 @@ const renderOptions = mapMaker => {
     const options = []
     const resume = createAndAddClass('div', 'common-option')
     resume.textContent = 'resume'
-    if (mapMaker) resume.addEventListener('click', () => getPauseContainer().lastElementChild.remove())
-    else resume.addEventListener('click', () => quitPage())
+    addHoverSoundEffect(resume)
+    if (mapMaker)
+        resume.addEventListener('click', () => {
+            playClickSoundEffect()
+            getPauseContainer().lastElementChild.remove()
+        })
+    else
+        resume.addEventListener('click', () => {
+            playClickSoundEffect()
+            quitPage()
+        })
     options.push(resume)
     const loadGame = createAndAddClass('div', 'common-option')
     loadGame.textContent = 'load game'
     if (!getIsMapMakerRoot() && !mapMaker) options.push(loadGame)
-    loadGame.addEventListener('click', () => renderDesktop(true))
+    addHoverSoundEffect(loadGame)
+    loadGame.addEventListener('click', () => {
+        playClickSoundEffect()
+        renderDesktop(true)
+    })
     const mainMenu = createAndAddClass('div', 'common-option')
     mainMenu.textContent = getIsMapMakerRoot() ? 'return to map maker' : 'return to main menu'
-    mainMenu.addEventListener('click', () => renderConfirmReturn2MainMenu(mapMaker))
+    addHoverSoundEffect(mainMenu)
+    mainMenu.addEventListener('click', () => {
+        playClickSoundEffect()
+        renderConfirmReturn2MainMenu(mapMaker)
+    })
     options.push(mainMenu)
     return options
 }
@@ -61,11 +79,17 @@ const renderConfirmReturn2MainMenu = mapMaker => {
     helper.textContent = 'All unsaved progress will be lost'
     const buttons = createAndAddClass('div', 'common-buttons')
     const cancel = createAndAddClass('button', 'popup-cancel')
-    cancel.addEventListener('click', closeReturnPopup)
+    addHoverSoundEffect(cancel)
+    cancel.addEventListener('click', () => {
+        playClickSoundEffect()
+        closeReturnPopup()
+    })
     cancel.textContent = 'cancel'
     const confirm = createAndAddClass('button', 'popup-confirm')
     confirm.textContent = 'yes'
+    addHoverSoundEffect(confirm)
     confirm.addEventListener('click', () => {
+        playClickSoundEffect()
         if (getIsMapMakerRoot()) return2MapMaker()
         else return2MainMenu(mapMaker)
     })

@@ -7,6 +7,7 @@ import {
     findEquippedWeaponById,
     updateInteractablePopups,
 } from './inventory.js'
+import { addHoverSoundEffect, playClickSoundEffect } from './sound-manager.js'
 import { isThrowable } from './throwable-details.js'
 import { addClass, appendAll, containsClass, createAndAddClass, removeClass } from './util.js'
 import {
@@ -90,6 +91,7 @@ export const renderQuit = (mapMaker = false) => {
     const quitText = document.createElement('p')
     quitText.textContent = 'quit'
     appendAll(quitContainer, quitBtn, quitText)
+    addHoverSoundEffect(quitContainer)
     quitContainer.addEventListener('click', () => quitPage(mapMaker))
     getPauseContainer().lastElementChild.append(quitContainer)
 }
@@ -98,6 +100,7 @@ export const quitPage = mapMaker => {
     if (getDraggedItem()) return
     const last = getPauseContainer().lastElementChild
     if (Array.from(last.children).find(child => containsClass(child, 'popup-container'))) return
+    playClickSoundEffect()
     last.remove()
     updateInteractablePopups()
     if (

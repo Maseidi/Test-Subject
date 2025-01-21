@@ -38,7 +38,6 @@ import { damagePlayer, infectPlayer2SpecificVirus, poisonPlayer, setPlayer2Fire 
 import { Popup } from './popup-manager.js'
 import { activateAllProgresses, getProgressValueByNumber } from './progress-manager.js'
 import { loadCurrentRoom } from './room-loader.js'
-import { playBreakCrate } from './sound-manager.js'
 import { getThrowableDetail } from './throwable-details.js'
 import { removeTorch } from './torch-loader.js'
 import {
@@ -468,7 +467,6 @@ const explodeCrates = explosion => {
         if (int.getAttribute('name') !== 'crate') continue
         if (!collide(explosion, int, 0)) continue
         dropLoot(int)
-        playBreakCrate()
     }
 }
 
