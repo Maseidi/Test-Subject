@@ -137,7 +137,7 @@ import {
     setWeaponWheel,
 } from '../variables.js'
 import { Wall } from '../wall.js'
-import { getChaos, getRandomizedWeapons, setChaos, setRandomizedWeapons } from './variables.js'
+import { getChaos, getRandomizedWeapons, setChaos, setEnemiesKilled, setRandomizedWeapons } from './variables.js'
 
 let startingPistol = null
 export const prepareNewSurvivalData = () => {
@@ -237,6 +237,7 @@ export const initConstants = () => {
     setPlayerAngleState(0)
     setPlayerAimAngle(0)
     setAimMode(false)
+    setEnemiesKilled(0)
 }
 
 export const initNewSurvivalVariables = (spawnX = 1500, spawnY = 1000, difficulty) => {

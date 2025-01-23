@@ -68,6 +68,11 @@ import {
 } from './variables.js'
 
 export const dropLoot = (rootElem, isEnemy) => {
+    if (!isEnemy) {
+        removeDrop(rootElem)
+        playBreakCrate()
+    } else setCurrentRoomSolid(getCurrentRoomSolid().filter(solid => solid !== rootElem.firstElementChild))
+
     const root = element2Object(rootElem)
     const {
         left,
@@ -93,11 +98,6 @@ export const dropLoot = (rootElem, isEnemy) => {
         } = root
         loot = new KeyDrop(left, top, code, heading, description, unlocks)
     } else loot = dropDeterminedLoot(decision, left, top, amount)
-    if (!isEnemy) {
-        removeDrop(rootElem)
-        playBreakCrate()
-    }
-    else setCurrentRoomSolid(getCurrentRoomSolid().filter(solid => solid !== rootElem.firstElementChild))
     if (!loot) return
     let interactable = { ...loot, left: left, top: top, id: nextId() }
     if (progress2Active) interactable = { ...interactable, progress2Active }

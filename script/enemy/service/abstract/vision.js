@@ -22,6 +22,7 @@ export class AbstractVisionService {
     }
 
     getWallInTheWay() {
+        if ( this.enemy.movementService.distance2Player() > this.enemy.vision ) return
         this.visionCounter = this.visionCounter + 1 === 21 ? 0 : this.visionCounter + 1
         if (this.visionCounter !== 20) return
         const walls = getCurrentRoomSolid().filter(solid => !containsClass(solid, 'enemy-collider'))

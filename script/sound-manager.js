@@ -22,7 +22,7 @@ const playSound = sound => {
 
 export const playFootstep = () => {
     const footstep = new Audio('../assets/audio/footstep.mp3')
-    footstep.volume = 0.1
+    footstep.volume = 0.3
     playSound(footstep)
 }
 

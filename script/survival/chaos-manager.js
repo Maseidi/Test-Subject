@@ -45,6 +45,7 @@ import {
     setChaos,
     setCurrentChaosEnemies,
     setCurrentChaosSpawned,
+    setEnemiesKilled,
     setEnemyId,
     setSpawnCounter,
 } from './variables.js'
@@ -52,6 +53,7 @@ import {
 export const startChaos = () => {
     setEnemyId(0)
     setSpawnCounter(0)
+    setEnemiesKilled(0)
     setChaos(getChaos() + 1)
     setCurrentChaosEnemies(4 + getChaos())
     setCurrentChaosSpawned(0)

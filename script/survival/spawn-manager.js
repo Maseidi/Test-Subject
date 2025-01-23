@@ -15,6 +15,7 @@ import {
     getChaos,
     getCurrentChaosEnemies,
     getCurrentChaosSpawned,
+    getEnemiseKilled,
     getEnemyId,
     getSpawnCounter,
     setCurrentChaosSpawned,
@@ -64,12 +65,7 @@ const spawnLocations = [
 
 export const manageSpawns = () => {
     if (getCurrentChaosSpawned() >= getCurrentChaosEnemies()) return
-    if (
-        getEnemies()
-            .get(1)
-            .filter(enemy => enemy.health !== 0).length >= 50
-    )
-        return
+    if (getCurrentChaosSpawned() - getEnemiseKilled() >= 40) return
 
     setSpawnCounter(getSpawnCounter() + 1)
     if (getSpawnCounter() !== 60) return

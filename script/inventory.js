@@ -23,7 +23,7 @@ import {
     toggleDoor,
 } from './progress-manager.js'
 import { renderInteractable } from './room-loader.js'
-import { addHoverSoundEffect, playClickSoundEffect } from './sound-manager.js'
+import { playClickSoundEffect } from './sound-manager.js'
 import { isThrowable } from './throwable-details.js'
 import { renderThrowable } from './throwable-loader.js'
 import { quitPage, renderQuit } from './user-interface.js'
@@ -462,10 +462,7 @@ const removeDescriptionContent = e => {
     descContainer.children[1].textContent = ``
 }
 
-const optionsEvents = item => {
-    addHoverSoundEffect(item)
-    item.addEventListener('click', addOptionsEvent, true)
-}
+const optionsEvents = item => item.addEventListener('click', addOptionsEvent, true)
 
 const addOptionsEvent = e => {
     playClickSoundEffect()
@@ -554,7 +551,6 @@ const renderGrid = () => {
                 MAX_PACKSIZE[item.name] >= item.amount + Number(getDraggedItem().getAttribute('amount'))
             )
                 addClass(block, 'combine')
-            addHoverSoundEffect(block) 
             block.addEventListener('click', checkReplace, true)
             grid.append(block)
         }
@@ -785,7 +781,6 @@ const shortcut = item => {
     Array.from(weaponWheel.children).forEach((slot, index) => {
         addClass(slot, 'selectable-slot')
         addAllAttributes(slot, 'selected-weapon', item.id, 'slot-num', index)
-        addHoverSoundEffect(slot)
         slot.addEventListener('click', selectAsSlot)
     })
     item.children[2].remove()
@@ -908,8 +903,7 @@ const OPTIONS = new Map([
 const createOption = (options, text) => {
     const elem = document.createElement('div')
     elem.textContent = `${text}`
-    addHoverSoundEffect(elem)
-    elem.addEventListener('click', (e) => {
+    elem.addEventListener('click', e => {
         e.stopPropagation()
         playClickSoundEffect()
         OPTIONS.get(text)(options.parentElement)

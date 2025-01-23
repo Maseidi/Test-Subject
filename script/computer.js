@@ -52,15 +52,16 @@ const slots = (load, mapMaker) => {
         const className = isNotEmpty ? 'desktop-slot' : 'desktop-empty-slot'
         const slot = createAndAddClass('div', className)
         appendAll(slot, ...(isNotEmpty ? savedSlotContent(slotData, mapMaker, getIsSurvival()) : noSaveData()))
-        addHoverSoundEffect(slot)
-        if (!load) slot.addEventListener('click', () => {
-            playClickSoundEffect()
-            renderSaveConfirmPopup(i + 1, isNotEmpty, mapMaker)
-        })
-        if (isNotEmpty && load) slot.addEventListener('click', () => {
-            playClickSoundEffect()
-            renderLoadConfirmPopup(i + 1)
-        })
+        if (!load)
+            slot.addEventListener('click', () => {
+                playClickSoundEffect()
+                renderSaveConfirmPopup(i + 1, isNotEmpty, mapMaker)
+            })
+        if (isNotEmpty && load)
+            slot.addEventListener('click', () => {
+                playClickSoundEffect()
+                renderLoadConfirmPopup(i + 1)
+            })
         slots.append(slot)
     }
     return slots

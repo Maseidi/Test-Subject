@@ -33,3 +33,9 @@ export const setRandomizedWeapons = val => {
     randomizedWeapons = val
 }
 export const getRandomizedWeapons = () => randomizedWeapons
+
+let enemiesKilled = null
+export const setEnemiesKilled = val => {
+    enemiesKilled = val
+}
+export const getEnemiseKilled = () => enemiesKilled

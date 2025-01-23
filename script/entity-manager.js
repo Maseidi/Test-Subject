@@ -48,6 +48,7 @@ import {
     collide,
     containsClass,
     createAndAddClass,
+    distance,
     element2Object,
     getProperty,
     isAble2Interact,
@@ -135,9 +136,12 @@ const calculateNewRoomLeftAndTop = prevLoader => {
     setRoomTop(getRoomTop() - top + getProperty(prevLoader, 'top', 'px'))
 }
 
+let interactables2Check = []
+let interactableDistanceCounter = -1
 const manageInteractables = () => {
+    findNearInteractables()
     setElementInteractedWith(null)
-    getCurrentRoomInteractables().forEach(int => {
+    interactables2Check.forEach(int => {
         switch (int.getAttribute('name')) {
             case 'speaker':
                 return
@@ -151,6 +155,14 @@ const manageInteractables = () => {
                 hanldeRestOfInteractables(int)
         }
     })
+}
+
+const findNearInteractables = () => {
+    interactableDistanceCounter++
+    if (interactableDistanceCounter === 20) {
+        interactables2Check = getCurrentRoomInteractables().filter(int => distance(int, getPlayer()) < 200)
+        interactableDistanceCounter = 0
+    }
 }
 
 const handleDoorInteractables = int => {
@@ -194,6 +206,7 @@ const setAsInteractingObject = (popup, int) => {
 
 const handleEnemyInteractables = int => {
     const popup = int.firstElementChild
+    if (int.parentElement === null) return
     const enemyElem = int.parentElement.parentElement
     const enemyObject = getEnemyObject(enemyElem)
     if (!getProgressValueByNumber('3002')) removePopup(popup)

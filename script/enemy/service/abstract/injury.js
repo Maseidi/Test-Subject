@@ -1,4 +1,9 @@
-import { getCurrentRoomInteractables, setCurrentRoomInteractables } from '../../../elements.js'
+import {
+    getCurrentRoomEnemies,
+    getCurrentRoomInteractables,
+    setCurrentRoomEnemies,
+    setCurrentRoomInteractables,
+} from '../../../elements.js'
 import { getEnemies } from '../../../entities.js'
 import { isGun } from '../../../gun-details.js'
 import { dropLoot } from '../../../loot-manager.js'
@@ -10,7 +15,12 @@ import {
     updateKillAllInteractables,
 } from '../../../progress-manager.js'
 import { endChaos } from '../../../survival/chaos-manager.js'
-import { getCurrentChaosEnemies, getCurrentChaosSpawned } from '../../../survival/variables.js'
+import {
+    getCurrentChaosEnemies,
+    getCurrentChaosSpawned,
+    getEnemiseKilled,
+    setEnemiesKilled,
+} from '../../../survival/variables.js'
 import {
     addAllAttributes,
     addAllClasses,
@@ -85,12 +95,14 @@ export class AbstractInjuryService {
         updateKillAllInteractables()
         this.removePopup()
         this.enemy.sprite.style.zIndex = '34'
+        if (getIsSurvival()) {
+            setEnemiesKilled(getEnemiseKilled() + 1)
+            setCurrentRoomEnemies(getCurrentRoomEnemies().filter(enemy => enemy !== this.enemy))
+        }
         if (
             getIsSurvival() &&
             getCurrentChaosEnemies() === getCurrentChaosSpawned() &&
-            !getEnemies()
-                .get(1)
-                .find(enemy => enemy.health !== 0)
+            getEnemiseKilled() === getCurrentChaosEnemies()
         ) {
             endChaos()
         }
