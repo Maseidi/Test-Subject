@@ -58,6 +58,7 @@ const inventoryEvents = () => {
 const addMoveItemEvent = item => {
     if (containsClass(item, 'stash-item-selector')) item.parentElement.setAttribute('type', 'to-inventory')
     else item.setAttribute('type', 'to-stash')
+    addHoverSoundEffect(item)
     item.addEventListener('click', applyItemMovement)
 }
 
@@ -146,6 +147,7 @@ const renderChevRight = () => {
 const renderConfirm = () => {
     const confirm = createAndAddClass('p', 'confirm')
     confirm.textContent = 'confirm'
+    addHoverSoundEffect(confirm)
     confirm.addEventListener('click', moveItem)
     return confirm
 }
@@ -190,9 +192,11 @@ export const add2Stash = (object2Move, reduce) => {
 const renderBiggerSteps = () => {
     const bigger = createAndAddClass('div', 'bigger')
     const reduce = document.createElement('div')
+    addHoverSoundEffect(reduce)
     reduce.addEventListener('click', reduceNumber)
     reduce.textContent = '-5'
     const add = document.createElement('div')
+    addHoverSoundEffect(add)
     add.addEventListener('click', addNumber)
     add.textContent = '+5'
     appendAll(bigger, reduce, add)

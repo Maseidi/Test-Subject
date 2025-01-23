@@ -60,6 +60,7 @@ const continueOption = () =>
     mainMenuOption(
         'continue',
         e => {
+            playClickSoundEffect()
             addSelectedStyle(e.currentTarget)
             loadLatestSavedSlot()
         },

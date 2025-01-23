@@ -462,7 +462,10 @@ const removeDescriptionContent = e => {
     descContainer.children[1].textContent = ``
 }
 
-const optionsEvents = item => item.addEventListener('click', addOptionsEvent, true)
+const optionsEvents = item => {
+    addHoverSoundEffect(item)
+    item.addEventListener('click', addOptionsEvent, true)
+}
 
 const addOptionsEvent = e => {
     playClickSoundEffect()
@@ -551,6 +554,7 @@ const renderGrid = () => {
                 MAX_PACKSIZE[item.name] >= item.amount + Number(getDraggedItem().getAttribute('amount'))
             )
                 addClass(block, 'combine')
+            addHoverSoundEffect(block) 
             block.addEventListener('click', checkReplace, true)
             grid.append(block)
         }
@@ -904,6 +908,7 @@ const OPTIONS = new Map([
 const createOption = (options, text) => {
     const elem = document.createElement('div')
     elem.textContent = `${text}`
+    addHoverSoundEffect(elem)
     elem.addEventListener('click', (e) => {
         e.stopPropagation()
         playClickSoundEffect()

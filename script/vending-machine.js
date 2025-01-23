@@ -125,6 +125,7 @@ const renderBuyItems = () => {
             const info = createAndAddClass('div', 'info')
             const left = createAndAddClass('div', 'left')
             const right = createAndAddClass('div', 'right')
+            addHoverSoundEffect(buyItem)
             buyItem.addEventListener('click', buyPopup)
             appendAll(left, name, amount)
             appendAll(right, price, buyItemCoin)
@@ -364,6 +365,7 @@ const renderUpgradeItems = () => {
             name.textContent = `${weapon.heading}`
             appendAll(wrapper, img, name)
             appendAll(weapon2Upgrade, wrapper)
+            addHoverSoundEffect(weapon2Upgrade)
             weapon2Upgrade.addEventListener('click', renderGunDetails)
             return weapon2Upgrade
         })
@@ -394,6 +396,7 @@ const renderDetail = (weaponObj, name) => {
     appendAll(lower, levels, values, price)
     appendAll(upgradeDetailComponent, title, lower)
     if (weaponObj[`${name.replace(' ', '')}lvl`] !== 5) {
+        addHoverSoundEffect(upgradeDetailComponent)
         upgradeDetailComponent.addEventListener('click', upgradePopup)
     }
     return upgradeDetailComponent
@@ -522,6 +525,7 @@ const renderSell = () => {
             const info = createAndAddClass('div', 'info')
             const left = createAndAddClass('div', 'left')
             const right = createAndAddClass('div', 'right')
+            addHoverSoundEffect(sellItem)
             sellItem.addEventListener('click', sellPopup)
             appendAll(left, name, amount)
             appendAll(right, price, sellItemCoin)
