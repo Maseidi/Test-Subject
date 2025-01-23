@@ -211,7 +211,7 @@ export const fDown = () => {
         const { name, amount, space } = element2Object(getElementInteractedWith())
         if (getPause() || !getElementInteractedWith()) return
         if (amount) {
-            if ( isEnoughSpace(name, space) ) playPickup(name)
+            if (isEnoughSpace(name, space)) playPickup(name)
             pickupDrop(getElementInteractedWith())
         }
         if (getShooting() || getReloading()) return
@@ -482,10 +482,7 @@ export const clickDown = event => {
     // right click
     else if (event.button === 2) {
         if (getGrabbed() || !getEquippedWeaponId()) return
-        if (isThrowing()) {
-            setNoAimAfterThrow(false)
-            return
-        }
+        setNoAimAfterThrow(false)
         if (getPause()) {
             setWaitingFunctions(getWaitingFunctions().filter(item => item.id !== 'aim-waiting-function'))
         } else aimWeapon()

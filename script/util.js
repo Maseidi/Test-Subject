@@ -18,8 +18,12 @@ import {
     getEntityId,
     getHealth,
     getLeftPressed,
+    getPlayerX,
+    getPlayerY,
     getPlayingDialogue,
     getRightPressed,
+    getRoomLeft,
+    getRoomTop,
     getThrowCounter,
     getUpPressed,
     setEntityId,
@@ -247,3 +251,14 @@ export const getDifficultyList = difficulty => {
 }
 
 export const getMapWithArrayValuesByKey = (map, key) => map.get(key) || []
+
+export const addSplatter = () => {
+    const splatter = createAndAddClass('img', 'splatter', 'fade-out', 'animation')
+    splatter.src = `../assets/images/splatter.png`
+    splatter.setAttribute('draggable', false)
+    splatter.style.left = `${getPlayerX() - getRoomLeft()}px`
+    splatter.style.top = `${getPlayerY() - getRoomTop()}px`
+    getCurrentRoom().append(splatter)
+    splatter.style.animationDuration = `10s`
+    splatter.addEventListener('animationend', () => splatter.remove())
+}

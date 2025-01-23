@@ -32,6 +32,7 @@ class Gun {
         firerate,
         description,
         price,
+        knock,
     ) {
         this.heading = heading
         this.ammotype = ammotype
@@ -46,6 +47,7 @@ class Gun {
         this.firerate = firerate
         this.description = description
         this.price = price
+        this.knock = knock
     }
 }
 
@@ -70,6 +72,7 @@ const gunDetails = new Map([
             [2, 1.9, 1.8, 1.7, 1.6],
             'A powerful magnum handy in very special scenarios',
             100,
+            250,
         ),
     ],
     [
@@ -79,7 +82,7 @@ const gunDetails = new Map([
             'magnumAmmo',
             14,
             'gray',
-            'purple', 
+            'purple',
             2,
             [750, 1122, 1548, 2028, 2562],
             [325, 400, 475, 550, 625],
@@ -88,6 +91,7 @@ const gunDetails = new Map([
             [2.2, 2.1, 2, 1.9, 1.8],
             'A magnum capable of tearing through every living creature',
             90,
+            200,
         ),
     ],
     [
@@ -106,6 +110,7 @@ const gunDetails = new Map([
             [2, 1.75, 1.5, 1.25, 1],
             'A high damage handgun making it a nice choice for every avid gun collector',
             15,
+            50,
         ),
     ],
     [
@@ -124,6 +129,7 @@ const gunDetails = new Map([
             [1.3, 1.2, 1.1, 1, 0.9],
             'Small and fast paced pistol with a pretty decent range',
             14,
+            50,
         ),
     ],
     [
@@ -142,6 +148,7 @@ const gunDetails = new Map([
             [1.2, 1.1, 1, 0.9, 0.8],
             'A handgun with a clip capacity that barely makes you think of reloading',
             13,
+            50,
         ),
     ],
     [
@@ -160,6 +167,7 @@ const gunDetails = new Map([
             [0.14, 0.13, 0.12, 0.11, 0.1],
             'Pretty balanced SMG useful for most cases',
             24,
+            25,
         ),
     ],
     [
@@ -178,6 +186,7 @@ const gunDetails = new Map([
             [0.15, 0.14, 0.13, 0.12, 0.11],
             'An SMG with high damage and huge capacity.',
             23,
+            25,
         ),
     ],
     [
@@ -196,6 +205,7 @@ const gunDetails = new Map([
             [0.13, 0.12, 0.11, 0.1, 0.09],
             'Decent range, fast reload and fire rate are the greatest highlights of this weapon',
             22,
+            25,
         ),
     ],
     [
@@ -214,6 +224,7 @@ const gunDetails = new Map([
             [0.13, 0.11, 0.09, 0.07, 0.05],
             'The insane fire rate and reload speed make up for its low damage',
             21,
+            25,
         ),
     ],
     [
@@ -232,6 +243,7 @@ const gunDetails = new Map([
             [2.5, 2.3, 2.1, 1.9, 1.7],
             'Long range shotgun suitable for dealing high damage from afar',
             35,
+            400,
         ),
     ],
     [
@@ -250,6 +262,7 @@ const gunDetails = new Map([
             [1.2, 1.1, 1, 0.9, 0.8],
             'A real boomstick ideal for shredding everything on its way',
             70,
+            350,
         ),
     ],
     [
@@ -268,6 +281,7 @@ const gunDetails = new Map([
             [0.9, 0.8, 0.7, 0.6, 0.5],
             'An automatic shotgun with an insane fire rate and magazine capacity',
             50,
+            300,
         ),
     ],
     [
@@ -286,6 +300,7 @@ const gunDetails = new Map([
             [2.4, 2.2, 2, 1.8, 1.6],
             'Slow paced sniper rifle focused primarily on dealing damage',
             65,
+            200,
         ),
     ],
     [
@@ -304,6 +319,7 @@ const gunDetails = new Map([
             [1.2, 1, 0.8, 0.6, 0.4],
             'A sniper rifle with incredibly fast fire rate making it one of a kind',
             75,
+            100,
         ),
     ],
     [
@@ -322,6 +338,7 @@ const gunDetails = new Map([
             [1.8, 1.6, 1.5, 1.4, 1.2],
             'Sniper rifle with the most balanced stats possible',
             70,
+            150,
         ),
     ],
 ])

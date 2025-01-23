@@ -4,6 +4,7 @@ import { damagePlayer } from '../../../player-health.js'
 import {
     addAllAttributes,
     addClass,
+    addSplatter,
     appendAll,
     createAndAddClass,
     exitAimModeAnimation,
@@ -62,6 +63,7 @@ export class GrabberGrabService {
     }
 
     grabPlayer() {
+        addSplatter()
         setAimMode(false)
         exitAimModeAnimation()
         removeEquipped()

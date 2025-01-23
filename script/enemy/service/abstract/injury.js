@@ -6,6 +6,7 @@ import {
 } from '../../../elements.js'
 import { getEnemies } from '../../../entities.js'
 import { isGun } from '../../../gun-details.js'
+import { knockEnemy } from '../../../knock-manager.js'
 import { dropLoot } from '../../../loot-manager.js'
 import {
     activateAllProgresses,
@@ -60,6 +61,7 @@ export class AbstractInjuryService {
         this.enemy.health = newHealth
         if (newHealth <= 0) this.killEnemy()
         else {
+            knockEnemy(this.enemy, name)
             addClass(this.enemy.sprite.firstElementChild.firstElementChild, 'damaged')
             this.enemy.damagedCounter = 1
             if (this.enemy.state === STUNNED) this.enemy.state = CHASE

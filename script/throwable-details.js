@@ -5,8 +5,8 @@ class Throwable {
         this.space = 1
         this.damage = damage
         this.range = 300
-        this.firerate = 1
         this.price = price
+        this.firerate = 0.5
     }
 }
 

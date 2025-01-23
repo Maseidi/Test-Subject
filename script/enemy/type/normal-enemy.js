@@ -32,6 +32,7 @@ class NormalEnemy extends AbstractEnemy {
         virus,
         difficulties,
         level,
+        knock,
     ) {
         super(
             type,
@@ -47,6 +48,7 @@ class NormalEnemy extends AbstractEnemy {
             virus,
             difficulties,
             level,
+            knock,
         )
 
         this.investigationService = new NormalInvestigationService(this)
@@ -84,7 +86,23 @@ export class Torturer extends NormalEnemy {
         const health = Math.floor(base * 180 + Math.random() * 20)
         const damage = Math.floor(base * 10 + Math.random() * 10)
         const maxSpeed = 3.5 + Math.random()
-        super(TORTURER, 4, waypoint, health, damage, maxSpeed, 600, 1.5, loot, progress, virus, difficulties, level)
+
+        super(
+            TORTURER,
+            4,
+            waypoint,
+            health,
+            damage,
+            maxSpeed,
+            600,
+            1.5,
+            loot,
+            progress,
+            virus,
+            difficulties,
+            level,
+            100,
+        )
     }
 }
 
@@ -94,7 +112,23 @@ export class SoulDrinker extends NormalEnemy {
         const health = Math.floor(base * 90 + Math.random() * 15)
         const damage = Math.floor(base * 5 + Math.random() * 5)
         const maxSpeed = 4.5 + Math.random()
-        super(SOUL_DRINKER, 4, waypoint, health, damage, maxSpeed, 400, 0.9, loot, progress, virus, difficulties, level)
+
+        super(
+            SOUL_DRINKER,
+            4,
+            waypoint,
+            health,
+            damage,
+            maxSpeed,
+            400,
+            0.9,
+            loot,
+            progress,
+            virus,
+            difficulties,
+            level,
+            50,
+        )
     }
 }
 
@@ -104,6 +138,22 @@ export class RockCrusher extends NormalEnemy {
         const health = Math.floor(base * 360 + Math.random() * 45)
         const damage = Math.floor(base * 30 + Math.random() * 20)
         const maxSpeed = 2.5 + Math.random()
-        super(ROCK_CRUSHER, 4, waypoint, health, damage, maxSpeed, 800, 1.8, loot, progress, virus, difficulties, level)
+
+        super(
+            ROCK_CRUSHER,
+            4,
+            waypoint,
+            health,
+            damage,
+            maxSpeed,
+            800,
+            1.8,
+            loot,
+            progress,
+            virus,
+            difficulties,
+            level,
+            300,
+        )
     }
 }

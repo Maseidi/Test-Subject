@@ -24,6 +24,7 @@ export class AbstractEnemy {
         virus,
         difficulty,
         level,
+        knock
     ) {
         this.type = type ?? null
         this.components = components ?? 0
@@ -41,9 +42,12 @@ export class AbstractEnemy {
         this.x = this.waypoint.points[0].x ?? 0
         this.y = this.waypoint.points[0].y ?? 0
         this.level = level ?? 1
+        this.knock = knock ?? 100
         this.loot = loot ?? {}
+
         this.difficulties = difficulty ? getDifficultyList(difficulty) : getDifficultyList(difficultyMap.MILD)
         this.balanceStatsBasedOnDifficulty()
+    
         this.angleService = new AbstractAngleService(this)
         this.injuryService = new AbstractInjuryService(this)
         this.offenceService = new AbstractOffenceService(this)

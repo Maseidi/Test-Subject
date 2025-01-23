@@ -16,7 +16,24 @@ export class Spiker extends AbstractEnemy {
         const health = Math.floor(base * 25 + Math.random() * 5)
         const damage = Math.floor(base * 5 + Math.random() * 5)
         const maxSpeed = 6 + Math.random()
-        super(SPIKER, 6, waypoint, health, damage, maxSpeed, 400, maxSpeed, loot, progress, virus, difficulties, level)
+
+        super(
+            SPIKER,
+            6,
+            waypoint,
+            health,
+            damage,
+            maxSpeed,
+            400,
+            maxSpeed,
+            loot,
+            progress,
+            virus,
+            difficulties,
+            level,
+            25,
+        )
+
         this.axis = Math.random() < 0.5 ? 1 : 2
         this.visionService = new SpikerVisionService(this)
         this.movementService = new SpikerMovementService(this)

@@ -240,26 +240,26 @@ const manageThrow = () => {
 }
 
 const throwAnimation = () => {
-    if (isThrowing()) setThrowCounter(getThrowCounter() + 1)
-    else return
+    if (!isThrowing()) return
+    setThrowCounter(getThrowCounter() + 1)
     const rightHand = getPlayer().firstElementChild.firstElementChild.children[2]
     const handHeight = getProperty(rightHand, 'height', 'px')
     const handTop = getProperty(rightHand, 'top', 'px')
     const throwable = findAttachmentsOnPlayer('throwable').children[1]
     const throwableTop = getProperty(throwable, 'top', 'px')
-    animateThrow(rightHand, 1, 13, `${handHeight - 1}px`, `${handTop + 1}px`)
-    animateThrow(rightHand, 14, 14, '2px', '0')
-    animateThrow(rightHand, 17, 28, `${handHeight + 1}px`, `${handTop + 0.08}px`)
-    animateThrow(rightHand, 29, 29, '', '')
-    if (getThrowCounter() === 29) throwable.style.top = ''
-    if (getThrowCounter() > 0 && getThrowCounter() <= 28) throwable.style.top = `${throwableTop + 1}px`
-    if (getThrowCounter() === 60) {
+    animateThrow(rightHand, 1, 8, `${handHeight - 1}px`, `${handTop + 1}px`)
+    animateThrow(rightHand, 9, 9, '2px', '0')
+    animateThrow(rightHand, 10, 18, `${handHeight + 1}px`, `${handTop + 0.08}px`)
+    animateThrow(rightHand, 19, 19, '', '')
+    if (getThrowCounter() === 19) {
         setThrowCounter(0)
+        throwable.style.top = ''
         if (getNoAimAfterThrow()) {
             exitAim()
             return
         }
     }
+    if (getThrowCounter() > 0 && getThrowCounter() <= 18) throwable.style.top = `${throwableTop + 1}px`
 }
 
 const animateThrow = (hand, start, end, height, top) => {
@@ -269,7 +269,7 @@ const animateThrow = (hand, start, end, height, top) => {
 }
 
 const throwItem = () => {
-    if (getThrowCounter() !== 28) return
+    if (getThrowCounter() !== 18) return
     const { srcX, srcY } = getSourceCoordinates()
     const { destX, destY } = getDestinationCoordinates()
     const diffY = destY - srcY

@@ -1,4 +1,5 @@
 import { getGunUpgradableDetail, isGun } from './gun-details.js'
+import { isThrowable } from './throwable-details.js'
 
 let playingSoudEffects = []
 export const setPlayingSoundEffects = val => {
@@ -50,6 +51,7 @@ export const playReload = equipped => {
 }
 
 export const playEquip = name => {
+    if ( isThrowable(name) ) return
     const gunShot = new Audio(`../assets/audio/weapon/equip/${name}.mp3`)
     setPlayingEquipSoundEffect(gunShot)
     gunShot.volume = 0.3

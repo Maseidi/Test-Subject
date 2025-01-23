@@ -33,6 +33,7 @@ import {
 } from './enemy/enemy-constants.js'
 import { getEnemies, getLoaders, getPopups, getRooms } from './entities.js'
 import { findEquippedTorchById, getInventory } from './inventory.js'
+import { knockPlayer } from './knock-manager.js'
 import { dropLoot } from './loot-manager.js'
 import { damagePlayer, infectPlayer2SpecificVirus, poisonPlayer, setPlayer2Fire } from './player-health.js'
 import { Popup } from './popup-manager.js'
@@ -44,6 +45,7 @@ import {
     addAllAttributes,
     addClass,
     addExplosion,
+    addSplatter,
     calculateBulletSpeed,
     collide,
     containsClass,
@@ -288,6 +290,7 @@ const manageBullets = () => {
         if (collide(bullet, getPlayer().firstElementChild, 0)) {
             if (!getGrabbed() && getNoOffenseCounter() === 0) {
                 damagePlayer(Number(bullet.getAttribute('damage')))
+                addSplatter()
                 if (containsClass(bullet, 'scorcher-bullet')) setPlayer2Fire()
                 if (containsClass(bullet, 'stinger-bullet')) poisonPlayer()
                 infectPlayer2SpecificVirus(bullet.getAttribute('virus'))
@@ -463,6 +466,8 @@ const explodePlayer = explosion => {
     if (getExplosionDamageCounter() !== 0) return
     if (!collide(getPlayer(), explosion, 0)) return
     damagePlayer((80 * getMaxHealth()) / 100)
+    knockPlayer(['U', 'L', 'R', 'D'].sort(() => Math.random() - 0.5)[0], 500)
+    addSplatter()
     setExplosionDamageCounter(1)
     setNoOffenseCounter(1)
 }

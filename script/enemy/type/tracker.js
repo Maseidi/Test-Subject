@@ -30,6 +30,7 @@ export class Tracker extends AbstractEnemy {
             virus,
             difficulties,
             level,
+            200,
         )
 
         this.notificationService = new TrackerNotificationService(this)

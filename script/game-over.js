@@ -6,6 +6,7 @@ import { finishUp } from './finishup.js'
 import { play } from './game.js'
 import { playTest } from './mapMaker/map-maker.js'
 import { return2MainMenu, return2MapMaker } from './pause-menu.js'
+import { addHoverSoundEffect, playClickSoundEffect } from './sound-manager.js'
 import { loadSurvivalFromSlot, prepareNewSurvivalData } from './survival/data-manager.js'
 import { getChaos } from './survival/variables.js'
 import { addClass, appendAll, createAndAddClass, removeAllClasses, removeEquipped } from './util.js'
@@ -77,7 +78,9 @@ const renderGameOverScreen = () => {
         : 'You are dead'
     const continueOption = createAndAddClass('div', 'common-option')
     continueOption.textContent = getIsSurvival() ? `try again` : 'continue'
+    addHoverSoundEffect(continueOption)
     continueOption.addEventListener('click', () => {
+        playClickSoundEffect()
         if (getIsMapMakerRoot()) {
             finishUp()
             playTest()
@@ -86,18 +89,30 @@ const renderGameOverScreen = () => {
         else startNewGame()
     })
     const loadGame = createAndAddClass('div', 'common-option')
-    loadGame.addEventListener('click', () => renderDesktop(true))
+    addHoverSoundEffect(loadGame)
+    loadGame.addEventListener('click', () => {
+        playClickSoundEffect()
+        renderDesktop(true)
+    })
     loadGame.textContent = 'load game'
     const mainMenu = createAndAddClass('div', 'common-option')
     mainMenu.textContent = 'return to main menu'
-    mainMenu.addEventListener('click', () => return2MainMenu())
+    addHoverSoundEffect(mainMenu)
+    mainMenu.addEventListener('click', () => {
+        playClickSoundEffect()
+        return2MainMenu()
+    })
     appendAll(gameOverContents, title, continueOption)
     if (getIsSurvival()) appendAll(gameOverContents, mainMenu)
     else if (!getIsMapMakerRoot()) appendAll(gameOverContents, loadGame, mainMenu)
     else {
         const mapMaker = createAndAddClass('div', 'common-option')
         mapMaker.textContent = 'return to map maker'
-        mapMaker.addEventListener('click', return2MapMaker)
+        addHoverSoundEffect(mapMaker)
+        mapMaker.addEventListener('click', () => {
+            playClickSoundEffect()
+            return2MapMaker()
+        })
         gameOverContents.append(mapMaker)
     }
     gameOverContainer.append(gameOverContents)

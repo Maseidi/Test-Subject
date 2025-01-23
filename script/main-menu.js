@@ -37,7 +37,7 @@ const options = () => {
     handleContinueOption(options)
     appendAll(options, survival())
     // appendAll(options, newGame(), loadGame(), survival())
-    // handleMapMakerOption(options)
+    handleMapMakerOption(options)
     options.append(lineBar())
     return options
 }

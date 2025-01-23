@@ -471,7 +471,7 @@ const defineVision = element => {
 }
 
 const defineBackwardDetector = enemyObject => {
-    if ([SPIKER, TRACKER].includes(enemyObject.type)) return
+    if (getIsSurvival() || [SPIKER, TRACKER].includes(enemyObject.type)) return
     const backwardDetector = createAndAddClass('div', `enemy-backward-detector`)
     addAllAttributes(
         backwardDetector,
