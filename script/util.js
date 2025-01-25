@@ -256,8 +256,8 @@ export const addSplatter = () => {
     const splatter = createAndAddClass('img', 'splatter', 'fade-out', 'animation')
     splatter.src = `../assets/images/splatter.png`
     splatter.setAttribute('draggable', false)
-    splatter.style.left = `${getPlayerX() - getRoomLeft()}px`
-    splatter.style.top = `${getPlayerY() - getRoomTop()}px`
+    splatter.style.left = `${getPlayerX() - getRoomLeft() + 17}px`
+    splatter.style.top = `${getPlayerY() - getRoomTop() + 17}px`
     getCurrentRoom().append(splatter)
     splatter.style.animationDuration = `10s`
     splatter.addEventListener('animationend', () => splatter.remove())

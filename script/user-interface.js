@@ -7,7 +7,7 @@ import {
     findEquippedWeaponById,
     updateInteractablePopups,
 } from './inventory.js'
-import { addHoverSoundEffect, playClickSoundEffect } from './sound-manager.js'
+import { addHoverSoundEffect, playClickSoundEffect, stopSaveSoundEffect, stopStashSoundEffect, stopVendingMachineSoundEffect } from './sound-manager.js'
 import { isThrowable } from './throwable-details.js'
 import { addClass, appendAll, containsClass, createAndAddClass, removeClass } from './util.js'
 import {
@@ -17,6 +17,7 @@ import {
     getHealth,
     getMaxHealth,
     getMaxStamina,
+    getPauseCause,
     getStamina,
 } from './variables.js'
 
@@ -106,8 +107,12 @@ export const quitPage = mapMaker => {
     if (
         !mapMaker &&
         (getPauseContainer().children.length === 0 || (getPauseContainer().children.length === 1 && getGrabbed()))
-    )
+    ) {
+        if (getPauseCause() === 'store') stopVendingMachineSoundEffect()
+        else if ( getPauseCause() === 'save' ) stopSaveSoundEffect()
+        else if ( getPauseCause() === 'stash' ) stopStashSoundEffect()
         managePause()
+    }
 }
 
 export const itemNotification = name => {

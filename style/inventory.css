@@ -21,7 +21,7 @@
     background-image: url('../assets/images/note.png');
 }
 
-.note-data {
+.note > * {
     font-family: kalam;
 }
 

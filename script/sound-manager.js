@@ -51,7 +51,7 @@ export const playReload = equipped => {
 }
 
 export const playEquip = name => {
-    if ( isThrowable(name) ) return
+    if (isThrowable(name)) return
     const gunShot = new Audio(`../assets/audio/weapon/equip/${name}.mp3`)
     setPlayingEquipSoundEffect(gunShot)
     gunShot.volume = 0.3
@@ -75,7 +75,6 @@ export const playPickup = name => {
     else if (isGun(name)) var pickup = new Audio('../assets/audio/pickup/gun-pickup.mp3')
     else if (name.toLowerCase().includes('ammo') || name.toLowerCase() === 'shotgunshells')
         var pickup = new Audio('../assets/audio/pickup/ammo-pickup.mp3')
-
     else var pickup = new Audio('../assets/audio/pickup/pickup.mp3')
     pickup.volume = 0.3
     playSound(pickup)
@@ -105,4 +104,31 @@ export const playClickSoundEffect = () => {
     const click = new Audio('../assets/audio/ui/click.mp3')
     click.volume = 0.1
     click.play()
+}
+
+const serenity = new Audio('../assets/audio/ui/serenity.mp3')
+serenity.volume = 0.1
+export const playVendingMachineSoundEffect = () => serenity.play()
+
+export const stopVendingMachineSoundEffect = () => {
+    serenity.currentTime = 0
+    serenity.pause()
+}
+
+const save = new Audio('../assets/audio/ui/save.mp3')
+save.volume = 0.1
+export const playSaveSoundEffect = () => save.play()
+
+export const stopSaveSoundEffect = () => {
+    save.currentTime = 0
+    save.pause()
+}
+
+const stash = new Audio('../assets/audio/ui/stash.mp3')
+stash.volume = 0.1
+export const playStashSoundEffect = () => stash.play()
+
+export const stopStashSoundEffect = () => {
+    stash.currentTime = 0
+    stash.pause()
 }

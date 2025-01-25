@@ -24,7 +24,7 @@ export const renderPopup = progress => {
         'timer',
         0,
         'duration',
-        5 * 60,
+        (popupObj.duration / 1000) * 60,
         'progress2active',
         popupObj.progress2Active,
         'fade-out',

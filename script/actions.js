@@ -33,6 +33,8 @@ import {
     getPlayingSoundEffects,
     playEquip,
     playPickup,
+    playStashSoundEffect,
+    playVendingMachineSoundEffect,
     setPlayingSoundEffects,
 } from './sound-manager.js'
 import { centralizePlayer } from './startup.js'
@@ -244,9 +246,15 @@ const processPart = (predicate, className) => {
     addClass(getGrabBar(), className)
 }
 
-const openStash = () => openPause('stash', renderStash)
+const openStash = () => {
+    playStashSoundEffect()
+    openPause('stash', renderStash)
+}
 
-const openVendingMachine = () => openPause('store', renderStore)
+const openVendingMachine = () => {
+    playVendingMachineSoundEffect()
+    openPause('store', renderStore)
+}
 
 const breakCrate = () => {
     dropLoot(getElementInteractedWith())

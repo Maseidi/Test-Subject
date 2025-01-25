@@ -46,7 +46,7 @@ export class AbstractInjuryService {
         this.enemy.damagedCounter = 0
     }
 
-    damageEnemy(name, damage, antivirus) {
+    damageEnemy(name, damage, antivirus, knock = false) {
         if (isGun(name) && this.enemy.virus === antivirus) {
             damage *= 1.2
             var sameVirus = this.enemy.virus
@@ -61,7 +61,7 @@ export class AbstractInjuryService {
         this.enemy.health = newHealth
         if (newHealth <= 0) this.killEnemy()
         else {
-            knockEnemy(this.enemy, name)
+            if (knock) knockEnemy(this.enemy, knock)
             addClass(this.enemy.sprite.firstElementChild.firstElementChild, 'damaged')
             this.enemy.damagedCounter = 1
             if (this.enemy.state === STUNNED) this.enemy.state = CHASE

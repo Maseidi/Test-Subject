@@ -1,5 +1,4 @@
 import { getCurrentRoomLoaders, getCurrentRoomSolid, getMapEl, getPlayer } from './elements.js'
-import { getGunDetail } from './gun-details.js'
 import { containsClass, getProperty } from './util.js'
 import {
     getHealth,
@@ -102,9 +101,8 @@ export const knockPlayer = (direction, knock) => {
     getPlayer().style.top = `${getPlayerY()}px`
 }
 
-export const knockEnemy = (enemy, gunName) => {
+export const knockEnemy = (enemy, knock) => {
     const sprite = enemy.sprite
-    const knock = getGunDetail(gunName, 'knock')
     const playerAngle = getPlayerAimAngle()
 
     const currentEnemyLeft = getProperty(sprite, 'left', 'px')

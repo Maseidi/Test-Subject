@@ -6,13 +6,15 @@ import { play } from './game.js'
 import { countItem, useInventoryResource } from './inventory.js'
 import { saveMapMakerAtSlot } from './mapMaker/data-manager.js'
 import { activateAllProgresses, getProgressValueByNumber } from './progress-manager.js'
-import { addHoverSoundEffect, playClickSoundEffect } from './sound-manager.js'
+import { addHoverSoundEffect, playClickSoundEffect, playSaveSoundEffect } from './sound-manager.js'
 import { loadSurvivalFromSlot, saveSurvivalAtSlot } from './survival/data-manager.js'
 import { addMessage, itemNotification, renderQuit } from './user-interface.js'
 import { appendAll, createAndAddClass } from './util.js'
-import { getIsSurvival } from './variables.js'
+import { getIsSurvival, setPauseCause } from './variables.js'
 
 export const turnOnComputer = () => {
+    playSaveSoundEffect()
+    setPauseCause('save')
     managePause()
     renderDesktop()
 }

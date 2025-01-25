@@ -16,7 +16,7 @@ import {
     setRooms,
     setWalls,
 } from '../entities.js'
-import { GunDrop, Lever, PC, PistolAmmo, Stash, VendingMachine } from '../interactables.js'
+import { GunDrop, Lever, Note, PC, PistolAmmo, Stash, VendingMachine } from '../interactables.js'
 import { getInventory, initInventory, pickupDrop, setInventory } from '../inventory.js'
 import {
     ARCTIC_WARFERE,
@@ -36,7 +36,9 @@ import {
     UZI,
 } from '../loot.js'
 import { getPasswords, initPasswords, setPasswords } from '../password-manager.js'
+import { Popup } from '../popup-manager.js'
 import { getProgress, initProgress, setProgress } from '../progress-manager.js'
+import { Progress } from '../progress.js'
 import { Room } from '../room.js'
 import { getShopItems, initShopItems, setShopItems } from '../shop-item.js'
 import { getStash, initStash, setStash } from '../stash.js'
@@ -154,9 +156,36 @@ export const prepareNewSurvivalData = () => {
     initNewSurvivalEntities()
     initConstants()
     pickupDrop(object2Element(new PistolAmmo(null, null, 30)))
+    pickupDrop(
+        object2Element(
+            new Note(
+                null,
+                null,
+                'Controls',
+                'Explanation of game controls',
+                `
+                <div>W , A , S , D => Movement</div>
+                <div>F => Interact</div>
+                <div>Shift => Sprint</div>
+                <div>Tab => Open inventory</div>
+                <div>1, 2, 3, 4 , Mouse wheel => Switch weapon slot</div>
+                <div>Right click => Aim</div>
+                <div>Left click + Aim => shoot</div>
+                <div>H => Use bandage</div>
+                `,
+                Progress.builder().setOnExamineProgress2Active('1005'),
+            ),
+        ),
+    )
+    initPopups()
 }
 
-const initRooms = () => setRooms(new Map([[1, new Room(1, 3000, 2000, 'Main Hall', 10, null, '#9ea395')]]))
+const initRooms = () =>
+    setRooms(
+        new Map([
+            [1, new Room(1, 3000, 2000, 'Main Hall', 10, Progress.builder().setProgress2Active('1000'), '#9ea395')],
+        ]),
+    )
 
 const initWalls = () =>
     setWalls(
@@ -202,6 +231,41 @@ const initNewSurvivalEntities = () => {
                 ],
             ],
         ]),
+    )
+}
+
+const initPopups = () => {
+    getPopups().push(new Popup(`Welcome to survival mode!`, { renderProgress: '1000', progress2Active: '1001' }, 3000))
+    getPopups().push(
+        new Popup(
+            `In this mode, you need to survive as many chaos waves as possible`,
+            { renderProgress: '1001', progress2Active: '1002' },
+            10000,
+        ),
+    )
+    getPopups().push(
+        new Popup(
+            `To end a chaos, you need to defeat all the enemies`,
+            { renderProgress: '1002', progress2Active: '1003' },
+            10000,
+        ),
+    )
+    getPopups().push(
+        new Popup(
+            `Earn resources and money during chaos waves and manage your items to prepare for the next chaos`,
+            { renderProgress: '1003', progress2Active: '1004' },
+            10000,
+        ),
+    )
+    getPopups().push(
+        new Popup(
+            `Use <span>Tab</span> to open inventory and view controls in the note`,
+            { renderProgress: '1004' },
+            10000,
+        ),
+    )
+    getPopups().push(
+        new Popup(`Trigger a chaos by toggling the lever when you are ready`, { renderProgress: '1005' }, 10000),
     )
 }
 
