@@ -10,9 +10,11 @@ import {
     initEnemies,
     initInteractables,
     initLoaders,
+    setDialogues,
     setEnemies,
     setInteractables,
     setLoaders,
+    setPopups,
     setRooms,
     setWalls,
 } from '../entities.js'
@@ -177,7 +179,8 @@ export const prepareNewSurvivalData = () => {
             ),
         ),
     )
-    initPopups()
+    initNewSurvivalPopups()
+    initNewSurvivalDialogues()
 }
 
 const initRooms = () =>
@@ -234,7 +237,8 @@ const initNewSurvivalEntities = () => {
     )
 }
 
-const initPopups = () => {
+const initNewSurvivalPopups = () => {
+    setPopups([])
     getPopups().push(new Popup(`Welcome to survival mode!`, { renderProgress: '1000', progress2Active: '1001' }, 3000))
     getPopups().push(
         new Popup(
@@ -268,6 +272,8 @@ const initPopups = () => {
         new Popup(`Trigger a chaos by toggling the lever when you are ready`, { renderProgress: '1005' }, 10000),
     )
 }
+
+const initNewSurvivalDialogues = () => setDialogues([])
 
 export const initConstants = () => {
     setUpPressed(false)

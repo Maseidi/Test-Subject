@@ -32,6 +32,7 @@
 .health-bar,
 .stamina-bar {
     height: 8px;
+    width: 390px;
     transform: skewX(-40deg);
     backdrop-filter: blur(3.3px);
     box-shadow: 1px 1px 10px white;
@@ -401,4 +402,31 @@
 .chaos-container-coin > img {
     width: 25px;
     display: block;
+}
+
+.joystick {
+    left: 50px;
+    width: 250px;
+    bottom: 50px;
+    height: 250px;
+    opacity: 0.3;
+    border-radius: 50%;
+}
+
+.joystick-center,
+.joystick-handle {
+    top: 50%;
+    left: 50%;
+    width: 10px;
+    height: 10px;
+    position: absolute;
+    border-radius: 50%;
+    background-color: red;
+    transform: translateX(-50%) translateY(-50%);
+}
+
+.joystick-handle {
+    width: 100px;
+    height: 100px;
+    background-color: white;
 }

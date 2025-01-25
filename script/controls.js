@@ -43,7 +43,7 @@ const keyDown = e => {
             case 'Digit2':
             case 'Digit3':
             case 'Digit4':
-                weaponSlotDown(e.key)
+                weaponSlotDown(e.code.toString().split('').reverse()[0])
                 break
             case 'ShiftLeft':
                 shiftDown()

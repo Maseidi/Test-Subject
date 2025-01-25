@@ -37,7 +37,7 @@ const options = () => {
     handleContinueOption(options)
     appendAll(options, survival())
     // appendAll(options, newGame(), loadGame(), survival())
-    handleMapMakerOption(options)
+    if ( screen.width >= 768 ) handleMapMakerOption(options)
     options.append(lineBar())
     return options
 }

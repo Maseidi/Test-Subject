@@ -111,14 +111,12 @@ export const createAndAddClass = (type, ...classNames) => {
 }
 
 export const distance = (first, second) => {
-    const { x: x1, y: y1 } = first.getBoundingClientRect()
-    const { x: x2, y: y2 } = second.getBoundingClientRect()
-    return distanceFormula(x1, y1, x2, y2)
+    const { x: x1, y: y1, width: w1, height: h1 } = first.getBoundingClientRect()
+    const { x: x2, y: y2, width: w2, height: h2 } = second.getBoundingClientRect()
+    return distanceFormula(x1 + w1 / 2, y1 + h1 / 2, x2 + w2 / 2, y2 + h2 / 2)
 }
 
-export const distanceFormula = (x1, y1, x2, y2) => {
-    return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2))
-}
+export const distanceFormula = (x1, y1, x2, y2) => Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2))
 
 export const isLowHealth = () => getHealth() <= 20
 

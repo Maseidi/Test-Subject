@@ -105,6 +105,31 @@ import {
 import { renderStore } from './vending-machine.js'
 import { setupReload } from './weapon-manager.js'
 
+export const movePlayer = angle => {
+    stopMovement()
+    if ((angle >= 0 && angle < 22.5) || (angle >= -22.5 && angle < 0)) {
+        sDown()
+    } else if (angle >= 22.5 && angle < 67.5) {
+        sDown()
+        aDown()
+    } else if (angle >= 67.5 && angle < 112.5) {
+        aDown()
+    } else if (angle >= 112.5 && angle < 157.5) {
+        aDown()
+        wDown()
+    } else if ((angle >= 157.5 && angle < 180) || (angle >= -180 && angle < -157.5)) {
+        wDown()
+    } else if (angle >= -157.5 && angle < -112.5) {
+        wDown()
+        dDown()
+    } else if (angle >= -112.5 && angle < -67.5) {
+        dDown()
+    } else {
+        dDown()
+        sDown()
+    }
+}
+
 export const wDown = () => enableDirection(getUpPressed, getDownPressed, setUpPressed, setDownPressed)
 
 export const aDown = () => enableDirection(getLeftPressed, getRightPressed, setLeftPressed, setRightPressed)
@@ -437,6 +462,13 @@ export const unequipTorch = () => {
     setEquippedTorchId(null)
     removeTorch()
     renderShadow(getRooms().get(getCurrentRoomId()).brightness * 10)
+}
+
+export const stopMovement = () => {
+    sUp()
+    aUp()
+    wUp()
+    dUp()
 }
 
 export const wUp = () => disableDirection(setUpPressed, setDownPressed)

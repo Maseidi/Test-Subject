@@ -1,4 +1,4 @@
-import { managePause } from './actions.js'
+import { managePause, movePlayer, stopMovement } from './actions.js'
 import { getPauseContainer, getUiEl, setUiEl } from './elements.js'
 import {
     calculateThrowableAmount,
@@ -7,9 +7,15 @@ import {
     findEquippedWeaponById,
     updateInteractablePopups,
 } from './inventory.js'
-import { addHoverSoundEffect, playClickSoundEffect, stopSaveSoundEffect, stopStashSoundEffect, stopVendingMachineSoundEffect } from './sound-manager.js'
+import {
+    addHoverSoundEffect,
+    playClickSoundEffect,
+    stopSaveSoundEffect,
+    stopStashSoundEffect,
+    stopVendingMachineSoundEffect,
+} from './sound-manager.js'
 import { isThrowable } from './throwable-details.js'
-import { addClass, appendAll, containsClass, createAndAddClass, removeClass } from './util.js'
+import { addClass, angleOf2Points, appendAll, containsClass, createAndAddClass, removeClass } from './util.js'
 import {
     getDraggedItem,
     getEquippedWeaponId,
@@ -37,7 +43,6 @@ const renderBackground = () => {
 
 const renderHealthBar = () => {
     const healthBarEl = createAndAddClass('div', 'health-bar')
-    healthBarEl.style.width = `390px`
     const healthEl = createAndAddClass('div', 'health')
     healthBarEl.append(healthEl)
     getUiEl().append(healthBarEl)
@@ -49,7 +54,6 @@ export const healthManager = inputHealth =>
 
 const renderStaminaBar = () => {
     const staminaBarEl = createAndAddClass('div', 'stamina-bar')
-    staminaBarEl.style.width = `390px`
     const staminaEl = createAndAddClass('div', 'stamina')
     staminaBarEl.append(staminaEl)
     getUiEl().append(staminaBarEl)
@@ -109,8 +113,8 @@ export const quitPage = mapMaker => {
         (getPauseContainer().children.length === 0 || (getPauseContainer().children.length === 1 && getGrabbed()))
     ) {
         if (getPauseCause() === 'store') stopVendingMachineSoundEffect()
-        else if ( getPauseCause() === 'save' ) stopSaveSoundEffect()
-        else if ( getPauseCause() === 'stash' ) stopStashSoundEffect()
+        else if (getPauseCause() === 'save') stopSaveSoundEffect()
+        else if (getPauseCause() === 'stash') stopStashSoundEffect()
         managePause()
     }
 }
@@ -133,4 +137,32 @@ export const addMessage = (input, popup) => {
         removeClass(message, 'message-animation')
         message.textContent = ''
     })
+}
+
+export const renderMovementJoystick = () => {
+    if (screen.width > 768) return
+    const root = document.getElementById('root')
+    const joystick = createAndAddClass('div', 'joystick', 'ui-theme')
+    const handle = createAndAddClass('div', 'joystick-handle')
+    joystick.append(handle)
+    const center = createAndAddClass('div', 'joystick-center')
+    joystick.append(center)
+    handle.addEventListener('touchmove', e => {
+        e.preventDefault()
+        const { x, y } = joystick.getBoundingClientRect()
+        let { x: centerX, y: centerY, width: centerW, height: centerH } = center.getBoundingClientRect()
+        centerX -= centerW / 2
+        centerY -= centerH / 2
+        const newX = e.touches[0].pageX
+        const newY = e.touches[0].pageY
+        handle.style.left = `${newX - x}px`
+        handle.style.top = `${newY - y}px`
+        const angle = angleOf2Points(centerX, centerY, newX, newY)
+        movePlayer(angle)
+    })
+    handle.addEventListener('touchend', () => {
+        stopMovement()
+        handle.style = ''
+    })
+    root.append(joystick)
 }

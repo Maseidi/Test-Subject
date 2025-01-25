@@ -16,7 +16,7 @@ import {
 import { renderVirusIcon } from './player-health.js'
 import { loadCurrentRoom } from './room-loader.js'
 import { playFootstep } from './sound-manager.js'
-import { renderUi } from './user-interface.js'
+import { renderMovementJoystick, renderUi } from './user-interface.js'
 import { appendAll, createAndAddClass } from './util.js'
 import { getInfection, getPlayerAngle, getPlayerX, getPlayerY, setMapX, setMapY } from './variables.js'
 
@@ -34,6 +34,7 @@ export const startUp = () => {
     getMapEl().append(renderPlayer())
     renderCurrentRoom()
     centralizePlayer()
+    renderMovementJoystick()
 }
 
 const renderRoomNameContainer = () => renderContainer('room-name-container', setRoomNameContainer)
