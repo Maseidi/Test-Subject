@@ -1,5 +1,15 @@
-import { managePause, movePlayer, stopMovement } from './actions.js'
-import { getPauseContainer, getUiEl, setUiEl } from './elements.js'
+import { fDown, hDown, managePause, movePlayer, shiftDown, shiftUp, stopMovement, tabDown } from './actions.js'
+import {
+    getPauseContainer,
+    getUiEl,
+    setAimJoystick,
+    setHealButton,
+    setInteractButton,
+    setInventoryButton,
+    setMovementJoystick,
+    setSprintButton,
+    setUiEl,
+} from './elements.js'
 import {
     calculateThrowableAmount,
     calculateTotalAmmo,
@@ -7,6 +17,7 @@ import {
     findEquippedWeaponById,
     updateInteractablePopups,
 } from './inventory.js'
+import { IS_MOBILE } from './script.js'
 import {
     addHoverSoundEffect,
     playClickSoundEffect,
@@ -139,10 +150,21 @@ export const addMessage = (input, popup) => {
     })
 }
 
-export const renderMovementJoystick = () => {
-    if (screen.width > 768) return
+export const renderMovementJoystick = () => renderJoystick('movement', movePlayer, setMovementJoystick)
+
+export const renderAimJoystick = () =>
+    renderJoystick(
+        'aim',
+        () => {
+            console.log(1)
+        },
+        setAimJoystick,
+    )
+
+const renderJoystick = (type, onTouchMove, setter, index) => {
+    if (!IS_MOBILE) return
     const root = document.getElementById('root')
-    const joystick = createAndAddClass('div', 'joystick', 'ui-theme')
+    const joystick = createAndAddClass('div', `${type}-joystick`, 'joystick', 'ui-theme')
     const handle = createAndAddClass('div', 'joystick-handle')
     joystick.append(handle)
     const center = createAndAddClass('div', 'joystick-center')
@@ -158,11 +180,38 @@ export const renderMovementJoystick = () => {
         handle.style.left = `${newX - x}px`
         handle.style.top = `${newY - y}px`
         const angle = angleOf2Points(centerX, centerY, newX, newY)
-        movePlayer(angle)
+        onTouchMove(angle)
     })
     handle.addEventListener('touchend', () => {
         stopMovement()
         handle.style = ''
     })
+    setter(joystick)
     root.append(joystick)
+}
+
+export const renderSprintButton = () => renderButton('sprint', null, shiftUp, setSprintButton, shiftDown)
+
+export const renderInventoryButton = () => renderButton('inventory', tabDown, null, setInventoryButton)
+
+export const renderInteractButton = () => renderButton('interact', fDown, null, setInteractButton)
+
+export const renderHealButton = () =>
+    renderButton('heal', hDown, null, setHealButton, null, getHealth() >= getMaxHealth() || countItem('bandage') === 0)
+
+const renderButton = (name, onTouchStart, onTouchEnd, setter, onTouchEvenOnDisabled, disabledPredicate) => {
+    if (!IS_MOBILE) return
+    const root = document.getElementById('root')
+    const button = createAndAddClass('div', 'mobile-control-btn', `mobile-${name}-btn`, 'ui-theme')
+    const image = new Image()
+    image.src = `./assets/images/${name}.png`
+    button.append(image)
+    if (disabledPredicate === true) addClass(button, 'disabled')
+    button.addEventListener('touchstart', e => {
+        onTouchEvenOnDisabled?.()
+        if (!containsClass(e.currentTarget, 'disabled')) onTouchStart?.()
+    })
+    button.addEventListener('touchend', () => onTouchEnd?.())
+    setter(button)
+    root.append(button)
 }

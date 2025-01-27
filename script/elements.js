@@ -100,12 +100,6 @@ export const setGrabBar = val => {
 }
 export const getGrabBar = () => grabBar
 
-let buffer = null
-export const setBuffer = val => {
-    buffer = val
-}
-export const getBuffer = () => buffer
-
 let popupContainer = null
 export const setPopupContainer = val => {
     popupContainer = val
@@ -147,3 +141,39 @@ export const setMainMenuEl = val => {
     mainMenuEl = val
 }
 export const getMainMenuEl = () => mainMenuEl
+
+let movementJoyStick = null
+export const setMovementJoystick = val => {
+    movementJoyStick = val
+}
+export const getMovementJoystick = () => movementJoyStick
+
+let aimJoyStick = null
+export const setAimJoystick = val => {
+    aimJoyStick = val
+}
+export const getAimJoystick = () => aimJoyStick
+
+let sprintButton = null
+export const setSprintButton = val => {
+    sprintButton = val
+}
+export const getSprintButton = () => sprintButton
+
+let inventoryButton = null
+export const setInventoryButton = val => {
+    inventoryButton = val
+}
+export const getInventoryButton = () => inventoryButton
+
+let interactButton = null
+export const setInteractButton = val => {
+    interactButton = val
+}
+export const getInteractButton = () => interactButton
+
+let healButton = null
+export const setHealButton = val => {
+    healButton = val
+}
+export const getHealButton = () => healButton

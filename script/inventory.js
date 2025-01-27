@@ -2,6 +2,7 @@ import { equipTorch, unequipTorch } from './actions.js'
 import {
     getCurrentRoomEnemies,
     getCurrentRoomInteractables,
+    getHealButton,
     getPauseContainer,
     getPlayer,
     getUiEl,
@@ -23,6 +24,7 @@ import {
     toggleDoor,
 } from './progress-manager.js'
 import { renderInteractable } from './room-loader.js'
+import { IS_MOBILE } from './script.js'
 import { playClickSoundEffect } from './sound-manager.js'
 import { isThrowable } from './throwable-details.js'
 import { renderThrowable } from './throwable-loader.js'
@@ -51,6 +53,7 @@ import {
     getElementInteractedWith,
     getEquippedTorchId,
     getEquippedWeaponId,
+    getHealth,
     getIsSurvival,
     getMaxHealth,
     getMaxStamina,
@@ -125,7 +128,8 @@ export const pickupDrop = drop => {
     checkSpecialScenarios()
     handleVaccinePickup(dropObject)
     updateInteractablePopups()
-    if (!getIsSurvival()) handleBandageFirstTimePickup()
+    handleBandageFirstTimePickup()
+    if (countItem('bandage') > 0 && getHealth() < getMaxHealth()) removeClass(getHealButton(), 'disabled')
 }
 
 const searchPack = () => {
@@ -227,6 +231,7 @@ export const updateInteractablePopup = interactable => {
 }
 
 const handleBandageFirstTimePickup = () => {
+    if (getIsSurvival()) return
     if (getProgressValueByNumber('1000001')) return
     if (countItem('bandage') === 0) return
     getPopups().push(new Popup('<span>H</span> Use bandage to heal', { renderProgress: '1000001' }, 3000))
@@ -468,6 +473,7 @@ const addOptionsEvent = e => {
     playClickSoundEffect()
     const target = e.currentTarget
     const options = createAndAddClass('div', 'options')
+    if (IS_MOBILE) addClass(options, 'mobile-options')
     renderOptions(target, options)
     target.addEventListener('mouseleave', () => options.remove())
     target.append(options)

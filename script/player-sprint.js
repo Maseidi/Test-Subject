@@ -1,4 +1,4 @@
-import { getCurrentRoomEnemies, getPlayer } from './elements.js'
+import { getCurrentRoomEnemies, getPlayer, getSprintButton } from './elements.js'
 import { TRACKER } from './enemy/enemy-constants.js'
 import { staminaManager } from './user-interface.js'
 import { addClass, isMoving, removeClass } from './util.js'
@@ -19,6 +19,11 @@ import {
 } from './variables.js'
 
 export const manageSprint = () => {
+    if (getSprintButton()) {
+        if (getRefillStamina()) addClass(getSprintButton(), 'disabled')
+        else removeClass(getSprintButton(), 'disabled')
+    }
+
     if (getSprintPressed() && !getAimMode() && isMoving() && !getGrabbed()) {
         if (!getRefillStamina() && getAllowMove()) {
             handleSprintAndStamina(true, addClass, -2, getRefillStamina())
@@ -32,7 +37,7 @@ export const manageSprint = () => {
     }
     handleSprintAndStamina(false, removeClass, 1, getRefillStamina())
     if (getStamina() >= getMaxStamina())
-        handleSprintAndStamina(getSprint(), null, getMaxStamina() - getStamina(), getRefillStamina())
+        handleSprintAndStamina(getSprint(), null, getMaxStamina() - getStamina(), false)
 }
 
 const handleSprintAndStamina = (sprint, animator, stamina, refill) => {

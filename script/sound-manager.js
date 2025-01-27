@@ -106,8 +106,17 @@ export const playClickSoundEffect = () => {
     click.play()
 }
 
+const addLoop = (sound) => {
+    sound.addEventListener('ended', () => {
+        sound.pause()
+        sound.currentTime = 0
+        sound.play()
+    })
+}
+
 const serenity = new Audio('../assets/audio/ui/serenity.mp3')
 serenity.volume = 0.1
+addLoop(serenity)
 export const playVendingMachineSoundEffect = () => serenity.play()
 
 export const stopVendingMachineSoundEffect = () => {
@@ -117,6 +126,7 @@ export const stopVendingMachineSoundEffect = () => {
 
 const save = new Audio('../assets/audio/ui/save.mp3')
 save.volume = 0.1
+addLoop(save)
 export const playSaveSoundEffect = () => save.play()
 
 export const stopSaveSoundEffect = () => {
@@ -126,6 +136,7 @@ export const stopSaveSoundEffect = () => {
 
 const stash = new Audio('../assets/audio/ui/stash.mp3')
 stash.volume = 0.1
+addLoop(stash)
 export const playStashSoundEffect = () => stash.play()
 
 export const stopStashSoundEffect = () => {

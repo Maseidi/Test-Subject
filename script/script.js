@@ -8,5 +8,10 @@ for (let i = 0; i < 5; i++)
 for (let i = 0; i < 10; i++)
     if (!localStorage.getItem(`survival-slot-${i + 1}`)) localStorage.setItem(`survival-slot-${i + 1}`, 'empty')
 
+export const IS_MOBILE = ['android', 'iphone', 'ipad', 'webos', 'blackberry', 'windows phone'].reduce(
+    (a, b) => a || navigator.userAgent.toLowerCase().includes(b),
+    false,
+)
+
 window.addEventListener('contextmenu', e => e.preventDefault())
 renderMainMenu()

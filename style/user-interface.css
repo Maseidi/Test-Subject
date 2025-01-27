@@ -405,12 +405,20 @@
 }
 
 .joystick {
-    left: 50px;
-    width: 250px;
     bottom: 50px;
+    width: 250px;
     height: 250px;
     opacity: 0.3;
     border-radius: 50%;
+}
+
+.movement-joystick {
+    left: 50px;
+}
+
+.aim-joystick {
+    left: unset;
+    right: 50px;
 }
 
 .joystick-center,
@@ -429,4 +437,46 @@
     width: 100px;
     height: 100px;
     background-color: white;
+}
+
+.mobile-control-btn {
+    width: 70px;
+    height: 70px;
+    padding: 5px;
+    opacity: 0.3;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+}
+
+.mobile-control-btn > img {
+    width: 70%;
+}
+
+.mobile-sprint-btn {
+    left: unset;
+    right: 350px;
+    bottom: 50px;
+}
+
+.mobile-inventory-btn {
+    left: unset;
+    right: 330px;
+    bottom: 150px;
+}
+
+.mobile-interact-btn {
+    left: unset;
+    right: 310px;
+    bottom: 250px;
+}
+
+.mobile-heal-btn {
+    left: unset;
+    right: 230px;
+    bottom: 325px;
+}
+
+.mobile-control-btn.disabled {
+    opacity: 0.1;
 }

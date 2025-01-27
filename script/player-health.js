@@ -1,6 +1,6 @@
-import { getCurrentRoomEnemies, getHealthStatusContainer, getMapEl, getPlayer } from './elements.js'
+import { getCurrentRoomEnemies, getHealButton, getHealthStatusContainer, getMapEl, getPlayer } from './elements.js'
 import { CHASE, NO_OFFENCE } from './enemy/enemy-constants.js'
-import { getInventory, useInventoryResource } from './inventory.js'
+import { countItem, getInventory, useInventoryResource } from './inventory.js'
 import { healthManager } from './user-interface.js'
 import {
     addAllClasses,
@@ -84,6 +84,7 @@ export const useBandage = bandage => {
     let newHealth = Math.min(getHealth() + getMaxHealth() / 5, getMaxHealth())
     bandage.amount -= 1
     modifyHealth(newHealth)
+    if (bandage.amount === 0 && getHealButton()) addClass(getHealButton(), 'disabled')
     if (!isLowHealth()) renderDangerStateEffect(removeHealthStatusChildByClassName, removeClass)
 }
 
@@ -111,12 +112,7 @@ export const damagePlayer = damage => {
     if (getNoOffenseCounter() !== 0) return
     addAllClasses(getMapEl(), 'camera-shake', 'animation')
     getMapEl().addEventListener('animationend', () => removeAllClasses(getMapEl(), 'camera-shake', 'animation'))
-    if (
-        getInventory()
-            .flat()
-            .find(item => item && item.name === 'armor')
-    )
-        damage /= 2
+    if (countItem('armor') > 0) damage /= 2
     let newHealth = getHealth() - damage
     newHealth = newHealth < 0 ? 0 : newHealth
     modifyHealth(newHealth)
@@ -134,6 +130,9 @@ const noOffenceAllEnemies = () => {
 const modifyHealth = val => {
     setHealth(val)
     healthManager(getHealth())
+    if (!getHealButton()) return
+    if (getHealth() >= getMaxHealth()) addClass(getHealButton(), 'disabled')
+    else if (countItem('bandage') > 0) removeClass(getHealButton(), 'disabled')
 }
 
 const renderDangerStateEffect = (lowHealthContainerCallbackFn, classCallbackFn) => {

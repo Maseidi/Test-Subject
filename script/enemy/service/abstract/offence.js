@@ -13,7 +13,7 @@ export class AbstractOffenceService {
         if (getNoOffenseCounter() === 0) addAllClasses(arm, 'attack', 'animation')
         damagePlayer(this.enemy.damage)
         arm.addEventListener('animationend', () => removeClass(arm, 'attack', 'animation'))
-        this.infectPlayer()
+        // this.infectPlayer()
         this.knockPlayer()
         addSplatter()
     }

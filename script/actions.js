@@ -1,11 +1,17 @@
 import { turnOnComputer } from './computer.js'
 import {
+    getAimJoystick,
     getDialogueContainer,
     getGrabBar,
+    getHealButton,
+    getInteractButton,
+    getInventoryButton,
+    getMovementJoystick,
     getPauseContainer,
     getPlayer,
     getPopupContainer,
     getRoomNameContainer,
+    getSprintButton,
     getUiEl,
 } from './elements.js'
 import { getEnemies, getRooms } from './entities.js'
@@ -43,7 +49,17 @@ import { startChaos } from './survival/chaos-manager.js'
 import { isThrowable } from './throwable-details.js'
 import { renderThrowable } from './throwable-loader.js'
 import { removeTorch, renderTorch } from './torch-loader.js'
-import { quitPage, renderUi, renderWeaponUi } from './user-interface.js'
+import {
+    quitPage,
+    renderAimJoystick,
+    renderHealButton,
+    renderInteractButton,
+    renderInventoryButton,
+    renderMovementJoystick,
+    renderSprintButton,
+    renderUi,
+    renderWeaponUi,
+} from './user-interface.js'
 import {
     addClass,
     angleOf2Points,
@@ -106,7 +122,11 @@ import { renderStore } from './vending-machine.js'
 import { setupReload } from './weapon-manager.js'
 
 export const movePlayer = angle => {
-    stopMovement()
+    disableDirectionStates(setRightPressed, setLeftPressed)
+    disableDirectionStates(setLeftPressed, setRightPressed)
+    disableDirectionStates(setUpPressed, setDownPressed)
+    disableDirectionStates(setDownPressed, setUpPressed)
+
     if ((angle >= 0 && angle < 22.5) || (angle >= -22.5 && angle < 0)) {
         sDown()
     } else if (angle >= 22.5 && angle < 67.5) {
@@ -354,6 +374,12 @@ const stopAnimations = () => {
 
 const removeUi = () => {
     getUiEl().remove()
+    getMovementJoystick()?.remove()
+    getAimJoystick()?.remove()
+    getSprintButton()?.remove()
+    getInventoryButton()?.remove()
+    getInteractButton()?.remove()
+    getHealButton()?.remove()
     getPopupContainer().style.opacity = '0'
     getRoomNameContainer().style.opacity = '0'
     getDialogueContainer().style.opacity = '0'
@@ -380,6 +406,12 @@ const resumeAnimations = () => {
 
 const showUi = () => {
     renderUi()
+    renderMovementJoystick()
+    renderAimJoystick()
+    renderSprintButton()
+    renderInventoryButton()
+    renderInteractButton()
+    renderHealButton()
     getPopupContainer().style.opacity = '1'
     getRoomNameContainer().style.opacity = '1'
     getDialogueContainer().style.opacity = '1'
@@ -480,9 +512,13 @@ export const sUp = () => disableDirection(setDownPressed, setUpPressed)
 export const dUp = () => disableDirection(setRightPressed, setLeftPressed)
 
 const disableDirection = (setPressed, setOppositePressed) => {
+    disableDirectionStates(setPressed, setOppositePressed)
+    stopWalkingAnimation()
+}
+
+const disableDirectionStates = (setPressed, setOppositePressed) => {
     if (getPoisoned()) setOppositePressed(false)
     else setPressed(false)
-    stopWalkingAnimation()
 }
 
 export const shiftUp = () => {

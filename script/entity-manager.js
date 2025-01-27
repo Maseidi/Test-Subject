@@ -12,6 +12,7 @@ import {
     getCurrentRoomSolid,
     getCurrentRoomThrowables,
     getDialogueContainer,
+    getInteractButton,
     getPlayer,
     getPopupContainer,
     getRoomNameContainer,
@@ -157,6 +158,9 @@ const manageInteractables = () => {
                 hanldeRestOfInteractables(int)
         }
     })
+    if (!getInteractButton()) return
+    if (getElementInteractedWith()) removeClass(getInteractButton(), 'disabled')
+    else addClass(getInteractButton(), 'disabled')
 }
 
 const findNearInteractables = () => {

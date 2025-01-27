@@ -4,6 +4,7 @@ import { getMainMenuEl, setMainMenuEl } from './elements.js'
 import { play } from './game.js'
 import { loadMapMakerFromSlot, prepareNewMapMakerData } from './mapMaker/data-manager.js'
 import { renderMapMaker } from './mapMaker/map-maker.js'
+import { IS_MOBILE } from './script.js'
 import { addHoverSoundEffect, playClickSoundEffect } from './sound-manager.js'
 import { loadSurvivalFromSlot, prepareNewSurvivalData } from './survival/data-manager.js'
 import { addClass, appendAll, createAndAddClass, difficulties, removeClass } from './util.js'
@@ -37,7 +38,7 @@ const options = () => {
     handleContinueOption(options)
     appendAll(options, survival())
     // appendAll(options, newGame(), loadGame(), survival())
-    if ( screen.width >= 768 ) handleMapMakerOption(options)
+    if (!IS_MOBILE) handleMapMakerOption(options)
     options.append(lineBar())
     return options
 }
