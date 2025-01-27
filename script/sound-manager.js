@@ -1,4 +1,5 @@
 import { getGunUpgradableDetail, isGun } from './gun-details.js'
+import { IS_MOBILE } from './script.js'
 import { isThrowable } from './throwable-details.js'
 
 let playingSoudEffects = []
@@ -93,6 +94,7 @@ export const playUpgrade = () => {
 }
 
 export const addHoverSoundEffect = element => {
+    if (IS_MOBILE) return
     element.addEventListener('mouseenter', () => {
         const hover = new Audio('../assets/audio/ui/hover.mp3')
         hover.volume = 0.1
@@ -106,7 +108,7 @@ export const playClickSoundEffect = () => {
     click.play()
 }
 
-const addLoop = (sound) => {
+const addLoop = sound => {
     sound.addEventListener('ended', () => {
         sound.pause()
         sound.currentTime = 0

@@ -444,8 +444,8 @@
     height: 70px;
     padding: 5px;
     opacity: 0.3;
-    border-radius: 50%;
     display: grid;
+    border-radius: 50%;
     place-items: center;
 }
 
@@ -455,7 +455,7 @@
 
 .mobile-sprint-btn {
     left: unset;
-    right: 350px;
+    right: 320px;
     bottom: 50px;
 }
 
@@ -474,9 +474,34 @@
 .mobile-heal-btn {
     left: unset;
     right: 230px;
-    bottom: 325px;
+    bottom: 310px;
+}
+
+.mobile-reload-btn {
+    left: unset;
+    right: 130px;
+    bottom: 330px;
+}
+
+.mobile-pause-btn {
+    left: 50px;
+    bottom: 310px;
 }
 
 .mobile-control-btn.disabled {
     opacity: 0.1;
+}
+
+.slot-container {
+    gap: 20px;
+    left: 50%;
+    z-index: 70;
+    bottom: 50px;
+    display: flex;
+    position: fixed;
+    transform: translateX(-50%);
+}
+
+.slot-container > div {
+    position: unset;
 }

@@ -15,6 +15,7 @@ import {
 } from './elements.js'
 import { renderVirusIcon } from './player-health.js'
 import { loadCurrentRoom } from './room-loader.js'
+import { IS_MOBILE } from './script.js'
 import { playFootstep } from './sound-manager.js'
 import {
     renderAimJoystick,
@@ -22,10 +23,13 @@ import {
     renderInteractButton,
     renderInventoryButton,
     renderMovementJoystick,
+    renderPauseButton,
+    renderReloadButton,
+    renderSlots,
     renderSprintButton,
     renderUi,
 } from './user-interface.js'
-import { appendAll, createAndAddClass } from './util.js'
+import { addClass, appendAll, createAndAddClass } from './util.js'
 import { getInfection, getPlayerAngle, getPlayerX, getPlayerY, setMapX, setMapY } from './variables.js'
 
 export const startUp = () => {
@@ -48,6 +52,9 @@ export const startUp = () => {
     renderInventoryButton()
     renderInteractButton()
     renderHealButton()
+    renderReloadButton()
+    renderPauseButton()
+    renderSlots()
 }
 
 const renderRoomNameContainer = () => renderContainer('room-name-container', setRoomNameContainer)
@@ -59,6 +66,7 @@ const renderPopupContainer = () => renderContainer('popupover-container', setPop
 const renderHealthStatusContainer = () => {
     renderContainer('health-status-container', setHealthStatusContainer)
     const infectedContainer = createAndAddClass('div', 'infected-container')
+    if (IS_MOBILE) addClass(infectedContainer, 'mobile-infected-container')
     const virusBar = createAndAddClass('div', 'virus-bar')
     infectedContainer.append(virusBar)
     getHealthStatusContainer().append(infectedContainer)

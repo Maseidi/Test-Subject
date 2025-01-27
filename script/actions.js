@@ -7,10 +7,13 @@ import {
     getInteractButton,
     getInventoryButton,
     getMovementJoystick,
+    getPauseButton,
     getPauseContainer,
     getPlayer,
     getPopupContainer,
+    getReloadButton,
     getRoomNameContainer,
+    getSlotsContainer,
     getSprintButton,
     getUiEl,
 } from './elements.js'
@@ -34,6 +37,7 @@ import { renderPasswordInput } from './password-manager.js'
 import { renderPauseMenu } from './pause-menu.js'
 import { damagePlayer, findHealtStatusChildByClassName, heal } from './player-health.js'
 import { activateAllProgresses, deactivateAllProgresses, getProgress } from './progress-manager.js'
+import { IS_MOBILE } from './script.js'
 import {
     getPlayingEquipSoundEffect,
     getPlayingSoundEffects,
@@ -56,6 +60,9 @@ import {
     renderInteractButton,
     renderInventoryButton,
     renderMovementJoystick,
+    renderPauseButton,
+    renderReloadButton,
+    renderSlots,
     renderSprintButton,
     renderUi,
     renderWeaponUi,
@@ -199,6 +206,8 @@ export const weaponSlotDown = key => {
     setPlayingSoundEffects(getPlayingSoundEffects().filter(effect => effect !== getPlayingEquipSoundEffect()))
     removeEquipped()
     equipWeapon(newId)
+    getReloadButton()?.remove()
+    if (IS_MOBILE) renderReloadButton()
 }
 
 const equipWeapon = id => {
@@ -380,6 +389,9 @@ const removeUi = () => {
     getInventoryButton()?.remove()
     getInteractButton()?.remove()
     getHealButton()?.remove()
+    getReloadButton()?.remove()
+    getPauseButton()?.remove()
+    getSlotsContainer()?.remove()
     getPopupContainer().style.opacity = '0'
     getRoomNameContainer().style.opacity = '0'
     getDialogueContainer().style.opacity = '0'
@@ -412,6 +424,9 @@ const showUi = () => {
     renderInventoryButton()
     renderInteractButton()
     renderHealButton()
+    renderReloadButton()
+    renderPauseButton()
+    renderSlots()
     getPopupContainer().style.opacity = '1'
     getRoomNameContainer().style.opacity = '1'
     getDialogueContainer().style.opacity = '1'
@@ -556,29 +571,33 @@ export const clickDown = event => {
     // left click
     if (event.button === 0) setShootPressed(true)
     // right click
-    else if (event.button === 2) {
-        if (getGrabbed() || !getEquippedWeaponId()) return
-        setNoAimAfterThrow(false)
-        if (getPause()) {
-            setWaitingFunctions(getWaitingFunctions().filter(item => item.id !== 'aim-waiting-function'))
-        } else aimWeapon()
-    }
+    else if (event.button === 2) aimDown()
 }
 
 export const clickUp = event => {
     // left click
     if (event.button === 0) setShootPressed(false)
     // right click
-    else if (event.button === 2) {
-        if (getGrabbed() || !getEquippedWeaponId()) return
-        if (isThrowing()) {
-            setNoAimAfterThrow(true)
-            return
-        }
-        if (getPause()) {
-            setWaitingFunctions([...getWaitingFunctions(), { fn: exitAim, args: [], id: 'aim-waiting-function' }])
-        } else exitAim()
+    else if (event.button === 2) aimUp()
+}
+
+export const aimDown = () => {
+    if (getGrabbed() || !getEquippedWeaponId()) return
+    setNoAimAfterThrow(false)
+    if (getPause()) {
+        setWaitingFunctions(getWaitingFunctions().filter(item => item.id !== 'aim-waiting-function'))
+    } else aimWeapon()
+}
+
+export const aimUp = () => {
+    if (getGrabbed() || !getEquippedWeaponId()) return
+    if (isThrowing()) {
+        setNoAimAfterThrow(true)
+        return
     }
+    if (getPause()) {
+        setWaitingFunctions([...getWaitingFunctions(), { fn: exitAim, args: [], id: 'aim-waiting-function' }])
+    } else exitAim()
 }
 
 export const wheelChange = event => {

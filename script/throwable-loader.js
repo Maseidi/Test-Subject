@@ -1,7 +1,8 @@
 import { getPlayer } from './elements.js'
 import { findEquippedWeaponById } from './inventory.js'
+import { IS_MOBILE } from './script.js'
 import { getThrowableDetail } from './throwable-details.js'
-import { appendAll, createAndAddClass, findAttachmentsOnPlayer } from './util.js'
+import { addClass, appendAll, createAndAddClass, findAttachmentsOnPlayer } from './util.js'
 
 export const renderThrowable = () => {
     const equippedThrowable = findEquippedWeaponById()
@@ -14,6 +15,7 @@ export const renderThrowable = () => {
 
 const renderLaser = name => {
     const laser = createAndAddClass('div', 'throwable-laser')
+    if (IS_MOBILE) addClass(laser, 'mobile-laser')
     laser.style.height = `${getThrowableDetail(name, 'range')}px`
     for (let i = 0; i < 100; i++) {
         const part = document.createElement('div')

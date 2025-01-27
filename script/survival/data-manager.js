@@ -18,7 +18,7 @@ import {
     setRooms,
     setWalls,
 } from '../entities.js'
-import { Bandage, GunDrop, Lever, Note, PC, PistolAmmo, Stash, VendingMachine } from '../interactables.js'
+import { GunDrop, Lever, Note, PC, PistolAmmo, Stash, VendingMachine } from '../interactables.js'
 import { getInventory, initInventory, pickupDrop, setInventory } from '../inventory.js'
 import {
     ARCTIC_WARFERE,
@@ -42,6 +42,7 @@ import { Popup } from '../popup-manager.js'
 import { getProgress, initProgress, setProgress } from '../progress-manager.js'
 import { Progress } from '../progress.js'
 import { Room } from '../room.js'
+import { IS_MOBILE } from '../script.js'
 import { getShopItems, initShopItems, setShopItems } from '../shop-item.js'
 import { getStash, initStash, setStash } from '../stash.js'
 import { difficulties, object2Element } from '../util.js'
@@ -95,10 +96,12 @@ import {
     setEquippedTorchId,
     setEquippedWeaponId,
     setExplosionDamageCounter,
+    setFoundTarget,
     setGrabbed,
     setHealth,
     setHealthPotionsDropped,
     setInfection,
+    setIsSearching4Target,
     setLeftPressed,
     setLuckPillsDropped,
     setMapX,
@@ -133,6 +136,7 @@ import {
     setSprintPressed,
     setStamina,
     setStunnedCounter,
+    setSuitableTargetAngle,
     setTargets,
     setThrowCounter,
     setTimesSaved,
@@ -158,27 +162,29 @@ export const prepareNewSurvivalData = () => {
     initNewSurvivalEntities()
     initConstants()
     pickupDrop(object2Element(new PistolAmmo(null, null, 30)))
-    pickupDrop(
-        object2Element(
-            new Note(
-                null,
-                null,
-                'Controls',
-                'Explanation of game controls',
-                `
-                <div>W , A , S , D => Movement</div>
-                <div>F => Interact</div>
-                <div>Shift => Sprint</div>
-                <div>Tab => Open inventory</div>
-                <div>1, 2, 3, 4 , Mouse wheel => Switch weapon slot</div>
-                <div>Right click => Aim</div>
-                <div>Left click + Aim => shoot</div>
-                <div>H => Use bandage</div>
-                `,
-                Progress.builder().setOnExamineProgress2Active('1005'),
+    if (!IS_MOBILE) {
+        pickupDrop(
+            object2Element(
+                new Note(
+                    null,
+                    null,
+                    'Controls',
+                    'Explanation of game controls',
+                    `
+                    <div>W , A , S , D => Movement</div>
+                    <div>F => Interact</div>
+                    <div>Shift => Sprint</div>
+                    <div>Tab => Open inventory</div>
+                    <div>1, 2, 3, 4 , Mouse wheel => Switch weapon slot</div>
+                    <div>Right click => Aim</div>
+                    <div>Left click + Aim => shoot</div>
+                    <div>H => Use bandage</div>
+                    `,
+                    Progress.builder().setOnExamineProgress2Active('1005'),
+                ),
             ),
-        ),
-    )
+        )
+    }
     initNewSurvivalPopups()
     initNewSurvivalDialogues()
 }
@@ -231,7 +237,6 @@ const initNewSurvivalEntities = () => {
                     new VendingMachine(200, 20),
                     new Lever(1400, 1000),
                     new GunDrop(1400, 1200, startingPistol, 10, 1, 1, 1, 1, 1),
-                    new Bandage(1400, 1400, 3)
                 ],
             ],
         ]),
@@ -262,15 +267,21 @@ const initNewSurvivalPopups = () => {
             10000,
         ),
     )
+    if (!IS_MOBILE) {
+        getPopups().push(
+            new Popup(
+                `Use <span>Tab</span> to open inventory and view controls in the note`,
+                { renderProgress: '1004' },
+                10000,
+            ),
+        )
+    }
     getPopups().push(
         new Popup(
-            `Use <span>Tab</span> to open inventory and view controls in the note`,
-            { renderProgress: '1004' },
+            `Trigger a chaos by toggling the lever when you are ready`,
+            { renderProgress: IS_MOBILE ? '1004' : '1005' },
             10000,
         ),
-    )
-    getPopups().push(
-        new Popup(`Trigger a chaos by toggling the lever when you are ready`, { renderProgress: '1005' }, 10000),
     )
 }
 
@@ -309,6 +320,9 @@ export const initConstants = () => {
     setPlayerAimAngle(0)
     setAimMode(false)
     setEnemiesKilled(0)
+    setIsSearching4Target(false)
+    setFoundTarget(null)
+    setSuitableTargetAngle(null)
 }
 
 export const initNewSurvivalVariables = (spawnX = 1500, spawnY = 1000, difficulty) => {

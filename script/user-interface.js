@@ -1,4 +1,18 @@
-import { fDown, hDown, managePause, movePlayer, shiftDown, shiftUp, stopMovement, tabDown } from './actions.js'
+import {
+    aimDown,
+    aimUp,
+    escapeDown,
+    fDown,
+    hDown,
+    managePause,
+    movePlayer,
+    rDown,
+    shiftDown,
+    shiftUp,
+    stopMovement,
+    tabDown,
+    weaponSlotDown,
+} from './actions.js'
 import {
     getPauseContainer,
     getUiEl,
@@ -7,14 +21,19 @@ import {
     setInteractButton,
     setInventoryButton,
     setMovementJoystick,
+    setPauseButton,
+    setReloadButton,
+    setSlotsContainer,
     setSprintButton,
     setUiEl,
 } from './elements.js'
+import { getGunUpgradableDetail } from './gun-details.js'
 import {
     calculateThrowableAmount,
     calculateTotalAmmo,
     countItem,
     findEquippedWeaponById,
+    getInventory,
     updateInteractablePopups,
 } from './inventory.js'
 import { IS_MOBILE } from './script.js'
@@ -28,14 +47,22 @@ import {
 import { isThrowable } from './throwable-details.js'
 import { addClass, angleOf2Points, appendAll, containsClass, createAndAddClass, removeClass } from './util.js'
 import {
+    getAimMode,
     getDraggedItem,
+    getElementInteractedWith,
     getEquippedWeaponId,
+    getFoundTarget,
     getGrabbed,
     getHealth,
     getMaxHealth,
     getMaxStamina,
     getPauseCause,
     getStamina,
+    getWeaponWheel,
+    setFoundTarget,
+    setIsSearching4Target,
+    setPlayerAimAngle,
+    setShootPressed,
 } from './variables.js'
 
 export const renderUi = () => {
@@ -150,18 +177,26 @@ export const addMessage = (input, popup) => {
     })
 }
 
-export const renderMovementJoystick = () => renderJoystick('movement', movePlayer, setMovementJoystick)
+export const renderMovementJoystick = () => renderJoystick('movement', movePlayer, stopMovement, setMovementJoystick)
 
 export const renderAimJoystick = () =>
     renderJoystick(
         'aim',
+        angle => {
+            if (angle && !getFoundTarget()) setPlayerAimAngle(angle)
+            if (!getAimMode()) aimDown()
+            setIsSearching4Target(true)
+        },
         () => {
-            console.log(1)
+            aimUp()
+            setShootPressed(false)
+            setIsSearching4Target(false)
+            setFoundTarget(false)
         },
         setAimJoystick,
     )
 
-const renderJoystick = (type, onTouchMove, setter, index) => {
+const renderJoystick = (type, onTouchMove, onTouchEnd, setter) => {
     if (!IS_MOBILE) return
     const root = document.getElementById('root')
     const joystick = createAndAddClass('div', `${type}-joystick`, 'joystick', 'ui-theme')
@@ -175,15 +210,15 @@ const renderJoystick = (type, onTouchMove, setter, index) => {
         let { x: centerX, y: centerY, width: centerW, height: centerH } = center.getBoundingClientRect()
         centerX -= centerW / 2
         centerY -= centerH / 2
-        const newX = e.touches[0].pageX
-        const newY = e.touches[0].pageY
+        const newX = e.targetTouches[0].pageX
+        const newY = e.targetTouches[0].pageY
         handle.style.left = `${newX - x}px`
         handle.style.top = `${newY - y}px`
         const angle = angleOf2Points(centerX, centerY, newX, newY)
         onTouchMove(angle)
     })
     handle.addEventListener('touchend', () => {
-        stopMovement()
+        onTouchEnd?.()
         handle.style = ''
     })
     setter(joystick)
@@ -194,24 +229,68 @@ export const renderSprintButton = () => renderButton('sprint', null, shiftUp, se
 
 export const renderInventoryButton = () => renderButton('inventory', tabDown, null, setInventoryButton)
 
-export const renderInteractButton = () => renderButton('interact', fDown, null, setInteractButton)
+export const renderInteractButton = () =>
+    renderButton('interact', fDown, null, setInteractButton, null, getElementInteractedWith() === null)
 
 export const renderHealButton = () =>
     renderButton('heal', hDown, null, setHealButton, null, getHealth() >= getMaxHealth() || countItem('bandage') === 0)
 
+export const renderReloadButton = () =>
+    renderButton(
+        'reload',
+        rDown,
+        null,
+        setReloadButton,
+        null,
+        (() => {
+            const equipped = findEquippedWeaponById()
+            if (!equipped) return true
+            if (isThrowable(equipped.name)) return true
+            if (equipped.currmag === getGunUpgradableDetail(equipped.name, 'magazine', equipped.magazinelvl))
+                return true
+            if (calculateTotalAmmo() === 0) return true
+            return false
+        })(),
+    )
+
+export const renderPauseButton = () => renderButton('pause', escapeDown, null, setPauseButton)
+
 const renderButton = (name, onTouchStart, onTouchEnd, setter, onTouchEvenOnDisabled, disabledPredicate) => {
-    if (!IS_MOBILE) return
     const root = document.getElementById('root')
+    const button = getButton(name, onTouchStart, onTouchEnd, setter, onTouchEvenOnDisabled, disabledPredicate)
+    root.append(button)
+}
+
+const getButton = (name, onTouchStart, onTouchEnd, setter, onTouchEvenOnDisabled, disabledPredicate) => {
+    if (!IS_MOBILE) return
     const button = createAndAddClass('div', 'mobile-control-btn', `mobile-${name}-btn`, 'ui-theme')
     const image = new Image()
     image.src = `./assets/images/${name}.png`
     button.append(image)
     if (disabledPredicate === true) addClass(button, 'disabled')
     button.addEventListener('touchstart', e => {
+        e.preventDefault()
         onTouchEvenOnDisabled?.()
         if (!containsClass(e.currentTarget, 'disabled')) onTouchStart?.()
     })
-    button.addEventListener('touchend', () => onTouchEnd?.())
-    setter(button)
-    root.append(button)
+    if (onTouchEnd) button.addEventListener('touchend', onTouchEnd)
+    setter?.(button)
+    return button
+}
+
+export const renderSlots = () => {
+    if (!IS_MOBILE) return
+    const root = document.getElementById('root')
+    const slotsContainer = createAndAddClass('div', 'slot-container')
+    for (let i = 0; i < 4; i++) {
+        const button = getButton(`slot-${i + 1}`, () => weaponSlotDown(i + 1))
+        if (getWeaponWheel()[i] !== null) {
+            const flattenedInventory = getInventory().flat()
+            const name = flattenedInventory.find(item => item?.id === getWeaponWheel()[i]).name
+            button.firstElementChild.src = `./assets/images/${name}.png`
+        }
+        slotsContainer.append(button)
+    }
+    setSlotsContainer(slotsContainer)
+    root.append(slotsContainer)
 }

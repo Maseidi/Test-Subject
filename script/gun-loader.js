@@ -1,7 +1,8 @@
 import { getPlayer } from './elements.js'
 import { getGunDetails, getGunUpgradableDetail } from './gun-details.js'
 import { findEquippedWeaponById } from './inventory.js'
-import { appendAll, createAndAddClass, findAttachmentsOnPlayer } from './util.js'
+import { IS_MOBILE } from './script.js'
+import { addClass, appendAll, createAndAddClass, findAttachmentsOnPlayer } from './util.js'
 
 export const renderGun = () => {
     const equippedWeapon = findEquippedWeaponById()
@@ -17,6 +18,7 @@ export const renderGun = () => {
 
 const renderLaser = (name, rangeLevel, color) => {
     const laser = createAndAddClass('div', 'laser')
+    if (IS_MOBILE) addClass(laser, 'mobile-laser')
     laser.style.height = `${getGunUpgradableDetail(name, 'range', rangeLevel)}px`
     for (let i = 0; i < 100; i++) {
         const part = document.createElement('div')

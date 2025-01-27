@@ -9,12 +9,15 @@ import {
     getInventoryButton,
     getMapEl,
     getMovementJoystick,
+    getPauseButton,
     getPauseContainer,
     getPlayer,
     getPopupContainer,
+    getReloadButton,
     getRoomContainer,
     getRoomNameContainer,
     getShadowContainer,
+    getSlotsContainer,
     getSprintButton,
     getUiEl,
     setAimJoystick,
@@ -25,12 +28,15 @@ import {
     setInteractButton,
     setMapEl,
     setMovementJoystick,
+    setPauseButton,
     setPauseContainer,
     setPlayer,
     setPopupContainer,
+    setReloadButton,
     setRoomContainer,
     setRoomNameContainer,
     setShadowContainer,
+    setSlotsContainer,
     setSprintButton,
     setUiEl,
 } from './elements.js'
@@ -55,6 +61,9 @@ export const finishUp = () => {
     removeElement(getInventoryButton(), setSprintButton)
     removeElement(getInteractButton(), setInteractButton)
     removeElement(getHealButton(), setHealButton)
+    removeElement(getReloadButton(), setReloadButton)
+    removeElement(getPauseButton(), setPauseButton)
+    removeElement(getSlotsContainer(), setSlotsContainer)
     endSession()
 }
 

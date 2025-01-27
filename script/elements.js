@@ -177,3 +177,21 @@ export const setHealButton = val => {
     healButton = val
 }
 export const getHealButton = () => healButton
+
+let pauseButton = null
+export const setPauseButton = val => {
+    pauseButton = val
+}
+export const getPauseButton = () => pauseButton
+
+let reloadButton = null
+export const setReloadButton = val => {
+    reloadButton = val
+}
+export const getReloadButton = () => reloadButton
+
+let slotsContainer = null
+export const setSlotsContainer = val => {
+    slotsContainer = val
+}
+export const getSlotsContainer = () => slotsContainer

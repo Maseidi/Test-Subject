@@ -375,3 +375,21 @@ export const setNoAimAfterThrow = val => {
     noAimAfterThrow = val
 }
 export const getNoAimAfterThrow = () => noAimAfterThrow
+
+let isSearching4Target = null
+export const setIsSearching4Target = val => {
+    isSearching4Target = val
+}
+export const getIsSearching4Target = () => isSearching4Target
+
+let foundTarget = null
+export const setFoundTarget = val => {
+    foundTarget = val
+}
+export const getFoundTarget = () => foundTarget
+
+let suitableTargetAngle = null
+export const setSuitableTargetAngle = val => {
+    suitableTargetAngle = val
+}
+export const getSuitableTargetAngle = () => suitableTargetAngle

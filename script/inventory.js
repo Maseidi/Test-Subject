@@ -5,6 +5,8 @@ import {
     getHealButton,
     getPauseContainer,
     getPlayer,
+    getReloadButton,
+    getSlotsContainer,
     getUiEl,
 } from './elements.js'
 import { getInteractables, getPopups } from './entities.js'
@@ -28,7 +30,7 @@ import { IS_MOBILE } from './script.js'
 import { playClickSoundEffect } from './sound-manager.js'
 import { isThrowable } from './throwable-details.js'
 import { renderThrowable } from './throwable-loader.js'
-import { quitPage, renderQuit } from './user-interface.js'
+import { quitPage, renderQuit, renderReloadButton, renderSlots } from './user-interface.js'
 import {
     addAllAttributes,
     addClass,
@@ -214,6 +216,7 @@ const checkSpecialScenarios = () => {
     if (getPause()) return
     if (amount === 0) removeDrop(dropElem)
     ammo4Equipped()
+    handleWeaponPickup()
 }
 
 const handleVaccinePickup = itemObj =>
@@ -251,6 +254,8 @@ const ammo4EquippedWeapon = equipped => {
     const ammoCount = getUiEl().children[2].children[1]
     const totalAmmo = ammoCount.children[1]
     totalAmmo.textContent = calculateTotalAmmo()
+    getReloadButton()?.remove()
+    if (IS_MOBILE) renderReloadButton()
 }
 
 const ammo4EquippedThrowable = equipped => {
@@ -258,6 +263,13 @@ const ammo4EquippedThrowable = equipped => {
     if (dropObject.name !== equipped.name) return
     const ammoCount = getUiEl().children[2].children[1]
     ammoCount.firstElementChild.textContent = calculateThrowableAmount(equipped)
+}
+
+const handleWeaponPickup = () => {
+    if ((isGun(dropObject.name) || isThrowable(dropObject.name)) && IS_MOBILE) {
+        getSlotsContainer()?.remove()
+        renderSlots()
+    }
 }
 
 const inventoryFull = () => inventory.flat().every(item => item !== null)
@@ -371,6 +383,7 @@ export const renderBlocks = () => {
         row.forEach(block => {
             const theBlock = ['taken', 'locked'].includes(block) ? document.createElement('div') : object2Element(block)
             addClass(theBlock, 'block')
+            if (IS_MOBILE) addClass(theBlock, 'mobile-block')
             let skip = false
             if (block === 'taken') skip = true
             else if (block === null || block === 'locked') theBlock.style.width = `25%`

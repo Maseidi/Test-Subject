@@ -75,10 +75,12 @@ import {
     setEquippedTorchId,
     setEquippedWeaponId,
     setExplosionDamageCounter,
+    setFoundTarget,
     setGrabbed,
     setHealth,
     setHealthPotionsDropped,
     setInfection,
+    setIsSearching4Target,
     setLeftPressed,
     setLuckPillsDropped,
     setMapX,
@@ -113,6 +115,7 @@ import {
     setSprintPressed,
     setStamina,
     setStunnedCounter,
+    setSuitableTargetAngle,
     setTargets,
     setThrowCounter,
     setTimesSaved,
@@ -182,6 +185,9 @@ export const initConstants = () => {
     setPlayerAngleState(0)
     setPlayerAimAngle(0)
     setAimMode(false)
+    setIsSearching4Target(false)
+    setFoundTarget(null)
+    setSuitableTargetAngle(null)
 }
 
 export const initNewGameVariables = (spawnX = 200, spawnY = 600, difficulty) => {

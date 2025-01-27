@@ -177,6 +177,10 @@
     position: absolute;
 }
 
+.mobile-laser {
+    width: 1px;
+}
+
 .laser {
     transform: translateX(-50%) translateZ(-10px);
 }
@@ -301,6 +305,13 @@
     animation-name: rotation;
     animation-direction: alternate;
     animation-iteration-count: infinite;
+}
+
+.mobile-infected-container > div {
+    top: 10px;
+    left: 50%;
+    height: 50px;
+    transform: translateX(-50%);
 }
 
 .dead-player > .player-collider > .player-body {
