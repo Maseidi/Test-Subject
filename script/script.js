@@ -13,5 +13,8 @@ export const IS_MOBILE = ['android', 'iphone', 'ipad', 'webos', 'blackberry', 'w
     false,
 )
 
+export const ENEMY_CAP = IS_MOBILE ? 20 : 40
+export const SPAWN_INTERVAL = IS_MOBILE ? 90 : 60
+
 window.addEventListener('contextmenu', e => e.preventDefault())
 renderMainMenu()

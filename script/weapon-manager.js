@@ -19,7 +19,6 @@ import {
     updateInventoryWeaponMag,
     useInventoryResource,
 } from './inventory.js'
-import { dropLoot } from './loot-manager.js'
 import { IS_MOBILE } from './script.js'
 import { playEmptyWeapon, playGunShot, playReload } from './sound-manager.js'
 import { isThrowable } from './throwable-details.js'
@@ -43,6 +42,7 @@ import {
     removeClass,
 } from './util.js'
 import {
+    getAimJoystickAngle,
     getAimMode,
     getCriticalChance,
     getEquippedWeaponId,
@@ -122,11 +122,19 @@ const manageAim = () => {
 }
 
 export const setupReload = () => {
-    if (isThrowable(equipped.name)) return
-    if (equipped.currmag === getGunUpgradableDetail(equipped.name, 'magazine', equipped.magazinelvl)) return
-    if (calculateTotalAmmo() === 0) return
+    if (isReloadDisabled()) return
     if (!getReloading()) playReload(equipped)
     setReloading(true)
+}
+
+export const isReloadDisabled = (local = true) => {
+    const innerEquipped = local ? equipped : findEquippedWeaponById()
+    if (!innerEquipped) return true
+    if (isThrowable(innerEquipped.name)) return true
+    if (innerEquipped.currmag === getGunUpgradableDetail(innerEquipped.name, 'magazine', innerEquipped.magazinelvl))
+        return true
+    if (calculateTotalAmmo() === 0) return true
+    return false
 }
 
 let reloadCounter = 0
@@ -149,7 +157,7 @@ const reload = () => {
     const trade = need <= totalAmmo ? need : totalAmmo
     useAmmoFromInventory(currentMag + trade, trade)
     getReloadButton()?.remove()
-    if (IS_MOBILE) renderReloadButton()
+    renderReloadButton()
 }
 
 const manageShoot = () => {
@@ -189,7 +197,7 @@ const shoot = () => {
     managePenetration()
     useAmmoFromInventory(currMag, 0)
     getReloadButton()?.remove()
-    if (IS_MOBILE) renderReloadButton()
+    renderReloadButton()
 }
 
 const applyRecoil = () => {
@@ -231,7 +239,7 @@ const managePenetration = () => {
                 absoluteKnock,
             )
         }
-        if (target?.getAttribute('name') === 'crate') dropLoot(target)
+        // if (target?.getAttribute('name') === 'crate') dropLoot(target)
     }
 }
 
@@ -401,40 +409,38 @@ const manageMobileAim = () => {
     shootWhenTargetDetected()
 }
 
+const remove360 = angle => (angle >= 360 ? angle - 360 : angle)
 const findMostSuitableTarget = () => {
     if (!getAimMode()) return
     if (!getIsSearching4Target()) return
     if (getTargets().length > 0) return
 
-    let foundTarget = null
-    let minAngleDifference = Number.MAX_SAFE_INTEGER
+    setFoundTarget(null)
+    setSuitableTargetAngle(null)
+
+    let minDistance = Number.MAX_SAFE_INTEGER
     const { x: x1, y: y1, width: w1, height: h1 } = getPlayer().getBoundingClientRect()
     const playerCenterX = x1 + w1 / 2
     const playerCenterY = y1 + h1 / 2
     ;[
         ...getCurrentRoomEnemies().map(enemy => enemy.sprite),
-        ...getCurrentRoomInteractables().filter(solid => containsClass(solid, 'crate')),
+        ...getCurrentRoomInteractables().filter(solid => solid.getAttribute('name') === 'crate'),
     ].forEach(item => {
-        if (distance(item, player) > getGunUpgradableDetail(equipped.name, 'range', equipped.rangelvl)) return
+        const distance2Player = distance(item, player)
+        if (distance2Player > getGunUpgradableDetail(equipped.name, 'range', equipped.rangelvl)) return
         const { x: x2, y: y2, width: w2, height: h2 } = item.getBoundingClientRect()
-        let angle2Item = angleOf2Points(playerCenterX, playerCenterY, x2 + w2 / 2, y2 + h2 / 2)
-        let playerAngle = getPlayerAimAngle()
-        if (angle2Item < 0) angle2Item += 360
-        if (playerAngle < 0) playerAngle += 360
-        const currentDiff = Math.abs(angle2Item - playerAngle)
-        if (currentDiff < minAngleDifference && currentDiff < 45) {
-            minAngleDifference = currentDiff
-            foundTarget = item
-            setSuitableTargetAngle(angle2Item >= 360 ? angle2Item - 360 : angle2Item)
+        const angle2Item = angleOf2Points(playerCenterX, playerCenterY, x2 + w2 / 2, y2 + h2 / 2)
+        const joystickAngle = getAimJoystickAngle()
+        const currentDiff = Math.abs(remove360(angle2Item) - remove360(joystickAngle))
+        if (distance2Player < minDistance && currentDiff < 45) {
+            minDistance = distance2Player
+            setFoundTarget(item)
+            setSuitableTargetAngle(angle2Item)
         }
     })
-    setFoundTarget(foundTarget)
 }
 
-const autoAim2Target = () => {
-    if (!getFoundTarget()) return
-    setPlayerAimAngle(getSuitableTargetAngle())
-}
+const autoAim2Target = () => setPlayerAimAngle(getFoundTarget() ? getSuitableTargetAngle() : getAimJoystickAngle())
 
 const shootWhenTargetDetected = () => {
     if (!getFoundTarget()) return

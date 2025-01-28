@@ -393,3 +393,9 @@ export const setSuitableTargetAngle = val => {
     suitableTargetAngle = val
 }
 export const getSuitableTargetAngle = () => suitableTargetAngle
+
+let aimJoystickAngle = null
+export const setAimJoystickAngle = val => {
+    aimJoystickAngle = val
+}
+export const getAimJoystickAngle = () => aimJoystickAngle

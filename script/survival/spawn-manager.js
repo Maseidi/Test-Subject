@@ -9,6 +9,7 @@ import { getEnemies } from '../entities.js'
 import { Loot, RANDOM } from '../loot.js'
 import { SinglePointPath } from '../path.js'
 import { spawnEnemy } from '../room-loader.js'
+import { ENEMY_CAP, SPAWN_INTERVAL } from '../script.js'
 import { distanceFormula } from '../util.js'
 import { getPlayerX, getPlayerY, getRoomLeft, getRoomTop } from '../variables.js'
 import {
@@ -23,7 +24,7 @@ import {
     setSpawnCounter,
 } from './variables.js'
 
-const spawnLocations = [
+const SPAWN_LOCATIONS = [
     { x: 100, y: 100 },
     { x: 100, y: 500 },
     { x: 100, y: 900 },
@@ -65,21 +66,19 @@ const spawnLocations = [
 
 export const manageSpawns = () => {
     if (getCurrentChaosSpawned() >= getCurrentChaosEnemies()) return
-    if (getCurrentChaosSpawned() - getEnemiseKilled() >= 40) return
+    if (getCurrentChaosSpawned() - getEnemiseKilled() >= ENEMY_CAP) return
 
     setSpawnCounter(getSpawnCounter() + 1)
-    if (getSpawnCounter() !== 60) return
+    if (getSpawnCounter() !== SPAWN_INTERVAL) return
     setSpawnCounter(-1)
 
     const playerX = getPlayerX() - getRoomLeft()
     const playerY = getPlayerY() - getRoomTop()
 
-    const { x, y } = spawnLocations
-        .filter(({ x, y }) => {
-            const dist = distanceFormula(playerX, playerY, x, y)
-            return dist > 1500 && dist < 2000
-        })
-        .sort(() => Math.random() - 0.5)[0]
+    const { x, y } = SPAWN_LOCATIONS.filter(({ x, y }) => {
+        const dist = distanceFormula(playerX, playerY, x, y)
+        return dist > 1500 && dist < 2000
+    }).sort(() => Math.random() - 0.5)[0]
 
     let enemy
     const chaos = getChaos()

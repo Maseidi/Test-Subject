@@ -443,7 +443,7 @@
     width: 70px;
     height: 70px;
     padding: 5px;
-    opacity: 0.3;
+    opacity: 0.5;
     display: grid;
     border-radius: 50%;
     place-items: center;

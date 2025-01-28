@@ -18,7 +18,7 @@ import {
     setRooms,
     setWalls,
 } from '../entities.js'
-import { GunDrop, Lever, Note, PC, PistolAmmo, Stash, VendingMachine } from '../interactables.js'
+import { Crate, GunDrop, Lever, Note, PC, PistolAmmo, Stash, VendingMachine } from '../interactables.js'
 import { getInventory, initInventory, pickupDrop, setInventory } from '../inventory.js'
 import {
     ARCTIC_WARFERE,
@@ -81,6 +81,7 @@ import {
     getTimesSaved,
     getWeaponWheel,
     setAdrenalinesDropped,
+    setAimJoystickAngle,
     setAimMode,
     setAllowMove,
     setAnimatedLimbs,
@@ -237,6 +238,7 @@ const initNewSurvivalEntities = () => {
                     new VendingMachine(200, 20),
                     new Lever(1400, 1000),
                     new GunDrop(1400, 1200, startingPistol, 10, 1, 1, 1, 1, 1),
+                    new Crate(700, 1200)
                 ],
             ],
         ]),
@@ -323,6 +325,7 @@ export const initConstants = () => {
     setIsSearching4Target(false)
     setFoundTarget(null)
     setSuitableTargetAngle(null)
+    setAimJoystickAngle(null)
 }
 
 export const initNewSurvivalVariables = (spawnX = 1500, spawnY = 1000, difficulty) => {

@@ -60,6 +60,7 @@ import {
     getTimesSaved,
     getWeaponWheel,
     setAdrenalinesDropped,
+    setAimJoystickAngle,
     setAimMode,
     setAllowMove,
     setAnimatedLimbs,
@@ -188,6 +189,7 @@ export const initConstants = () => {
     setIsSearching4Target(false)
     setFoundTarget(null)
     setSuitableTargetAngle(null)
+    setAimJoystickAngle(null)
 }
 
 export const initNewGameVariables = (spawnX = 200, spawnY = 600, difficulty) => {

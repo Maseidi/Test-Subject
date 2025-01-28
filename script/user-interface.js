@@ -27,7 +27,6 @@ import {
     setSprintButton,
     setUiEl,
 } from './elements.js'
-import { getGunUpgradableDetail } from './gun-details.js'
 import {
     calculateThrowableAmount,
     calculateTotalAmmo,
@@ -51,7 +50,6 @@ import {
     getDraggedItem,
     getElementInteractedWith,
     getEquippedWeaponId,
-    getFoundTarget,
     getGrabbed,
     getHealth,
     getMaxHealth,
@@ -59,11 +57,12 @@ import {
     getPauseCause,
     getStamina,
     getWeaponWheel,
+    setAimJoystickAngle,
     setFoundTarget,
     setIsSearching4Target,
-    setPlayerAimAngle,
     setShootPressed,
 } from './variables.js'
+import { isReloadDisabled } from './weapon-manager.js'
 
 export const renderUi = () => {
     renderBackground()
@@ -183,7 +182,7 @@ export const renderAimJoystick = () =>
     renderJoystick(
         'aim',
         angle => {
-            if (angle && !getFoundTarget()) setPlayerAimAngle(angle)
+            if (angle) setAimJoystickAngle(angle)
             if (!getAimMode()) aimDown()
             setIsSearching4Target(true)
         },
@@ -236,28 +235,14 @@ export const renderHealButton = () =>
     renderButton('heal', hDown, null, setHealButton, null, getHealth() >= getMaxHealth() || countItem('bandage') === 0)
 
 export const renderReloadButton = () =>
-    renderButton(
-        'reload',
-        rDown,
-        null,
-        setReloadButton,
-        null,
-        (() => {
-            const equipped = findEquippedWeaponById()
-            if (!equipped) return true
-            if (isThrowable(equipped.name)) return true
-            if (equipped.currmag === getGunUpgradableDetail(equipped.name, 'magazine', equipped.magazinelvl))
-                return true
-            if (calculateTotalAmmo() === 0) return true
-            return false
-        })(),
-    )
+    renderButton('reload', rDown, null, setReloadButton, null, isReloadDisabled(false))
 
 export const renderPauseButton = () => renderButton('pause', escapeDown, null, setPauseButton)
 
 const renderButton = (name, onTouchStart, onTouchEnd, setter, onTouchEvenOnDisabled, disabledPredicate) => {
     const root = document.getElementById('root')
     const button = getButton(name, onTouchStart, onTouchEnd, setter, onTouchEvenOnDisabled, disabledPredicate)
+    if (!button) return
     root.append(button)
 }
 
