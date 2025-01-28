@@ -3,11 +3,12 @@ import { manageAimModeAngle } from './angle-manager.js'
 import {
     getCurrentRoom,
     getCurrentRoomEnemies,
-    getCurrentRoomInteractables,
     getCurrentRoomSolid,
     getCurrentRoomThrowables,
     getPlayer,
     getReloadButton,
+    getSlotsContainer,
+    getThrowButton,
     getUiEl,
 } from './elements.js'
 import { TRACKER } from './enemy/enemy-constants.js'
@@ -19,11 +20,12 @@ import {
     updateInventoryWeaponMag,
     useInventoryResource,
 } from './inventory.js'
+import { dropLoot } from './loot-manager.js'
 import { IS_MOBILE } from './script.js'
 import { playEmptyWeapon, playGunShot, playReload } from './sound-manager.js'
 import { isThrowable } from './throwable-details.js'
 import { removeThrowable } from './throwable-loader.js'
-import { renderReloadButton } from './user-interface.js'
+import { renderReloadButton, renderSlots, renderThrowButton } from './user-interface.js'
 import {
     addAllAttributes,
     addClass,
@@ -239,7 +241,7 @@ const managePenetration = () => {
                 absoluteKnock,
             )
         }
-        // if (target?.getAttribute('name') === 'crate') dropLoot(target)
+        if (target?.getAttribute('name') === 'crate') dropLoot(target)
     }
 }
 
@@ -340,6 +342,8 @@ const throwItem = () => {
     useThrowableFromInventory()
     getCurrentRoomThrowables().push(item)
     getCurrentRoom().append(item)
+    getThrowButton()?.remove()
+    renderThrowButton()
 }
 
 const getSourceCoordinates = () => {
@@ -380,6 +384,10 @@ const useThrowableFromInventory = () => {
     if (totalAmmo === 1) {
         ammoCount.parentElement.remove()
         unEquipThrowable()
+        getSlotsContainer()?.remove()
+        renderSlots()
+        getThrowButton()?.remove()
+        renderThrowButton()
     } else ammoCount.firstElementChild.textContent = totalAmmo - 1
 }
 
@@ -409,11 +417,9 @@ const manageMobileAim = () => {
     shootWhenTargetDetected()
 }
 
-const remove360 = angle => (angle >= 360 ? angle - 360 : angle)
 const findMostSuitableTarget = () => {
-    if (!getAimMode()) return
     if (!getIsSearching4Target()) return
-    if (getTargets().length > 0) return
+    if (!getAimMode()) return
 
     setFoundTarget(null)
     setSuitableTargetAngle(null)
@@ -422,29 +428,39 @@ const findMostSuitableTarget = () => {
     const { x: x1, y: y1, width: w1, height: h1 } = getPlayer().getBoundingClientRect()
     const playerCenterX = x1 + w1 / 2
     const playerCenterY = y1 + h1 / 2
-    ;[
-        ...getCurrentRoomEnemies().map(enemy => enemy.sprite),
-        ...getCurrentRoomInteractables().filter(solid => solid.getAttribute('name') === 'crate'),
-    ].forEach(item => {
-        const distance2Player = distance(item, player)
-        if (distance2Player > getGunUpgradableDetail(equipped.name, 'range', equipped.rangelvl)) return
-        const { x: x2, y: y2, width: w2, height: h2 } = item.getBoundingClientRect()
-        const angle2Item = angleOf2Points(playerCenterX, playerCenterY, x2 + w2 / 2, y2 + h2 / 2)
-        const joystickAngle = getAimJoystickAngle()
-        const currentDiff = Math.abs(remove360(angle2Item) - remove360(joystickAngle))
-        if (distance2Player < minDistance && currentDiff < 45) {
-            minDistance = distance2Player
-            setFoundTarget(item)
-            setSuitableTargetAngle(angle2Item)
-        }
-    })
+
+    getCurrentRoomEnemies()
+        .filter(enemy => ['out-of-range', false].includes(enemy.wallInTheWay))
+        .map(enemy => enemy.sprite)
+        .forEach(item => {
+            const distance2Player = distance(item, player)
+            if (distance2Player > getGunUpgradableDetail(equipped.name, 'range', equipped.rangelvl)) return
+            const { x: x2, y: y2, width: w2, height: h2 } = item.getBoundingClientRect()
+            const angle2Item = angleOf2Points(playerCenterX, playerCenterY, x2 + w2 / 2, y2 + h2 / 2)
+            const joystickAngle = getAimJoystickAngle()
+            if (distance2Player < minDistance && getCurrentDiff(angle2Item, joystickAngle) < 20) {
+                minDistance = distance2Player
+                setFoundTarget(item)
+                setSuitableTargetAngle(angle2Item)
+            }
+        })
+}
+
+const getCurrentDiff = (angle2Item, joystickAngle) => {
+    if (joystickAngle >= -180 && joystickAngle < -90) {
+        if (angle2Item >= 90 && angle2Item < 180) angle2Item -= 360
+    } else if (joystickAngle >= 90 && joystickAngle < 180) {
+        if (angle2Item >= -180 && angle2Item < -90) angle2Item += 360
+    }
+    return Math.abs(angle2Item - joystickAngle)
 }
 
 const autoAim2Target = () => setPlayerAimAngle(getFoundTarget() ? getSuitableTargetAngle() : getAimJoystickAngle())
 
 const shootWhenTargetDetected = () => {
-    if (!getFoundTarget()) return
-    const target = containsClass(getFoundTarget(), 'enemy') ? getFoundTarget().firstElementChild : getFoundTarget()
-    if (!getTargets().includes(target)) return
+    if (!getFoundTarget() || getTargets()[0] !== getFoundTarget().firstElementChild) {
+        setShootPressed(false)
+        return
+    }
     setShootPressed(true)
 }

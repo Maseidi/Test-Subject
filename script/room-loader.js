@@ -26,6 +26,7 @@ import { countItem, findEquippedTorchById, updateInteractablePopup } from './inv
 import { BottomLoader, LeftLoader, RightLoader, TopLoader } from './loader.js'
 import { activateAllProgresses, deactivateAllProgresses, getProgressValueByNumber } from './progress-manager.js'
 import { renderRoomName } from './room-name-manager.js'
+import { IS_MOBILE } from './script.js'
 import {
     addAllAttributes,
     addAllClasses,
@@ -460,7 +461,7 @@ export const defineEnemyComponents = (element, enemyBody) => {
 }
 
 const defineVision = element => {
-    if (element.type === TRACKER) return createAndAddClass('div', 'vision')
+    if (element.type === TRACKER && !IS_MOBILE) return createAndAddClass('div', 'vision')
     const vision = createAndAddClass('div', 'vision')
     vision.style.height = `${element.vision}px`
     for (let i = 0; i < 50; i++) {

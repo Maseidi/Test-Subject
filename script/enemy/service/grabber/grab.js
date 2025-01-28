@@ -1,6 +1,14 @@
 import { manageAimModeAngle } from '../../../angle-manager.js'
-import { getCurrentRoomEnemies, getGrabBar, getPauseContainer, getPlayer, setGrabBar } from '../../../elements.js'
+import {
+    getCurrentRoomEnemies,
+    getGrabBar,
+    getInteractButton,
+    getPauseContainer,
+    getPlayer,
+    setGrabBar,
+} from '../../../elements.js'
 import { damagePlayer } from '../../../player-health.js'
+import { renderInteractButton } from '../../../user-interface.js'
 import {
     addAllAttributes,
     addClass,
@@ -64,8 +72,11 @@ export class GrabberGrabService {
 
     grabPlayer() {
         addSplatter()
+        setGrabbed(true)
         setAimMode(false)
         exitAimModeAnimation()
+        getInteractButton()?.remove()
+        renderInteractButton()
         removeEquipped()
         damagePlayer(this.enemy.damage / 2)
         if (getSprintPressed()) removeClass(getPlayer(), 'run')
@@ -86,7 +97,6 @@ export class GrabberGrabService {
         manageAimModeAngle(getPlayer(), angle2Enemy, getPlayerAngle, setPlayerAngle, setPlayerAngleState)
 
         addClass(this.enemy.sprite, 'grab')
-        setGrabbed(true)
         getCurrentRoomEnemies().forEach(elem => {
             if ([RANGER, STINGER, SCORCHER].includes(elem.type) && elem.state === GO_FOR_RANGED) return
             else elem.state = STAND_AND_WATCH
@@ -124,10 +134,12 @@ export class GrabberGrabService {
     releasePlayer() {
         if (getSprintPressed()) addClass(getPlayer(), 'run')
         if (isMoving()) addClass(getPlayer(), 'walk')
+        setGrabbed(false)
+        getInteractButton()?.remove()
+        renderInteractButton()
         removeClass(this.enemy.sprite.firstElementChild.firstElementChild, 'no-transition')
         removeClass(getPlayer().firstElementChild.firstElementChild, 'no-transition')
         removeClass(this.enemy.sprite, 'grab')
-        setGrabbed(false)
         getCurrentRoomEnemies().forEach(elem => (elem.state = elem.type === TRACKER ? INVESTIGATE : NO_OFFENCE))
         setNoOffenseCounter(1)
         this.removeQte()

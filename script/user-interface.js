@@ -25,6 +25,7 @@ import {
     setReloadButton,
     setSlotsContainer,
     setSprintButton,
+    setThrowButton,
     setUiEl,
 } from './elements.js'
 import {
@@ -60,6 +61,7 @@ import {
     setAimJoystickAngle,
     setFoundTarget,
     setIsSearching4Target,
+    setPlayerAimAngle,
     setShootPressed,
 } from './variables.js'
 import { isReloadDisabled } from './weapon-manager.js'
@@ -184,7 +186,8 @@ export const renderAimJoystick = () =>
         angle => {
             if (angle) setAimJoystickAngle(angle)
             if (!getAimMode()) aimDown()
-            setIsSearching4Target(true)
+            if (!isThrowable(findEquippedWeaponById()?.name)) setIsSearching4Target(true)
+            else setPlayerAimAngle(angle)
         },
         () => {
             aimUp()
@@ -203,7 +206,7 @@ const renderJoystick = (type, onTouchMove, onTouchEnd, setter) => {
     joystick.append(handle)
     const center = createAndAddClass('div', 'joystick-center')
     joystick.append(center)
-    handle.addEventListener('touchmove', e => {
+    joystick.addEventListener('touchmove', e => {
         e.preventDefault()
         const { x, y } = joystick.getBoundingClientRect()
         let { x: centerX, y: centerY, width: centerW, height: centerH } = center.getBoundingClientRect()
@@ -216,7 +219,7 @@ const renderJoystick = (type, onTouchMove, onTouchEnd, setter) => {
         const angle = angleOf2Points(centerX, centerY, newX, newY)
         onTouchMove(angle)
     })
-    handle.addEventListener('touchend', () => {
+    joystick.addEventListener('touchend', () => {
         onTouchEnd?.()
         handle.style = ''
     })
@@ -229,7 +232,7 @@ export const renderSprintButton = () => renderButton('sprint', null, shiftUp, se
 export const renderInventoryButton = () => renderButton('inventory', tabDown, null, setInventoryButton)
 
 export const renderInteractButton = () =>
-    renderButton('interact', fDown, null, setInteractButton, null, getElementInteractedWith() === null)
+    renderButton('interact', fDown, null, setInteractButton, null, getElementInteractedWith() === null && !getGrabbed())
 
 export const renderHealButton = () =>
     renderButton('heal', hDown, null, setHealButton, null, getHealth() >= getMaxHealth() || countItem('bandage') === 0)
@@ -239,11 +242,16 @@ export const renderReloadButton = () =>
 
 export const renderPauseButton = () => renderButton('pause', escapeDown, null, setPauseButton)
 
+export const renderThrowButton = () => {
+    if (!isThrowable(findEquippedWeaponById()?.name)) return
+    renderButton('throw', () => setShootPressed(true), null, setThrowButton, null, !getAimMode())
+}
+
 const renderButton = (name, onTouchStart, onTouchEnd, setter, onTouchEvenOnDisabled, disabledPredicate) => {
     const root = document.getElementById('root')
     const button = getButton(name, onTouchStart, onTouchEnd, setter, onTouchEvenOnDisabled, disabledPredicate)
-    if (!button) return
     root.append(button)
+    if (!button) return
 }
 
 const getButton = (name, onTouchStart, onTouchEnd, setter, onTouchEvenOnDisabled, disabledPredicate) => {

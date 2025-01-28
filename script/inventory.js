@@ -7,6 +7,7 @@ import {
     getPlayer,
     getReloadButton,
     getSlotsContainer,
+    getThrowButton,
     getUiEl,
 } from './elements.js'
 import { getInteractables, getPopups } from './entities.js'
@@ -30,7 +31,7 @@ import { IS_MOBILE } from './script.js'
 import { playClickSoundEffect } from './sound-manager.js'
 import { isThrowable } from './throwable-details.js'
 import { renderThrowable } from './throwable-loader.js'
-import { quitPage, renderQuit, renderReloadButton, renderSlots } from './user-interface.js'
+import { quitPage, renderQuit, renderReloadButton, renderSlots, renderThrowButton } from './user-interface.js'
 import {
     addAllAttributes,
     addClass,
@@ -269,6 +270,8 @@ const handleWeaponPickup = () => {
     if ((isGun(dropObject.name) || isThrowable(dropObject.name)) && IS_MOBILE) {
         getSlotsContainer()?.remove()
         renderSlots()
+        getThrowButton()?.remove()
+        renderThrowButton()
     }
 }
 
@@ -383,7 +386,6 @@ export const renderBlocks = () => {
         row.forEach(block => {
             const theBlock = ['taken', 'locked'].includes(block) ? document.createElement('div') : object2Element(block)
             addClass(theBlock, 'block')
-            if (IS_MOBILE) addClass(theBlock, 'mobile-block')
             let skip = false
             if (block === 'taken') skip = true
             else if (block === null || block === 'locked') theBlock.style.width = `25%`
@@ -486,7 +488,6 @@ const addOptionsEvent = e => {
     playClickSoundEffect()
     const target = e.currentTarget
     const options = createAndAddClass('div', 'options')
-    if (IS_MOBILE) addClass(options, 'mobile-options')
     renderOptions(target, options)
     target.addEventListener('mouseleave', () => options.remove())
     target.append(options)
@@ -537,19 +538,21 @@ const renderOptions = (item, options) => {
 
 const replace = item => {
     const itemObj = element2Object(item)
-    setDraggedItem(item)
     if (itemObj.remove !== 1) for (let k = 0; k < itemObj.space; k++) inventory[itemObj.row][itemObj.column + k] = null
+    setDraggedItem(item)
     removeInventory()
     renderInventory()
+    if (IS_MOBILE) item.children[2]?.remove()
+    item.removeEventListener('click', addOptionsEvent, true)
     if (itemObj.amount !== 0) {
         const blocks = getPauseContainer().firstElementChild.firstElementChild.firstElementChild
         blocks.append(item)
         addClass(item, 'block')
-        item.style.position = `fixed`
+        item.style.position = IS_MOBILE ? 'absolute' : `fixed`
         item.style.height = `70px`
         item.style.width = `${itemObj.space * 100}px`
-        item.style.left = `${getMouseX() + 10}px`
-        item.style.top = `${getMouseY() - 35}px`
+        item.style.left = IS_MOBILE ? `-${itemObj.space * 100}px` : `${getMouseX() + 10}px`
+        item.style.top = IS_MOBILE ? '0' : `${getMouseY() - 35}px`
         item.style.zIndex = `10`
         item.setAttribute('remove', 0)
         renderGrid()

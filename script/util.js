@@ -21,6 +21,7 @@ import {
     getPlayerX,
     getPlayerY,
     getPlayingDialogue,
+    getReloading,
     getRightPressed,
     getRoomLeft,
     getRoomTop,
@@ -240,7 +241,8 @@ export const difficulties = {
 export const isAble2Interact = () =>
     !getPlayingDialogue() &&
     !getPopupContainer().firstElementChild &&
-    !getCurrentRoomEnemies().find(enemy => enemy.health !== 0)
+    !getCurrentRoomEnemies().find(enemy => enemy.health !== 0) &&
+    !getReloading()
 
 export const getDifficultyList = difficulty => {
     if (difficulty === difficulties.MILD) return [difficulties.MILD, difficulties.MIDDLE, difficulties.SURVIVAL]

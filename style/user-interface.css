@@ -459,6 +459,11 @@
     bottom: 50px;
 }
 
+.mobile-throw-btn {
+    left: 320px;
+    bottom: 50px;
+}
+
 .mobile-inventory-btn {
     left: unset;
     right: 330px;

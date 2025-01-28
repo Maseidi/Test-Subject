@@ -19,6 +19,7 @@ import {
     getShadowContainer,
     getSlotsContainer,
     getSprintButton,
+    getThrowButton,
     getUiEl,
     setAimJoystick,
     setCurrentRoom,
@@ -38,6 +39,7 @@ import {
     setShadowContainer,
     setSlotsContainer,
     setSprintButton,
+    setThrowButton,
     setUiEl,
 } from './elements.js'
 import { getGameId, setGameId } from './variables.js'
@@ -62,6 +64,7 @@ export const finishUp = () => {
     removeElement(getInteractButton(), setInteractButton)
     removeElement(getHealButton(), setHealButton)
     removeElement(getReloadButton(), setReloadButton)
+    removeElement(getThrowButton(), setThrowButton)
     removeElement(getPauseButton(), setPauseButton)
     removeElement(getSlotsContainer(), setSlotsContainer)
     endSession()

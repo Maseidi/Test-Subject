@@ -76,10 +76,6 @@
     border: 1px solid rgba(255, 255, 255, 0.7);
 }
 
-.mobile-options > div {
-    padding: 10px 0 10px 5px;
-}
-
 .block:hover::after,
 .weapon-wheel > div:hover:after,
 .options > div:hover::after {

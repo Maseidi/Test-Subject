@@ -40,6 +40,7 @@ import { damagePlayer, infectPlayer2SpecificVirus, poisonPlayer, setPlayer2Fire 
 import { Popup } from './popup-manager.js'
 import { activateAllProgresses, getProgressValueByNumber } from './progress-manager.js'
 import { loadCurrentRoom } from './room-loader.js'
+import { playFlashbang } from './sound-manager.js'
 import { getThrowableDetail } from './throwable-details.js'
 import { removeTorch } from './torch-loader.js'
 import {
@@ -158,9 +159,7 @@ const manageInteractables = () => {
                 hanldeRestOfInteractables(int)
         }
     })
-    if (!getInteractButton()) return
-    if (getElementInteractedWith()) removeClass(getInteractButton(), 'disabled')
-    else addClass(getInteractButton(), 'disabled')
+    handleInteractButtonRender()
 }
 
 const findNearInteractables = () => {
@@ -248,8 +247,18 @@ const refreshPopupIdealStyles = popup => {
 }
 
 const handleStaticInteractablesIdealInteraction = (int, popup) => {
-    if (!['computer', 'stash', 'vendingMachine'].includes(int.getAttribute('name'))) return
+    if (!['computer', 'stash', 'vendingMachine', 'lever'].includes(int.getAttribute('name'))) return
     refreshPopupIdealStyles(popup)
+}
+
+const handleInteractButtonRender = () => {
+    if (!getInteractButton()) return
+    if (getElementInteractedWith()) {
+        var popup = getElementInteractedWith().children[1] ?? getElementInteractedWith().firstElementChild
+        if (containsClass(popup, 'not-ideal')) var disabled = true
+    }
+    if ((getElementInteractedWith() && !disabled) || getGrabbed()) removeClass(getInteractButton(), 'disabled')
+    else addClass(getInteractButton(), 'disabled')
 }
 
 const manageEnemies = () => {
@@ -392,6 +401,7 @@ const explodeGrenade = throwable => {
 
 const blindEnemies = throwable => {
     if (!collide(getCurrentRoom(), throwable, 0)) return
+    playFlashbang()
     getCurrentRoomEnemies().forEach(enemy => {
         if (enemy.state === GRAB) enemy.grabService.releasePlayer()
         setStunnedCounter(1)
@@ -400,7 +410,6 @@ const blindEnemies = throwable => {
     const flashbang = createAndAddClass('div', 'flashbang', 'animation')
     document.getElementById('root').append(flashbang)
     const cloneShadow = getShadowContainer().firstElementChild.cloneNode()
-    getShadowContainer().firstElementChild.remove()
     flashbang.addEventListener('animationend', () => {
         flashbang.remove()
         getShadowContainer().append(cloneShadow)

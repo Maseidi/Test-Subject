@@ -15,6 +15,7 @@ import {
     getRoomNameContainer,
     getSlotsContainer,
     getSprintButton,
+    getThrowButton,
     getUiEl,
 } from './elements.js'
 import { getEnemies, getRooms } from './entities.js'
@@ -64,6 +65,7 @@ import {
     renderReloadButton,
     renderSlots,
     renderSprintButton,
+    renderThrowButton,
     renderUi,
     renderWeaponUi,
 } from './user-interface.js'
@@ -175,6 +177,8 @@ const enableDirection = (getPressed, getOppositePressed, setPressed, setOpposite
 
 const aimWeapon = () => {
     setAimMode(true)
+    getThrowButton()?.remove()
+    renderThrowButton()
     removeAllClasses(getPlayer(), 'walk', 'run')
     const equipped = findEquippedWeaponById()
     if (isGun(equipped.name)) aimGun()
@@ -193,6 +197,8 @@ const aimThrowable = () => {
 
 export const exitAim = () => {
     setAimMode(false)
+    getThrowButton()?.remove()
+    renderThrowButton()
     exitAimModeAnimation()
     removeEquipped()
     if (isMoving()) addClass(getPlayer(), 'walk')
@@ -207,7 +213,9 @@ export const weaponSlotDown = key => {
     removeEquipped()
     equipWeapon(newId)
     getReloadButton()?.remove()
-    if (IS_MOBILE) renderReloadButton()
+    renderReloadButton()
+    getThrowButton()?.remove()
+    renderThrowButton()
 }
 
 const equipWeapon = id => {
@@ -271,10 +279,10 @@ export const fDown = () => {
             pickupDrop(getElementInteractedWith())
         }
         if (getShooting() || getReloading()) return
-        if (name === 'lever') toggleLever()
         if (name === 'crate') breakCrate()
         if (name === 'enemy-back') stealthKill()
         if (!isAble2Interact()) return
+        if (name === 'lever') toggleLever()
         if (name === 'stash') openStash()
         if (name === 'door') renderPasswordInput()
         if (name === 'vendingMachine') openVendingMachine()
@@ -390,6 +398,7 @@ const removeUi = () => {
     getInteractButton()?.remove()
     getHealButton()?.remove()
     getReloadButton()?.remove()
+    getThrowButton()?.remove()
     getPauseButton()?.remove()
     getSlotsContainer()?.remove()
     getPopupContainer().style.opacity = '0'
@@ -425,6 +434,7 @@ const showUi = () => {
     renderInteractButton()
     renderHealButton()
     renderReloadButton()
+    renderThrowButton()
     renderPauseButton()
     renderSlots()
     getPopupContainer().style.opacity = '1'
@@ -562,7 +572,7 @@ export const aimAngle = event => {
 const manageDragItem = event => {
     setMouseX(event.clientX)
     setMouseY(event.clientY)
-    if (!getDraggedItem()) return
+    if (!getDraggedItem() || IS_MOBILE) return
     getDraggedItem().style.left = `${getMouseX() + 10}px`
     getDraggedItem().style.top = `${getMouseY() - 35}px`
 }

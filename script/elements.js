@@ -195,3 +195,9 @@ export const setSlotsContainer = val => {
     slotsContainer = val
 }
 export const getSlotsContainer = () => slotsContainer
+
+let throwButton = null
+export const setThrowButton = val => {
+    throwButton = val
+}
+export const getThrowButton = () => throwButton

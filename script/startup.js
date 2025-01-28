@@ -27,6 +27,7 @@ import {
     renderReloadButton,
     renderSlots,
     renderSprintButton,
+    renderThrowButton,
     renderUi,
 } from './user-interface.js'
 import { addClass, appendAll, createAndAddClass } from './util.js'
@@ -53,6 +54,7 @@ export const startUp = () => {
     renderInteractButton()
     renderHealButton()
     renderReloadButton()
+    renderThrowButton()
     renderPauseButton()
     renderSlots()
 }

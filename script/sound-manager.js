@@ -65,6 +65,13 @@ export const playExplosion = () => {
     playSound(explosion)
 }
 
+export const playFlashbang = () => {
+    const flashbang = new Audio('../assets/audio/flashbang.mp3')
+    flashbang.currentTime = 1.5
+    flashbang.volume = 0.3
+    playSound(flashbang)
+}
+
 export const playBreakCrate = () => {
     const breakCrate = new Audio('../assets/audio/break-crate.mp3')
     breakCrate.volume = 0.3

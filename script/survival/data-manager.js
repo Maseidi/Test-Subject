@@ -18,7 +18,7 @@ import {
     setRooms,
     setWalls,
 } from '../entities.js'
-import { Crate, GunDrop, Lever, Note, PC, PistolAmmo, Stash, VendingMachine } from '../interactables.js'
+import { Flashbang, Grenade, GunDrop, Lever, Note, PC, PistolAmmo, Stash, VendingMachine } from '../interactables.js'
 import { getInventory, initInventory, pickupDrop, setInventory } from '../inventory.js'
 import {
     ARCTIC_WARFERE,
@@ -238,7 +238,7 @@ const initNewSurvivalEntities = () => {
                     new VendingMachine(200, 20),
                     new Lever(1400, 1000),
                     new GunDrop(1400, 1200, startingPistol, 10, 1, 1, 1, 1, 1),
-                    new Crate(700, 1200)
+                    new Flashbang(1400, 1400, 3)
                 ],
             ],
         ]),
@@ -247,6 +247,7 @@ const initNewSurvivalEntities = () => {
 
 const initNewSurvivalPopups = () => {
     setPopups([])
+    if (localStorage.getItem('survival-tutorial-done') === 'DONE') return
     getPopups().push(new Popup(`Welcome to survival mode!`, { renderProgress: '1000', progress2Active: '1001' }, 3000))
     getPopups().push(
         new Popup(
