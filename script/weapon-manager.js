@@ -417,7 +417,10 @@ const manageMobileAim = () => {
     shootWhenTargetDetected()
 }
 
+let targetCounter = 0
 const findMostSuitableTarget = () => {
+    targetCounter = targetCounter + 1 > 30 ? 0 : targetCounter + 1
+    if (targetCounter !== 10) return
     if (!getIsSearching4Target()) return
     if (!getAimMode()) return
 
@@ -429,21 +432,20 @@ const findMostSuitableTarget = () => {
     const playerCenterX = x1 + w1 / 2
     const playerCenterY = y1 + h1 / 2
 
-    getCurrentRoomEnemies()
-        .filter(enemy => ['out-of-range', false].includes(enemy.wallInTheWay))
-        .map(enemy => enemy.sprite)
-        .forEach(item => {
-            const distance2Player = distance(item, player)
-            if (distance2Player > getGunUpgradableDetail(equipped.name, 'range', equipped.rangelvl)) return
-            const { x: x2, y: y2, width: w2, height: h2 } = item.getBoundingClientRect()
-            const angle2Item = angleOf2Points(playerCenterX, playerCenterY, x2 + w2 / 2, y2 + h2 / 2)
-            const joystickAngle = getAimJoystickAngle()
-            if (distance2Player < minDistance && getCurrentDiff(angle2Item, joystickAngle) < 20) {
-                minDistance = distance2Player
-                setFoundTarget(item)
-                setSuitableTargetAngle(angle2Item)
-            }
-        })
+    getCurrentRoomEnemies().forEach(enemy => {
+        if (!['out-of-range', false].includes(enemy.wallInTheWay)) return
+        const item = enemy.sprite
+        const distance2Player = distance(item, player)
+        if (distance2Player > getGunUpgradableDetail(equipped.name, 'range', equipped.rangelvl)) return
+        const { x: x2, y: y2, width: w2, height: h2 } = item.getBoundingClientRect()
+        const angle2Item = angleOf2Points(playerCenterX, playerCenterY, x2 + w2 / 2, y2 + h2 / 2)
+        const joystickAngle = getAimJoystickAngle()
+        if (distance2Player < minDistance && getCurrentDiff(angle2Item, joystickAngle) < 20) {
+            minDistance = distance2Player
+            setFoundTarget(item)
+            setSuitableTargetAngle(angle2Item)
+        }
+    })
 }
 
 const getCurrentDiff = (angle2Item, joystickAngle) => {
