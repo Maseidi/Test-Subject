@@ -250,8 +250,8 @@ export const renderThrowButton = () => {
 const renderButton = (name, onTouchStart, onTouchEnd, setter, onTouchEvenOnDisabled, disabledPredicate) => {
     const root = document.getElementById('root')
     const button = getButton(name, onTouchStart, onTouchEnd, setter, onTouchEvenOnDisabled, disabledPredicate)
-    root.append(button)
     if (!button) return
+    root.append(button)
 }
 
 const getButton = (name, onTouchStart, onTouchEnd, setter, onTouchEvenOnDisabled, disabledPredicate) => {

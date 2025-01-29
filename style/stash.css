@@ -11,9 +11,9 @@
 
 .stash-items-container {
     width: 550px;
-    height: 550px;
     position: relative;
     border-radius: 5px;
+    height: calc(100dvh - 250px);
     border: 1px solid rgb(245, 222, 179, 0.8);
 }
 
