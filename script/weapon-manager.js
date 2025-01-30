@@ -435,6 +435,7 @@ const findMostSuitableTarget = () => {
     const playerCenterY = y1 + h1 / 2
 
     getCurrentRoomEnemies().forEach(enemy => {
+        if (enemy.health === 0) return
         if (!['out-of-range', false].includes(enemy.wallInTheWay)) return
         const item = enemy.sprite
         const distance2Player = distance(item, player)
