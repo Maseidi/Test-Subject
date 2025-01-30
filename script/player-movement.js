@@ -1,5 +1,5 @@
 import { getMapEl, getPlayer } from './elements.js'
-import { isLowHealth, isMoving } from './util.js'
+import { getSpeedPerFrame, isLowHealth, isMoving } from './util.js'
 import {
     getAimMode,
     getAllowMove,
@@ -55,7 +55,7 @@ const normalizeSpeed = () => {
     ) {
         speed /= 1.41
     }
-    return speed
+    return getSpeedPerFrame(speed)
 }
 
 export const useAdrenaline = adrenaline => {

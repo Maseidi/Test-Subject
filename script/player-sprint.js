@@ -1,7 +1,7 @@
 import { getCurrentRoomEnemies, getPlayer, getSprintButton } from './elements.js'
 import { TRACKER } from './enemy/enemy-constants.js'
 import { staminaManager } from './user-interface.js'
-import { addClass, isMoving, removeClass } from './util.js'
+import { addClass, getSpeedPerFrame, isMoving, removeClass } from './util.js'
 import {
     getAimMode,
     getAllowMove,
@@ -43,7 +43,7 @@ export const manageSprint = () => {
 const handleSprintAndStamina = (sprint, animator, stamina, refill) => {
     setSprint(sprint)
     if (animator) animator(getPlayer(), 'run')
-    setStamina(getStamina() + stamina)
+    setStamina(getStamina() + getSpeedPerFrame(stamina))
     setRefillStamina(refill)
     staminaManager(getStamina())
     if (sprint)

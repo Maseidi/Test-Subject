@@ -78,8 +78,8 @@
 
 .quit {
     gap: 20px;
-    right: 100px;
-    bottom: 30px;
+    right: 20px;
+    bottom: 20px;
     padding: 5px;
     display: flex;
     color: wheat;
@@ -373,7 +373,7 @@
 .chaos-container {
     gap: 20px;
     left: 50%;
-    top: 200px;
+    top: 75px;
     opacity: 0;
     padding: 20px;
     display: flex;

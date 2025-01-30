@@ -271,7 +271,7 @@
     left: 0;
     z-index: 60;
     width: 100vw;
-    height: 100vh;
+    height: 100dvh;
     position: absolute;
 }
 

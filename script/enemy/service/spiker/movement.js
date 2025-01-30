@@ -1,4 +1,4 @@
-import { getProperty } from '../../../util.js'
+import { getProperty, getSpeedPerFrame } from '../../../util.js'
 import { INVESTIGATE, NO_OFFENCE } from '../../enemy-constants.js'
 import { AbstractMovementService } from '../abstract/movement.js'
 
@@ -32,6 +32,6 @@ export class SpikerMovementService extends AbstractMovementService {
         let speed = this.enemy.currentSpeed
         if (this.enemy.state === NO_OFFENCE) speed /= 2
         else if (this.enemy.state === INVESTIGATE) speed = this.enemy.maxSpeed / 5
-        return speed
+        return getSpeedPerFrame(speed)
     }
 }

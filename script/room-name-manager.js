@@ -1,4 +1,5 @@
 import { getRoomNameContainer } from './elements.js'
+import { FRAME_RATE } from './script.js'
 import { addAllAttributes, addClass, createAndAddClass } from './util.js'
 
 export const renderRoomName = name => {
@@ -13,6 +14,6 @@ export const renderRoomName = name => {
         charEl.style.animationDelay = `${i * 100}ms`
         roomNamePopup.append(charEl)
     }
-    addAllAttributes(roomNamePopup, 'timer', 0, 'duration', 5 * 60, 'fade-out', 5000)
+    addAllAttributes(roomNamePopup, 'timer', 0, 'duration', 5 * FRAME_RATE, 'fade-out', 5000)
     getRoomNameContainer().append(roomNamePopup)
 }

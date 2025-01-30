@@ -1,3 +1,5 @@
+import { useDeltaTime } from '../../../util.js'
+
 export class NormalInvestigationService {
     constructor(enemy) {
         this.enemy = enemy
@@ -8,8 +10,10 @@ export class NormalInvestigationService {
         const path = this.enemy.sprite.previousSibling
         const counter = this.enemy.investigationCounter
         if (counter > 0) this.enemy.investigationCounter += 1
-        if (counter && counter !== 300 && counter % 100 === 0) this.enemy.angleService.checkSurroundings()
-        if (counter >= 300) this.enemy.investigationCounter = 0
+        const limit = useDeltaTime(300)
+        if (counter && counter !== limit && counter % Math.floor(limit / 3) === 0)
+            this.enemy.angleService.checkSurroundings()
+        if (counter >= limit) this.enemy.investigationCounter = 0
         if (counter !== 0) return
         if (path.children.length === 1) this.enemy.angleService.checkSurroundings()
         const dest = path.children[this.enemy.pathPoint]

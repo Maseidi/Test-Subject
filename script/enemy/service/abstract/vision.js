@@ -1,6 +1,6 @@
 import { getCurrentRoomSolid, getPlayer } from '../../../elements.js'
 import { IS_MOBILE } from '../../../script.js'
-import { collide, containsClass, getProperty } from '../../../util.js'
+import { collide, containsClass, getProperty, useDeltaTime } from '../../../util.js'
 import { getIsSurvival } from '../../../variables.js'
 import { INVESTIGATE, LOST, MOVE_TO_POSITION, RANGER, SCORCHER, STINGER } from '../../enemy-constants.js'
 
@@ -24,8 +24,9 @@ export class AbstractVisionService {
 
     getWallInTheWay() {
         if (this.enemy.movementService.distance2Player() > this.enemy.vision) return
-        this.visionCounter = this.visionCounter + 1 === 21 ? 0 : this.visionCounter + 1
-        if (this.visionCounter !== 20) return
+        const limit = useDeltaTime(20)
+        this.visionCounter = this.visionCounter === limit ? 0 : this.visionCounter + 1
+        if (this.visionCounter !== limit) return
         const walls = getCurrentRoomSolid().filter(solid => !containsClass(solid, 'enemy-collider'))
         const vision = this.enemy.sprite.firstElementChild.children[1]
         for (const component of vision.children) {

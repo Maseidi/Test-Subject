@@ -178,8 +178,15 @@ export const addMessage = (input, popup) => {
     })
 }
 
-export const renderMovementJoystick = () => renderJoystick('movement', movePlayer, stopMovement, setMovementJoystick)
+let movementCounter = 0
+const getMovementCounter = () => movementCounter
+const setMovementCounter = val => (movementCounter = val)
+export const renderMovementJoystick = () =>
+    renderJoystick('movement', movePlayer, stopMovement, setMovementJoystick, getMovementCounter, setMovementCounter, 5)
 
+let aimCounter = 0
+const getAimCounter = () => aimCounter
+const setAimCounter = val => (aimCounter = val)
 export const renderAimJoystick = () =>
     renderJoystick(
         'aim',
@@ -196,9 +203,11 @@ export const renderAimJoystick = () =>
             setFoundTarget(false)
         },
         setAimJoystick,
+        getAimCounter,
+        setAimCounter,
     )
 
-const renderJoystick = (type, onTouchMove, onTouchEnd, setter) => {
+const renderJoystick = (type, onTouchMove, onTouchEnd, setter, getCounter, setCounter, maxLimit = 2) => {
     if (!IS_MOBILE) return
     const root = document.getElementById('root')
     const joystick = createAndAddClass('div', `${type}-joystick`, 'joystick', 'ui-theme')

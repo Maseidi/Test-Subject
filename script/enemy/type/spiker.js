@@ -1,4 +1,4 @@
-import { getProperty } from '../../util.js'
+import { getProperty, getSpeedPerFrame, useDeltaTime } from '../../util.js'
 import { getRoundsFinished } from '../../variables.js'
 import { CHASE, GUESS_SEARCH, INVESTIGATE, LOST, MOVE_TO_POSITION, NO_OFFENCE, SPIKER } from '../enemy-constants.js'
 import { NormalChaseService } from '../service/normal/chase.js'
@@ -69,7 +69,7 @@ export class Spiker extends AbstractEnemy {
 
     handleRotation() {
         const angle = getProperty(this.sprite.firstElementChild.firstElementChild, 'transform', 'rotateZ(', 'deg)') || 0
-        let newAngle = Number(angle) + 5
+        let newAngle = Number(angle) + getSpeedPerFrame(5)
         if (newAngle > 360) newAngle = 0
         this.sprite.firstElementChild.firstElementChild.style.transform = `rotateZ(${newAngle}deg)`
     }
@@ -77,7 +77,7 @@ export class Spiker extends AbstractEnemy {
     handleAxis() {
         this.axisCounter = this.axisCounter || 0
         this.axisCounter++
-        if (this.axisCounter !== 60) return
+        if (this.axisCounter !== useDeltaTime(60)) return
         if (this.prevX === this.x && this.prevY === this.y) {
             if (this.axis === 1) this.axis = 2
             else this.axis = 1

@@ -135,7 +135,7 @@
     left: 0;
     z-index: 38;
     width: 100vw;
-    height: 100vh;
+    height: 100dvh;
     position: fixed;
 }
 

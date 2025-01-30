@@ -90,7 +90,6 @@ import {
     setMaxStamina,
     setMouseX,
     setMouseY,
-    setNoAimAfterThrow,
     setNoOffenseCounter,
     setPause,
     setPauseCause,
@@ -178,7 +177,6 @@ export const initConstants = () => {
     setExplosionDamageCounter(0)
     setAnimatedLimbs([])
     setWaitingFunctions([])
-    setNoAimAfterThrow(false)
     setPlayingDialogue(null)
     setNoOffenseCounter(0)
     setStunnedCounter(0)

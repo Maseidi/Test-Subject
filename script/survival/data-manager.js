@@ -18,7 +18,8 @@ import {
     setRooms,
     setWalls,
 } from '../entities.js'
-import { Flashbang, Grenade, GunDrop, Lever, Note, PC, PistolAmmo, Stash, VendingMachine } from '../interactables.js'
+import { getGunUpgradableDetail } from '../gun-details.js'
+import { GunDrop, Lever, Note, PC, PistolAmmo, Stash, VendingMachine } from '../interactables.js'
 import { getInventory, initInventory, pickupDrop, setInventory } from '../inventory.js'
 import {
     ARCTIC_WARFERE,
@@ -111,7 +112,6 @@ import {
     setMaxStamina,
     setMouseX,
     setMouseY,
-    setNoAimAfterThrow,
     setNoOffenseCounter,
     setPause,
     setPauseCause,
@@ -146,7 +146,16 @@ import {
     setWeaponWheel,
 } from '../variables.js'
 import { Wall } from '../wall.js'
-import { getChaos, getRandomizedWeapons, setChaos, setEnemiesKilled, setRandomizedWeapons } from './variables.js'
+import {
+    getChaos,
+    getRandomizedWeapons,
+    setChaos,
+    setCurrentChaosEnemies,
+    setCurrentChaosSpawned,
+    setEnemiesKilled,
+    setRandomizedWeapons,
+    setSpawnCounter,
+} from './variables.js'
 
 let startingPistol = null
 export const prepareNewSurvivalData = () => {
@@ -237,8 +246,17 @@ const initNewSurvivalEntities = () => {
                     new Stash(100, 20),
                     new VendingMachine(200, 20),
                     new Lever(1400, 1000),
-                    new GunDrop(1400, 1200, startingPistol, 10, 1, 1, 1, 1, 1),
-                    new Flashbang(1400, 1400, 3)
+                    new GunDrop(
+                        1400,
+                        1200,
+                        startingPistol,
+                        getGunUpgradableDetail(startingPistol, 'magazine', 1),
+                        1,
+                        1,
+                        1,
+                        1,
+                        1,
+                    ),
                 ],
             ],
         ]),
@@ -314,7 +332,6 @@ export const initConstants = () => {
     setExplosionDamageCounter(0)
     setAnimatedLimbs([])
     setWaitingFunctions([])
-    setNoAimAfterThrow(false)
     setPlayingDialogue(null)
     setNoOffenseCounter(0)
     setStunnedCounter(0)
@@ -323,6 +340,9 @@ export const initConstants = () => {
     setPlayerAimAngle(0)
     setAimMode(false)
     setEnemiesKilled(0)
+    setCurrentChaosEnemies(null)
+    setCurrentChaosSpawned(null)
+    setSpawnCounter(0)
     setIsSearching4Target(false)
     setFoundTarget(null)
     setSuitableTargetAngle(null)

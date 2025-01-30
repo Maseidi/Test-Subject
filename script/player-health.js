@@ -9,9 +9,11 @@ import {
     containsClass,
     createAndAddClass,
     findAttachmentsOnPlayer,
+    getSpeedPerFrame,
     isLowHealth,
     removeAllClasses,
     removeClass,
+    useDeltaTime,
 } from './util.js'
 import {
     getBurning,
@@ -48,12 +50,12 @@ export const manageHealthStatus = () => {
 const manageBurningState = () => {
     if (getBurning() === 0) return
     setBurning(getBurning() + 1)
-    if (getBurning() === 900) {
+    if (getBurning() === useDeltaTime(900)) {
         setBurning(0)
         findAttachmentsOnPlayer('fire').remove()
         return
     }
-    let newHealth = getHealth() - 0.02
+    let newHealth = getHealth() - getSpeedPerFrame(0.02)
     newHealth = newHealth < 0 ? 0 : newHealth
     modifyHealth(newHealth)
     if (isLowHealth()) renderDangerStateEffect(renderHealthStatusChildByClassName, addClass)
@@ -61,7 +63,7 @@ const manageBurningState = () => {
 
 const managePoisonedState = () => {
     if (!getPoisoned()) return
-    let newHealth = getHealth() - 0.01
+    let newHealth = getHealth() - getSpeedPerFrame(0.01)
     newHealth = newHealth < 0 ? 0 : newHealth
     modifyHealth(newHealth)
     if (isLowHealth()) renderDangerStateEffect(renderHealthStatusChildByClassName, addClass)
@@ -76,6 +78,7 @@ export const heal = () => {
     let newHealth = Math.min(getHealth() + getMaxHealth() / 5, getMaxHealth())
     useInventoryResource('bandage', 1)
     modifyHealth(newHealth)
+    if (bandage.amount === 0 && getHealButton()) addClass(getHealButton(), 'disabled')
     if (!isLowHealth()) renderDangerStateEffect(removeHealthStatusChildByClassName, removeClass)
 }
 
@@ -169,7 +172,7 @@ export const poisonPlayer = () => {
 const manageExplosionDamagedState = () => {
     if (getExplosionDamageCounter() === 0) return
     setExplosionDamageCounter(getExplosionDamageCounter() + 1)
-    if (getExplosionDamageCounter() === 100) setExplosionDamageCounter(0)
+    if (getExplosionDamageCounter() === useDeltaTime(100)) setExplosionDamageCounter(0)
 }
 
 export const useHealthPotion = potion => {
@@ -190,7 +193,7 @@ const clearAllInfection = () => {
 
 const manageInfectedState = () => {
     if (getInfection().length === 0) return
-    let newHealth = getHealth() - 0.002 * getInfection().length
+    let newHealth = getHealth() - getSpeedPerFrame(0.002 * getInfection().length)
     newHealth = newHealth < 0 ? 0 : newHealth
     modifyHealth(newHealth)
     if (isLowHealth()) renderDangerStateEffect(renderHealthStatusChildByClassName, addClass)

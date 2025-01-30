@@ -41,8 +41,8 @@ export const PARKER_HALE_M_85 = 'parkerhalem85'
 
 export class Loot {
     constructor(name, amount, progress) {
-        this.name = name ?? null
         this.amount = amount ?? 0
+        this['loot-name'] = name ?? null
         this.progress2Active = progress?.progress2Active ?? []
         this.progress2Deactive = progress?.progress2Deactive ?? []
     }

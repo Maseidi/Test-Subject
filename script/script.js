@@ -12,7 +12,8 @@ export const IS_MOBILE =
     navigator.userAgent.toLowerCase().includes('android') || navigator.userAgent.toLowerCase().includes('iphone')
 
 export const ENEMY_CAP = IS_MOBILE ? 20 : 40
-export const SPAWN_INTERVAL = IS_MOBILE ? 90 : 60
+export const FRAME_RATE = IS_MOBILE ? 30 : 60
+export const SPAWN_INTERVAL = IS_MOBILE ? 1.5 * FRAME_RATE : FRAME_RATE
 
 window.addEventListener('contextmenu', e => e.preventDefault())
 renderMainMenu()

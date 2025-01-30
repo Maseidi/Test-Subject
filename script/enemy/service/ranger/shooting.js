@@ -7,6 +7,7 @@ import {
     calculateBulletSpeed,
     createAndAddClass,
     getProperty,
+    getSpeedPerFrame,
     removeClass,
 } from '../../../util.js'
 import { getGrabbed, getPlayerX, getPlayerY, getRoomLeft, getRoomTop, getStunnedCounter } from '../../../variables.js'
@@ -41,7 +42,6 @@ export class RangerShootingService {
         }
         if (shootCounter > this.fireRate - 1 && getStunnedCounter() === 0) this.updateAngle2Player()
         this.enemy.shootCounter = shootCounter
-        this.shootAnimation()
         if (shootCounter !== this.fireRate / 2) return
         if (this.enemy.health > 0) this.shoot()
     }
@@ -56,22 +56,8 @@ export class RangerShootingService {
         )
     }
 
-    shootAnimation() {
-        this.enemy.angle = this.enemy.angle || 0
-        this.rotateBody(this.enemy.shootCounter < this.fireRate / 2, 12)
-        this.rotateBody(
-            this.enemy.shootCounter >= this.fireRate / 2 && this.enemy.shootCounter < this.fireRate - 1,
-            -12,
-        )
-    }
-
-    rotateBody(predicate, amount) {
-        if (!predicate) return
-        this.enemy.angle = this.enemy.angle + amount
-        this.enemy.sprite.firstElementChild.firstElementChild.style.transform = `rotateZ(${this.enemy.angle}deg)`
-    }
-
     shoot() {
+        this.playShootAnimation()
         const { x: srcX, y: srcY } = {
             x: getProperty(this.enemy.sprite, 'left', 'px') + 16,
             y: getProperty(this.enemy.sprite, 'top', 'px') + 16,
@@ -86,9 +72,9 @@ export class RangerShootingService {
         addAllAttributes(
             bullet,
             'speed-x',
-            speedX,
+            getSpeedPerFrame(speedX),
             'speed-y',
-            speedY,
+            getSpeedPerFrame(speedY),
             'damage',
             this.enemy.damage,
             'virus',
@@ -100,5 +86,20 @@ export class RangerShootingService {
         getCurrentRoom().append(bullet)
         getCurrentRoomBullets().push(bullet)
         this.enemy.movementService.resetAcceleration()
+    }
+
+    playShootAnimation() {
+        const body = this.enemy.sprite.firstElementChild.firstElementChild
+        const currentAngle = getProperty(body, 'transform', 'rotateZ(', 'deg)')
+        body.animate(
+            [
+                { transform: `rotateZ(${currentAngle}deg)` },
+                { transform: `rotateZ(${currentAngle + 180}deg)` },
+                { transform: `rotateZ(${currentAngle}deg)` },
+            ],
+            {
+                duration: 500,
+            },
+        )
     }
 }

@@ -5,6 +5,7 @@ import {
     calculateBulletSpeed,
     createAndAddClass,
     getProperty,
+    getSpeedPerFrame,
 } from '../../../util.js'
 import { getPlayerX, getPlayerY, getRoomLeft, getRoomTop } from '../../../variables.js'
 import { RangerShootingService } from '../ranger/shooting.js'
@@ -16,6 +17,7 @@ export class StingerShootingService extends RangerShootingService {
     }
 
     shoot() {
+        super.playShootAnimation()
         const { x: srcX, y: srcY } = {
             x: getProperty(this.enemy.sprite, 'left', 'px') + 25,
             y: getProperty(this.enemy.sprite, 'top', 'px') + 25,
@@ -30,9 +32,9 @@ export class StingerShootingService extends RangerShootingService {
         addAllAttributes(
             bullet,
             'speed-x',
-            speedX,
+            getSpeedPerFrame(speedX),
             'speed-y',
-            speedY,
+            getSpeedPerFrame(speedY),
             'damage',
             this.enemy.damage,
             'virus',

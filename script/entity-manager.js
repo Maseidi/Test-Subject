@@ -55,9 +55,11 @@ import {
     distance,
     element2Object,
     getProperty,
+    getSpeedPerFrame,
     isAble2Interact,
     removeClass,
     renderShadow,
+    useDeltaTime,
 } from './util.js'
 import {
     getCurrentRoomId,
@@ -68,6 +70,7 @@ import {
     getMaxHealth,
     getNoOffenseCounter,
     getPlayingDialogue,
+    getReloading,
     getRoomLeft,
     getRoomTop,
     getStunnedCounter,
@@ -164,7 +167,7 @@ const manageInteractables = () => {
 
 const findNearInteractables = () => {
     interactableDistanceCounter++
-    if (interactableDistanceCounter === 20) {
+    if (interactableDistanceCounter === useDeltaTime(20)) {
         interactables2Check = getCurrentRoomInteractables().filter(int => distance(int, getPlayer()) < 200)
         interactableDistanceCounter = 0
     }
@@ -247,7 +250,14 @@ const refreshPopupIdealStyles = popup => {
 }
 
 const handleStaticInteractablesIdealInteraction = (int, popup) => {
-    if (!['computer', 'stash', 'vendingMachine', 'lever'].includes(int.getAttribute('name'))) return
+    const name = int.getAttribute('name')
+    if (name === 'lever') {
+        if (getPlayingDialogue() || getPopupContainer().firstElementChild || getReloading())
+            addClass(popup, 'not-ideal')
+        else removeClass(popup, 'not-ideal')
+        return
+    }
+    if (!['computer', 'stash', 'vendingMachine'].includes(int.getAttribute('name'))) return
     refreshPopupIdealStyles(popup)
 }
 
@@ -269,7 +279,7 @@ const manageEnemies = () => {
 
 const handleNoOffenceMode = () => {
     if (getNoOffenseCounter() > 0) setNoOffenseCounter(getNoOffenseCounter() + 1)
-    if (getNoOffenseCounter() < 180) return
+    if (getNoOffenseCounter() < useDeltaTime(180)) return
     getCurrentRoomEnemies()
         .filter(elem => elem.state === NO_OFFENCE)
         .forEach(elem => (elem.state = CHASE))
@@ -278,7 +288,7 @@ const handleNoOffenceMode = () => {
 
 const handleStunnedMode = () => {
     if (getStunnedCounter() > 0) setStunnedCounter(getStunnedCounter() + 1)
-    if (getStunnedCounter() < 600) return
+    if (getStunnedCounter() < useDeltaTime(600)) return
     getCurrentRoomEnemies().forEach(elem => {
         elem.state = LOST
         elem.lostCounter = 1
@@ -334,7 +344,7 @@ const handleObstacles = (getItems, time, harmPlayer, setItems) => {
     const obstacles2Remove = new Map()
     getItems().forEach(item => {
         const theTime = Number(item.getAttribute('time'))
-        if (theTime === time) {
+        if (theTime === useDeltaTime(time)) {
             obstacles2Remove.set(item, true)
             item.remove()
         }
@@ -362,9 +372,10 @@ const manageThrowables = () => {
         rotateThrowable(throwable, baseSpeed)
         handleInteractability(throwable, time, name)
         throwable.setAttribute('acc-counter', accCounter + 1)
+        const nextBaseSpeed = baseSpeed - getSpeedPerFrame(2)
 
-        if (accCounter === 15 && baseSpeed - 2 >= 0) {
-            const newSpeed = calculateBulletSpeed(deg, diffY / diffX, diffX, diffY, baseSpeed - 2)
+        if (accCounter === useDeltaTime(15) && nextBaseSpeed >= 0) {
+            const newSpeed = calculateBulletSpeed(deg, diffY / diffX, diffX, diffY, nextBaseSpeed)
             speedX = Math.sign(speedX) * Math.abs(newSpeed.speedX)
             speedY = Math.sign(speedY) * Math.abs(newSpeed.speedY)
             addAllAttributes(
@@ -376,7 +387,7 @@ const manageThrowables = () => {
                 'speed-y',
                 speedY,
                 'base-speed',
-                baseSpeed - 2,
+                nextBaseSpeed,
             )
         }
 
@@ -422,7 +433,7 @@ const THROWABLE_FUNCTIONALITY = new Map([
 ])
 
 const handleInteractability = (throwable, time, name) => {
-    if (time === 180) {
+    if (time === useDeltaTime(180)) {
         THROWABLE_FUNCTIONALITY.get(name)(throwable)
         throwable.remove()
     }
@@ -468,9 +479,10 @@ const manageExplosions = () => {
         explodeCrates(explosion)
         const time = Number(explosion.getAttribute('time'))
         const scale = getProperty(explosion, 'transform', 'scale(', ')')
-        if (time < 10) explosion.style.transform = `scale(${scale + 2})`
-        else if (time < 20) explosion.style.transform = `scale(${scale - 2})`
-        if (time === 30) explosion.remove()
+        const limit = useDeltaTime(30)
+        if (time < Math.floor(limit / 3)) explosion.style.transform = `scale(${scale + 2})`
+        else if (time < Math.floor((limit / 3) * 2)) explosion.style.transform = `scale(${scale - 2})`
+        if (time === limit) explosion.remove()
         explosion.setAttribute('time', time + 1)
     })
 }
@@ -504,8 +516,9 @@ const explodeCrates = explosion => {
 let torchCounter = 0
 const manageTorch = () => {
     if (!getEquippedTorchId()) return
-    if (torchCounter < 180) torchCounter++
-    if (torchCounter !== 180) return
+    const limit = useDeltaTime(180)
+    if (torchCounter < limit) torchCounter++
+    if (torchCounter !== limit) return
     const torchOfInventory = findEquippedTorchById()
     torchOfInventory.health--
     const health = torchOfInventory.health

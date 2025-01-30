@@ -15,8 +15,9 @@
     line-height: 30px;
     position: absolute;
     padding: 30px 50px;
+    font-family: kalam;
     background-size: cover;
-    height: calc(100dvh - 250px);
+    height: calc(100dvh - 100px);
     transform: translateX(-50%) translateY(-50%);
     background-image: url('../assets/images/note.png');
 }
@@ -41,6 +42,7 @@
 .inventory {
     width: 400px;
     display: flex;
+    margin-top: 50px;
     position: relative;
     flex-flow: row wrap;
 }
@@ -235,14 +237,15 @@ div.selectable-slot {
 
 .weapon-stats-container {
     display: flex;
+    padding-top: 50px;
     align-items: center;
     justify-content: center;
     color: rgb(245, 222, 179, 0.8);
 }
 
 .weapon-stats {
-    width: 700px;
-    padding: 50px;
+    width: 600px;
+    padding: 20px;
     border-radius: 5px;
     position: relative;
     height: fit-content;
@@ -263,7 +266,7 @@ div.selectable-slot {
 }
 
 .weapon-stats-name {
-    font-size: 35px;
+    font-size: 20px;
     font-weight: bold;
     text-align: center;
     text-transform: uppercase;
@@ -299,7 +302,7 @@ div.selectable-slot {
 .lower {
     gap: 10px;
     width: 100%;
-    height: 45px;
+    height: 30px;
     display: flex;
     flex-direction: row;
     align-items: center;

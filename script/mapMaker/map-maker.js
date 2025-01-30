@@ -14,6 +14,7 @@ import { Popup } from '../popup-manager.js'
 import { initProgress, setProgress } from '../progress-manager.js'
 import { defineEnemyComponents } from '../room-loader.js'
 import { Room } from '../room.js'
+import { IS_MOBILE } from '../script.js'
 import { BandageShopItem, setShopItems } from '../shop-item.js'
 import { renderPauseContainer, renderPlayer } from '../startup.js'
 import { initStash, setStash } from '../stash.js'
@@ -369,6 +370,12 @@ const renderOptions = () => {
     )
     addClass(difficulty, 'room-overview-difficulty-autocomplete')
     appendAll(optionsContainer, save, playBtn, difficulty)
+    if (IS_MOBILE) {
+        const pauseBtn = createAndAddClass('div', 'play-option')
+        pauseBtn.textContent = 'pause'
+        pauseBtn.addEventListener('click', () => dispatchEvent(new KeyboardEvent('keydown', { code: 'Escape' })))
+        optionsContainer.append(pauseBtn)
+    }
     return optionsContainer
 }
 

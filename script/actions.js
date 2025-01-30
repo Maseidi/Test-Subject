@@ -106,6 +106,7 @@ import {
     getRightPressed,
     getShooting,
     getSprintPressed,
+    getThrowCounter,
     getUpPressed,
     getWaitingFunctions,
     getWeaponWheel,
@@ -116,7 +117,6 @@ import {
     setLeftPressed,
     setMouseX,
     setMouseY,
-    setNoAimAfterThrow,
     setPause,
     setPauseCause,
     setPlayerAimAngle,
@@ -415,7 +415,9 @@ const gamePlaying = () => {
     resumeAnimations()
     showUi()
     resumePlayerActions()
-    getWaitingFunctions().forEach(elem => elem.fn(...elem.args))
+    getWaitingFunctions()
+        .filter(item => item.id !== 'aim-waiting-4-throw-function')
+        .forEach(elem => elem.fn(...elem.args))
     setWaitingFunctions([])
     getPlayingSoundEffects().forEach(effect => effect.play())
 }
@@ -593,7 +595,7 @@ export const clickUp = event => {
 
 export const aimDown = () => {
     if (getGrabbed() || !getEquippedWeaponId()) return
-    setNoAimAfterThrow(false)
+    setWaitingFunctions(getWaitingFunctions().filter(item => item.id !== 'aim-waiting-4-throw-function'))
     if (getPause()) {
         setWaitingFunctions(getWaitingFunctions().filter(item => item.id !== 'aim-waiting-function'))
     } else aimWeapon()
@@ -601,8 +603,8 @@ export const aimDown = () => {
 
 export const aimUp = () => {
     if (getGrabbed() || !getEquippedWeaponId()) return
-    if (isThrowing()) {
-        setNoAimAfterThrow(true)
+    if (getThrowCounter() > 0) {
+        setWaitingFunctions([...getWaitingFunctions(), { fn: exitAim, args: [], id: 'aim-waiting-4-throw-function' }])
         return
     }
     if (getPause()) {

@@ -27,8 +27,8 @@ export const manageLootAttribute = (model, reRenderCallback, canHaveKeyAsLoot = 
                     let loot = findLoot(value, model)
                     if (!loot) return
                     resetAllLootValues(model)
-                    model['loot-name'] = loot.name
                     model['loot-amount'] = loot.amount
+                    model['loot-name'] = loot['loot-name']
                     model['loot-active'] = loot.progress2Active
                     model['loot-deactive'] = loot.progress2Deactive
                     if (value === 'note') {

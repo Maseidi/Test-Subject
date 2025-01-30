@@ -1,6 +1,6 @@
 import { getCurrentRoom, getCurrentRoomFlames, getPlayer } from '../../../elements.js'
 import { setPlayer2Fire } from '../../../player-health.js'
-import { addClass, collide, isThrowing } from '../../../util.js'
+import { addClass, collide, isThrowing, useDeltaTime } from '../../../util.js'
 import { CHASE, NO_OFFENCE } from '../../enemy-constants.js'
 import { AbstractMovementService } from '../abstract/movement.js'
 
@@ -11,7 +11,7 @@ export class ScorcherMovementService extends AbstractMovementService {
 
     displaceEnemy() {
         this.enemy.flameCounter = this.enemy.flameCounter || 0
-        if (this.enemy.flameCounter === 600) this.addFlame()
+        if (this.enemy.flameCounter === useDeltaTime(600)) this.addFlame()
         this.enemy.flameCounter += 1
         this.enemy.pathFindingService.findPath()
         this.move2Destination()

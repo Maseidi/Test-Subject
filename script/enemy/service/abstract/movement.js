@@ -1,5 +1,5 @@
 import { getPlayer } from '../../../elements.js'
-import { collide, distance, getProperty } from '../../../util.js'
+import { collide, distance, getProperty, getSpeedPerFrame, useDeltaTime } from '../../../util.js'
 import { CHASE, GUESS_SEARCH, INVESTIGATE, LOST, MOVE_TO_POSITION, NO_OFFENCE } from '../../enemy-constants.js'
 
 export class AbstractMovementService {
@@ -53,7 +53,7 @@ export class AbstractMovementService {
         if (this.enemy.state === NO_OFFENCE) speed /= 2
         else if (this.enemy.state === INVESTIGATE) speed = this.enemy.maxSpeed / 5
         if (xMultiplier && yMultiplier) speed /= 1.41
-        return speed
+        return getSpeedPerFrame(speed)
     }
 
     reachedDestination() {
@@ -86,7 +86,7 @@ export class AbstractMovementService {
 
     accelerateEnemy() {
         this.enemy.accelerationCounter += 1
-        if (this.enemy.accelerationCounter === 60) {
+        if (this.enemy.accelerationCounter === useDeltaTime(60)) {
             let newSpeed = this.enemy.currentSpeed + this.enemy.acceleration
             if (newSpeed > this.enemy.maxSpeed) newSpeed = this.enemy.maxSpeed
             this.enemy.currentSpeed = newSpeed

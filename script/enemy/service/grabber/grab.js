@@ -17,6 +17,7 @@ import {
     createAndAddClass,
     exitAimModeAnimation,
     getProperty,
+    getSpeedPerFrame,
     isMoving,
     removeClass,
     removeEquipped,
@@ -52,8 +53,9 @@ export class GrabberGrabService {
         const slider = getGrabBar().lastElementChild
         const percent = getProperty(slider, 'left', '%')
         if (percent >= 100) this.releasePlayer()
-        slider.style.left = `${percent + 0.7}%`
-        const current = 10 * (percent + 0.7)
+        const newValue = percent + getSpeedPerFrame(0.7)
+        slider.style.left = `${newValue}%`
+        const current = 10 * newValue
         this.#processPart(current, 'first')
         this.#processPart(current, 'second')
         this.#processPart(current, 'third')

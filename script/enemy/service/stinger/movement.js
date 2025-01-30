@@ -1,6 +1,6 @@
 import { getCurrentRoom, getCurrentRoomPoisons, getPlayer } from '../../../elements.js'
 import { poisonPlayer } from '../../../player-health.js'
-import { addClass, collide, isThrowing } from '../../../util.js'
+import { addClass, collide, isThrowing, useDeltaTime } from '../../../util.js'
 import { CHASE, NO_OFFENCE } from '../../enemy-constants.js'
 import { AbstractMovementService } from '../abstract/movement.js'
 
@@ -11,7 +11,7 @@ export class StingerMovementService extends AbstractMovementService {
 
     displaceEnemy() {
         this.enemy.poisonCounter = this.enemy.poisonCounter || 0
-        if (this.enemy.poisonCounter === 900) this.addPoison()
+        if (this.enemy.poisonCounter === useDeltaTime(900)) this.addPoison()
         this.enemy.poisonCounter += 1
         this.enemy.pathFindingService.findPath()
         this.move2Destination()

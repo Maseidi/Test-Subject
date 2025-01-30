@@ -370,12 +370,6 @@ export const setIsSurvival = val => {
 }
 export const getIsSurvival = () => isSurvival
 
-let noAimAfterThrow = null
-export const setNoAimAfterThrow = val => {
-    noAimAfterThrow = val
-}
-export const getNoAimAfterThrow = () => noAimAfterThrow
-
 let isSearching4Target = null
 export const setIsSearching4Target = val => {
     isSearching4Target = val

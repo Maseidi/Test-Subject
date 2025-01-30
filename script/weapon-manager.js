@@ -1,4 +1,3 @@
-import { exitAim } from './actions.js'
 import { manageAimModeAngle } from './angle-manager.js'
 import {
     getCurrentRoom,
@@ -39,9 +38,11 @@ import {
     findAttachmentsOnPlayer,
     getEquippedItemDetail,
     getProperty,
+    getSpeedPerFrame,
     isMoving,
     isThrowing,
     removeClass,
+    useDeltaTime,
 } from './util.js'
 import {
     getAimJoystickAngle,
@@ -50,7 +51,6 @@ import {
     getEquippedWeaponId,
     getFoundTarget,
     getIsSearching4Target,
-    getNoAimAfterThrow,
     getNoOffenseCounter,
     getPlayerAimAngle,
     getPlayerAngle,
@@ -64,6 +64,7 @@ import {
     getSuitableTargetAngle,
     getTargets,
     getThrowCounter,
+    getWaitingFunctions,
     getWeaponWheel,
     setAimMode,
     setCriticalChance,
@@ -97,7 +98,7 @@ let counter = 0
 const manageAim = () => {
     if (!getAimMode()) return
     counter++
-    if (counter === 5) {
+    if (counter === useDeltaTime(6)) {
         counter = 0
         setTargets([])
     }
@@ -166,8 +167,9 @@ const manageShoot = () => {
     if (!getEquippedWeaponId()) return
     const fireRate = getEquippedItemDetail(equipped, 'firerate')
     setShootCounter(getShootCounter() + 1)
-    if (getShootCounter() / 60 >= fireRate) setShootCounter(getShootCounter() - 1)
-    if ((getShootCounter() + 1) / 60 >= fireRate) {
+    const limit = useDeltaTime(60)
+    if (getShootCounter() / limit >= fireRate) setShootCounter(getShootCounter() - 1)
+    if ((getShootCounter() + 1) / limit >= fireRate) {
         setShooting(false)
         if (getAimMode() && getShootPressed() && !getReloading()) {
             setShooting(true)
@@ -260,7 +262,7 @@ const manageFireAnimation = () => {
     const weaponFire = findAttachmentsOnPlayer('gun').lastElementChild
     const time = Number(weaponFire.getAttribute('time'))
     if (time === 0) return
-    if (time === 6) {
+    if (time === useDeltaTime(6)) {
         weaponFire.setAttribute('time', 0)
         weaponFire.style.display = 'none'
     } else weaponFire.setAttribute('time', time + 1)
@@ -279,19 +281,19 @@ const throwAnimation = () => {
     const handTop = getProperty(rightHand, 'top', 'px')
     const throwable = findAttachmentsOnPlayer('throwable').children[1]
     const throwableTop = getProperty(throwable, 'top', 'px')
-    animateThrow(rightHand, 1, 8, `${handHeight - 1}px`, `${handTop + 1}px`)
+    const one2Frame = getSpeedPerFrame(1)
+    animateThrow(rightHand, 1, 8, `${handHeight - one2Frame}px`, `${handTop + one2Frame}px`)
     animateThrow(rightHand, 9, 9, '2px', '0')
-    animateThrow(rightHand, 10, 18, `${handHeight + 1}px`, `${handTop + 0.08}px`)
+    animateThrow(rightHand, 10, 18, `${handHeight + one2Frame}px`, `${handTop + getSpeedPerFrame(0.08)}px`)
     animateThrow(rightHand, 19, 19, '', '')
     if (getThrowCounter() === 19) {
-        setThrowCounter(0)
         throwable.style.top = ''
-        if (getNoAimAfterThrow()) {
-            exitAim()
-            return
-        }
+        getWaitingFunctions()
+            .find(item => item.id === 'aim-waiting-4-throw-function')
+            ?.fn?.()
+        setThrowCounter(0)
     }
-    if (getThrowCounter() > 0 && getThrowCounter() <= 18) throwable.style.top = `${throwableTop + 1}px`
+    if (getThrowCounter() > 0 && getThrowCounter() <= 18) throwable.style.top = `${throwableTop + one2Frame}px`
 }
 
 const animateThrow = (hand, start, end, height, top) => {
@@ -321,9 +323,9 @@ const throwItem = () => {
         'name',
         equipped.name,
         'speed-x',
-        speedX,
+        getSpeedPerFrame(speedX),
         'speed-y',
-        speedY,
+        getSpeedPerFrame(speedY),
         'distance',
         0,
         'diff-x',
@@ -333,7 +335,7 @@ const throwItem = () => {
         'deg',
         deg,
         'base-speed',
-        8,
+        getSpeedPerFrame(8),
         'acc-counter',
         0,
         'time',
@@ -419,7 +421,7 @@ const manageMobileAim = () => {
 
 let targetCounter = 0
 const findMostSuitableTarget = () => {
-    targetCounter = targetCounter + 1 > 30 ? 0 : targetCounter + 1
+    targetCounter = targetCounter + 1 > useDeltaTime(30) ? 0 : targetCounter + 1
     if (targetCounter !== 10) return
     if (!getIsSearching4Target()) return
     if (!getAimMode()) return
@@ -440,7 +442,7 @@ const findMostSuitableTarget = () => {
         const { x: x2, y: y2, width: w2, height: h2 } = item.getBoundingClientRect()
         const angle2Item = angleOf2Points(playerCenterX, playerCenterY, x2 + w2 / 2, y2 + h2 / 2)
         const joystickAngle = getAimJoystickAngle()
-        if (distance2Player < minDistance && getCurrentDiff(angle2Item, joystickAngle) < 20) {
+        if (distance2Player < minDistance && getCurrentDiff(angle2Item, joystickAngle) < 40) {
             minDistance = distance2Player
             setFoundTarget(item)
             setSuitableTargetAngle(angle2Item)
