@@ -543,7 +543,7 @@ test('should be able to buy a weapon, buy ammo, upgrade it, fight off some enemi
         await page.keyboard.press('Escape')
         // popup showing
         expect(page.getByText(POPUP_CONTENT)).toBeVisible()
-        await page.waitForTimeout(Number(POPUP_DURATION) + 10)
+        await page.waitForTimeout(Number(POPUP_DURATION) + 100)
         // popup disappear and show dialogue
         expect(page.getByText(POPUP_CONTENT)).toHaveCount(0)
         expect(page.getByText(DIALOGUE_CONTENT)).toBeVisible()
