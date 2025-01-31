@@ -6,6 +6,7 @@ import {
     createAndAddClass,
     getProperty,
     getSpeedPerFrame,
+    useDeltaTime,
 } from '../../../util.js'
 import { getPlayerX, getPlayerY, getRoomLeft, getRoomTop } from '../../../variables.js'
 import { RangerShootingService } from '../ranger/shooting.js'
@@ -13,11 +14,10 @@ import { RangerShootingService } from '../ranger/shooting.js'
 export class StingerShootingService extends RangerShootingService {
     constructor(enemy) {
         super(enemy)
-        this.fireRate = 50
+        this.fireRate = useDeltaTime(50)
     }
 
     shoot() {
-        super.playShootAnimation()
         const { x: srcX, y: srcY } = {
             x: getProperty(this.enemy.sprite, 'left', 'px') + 25,
             y: getProperty(this.enemy.sprite, 'top', 'px') + 25,

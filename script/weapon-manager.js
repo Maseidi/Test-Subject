@@ -20,7 +20,7 @@ import {
     useInventoryResource,
 } from './inventory.js'
 import { dropLoot } from './loot-manager.js'
-import { IS_MOBILE } from './script.js'
+import { FRAME_RATE, IS_MOBILE } from './script.js'
 import { playEmptyWeapon, playGunShot, playReload } from './sound-manager.js'
 import { isThrowable } from './throwable-details.js'
 import { removeThrowable } from './throwable-loader.js'
@@ -145,7 +145,7 @@ const manageReload = () => {
     if (isThrowable(equipped?.name)) return
     if (!getEquippedWeaponId()) return
     if (getReloading()) reloadCounter++
-    if (reloadCounter / 60 >= getGunUpgradableDetail(equipped.name, 'reloadspeed', equipped.reloadspeedlvl)) {
+    if (reloadCounter / FRAME_RATE >= getGunUpgradableDetail(equipped.name, 'reloadspeed', equipped.reloadspeedlvl)) {
         reload()
         setReloading(false)
         reloadCounter = 0
@@ -419,10 +419,10 @@ const manageMobileAim = () => {
     shootWhenTargetDetected()
 }
 
-let targetCounter = 0
+let sholudTry2FindTarget = false
 const findMostSuitableTarget = () => {
-    targetCounter = targetCounter + 1 > useDeltaTime(30) ? 0 : targetCounter + 1
-    if (targetCounter !== 10) return
+    sholudTry2FindTarget = !sholudTry2FindTarget
+    if ( !sholudTry2FindTarget ) return
     if (!getIsSearching4Target()) return
     if (!getAimMode()) return
 

@@ -7,6 +7,7 @@ import {
     createAndAddClass,
     getProperty,
     getSpeedPerFrame,
+    useDeltaTime,
 } from '../../../util.js'
 import { getPlayerX, getPlayerY, getRoomLeft, getRoomTop } from '../../../variables.js'
 import { RangerShootingService } from '../ranger/shooting.js'
@@ -14,11 +15,26 @@ import { RangerShootingService } from '../ranger/shooting.js'
 export class ScorcherShootingService extends RangerShootingService {
     constructor(enemy) {
         super(enemy)
-        this.fireRate = 30
+        this.fireRate = useDeltaTime(30)
+    }
+
+    playShootAnimation() {
+        const arm = this.enemy.sprite.firstElementChild.firstElementChild.firstElementChild
+        const currentAngle = getProperty(arm, 'transform', 'rotateZ(', 'deg)')
+        arm.animate([{ transform: `rotateZ(${currentAngle}deg)` }, { transform: `rotateZ(${currentAngle + 20}deg)` }], {
+            duration: 250,
+        }).addEventListener('finish', () => {
+            this.shoot()
+            arm.animate(
+                [{ transform: `rotateZ(${currentAngle + 20}deg)` }, { transform: `rotateZ(${currentAngle}deg)` }],
+                {
+                    duration: 250,
+                },
+            )
+        })
     }
 
     shoot() {
-        this.playShootAnimation()
         const { x: srcX, y: srcY } = {
             x: getProperty(this.enemy.sprite, 'left', 'px') + 18.5,
             y: getProperty(this.enemy.sprite, 'top', 'px') + 18.5,
@@ -50,20 +66,5 @@ export class ScorcherShootingService extends RangerShootingService {
         getCurrentRoom().append(bullet)
         getCurrentRoomBullets().push(bullet)
         this.enemy.movementService.resetAcceleration()
-    }
-
-    playShootAnimation() {
-        const arm = this.enemy.sprite.firstElementChild.firstElementChild.firstElementChild
-        const currentAngle = getProperty(arm, 'transform', 'rotateZ(', 'deg)')
-        arm.animate(
-            [
-                { transform: `rotateZ(${currentAngle}deg)` },
-                { transform: `rotateZ(${currentAngle + 20}deg)` },
-                { transform: `rotateZ(${currentAngle}deg)` },
-            ],
-            {
-                duration: 500,
-            },
-        )
     }
 }

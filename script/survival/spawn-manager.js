@@ -86,7 +86,7 @@ export const manageSpawns = () => {
     const chance = Math.random()
 
     if (chaos < 2) {
-        enemy = new Scorcher(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
+        enemy = new Torturer(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
     } else if (chaos < 4) {
         if (chance < 0.5) enemy = new Torturer(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
         else enemy = new SoulDrinker(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))

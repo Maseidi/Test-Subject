@@ -9,6 +9,7 @@ import {
     getProperty,
     getSpeedPerFrame,
     removeClass,
+    useDeltaTime,
 } from '../../../util.js'
 import { getGrabbed, getPlayerX, getPlayerY, getRoomLeft, getRoomTop, getStunnedCounter } from '../../../variables.js'
 import { CHASE, STAND_AND_WATCH, STUNNED } from '../../enemy-constants.js'
@@ -16,7 +17,7 @@ import { CHASE, STAND_AND_WATCH, STUNNED } from '../../enemy-constants.js'
 export class RangerShootingService {
     constructor(enemy) {
         this.enemy = enemy
-        this.fireRate = 30
+        this.fireRate = useDeltaTime(30)
     }
 
     transferEnemy(toggle) {
@@ -42,8 +43,8 @@ export class RangerShootingService {
         }
         if (shootCounter > this.fireRate - 1 && getStunnedCounter() === 0) this.updateAngle2Player()
         this.enemy.shootCounter = shootCounter
-        if (shootCounter !== this.fireRate / 2) return
-        if (this.enemy.health > 0) this.shoot()
+        if (shootCounter !== Math.floor(this.fireRate / 2)) return
+        if (this.enemy.health > 0) this.playShootAnimation()
     }
 
     updateAngle2Player() {
@@ -56,8 +57,26 @@ export class RangerShootingService {
         )
     }
 
+    playShootAnimation() {
+        const body = this.enemy.sprite.firstElementChild.firstElementChild
+        const currentAngle = getProperty(body, 'transform', 'rotateZ(', 'deg)')
+        body.animate(
+            [{ transform: `rotateZ(${currentAngle}deg)` }, { transform: `rotateZ(${currentAngle + 180}deg)` }],
+            {
+                duration: 250,
+            },
+        ).addEventListener('finish', () => {
+            this.shoot()
+            body.animate(
+                [{ transform: `rotateZ(${currentAngle + 180}deg)` }, { transform: `rotateZ(${currentAngle}deg)` }],
+                {
+                    duration: 250,
+                },
+            )
+        })
+    }
+
     shoot() {
-        this.playShootAnimation()
         const { x: srcX, y: srcY } = {
             x: getProperty(this.enemy.sprite, 'left', 'px') + 16,
             y: getProperty(this.enemy.sprite, 'top', 'px') + 16,
@@ -86,20 +105,5 @@ export class RangerShootingService {
         getCurrentRoom().append(bullet)
         getCurrentRoomBullets().push(bullet)
         this.enemy.movementService.resetAcceleration()
-    }
-
-    playShootAnimation() {
-        const body = this.enemy.sprite.firstElementChild.firstElementChild
-        const currentAngle = getProperty(body, 'transform', 'rotateZ(', 'deg)')
-        body.animate(
-            [
-                { transform: `rotateZ(${currentAngle}deg)` },
-                { transform: `rotateZ(${currentAngle + 180}deg)` },
-                { transform: `rotateZ(${currentAngle}deg)` },
-            ],
-            {
-                duration: 500,
-            },
-        )
     }
 }
