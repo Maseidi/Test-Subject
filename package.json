@@ -3,10 +3,12 @@
   "version": "1.0.0",
   "description": "Test Subject is a top down shooter video game coded mainly in vanilla Javascript. The main character has to flee from the hellhole he's been trapped in while facing a wide variety of strange monsters.",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "scripts": {},
   "keywords": [],
   "author": "Mohammad Ali Seidi",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.50.0",
+    "@types/node": "^22.12.0"
+  }
 }

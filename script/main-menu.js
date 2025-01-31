@@ -217,6 +217,7 @@ const mapMakerOptions = () => {
 
 const newMapMakerOption = () => {
     const slot = createAndAddClass('div', 'load-game-option-empty-slot', 'map-maker-new-game')
+    slot.setAttribute('data-testid', 'new-map-maker')
     const word1 = document.createElement('p')
     word1.textContent = 'start'
     const word2 = document.createElement('p')
