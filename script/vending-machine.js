@@ -41,6 +41,7 @@ import {
 } from './variables.js'
 
 let page = 1
+let lastItemClickedOn = null
 export const renderStore = () => {
     renderBackground()
     renderCoins()
@@ -162,6 +163,7 @@ const statUpgraderOffLimit = () => {
 
 const buyPopup = e => {
     playClickSoundEffect()
+    lastItemClickedOn = e.currentTarget
     const itemObj = element2Object(e.currentTarget)
     renderDealPopup(itemObj, 'Purchase item?', isGun(itemObj.name) || itemObj.name === 'pouch', renderConfirmBuyBtn)
 }
@@ -326,8 +328,7 @@ const submitPurchase = itemObj => {
     getShopItems()[itemObj.id].sold = true
     handleStatUpgrader(itemObj)
     playTrade()
-    removeStore()
-    renderStore()
+    removePopup(-itemObj.price)
 }
 
 const handleStatUpgrader = itemObj => {
@@ -533,6 +534,7 @@ const renderSell = () => {
 
 const sellPopup = e => {
     playClickSoundEffect()
+    lastItemClickedOn = e.currentTarget
     const itemObj = element2Object(e.currentTarget)
     renderDealPopup(itemObj, 'Sell item?', isGun(itemObj.name), renderConfirmSellBtn)
 }
@@ -550,8 +552,7 @@ const manageSell = itemObj => {
         useInventoryResource(itemObj.name, itemObj.amount)
         pickupDrop(object2Element(new Coin(null, null, gain)))
         handleEquippableDrop(itemObj)
-        removeStore()
-        renderStore()
+        removePopup(gain)
         if (isGun(itemObj.name) && !getShopItems().find(item => !item.sold && item.name === itemObj.name))
             getShopItems().push(new GunShopItem(itemObj.name))
 
@@ -563,4 +564,12 @@ const manageSell = itemObj => {
 
 const removeStore = () => {
     getPauseContainer().firstElementChild.remove()
+}
+
+const removePopup = (difference) => {
+    lastItemClickedOn?.remove()
+    lastItemClickedOn = null
+    getPauseContainer().firstElementChild.lastElementChild.remove()
+    const coins = getPauseContainer().firstElementChild.firstElementChild.children[1]
+    coins.textContent = Number(coins.textContent) + difference
 }

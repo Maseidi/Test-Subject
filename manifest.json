@@ -1,0 +1,37 @@
+{
+    "name": "Test Subject",
+    "short_name": "Test Subject",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "description": "A top down shooter survival horror game",
+    "icons": [
+        {
+            "src": "./assets/images/icon-desktop.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "any"
+        },
+        {
+            "src": "./assets/images/icon-mobile.png",
+            "sizes": "192x192",
+            "type": "image/png",
+            "purpose": "any"
+        }
+    ],
+    "screenshots": [
+        {
+            "src": "./assets/images/screenshot.png",
+            "sizes": "666x375",
+            "type": "image/gif",
+            "form_factor": "wide",
+            "label": "Application"
+        },
+        {
+            "src": "./assets/images/screenshot-mobile.png",
+            "sizes": "666x375",
+            "type": "image/gif",
+            "label": "Application"
+        }
+    ]
+}

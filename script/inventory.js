@@ -378,8 +378,7 @@ const renderBackground = () => {
     getPauseContainer().append(background)
 }
 
-export const renderBlocks = () => {
-    const background = getPauseContainer().firstElementChild
+export const renderBlocks = replace => {
     const inventoryContainer = createAndAddClass('div', 'inventory-container')
     const inventoryEl = createAndAddClass('div', 'inventory')
     inventory.forEach(row => {
@@ -410,16 +409,23 @@ export const renderBlocks = () => {
         })
     })
     inventoryContainer.append(inventoryEl)
-    background.append(inventoryContainer)
+    if (replace) replace.replaceWith(inventoryContainer)
+    else {
+        const background = getPauseContainer().firstElementChild
+        background.append(inventoryContainer)
+    }
 }
 
-export const renderHeadingAndDescription = () => {
-    const background = getPauseContainer().firstElementChild
+export const renderHeadingAndDescription = root => {
     const desc = createAndAddClass('div', 'description')
     const heading = document.createElement('h2')
     const paragraph = document.createElement('p')
     appendAll(desc, heading, paragraph)
-    background.firstElementChild.append(desc)
+    if (root) root.append(desc)
+    else {
+        const background = getPauseContainer().firstElementChild
+        background.firstElementChild.append(desc)
+    }
 }
 
 const inventoryEvents = () => {

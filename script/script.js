@@ -1,5 +1,11 @@
 import { renderMainMenu } from './main-menu.js'
 
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./script/sw.js')
+    })
+}
+
 for (let i = 0; i < 10; i++) if (!localStorage.getItem(`slot-${i + 1}`)) localStorage.setItem(`slot-${i + 1}`, 'empty')
 
 for (let i = 0; i < 5; i++)
