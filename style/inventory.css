@@ -11,13 +11,13 @@
     top: 50%;
     left: 50%;
     width: 500px;
+    height: 500px;
     color: #2b2b2b;
-    line-height: 30px;
+    line-height: 31px;
     position: absolute;
     padding: 30px 50px;
     font-family: kalam;
     background-size: cover;
-    height: calc(100dvh - 100px);
     transform: translateX(-50%) translateY(-50%);
     background-image: url('../assets/images/note.png');
 }

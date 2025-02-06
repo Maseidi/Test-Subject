@@ -50,7 +50,7 @@ export const manageHealthStatus = () => {
 const manageBurningState = () => {
     if (getBurning() === 0) return
     setBurning(getBurning() + 1)
-    if (getBurning() === useDeltaTime(900)) {
+    if (getBurning() >= useDeltaTime(900)) {
         setBurning(0)
         findAttachmentsOnPlayer('fire').remove()
         return
@@ -172,7 +172,7 @@ export const poisonPlayer = () => {
 const manageExplosionDamagedState = () => {
     if (getExplosionDamageCounter() === 0) return
     setExplosionDamageCounter(getExplosionDamageCounter() + 1)
-    if (getExplosionDamageCounter() === useDeltaTime(100)) setExplosionDamageCounter(0)
+    if (getExplosionDamageCounter() >= useDeltaTime(100)) setExplosionDamageCounter(0)
 }
 
 export const useHealthPotion = potion => {

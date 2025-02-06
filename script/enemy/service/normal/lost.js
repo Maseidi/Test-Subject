@@ -8,7 +8,7 @@ export class NormalLostService {
 
     handleLostState() {
         if (this.enemy.visionService.playerSpotted()) return
-        if (this.enemy.lostCounter === useDeltaTime(600)) {
+        if (this.enemy.lostCounter >= useDeltaTime(600)) {
             this.enemy.state = MOVE_TO_POSITION
             return
         }

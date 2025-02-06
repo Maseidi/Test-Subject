@@ -27,6 +27,7 @@ import { BottomLoader, LeftLoader, RightLoader, TopLoader } from './loader.js'
 import { activateAllProgresses, deactivateAllProgresses, getProgressValueByNumber } from './progress-manager.js'
 import { renderRoomName } from './room-name-manager.js'
 import { IS_MOBILE } from './script.js'
+import { getSettings } from './settings.js'
 import {
     addAllAttributes,
     addAllClasses,
@@ -359,9 +360,9 @@ const renderDescription = (popup, interactable) => {
     const descContainer = document.createElement('div')
     const appendList = []
     const fButton = createAndAddClass('p', 'interactable-btn')
-    fButton.textContent = 'F'
+    fButton.textContent = getSettings().controls.interact.replace('Digit', '').replace('Key', '')
     const needCodeDoor = interactable.isDoor && interactable.code
-    if (!interactable.isDoor || needCodeDoor) appendList.push(fButton)
+    if (!IS_MOBILE && (!interactable.isDoor || needCodeDoor)) appendList.push(fButton)
     appendList.push(getDescriptionContent(interactable, needCodeDoor))
     appendAll(descContainer, ...appendList)
     popup.append(descContainer)

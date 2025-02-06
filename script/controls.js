@@ -22,48 +22,55 @@ import {
     wheelChange,
     wUp,
 } from './actions.js'
+import { getSettings } from './settings.js'
 
 const keyDown = e => {
     e.preventDefault()
     if (!e.repeat) {
         switch (e.code) {
-            case 'KeyW':
+            case getSettings().controls.up:
                 wDown()
                 break
-            case 'KeyA':
+            case getSettings().controls.left:
                 aDown()
                 break
-            case 'KeyS':
+            case getSettings().controls.down:
                 sDown()
                 break
-            case 'KeyD':
+            case getSettings().controls.right:
                 dDown()
                 break
-            case 'Digit1':
-            case 'Digit2':
-            case 'Digit3':
-            case 'Digit4':
-                weaponSlotDown(e.code.toString().split('').reverse()[0])
+            case getSettings().controls.slot1:
+                weaponSlotDown('1')
                 break
-            case 'ShiftLeft':
+            case getSettings().controls.slot2:
+                weaponSlotDown('2')
+                break
+            case getSettings().controls.slot3:
+                weaponSlotDown('3')
+                break
+            case getSettings().controls.slot4:
+                weaponSlotDown('4')
+                break
+            case getSettings().controls.sprint:
                 shiftDown()
                 break
-            case 'KeyF':
+            case getSettings().controls.interact:
                 fDown()
                 break
-            case 'Tab':
+            case getSettings().controls.inventory:
                 tabDown()
                 break
-            case 'KeyR':
+            case getSettings().controls.reload:
                 rDown()
                 break
             case 'Escape':
                 escapeDown()
                 break
-            case 'KeyH':
+            case getSettings().controls.heal:
                 hDown()
                 break
-            case 'KeyQ':
+            case getSettings().controls.lightUp:
                 qDown()
                 break
         }
@@ -72,19 +79,19 @@ const keyDown = e => {
 
 const keyUp = e => {
     switch (e.code) {
-        case 'KeyW':
+        case getSettings().controls.up:
             wUp()
             break
-        case 'KeyA':
+        case getSettings().controls.left:
             aUp()
             break
-        case 'KeyS':
+        case getSettings().controls.down:
             sUp()
             break
-        case 'KeyD':
+        case getSettings().controls.right:
             dUp()
             break
-        case 'ShiftLeft':
+        case getSettings().controls.sprint:
             shiftUp()
             break
     }

@@ -44,8 +44,8 @@ import {
     getPlayingSoundEffects,
     playEquip,
     playPickup,
-    playStashSoundEffect,
-    playVendingMachineSoundEffect,
+    playStashMusic,
+    playVendingMachineMusic,
     setPlayingSoundEffects,
 } from './sound-manager.js'
 import { centralizePlayer } from './startup.js'
@@ -106,7 +106,6 @@ import {
     getRightPressed,
     getShooting,
     getSprintPressed,
-    getThrowCounter,
     getUpPressed,
     getWaitingFunctions,
     getWeaponWheel,
@@ -309,12 +308,12 @@ const processPart = (predicate, className) => {
 }
 
 const openStash = () => {
-    playStashSoundEffect()
+    playStashMusic()
     openPause('stash', renderStash)
 }
 
 const openVendingMachine = () => {
-    playVendingMachineSoundEffect()
+    playVendingMachineMusic()
     openPause('store', renderStore)
 }
 
@@ -598,12 +597,12 @@ export const aimDown = () => {
     setWaitingFunctions(getWaitingFunctions().filter(item => item.id !== 'aim-waiting-4-throw-function'))
     if (getPause()) {
         setWaitingFunctions(getWaitingFunctions().filter(item => item.id !== 'aim-waiting-function'))
-    } else aimWeapon()
+    } else if (!isThrowing()) aimWeapon()
 }
 
 export const aimUp = () => {
     if (getGrabbed() || !getEquippedWeaponId()) return
-    if (getThrowCounter() > 0) {
+    if (isThrowing()) {
         setWaitingFunctions([...getWaitingFunctions(), { fn: exitAim, args: [], id: 'aim-waiting-4-throw-function' }])
         return
     }

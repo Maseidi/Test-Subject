@@ -4,7 +4,7 @@ import { manageGameOver } from './game-over.js'
 import { manageHealthStatus } from './player-health.js'
 import { managePlayerMovement } from './player-movement.js'
 import { manageSprint } from './player-sprint.js'
-import { FRAME_RATE } from './script.js'
+import { getSettings } from './settings.js'
 import { startUp } from './startup.js'
 import { manageSpawns } from './survival/spawn-manager.js'
 import { setEnemyId, setSpawnCounter } from './survival/variables.js'
@@ -30,7 +30,7 @@ export const play = (mapMaker = false, survival = false) => {
         managePlayerMovement()
         manageWeaponActions()
         manageHealthStatus()
-    }, 1000 / FRAME_RATE)
+    }, 1000 / getSettings().display.fps)
 
     setGameId(gameId)
 }

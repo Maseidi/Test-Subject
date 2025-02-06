@@ -17,7 +17,7 @@ import { CHASE, STAND_AND_WATCH, STUNNED } from '../../enemy-constants.js'
 export class RangerShootingService {
     constructor(enemy) {
         this.enemy = enemy
-        this.fireRate = useDeltaTime(30)
+        this.relativeFireRate = 30
     }
 
     transferEnemy(toggle) {
@@ -27,12 +27,13 @@ export class RangerShootingService {
     }
 
     handleRangedAttackState() {
+        const fireRate = useDeltaTime(this.relativeFireRate)
         this.transferEnemy(true)
         if (this.enemy.visionService.isPlayerVisible())
             this.enemy.notificationService.notifyEnemy(Number.MAX_SAFE_INTEGER)
         let shootCounter = this.enemy.shootCounter || 0
         shootCounter++
-        if (shootCounter === 3 * this.fireRate) {
+        if (shootCounter === 3 * fireRate) {
             const d = this.enemy.movementService.distance2Player()
             if (getGrabbed()) this.enemy.state = STAND_AND_WATCH
             else if (getStunnedCounter() > 0) this.enemy.state = STUNNED
@@ -41,9 +42,9 @@ export class RangerShootingService {
             this.enemy.shootCounter = -1
             return
         }
-        if (shootCounter > this.fireRate - 1 && getStunnedCounter() === 0) this.updateAngle2Player()
+        if (shootCounter > fireRate - 1 && getStunnedCounter() === 0) this.updateAngle2Player()
         this.enemy.shootCounter = shootCounter
-        if (shootCounter !== Math.floor(this.fireRate / 2)) return
+        if (shootCounter !== Math.floor(fireRate / 2)) return
         if (this.enemy.health > 0) this.playShootAnimation()
     }
 

@@ -10,7 +10,7 @@ import {
 import { getGunDetail, getGunUpgradableDetail } from './gun-details.js'
 import { removeWeapon } from './gun-loader.js'
 import { ADRENALINE, ENERGY_DRINK, HEALTH_POTION, LUCK_PILLS } from './loot.js'
-import { FRAME_RATE } from './script.js'
+import { getSettings } from './settings.js'
 import { playExplosion } from './sound-manager.js'
 import { getThrowableDetail, isThrowable } from './throwable-details.js'
 import { removeThrowable } from './throwable-loader.js'
@@ -264,6 +264,6 @@ export const addSplatter = () => {
     splatter.addEventListener('animationend', () => splatter.remove())
 }
 
-export const getSpeedPerFrame = speed => (speed * 60) / FRAME_RATE
+export const getSpeedPerFrame = speed => (speed * 60) / getSettings().display.fps
 
-export const useDeltaTime = time => Math.floor((time / 60) * FRAME_RATE)
+export const useDeltaTime = time => Math.floor((time / 60) * getSettings().display.fps)

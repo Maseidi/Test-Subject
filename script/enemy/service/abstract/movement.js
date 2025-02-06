@@ -86,7 +86,7 @@ export class AbstractMovementService {
 
     accelerateEnemy() {
         this.enemy.accelerationCounter += 1
-        if (this.enemy.accelerationCounter === useDeltaTime(60)) {
+        if (this.enemy.accelerationCounter >= useDeltaTime(60)) {
             let newSpeed = this.enemy.currentSpeed + this.enemy.acceleration
             if (newSpeed > this.enemy.maxSpeed) newSpeed = this.enemy.maxSpeed
             this.enemy.currentSpeed = newSpeed

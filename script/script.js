@@ -1,9 +1,8 @@
 import { renderMainMenu } from './main-menu.js'
+import { getDefaultSettings, setSettings } from './settings.js'
 
 if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./script/sw.js')
-    })
+    navigator.serviceWorker.register('./script/sw.js')
 }
 
 for (let i = 0; i < 10; i++) if (!localStorage.getItem(`slot-${i + 1}`)) localStorage.setItem(`slot-${i + 1}`, 'empty')
@@ -17,9 +16,10 @@ for (let i = 0; i < 10; i++)
 export const IS_MOBILE =
     navigator.userAgent.toLowerCase().includes('android') || navigator.userAgent.toLowerCase().includes('iphone')
 
+if (localStorage.getItem('settings')) setSettings(JSON.parse(localStorage.getItem('settings')))
+else setSettings(getDefaultSettings())
+
 export const ENEMY_CAP = IS_MOBILE ? 20 : 40
-export const FRAME_RATE = IS_MOBILE ? 30 : 60
-export const SPAWN_INTERVAL = IS_MOBILE ? 1.5 * FRAME_RATE : FRAME_RATE
 
 window.addEventListener('contextmenu', e => e.preventDefault())
 renderMainMenu()

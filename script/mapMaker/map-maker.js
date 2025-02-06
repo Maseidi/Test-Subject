@@ -371,7 +371,7 @@ const renderOptions = () => {
     addClass(difficulty, 'room-overview-difficulty-autocomplete')
     appendAll(optionsContainer, save, playBtn, difficulty)
     if (IS_MOBILE) {
-        const pauseBtn = createAndAddClass('div', 'play-option')
+        const pauseBtn = createAndAddClass('div', 'pause-option')
         pauseBtn.textContent = 'pause'
         pauseBtn.addEventListener('click', () => dispatchEvent(new KeyboardEvent('keydown', { code: 'Escape' })))
         optionsContainer.append(pauseBtn)

@@ -47,7 +47,6 @@
 }
 
 .health {
-    transition: 300ms;
     background: linear-gradient(to right, #cb2d3e, #ef473a);
 }
 

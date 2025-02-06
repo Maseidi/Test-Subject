@@ -1,6 +1,6 @@
 import { getPopupContainer } from './elements.js'
 import { getPopups } from './entities.js'
-import { FRAME_RATE } from './script.js'
+import { getSettings } from './settings.js'
 import { addAllAttributes, appendAll, createAndAddClass } from './util.js'
 
 export class Popup {
@@ -25,7 +25,7 @@ export const renderPopup = progress => {
         'timer',
         0,
         'duration',
-        (popupObj.duration / 1000) * FRAME_RATE,
+        (popupObj.duration / 1000) * getSettings().display.fps,
         'progress2active',
         popupObj.progress2Active,
         'fade-out',

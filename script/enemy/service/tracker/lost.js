@@ -8,7 +8,7 @@ export class TrackerLostService extends NormalLostService {
 
     handleLostState() {
         this.enemy.lostCounter = this.enemy.lostCounter || 0
-        if (this.enemy.lostCounter === useDeltaTime(600)) {
+        if (this.enemy.lostCounter >= useDeltaTime(600)) {
             this.enemy.lostCounter = 0
             return
         }

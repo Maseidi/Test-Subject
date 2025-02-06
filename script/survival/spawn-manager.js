@@ -9,7 +9,8 @@ import { getEnemies } from '../entities.js'
 import { Loot, RANDOM } from '../loot.js'
 import { SinglePointPath } from '../path.js'
 import { spawnEnemy } from '../room-loader.js'
-import { ENEMY_CAP, SPAWN_INTERVAL } from '../script.js'
+import { ENEMY_CAP, IS_MOBILE } from '../script.js'
+import { getSettings } from '../settings.js'
 import { distanceFormula } from '../util.js'
 import { getPlayerX, getPlayerY, getRoomLeft, getRoomTop } from '../variables.js'
 import {
@@ -69,7 +70,8 @@ export const manageSpawns = () => {
     if (getCurrentChaosSpawned() - getEnemiseKilled() >= ENEMY_CAP) return
 
     setSpawnCounter(getSpawnCounter() + 1)
-    if (getSpawnCounter() !== SPAWN_INTERVAL) return
+    const fps = getSettings().display.fps
+    if (getSpawnCounter() < (IS_MOBILE ? 1.5 * fps : fps)) return
     setSpawnCounter(-1)
 
     const playerX = getPlayerX() - getRoomLeft()

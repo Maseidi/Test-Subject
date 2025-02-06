@@ -4,9 +4,11 @@ import { getMainMenuEl, setMainMenuEl } from './elements.js'
 import { play } from './game.js'
 import { loadMapMakerFromSlot, prepareNewMapMakerData } from './mapMaker/data-manager.js'
 import { renderMapMaker } from './mapMaker/map-maker.js'
+import { IS_MOBILE } from './script.js'
+import { getDefaultSettings, getSettings, setSettings } from './settings.js'
 import { addHoverSoundEffect, playClickSoundEffect } from './sound-manager.js'
 import { loadSurvivalFromSlot, prepareNewSurvivalData } from './survival/data-manager.js'
-import { addClass, appendAll, createAndAddClass, difficulties, removeClass } from './util.js'
+import { addClass, appendAll, containsClass, createAndAddClass, difficulties, removeClass } from './util.js'
 import { setDifficulty } from './variables.js'
 
 let isContinueIncluded = null
@@ -35,9 +37,9 @@ const mainMenuHeader = () => {
 const options = () => {
     const options = createAndAddClass('div', 'main-menu-options')
     handleContinueOption(options)
-    appendAll(options, survival())
-    // appendAll(options, newGame(), loadGame(), survival())
+    appendAll(options, newGame(), loadGame(), survival())
     handleMapMakerOption(options)
+    options.append(settings())
     options.append(lineBar())
     return options
 }
@@ -125,6 +127,7 @@ const addSelectedStyle = elem => {
 
 const refreshContents = content => {
     clearContent()
+    removeRenderedSettings()
     renderNewContent(content)
 }
 
@@ -329,4 +332,213 @@ const loadMapMakerWithGivenData = loader => {
     loader()
     setDifficulty(difficulties.MIDDLE)
     renderMapMaker()
+}
+
+const settings = () =>
+    mainMenuOption(
+        'settings',
+        e => {
+            playClickSoundEffect()
+            addSelectedStyle(e.currentTarget)
+            refreshContents(settingsOptions())
+        },
+        getDelay(5),
+        getDuration(5),
+    )
+
+const settingsOptions = () => {
+    const settingsContainer = createAndAddClass('div', 'new-game-options')
+    Array.from(
+        IS_MOBILE
+            ? [
+                  settingOption('Audio', renderAudioSettings),
+                  settingOption('Display', renderDisplaySettings),
+                  settingOption('reset settings', resetAllSettings),
+              ]
+            : [
+                  settingOption('Audio', renderAudioSettings),
+                  settingOption('Display', renderDisplaySettings),
+                  settingOption('Controls', renderControlsSetting),
+                  settingOption('reset settings', resetAllSettings),
+              ],
+    ).forEach(option => {
+        addHoverSoundEffect(option)
+        settingsContainer.append(option)
+    })
+    return settingsContainer
+}
+
+const refreshSettings = option => {
+    Array.from(option.parentElement.children).forEach(child => removeClass(child, 'selected-main-menu-option'))
+    addClass(option, 'selected-main-menu-option')
+}
+
+const settingOption = (textContent, onClick) => {
+    const option = document.createElement('p')
+    option.textContent = textContent
+    option.addEventListener('click', e => {
+        playClickSoundEffect()
+        refreshSettings(e.currentTarget)
+        removeRenderedSettings()
+        onClick(e)
+    })
+    return option
+}
+
+const removeRenderedSettings = () => {
+    if (
+        getMainMenuEl().lastElementChild &&
+        containsClass(getMainMenuEl().lastElementChild, 'setting-options-container')
+    )
+        getMainMenuEl().lastElementChild.remove()
+}
+
+const renderAudioSettings = () => {
+    const audioSettingsContainer = createAndAddClass('div', 'setting-options-container')
+    const sound = soundRange()
+    const music = musicRange()
+    const ui = uiSoundRange()
+    appendAll(audioSettingsContainer, sound, ui, music)
+    getMainMenuEl().append(audioSettingsContainer)
+}
+
+const soundRange = () =>
+    renderRange('Sound effects', 'sound-range', getSettings().audio.sound, value => (getSettings().audio.sound = value))
+
+const uiSoundRange = () =>
+    renderRange('UI Sound effects', 'ui-range', getSettings().audio.ui, value => (getSettings().audio.ui = value))
+
+const musicRange = () =>
+    renderRange('Music', 'music-range', getSettings().audio.music, value => (getSettings().audio.music = value))
+
+const renderRange = (labelText, id, value, onChange) => {
+    const container = createAndAddClass('div', 'setting-option')
+    const label = document.createElement('label')
+    label.htmlFor = id
+    label.textContent = labelText
+    const input = document.createElement('input')
+    input.id = id
+    input.type = 'range'
+    input.min = 0
+    input.max = 1
+    input.step = 0.1
+    input.setAttribute('value', value)
+    input.addEventListener('change', e => {
+        onChange(e.target.value)
+        localStorage.setItem('settings', JSON.stringify(getSettings()))
+    })
+    appendAll(container, label, input)
+    return container
+}
+
+const renderDisplaySettings = () => {
+    const displaySettingsContainer = createAndAddClass('div', 'setting-options-container')
+    const fps = fpsAutocomplete(getSettings().display.fps, value => (getSettings().display.fps = value))
+    appendAll(displaySettingsContainer, fps)
+    getMainMenuEl().append(displaySettingsContainer)
+}
+
+const fpsAutocomplete = (value, onChange) => {
+    const container = createAndAddClass('div', 'setting-option')
+    const label = document.createElement('label')
+    label.htmlFor = 'fps'
+    label.textContent = 'FPS'
+    const select = document.createElement('select')
+    select.id = 'fps'
+    Array.from([30, 45, 60, 90, 120, 144, 165, 240]).forEach(item => {
+        const option = document.createElement('option')
+        option.textContent = item
+        option.value = item
+        select.append(option)
+    })
+    select.addEventListener('change', e => {
+        onChange(e.target.value)
+        localStorage.setItem('settings', JSON.stringify(getSettings()))
+    })
+    select.value = value
+    appendAll(container, label, select)
+    return container
+}
+
+let waitingControl = null
+const renderControlsSetting = () => {
+    const controlSettingsContainer = createAndAddClass('div', 'setting-options-container', 'control-options-cotainer')
+    const btn = controlBtnGenerator()
+    const up = btn('move up', 'up')
+    const left = btn('move left', 'left')
+    const down = btn('move down', 'down')
+    const right = btn('move right', 'right')
+    const heal = btn('heal', 'heal')
+    const reload = btn('reload', 'reload')
+    const slot1 = btn('slot1', 'slot1')
+    const slot2 = btn('slot2', 'slot2')
+    const slot3 = btn('slot3', 'slot3')
+    const slot4 = btn('slot4', 'slot4')
+    const interact = btn('interact', 'interact')
+    const inventory = btn('inventory', 'inventory')
+    const sprint = btn('sprint', 'sprint')
+    const lightUp = btn('light up torch', 'lightUp')
+    controlSettingsContainer.append(
+        up,
+        left,
+        down,
+        right,
+        heal,
+        reload,
+        slot1,
+        slot2,
+        slot3,
+        slot4,
+        interact,
+        inventory,
+        sprint,
+        lightUp,
+    )
+    getMainMenuEl().append(controlSettingsContainer)
+}
+
+const controlBtnGenerator = () => {
+    let counter = 0
+    return (textContent, value) => {
+        counter++
+        return controlBtn(textContent, value, counter)
+    }
+}
+
+const formatButtonText = value => value.replace('Digit', '').replace('Key', '')
+const controlBtn = (textContent, key, index) => {
+    const container = createAndAddClass('div', 'control-setting-container')
+    container.setAttribute('tabindex', index)
+    const text = createAndAddClass('p', 'control-setting-text')
+    text.textContent = textContent
+    const btn = createAndAddClass('div', 'control-setting-btn')
+    btn.id = `${key}-control-btn`
+    btn.textContent = formatButtonText(getSettings().controls[key])
+    appendAll(container, text, btn)
+    addHoverSoundEffect(container)
+    container.addEventListener('click', e => {
+        playClickSoundEffect()
+        addClass(e.currentTarget, 'waiting')
+        waitingControl = e.currentTarget
+    })
+    container.addEventListener('keydown', e => {
+        e.preventDefault()
+        if (!containsClass(container, 'waiting')) return
+        const repeated = Object.entries(getSettings().controls).find(([prop, value]) => value === e.code)
+        if (repeated) {
+            const prop = repeated[0]
+            document.getElementById(`${prop}-control-btn`).textContent = formatButtonText(getSettings().controls[key])
+            getSettings().controls[prop] = getSettings().controls[key]
+        }
+        getSettings().controls[key] = e.code
+        btn.textContent = formatButtonText(e.code)
+        localStorage.setItem('settings', JSON.stringify(getSettings()))
+    })
+    container.addEventListener('focusout', e => removeClass(e.currentTarget, 'waiting'))
+    return container
+}
+
+const resetAllSettings = () => {
+    setSettings(getDefaultSettings())
+    localStorage.removeItem('settings')
 }

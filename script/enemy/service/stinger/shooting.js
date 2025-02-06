@@ -14,7 +14,7 @@ import { RangerShootingService } from '../ranger/shooting.js'
 export class StingerShootingService extends RangerShootingService {
     constructor(enemy) {
         super(enemy)
-        this.fireRate = useDeltaTime(50)
+        this.relativeFireRate = 50
     }
 
     shoot() {

@@ -20,7 +20,8 @@ import {
     useInventoryResource,
 } from './inventory.js'
 import { dropLoot } from './loot-manager.js'
-import { FRAME_RATE, IS_MOBILE } from './script.js'
+import { IS_MOBILE } from './script.js'
+import { getSettings } from './settings.js'
 import { playEmptyWeapon, playGunShot, playReload } from './sound-manager.js'
 import { isThrowable } from './throwable-details.js'
 import { removeThrowable } from './throwable-loader.js'
@@ -98,7 +99,7 @@ let counter = 0
 const manageAim = () => {
     if (!getAimMode()) return
     counter++
-    if (counter === useDeltaTime(6)) {
+    if (counter >= useDeltaTime(6)) {
         counter = 0
         setTargets([])
     }
@@ -145,7 +146,10 @@ const manageReload = () => {
     if (isThrowable(equipped?.name)) return
     if (!getEquippedWeaponId()) return
     if (getReloading()) reloadCounter++
-    if (reloadCounter / FRAME_RATE >= getGunUpgradableDetail(equipped.name, 'reloadspeed', equipped.reloadspeedlvl)) {
+    if (
+        reloadCounter / getSettings().display.fps >=
+        getGunUpgradableDetail(equipped.name, 'reloadspeed', equipped.reloadspeedlvl)
+    ) {
         reload()
         setReloading(false)
         reloadCounter = 0
@@ -262,7 +266,7 @@ const manageFireAnimation = () => {
     const weaponFire = findAttachmentsOnPlayer('gun').lastElementChild
     const time = Number(weaponFire.getAttribute('time'))
     if (time === 0) return
-    if (time === useDeltaTime(6)) {
+    if (time >= useDeltaTime(6)) {
         weaponFire.setAttribute('time', 0)
         weaponFire.style.display = 'none'
     } else weaponFire.setAttribute('time', time + 1)
@@ -289,7 +293,7 @@ const throwAnimation = () => {
     if (getThrowCounter() === 19) {
         throwable.style.top = ''
         getWaitingFunctions()
-            .find(item => item.id === 'aim-waiting-4-throw-function')
+            .find(item => item?.id === 'aim-waiting-4-throw-function')
             ?.fn?.()
         setThrowCounter(0)
     }
@@ -422,7 +426,7 @@ const manageMobileAim = () => {
 let sholudTry2FindTarget = false
 const findMostSuitableTarget = () => {
     sholudTry2FindTarget = !sholudTry2FindTarget
-    if ( !sholudTry2FindTarget ) return
+    if (!sholudTry2FindTarget) return
     if (!getIsSearching4Target()) return
     if (!getAimMode()) return
 

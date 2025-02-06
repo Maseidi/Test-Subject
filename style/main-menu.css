@@ -58,7 +58,8 @@
 
 .main-menu-option:hover,
 .new-game-options > p:hover,
-.load-game-option-full-slot:hover {
+.load-game-option-full-slot:hover,
+.control-setting-container:hover:not(.waiting) {
     background-color: rgb(245, 222, 179, 0.3);
 }
 
@@ -130,4 +131,127 @@
 
 .map-maker-new-game:hover {
     background-color: rgb(245, 222, 179, 0.3);
+}
+
+.setting-options-container {
+    gap: 20px;
+    display: flex;
+    margin-top: 32px;
+    max-width: max-content;
+    flex-direction: column;
+}
+
+.setting-option {
+    gap: 128px;
+    display: flex;
+    color: wheat;
+    letter-spacing: 4px;
+    align-items: center;
+    text-transform: uppercase;
+    justify-content: space-between;
+}
+
+.setting-option > select {
+    padding: 5px;
+    color: wheat;
+    border-radius: 5px;
+    background-color: #2b2b2b;
+}
+
+.setting-option > select:focus {
+    outline: none;
+}
+
+input[type='range'] {
+    width: 15rem;
+    cursor: pointer;
+    appearance: none;
+    background: transparent;
+    -webkit-appearance: none;
+}
+
+input[type='range']:focus {
+    outline: none;
+}
+
+input[type='range']::-webkit-slider-runnable-track {
+    height: 10px;
+    border-radius: 0.5rem;
+    background-color: #2b2b2b;
+}
+
+input[type='range']::-webkit-slider-thumb {
+    appearance: none;
+    -webkit-appearance: none;
+
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+    background-color: wheat;
+}
+
+input[type='range']:focus::-webkit-slider-thumb {
+    outline-offset: 0.125rem;
+    border: 1px solid #053a5f;
+    outline: 3px solid #053a5f;
+}
+
+input[type='range']::-moz-range-track {
+    height: 10px;
+    border-radius: 0.5rem;
+    background-color: #2b2b2b;
+}
+
+input[type='range']::-moz-range-thumb {
+    border: none;
+    border-radius: 5px;
+
+    width: 10px;
+    height: 10px;
+    background-color: wheat;
+}
+
+input[type='range']:focus::-moz-range-thumb {
+    outline-offset: 0.125rem;
+    border: 1px solid #053a5f;
+    outline: 3px solid #053a5f;
+}
+
+.control-options-cotainer {
+    row-gap: 32px;
+    display: grid;
+    column-gap: 20px;
+    grid-template-rows: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.control-setting-container {
+    padding: 5px;
+    width: 300px;
+    outline: none;
+    display: flex;
+    color: wheat;
+    cursor: pointer;
+    align-items: center;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.waiting {
+    color: black;
+    background-color: rgba(245, 222, 179, 0.6);
+}
+
+.control-setting-container > p {
+    letter-spacing: 3px;
+    text-transform: uppercase;
+}
+
+.control-setting-container > div {
+    padding: 5px;
+    border: 1px solid wheat;
+}
+
+.waiting > div {
+    border: 1px solid black;
 }

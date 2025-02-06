@@ -141,7 +141,7 @@ export class AbstractInjuryService {
     manageDamagedMode() {
         if (this.enemy.damagedCounter === 0) return
         this.enemy.damagedCounter += 1
-        if (this.enemy.damagedCounter !== useDeltaTime(6)) return
+        if (this.enemy.damagedCounter < useDeltaTime(6)) return
         removeClass(this.enemy.sprite.firstElementChild.firstElementChild, 'damaged')
         this.enemy.damagedCounter = 0
     }

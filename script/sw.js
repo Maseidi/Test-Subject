@@ -1,6 +1,8 @@
+const VERSION = 'v1'
+
 self.addEventListener('install', event => {
     event.waitUntil(
-        caches.open('v1').then(cache => {
+        caches.open(VERSION).then(cache => {
             return cache.addAll([
                 '/',
                 '/index.html',
@@ -156,7 +158,6 @@ self.addEventListener('install', event => {
                 '/assets/images/vendingMachine.png',
                 '/assets/images/yellowvaccine.png',
                 '/assets/images/yellowvirus.png',
-                '/index.html',
                 '/manifest.json',
                 '/script/actions.js',
                 '/script/angle-manager.js',
@@ -287,10 +288,32 @@ self.addEventListener('install', event => {
     )
 })
 
-self.addEventListener('fetch', event => {
-    event.respondWith(
-        caches.match(event.request).then(response => {
-            return response || fetch(event.request)
+self.addEventListener('fetch', e => {
+    e.respondWith(
+        (async () => {
+            const r = await caches.match(e.request)
+            if (r) {
+                return r
+            }
+            const response = await fetch(e.request)
+            const cache = await caches.open(VERSION)
+            cache.put(e.request, response.clone())
+            return response
+        })(),
+    )
+})
+
+self.addEventListener('activate', e => {
+    e.waitUntil(
+        caches.keys().then(keyList => {
+            return Promise.all(
+                keyList.map(key => {
+                    if (key === VERSION) {
+                        return
+                    }
+                    return caches.delete(key)
+                }),
+            )
         }),
     )
 })

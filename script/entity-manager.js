@@ -167,7 +167,7 @@ const manageInteractables = () => {
 
 const findNearInteractables = () => {
     interactableDistanceCounter++
-    if (interactableDistanceCounter === useDeltaTime(20)) {
+    if (interactableDistanceCounter >= useDeltaTime(20)) {
         interactables2Check = getCurrentRoomInteractables().filter(int => distance(int, getPlayer()) < 200)
         interactableDistanceCounter = 0
     }
@@ -344,7 +344,7 @@ const handleObstacles = (getItems, time, harmPlayer, setItems) => {
     const obstacles2Remove = new Map()
     getItems().forEach(item => {
         const theTime = Number(item.getAttribute('time'))
-        if (theTime === useDeltaTime(time)) {
+        if (theTime >= useDeltaTime(time)) {
             obstacles2Remove.set(item, true)
             item.remove()
         }
@@ -374,7 +374,7 @@ const manageThrowables = () => {
         throwable.setAttribute('acc-counter', accCounter + 1)
         const nextBaseSpeed = baseSpeed - getSpeedPerFrame(2)
 
-        if (accCounter === useDeltaTime(15) && nextBaseSpeed >= 0) {
+        if (accCounter >= useDeltaTime(15) && nextBaseSpeed >= 0) {
             const newSpeed = calculateBulletSpeed(deg, diffY / diffX, diffX, diffY, nextBaseSpeed)
             speedX = Math.sign(speedX) * Math.abs(newSpeed.speedX)
             speedY = Math.sign(speedY) * Math.abs(newSpeed.speedY)
@@ -480,9 +480,9 @@ const manageExplosions = () => {
         const time = Number(explosion.getAttribute('time'))
         const scale = getProperty(explosion, 'transform', 'scale(', ')')
         const limit = useDeltaTime(30)
-        if (time < Math.floor(limit / 3)) explosion.style.transform = `scale(${scale + 2})`
-        else if (time < Math.floor((limit / 3) * 2)) explosion.style.transform = `scale(${scale - 2})`
-        if (time === limit) explosion.remove()
+        if (time < Math.floor(limit / 3)) explosion.style.transform = `scale(${scale + getSpeedPerFrame(2)})`
+        else if (time < Math.floor((limit / 3) * 2)) explosion.style.transform = `scale(${scale - getSpeedPerFrame(2)})`
+        if (time >= limit) explosion.remove()
         explosion.setAttribute('time', time + 1)
     })
 }
@@ -546,7 +546,7 @@ const managePopovers = () => {
         if (!popover) return
         const timer = Number(popover.getAttribute('timer'))
         const duration = Number(popover.getAttribute('duration'))
-        if (timer === duration) removePopover(popover)
+        if (timer >= duration) removePopover(popover)
         popover.setAttribute('timer', timer + 1)
     })
 }

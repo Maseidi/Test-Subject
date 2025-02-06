@@ -1,6 +1,6 @@
 import { getDialogueContainer } from './elements.js'
 import { getDialogues } from './entities.js'
-import { FRAME_RATE } from './script.js'
+import { getSettings } from './settings.js'
 import { addAllAttributes, addClass, createAndAddClass } from './util.js'
 import { setPlayingDialogue } from './variables.js'
 
@@ -44,7 +44,7 @@ const displayDialogue = dialogueObj => {
         'timer',
         0,
         'duration',
-        (duration / 1000) * FRAME_RATE,
+        (duration / 1000) * getSettings().display.fps,
         'progress2active',
         progress2Active,
         'fade-out',

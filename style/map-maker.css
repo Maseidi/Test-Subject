@@ -270,7 +270,7 @@
     border-top-right-radius: 5px;
 }
 
-.map-maker-options > div:hover {
+.map-maker-options > div:not(.pause-option):hover {
     color: black;
     border-color: black;
 }
@@ -296,7 +296,8 @@
 }
 
 .save-option,
-.play-option {
+.play-option,
+.pause-option {
     display: flex;
     align-items: center;
 }
