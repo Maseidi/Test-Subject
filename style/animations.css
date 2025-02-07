@@ -389,3 +389,18 @@
         transform: translateX(20px) translateY(20px);
     }
 }
+
+@keyframes profile {
+    0% {
+        top: 50px;
+        left: 500px;
+        opacity: 0.3;
+        width: 220px;
+    }
+    100% {
+        top: 0;
+        left: 0;
+        opacity: 1;
+        width: 200px;
+    }
+}

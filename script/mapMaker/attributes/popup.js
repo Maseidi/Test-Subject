@@ -18,7 +18,7 @@ export const renderPopupAttributes = () => {
         input(
             'progresses to active',
             popup.progress2Active.join(','),
-            value => (popup.progress2Active = value.split(',')),
+            value => (popup.progress2Active = (value ?? '').split(',')),
             'text',
         ),
     )

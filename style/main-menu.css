@@ -255,3 +255,56 @@ input[type='range']:focus::-moz-range-thumb {
 .waiting > div {
     border: 1px solid black;
 }
+
+.credits-container {
+    position: relative;
+}
+
+.profile-img {
+    width: 200px;
+    position: absolute;
+    border-radius: 10px;
+    animation-duration: 3s;
+    animation-name: profile;
+    border: 5px solid wheat;
+}
+
+.credit-names {
+    gap: 50px;
+    opacity: 0;
+    width: 700px;
+    color: wheat;
+    display: flex;
+    visibility: hidden;
+    margin-left: 250px;
+    letter-spacing: 4px;
+    animation-delay: 3.2s;
+    flex-direction: column;
+    animation-name: fade-in;
+    animation-duration: 500ms;
+    text-transform: uppercase;
+    animation-fill-mode: forwards;
+}
+
+.credit-name {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.credit-name > div {
+    gap: 20px;
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+}
+
+.credit-name > div > a {
+    color: wheat;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.credit-name > div > a > img {
+    width: 30px;
+}

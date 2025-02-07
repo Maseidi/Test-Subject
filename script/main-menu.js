@@ -39,8 +39,7 @@ const options = () => {
     handleContinueOption(options)
     appendAll(options, newGame(), loadGame(), survival())
     handleMapMakerOption(options)
-    options.append(settings())
-    options.append(lineBar())
+    appendAll(options, settings(), credits(), lineBar())
     return options
 }
 
@@ -125,15 +124,23 @@ const addSelectedStyle = elem => {
     addClass(elem, 'selected-main-menu-option')
 }
 
-const refreshContents = content => {
-    clearContent()
+const refreshContents = (content, credits = false) => {
+    clearContent(credits)
     removeRenderedSettings()
     renderNewContent(content)
 }
 
-const clearContent = () => Array.from(getMainMenuEl().children[2].children).forEach(child => child.remove())
+const clearContent = credits =>
+    Array.from(getMainMenuEl().children[2].children)
+        .filter(child => !credits || !containsClass(child, 'credits-container'))
+        .forEach(child => child.remove())
 
-const renderNewContent = content => getMainMenuEl().children[2].append(content)
+const renderNewContent = content => {
+    const currentContent = getMainMenuEl().children[2]
+    const contentContainer = currentContent?.firstElementChild
+    if (contentContainer && containsClass(contentContainer, 'credits-container')) return
+    currentContent.append(content)
+}
 
 const loadGame = () =>
     mainMenuOption(
@@ -523,6 +530,7 @@ const controlBtn = (textContent, key, index) => {
     })
     container.addEventListener('keydown', e => {
         e.preventDefault()
+        if (e.code === 'Escape') return
         if (!containsClass(container, 'waiting')) return
         const repeated = Object.entries(getSettings().controls).find(([prop, value]) => value === e.code)
         if (repeated) {
@@ -541,4 +549,71 @@ const controlBtn = (textContent, key, index) => {
 const resetAllSettings = () => {
     setSettings(getDefaultSettings())
     localStorage.removeItem('settings')
+}
+
+const credits = () =>
+    mainMenuOption(
+        'credits',
+        e => {
+            playClickSoundEffect()
+            addSelectedStyle(e.currentTarget)
+            refreshContents(creditsContent(), true)
+        },
+        getDelay(6),
+        getDuration(6),
+    )
+
+const creditsContent = () => {
+    const creditsContainer = createAndAddClass('div', 'credits-container')
+    const myImg = createAndAddClass('img', 'profile-img')
+    myImg.src = '/assets/images/profile.png'
+    const creditNamesContainer = createAndAddClass('div', 'credit-names')
+    const programmer = createCredit('Programmer', [{ title: 'Mohammad Ali Seidi' }])
+    const icons = createCredit('visual assets', [
+        { title: 'icons8', link: 'https://icons8.com' },
+        { title: 'The noun project', link: 'https://thenounproject.com' },
+    ])
+    const audio = createCredit('Audio assets', [{ title: 'pixabay', link: 'https://pixabay.com' }])
+    const contact = createCredit('Conact me', [
+        { img: 'github', link: 'https://github.com/Maseidi' },
+        { img: 'linkedin', link: 'https://www.linkedin.com/in/mohammad-ali-seidi-b2ba61286' },
+        {
+            img: 'instagram',
+            link: 'https://www.instagram.com/maseidi_17?igsh=MTF6dG9lZTZhY3NjZw==',
+        },
+    ])
+    appendAll(creditNamesContainer, programmer, icons, audio, contact)
+    appendAll(creditsContainer, myImg, creditNamesContainer)
+    myImg.addEventListener('animationend', () => {
+        creditNamesContainer.style.visibility = 'visible'
+    })
+    return creditsContainer
+}
+
+const createCredit = (role, names) => {
+    const container = createAndAddClass('div', 'credit-name')
+    const roleText = document.createElement('p')
+    roleText.textContent = role
+    const namesContainer = document.createElement('div')
+    names.forEach(({ title, link, img }) => {
+        if (img) {
+            var nameText = document.createElement('a')
+            const image = document.createElement('img')
+            image.src = `/assets/images/${img}.png`
+            nameText.append(image)
+            nameText.href = link
+            nameText.target = '_blank'
+        } else if (link) {
+            var nameText = document.createElement('a')
+            nameText.textContent = title
+            nameText.href = link
+            nameText.target = '_blank'
+        } else {
+            var nameText = document.createElement('p')
+            nameText.textContent = title
+        }
+        namesContainer.append(nameText)
+    })
+    appendAll(container, roleText, namesContainer)
+    return container
 }

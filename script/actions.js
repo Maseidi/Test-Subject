@@ -400,7 +400,6 @@ const removeUi = () => {
     getThrowButton()?.remove()
     getPauseButton()?.remove()
     getSlotsContainer()?.remove()
-    getPopupContainer().style.opacity = '0'
     getRoomNameContainer().style.opacity = '0'
     getDialogueContainer().style.opacity = '0'
     findHealtStatusChildByClassName('infected-container').style.opacity = '0'
@@ -438,7 +437,6 @@ const showUi = () => {
     renderThrowButton()
     renderPauseButton()
     renderSlots()
-    getPopupContainer().style.opacity = '1'
     getRoomNameContainer().style.opacity = '1'
     getDialogueContainer().style.opacity = '1'
     findHealtStatusChildByClassName('infected-container').style.opacity = '1'

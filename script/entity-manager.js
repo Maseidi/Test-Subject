@@ -546,7 +546,7 @@ const managePopovers = () => {
         if (!popover) return
         const timer = Number(popover.getAttribute('timer'))
         const duration = Number(popover.getAttribute('duration'))
-        if (timer >= duration) removePopover(popover)
+        if (timer === duration) removePopover(popover)
         popover.setAttribute('timer', timer + 1)
     })
 }
@@ -577,7 +577,7 @@ const manageDialogues = () => {
         getDialogueContainer().firstElementChild.getBoundingClientRect()
     const newX =
         x + width < 10 ? 10 : x + width + dialogueWidth > innerWidth - 10 ? innerWidth - 10 - dialogueWidth : x + width
-    const newY = y < 200 ? 200 : y + dialogueHeight > innerHeight + 20 ? innerHeight + 20 - dialogueHeight : y
+    const newY = y < 200 ? 200 : y + dialogueHeight > innerHeight + 20 ? innerHeight + 20 - dialogueHeight : y    
     getDialogueContainer().firstElementChild.style.left = `${newX}px`
     getDialogueContainer().firstElementChild.style.top = `${newY}px`
 }
