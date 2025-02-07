@@ -5,7 +5,6 @@ import { finishUp } from './finishup.js'
 import { play } from './game.js'
 import { countItem, useInventoryResource } from './inventory.js'
 import { saveMapMakerAtSlot } from './mapMaker/data-manager.js'
-import { activateAllProgresses, getProgressValueByNumber } from './progress-manager.js'
 import { addHoverSoundEffect, playClickSoundEffect, playSaveMusic } from './sound-manager.js'
 import { loadSurvivalFromSlot, saveSurvivalAtSlot } from './survival/data-manager.js'
 import { addMessage, itemNotification, renderQuit } from './user-interface.js'
@@ -153,9 +152,6 @@ const renderSaveConfirmPopup = (slotNumber, isNotEmpty, mapMaker) => {
         const hardDriveImage = document.createElement('img')
         hardDriveImage.src = './assets/images/hardDrive.png'
         appendAll(confirm, hardDriveAmount, hardDriveImage)
-        if (!getProgressValueByNumber('1000002')) {
-            activateAllProgresses('1000002')
-        }
     }
     appendAll(buttons, cancel, confirm)
     const message = createAndAddClass('p', 'message')

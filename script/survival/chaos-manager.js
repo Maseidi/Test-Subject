@@ -37,6 +37,7 @@ import {
     SmgAmmoShopItem,
     YellowVaccineShopItem,
 } from '../shop-item.js'
+import { getPlayingMusic, playActionMusic, setPlayingMusic } from '../sound-manager.js'
 import { add2Stash } from '../stash.js'
 import { appendAll, createAndAddClass } from '../util.js'
 import {
@@ -60,6 +61,7 @@ export const startChaos = () => {
     resetRoom()
     renderInteractables()
     renderchaosPopup()
+    playActionMusic()
 }
 
 const resetRoom = () => {
@@ -98,6 +100,8 @@ export const endChaos = () => {
     renderchaosPopup('end')
     add2Stash(new Coin(), Math.min(20, getChaos()))
     updateShop()
+    getPlayingMusic()?.pause()
+    setPlayingMusic(null)
 }
 
 const renderchaosPopup = (type = 'start') => {

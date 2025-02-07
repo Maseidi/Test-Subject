@@ -1,8 +1,7 @@
 import { getCurrentRoomSolid, getPlayer } from '../../../elements.js'
-import { IS_MOBILE } from '../../../script.js'
 import { collide, containsClass, getProperty, useDeltaTime } from '../../../util.js'
 import { getIsSurvival } from '../../../variables.js'
-import { INVESTIGATE, LOST, MOVE_TO_POSITION, RANGER, SCORCHER, STINGER } from '../../enemy-constants.js'
+import { INVESTIGATE, LOST, MOVE_TO_POSITION } from '../../enemy-constants.js'
 
 export class AbstractVisionService {
     constructor(enemy) {
@@ -17,13 +16,11 @@ export class AbstractVisionService {
     }
 
     look4Player() {
-        if (!IS_MOBILE && getIsSurvival() && ![RANGER, SCORCHER, STINGER].includes(this.enemy.type)) return
         this.getWallInTheWay()
         this.vision2Player()
     }
 
     getWallInTheWay() {
-        if (this.enemy.movementService.distance2Player() > this.enemy.vision) return
         const limit = useDeltaTime(20)
         this.visionCounter = this.visionCounter === limit ? 0 : this.visionCounter + 1
         if (this.visionCounter !== limit) return

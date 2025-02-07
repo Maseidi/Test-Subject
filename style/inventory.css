@@ -27,7 +27,6 @@
 }
 
 .inventory-ui {
-    gap: 50px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -40,7 +39,7 @@
 }
 
 .inventory {
-    width: 400px;
+    width: 360px;
     display: flex;
     margin-top: 50px;
     position: relative;
@@ -48,7 +47,7 @@
 }
 
 .block {
-    height: 70px;
+    height: 65px;
     display: flex;
     position: relative;
     align-items: center;

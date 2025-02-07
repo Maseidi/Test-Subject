@@ -10,7 +10,6 @@ import {
     getPauseButton,
     getPauseContainer,
     getPlayer,
-    getPopupContainer,
     getReloadButton,
     getRoomNameContainer,
     getSlotsContainer,
@@ -41,6 +40,7 @@ import { activateAllProgresses, deactivateAllProgresses, getProgress } from './p
 import { IS_MOBILE } from './script.js'
 import {
     getPlayingEquipSoundEffect,
+    getPlayingMusic,
     getPlayingSoundEffects,
     playEquip,
     playPickup,
@@ -343,7 +343,6 @@ const toggleLever = () => {
 }
 
 const stealthKill = () => {
-    // if ( !getProgressValueByNumber('3002') ) return
     const intObj = element2Object(getElementInteractedWith())
     const neededVaccine = intObj.popup
     if (countItem(neededVaccine) === 0) return
@@ -381,6 +380,7 @@ const gamePaused = () => {
     stopAnimations()
     removeUi()
     getPlayingSoundEffects().forEach(effect => effect.pause())
+    getPlayingMusic()?.pause()
 }
 
 const stopAnimations = () => {
@@ -418,6 +418,7 @@ const gamePlaying = () => {
         .forEach(elem => elem.fn(...elem.args))
     setWaitingFunctions([])
     getPlayingSoundEffects().forEach(effect => effect.play())
+    getPlayingMusic()?.play()
 }
 
 const resumeAnimations = () => {

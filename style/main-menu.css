@@ -288,6 +288,7 @@ input[type='range']:focus::-moz-range-thumb {
 
 .credit-name {
     display: flex;
+    align-items: center;
     flex-direction: row;
     justify-content: space-between;
 }
@@ -302,9 +303,15 @@ input[type='range']:focus::-moz-range-thumb {
 .credit-name > div > a {
     color: wheat;
     cursor: pointer;
+    width: max-content;
     text-decoration: none;
 }
 
 .credit-name > div > a > img {
     width: 30px;
+}
+
+.row-credit-name > div {
+    flex-direction: row;
+    align-items: center;
 }

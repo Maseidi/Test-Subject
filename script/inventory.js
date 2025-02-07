@@ -10,7 +10,7 @@ import {
     getThrowButton,
     getUiEl,
 } from './elements.js'
-import { getInteractables, getPopups } from './entities.js'
+import { getInteractables } from './entities.js'
 import { getGunDetails, isGun } from './gun-details.js'
 import { renderStats } from './gun-examine.js'
 import { renderGun } from './gun-loader.js'
@@ -19,13 +19,7 @@ import { getPasswords } from './password-manager.js'
 import { useAntidote, useBandage, useHealthPotion, useVaccine } from './player-health.js'
 import { useAdrenaline } from './player-movement.js'
 import { useEnergyDrink } from './player-sprint.js'
-import { Popup } from './popup-manager.js'
-import {
-    activateAllProgresses,
-    deactivateAllProgresses,
-    getProgressValueByNumber,
-    toggleDoor,
-} from './progress-manager.js'
+import { activateAllProgresses, deactivateAllProgresses, toggleDoor } from './progress-manager.js'
 import { renderInteractable } from './room-loader.js'
 import { IS_MOBILE } from './script.js'
 import { playClickSoundEffect } from './sound-manager.js'
@@ -57,7 +51,6 @@ import {
     getEquippedTorchId,
     getEquippedWeaponId,
     getHealth,
-    getIsSurvival,
     getMaxHealth,
     getMaxStamina,
     getMouseX,
@@ -131,8 +124,8 @@ export const pickupDrop = drop => {
     checkSpecialScenarios()
     handleVaccinePickup(dropObject)
     updateInteractablePopups()
-    handleBandageFirstTimePickup()
-    if (countItem('bandage') > 0 && getHealth() < getMaxHealth()) removeClass(getHealButton(), 'disabled')
+    if (countItem('bandage') > 0 && getHealth() < getMaxHealth() && getHealButton())
+        removeClass(getHealButton(), 'disabled')
 }
 
 const searchPack = () => {
@@ -206,12 +199,6 @@ const checkSpecialScenarios = () => {
     if (amount === 0) {
         if (progress2active) activateAllProgresses(progress2active)
         if (progress2deactive) deactivateAllProgresses(progress2deactive)
-        if ((name === 'stick' && countItem('lighter') > 0) || (name === 'lighter' && countItem('stick') > 0)) {
-            if (!getProgressValueByNumber('1000000')) {
-                getPopups().push(new Popup('<span>Q</span> Light up torch', { renderProgress: '1000000' }, 3000))
-                activateAllProgresses('1000000')
-            }
-        }
     }
     if ((isThrowable(name) && !getWeaponWheel().includes(id)) || (isGun(name) && amount === 0)) updateWeaponWheel()
     if (getPause()) return
@@ -232,14 +219,6 @@ export const updateInteractablePopup = interactable => {
     const popup = interactable.lastElementChild
     if (isEnoughSpace(name, space)) removeClass(popup, 'not-ideal')
     else addClass(popup, 'not-ideal')
-}
-
-const handleBandageFirstTimePickup = () => {
-    if (getIsSurvival()) return
-    if (getProgressValueByNumber('1000001')) return
-    if (countItem('bandage') === 0) return
-    getPopups().push(new Popup('<span>H</span> Use bandage to heal', { renderProgress: '1000001' }, 3000))
-    activateAllProgresses('1000001')
 }
 
 const ammo4Equipped = () => {

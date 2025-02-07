@@ -15,6 +15,12 @@ export const setPlayingEquipSoundEffect = val => {
 }
 export const getPlayingEquipSoundEffect = () => playingEquipSoundEffect
 
+let playingMusic = null
+export const setPlayingMusic = val => {
+    playingMusic = val
+}
+export const getPlayingMusic = () => playingMusic
+
 const playSound = sound => {
     sound.play()
     playingSoudEffects.push(sound)
@@ -145,6 +151,30 @@ addLoop(stash)
 export const playStashMusic = () => playMusic(stash)
 export const stopStashMusic = () => {
     stash.pause()
+}
+
+const actionMusicCollection = new Array(5)
+    .fill(null)
+    .map((item, index) => new Audio(`../assets/audio/action/action-${index + 1}.mp3`))
+
+const addActionMusicEndEvent = music => {
+    music.addEventListener('ended', () => {
+        const newMusic = actionMusicCollection.sort(() => Math.random() - 0.5)[0]
+        newMusic.currentTime = 0
+        setPlayingMusic(newMusic)
+        playMusic(newMusic)
+    })
+}
+
+actionMusicCollection.forEach(music => {
+    addActionMusicEndEvent(music)
+})
+
+export const playActionMusic = () => {
+    const music = actionMusicCollection.sort(() => Math.random() - 0.5)[0]
+    music.currentTime = 0
+    setPlayingMusic(music)
+    playMusic(music)
 }
 
 const playMusic = music => {

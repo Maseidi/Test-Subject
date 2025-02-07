@@ -32,13 +32,12 @@ import {
     NO_OFFENCE,
     STUNNED,
 } from './enemy/enemy-constants.js'
-import { getEnemies, getLoaders, getPopups, getRooms } from './entities.js'
+import { getEnemies, getLoaders, getRooms } from './entities.js'
 import { findEquippedTorchById, getInventory } from './inventory.js'
 import { knockPlayer } from './knock-manager.js'
 import { dropLoot } from './loot-manager.js'
 import { damagePlayer, infectPlayer2SpecificVirus, poisonPlayer, setPlayer2Fire } from './player-health.js'
-import { Popup } from './popup-manager.js'
-import { activateAllProgresses, getProgressValueByNumber } from './progress-manager.js'
+import { activateAllProgresses } from './progress-manager.js'
 import { loadCurrentRoom } from './room-loader.js'
 import { playFlashbang } from './sound-manager.js'
 import { getThrowableDetail } from './throwable-details.js'
@@ -190,26 +189,6 @@ const interactionPredicate = int => collide(getPlayer().firstElementChild, int, 
 const setAsInteractingObject = (popup, int) => {
     showPopup(popup)
     setElementInteractedWith(int)
-    if (!getProgressValueByNumber('8013')) return
-    if (int.getAttribute('name') === 'stash' && !getProgressValueByNumber('1000003')) {
-        getPopups().push(
-            new Popup(
-                'Use stash to manage your items in a much more organized environment',
-                { renderProgress: '1000003' },
-                3000,
-            ),
-        )
-        activateAllProgresses('1000003')
-    } else if (int.getAttribute('name') === 'vendingMachine' && !getProgressValueByNumber('1000004')) {
-        getPopups().push(
-            new Popup(
-                'Use vending machine to buy/sell items or upgrade your gear',
-                { renderProgress: '1000004' },
-                3000,
-            ),
-        )
-        activateAllProgresses('1000004')
-    }
 }
 
 const handleEnemyInteractables = int => {
@@ -217,7 +196,6 @@ const handleEnemyInteractables = int => {
     if (int.parentElement === null) return
     const enemyElem = int.parentElement.parentElement
     const enemyObject = getEnemyObject(enemyElem)
-    if (!getProgressValueByNumber('3002')) removePopup(popup)
     if (enemyObject.health === 0) removePopup(popup)
     else if (isEnemyNotified(enemyObject)) removePopup(popup)
     else if (!interactionPredicate(int)) removePopup(popup)
@@ -577,7 +555,7 @@ const manageDialogues = () => {
         getDialogueContainer().firstElementChild.getBoundingClientRect()
     const newX =
         x + width < 10 ? 10 : x + width + dialogueWidth > innerWidth - 10 ? innerWidth - 10 - dialogueWidth : x + width
-    const newY = y < 200 ? 200 : y + dialogueHeight > innerHeight + 20 ? innerHeight + 20 - dialogueHeight : y    
+    const newY = y < 200 ? 200 : y + dialogueHeight > innerHeight + 20 ? innerHeight + 20 - dialogueHeight : y
     getDialogueContainer().firstElementChild.style.left = `${newX}px`
     getDialogueContainer().firstElementChild.style.top = `${newY}px`
 }
