@@ -7,11 +7,6 @@ import {
     getPopups,
     getRooms,
     getWalls,
-    initEnemies,
-    initInteractables,
-    initLoaders,
-    initRooms,
-    initWalls,
     setDialogues,
     setEnemies,
     setInteractables,
@@ -20,11 +15,12 @@ import {
     setRooms,
     setWalls,
 } from './entities.js'
-import { getInventory, initInventory, setInventory } from './inventory.js'
+import { getInitialInventory, getInventory, setInventory } from './inventory.js'
+import { dialogues, enemies, interactables, loaders, popups, rooms, shopItems, walls } from './new-game.js'
 import { getPasswords, initPasswords, setPasswords } from './password-manager.js'
-import { getProgress, initProgress, setProgress } from './progress-manager.js'
-import { getShopItems, initShopItems, setShopItems } from './shop-item.js'
-import { getStash, initStash, setStash } from './stash.js'
+import { getInitialProgress, getProgress, setProgress } from './progress-manager.js'
+import { getShopItems, setShopItems } from './shop-item.js'
+import { getStash, setStash } from './stash.js'
 import {
     getAdrenalinesDropped,
     getAimMode,
@@ -126,32 +122,56 @@ import {
 
 export const prepareNewGameData = difficulty => {
     initNewGameVariables(undefined, undefined, difficulty)
-    initRooms()
-    initWalls()
+    initNewGameRooms()
+    initNewGameWalls()
     initPasswords()
     initNewGameLoaders()
     initNewGameProgress()
     initNewGameInventory()
     initNewGameStash()
     initNewGameShop()
-    initNewGameEntities()
+    initNewGameEnemies()
+    initNewGameInteractables()
+    initNewGamePopups()
+    initNewGameDialogues()
     initConstants()
 }
 
-const initNewGameLoaders = () => setLoaders(initLoaders())
-
-const initNewGameProgress = () => setProgress(initProgress())
-
-const initNewGameInventory = () => setInventory(initInventory())
-
-const initNewGameStash = () => setStash(initStash())
-
-const initNewGameShop = () => setShopItems(initShopItems())
-
-const initNewGameEntities = () => {
-    initEnemies(new Map())
-    initInteractables(new Map())
+const initNewGameRooms = () => {
+    const result = new Map()
+    JSON.parse(rooms).forEach(room => result.set(room.id, room))
+    setRooms(result)
 }
+
+const initNewGameWalls = () => parseStringAndSetAsData(walls, setWalls)
+
+const initNewGameLoaders = () => parseStringAndSetAsData(loaders, setLoaders)
+
+const initNewGameProgress = () => setProgress(getInitialProgress())
+
+const initNewGameInventory = () => setInventory(getInitialInventory())
+
+const initNewGameStash = () => setStash([])
+
+const initNewGameShop = () => setShopItems(JSON.parse(shopItems))
+
+const initNewGameEnemies = () => {
+    const data2Load = new Map([])
+    const data = JSON.parse(enemies)
+    Object.getOwnPropertyNames(data).forEach(name => {
+        data2Load.set(
+            Number(name),
+            data[name].map(enemy => buildEnemy(enemy)),
+        )
+    })
+    setEnemies(data2Load)
+}
+
+const initNewGameInteractables = () => parseStringAndSetAsData(interactables, setInteractables)
+
+const initNewGamePopups = () => setPopups(JSON.parse(popups))
+
+const initNewGameDialogues = () => setDialogues(JSON.parse(dialogues))
 
 export const initConstants = () => {
     setUpPressed(false)
@@ -420,9 +440,12 @@ const loadLoaders = slotNumber => loadStringAsMap(slotNumber, 'loaders', setLoad
 
 const loadPasswords = slotNumber => loadStringAsMap(slotNumber, 'passwords', setPasswords, false)
 
-const loadStringAsMap = (slotNumber, entityType, setter, toNumber = true) => {
+const loadStringAsMap = (slotNumber, entityType, setter, toNumber = true) =>
+    parseStringAndSetAsData(localStorage.getItem(`slot-${slotNumber}-${entityType}`), setter, toNumber)
+
+const parseStringAndSetAsData = (string, setter, toNumber = true) => {
     const data2Load = new Map([])
-    const data = JSON.parse(localStorage.getItem(`slot-${slotNumber}-${entityType}`))
+    const data = JSON.parse(string)
     Object.getOwnPropertyNames(data).forEach(name => data2Load.set(toNumber ? Number(name) : name, data[name]))
     setter(data2Load)
 }

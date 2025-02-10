@@ -1,6 +1,17 @@
-import { getCurrentRoomEnemies, getHealButton, getHealthStatusContainer, getMapEl, getPlayer } from './elements.js'
+import {
+    getCurrentRoomEnemies,
+    getHealButton,
+    getHealthStatusContainer,
+    getMapEl,
+    getPlayer,
+    getPopupContainer,
+} from './elements.js'
 import { CHASE, NO_OFFENCE } from './enemy/enemy-constants.js'
+import { getPopups } from './entities.js'
 import { countItem, getInventory, useInventoryResource } from './inventory.js'
+import { Popup } from './popup-manager.js'
+import { activateAllProgresses, getProgressValueByNumber } from './progress-manager.js'
+import { IS_MOBILE } from './script.js'
 import { healthManager } from './user-interface.js'
 import {
     addAllClasses,
@@ -21,9 +32,11 @@ import {
     getExplosionDamageCounter,
     getHealth,
     getInfection,
+    getIsSurvival,
     getLeftPressed,
     getMaxHealth,
     getNoOffenseCounter,
+    getPlayingDialogue,
     getPoisoned,
     getRightPressed,
     getUpPressed,
@@ -200,9 +213,11 @@ const manageInfectedState = () => {
 }
 
 export const infectPlayer2SpecificVirus = virusName => {
-    if (getInfection().includes(virusName)) return
-    setInfection([...getInfection(), virusName])
-    renderVirusIcon(virusName)
+    if (!getInfection().includes(virusName)) {
+        setInfection([...getInfection(), virusName])
+        renderVirusIcon(virusName)
+    }
+    alertOfVirusExistence()
 }
 
 export const renderVirusIcon = virusName => {
@@ -212,6 +227,26 @@ export const renderVirusIcon = virusName => {
     virusIcon.src = `/assets/images/${virusName}virus.png`
     addClass(virusIcon, 'animation')
     virusBar.append(virusIcon)
+}
+
+const alertOfVirusExistence = () => {
+    if ( getIsSurvival() ) return
+    if (!getPlayingDialogue() && !getPopupContainer().firstElementChild && !getProgressValueByNumber('10000000')) {
+        getPopups().push(
+            new Popup(
+                () => {
+                    const viruses = document.querySelector('.infected-container')?.firstElementChild
+                    if (viruses) addClass(viruses, 'glow')
+                    return `The virus icons at the ${
+                        IS_MOBILE ? 'top' : 'bottom left'
+                    } of the screen indicate which virus types you are infected to`
+                },
+                { renderProgress: '10000000' },
+                10000,
+            ),
+        )
+        activateAllProgresses('10000000')
+    }
 }
 
 export const useVaccine = vaccine => {

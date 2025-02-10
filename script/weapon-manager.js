@@ -92,7 +92,7 @@ export const manageWeaponActions = () => {
     manageShoot()
     manageFireAnimation()
     manageThrow()
-    if (IS_MOBILE) manageMobileAim()
+    manageMobileAim()
 }
 
 let counter = 0
@@ -418,6 +418,7 @@ export const useLuckPills = pills => {
 }
 
 const manageMobileAim = () => {
+    if ( !IS_MOBILE ) return
     findMostSuitableTarget()
     autoAim2Target()
     shootWhenTargetDetected()

@@ -13,8 +13,8 @@ import { AbstractEnemy } from './abstract-enemy.js'
 export class Spiker extends AbstractEnemy {
     constructor(level, waypoint, loot, progress, virus, difficulties) {
         const base = level + getRoundsFinished() * 5
-        const health = Math.floor(base * 25 + Math.random() * 5)
-        const damage = Math.floor(base * 5 + Math.random() * 5)
+        const health = Math.floor(base * 13 + Math.random() * 3)
+        const damage = Math.floor(base * 3 + Math.random() * 3)
         const maxSpeed = 6 + Math.random()
 
         super(

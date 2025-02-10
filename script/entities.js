@@ -1,37 +1,31 @@
 import { buildEnemy } from './enemy/enemy-factory.js'
 import { getDifficulty } from './variables.js'
 
-let rooms = new Map([])
+let rooms = null
 export const setRooms = val => {
     rooms = val
 }
 export const getRooms = () => rooms
 
-export const initRooms = () => new Map([])
-
-let walls = new Map([])
+let walls = null
 export const setWalls = val => {
     walls = val
 }
 export const getWalls = () => walls
 
-export const initWalls = () => new Map([])
-
-let loaders = new Map([])
+let loaders = null
 export const setLoaders = val => {
     loaders = val
 }
 export const getLoaders = () => loaders
 
-export const initLoaders = () => new Map([[1, []]])
-
-let enemies = new Map([])
+let enemies = null
 export const setEnemies = val => {
     enemies = val
 }
 export const getEnemies = () => enemies
 
-export const initEnemies = inputEnemies => {
+export const getInitialEnemies = inputEnemies => {
     const result = new Map([])
     for (const [roomId, enemiesOfRoom] of inputEnemies.entries()) {
         result.set(
@@ -39,7 +33,7 @@ export const initEnemies = inputEnemies => {
             enemiesOfRoom.map(enemy => buildEnemy(enemy)).filter(enemy => enemy.difficulties.includes(getDifficulty())),
         )
     }
-    setEnemies(result)
+    return result
 }
 
 let interactables = new Map([])
@@ -48,7 +42,7 @@ export const setInteractables = val => {
 }
 export const getInteractables = () => interactables
 
-export const initInteractables = inputInteractables => {
+export const getInitialInteractables = inputInteractables => {
     const result = new Map([])
     for (const [roomId, interactablesOfRoom] of inputInteractables.entries()) {
         result.set(
@@ -56,16 +50,16 @@ export const initInteractables = inputInteractables => {
             interactablesOfRoom.map(int => ({ ...int })).filter(int => int.difficulties.includes(getDifficulty())),
         )
     }
-    setInteractables(result)
+    return result
 }
 
-let dialogues = []
+let dialogues = null
 export const setDialogues = val => {
     dialogues = val
 }
 export const getDialogues = () => dialogues
 
-let popups = []
+let popups = null
 export const setPopups = val => {
     popups = val
 }

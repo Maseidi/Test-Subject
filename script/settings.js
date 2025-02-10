@@ -11,7 +11,7 @@ export const getDefaultSettings = () => ({
     audio: {
         ui: 0.1,
         sound: 0.3,
-        music: 0.1,
+        music: 0.6,
     },
     display: {
         fps: IS_MOBILE ? 30 : 60,

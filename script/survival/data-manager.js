@@ -2,13 +2,13 @@ import { buildEnemy } from '../enemy/enemy-factory.js'
 import {
     getDialogues,
     getEnemies,
+    getInitialEnemies,
+    getInitialInteractables,
     getInteractables,
     getLoaders,
     getPopups,
     getRooms,
     getWalls,
-    initEnemies,
-    initInteractables,
     setDialogues,
     setEnemies,
     setInteractables,
@@ -19,7 +19,7 @@ import {
 } from '../entities.js'
 import { getGunUpgradableDetail } from '../gun-details.js'
 import { GunDrop, Lever, PC, PistolAmmo, Stash, VendingMachine } from '../interactables.js'
-import { getInventory, initInventory, pickupDrop, setInventory } from '../inventory.js'
+import { getInitialInventory, getInventory, pickupDrop, setInventory } from '../inventory.js'
 import {
     ARCTIC_WARFERE,
     BENELLI_M4,
@@ -39,7 +39,7 @@ import {
 } from '../loot.js'
 import { getPasswords, initPasswords, setPasswords } from '../password-manager.js'
 import { Popup } from '../popup-manager.js'
-import { getProgress, initProgress, setProgress } from '../progress-manager.js'
+import { getInitialProgress, getProgress, setProgress } from '../progress-manager.js'
 import { Progress } from '../progress.js'
 import { Room } from '../room.js'
 import { getShopItems, setShopItems } from '../shop-item.js'
@@ -202,39 +202,41 @@ const initNewSurvivalWalls = () =>
 
 const initNewSurvivalLoaders = () => setLoaders(new Map([[1, []]]))
 
-const initNewSurvivalProgress = () => setProgress(initProgress())
+const initNewSurvivalProgress = () => setProgress(getInitialProgress())
 
-const initNewSurvivalInventory = () => setInventory(initInventory())
+const initNewSurvivalInventory = () => setInventory(getInitialInventory())
 
 const initNewSurvivalStash = () => setStash([])
 
 const initNewSurvivalShop = () => setShopItems([])
 
 const initNewSurvivalEntities = () => {
-    initEnemies(new Map([[1, []]]))
-    initInteractables(
-        new Map([
-            [
-                1,
+    setEnemies(getInitialEnemies(new Map([[1, []]])))
+    setInteractables(
+        getInitialInteractables(
+            new Map([
                 [
-                    new PC(20, 20),
-                    new Stash(100, 20),
-                    new VendingMachine(200, 20),
-                    new Lever(1400, 1000),
-                    new GunDrop(
-                        1400,
-                        1200,
-                        startingPistol,
-                        getGunUpgradableDetail(startingPistol, 'magazine', 1),
-                        1,
-                        1,
-                        1,
-                        1,
-                        1,
-                    ),
+                    1,
+                    [
+                        new PC(20, 20),
+                        new Stash(100, 20),
+                        new VendingMachine(200, 20),
+                        new Lever(1400, 1000),
+                        new GunDrop(
+                            1400,
+                            1200,
+                            startingPistol,
+                            getGunUpgradableDetail(startingPistol, 'magazine', 1),
+                            1,
+                            1,
+                            1,
+                            1,
+                            1,
+                        ),
+                    ],
                 ],
-            ],
-        ]),
+            ]),
+        ),
     )
 }
 

@@ -15,19 +15,20 @@ export class Popup {
 export const renderPopup = progress => {
     const popupObj = getPopups().find(popup => popup.renderProgress === progress)
     if (!popupObj) return
+    const { message, duration, progress2Active } = popupObj
     if (getPopupContainer().firstElementChild) getPopupContainer().firstElementChild.remove()
     const popup = createAndAddClass('div', 'ui-theme', 'hint-popup', 'animation')
     const content = document.createElement('p')
-    content.innerHTML = popupObj.message
+    content.innerHTML = typeof message === 'function' ? message() : message
     appendAll(popup, content)
     addAllAttributes(
         popup,
         'timer',
         0,
         'duration',
-        (popupObj.duration / 1000) * getSettings().display.fps,
+        (duration / 1000) * getSettings().display.fps,
         'progress2active',
-        popupObj.progress2Active,
+        progress2Active,
         'fade-out',
         500,
     )

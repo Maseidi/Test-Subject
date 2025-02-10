@@ -20,8 +20,8 @@ import { AbstractEnemy } from '../type/abstract-enemy.js'
 export class Ranger extends AbstractEnemy {
     constructor(level, waypoint, loot, progress, virus, difficulties) {
         const base = level + getRoundsFinished() * 5
-        const health = Math.floor(base * 112 + Math.random() * 17)
-        const damage = Math.floor(base * 15 + Math.random() * 5)
+        const health = Math.floor(base * 56 + Math.random() * 9)
+        const damage = Math.floor(base * 8 + Math.random() * 3)
         const maxSpeed = 4 + Math.random()
         const vision = Math.floor(500 + Math.random() * 300)
 

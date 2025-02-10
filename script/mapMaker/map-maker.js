@@ -3,21 +3,31 @@ import { initConstants, initNewGameVariables } from '../data-manager.js'
 import { Dialogue, sources } from '../dialogue-manager.js'
 import { getPauseContainer } from '../elements.js'
 import { Torturer } from '../enemy/type/normal-enemy.js'
-import { initEnemies, initInteractables, setDialogues, setLoaders, setPopups, setRooms, setWalls } from '../entities.js'
+import {
+    getInitialEnemies,
+    getInitialInteractables,
+    setDialogues,
+    setEnemies,
+    setInteractables,
+    setLoaders,
+    setPopups,
+    setRooms,
+    setWalls,
+} from '../entities.js'
 import { play } from '../game.js'
 import { PistolAmmo } from '../interactables.js'
-import { initInventory, setInventory } from '../inventory.js'
+import { getInitialInventory, setInventory } from '../inventory.js'
 import { Door, TopLoader } from '../loader.js'
 import { setPasswords } from '../password-manager.js'
 import { renderPauseMenu } from '../pause-menu.js'
 import { Popup } from '../popup-manager.js'
-import { initProgress, setProgress } from '../progress-manager.js'
+import { getInitialProgress, setProgress } from '../progress-manager.js'
 import { defineEnemyComponents } from '../room-loader.js'
 import { Room } from '../room.js'
 import { IS_MOBILE } from '../script.js'
 import { BandageShopItem, setShopItems } from '../shop-item.js'
 import { renderPauseContainer, renderPlayer } from '../startup.js'
-import { initStash, setStash } from '../stash.js'
+import { setStash } from '../stash.js'
 import {
     addClass,
     appendAll,
@@ -384,15 +394,15 @@ export const playTest = () => {
     handlePasswords()
     initNewGameVariables(getSpawnX(), getSpawnY(), getDifficulty())
     initConstants()
-    setProgress(initProgress())
-    setInventory(initInventory())
-    setStash(initStash())
+    setProgress(getInitialProgress())
+    setInventory(getInitialInventory())
+    setStash([])
     setShopItems(getShop().map(shop => ({ ...shop })))
-    initInteractables(getInteractables())
+    setInteractables(getInitialInteractables(getInteractables()))
     handleLoaders()
     setWalls(getWalls())
     handleRooms()
-    initEnemies(getEnemies())
+    setEnemies(getInitialEnemies(getEnemies()))
     setDialogues(getDialogues().map(dialog => ({ ...dialog })))
     setPopups(getPopups().map(popup => ({ ...popup })))
     setCurrentRoomId(getSpawnRoom())

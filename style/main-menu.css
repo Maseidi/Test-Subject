@@ -288,7 +288,7 @@ input[type='range']:focus::-moz-range-thumb {
 
 .credit-name {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     flex-direction: row;
     justify-content: space-between;
 }

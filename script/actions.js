@@ -10,6 +10,7 @@ import {
     getPauseButton,
     getPauseContainer,
     getPlayer,
+    getPopupContainer,
     getReloadButton,
     getRoomNameContainer,
     getSlotsContainer,
@@ -100,6 +101,7 @@ import {
     getMouseY,
     getPause,
     getPauseCause,
+    getPlayingDialogue,
     getPoisoned,
     getRefillStamina,
     getReloading,
@@ -280,8 +282,8 @@ export const fDown = () => {
         if (getShooting() || getReloading()) return
         if (name === 'crate') breakCrate()
         if (name === 'enemy-back') stealthKill()
-        if (!isAble2Interact()) return
         if (name === 'lever') toggleLever()
+        if (!isAble2Interact()) return
         if (name === 'stash') openStash()
         if (name === 'door') renderPasswordInput()
         if (name === 'vendingMachine') openVendingMachine()
@@ -328,6 +330,7 @@ const openPause = (cause, func) => {
 }
 
 const toggleLever = () => {
+    if (getPlayingDialogue() || getPopupContainer().firstElementChild || getReloading()) return
     const toggle1 = getElementInteractedWith().getAttribute('progress2Active')
     const toggle2 = getElementInteractedWith().getAttribute('progress2Deactive')
     if (!getProgress()[toggle1]) {
@@ -400,6 +403,7 @@ const removeUi = () => {
     getThrowButton()?.remove()
     getPauseButton()?.remove()
     getSlotsContainer()?.remove()
+    getPopupContainer().style.opacity = '0'
     getRoomNameContainer().style.opacity = '0'
     getDialogueContainer().style.opacity = '0'
     findHealtStatusChildByClassName('infected-container').style.opacity = '0'
@@ -438,6 +442,7 @@ const showUi = () => {
     renderThrowButton()
     renderPauseButton()
     renderSlots()
+    getPopupContainer().style.opacity = '1'
     getRoomNameContainer().style.opacity = '1'
     getDialogueContainer().style.opacity = '1'
     findHealtStatusChildByClassName('infected-container').style.opacity = '1'

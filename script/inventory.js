@@ -104,7 +104,7 @@ export const setInventory = val => {
 }
 export const getInventory = () => inventory
 
-export const initInventory = () => [
+export const getInitialInventory = () => [
     [null, null, null, null],
     [null, null, null, null],
     ['locked', 'locked', 'locked', 'locked'],

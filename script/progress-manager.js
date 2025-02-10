@@ -14,7 +14,7 @@ export const setProgress = val => {
 }
 export const getProgress = () => progress
 
-export const initProgress = () => ({
+export const getInitialProgress = () => ({
     [Number.MAX_SAFE_INTEGER]: true,
 })
 

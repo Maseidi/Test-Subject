@@ -404,3 +404,12 @@
         width: 200px;
     }
 }
+
+@keyframes glow {
+    0% {
+        outline: 5px solid red;
+    }
+    100% {
+        outline: 5px solid transparent;
+    }
+}

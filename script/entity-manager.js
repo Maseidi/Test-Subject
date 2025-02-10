@@ -37,7 +37,7 @@ import { findEquippedTorchById, getInventory } from './inventory.js'
 import { knockPlayer } from './knock-manager.js'
 import { dropLoot } from './loot-manager.js'
 import { damagePlayer, infectPlayer2SpecificVirus, poisonPlayer, setPlayer2Fire } from './player-health.js'
-import { activateAllProgresses } from './progress-manager.js'
+import { activateAllProgresses, getProgressValueByNumber } from './progress-manager.js'
 import { loadCurrentRoom } from './room-loader.js'
 import { playFlashbang } from './sound-manager.js'
 import { getThrowableDetail } from './throwable-details.js'
@@ -196,7 +196,8 @@ const handleEnemyInteractables = int => {
     if (int.parentElement === null) return
     const enemyElem = int.parentElement.parentElement
     const enemyObject = getEnemyObject(enemyElem)
-    if (enemyObject.health === 0) removePopup(popup)
+    if (!getProgressValueByNumber('3002')) removePopup(popup)
+    else if (enemyObject.health === 0) removePopup(popup)
     else if (isEnemyNotified(enemyObject)) removePopup(popup)
     else if (!interactionPredicate(int)) removePopup(popup)
     else setAsInteractingObject(popup, int)
