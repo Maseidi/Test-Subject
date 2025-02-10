@@ -5,6 +5,7 @@ import { manageHealthStatus } from './player-health.js'
 import { managePlayerMovement } from './player-movement.js'
 import { manageSprint } from './player-sprint.js'
 import { getSettings } from './settings.js'
+import { stash } from './sound-manager.js'
 import { startUp } from './startup.js'
 import { manageSpawns } from './survival/spawn-manager.js'
 import { setEnemyId, setSpawnCounter } from './survival/variables.js'
@@ -12,6 +13,7 @@ import { getIsSurvival, getPause, setGameId, setIsMapMakerRoot, setIsSurvival } 
 import { manageWeaponActions } from './weapon-manager.js'
 
 export const play = (mapMaker = false, survival = false) => {
+    stash.currentTime = 0
     setIsMapMakerRoot(mapMaker)
     setIsSurvival(survival)
     if (survival) {
