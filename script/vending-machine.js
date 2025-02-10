@@ -437,7 +437,7 @@ const renderPrice = (weaponObj, name) => {
         const img = document.createElement('img')
         img.src = `../assets/images/coin.png`
         const value = createAndAddClass('p', 'upgrade-stat-price-value')
-        value.textContent = `${Math.pow(currLvl, 2) + 2}`
+        value.textContent = `${9 * (currLvl - 1) + 3}`
         appendAll(price, img, value)
     }
     return price
@@ -566,7 +566,7 @@ const removeStore = () => {
     getPauseContainer().firstElementChild.remove()
 }
 
-const removePopup = (difference) => {
+const removePopup = difference => {
     lastItemClickedOn?.remove()
     lastItemClickedOn = null
     getPauseContainer().firstElementChild.lastElementChild.remove()

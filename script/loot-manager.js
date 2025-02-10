@@ -111,7 +111,7 @@ const dropRandomLoot = (left, top) => {
         { obj: SmgAmmo, chance: 0.3 },
         { obj: Coin, chance: 0.4 },
         { obj: PistolAmmo, chance: 0.5 },
-        { obj: null, chance: 0.5 },
+        { obj: null, chance: 0.9 },
         { obj: PurpleVaccine, chance: 0.1 },
         { obj: Stick, chance: 0 },
         { obj: Bandage, chance: 0.1 },

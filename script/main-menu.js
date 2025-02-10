@@ -37,9 +37,9 @@ const mainMenuHeader = () => {
 const options = () => {
     const options = createAndAddClass('div', 'main-menu-options')
     handleContinueOption(options)
-    appendAll(options, newGame(), loadGame(), survival())
-    handleMapMakerOption(options)
-    appendAll(options, settings(), credits(), lineBar())
+    // appendAll(options, newGame(), loadGame(), survival())
+    // handleMapMakerOption(options)
+    appendAll(options, survival(), settings(), credits(), lineBar())
     return options
 }
 
@@ -162,8 +162,8 @@ const survival = () =>
             addSelectedStyle(e.currentTarget)
             refreshContents(survivalOptions())
         },
-        getDelay(3),
-        getDuration(3),
+        getDelay(1),
+        getDuration(1),
     )
 
 const lineBar = () => createAndAddClass('div', 'main-menu-options-bar')
@@ -349,8 +349,8 @@ const settings = () =>
             addSelectedStyle(e.currentTarget)
             refreshContents(settingsOptions())
         },
-        getDelay(5),
-        getDuration(5),
+        getDelay(2),
+        getDuration(2),
     )
 
 const settingsOptions = () => {
@@ -484,7 +484,7 @@ const renderControlsSetting = () => {
     const interact = btn('interact', 'interact')
     const inventory = btn('inventory', 'inventory')
     const sprint = btn('sprint', 'sprint')
-    const lightUp = btn('light up torch', 'lightUp')
+    // const lightUp = btn('light up torch', 'lightUp')
     controlSettingsContainer.append(
         up,
         left,
@@ -499,7 +499,7 @@ const renderControlsSetting = () => {
         interact,
         inventory,
         sprint,
-        lightUp,
+        // lightUp,
     )
     getMainMenuEl().append(controlSettingsContainer)
 }
@@ -559,8 +559,8 @@ const credits = () =>
             addSelectedStyle(e.currentTarget)
             refreshContents(creditsContent(), true)
         },
-        getDelay(6),
-        getDuration(6),
+        getDelay(3),
+        getDuration(3),
     )
 
 const creditsContent = () => {

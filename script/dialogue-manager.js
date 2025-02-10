@@ -20,7 +20,7 @@ export class Dialogue {
 }
 
 export const renderDialogue = progress => {
-    const dialogueObj = getDialogues().find(dialogue => dialogue.renderProgress === progress)
+    const dialogueObj = getDialogues()?.find(dialogue => dialogue.renderProgress === progress)
     if (!dialogueObj) return
     displayDialogue(dialogueObj)
 }

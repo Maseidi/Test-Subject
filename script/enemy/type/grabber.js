@@ -22,8 +22,8 @@ import { AbstractEnemy } from './abstract-enemy.js'
 export class Grabber extends AbstractEnemy {
     constructor(level, path, loot, progress, virus, difficulties) {
         const base = level + getRoundsFinished() * 5
-        const health = Math.floor(base * 50 + Math.random() * 25)
-        const damage = Math.floor(base * 5 + Math.random() * 5)
+        const health = Math.floor(base * 75 + Math.random() * 38)
+        const damage = Math.floor(base * 8 + Math.random() * 8)
         const maxSpeed = 3 + Math.random()
 
         super(GRABBER, 4, path, health, damage, maxSpeed, 400, 1.4, loot, progress, virus, difficulties, level, 125)

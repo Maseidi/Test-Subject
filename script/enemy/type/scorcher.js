@@ -24,8 +24,8 @@ import { AbstractEnemy } from './abstract-enemy.js'
 export class Scorcher extends AbstractEnemy {
     constructor(level, waypoint, loot, progress, virus, difficulties) {
         const base = level + getRoundsFinished() * 5
-        const health = Math.floor(base * 68 + Math.random() * 8)
-        const damage = Math.floor(base * 5 + Math.random() * 5)
+        const health = Math.floor(base * 102 + Math.random() * 12)
+        const damage = Math.floor(base * 8 + Math.random() * 8)
         const maxSpeed = 2.5 + Math.random()
 
         super(

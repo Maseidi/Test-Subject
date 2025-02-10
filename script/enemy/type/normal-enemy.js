@@ -83,8 +83,8 @@ class NormalEnemy extends AbstractEnemy {
 export class Torturer extends NormalEnemy {
     constructor(level, waypoint, loot, progress, virus, difficulties) {
         const base = level + getRoundsFinished() * 5
-        const health = Math.floor(base * 90 + Math.random() * 10)
-        const damage = Math.floor(base * 5 + Math.random() * 5)
+        const health = Math.floor(base * 135 + Math.random() * 15)
+        const damage = Math.floor(base * 8 + Math.random() * 8)
         const maxSpeed = 3.5 + Math.random()
 
         super(
@@ -109,8 +109,8 @@ export class Torturer extends NormalEnemy {
 export class SoulDrinker extends NormalEnemy {
     constructor(level, waypoint, loot, progress, virus, difficulties) {
         const base = level + getRoundsFinished() * 5
-        const health = Math.floor(base * 45 + Math.random() * 8)
-        const damage = Math.floor(base * 3 + Math.random() * 3)
+        const health = Math.floor(base * 68 + Math.random() * 12)
+        const damage = Math.floor(base * 5 + Math.random() * 5)
         const maxSpeed = 4.5 + Math.random()
 
         super(
@@ -135,8 +135,8 @@ export class SoulDrinker extends NormalEnemy {
 export class RockCrusher extends NormalEnemy {
     constructor(level, waypoint, loot, progress, virus, difficulties) {
         const base = level + getRoundsFinished() * 5
-        const health = Math.floor(base * 180 + Math.random() * 23)
-        const damage = Math.floor(base * 15 + Math.random() * 10)
+        const health = Math.floor(base * 270 + Math.random() * 35)
+        const damage = Math.floor(base * 23 + Math.random() * 15)
         const maxSpeed = 2.5 + Math.random()
 
         super(
