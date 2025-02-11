@@ -1,5 +1,6 @@
 import {
     getCurrentRoomInteractables,
+    getToggleMenuButton,
     setCurrentRoomBullets,
     setCurrentRoomEnemies,
     setCurrentRoomExplosions,
@@ -8,10 +9,15 @@ import {
     setCurrentRoomPoisons,
     setCurrentRoomThrowables,
 } from '../elements.js'
-import { getEnemies, getInteractables, setEnemies, setInteractables } from '../entities.js'
+import { getEnemies, getInteractables, getPopups, setEnemies, setInteractables } from '../entities.js'
 import { isGun } from '../gun-details.js'
-import { Coin, Lever } from '../interactables.js'
+import { Coin, Lever, PC } from '../interactables.js'
+import { Popup } from '../popup-manager.js'
+import { activateAllProgresses, getProgressValueByNumber } from '../progress-manager.js'
+import { Progress } from '../progress.js'
 import { renderInteractable, renderInteractables } from '../room-loader.js'
+import { IS_MOBILE } from '../script.js'
+import { getSettings } from '../settings.js'
 import {
     AdrenalineShopItem,
     AntidoteShopItem,
@@ -39,7 +45,8 @@ import {
 } from '../shop-item.js'
 import { getPlayingMusic, playActionMusic, setPlayingMusic } from '../sound-manager.js'
 import { add2Stash } from '../stash.js'
-import { appendAll, createAndAddClass } from '../util.js'
+import { renderToggleMenuButton } from '../user-interface.js'
+import { addClass, appendAll, createAndAddClass } from '../util.js'
 import {
     getChaos,
     getRandomizedWeapons,
@@ -62,6 +69,7 @@ export const startChaos = () => {
     renderInteractables()
     renderchaosPopup()
     playActionMusic()
+    getToggleMenuButton()?.remove()
 }
 
 const resetRoom = () => {
@@ -84,7 +92,7 @@ const resetRoom = () => {
                 [
                     ...getInteractables()
                         .get(1)
-                        .filter((item, index) => index < 3 || isGun(item.name)),
+                        .filter(item => isGun(item.name)),
                 ],
             ],
         ]),
@@ -94,14 +102,60 @@ const resetRoom = () => {
 }
 
 export const endChaos = () => {
+    getInteractables()
+        .get(1)
+        .forEach(int => add2Stash(int, int.amount))
+    getCurrentRoomInteractables().forEach(int => int.remove())
     const lever = new Lever(1400, 1000)
+    const pc = new PC(20, 20)
     renderInteractable(lever)
-    setInteractables(new Map([[1, [...getInteractables().get(1), lever]]]))
+    renderInteractable(pc)
+    setInteractables(new Map([[1, [pc, lever]]]))
     renderchaosPopup('end')
     add2Stash(new Coin(), Math.min(20, getChaos()))
     updateShop()
     getPlayingMusic()?.pause()
     setPlayingMusic(null)
+    notifyPlayerOfStashAndShopAndPC()
+}
+
+const notifyPlayerOfStashAndShopAndPC = () => {
+    if (getProgressValueByNumber('9999999997') || localStorage.getItem('survival-tutorial-done') === 'DONE') {
+        if (IS_MOBILE) renderToggleMenuButton()
+        return
+    }
+    getPopups().push(
+        new Popup(
+            `After each wave, all of the available loot will be collected automitically. You can check them in your stash.`,
+            Progress.builder().setRenderProgress('9999999997').setProgress2Active('9999999998'),
+            10000,
+        ),
+    )
+    getPopups().push(
+        new Popup(
+            () => {
+                if (IS_MOBILE) {
+                    if (!getToggleMenuButton()) renderToggleMenuButton()
+                    addClass(getToggleMenuButton(), 'glow')
+                }
+                return `Use ${
+                    IS_MOBILE
+                        ? 'the cart icon'
+                        : `<span>${getSettings().controls.toggleMenu.replace('Key', '').replace('Digit', '')}</span>`
+                } to manage your items in stash, or buy / sell / upgrade items using the shop. The menus can be toggled if you press this button repeatedly.`
+            },
+            Progress.builder().setRenderProgress('9999999998').setProgress2Active('9999999999'),
+            10000,
+        ),
+    )
+    getPopups().push(
+        new Popup(
+            `You can save your progress by using the computer at the top left corner of the map.`,
+            Progress.builder().setRenderProgress('9999999999'),
+            10000,
+        ),
+    )
+    activateAllProgresses('9999999997')
 }
 
 const renderchaosPopup = (type = 'start') => {

@@ -4,7 +4,6 @@ import { getEnemies, getInteractables } from './entities.js'
 import { getDoorObject } from './loader.js'
 import { renderPopup } from './popup-manager.js'
 import { renderInteractable, spawnEnemy } from './room-loader.js'
-import { IS_MOBILE } from './script.js'
 import { addClass, element2Object, removeClass } from './util.js'
 import { getCurrentRoomId, getPause, getWaitingFunctions, setWaitingFunctions } from './variables.js'
 
@@ -23,7 +22,7 @@ export const getProgressValueByNumber = number => progress[number]
 export const activateAllProgresses = numbers => {
     if (!numbers) return
 
-    if (numbers === (IS_MOBILE ? '1004' : '1005')) localStorage.setItem('survival-tutorial-done', 'DONE')
+    if (numbers === '9999999999') localStorage.setItem('survival-tutorial-done', 'DONE')
 
     const progresses2Active = String(numbers).split(',')
 

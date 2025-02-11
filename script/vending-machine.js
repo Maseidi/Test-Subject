@@ -30,7 +30,6 @@ import {
 } from './util.js'
 import {
     getAdrenalinesDropped,
-    getElementInteractedWith,
     getEnergyDrinksDropped,
     getHealthPotionsDropped,
     getLuckPillsDropped,
@@ -437,7 +436,7 @@ const renderPrice = (weaponObj, name) => {
         const img = document.createElement('img')
         img.src = `../assets/images/coin.png`
         const value = createAndAddClass('p', 'upgrade-stat-price-value')
-        value.textContent = `${9 * (currLvl - 1) + 3}`
+        value.textContent = `${Math.pow(currLvl - 1, 2) + 3}`
         appendAll(price, img, value)
     }
     return price
@@ -545,10 +544,8 @@ const manageSell = itemObj => {
     const gain = itemObj.price * itemObj.amount
     const gainSpace = itemObj.space
     pickupDrop(object2Element(new Coin(null, null, gain)))
-    let left = getElementInteractedWith().getAttribute('amount')
-    useInventoryResource('coin', gain - left)
-    left -= gainSpace * 50
-    if (left <= 0) {
+    useInventoryResource('coin', gain)
+    if (gainSpace > 0) {
         useInventoryResource(itemObj.name, itemObj.amount)
         pickupDrop(object2Element(new Coin(null, null, gain)))
         handleEquippableDrop(itemObj)

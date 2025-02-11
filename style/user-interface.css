@@ -463,6 +463,11 @@
     bottom: 50px;
 }
 
+.mobile-cart-btn {
+    left: 10px;
+    bottom: 10px;
+}
+
 .mobile-inventory-btn {
     left: unset;
     right: 330px;

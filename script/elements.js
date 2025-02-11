@@ -201,3 +201,9 @@ export const setThrowButton = val => {
     throwButton = val
 }
 export const getThrowButton = () => throwButton
+
+let toggleMenuButton = null
+export const setToggleMenuButton = val => {
+    toggleMenuButton = val
+}
+export const getToggleMenuButton = () => toggleMenuButton

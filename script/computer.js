@@ -1,6 +1,6 @@
 import { managePause } from './actions.js'
 import { loadGameFromSlot, saveGameAtSlot } from './data-manager.js'
-import { getPauseContainer } from './elements.js'
+import { getPauseContainer, getToggleMenuButton } from './elements.js'
 import { finishUp } from './finishup.js'
 import { play } from './game.js'
 import { countItem, useInventoryResource } from './inventory.js'
@@ -16,6 +16,7 @@ export const turnOnComputer = () => {
     setPauseCause('save')
     managePause()
     renderDesktop()
+    if (getToggleMenuButton()) getToggleMenuButton().style.visibility = 'hidden'
 }
 
 // NOTE: Map maker in arguments says that the pause menu is opened at map maker environment

@@ -16,6 +16,7 @@ import {
     getSlotsContainer,
     getSprintButton,
     getThrowButton,
+    getToggleMenuButton,
     getUiEl,
 } from './elements.js'
 import { getEnemies, getRooms } from './entities.js'
@@ -52,6 +53,7 @@ import {
 import { centralizePlayer } from './startup.js'
 import { renderStash } from './stash.js'
 import { startChaos } from './survival/chaos-manager.js'
+import { getCurrentChaosEnemies, getCurrentChaosSpawned, getEnemiseKilled } from './survival/variables.js'
 import { isThrowable } from './throwable-details.js'
 import { renderThrowable } from './throwable-loader.js'
 import { removeTorch, renderTorch } from './torch-loader.js'
@@ -366,8 +368,10 @@ export const tabDown = () => {
     if (getPause()) {
         setPauseCause('inventory')
         renderInventory()
+        if (getToggleMenuButton()) getToggleMenuButton().style.visibility = 'hidden'
         return
     }
+    if (getToggleMenuButton()) getToggleMenuButton().style.visibility = 'visible'
     removeInventory()
 }
 
@@ -469,9 +473,11 @@ export const escapeDown = () => {
     if (!getPause()) {
         managePause()
         setPauseCause('pause')
+        if (getToggleMenuButton()) getToggleMenuButton().style.visibility = 'hidden'
         renderPauseMenu()
         return
     }
+    if (getToggleMenuButton()) getToggleMenuButton().style.visibility = 'visible'
     quitPage()
 }
 
@@ -644,3 +650,19 @@ export const wheelChange = event => {
 }
 
 export const resizeWindow = () => centralizePlayer()
+
+export const spaceDown = () => {
+    if (!getIsSurvival()) return
+    if (getCurrentChaosEnemies() === getCurrentChaosSpawned() && getEnemiseKilled() === getCurrentChaosEnemies()) {
+        if (!getPause()) openStash()
+        else {
+            if (getPauseCause() === 'stash') {
+                quitPage()
+                openVendingMachine()
+            } else if (getPauseCause() === 'store') {
+                quitPage()
+                openStash()
+            }
+        }
+    }
+}

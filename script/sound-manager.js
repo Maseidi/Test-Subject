@@ -131,10 +131,11 @@ const addLoop = sound => {
 }
 
 export const serenity = new Audio('../assets/audio/ui/serenity.mp3')
+serenity.currentTime = 1.5
 addLoop(serenity)
 export const playVendingMachineMusic = () => playMusic(serenity)
 export const stopVendingMachineMusic = () => {
-    serenity.currentTime = 0
+    serenity.currentTime = 1.5
     serenity.pause()
 }
 

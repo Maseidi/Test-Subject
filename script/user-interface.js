@@ -9,12 +9,14 @@ import {
     rDown,
     shiftDown,
     shiftUp,
+    spaceDown,
     stopMovement,
     tabDown,
     weaponSlotDown,
 } from './actions.js'
 import {
     getPauseContainer,
+    getToggleMenuButton,
     getUiEl,
     setAimJoystick,
     setHealButton,
@@ -26,6 +28,7 @@ import {
     setSlotsContainer,
     setSprintButton,
     setThrowButton,
+    setToggleMenuButton,
     setUiEl,
 } from './elements.js'
 import {
@@ -144,6 +147,7 @@ export const quitPage = mapMaker => {
     if (getDraggedItem()) return
     const last = getPauseContainer().lastElementChild
     if (Array.from(last.children).find(child => containsClass(child, 'popup-container'))) return
+    if (getToggleMenuButton()) getToggleMenuButton().style.visibility = 'visible'
     playClickSoundEffect()
     last.remove()
     updateInteractablePopups()
@@ -246,6 +250,8 @@ export const renderThrowButton = () => {
     if (!isThrowable(findEquippedWeaponById()?.name)) return
     renderButton('throw', () => setShootPressed(true), null, setThrowButton, null, !getAimMode())
 }
+
+export const renderToggleMenuButton = () => renderButton('cart', spaceDown, null, setToggleMenuButton)
 
 const renderButton = (name, onTouchStart, onTouchEnd, setter, onTouchEvenOnDisabled, disabledPredicate) => {
     const root = document.getElementById('root')

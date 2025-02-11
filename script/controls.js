@@ -15,6 +15,7 @@ import {
     sDown,
     shiftDown,
     shiftUp,
+    spaceDown,
     sUp,
     tabDown,
     wDown,
@@ -72,6 +73,9 @@ const keyDown = e => {
                 break
             case getSettings().controls.lightUp:
                 qDown()
+                break
+            case getSettings().controls.toggleMenu:
+                spaceDown()
                 break
         }
     }

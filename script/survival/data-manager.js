@@ -18,7 +18,7 @@ import {
     setWalls,
 } from '../entities.js'
 import { getGunUpgradableDetail } from '../gun-details.js'
-import { GunDrop, Lever, PC, PistolAmmo, Stash, VendingMachine } from '../interactables.js'
+import { GunDrop, Lever, PC, PistolAmmo } from '../interactables.js'
 import { getInitialInventory, getInventory, pickupDrop, setInventory } from '../inventory.js'
 import {
     ARCTIC_WARFERE,
@@ -219,8 +219,6 @@ const initNewSurvivalEntities = () => {
                     1,
                     [
                         new PC(20, 20),
-                        new Stash(100, 20),
-                        new VendingMachine(200, 20),
                         new Lever(1400, 1000),
                         new GunDrop(
                             1400,

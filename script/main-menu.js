@@ -484,6 +484,7 @@ const renderControlsSetting = () => {
     const interact = btn('interact', 'interact')
     const inventory = btn('inventory', 'inventory')
     const sprint = btn('sprint', 'sprint')
+    const toggleMenu = btn('toggle menu', 'toggleMenu')
     // const lightUp = btn('light up torch', 'lightUp')
     controlSettingsContainer.append(
         up,
@@ -499,6 +500,7 @@ const renderControlsSetting = () => {
         interact,
         inventory,
         sprint,
+        toggleMenu,
         // lightUp,
     )
     getMainMenuEl().append(controlSettingsContainer)

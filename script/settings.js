@@ -31,5 +31,6 @@ export const getDefaultSettings = () => ({
         interact: 'KeyF',
         inventory: 'Tab',
         sprint: 'ShiftLeft',
+        toggleMenu: 'Space',
     },
 })
