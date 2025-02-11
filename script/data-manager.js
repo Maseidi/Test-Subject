@@ -59,7 +59,7 @@ import {
     setAimJoystickAngle,
     setAimMode,
     setAllowMove,
-    setAnimatedLimbs,
+    setAnimatedElements,
     setBurning,
     setCriticalChance,
     setCurrentRoomId,
@@ -195,7 +195,7 @@ export const initConstants = () => {
     setGrabbed(false)
     setThrowCounter(0)
     setExplosionDamageCounter(0)
-    setAnimatedLimbs([])
+    setAnimatedElements([])
     setWaitingFunctions([])
     setPlayingDialogue(null)
     setNoOffenseCounter(0)

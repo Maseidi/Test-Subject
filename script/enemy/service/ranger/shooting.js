@@ -11,7 +11,16 @@ import {
     removeClass,
     useDeltaTime,
 } from '../../../util.js'
-import { getGrabbed, getPlayerX, getPlayerY, getRoomLeft, getRoomTop, getStunnedCounter } from '../../../variables.js'
+import {
+    getAnimatedElements,
+    getGrabbed,
+    getPlayerX,
+    getPlayerY,
+    getRoomLeft,
+    getRoomTop,
+    getStunnedCounter,
+    setAnimatedElements,
+} from '../../../variables.js'
 import { CHASE, STAND_AND_WATCH, STUNNED } from '../../enemy-constants.js'
 
 export class RangerShootingService {
@@ -61,19 +70,26 @@ export class RangerShootingService {
     playShootAnimation() {
         const body = this.enemy.sprite.firstElementChild.firstElementChild
         const currentAngle = getProperty(body, 'transform', 'rotateZ(', 'deg)')
-        body.animate(
+        const animatedBody1 = body.animate(
             [{ transform: `rotateZ(${currentAngle}deg)` }, { transform: `rotateZ(${currentAngle + 180}deg)` }],
             {
                 duration: 250,
             },
-        ).addEventListener('finish', () => {
+        )
+        setAnimatedElements([...getAnimatedElements(), animatedBody1])
+        animatedBody1.addEventListener('finish', () => {
             this.shoot()
-            body.animate(
+            setAnimatedElements(getAnimatedElements().filter(item => item !== animatedBody1))
+            const animatedBody2 = body.animate(
                 [{ transform: `rotateZ(${currentAngle + 180}deg)` }, { transform: `rotateZ(${currentAngle}deg)` }],
                 {
                     duration: 250,
                 },
             )
+            setAnimatedElements([...getAnimatedElements(), animatedBody2])
+            animatedBody2.addEventListener('finish', () => {
+                setAnimatedElements(getAnimatedElements().filter(item => item !== animatedBody2))
+            })
         })
     }
 

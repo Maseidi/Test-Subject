@@ -22,8 +22,8 @@ export const renderPasswordInput = () => {
     if (!passwords.get(code)) return
     const value = getElementInteractedWith().getAttribute('value')
     const digits = passwords.get(code).toString().length
-    managePause()
     setPauseCause('password')
+    managePause()
     const passWrapper = createAndAddClass('div', 'password-wrapper', 'ui-theme')
     const passContainer = createAndAddClass('div', 'password-container')
     for (let i = 0; i < digits; i++) {

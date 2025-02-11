@@ -304,11 +304,11 @@ export const setInfection = val => {
 }
 export const getInfection = () => infection
 
-let animatedLimbs = null
-export const setAnimatedLimbs = val => {
-    animatedLimbs = val
+let animatedElements = null
+export const setAnimatedElements = val => {
+    animatedElements = val
 }
-export const getAnimatedLimbs = () => animatedLimbs
+export const getAnimatedElements = () => animatedElements
 
 let equippedTorchId = null
 export const setEquippedTorchId = val => {

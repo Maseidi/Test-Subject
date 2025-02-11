@@ -8,8 +8,8 @@
 
 .drop > img {
     border-radius: 5px;
-    outline-offset: 5px;
-    outline: 1px solid coral;
+    background-color: coral;
+    outline: 5px solid coral;
 }
 
 .interactable > img {

@@ -51,7 +51,7 @@ import {
 import { centralizePlayer } from './startup.js'
 import { renderStash } from './stash.js'
 import { startChaos } from './survival/chaos-manager.js'
-import { getChaos, getCurrentChaosEnemies, getCurrentChaosSpawned, getEnemiseKilled } from './survival/variables.js'
+import { getCurrentChaosEnemies, getCurrentChaosSpawned, getEnemiseKilled } from './survival/variables.js'
 import { isThrowable } from './throwable-details.js'
 import { renderThrowable } from './throwable-loader.js'
 import { removeTorch, renderTorch } from './torch-loader.js'
@@ -87,7 +87,7 @@ import {
 } from './util.js'
 import {
     getAimMode,
-    getAnimatedLimbs,
+    getAnimatedElements,
     getCurrentRoomId,
     getDownPressed,
     getDraggedItem,
@@ -383,12 +383,12 @@ const gamePaused = () => {
     stopAnimations()
     removeUi()
     getPlayingSoundEffects().forEach(effect => effect.pause())
-    getPlayingMusic()?.pause()
+    if (!['save', 'stash', 'store'].includes(getPauseCause())) getPlayingMusic()?.pause()
 }
 
 const stopAnimations = () => {
     document.querySelectorAll('.animation').forEach(elem => (elem.style.animationPlayState = 'paused'))
-    getAnimatedLimbs().forEach(elem => elem.pause())
+    getAnimatedElements().forEach(elem => elem.pause())
 }
 
 const removeUi = () => {
@@ -427,7 +427,7 @@ const gamePlaying = () => {
 
 const resumeAnimations = () => {
     document.querySelectorAll('.animation').forEach(elem => (elem.style.animationPlayState = 'running'))
-    getAnimatedLimbs().forEach(elem => elem.play())
+    getAnimatedElements().forEach(elem => elem.play())
 }
 
 const showUi = () => {
@@ -467,8 +467,8 @@ export const rDown = () => {
 export const escapeDown = () => {
     if (getPauseCause() === 'game-over' && !getPauseContainer().children[1]) return
     if (!getPause()) {
-        managePause()
         setPauseCause('pause')
+        managePause()
         if (getToggleMenuButton()) getToggleMenuButton().style.visibility = 'hidden'
         renderPauseMenu()
         return
@@ -649,10 +649,7 @@ export const resizeWindow = () => centralizePlayer()
 
 export const spaceDown = () => {
     if (!getIsSurvival()) return
-    if (
-        getChaos() === 0 ||
-        (getCurrentChaosEnemies() === getCurrentChaosSpawned() && getEnemiseKilled() === getCurrentChaosEnemies())
-    ) {
+    if (getCurrentChaosEnemies() === getCurrentChaosSpawned() && getEnemiseKilled() === getCurrentChaosEnemies()) {
         if (!getPause()) openStash()
         else {
             if (getPauseCause() === 'stash') {

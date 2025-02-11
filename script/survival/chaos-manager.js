@@ -43,10 +43,18 @@ import {
     SmgAmmoShopItem,
     YellowVaccineShopItem,
 } from '../shop-item.js'
-import { getPlayingMusic, playActionMusic, playPeaceMusic, setPlayingMusic } from '../sound-manager.js'
+import { getPlayingMusic, playActionMusic, playPeaceMusic, playPickup } from '../sound-manager.js'
 import { add2Stash } from '../stash.js'
 import { renderToggleMenuButton } from '../user-interface.js'
-import { addClass, appendAll, createAndAddClass } from '../util.js'
+import { addClass, appendAll, createAndAddClass, element2Object } from '../util.js'
+import {
+    getAnimatedElements,
+    getPlayerX,
+    getPlayerY,
+    getRoomLeft,
+    getRoomTop,
+    setAnimatedElements,
+} from '../variables.js'
 import {
     getChaos,
     getRandomizedWeapons,
@@ -68,6 +76,7 @@ export const startChaos = () => {
     resetRoom()
     renderInteractables()
     renderchaosPopup()
+    getPlayingMusic()?.pause()
     playActionMusic()
     getToggleMenuButton()?.remove()
 }
@@ -105,7 +114,7 @@ export const endChaos = () => {
     getInteractables()
         .get(1)
         .forEach(int => add2Stash(int, int.amount))
-    getCurrentRoomInteractables().forEach(int => int.remove())
+    getCurrentRoomInteractables().forEach(animateDrop)
     const lever = new Lever(1400, 1000)
     const pc = new PC(20, 20)
     renderInteractable(lever)
@@ -114,9 +123,34 @@ export const endChaos = () => {
     renderchaosPopup('end')
     add2Stash(new Coin(), Math.min(20, getChaos()))
     updateShop()
+    getPlayingMusic()?.pause()
     playPeaceMusic()
-    setPlayingMusic(null)
     notifyPlayerOfStashAndShopAndPC()
+}
+
+const animateDrop = interactable => {
+    const intObj = element2Object(interactable)
+    if (intObj.solid) {
+        interactable.remove()
+        return
+    }
+    const { left, top } = intObj
+    const animatedInteractable = interactable.animate(
+        [
+            { left: `${left}px`, top: `${top}px` },
+            { left: `${getPlayerX() - getRoomLeft()}px`, top: `${getPlayerY() - getRoomTop()}px` },
+        ],
+        {
+            duration: 200,
+        },
+    )
+    setAnimatedElements([...getAnimatedElements(), animatedInteractable])
+    interactable.setAttribute('moving-towards-player', 'true')
+    animatedInteractable.addEventListener('finish', () => {
+        setAnimatedElements(getAnimatedElements().filter(item => item !== animatedInteractable))
+        playPickup(interactable.getAttribute('name'))
+        interactable.remove()
+    })
 }
 
 const notifyPlayerOfStashAndShopAndPC = () => {

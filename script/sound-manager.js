@@ -131,15 +131,13 @@ const addMusicEndEvent = (music, list) => {
     })
 }
 
-const serenity = new Audio('../assets/audio/ui/serenity.mp3')
-const save = new Audio('../assets/audio/ui/save.mp3')
-const stash = new Audio('../assets/audio/ui/stash.mp3')
+const peaceMusicCollection = [
+    new Audio('../assets/audio/ui/serenity.mp3'),
+    new Audio('../assets/audio/ui/save.mp3'),
+    new Audio('../assets/audio/ui/stash.mp3'),
+]
 
-const peaceMusicCollection = [serenity, save, stash]
-
-peaceMusicCollection.forEach(music => {
-    addMusicEndEvent(music, peaceMusicCollection)
-})
+peaceMusicCollection.forEach(music => addMusicEndEvent(music, peaceMusicCollection))
 
 export const playPeaceMusic = () => {
     const music = peaceMusicCollection.sort(() => Math.random() - 0.5)[0]
@@ -152,9 +150,7 @@ const actionMusicCollection = new Array(5)
     .fill(null)
     .map((item, index) => new Audio(`../assets/audio/action/action-${index + 1}.mp3`))
 
-actionMusicCollection.forEach(music => {
-    addMusicEndEvent(music, actionMusicCollection)
-})
+actionMusicCollection.forEach(music => addMusicEndEvent(music, actionMusicCollection))
 
 export const playActionMusic = () => {
     const music = actionMusicCollection.sort(() => Math.random() - 0.5)[0]
@@ -167,3 +163,7 @@ const playMusic = music => {
     music.volume = getSettings().audio.music
     music.play()
 }
+
+export const isPeaceMusicPlaying = () => peaceMusicCollection.includes(playingMusic)
+
+export const isActionMusicPlaying = () => actionMusicCollection.includes(playingMusic)

@@ -16,7 +16,8 @@ import {
 import { renderVirusIcon } from './player-health.js'
 import { loadCurrentRoom } from './room-loader.js'
 import { IS_MOBILE } from './script.js'
-import { playFootstep } from './sound-manager.js'
+import { playFootstep, playPeaceMusic } from './sound-manager.js'
+import { getChaos } from './survival/variables.js'
 import {
     renderAimJoystick,
     renderHealButton,
@@ -32,7 +33,7 @@ import {
     renderUi,
 } from './user-interface.js'
 import { addClass, appendAll, createAndAddClass } from './util.js'
-import { getInfection, getPlayerAngle, getPlayerX, getPlayerY, setMapX, setMapY } from './variables.js'
+import { getInfection, getIsSurvival, getPlayerAngle, getPlayerX, getPlayerY, setMapX, setMapY } from './variables.js'
 
 export const startUp = () => {
     addControls()
@@ -58,7 +59,8 @@ export const startUp = () => {
     renderThrowButton()
     renderPauseButton()
     renderSlots()
-    renderToggleMenuButton()
+    if (getChaos() !== 0) renderToggleMenuButton()
+    if (getIsSurvival()) playPeaceMusic()
 }
 
 const renderRoomNameContainer = () => renderContainer('room-name-container', setRoomNameContainer)

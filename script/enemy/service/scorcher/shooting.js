@@ -8,7 +8,14 @@ import {
     getProperty,
     getSpeedPerFrame,
 } from '../../../util.js'
-import { getPlayerX, getPlayerY, getRoomLeft, getRoomTop } from '../../../variables.js'
+import {
+    getAnimatedElements,
+    getPlayerX,
+    getPlayerY,
+    getRoomLeft,
+    getRoomTop,
+    setAnimatedElements,
+} from '../../../variables.js'
 import { RangerShootingService } from '../ranger/shooting.js'
 
 export class ScorcherShootingService extends RangerShootingService {
@@ -20,16 +27,26 @@ export class ScorcherShootingService extends RangerShootingService {
     playShootAnimation() {
         const arm = this.enemy.sprite.firstElementChild.firstElementChild.firstElementChild
         const currentAngle = getProperty(arm, 'transform', 'rotateZ(', 'deg)')
-        arm.animate([{ transform: `rotateZ(${currentAngle}deg)` }, { transform: `rotateZ(${currentAngle + 20}deg)` }], {
-            duration: 250,
-        }).addEventListener('finish', () => {
+        const animatedArm1 = arm.animate(
+            [{ transform: `rotateZ(${currentAngle}deg)` }, { transform: `rotateZ(${currentAngle + 20}deg)` }],
+            {
+                duration: 250,
+            },
+        )
+        setAnimatedElements([...getAnimatedElements(), animatedArm1])
+        animatedArm1.addEventListener('finish', () => {
             this.shoot()
-            arm.animate(
+            setAnimatedElements(getAnimatedElements().filter(item => item !== animatedArm1))
+            const animatedArm2 = arm.animate(
                 [{ transform: `rotateZ(${currentAngle + 20}deg)` }, { transform: `rotateZ(${currentAngle}deg)` }],
                 {
                     duration: 250,
                 },
             )
+            setAnimatedElements([...getAnimatedElements(), animatedArm2])
+            animatedArm2.addEventListener('finish', () => {
+                setAnimatedElements(getAnimatedElements().filter(item => item !== animatedArm2))
+            })
         })
     }
 

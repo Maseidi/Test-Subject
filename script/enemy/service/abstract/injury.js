@@ -33,11 +33,11 @@ import {
     useDeltaTime,
 } from '../../../util.js'
 import {
-    getAnimatedLimbs,
+    getAnimatedElements,
     getCriticalChance,
     getCurrentRoomId,
     getIsSurvival,
-    setAnimatedLimbs,
+    setAnimatedElements,
 } from '../../../variables.js'
 import { CHASE, STUNNED } from '../../enemy-constants.js'
 
@@ -131,9 +131,9 @@ export class AbstractInjuryService {
                 },
             )
             addClass(limb, 'animation')
-            setAnimatedLimbs([...getAnimatedLimbs(), animatedLimb])
+            setAnimatedElements([...getAnimatedElements(), animatedLimb])
             animatedLimb.addEventListener('finish', () => {
-                setAnimatedLimbs(getAnimatedLimbs().filter(elem => elem !== animatedLimb))
+                setAnimatedElements(getAnimatedElements().filter(elem => elem !== animatedLimb))
             })
         })
     }

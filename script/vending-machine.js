@@ -436,7 +436,7 @@ const renderPrice = (weaponObj, name) => {
         const img = document.createElement('img')
         img.src = `../assets/images/coin.png`
         const value = createAndAddClass('p', 'upgrade-stat-price-value')
-        value.textContent = `${Math.pow(currLvl - 1, 2) + 3}`
+        value.textContent = `${Math.pow(currLvl, 2) + 2}`
         appendAll(price, img, value)
     }
     return price

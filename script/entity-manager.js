@@ -215,6 +215,7 @@ const hanldeRestOfInteractables = int => {
     const popup = int.children[1]
     handleStaticInteractablesIdealInteraction(int, popup)
     if (!interactionPredicate(int)) removePopup(popup)
+    else if (int.getAttribute('moving-towards-player') === 'true') removePopup(popup)
     else setAsInteractingObject(popup, int)
 }
 
