@@ -5,14 +5,13 @@ import { finishUp } from './finishup.js'
 import { play } from './game.js'
 import { countItem, useInventoryResource } from './inventory.js'
 import { saveMapMakerAtSlot } from './mapMaker/data-manager.js'
-import { addHoverSoundEffect, playClickSoundEffect, playSaveMusic } from './sound-manager.js'
+import { addHoverSoundEffect, playClickSoundEffect } from './sound-manager.js'
 import { loadSurvivalFromSlot, saveSurvivalAtSlot } from './survival/data-manager.js'
 import { addMessage, itemNotification, renderQuit } from './user-interface.js'
 import { appendAll, createAndAddClass } from './util.js'
 import { getIsSurvival, setPauseCause } from './variables.js'
 
 export const turnOnComputer = () => {
-    playSaveMusic()
     setPauseCause('save')
     managePause()
     renderDesktop()

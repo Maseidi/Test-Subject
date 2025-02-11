@@ -122,37 +122,11 @@ export const playClickSoundEffect = () => {
     click.play()
 }
 
-const addLoop = sound => {
-    sound.addEventListener('ended', () => {
-        sound.pause()
-        sound.currentTime = 0
-        sound.play()
-    })
-}
+const serenity = new Audio('../assets/audio/ui/serenity.mp3')
+const save = new Audio('../assets/audio/ui/save.mp3')
+const stash = new Audio('../assets/audio/ui/stash.mp3')
 
-export const serenity = new Audio('../assets/audio/ui/serenity.mp3')
-serenity.currentTime = 1.5
-addLoop(serenity)
-export const playVendingMachineMusic = () => playMusic(serenity)
-export const stopVendingMachineMusic = () => {
-    serenity.currentTime = 1.5
-    serenity.pause()
-}
-
-export const save = new Audio('../assets/audio/ui/save.mp3')
-addLoop(save)
-export const playSaveMusic = () => playMusic(save)
-export const stopSaveMusic = () => {
-    save.currentTime = 0
-    save.pause()
-}
-
-export const stash = new Audio('../assets/audio/ui/stash.mp3')
-addLoop(stash)
-export const playStashMusic = () => playMusic(stash)
-export const stopStashMusic = () => {
-    stash.pause()
-}
+const peaceMusicCollection = [serenity, save, stash]
 
 const actionMusicCollection = new Array(5)
     .fill(null)

@@ -28,6 +28,7 @@ import {
     renderSlots,
     renderSprintButton,
     renderThrowButton,
+    renderToggleMenuButton,
     renderUi,
 } from './user-interface.js'
 import { addClass, appendAll, createAndAddClass } from './util.js'
@@ -57,6 +58,7 @@ export const startUp = () => {
     renderThrowButton()
     renderPauseButton()
     renderSlots()
+    renderToggleMenuButton()
 }
 
 const renderRoomNameContainer = () => renderContainer('room-name-container', setRoomNameContainer)

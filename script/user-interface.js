@@ -43,9 +43,6 @@ import { IS_MOBILE } from './script.js'
 import {
     addHoverSoundEffect,
     playClickSoundEffect,
-    stopSaveMusic,
-    stopStashMusic,
-    stopVendingMachineMusic,
 } from './sound-manager.js'
 import { isThrowable } from './throwable-details.js'
 import { addClass, angleOf2Points, appendAll, containsClass, createAndAddClass, removeClass } from './util.js'
@@ -154,12 +151,8 @@ export const quitPage = mapMaker => {
     if (
         !mapMaker &&
         (getPauseContainer().children.length === 0 || (getPauseContainer().children.length === 1 && getGrabbed()))
-    ) {
-        if (getPauseCause() === 'store') stopVendingMachineMusic()
-        else if (getPauseCause() === 'save') stopSaveMusic()
-        else if (getPauseCause() === 'stash') stopStashMusic()
+    )
         managePause()
-    }
 }
 
 export const itemNotification = name => {

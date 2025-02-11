@@ -46,14 +46,12 @@ import {
     getPlayingSoundEffects,
     playEquip,
     playPickup,
-    playStashMusic,
-    playVendingMachineMusic,
     setPlayingSoundEffects,
 } from './sound-manager.js'
 import { centralizePlayer } from './startup.js'
 import { renderStash } from './stash.js'
 import { startChaos } from './survival/chaos-manager.js'
-import { getCurrentChaosEnemies, getCurrentChaosSpawned, getEnemiseKilled } from './survival/variables.js'
+import { getChaos, getCurrentChaosEnemies, getCurrentChaosSpawned, getEnemiseKilled } from './survival/variables.js'
 import { isThrowable } from './throwable-details.js'
 import { renderThrowable } from './throwable-loader.js'
 import { removeTorch, renderTorch } from './torch-loader.js'
@@ -312,12 +310,10 @@ const processPart = (predicate, className) => {
 }
 
 const openStash = () => {
-    playStashMusic()
     openPause('stash', renderStash)
 }
 
 const openVendingMachine = () => {
-    playVendingMachineMusic()
     openPause('store', renderStore)
 }
 
@@ -653,7 +649,10 @@ export const resizeWindow = () => centralizePlayer()
 
 export const spaceDown = () => {
     if (!getIsSurvival()) return
-    if (getCurrentChaosEnemies() === getCurrentChaosSpawned() && getEnemiseKilled() === getCurrentChaosEnemies()) {
+    if (
+        getChaos() === 0 ||
+        (getCurrentChaosEnemies() === getCurrentChaosSpawned() && getEnemiseKilled() === getCurrentChaosEnemies())
+    ) {
         if (!getPause()) openStash()
         else {
             if (getPauseCause() === 'stash') {
