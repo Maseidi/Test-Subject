@@ -1,6 +1,7 @@
 import { getGunUpgradableDetail, isGun } from './gun-details.js'
 import { IS_MOBILE } from './script.js'
 import { getSettings } from './settings.js'
+import { getChaos } from './survival/variables.js'
 import { isThrowable } from './throwable-details.js'
 
 let playingSoudEffects = []
@@ -140,6 +141,7 @@ const peaceMusicCollection = [
 peaceMusicCollection.forEach(music => addMusicEndEvent(music, peaceMusicCollection))
 
 export const playPeaceMusic = () => {
+    if (getChaos() === 0) return
     const music = peaceMusicCollection.sort(() => Math.random() - 0.5)[0]
     music.currentTime = 0
     setPlayingMusic(music)
