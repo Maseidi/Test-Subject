@@ -17,6 +17,7 @@ import { getProgressValueByNumber } from './progress-manager.js'
 import { Progress } from './progress.js'
 import { getShopItems, getShopItemsWithId, GunShopItem } from './shop-item.js'
 import { addHoverSoundEffect, playClickSoundEffect, playTrade, playUpgrade } from './sound-manager.js'
+import { add2Stash, countItemStash, getStash } from './stash.js'
 import { isThrowable } from './throwable-details.js'
 import { addMessage, itemNotification, renderQuit } from './user-interface.js'
 import {
@@ -32,6 +33,7 @@ import {
     getAdrenalinesDropped,
     getEnergyDrinksDropped,
     getHealthPotionsDropped,
+    getIsSurvival,
     getLuckPillsDropped,
     setAdrenalinesDropped,
     setEnergyDrinksDropped,
@@ -231,7 +233,7 @@ const renderExamineBtn = (itemObj, btnContainer) => {
 
 const renderConfirmBuyBtn = itemObj =>
     renderConfirmBtn(itemObj.price, () => {
-        if (!checkEnoughCoins(itemObj)) return
+        if (!checkEnoughCoins(itemObj) && !getIsSurvival()) return
         manageBuy(itemObj)
     })
 
@@ -260,6 +262,10 @@ const addVendingMachineMessage = input =>
     addMessage(input, getPauseContainer().firstElementChild.children[4].firstElementChild)
 
 const manageBuy = itemObj => {
+    if (getIsSurvival()) {
+        manageSurvivalBuy(itemObj)
+        return
+    }
     const loss = itemObj.price
     const needSpace2string = new Array(itemObj.space).fill('empty').join('')
     useInventoryResource('coin', loss)
@@ -301,6 +307,25 @@ const manageBuy = itemObj => {
     }
     pickupDrop(object2Element(new Coin(null, null, loss)))
     addVendingMachineMessage('No enough space')
+}
+
+const manageSurvivalBuy = itemObj => {
+    const { price, amount } = itemObj
+    const stashCoins = countItemStash('coin') ?? 0
+    const inventoryCoins = countItem('coin') ?? 0
+    if (stashCoins + inventoryCoins < price) {
+        addVendingMachineMessage('No enough cash')
+        return
+    }
+    if (inventoryCoins <= price) {
+        useInventoryResource('coin', inventoryCoins)
+        getStash().find(item => item.name === 'coin').amount -= price - inventoryCoins
+    } else useInventoryResource('coin', price)
+    const purchasedItem = { ...itemObj }
+    let final = handleNewWeapnPurchase(purchasedItem, itemObj.name)
+    final = handleNewThrowablePurchase(final, itemObj.name)
+    add2Stash({ ...final, price: price / amount }, amount)
+    submitPurchase(itemObj)
 }
 
 const handleNewWeapnPurchase = (purchasedItem, name) => {
@@ -541,6 +566,10 @@ const sellPopup = e => {
 const renderConfirmSellBtn = itemObj => renderConfirmBtn(itemObj.price * itemObj.amount, () => manageSell(itemObj))
 
 const manageSell = itemObj => {
+    if (getIsSurvival()) {
+        manageSurvivalSell(itemObj)
+        return
+    }
     const gain = itemObj.price * itemObj.amount
     const gainSpace = itemObj.space
     pickupDrop(object2Element(new Coin(null, null, gain)))
@@ -557,6 +586,24 @@ const manageSell = itemObj => {
         return
     }
     addVendingMachineMessage('No enough space')
+}
+
+const manageSurvivalSell = itemObj => {
+    const { amount, price, name } = itemObj
+    const totalPrice = price * amount
+    add2Stash(new Coin(), totalPrice)
+    useInventoryResource(name, amount)
+    handleEquippableDrop(itemObj)
+    removePopup(totalPrice)
+    if (isGun(name) && !getShopItems().find(item => !item.sold && item.name === name))
+        getShopItems().push(new GunShopItem(name))
+
+    playTrade()
+    const oldAmount = countItemStash(name) ?? 0
+    const newAmount = oldAmount + amount
+    const index = getStash().findIndex(item => item.name === name)
+    if (index === undefined) getStash().push({ ...itemObj, amount: newAmount })
+    else getStash()[index] = { ...getStash()[index], amount: newAmount }
 }
 
 const removeStore = () => {

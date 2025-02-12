@@ -226,3 +226,5 @@ const removeMove2InventoryPopupEvent = item => {
 }
 
 export const removeStash = () => getPauseContainer().firstElementChild.remove()
+
+export const countItemStash = name => stash.find(item => item.name === name)?.amount

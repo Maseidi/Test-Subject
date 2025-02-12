@@ -139,7 +139,7 @@ export class HardDrive extends Drop {
             15,
             left,
             top,
-            'hardDrive',
+            'harddrive',
             'hard drive',
             amount,
             1,

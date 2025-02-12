@@ -6,6 +6,7 @@ import { play } from './game.js'
 import { countItem, useInventoryResource } from './inventory.js'
 import { saveMapMakerAtSlot } from './mapMaker/data-manager.js'
 import { addHoverSoundEffect, playClickSoundEffect } from './sound-manager.js'
+import { countItemStash, getStash, setStash } from './stash.js'
 import { loadSurvivalFromSlot, saveSurvivalAtSlot } from './survival/data-manager.js'
 import { addMessage, itemNotification, renderQuit } from './user-interface.js'
 import { appendAll, createAndAddClass } from './util.js'
@@ -23,7 +24,7 @@ export const turnOnComputer = () => {
 export const renderDesktop = (load = false, mapMaker = false) => {
     const desktop = createAndAddClass('div', 'desktop', 'ui-theme')
     const content2Render = []
-    if (!load && !mapMaker) content2Render.push(itemNotification('hardDrive'))
+    if (!load && !mapMaker) content2Render.push(itemNotification('harddrive'))
     content2Render.push(contents(load, mapMaker))
     appendAll(desktop, ...content2Render)
     getPauseContainer().append(desktop)
@@ -150,7 +151,7 @@ const renderSaveConfirmPopup = (slotNumber, isNotEmpty, mapMaker) => {
         const hardDriveAmount = document.createElement('p')
         hardDriveAmount.textContent = 1
         const hardDriveImage = document.createElement('img')
-        hardDriveImage.src = './assets/images/hardDrive.png'
+        hardDriveImage.src = './assets/images/harddrive.png'
         appendAll(confirm, hardDriveAmount, hardDriveImage)
     }
     appendAll(buttons, cancel, confirm)
@@ -161,18 +162,37 @@ const renderSaveConfirmPopup = (slotNumber, isNotEmpty, mapMaker) => {
 }
 
 const confirmSave = (slotNumber, mapMaker = false) => {
+    if (getIsSurvival()) {
+        confirmSurvivalSave(slotNumber)
+        return
+    }
     if (mapMaker) {
         saveMapMakerAtSlot(slotNumber)
         reRenderDesktop(true)
         return
     }
-    if (countItem('hardDrive') === 0) {
+    if (countItem('harddrive') === 0) {
         addComputerMessage('Out of hard drive memory')
         return
     }
-    useInventoryResource('hardDrive', 1)
-    if (getIsSurvival()) saveSurvivalAtSlot(slotNumber)
-    else saveGameAtSlot(slotNumber)
+    useInventoryResource('harddrive', 1)
+    saveGameAtSlot(slotNumber)
+    reRenderDesktop(false)
+}
+
+const confirmSurvivalSave = slotNumber => {
+    const inventoryHardDrives = countItem('harddrive') ?? 0
+    const stashHardDrives = countItemStash('harddrive') ?? 0
+    if (inventoryHardDrives + stashHardDrives === 0) {
+        addComputerMessage('Out of hard drive memory')
+        return
+    }
+    if (inventoryHardDrives > 0) useInventoryResource('harddrive', 1)
+    else {
+        if (stashHardDrives === 1) setStash(getStash().filter(item => item.name !== 'harddrive'))
+        else getStash().find(item => item.name === 'harddrive').amount -= 1
+    }
+    saveSurvivalAtSlot(slotNumber)
     reRenderDesktop(false)
 }
 

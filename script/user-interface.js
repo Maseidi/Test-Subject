@@ -40,10 +40,8 @@ import {
     updateInteractablePopups,
 } from './inventory.js'
 import { IS_MOBILE } from './script.js'
-import {
-    addHoverSoundEffect,
-    playClickSoundEffect,
-} from './sound-manager.js'
+import { addHoverSoundEffect, playClickSoundEffect } from './sound-manager.js'
+import { countItemStash } from './stash.js'
 import { isThrowable } from './throwable-details.js'
 import { addClass, angleOf2Points, appendAll, containsClass, createAndAddClass, removeClass } from './util.js'
 import {
@@ -53,9 +51,9 @@ import {
     getEquippedWeaponId,
     getGrabbed,
     getHealth,
+    getIsSurvival,
     getMaxHealth,
     getMaxStamina,
-    getPauseCause,
     getStamina,
     getWeaponWheel,
     setAimJoystickAngle,
@@ -160,7 +158,7 @@ export const itemNotification = name => {
     const item = createAndAddClass('img', 'item-img')
     item.src = `./assets/images/${name}.png`
     const amount = createAndAddClass('p', 'item-amount')
-    amount.textContent = countItem(name)
+    amount.textContent = getIsSurvival() ? countItem(name) + (countItemStash(name) ?? 0) : countItem(name)
     appendAll(container, item, amount)
     return container
 }

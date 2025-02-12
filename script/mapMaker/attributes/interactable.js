@@ -82,7 +82,7 @@ const itemsMap1 = new Map([
     ['antidote', Antidote],
     ['bandage', Bandage],
     ['rifleAmmo', RifleAmmo],
-    ['hardDrive', HardDrive],
+    ['harddrive', HardDrive],
     ['grenade', Grenade],
     ['flashbang', Flashbang],
     ['redvaccine', RedVaccine],

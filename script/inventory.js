@@ -82,7 +82,7 @@ export const MAX_PACKSIZE = {
     smgAmmo: 90,
     antidote: 3,
     luckpills: 1,
-    hardDrive: 2,
+    harddrive: 2,
     flashbang: 3,
     rifleAmmo: 10,
     magnumAmmo: 5,
