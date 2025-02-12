@@ -1,6 +1,6 @@
 import { renderDesktop } from './computer.js'
 import { getPauseContainer } from './elements.js'
-import { finishUp } from './finishup.js'
+import { finishUp } from './finishUp.js'
 import { renderMainMenu } from './main-menu.js'
 import { getMapMakerEl } from './mapMaker/elements.js'
 import { pauseFn, renderMapMaker } from './mapMaker/map-maker.js'

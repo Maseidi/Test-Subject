@@ -1,7 +1,7 @@
 import { managePause } from './actions.js'
 import { loadGameFromSlot, saveGameAtSlot } from './data-manager.js'
 import { getPauseContainer, getToggleMenuButton } from './elements.js'
-import { finishUp } from './finishup.js'
+import { finishUp } from './finishUp.js'
 import { play } from './game.js'
 import { countItem, useInventoryResource } from './inventory.js'
 import { saveMapMakerAtSlot } from './mapMaker/data-manager.js'
