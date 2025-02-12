@@ -32,7 +32,7 @@ const renderLaser = (name, rangeLevel, color) => {
 const renderGunFire = () => {
     const weaponFire = createAndAddClass('img', 'gun-fire')
     weaponFire.setAttribute('time', 0)
-    weaponFire.src = '/assets/images/gun-fire.png'
+    weaponFire.src = './assets/images/gun-fire.png'
     weaponFire.style.display = 'none'
     return weaponFire
 }

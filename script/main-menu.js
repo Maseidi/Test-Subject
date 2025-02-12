@@ -568,7 +568,7 @@ const credits = () =>
 const creditsContent = () => {
     const creditsContainer = createAndAddClass('div', 'credits-container')
     const myImg = createAndAddClass('img', 'profile-img')
-    myImg.src = '/assets/images/profile.png'
+    myImg.src = './assets/images/profile.png'
     const creditNamesContainer = createAndAddClass('div', 'credit-names')
     const programmer = createCredit('Programmer', [{ title: 'Mohammad Ali Seidi' }])
     const icons = createCredit('visual assets', [
@@ -606,7 +606,7 @@ const createCredit = (role, names) => {
         if (img) {
             var nameText = document.createElement('a')
             const image = document.createElement('img')
-            image.src = `/assets/images/${img}.png`
+            image.src = `./assets/images/${img}.png`
             nameText.append(image)
             nameText.href = link
             nameText.target = '_blank'

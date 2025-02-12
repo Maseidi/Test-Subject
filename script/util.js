@@ -163,7 +163,7 @@ export const calculateBulletSpeed = (deg, slope, diffX, diffY, baseSpeed) => {
 export const addFireEffect = () => {
     const fire = document.createElement('img')
     addClass(fire, 'fire')
-    fire.src = `../assets/images/fire.gif`
+    fire.src = `./assets/images/fire.gif`
     fire.setAttribute('draggable', false)
     return fire
 }
@@ -201,7 +201,7 @@ export const findAttachmentsOnPlayer = (...attachments) =>
 export const addExplosion = (left, top) => {
     const explosion = createAndAddClass('div', 'explosion')
     const explosionImage = createAndAddClass('img', 'explosion-img')
-    explosionImage.src = `/assets/images/explosion.png`
+    explosionImage.src = `./assets/images/explosion.png`
     explosion.style.left = `${left}px`
     explosion.style.top = `${top}px`
     explosion.setAttribute('time', 0)
@@ -255,7 +255,7 @@ export const getMapWithArrayValuesByKey = (map, key) => map.get(key) || []
 
 export const addSplatter = () => {
     const splatter = createAndAddClass('img', 'splatter', 'fade-out', 'animation')
-    splatter.src = `../assets/images/splatter.png`
+    splatter.src = `./assets/images/splatter.png`
     splatter.setAttribute('draggable', false)
     splatter.style.left = `${getPlayerX() - getRoomLeft() + 17}px`
     splatter.style.top = `${getPlayerY() - getRoomTop() + 17}px`

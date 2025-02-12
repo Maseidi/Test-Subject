@@ -113,7 +113,7 @@ const renderBuyItems = () => {
             addClass(buyItem, 'buy-item')
             const wrapper = createAndAddClass('div', 'buy-wrapper')
             const img = createAndAddClass('img', 'buy-item-img')
-            img.src = `../assets/images/${item.name}.png`
+            img.src = `./assets/images/${item.name}.png`
             const name = createAndAddClass('p', 'buy-item-name')
             name.textContent = `${item.heading}`
             const amount = createAndAddClass('p', 'buy-item-amount')
@@ -121,7 +121,7 @@ const renderBuyItems = () => {
             const price = createAndAddClass('p', 'buy-item-price')
             price.textContent = `${item.price}`
             const buyItemCoin = createAndAddClass('img', 'buy-item-coin')
-            buyItemCoin.src = `../assets/images/coin.png`
+            buyItemCoin.src = `./assets/images/coin.png`
             const info = createAndAddClass('div', 'info')
             const left = createAndAddClass('div', 'left')
             const right = createAndAddClass('div', 'right')
@@ -173,7 +173,7 @@ const renderDealPopup = (itemObj, title, headingPredicate, confirmCb) => {
     const titleEl = createAndAddClass('h2', 'deal-popup-title')
     titleEl.textContent = title
     const image = createAndAddClass('img', 'deal-popup-img')
-    image.src = `../assets/images/${itemObj.name}.png`
+    image.src = `./assets/images/${itemObj.name}.png`
     const heading = createAndAddClass('h2', 'deal-popup-heading')
     const imageHeading = createAndAddClass('div', 'deal-heading-container')
     appendAll(imageHeading, image, heading)
@@ -238,7 +238,7 @@ const renderConfirmBuyBtn = itemObj =>
 const renderConfirmBtn = (price, cb, priceUnit = 'coin') => {
     const confirm = createAndAddClass('button', 'popup-confirm')
     const img = document.createElement('img')
-    img.src = `../assets/images/${priceUnit}.png`
+    img.src = `./assets/images/${priceUnit}.png`
     const p = document.createElement('p')
     p.textContent = `${price}`
     appendAll(confirm, img, p)
@@ -359,7 +359,7 @@ const renderUpgradeItems = () => {
             addClass(weapon2Upgrade, 'upgrade-item')
             const wrapper = createAndAddClass('div', 'upgrade-wrapper')
             const img = createAndAddClass('img', 'upgrade-item-img')
-            img.src = `../assets/images/${weapon.name}.png`
+            img.src = `./assets/images/${weapon.name}.png`
             const name = createAndAddClass('p', 'upgrade-item-name')
             name.textContent = `${weapon.heading}`
             appendAll(wrapper, img, name)
@@ -405,7 +405,7 @@ const renderLevel = (weaponObj, name) => {
         const current = document.createElement('p')
         current.textContent = `Lvl.${currLvl}`
         const img = document.createElement('img')
-        img.src = `../assets/images/upgrade.png`
+        img.src = `./assets/images/upgrade.png`
         const next = document.createElement('p')
         next.textContent = `Lvl.${currLvl + 1}`
         appendAll(levels, current, img, next)
@@ -421,7 +421,7 @@ const renderValue = (weaponObj, name) => {
         const current = document.createElement('p')
         current.textContent = `${getGunUpgradableDetail(weaponObj.name, name.replace(' ', ''), currLvl)}`
         const img = document.createElement('img')
-        img.src = `../assets/images/upgrade.png`
+        img.src = `./assets/images/upgrade.png`
         const next = document.createElement('p')
         next.textContent = `${getGunUpgradableDetail(weaponObj.name, name.replace(' ', ''), currLvl + 1)}`
         appendAll(values, current, img, next)
@@ -434,7 +434,7 @@ const renderPrice = (weaponObj, name) => {
     const currLvl = weaponObj[`${name.replace(' ', '')}lvl`]
     if (currLvl !== 5) {
         const img = document.createElement('img')
-        img.src = `../assets/images/coin.png`
+        img.src = `./assets/images/coin.png`
         const value = createAndAddClass('p', 'upgrade-stat-price-value')
         value.textContent = `${Math.pow(currLvl, 2) + 2}`
         appendAll(price, img, value)
@@ -508,7 +508,7 @@ const renderSell = () => {
             addClass(sellItem, 'sell-item')
             const wrapper = createAndAddClass('div', 'sell-wrapper')
             const img = createAndAddClass('img', 'sell-item-img')
-            img.src = `../assets/images/${item.name}.png`
+            img.src = `./assets/images/${item.name}.png`
             const name = createAndAddClass('p', 'sell-item-name')
             name.textContent = `${item.heading}`
             const amount = createAndAddClass('p', 'sell-item-amount')
@@ -516,7 +516,7 @@ const renderSell = () => {
             const price = createAndAddClass('p', 'sell-item-price')
             price.textContent = `${item.price * item.amount}`
             const sellItemCoin = createAndAddClass('img', 'sell-item-coin')
-            sellItemCoin.src = `../assets/images/coin.png`
+            sellItemCoin.src = `./assets/images/coin.png`
             const info = createAndAddClass('div', 'info')
             const left = createAndAddClass('div', 'left')
             const right = createAndAddClass('div', 'right')

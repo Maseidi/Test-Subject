@@ -382,7 +382,7 @@ export const renderBlocks = replace => {
                 if (block === 'locked') theBlock.style.backgroundColor = `rgba(255, 0, 0, 0.1)`
                 if (block === null || block === 'locked') return
                 const image = document.createElement('img')
-                image.src = `../assets/images/${block.name}.png`
+                image.src = `./assets/images/${block.name}.png`
                 theBlock.append(image)
             }
         })
@@ -938,7 +938,7 @@ const renderWeaponWheelImage = (slot, slots) => {
     const weaponName = findWeaponName(slots)
     if (weaponName) {
         const image = document.createElement('img')
-        image.src = `../assets/images/${weaponName}.png`
+        image.src = `./assets/images/${weaponName}.png`
         slot.append(image)
     } else slot.style.width = `70px`
 }

@@ -111,7 +111,7 @@ export const renderWeaponUi = () => {
     const throwable = isThrowable(equippedWeapon.name)
     const weaponContainer = createAndAddClass('div', 'weapon-container')
     const weaponIcon = createAndAddClass('img', 'weapon-icon')
-    weaponIcon.src = `../assets/images/${equippedWeapon.name}.png`
+    weaponIcon.src = `./assets/images/${equippedWeapon.name}.png`
     addClass(weaponIcon, 'weapon-icon')
     const ammoCount = createAndAddClass('div', 'ammo-count')
     if (!throwable) {
@@ -158,7 +158,7 @@ export const quitPage = mapMaker => {
 export const itemNotification = name => {
     const container = createAndAddClass('div', 'item-container')
     const item = createAndAddClass('img', 'item-img')
-    item.src = `../assets/images/${name}.png`
+    item.src = `./assets/images/${name}.png`
     const amount = createAndAddClass('p', 'item-amount')
     amount.textContent = countItem(name)
     appendAll(container, item, amount)

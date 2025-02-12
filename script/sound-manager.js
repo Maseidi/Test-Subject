@@ -31,25 +31,25 @@ const playSound = sound => {
 }
 
 export const playFootstep = () => {
-    const footstep = new Audio('../assets/audio/footstep.mp3')
+    const footstep = new Audio('./assets/audio/footstep.mp3')
     footstep.volume = getSettings().audio.sound
     playSound(footstep)
 }
 
 export const playEmptyWeapon = () => {
-    const empty = new Audio('../assets/audio/empty-weapon.mp3')
+    const empty = new Audio('./assets/audio/empty-weapon.mp3')
     playSound(empty)
 }
 
 export const playGunShot = name => {
-    const gunShot = new Audio(`../assets/audio/weapon/shoot/${name}.mp3`)
+    const gunShot = new Audio(`./assets/audio/weapon/shoot/${name}.mp3`)
     gunShot.volume = getSettings().audio.sound
     playSound(gunShot)
 }
 
 export const playReload = equipped => {
     const reloadSpeed = getGunUpgradableDetail(equipped.name, 'reloadspeed', equipped.reloadspeedlvl)
-    const gunShot = new Audio(`../assets/audio/weapon/reload/${equipped.name}.mp3`)
+    const gunShot = new Audio(`./assets/audio/weapon/reload/${equipped.name}.mp3`)
     gunShot.volume = getSettings().audio.sound
     gunShot.preload = 'metadata'
     gunShot.onloadedmetadata = () => {
@@ -61,49 +61,49 @@ export const playReload = equipped => {
 
 export const playEquip = name => {
     if (isThrowable(name)) return
-    const gunShot = new Audio(`../assets/audio/weapon/equip/${name}.mp3`)
+    const gunShot = new Audio(`./assets/audio/weapon/equip/${name}.mp3`)
     setPlayingEquipSoundEffect(gunShot)
     gunShot.volume = getSettings().audio.sound
     playSound(gunShot)
 }
 
 export const playExplosion = () => {
-    const explosion = new Audio('../assets/audio/explosion.mp3')
+    const explosion = new Audio('./assets/audio/explosion.mp3')
     explosion.volume = getSettings().audio.sound
     playSound(explosion)
 }
 
 export const playFlashbang = () => {
-    const flashbang = new Audio('../assets/audio/flashbang.mp3')
+    const flashbang = new Audio('./assets/audio/flashbang.mp3')
     flashbang.currentTime = 1.5
     flashbang.volume = getSettings().audio.sound
     playSound(flashbang)
 }
 
 export const playBreakCrate = () => {
-    const breakCrate = new Audio('../assets/audio/break-crate.mp3')
+    const breakCrate = new Audio('./assets/audio/break-crate.mp3')
     breakCrate.volume = getSettings().audio.sound
     playSound(breakCrate)
 }
 
 export const playPickup = name => {
-    if (name === 'coin') var pickup = new Audio('../assets/audio/pickup/coin-pickup.mp3')
-    else if (isGun(name)) var pickup = new Audio('../assets/audio/pickup/gun-pickup.mp3')
+    if (name === 'coin') var pickup = new Audio('./assets/audio/pickup/coin-pickup.mp3')
+    else if (isGun(name)) var pickup = new Audio('./assets/audio/pickup/gun-pickup.mp3')
     else if (name.toLowerCase().includes('ammo') || name.toLowerCase() === 'shotgunshells')
-        var pickup = new Audio('../assets/audio/pickup/ammo-pickup.mp3')
-    else var pickup = new Audio('../assets/audio/pickup/pickup.mp3')
+        var pickup = new Audio('./assets/audio/pickup/ammo-pickup.mp3')
+    else var pickup = new Audio('./assets/audio/pickup/pickup.mp3')
     pickup.volume = getSettings().audio.sound
     playSound(pickup)
 }
 
 export const playTrade = () => {
-    const trade = new Audio('../assets/audio/ui/trade.mp3')
+    const trade = new Audio('./assets/audio/ui/trade.mp3')
     trade.volume = getSettings().audio.sound
     trade.play()
 }
 
 export const playUpgrade = () => {
-    const upgrade = new Audio('../assets/audio/ui/upgrade.mp3')
+    const upgrade = new Audio('./assets/audio/ui/upgrade.mp3')
     upgrade.volume = getSettings().audio.sound
     upgrade.play()
 }
@@ -111,14 +111,14 @@ export const playUpgrade = () => {
 export const addHoverSoundEffect = element => {
     if (IS_MOBILE) return
     element.addEventListener('mouseenter', () => {
-        const hover = new Audio('../assets/audio/ui/hover.mp3')
+        const hover = new Audio('./assets/audio/ui/hover.mp3')
         hover.volume = getSettings().audio.ui
         hover.play()
     })
 }
 
 export const playClickSoundEffect = () => {
-    const click = new Audio('../assets/audio/ui/click.mp3')
+    const click = new Audio('./assets/audio/ui/click.mp3')
     click.volume = getSettings().audio.ui
     click.play()
 }
@@ -133,9 +133,9 @@ const addMusicEndEvent = (music, list) => {
 }
 
 const peaceMusicCollection = [
-    new Audio('../assets/audio/ui/serenity.mp3'),
-    new Audio('../assets/audio/ui/save.mp3'),
-    new Audio('../assets/audio/ui/stash.mp3'),
+    new Audio('./assets/audio/ui/serenity.mp3'),
+    new Audio('./assets/audio/ui/save.mp3'),
+    new Audio('./assets/audio/ui/stash.mp3'),
 ]
 
 peaceMusicCollection.forEach(music => addMusicEndEvent(music, peaceMusicCollection))
@@ -150,7 +150,7 @@ export const playPeaceMusic = () => {
 
 const actionMusicCollection = new Array(5)
     .fill(null)
-    .map((item, index) => new Audio(`../assets/audio/action/action-${index + 1}.mp3`))
+    .map((item, index) => new Audio(`./assets/audio/action/action-${index + 1}.mp3`))
 
 actionMusicCollection.forEach(music => addMusicEndEvent(music, actionMusicCollection))
 

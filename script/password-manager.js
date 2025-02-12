@@ -73,7 +73,7 @@ const calculateAfter = start => {
 const renderIncreaseBtn = (digit, bar) => {
     const increase = createAndAddClass('div', 'increase-digit')
     const increaseIcon = document.createElement('img')
-    increaseIcon.src = `/assets/images/chev-up.png`
+    increaseIcon.src = `./assets/images/chev-up.png`
     increase.append(increaseIcon)
     increase.digit = digit
     increase.bar = bar
@@ -103,7 +103,7 @@ const increaseDigit = e => {
 const renderDecreaseBtn = (digit, bar) => {
     const decrease = createAndAddClass('div', 'decrease-digit')
     const decreaseIcon = document.createElement('img')
-    decreaseIcon.src = `/assets/images/chev-down.png`
+    decreaseIcon.src = `./assets/images/chev-down.png`
     decrease.append(decreaseIcon)
     decrease.digit = digit
     decrease.bar = bar

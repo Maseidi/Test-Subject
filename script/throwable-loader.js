@@ -27,7 +27,7 @@ const renderLaser = name => {
 
 const renderImage = name => {
     const throwableImg = createAndAddClass('img', 'throwable-img')
-    throwableImg.src = `/assets/images/${name}.png`
+    throwableImg.src = `./assets/images/${name}.png`
     return throwableImg
 }
 

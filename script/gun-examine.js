@@ -9,7 +9,7 @@ export const renderStats = itemObj => {
     const weaponStats = createAndAddClass('div', 'weapon-stats')
     const imgContainer = createAndAddClass('div', 'weapon-stats-img-container')
     const img = document.createElement('img')
-    img.src = `../assets/images/${itemObj.name}.png`
+    img.src = `./assets/images/${itemObj.name}.png`
     imgContainer.append(img)
     const weaponStatsName = createAndAddClass('div', 'weapon-stats-name')
     weaponStatsName.textContent = itemObj.heading

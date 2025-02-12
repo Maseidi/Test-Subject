@@ -313,7 +313,7 @@ const setInteractableId = (interactable, int, index) => {
 
 const renderImage = (int, interactable) => {
     const image = document.createElement('img')
-    image.src = `../assets/images/${interactable.name}.png`
+    image.src = `./assets/images/${interactable.name}.png`
     handleLeverImage(interactable, image)
     int.append(image)
 }
@@ -373,7 +373,7 @@ const getDescriptionContent = (interactable, needCode) => {
     if (needCode) descContent.textContent = 'Enter code'
     else if (interactable.popup.includes('vaccine')) {
         descContent = document.createElement('img')
-        descContent.src = `/assets/images/${interactable.popup}.png`
+        descContent.src = `./assets/images/${interactable.popup}.png`
     } else descContent.textContent = interactable.popup
     return descContent
 }

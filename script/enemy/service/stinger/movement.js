@@ -21,7 +21,7 @@ export class StingerMovementService extends AbstractMovementService {
         if (getCurrentRoomPoisons().length >= 10) return
         const poison = document.createElement('img')
         addClass(poison, 'poison')
-        poison.src = `../assets/images/poison.png`
+        poison.src = `./assets/images/poison.png`
         poison.style.left = `${this.enemy.x}px`
         poison.style.top = `${this.enemy.y}px`
         poison.setAttribute('time', 0)

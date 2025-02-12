@@ -224,7 +224,7 @@ export const renderVirusIcon = virusName => {
     const infectedContainer = findHealtStatusChildByClassName('infected-container')
     const virusBar = infectedContainer.firstElementChild
     const virusIcon = document.createElement('img')
-    virusIcon.src = `/assets/images/${virusName}virus.png`
+    virusIcon.src = `./assets/images/${virusName}virus.png`
     addClass(virusIcon, 'animation')
     virusBar.append(virusIcon)
 }

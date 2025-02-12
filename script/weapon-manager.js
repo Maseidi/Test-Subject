@@ -317,7 +317,7 @@ const throwItem = () => {
     const { speedX, speedY } = calculateBulletSpeed(deg, slope, diffY, diffX, 8)
     const item = createAndAddClass('div', 'throwable-item')
     const image = createAndAddClass('img', 'throwable-image')
-    image.src = `/assets/images/${equipped.name}.png`
+    image.src = `./assets/images/${equipped.name}.png`
     item.style.left = `${srcX}px`
     item.style.top = `${srcY}px`
     item.append(image)

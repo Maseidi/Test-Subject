@@ -96,7 +96,7 @@ const renderMoveComponent = itemObj => {
 
 const renderChevLeft = () => {
     const chevLeft = document.createElement('img')
-    chevLeft.src = '../assets/images/chev-left.png'
+    chevLeft.src = './assets/images/chev-left.png'
     chevLeft.addEventListener('click', reduceNumber)
     return chevLeft
 }
@@ -134,7 +134,7 @@ const applyNewValue = (elem, diff, max) => {
 
 const renderChevRight = () => {
     const chevRight = document.createElement('img')
-    chevRight.src = '../assets/images/chev-right.png'
+    chevRight.src = './assets/images/chev-right.png'
     chevRight.addEventListener('click', addNumber)
     return chevRight
 }
@@ -204,7 +204,7 @@ const renderStashItems = () => {
         const selector = createAndAddClass('div', 'stash-item-selector')
         stashItem.append(selector)
         const img = document.createElement('img')
-        img.src = `../assets/images/${item.name}.png`
+        img.src = `./assets/images/${item.name}.png`
         const specs = createAndAddClass('div', 'specs')
         const title = document.createElement('p')
         title.textContent = `${item.heading}`

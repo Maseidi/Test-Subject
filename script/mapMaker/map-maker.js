@@ -154,7 +154,7 @@ const createTool = header => {
     const headerEl = document.createElement('p')
     headerEl.textContent = header
     const chevRight = new Image()
-    chevRight.src = '../assets/images/chev-right.png'
+    chevRight.src = './assets/images/chev-right.png'
     appendAll(tool, headerEl, chevRight)
     tool.addEventListener('click', e => onToolClick(e, header))
     return tool
