@@ -73,6 +73,7 @@ import {
 import {
     addClass,
     angleOf2Points,
+    containsClass,
     element2Object,
     exitAimModeAnimation,
     getEquippedItemDetail,
@@ -656,6 +657,10 @@ export const spaceDown = () => {
                 quitPage()
                 openVendingMachine()
             } else if (getPauseCause() === 'store') {
+                if (containsClass(getPauseContainer().firstElementChild.lastElementChild, 'deal-popup-container')) {
+                    getPauseContainer().firstElementChild.lastElementChild.remove()
+                }
+                if (getPauseContainer().children[1]) quitPage()
                 quitPage()
                 openStash()
             }
