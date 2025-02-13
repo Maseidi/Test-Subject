@@ -321,10 +321,13 @@ const manageSurvivalBuy = itemObj => {
         useInventoryResource('coin', inventoryCoins)
         getStash().find(item => item.name === 'coin').amount -= price - inventoryCoins
     } else useInventoryResource('coin', price)
-    const purchasedItem = { ...itemObj }
-    let final = handleNewWeapnPurchase(purchasedItem, itemObj.name)
-    final = handleNewThrowablePurchase(final, itemObj.name)
-    add2Stash({ ...final, price: price / amount }, amount)
+    if (itemObj.name === 'pouch') upgradeInventory()
+    else {
+        const purchasedItem = { ...itemObj }
+        let final = handleNewWeapnPurchase(purchasedItem, itemObj.name)
+        final = handleNewThrowablePurchase(final, itemObj.name)
+        add2Stash({ ...final, price: price / amount }, amount)
+    }
     submitPurchase(itemObj)
 }
 
