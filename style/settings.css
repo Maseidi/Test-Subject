@@ -10,3 +10,7 @@ body {
     overflow: hidden;
     background-color: #2b2b2b;
 }
+
+.buffer {
+    opacity: 0;
+}
