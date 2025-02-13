@@ -499,13 +499,40 @@ const upgradePopup = e => {
 
 const renderUpgradeConfirmBtn = itemObj =>
     renderConfirmBtn(itemObj.cost, () => {
-        if (!checkEnoughCoins({ price: itemObj.cost })) return
+        if (!checkEnoughCoins({ price: itemObj.cost }) && !getIsSurvival()) return
         manageUpgrade(itemObj)
     })
 
 const manageUpgrade = itemObj => {
+    if (getIsSurvival()) {
+        manageSurvivalUpgrade(itemObj)
+        return
+    }
     playUpgrade()
     useInventoryResource('coin', itemObj.cost)
+    const stat = itemObj.stat.replace(' ', '')
+    upgradeWeaponStat(itemObj.name, stat)
+    removeStore()
+    renderStore()
+    const newElem = object2Element(itemObj)
+    newElem.setAttribute(stat.concat('lvl'), itemObj[stat.concat('lvl')] + 1)
+    const e = { currentTarget: newElem }
+    renderGunDetails(e)
+}
+
+const manageSurvivalUpgrade = itemObj => {
+    const { cost } = itemObj
+    const stashCoins = countItemStash('coin') ?? 0
+    const inventoryCoins = countItem('coin') ?? 0
+    if (stashCoins + inventoryCoins < cost) {
+        addVendingMachineMessage('No enough cash')
+        return
+    }
+    if (inventoryCoins <= cost) {
+        useInventoryResource('coin', inventoryCoins)
+        getStash().find(item => item.name === 'coin').amount -= cost - inventoryCoins
+    } else useInventoryResource('coin', cost)
+    playUpgrade()
     const stat = itemObj.stat.replace(' ', '')
     upgradeWeaponStat(itemObj.name, stat)
     removeStore()
