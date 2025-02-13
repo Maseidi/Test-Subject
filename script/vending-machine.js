@@ -17,7 +17,7 @@ import { getProgressValueByNumber } from './progress-manager.js'
 import { Progress } from './progress.js'
 import { getShopItems, getShopItemsWithId, GunShopItem } from './shop-item.js'
 import { addHoverSoundEffect, playClickSoundEffect, playTrade, playUpgrade } from './sound-manager.js'
-import { add2Stash, countItemStash, getStash } from './stash.js'
+import { add2Stash, countItemStash, getStash, setStash } from './stash.js'
 import { isThrowable } from './throwable-details.js'
 import { addMessage, itemNotification, renderQuit } from './user-interface.js'
 import {
@@ -546,8 +546,8 @@ const manageSurvivalUpgrade = itemObj => {
 const renderSell = () => {
     if (page !== 3) return
     const sell = createAndAddClass('div', 'sell')
-    getInventory()
-        .flat()
+    const items = getIsSurvival() ? getSurvivalItems() : getInventory().flat()
+    items
         .filter(
             item =>
                 item &&
@@ -581,6 +581,39 @@ const renderSell = () => {
             sell.append(sellItem)
         })
     getPauseContainer().firstElementChild.children[2].append(sell)
+}
+
+const getSurvivalItems = () => {
+    const result = []
+    getInventory()
+        .flat()
+        .filter(item => item && item !== 'empty' && item !== 'locked')
+        .forEach(item => {
+            let amount = item.amount
+            getStash().forEach(stashItem => {
+                if (item.name === stashItem.name) amount += stashItem.amount
+            })
+            const packsize = MAX_PACKSIZE[item.name]
+            while (amount >= packsize) {
+                amount -= packsize
+                result.push({ ...item, amount: packsize })
+            }
+            if (isGun(item.name)) result.push(item)
+        })
+
+    getStash().forEach(item => {
+        if (result.find(resultItem => resultItem.name === item.name)) return
+        if (isGun(item.name)) result.push(item)
+        else {
+            let amount = item.amount
+            const packsize = MAX_PACKSIZE[item.name]
+            while (amount >= packsize) {
+                amount -= packsize
+                result.push({ ...item, amount: packsize })
+            }
+        }
+    })
+    return result
 }
 
 const sellPopup = e => {
@@ -619,18 +652,25 @@ const manageSurvivalSell = itemObj => {
     const { amount, price, name } = itemObj
     const totalPrice = price * amount
     add2Stash(new Coin(), totalPrice)
-    useInventoryResource(name, amount)
-    handleEquippableDrop(itemObj)
     removePopup(totalPrice)
     if (isGun(name) && !getShopItems().find(item => !item.sold && item.name === name))
         getShopItems().push(new GunShopItem(name))
 
     playTrade()
-    const oldAmount = countItemStash(name) ?? 0
-    const newAmount = oldAmount + amount
+    const inventoryAmount = countItem(name) ?? 0
+    const stashAmount = countItemStash(name) ?? 0
+    let currentAmount = amount
+    if (inventoryAmount) {
+        if (isGun(name)) handleEquippableDrop(itemObj)
+        else {
+            const amount2Use = Math.min(inventoryAmount, currentAmount)
+            useInventoryResource(name, amount2Use)
+            currentAmount -= amount2Use
+        }
+    }
     const index = getStash().findIndex(item => item.name === name)
-    if (index === undefined) getStash().push({ ...itemObj, amount: newAmount })
-    else getStash()[index] = { ...getStash()[index], amount: newAmount }
+    if (stashAmount === currentAmount) setStash(getStash().filter((item, idx) => index !== idx))
+    else getStash()[index].amount = stashAmount - currentAmount
 }
 
 const removeStore = () => {

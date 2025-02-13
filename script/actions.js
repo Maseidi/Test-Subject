@@ -650,6 +650,7 @@ export const resizeWindow = () => centralizePlayer()
 
 export const spaceDown = () => {
     if (!getIsSurvival()) return
+    if (getReloading()) return
     if (getCurrentChaosEnemies() === getCurrentChaosSpawned() && getEnemiseKilled() === getCurrentChaosEnemies()) {
         if (!getPause()) openStash()
         else {

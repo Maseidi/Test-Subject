@@ -8,6 +8,7 @@ import {
     getReloadButton,
     getSlotsContainer,
     getThrowButton,
+    getToggleMenuButton,
     getUiEl,
 } from './elements.js'
 import { TRACKER } from './enemy/enemy-constants.js'
@@ -129,6 +130,7 @@ export const setupReload = () => {
     if (isReloadDisabled()) return
     if (!getReloading()) playReload(equipped)
     setReloading(true)
+    if (getToggleMenuButton()) addClass(getToggleMenuButton(), 'disabled')
 }
 
 export const isReloadDisabled = (local = true) => {
@@ -153,6 +155,7 @@ const manageReload = () => {
         reload()
         setReloading(false)
         reloadCounter = 0
+        if (getToggleMenuButton()) removeClass(getToggleMenuButton(), 'disabled')
     }
 }
 
@@ -418,7 +421,7 @@ export const useLuckPills = pills => {
 }
 
 const manageMobileAim = () => {
-    if ( !IS_MOBILE ) return
+    if (!IS_MOBILE) return
     findMostSuitableTarget()
     autoAim2Target()
     shootWhenTargetDetected()
