@@ -319,7 +319,8 @@ const manageSurvivalBuy = itemObj => {
     }
     if (inventoryCoins <= price) {
         useInventoryResource('coin', inventoryCoins)
-        getStash().find(item => item.name === 'coin').amount -= price - inventoryCoins
+        if (price - inventoryCoins === 0) setStash(getStash().filter(item => item.name !== 'coin'))
+        else getStash().find(item => item.name === 'coin').amount -= price - inventoryCoins
     } else useInventoryResource('coin', price)
     if (itemObj.name === 'pouch') upgradeInventory()
     else {

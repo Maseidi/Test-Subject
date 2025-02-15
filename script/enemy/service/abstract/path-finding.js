@@ -8,8 +8,7 @@ export class AbstractPathFindingService {
     }
 
     findPath() {
-        let wall = this.#useWallInTheWay()
-        if (!wall) wall = this.#findWall()
+        const wall = this.#findWall()
         if (!wall) return
         const enemyWidth = getProperty(this.enemy.sprite, 'width', 'px')
         const { wallX, wallY, wallW, wallH } = this.#getWallCoordinates(wall)
@@ -26,15 +25,6 @@ export class AbstractPathFindingService {
         const trackerMap = new Map([])
         Array.from(wall.children).forEach(tracker => trackerMap.set(tracker.classList[0], tracker))
         this.#managePathFindingState(enemyState, destState, trackerMap, wallX, wallY, wallW, wallH)
-    }
-
-    #useWallInTheWay() {
-        if (!getIsSurvival()) return
-        if (this.enemy.wallInTheWay === false || this.enemy.wallInTheWay === 'out-of-range') {
-            this.#addPathFinding(null, null)
-            return null
-        }
-        return this.enemy.wallInTheWay
     }
 
     #findWall() {
