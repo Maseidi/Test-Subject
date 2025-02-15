@@ -9,57 +9,111 @@ export const renderWallAttributes = () => {
     renderAttributes()
 
     getAttributesEl().append(
-        input('width', wall.width, value => {
-            wall.width = value
-            getElemBeingModified().style.width = `${value}px`
-        }),
+        input(
+            'width',
+            wall.width,
+            value => {
+                wall.width = value
+                getElemBeingModified().style.width = `${value}px`
+            },
+            null,
+            null,
+            null,
+            null,
+            'Set the width of the wall',
+        ),
     )
 
     getAttributesEl().append(
-        input('height', wall.height, value => {
-            wall.height = value
-            getElemBeingModified().style.height = `${value}px`
-        }),
+        input(
+            'height',
+            wall.height,
+            value => {
+                wall.height = value
+                getElemBeingModified().style.height = `${value}px`
+            },
+            null,
+            null,
+            null,
+            null,
+            'Set the height of the wall',
+        ),
     )
 
     getAttributesEl().append(
-        input('left', wall.left, value => {
-            wall.left = value
-            wall.right = null
-            getElemBeingModified().style.left = `${value}px`
-            getElemBeingModified().style.right = ''
-            document.getElementById('right').value = ''
-        }),
+        input(
+            'left',
+            wall.left,
+            value => {
+                wall.left = value
+                wall.right = null
+                getElemBeingModified().style.left = `${value}px`
+                getElemBeingModified().style.right = ''
+                document.getElementById('right').value = ''
+            },
+            null,
+            null,
+            null,
+            null,
+            'Modify the left offset of the wall, changing this setting might overwrite the right attribute',
+        ),
     )
 
     getAttributesEl().append(
-        input('right', wall.right, value => {
-            wall.right = value
-            wall.left = null
-            getElemBeingModified().style.right = `${value}px`
-            getElemBeingModified().style.left = ''
-            document.getElementById('left').value = ''
-        }),
+        input(
+            'right',
+            wall.right,
+            value => {
+                wall.right = value
+                wall.left = null
+                getElemBeingModified().style.right = `${value}px`
+                getElemBeingModified().style.left = ''
+                document.getElementById('left').value = ''
+            },
+            null,
+            null,
+            null,
+            null,
+            'Modify the right offset of the wall, changing this setting might overwrite the left attribute',
+        ),
     )
 
     getAttributesEl().append(
-        input('top', wall.top, value => {
-            wall.top = value
-            wall.bottom = null
-            getElemBeingModified().style.top = `${value}px`
-            getElemBeingModified().style.bottom = ''
-            document.getElementById('bottom').value = ''
-        }),
+        input(
+            'top',
+            wall.top,
+            value => {
+                wall.top = value
+                wall.bottom = null
+                getElemBeingModified().style.top = `${value}px`
+                getElemBeingModified().style.bottom = ''
+                document.getElementById('bottom').value = ''
+            },
+            null,
+            null,
+            null,
+            null,
+            'Modify the top offset of the wall, changing this setting might overwrite the bottom attribute',
+        ),
     )
 
     getAttributesEl().append(
-        input('bottom', wall.bottom, value => {
-            wall.bottom = value
-            wall.top = null
-            getElemBeingModified().style.bottom = `${value}px`
-            getElemBeingModified().style.top = ''
-            document.getElementById('top').value = ''
-        }),
+        input(
+            'bottom',
+            wall.bottom,
+            value => {
+                wall.bottom = value
+                wall.top = null
+                getElemBeingModified().style.bottom = `${value}px`
+                getElemBeingModified().style.top = ''
+                document.getElementById('top').value = ''
+            },
+            null,
+            null,
+            null,
+            null,
+            'Modify the bottom offset of the wall, changing this setting might overwrite the top attribute',
+        ),
     )
 
     getAttributesEl().append(
@@ -71,6 +125,10 @@ export const renderWallAttributes = () => {
                 getElemBeingModified().style.background = value
             },
             'color',
+            null,
+            null,
+            null,
+            'Changes the wall background',
         ),
     )
 

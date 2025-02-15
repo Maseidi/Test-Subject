@@ -26,16 +26,21 @@ export const renderRoomAttributes = () => {
     const isThisSpawnRoom = getSpawnRoom() === getRoomBeingMade()
 
     getAttributesEl().append(
-        checkbox('set as spawn room', isThisSpawnRoom, value => {
-            if (value) {
-                setSpawnRoom(getRoomBeingMade())
-                renderSpawn()
-            } else {
-                setSpawnRoom(null)
-                getSpawnEl().remove()
-            }
-            renderRoomAttributes()
-        }),
+        checkbox(
+            'set as spawn room',
+            isThisSpawnRoom,
+            value => {
+                if (value) {
+                    setSpawnRoom(getRoomBeingMade())
+                    renderSpawn()
+                } else {
+                    setSpawnRoom(null)
+                    getSpawnEl().remove()
+                }
+                renderRoomAttributes()
+            },
+            'Set this room as the starting point of the game',
+        ),
     )
 
     if (isThisSpawnRoom) {
@@ -50,6 +55,8 @@ export const renderRoomAttributes = () => {
                 'number',
                 () => room.width - 50,
                 20,
+                null,
+                'Set the x coordinate of where the player spawns in the room',
             ),
         )
 
@@ -64,6 +71,8 @@ export const renderRoomAttributes = () => {
                 'number',
                 () => room.height - 50,
                 20,
+                null,
+                'Set the y coordinate of where the player spawns in the room',
             ),
         )
     }
@@ -79,6 +88,8 @@ export const renderRoomAttributes = () => {
             'number',
             3000,
             400,
+            null,
+            'Set the width of the room',
         ),
     )
 
@@ -93,6 +104,8 @@ export const renderRoomAttributes = () => {
             'number',
             3000,
             400,
+            null,
+            'Set the height of the room',
         ),
     )
 
@@ -106,6 +119,10 @@ export const renderRoomAttributes = () => {
                 getSelectedToolEl().textContent = value
             },
             'text',
+            null,
+            null,
+            null,
+            'Modify the label for the room',
         ),
     )
 
@@ -119,6 +136,8 @@ export const renderRoomAttributes = () => {
             'number',
             10,
             1,
+            null,
+            'Used to change brightness of the room, higher is brighter.',
         ),
     )
 
@@ -130,6 +149,10 @@ export const renderRoomAttributes = () => {
                 room.progress2Active = extractCondition(value)
             },
             'text',
+            null,
+            null,
+            null,
+            'Splitable string that indicates which flags of the game activate when entering the room. Example formats: <b>1000</b> (just activates 1000) or <b>1000,2000</b> (activates flags 1000 and 2000) or <b>1000-1001,2000-2001</b> (if flag 1000 is active, activate flag 1001 and ...)',
         ),
     )
 
@@ -141,6 +164,10 @@ export const renderRoomAttributes = () => {
                 room.progress2Deactive = extractCondition(value)
             },
             'text',
+            null,
+            null,
+            null,
+            'Splitable string that indicates which flags of the game deactivate when entering the room. Example formats: <b>1000</b> (just deactivates 1000) or <b>1000,2000</b> (deactivates flags 1000 and 2000) or <b>1000-1001,2000-2001</b> (if flag 1000 is active, deactivate flag 1001 and ...)',
         ),
     )
 
@@ -153,6 +180,10 @@ export const renderRoomAttributes = () => {
                 getElemBeingModified().style.background = value
             },
             'color',
+            null,
+            null,
+            null,
+            'Changes the room background',
         ),
     )
 

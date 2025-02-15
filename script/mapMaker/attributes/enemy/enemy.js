@@ -40,6 +40,7 @@ export const renderEnemyAttributes = () => {
                 label: item,
                 value: item,
             })),
+            'Select the enemy variant',
         ),
     )
 
@@ -59,11 +60,21 @@ export const renderEnemyAttributes = () => {
             5,
             0.1,
             0.1,
+            'Set the how strong should the enemy be',
         ),
     )
 
     getAttributesEl().append(
-        input('render progress', enemy.renderProgress, value => (enemy.renderProgress = String(value)), 'number'),
+        input(
+            'render progress',
+            enemy.renderProgress,
+            value => (enemy.renderProgress = String(value)),
+            'number',
+            null,
+            null,
+            null,
+            'Indicates that which progress flag should be active so that this enemy will spawn in the room',
+        ),
     )
 
     getAttributesEl().append(
@@ -72,6 +83,10 @@ export const renderEnemyAttributes = () => {
             enemy.progress2Active.join(','),
             value => (enemy.progress2Active = value.split(',')),
             'text',
+            null,
+            null,
+            null,
+            'The progress flags that will be activated if the player kills this enemy. Example inputs: <b>1000</b>, <b>1000,2000,3000</b>',
         ),
     )
 
@@ -81,10 +96,25 @@ export const renderEnemyAttributes = () => {
             enemy.progress2Deactive.join(','),
             value => (enemy.progress2Deactive = value.split(',')),
             'text',
+            null,
+            null,
+            null,
+            'The progress flags that will be deactivated if the player kills this enemy. Example inputs: <b>1000</b>, <b>1000,2000,3000</b>',
         ),
     )
 
-    getAttributesEl().append(input('kill all', enemy.killAll, value => (enemy.killAll = String(value)), 'number'))
+    getAttributesEl().append(
+        input(
+            'kill all',
+            enemy.killAll,
+            value => (enemy.killAll = String(value)),
+            'number',
+            null,
+            null,
+            null,
+            'Indicates that which enemies of the room with the render progress property equal or lower than this property must die so that this enemy spawn in the room',
+        ),
+    )
 
     getAttributesEl().append(difficultyAutoComplete(enemy))
 
@@ -101,6 +131,7 @@ export const renderEnemyAttributes = () => {
                 })
             },
             ['red', 'green', 'yellow', 'blue', 'purple'].map(color => ({ label: color, value: color })),
+            'Set what virus will this enemy should carry',
         ),
     )
 

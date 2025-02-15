@@ -665,12 +665,15 @@ const manageSurvivalSell = itemObj => {
     const stashAmount = countItemStash(name) ?? 0
     let currentAmount = amount
     if (inventoryAmount) {
-        if (isGun(name)) handleEquippableDrop(itemObj)
-        else {
+        if (isGun(name)) {
+            useInventoryResource(itemObj.name, itemObj.amount)
+            handleEquippableDrop(itemObj)
+        } else {
             const amount2Use = Math.min(inventoryAmount, currentAmount)
             useInventoryResource(name, amount2Use)
             currentAmount -= amount2Use
         }
+        return
     }
     const index = getStash().findIndex(item => item.name === name)
     if (stashAmount === currentAmount) setStash(getStash().filter((item, idx) => index !== idx))

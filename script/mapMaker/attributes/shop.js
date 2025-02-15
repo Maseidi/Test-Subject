@@ -53,11 +53,21 @@ export const renderShopItemAttributes = () => {
                 label: item.heading,
                 value: item.name,
             })),
+            'Select the item to be available for sale',
         ),
     )
 
     getAttributesEl().append(
-        input('render progress', shopItem.renderProgress, value => (shopItem.renderProgress = value)),
+        input(
+            'render progress',
+            shopItem.renderProgress,
+            value => (shopItem.renderProgress = value),
+            null,
+            null,
+            null,
+            null,
+            'Indicates that which progress flag should be active so that this item will be available for sale',
+        ),
     )
 
     getAttributesEl().append(

@@ -10,7 +10,18 @@ export const renderLoaderAttributes = () => {
     renderAttributes()
     const type = getType(loader)
 
-    getAttributesEl().append(input('room to load', loader.className, value => (loader.className = value)))
+    getAttributesEl().append(
+        input(
+            'room to load',
+            loader.className,
+            value => (loader.className = value),
+            null,
+            null,
+            null,
+            null,
+            'The ID of the room that will be loaded through this loader',
+        ),
+    )
 
     getAttributesEl().append(
         autocomplete(
@@ -29,39 +40,118 @@ export const renderLoaderAttributes = () => {
                 { label: 'Left Loader', value: 'left-loader' },
                 { label: 'Bottom Loader', value: 'bottom-loader' },
             ],
+            'Set the direction of this loader',
         ),
     )
 
     if (type === 'top-loader' || type === 'bottom-loader') {
-        getAttributesEl().append(input('left', loader.left, value => setFieldAndStyle(loader, 'left', value)))
+        getAttributesEl().append(
+            input(
+                'left',
+                loader.left,
+                value => setFieldAndStyle(loader, 'left', value),
+                null,
+                null,
+                null,
+                null,
+                'Modify the left offset of the loader',
+            ),
+        )
 
-        getAttributesEl().append(input('width', loader.width, value => setFieldAndStyle(loader, 'width', value)))
+        getAttributesEl().append(
+            input(
+                'width',
+                loader.width,
+                value => setFieldAndStyle(loader, 'width', value),
+                null,
+                null,
+                null,
+                null,
+                'Set the width of the loader',
+            ),
+        )
     }
 
     if (type === 'left-loader' || type === 'right-loader') {
-        getAttributesEl().append(input('top', loader.top, value => setFieldAndStyle(loader, 'top', value)))
+        getAttributesEl().append(
+            input(
+                'top',
+                loader.top,
+                value => setFieldAndStyle(loader, 'top', value),
+                null,
+                null,
+                null,
+                null,
+                'Modify the top offset of the loader',
+            ),
+        )
 
-        getAttributesEl().append(input('height', loader.height, value => setFieldAndStyle(loader, 'height', value)))
+        getAttributesEl().append(
+            input(
+                'height',
+                loader.height,
+                value => setFieldAndStyle(loader, 'height', value),
+                null,
+                null,
+                null,
+                null,
+                'Set the height of the loader',
+            ),
+        )
     }
 
     getAttributesEl().append(
-        checkbox('has door', loader.door, value => {
-            if (value) loader.door = new Door('heading', 'popup')
-            else loader.door = null
-            renderLoaderAttributes()
-        }),
+        checkbox(
+            'has door',
+            loader.door,
+            value => {
+                if (value) loader.door = new Door('heading', 'popup')
+                else loader.door = null
+                renderLoaderAttributes()
+            },
+            'Check if you wish this loader to have a door',
+        ),
     )
 
     if (loader.door) {
         getAttributesEl().append(
-            input('door heading', loader.door.heading, value => (loader.door.heading = value ?? 'heading'), 'text'),
+            input(
+                'door heading',
+                loader.door.heading,
+                value => (loader.door.heading = value ?? 'heading'),
+                'text',
+                null,
+                null,
+                null,
+                'The heading of the door that will be visible when interacting with it',
+            ),
         )
 
         getAttributesEl().append(
-            input('door popup', loader.door.popup, value => (loader.door.popup = value ?? 'popup'), 'text'),
+            input(
+                'door popup',
+                loader.door.popup,
+                value => (loader.door.popup = value ?? 'popup'),
+                'text',
+                null,
+                null,
+                null,
+                'A short description of the door that will be visible when interacting with it',
+            ),
         )
 
-        getAttributesEl().append(input('door key', loader.door.key, value => (loader.door.key = value), 'text'))
+        getAttributesEl().append(
+            input(
+                'door key',
+                loader.door.key,
+                value => (loader.door.key = value),
+                'text',
+                null,
+                null,
+                null,
+                'The key needed for this door. <b>MUST</b> be equal the <b>unlocks</b> property of the desired key. A <b>render progress MUST</b> be provided for the door',
+            ),
+        )
 
         getAttributesEl().append(
             input(
@@ -69,6 +159,10 @@ export const renderLoaderAttributes = () => {
                 loader.door.renderProgress,
                 value => (loader.door.renderProgress = value),
                 'text',
+                null,
+                null,
+                null,
+                'Indicates that which flag of the progress should be active so that this door would open',
             ),
         )
 
@@ -78,14 +172,38 @@ export const renderLoaderAttributes = () => {
                 loader.door.progress2Active.join(','),
                 value => (loader.door.progress2Active = value.split(',')),
                 'text',
+                null,
+                null,
+                null,
+                'Indicates that which progress flags will get activated when this door opens. Accepts an splittable string like: <b>1000,2000,3000</b>',
             ),
         )
 
         getAttributesEl().append(
-            input('door kill all', loader.door.killAll, value => (loader.door.killAll = value), 'text'),
+            input(
+                'door kill all',
+                loader.door.killAll,
+                value => (loader.door.killAll = value),
+                'text',
+                null,
+                null,
+                null,
+                'Indicates that which enemies of the room with the render progress property equal or lower than this property must die so that this door would open',
+            ),
         )
 
-        getAttributesEl().append(input('door code', loader.door.code, value => (loader.door.code = value), 'text'))
+        getAttributesEl().append(
+            input(
+                'door code',
+                loader.door.code,
+                value => (loader.door.code = value),
+                'text',
+                null,
+                null,
+                null,
+                'The code needed for this door. <b>MUST</b> be equal the <b>code</b> property of the desired note. A <b>render progress MUST</b> be provided for the door',
+            ),
+        )
     }
 
     getAttributesEl().append(

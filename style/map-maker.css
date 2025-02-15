@@ -160,15 +160,6 @@
     text-transform: capitalize;
 }
 
-.checkbox-container {
-    gap: 20px;
-    color: wheat;
-    display: flex;
-    align-items: center;
-    flex-direction: row;
-    text-transform: capitalize;
-}
-
 .input-container > input,
 .input-container > select,
 .input-container > textarea {
@@ -300,4 +291,54 @@
 .pause-option {
     display: flex;
     align-items: center;
+}
+
+.tooltip-container {
+    height: 30px;
+    padding: 0 8px;
+    display: flex;
+    position: relative;
+    border-radius: 4px;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid wheat;
+    background-color: #2b2b2b;
+}
+
+.tooltip-container > img {
+    height: 50%;
+}
+
+.tooltip-container > div {
+    right: 100%;
+    bottom: 100%;
+    z-index: 100;
+    width: 200px;
+    padding: 4px;
+    display: none;
+    font-size: 14px;
+    position: absolute;
+    border-radius: 4px;
+    letter-spacing: 1px;
+    text-transform: none;
+    border: 1px solid wheat;
+    background-color: #2b2b2b;
+}
+
+.tooltip-container > div > b {
+    font-weight: 800;
+}
+
+.tooltip-container:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.tooltip-container:hover > div {
+    display: block;
+}
+
+.label-container {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
 }

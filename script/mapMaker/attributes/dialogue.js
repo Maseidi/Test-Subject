@@ -9,17 +9,43 @@ export const renderDialogueAttributes = () => {
     const dialogue = getItemBeingModified()
     renderAttributes()
 
-    getAttributesEl().append(input('message', dialogue.message, value => (dialogue.message = value), 'textarea'))
-
     getAttributesEl().append(
-        autocomplete('source', dialogue.source, value => (dialogue.source = value), [
-            { label: sources.MAIN, value: sources.MAIN },
-            { label: sources.SPEAKER, value: sources.SPEAKER },
-        ]),
+        input(
+            'message',
+            dialogue.message,
+            value => (dialogue.message = value),
+            'textarea',
+            null,
+            null,
+            null,
+            'Insert the content of the dialogue',
+        ),
     )
 
     getAttributesEl().append(
-        input('render progress', dialogue.renderProgress, value => (dialogue.renderProgress = String(value)), 'number'),
+        autocomplete(
+            'source',
+            dialogue.source,
+            value => (dialogue.source = value),
+            [
+                { label: sources.MAIN, value: sources.MAIN },
+                { label: sources.SPEAKER, value: sources.SPEAKER },
+            ],
+            'Choose if the player is saying the current dialogue or the villain via the speaker',
+        ),
+    )
+
+    getAttributesEl().append(
+        input(
+            'render progress',
+            dialogue.renderProgress,
+            value => (dialogue.renderProgress = String(value)),
+            'number',
+            null,
+            null,
+            null,
+            'Indicates that which progress flag should be active so that this dialogue will be played',
+        ),
     )
 
     getAttributesEl().append(
@@ -28,11 +54,24 @@ export const renderDialogueAttributes = () => {
             dialogue.progress2Active.join(','),
             value => (dialogue.progress2Active = value.split(',')),
             'text',
+            null,
+            null,
+            null,
+            'The progress flags that will be activated when the dialogue finishes. Example inputs: <b>1000</b>, <b>1000,2000,3000</b>',
         ),
     )
 
     getAttributesEl().append(
-        input('duration (ms)', dialogue.duration, value => (dialogue.duration = value), 'number', 30000),
+        input(
+            'duration (ms)',
+            dialogue.duration,
+            value => (dialogue.duration = value),
+            'number',
+            30000,
+            null,
+            null,
+            'Set how long should this dialogue be',
+        ),
     )
 
     getAttributesEl().append(

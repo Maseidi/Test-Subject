@@ -41,4 +41,8 @@
     display: flex;
     letter-spacing: 2px;
     justify-content: space-between;
+    opacity: 0;
+    animation-name: fade-in;
+    animation-fill-mode: forwards;
+    animation-direction: alternate;
 }

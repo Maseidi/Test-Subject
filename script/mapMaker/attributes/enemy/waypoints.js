@@ -48,6 +48,10 @@ const renderPointContainer = (innerValue, point, index) => {
                 }
             },
             'number',
+            null,
+            null,
+            null,
+            `Set the x coordinate of the point ${index} of the enemy's investigation path`,
         ),
     )
     const yContainer = createAndAddClass('div', 'coordinate-container')
@@ -64,6 +68,10 @@ const renderPointContainer = (innerValue, point, index) => {
                 }
             },
             'number',
+            null,
+            null,
+            null,
+            `Set the y coordinate of the point ${index} of the enemy's investigation path`,
         ),
     )
     const removeContainer = createAndAddClass('div', 'remove-container')

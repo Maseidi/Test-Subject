@@ -8,10 +8,30 @@ export const renderPopupAttributes = () => {
     const popup = getItemBeingModified()
     renderAttributes()
 
-    getAttributesEl().append(input('message', popup.message, value => (popup.message = value), 'textarea'))
+    getAttributesEl().append(
+        input(
+            'message',
+            popup.message,
+            value => (popup.message = value),
+            'textarea',
+            null,
+            null,
+            null,
+            'Insert the content of the popup',
+        ),
+    )
 
     getAttributesEl().append(
-        input('render progress', popup.renderProgress, value => (popup.renderProgress = String(value)), 'number'),
+        input(
+            'render progress',
+            popup.renderProgress,
+            value => (popup.renderProgress = String(value)),
+            'number',
+            null,
+            null,
+            null,
+            'Indicates that which progress flag should be active so that this popup will be visible to the player',
+        ),
     )
 
     getAttributesEl().append(
@@ -20,10 +40,25 @@ export const renderPopupAttributes = () => {
             popup.progress2Active.join(','),
             value => (popup.progress2Active = (value ?? '').split(',')),
             'text',
+            null,
+            null,
+            null,
+            'The progress flags that will be activated when the popup fades out. Example inputs: <b>1000</b>, <b>1000,2000,3000</b>',
         ),
     )
 
-    getAttributesEl().append(input('duration (ms)', popup.duration, value => (popup.duration = value), 'number', 30000))
+    getAttributesEl().append(
+        input(
+            'duration (ms)',
+            popup.duration,
+            value => (popup.duration = value),
+            'number',
+            30000,
+            null,
+            null,
+            'Set how long should this dialogue be',
+        ),
+    )
 
     getAttributesEl().append(
         deleteButton(() => {

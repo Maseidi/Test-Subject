@@ -137,21 +137,40 @@ export const renderInteractableAttributes = () => {
                 ...[...getGunDetails().keys()].map(gunName => new GunDrop(0, 0, gunName, 0, 1, 1, 1, 1, 1)),
                 ...new Array(15).fill(1).map((item, index) => new KeyDrop(null, null, index + 1)),
             ]).map(item => ({ label: item.heading || item.name, value: item.name })),
+            'Set the desired interactable type from the various options',
         ),
     )
 
     getAttributesEl().append(
-        input('left', left, value => {
-            interactable.left = value
-            getElemBeingModified().style.left = `${value}px`
-        }),
+        input(
+            'left',
+            left,
+            value => {
+                interactable.left = value
+                getElemBeingModified().style.left = `${value}px`
+            },
+            null,
+            null,
+            null,
+            null,
+            'Modify the left offset of the interactable',
+        ),
     )
 
     getAttributesEl().append(
-        input('top', top, value => {
-            interactable.top = value
-            getElemBeingModified().style.top = `${value}px`
-        }),
+        input(
+            'top',
+            top,
+            value => {
+                interactable.top = value
+                getElemBeingModified().style.top = `${value}px`
+            },
+            null,
+            null,
+            null,
+            null,
+            'Modify the top offset of the interactable',
+        ),
     )
 
     if (
@@ -160,19 +179,57 @@ export const renderInteractableAttributes = () => {
         !name.includes('key') &&
         !isGun(name)
     )
-        getAttributesEl().append(input('amount', amount, value => (interactable.amount = value)))
+        getAttributesEl().append(
+            input(
+                'amount',
+                amount,
+                value => (interactable.amount = value),
+                null,
+                null,
+                null,
+                null,
+                'Set how many of the interactable should be in the pack',
+            ),
+        )
 
     if (isGun(name)) {
         getAttributesEl().append(
-            input('current magazine', interactable.currmag, value => (interactable.currmag = value)),
+            input(
+                'current magazine',
+                interactable.currmag,
+                value => (interactable.currmag = value),
+                'number',
+                null,
+                null,
+                null,
+                'Set how many bullets should this weapon have at its clip',
+            ),
         )
 
         getAttributesEl().append(
-            input('damage level', interactable.damageLvl, value => (interactable.damageLvl = value), 'number', 5, 1),
+            input(
+                'damage level',
+                interactable.damageLvl,
+                value => (interactable.damageLvl = value),
+                'number',
+                5,
+                1,
+                null,
+                'Set the damage level of the current weapon. Should be numbers 1 to 5',
+            ),
         )
 
         getAttributesEl().append(
-            input('range level', interactable.rangeLvl, value => (interactable.rangeLvl = value), 'number', 5, 1),
+            input(
+                'range level',
+                interactable.rangeLvl,
+                value => (interactable.rangeLvl = value),
+                'number',
+                5,
+                1,
+                null,
+                'Set the range level of the current weapon. Should be numbers 1 to 5',
+            ),
         )
 
         getAttributesEl().append(
@@ -183,6 +240,8 @@ export const renderInteractableAttributes = () => {
                 'number',
                 5,
                 1,
+                null,
+                'Set the reload speed level of the current weapon. Should be numbers 1 to 5',
             ),
         )
 
@@ -194,6 +253,8 @@ export const renderInteractableAttributes = () => {
                 'number',
                 5,
                 1,
+                null,
+                'Set the max magazine capacity level of the current weapon. Should be numbers 1 to 5',
             ),
         )
 
@@ -205,34 +266,94 @@ export const renderInteractableAttributes = () => {
                 'number',
                 5,
                 1,
+                null,
+                'Set the fire rate level of the current weapon. Should be numbers 1 to 5',
             ),
         )
     }
 
     if (name === 'stick')
         getAttributesEl().append(
-            input('health', interactable.health, value => (interactable.health = value), 'number', 100, 1),
+            input(
+                'health',
+                interactable.health,
+                value => (interactable.health = value),
+                'number',
+                100,
+                1,
+                null,
+                'Set the initial health of the stick',
+            ),
         )
 
     if (name === 'note' || name.includes('key')) {
         getAttributesEl().append(
-            input('heading', interactable.heading, value => (interactable.heading = value), 'text'),
+            input(
+                'heading',
+                interactable.heading,
+                value => (interactable.heading = value),
+                'text',
+                null,
+                null,
+                null,
+                'The heading of the item that will be visible when interacting with it',
+            ),
         )
 
         getAttributesEl().append(
-            input('description', interactable.description, value => (interactable.description = value), 'text'),
+            input(
+                'description',
+                interactable.description,
+                value => (interactable.description = value),
+                'text',
+                null,
+                null,
+                null,
+                'A short description of the item that will be visible when interacting with it',
+            ),
         )
     }
 
     if (name === 'note') {
-        getAttributesEl().append(input('data', interactable.data, value => (interactable.data = value), 'textarea'))
+        getAttributesEl().append(
+            input(
+                'data',
+                interactable.data,
+                value => (interactable.data = value),
+                'textarea',
+                null,
+                null,
+                null,
+                'Insert the data that the peace of paper will reveal to the player. If you wish to add a code in the text of the note, first set a name for the <b>code</b> property of the note, and the use <b>PLACE_CODE_HERE</b> in the note data so that the generated code will be revealed at the desired position',
+            ),
+        )
 
-        getAttributesEl().append(input('code', interactable.code, value => (interactable.code = value), 'text'))
+        getAttributesEl().append(
+            input(
+                'code',
+                interactable.code,
+                value => (interactable.code = value),
+                'text',
+                null,
+                null,
+                null,
+                'The code used for some doors. This property <b>MUST</b> be equal to the door code property of the desired doors. Keep in mind, <b>PLACE_CODE_HERE MUST</b> be provided in the data',
+            ),
+        )
     }
 
     if (name.includes('key'))
         getAttributesEl().append(
-            input('unlocks', interactable.unlocks, value => (interactable.unlocks = value), 'text'),
+            input(
+                'unlocks',
+                interactable.unlocks,
+                value => (interactable.unlocks = value),
+                'text',
+                null,
+                null,
+                null,
+                'Doors will be opened by this key if they have the same <b>key</b> property as this value',
+            ),
         )
 
     if (!itemsMap2.has(name)) {
@@ -242,6 +363,10 @@ export const renderInteractableAttributes = () => {
                 interactable.renderProgress,
                 value => (interactable.renderProgress = String(value)),
                 'number',
+                null,
+                null,
+                null,
+                'Indicates that which progress flag should be active so that this interactable will be visible to the player',
             ),
         )
 
@@ -251,6 +376,10 @@ export const renderInteractableAttributes = () => {
                 interactable.progress2Active.join(','),
                 value => (interactable.progress2Active = value.split(',')),
                 'text',
+                null,
+                null,
+                null,
+                'The progress flags that will be activated if the player picks up this item. Example inputs: <b>1000</b>, <b>1000,2000,3000</b>',
             ),
         )
 
@@ -260,11 +389,24 @@ export const renderInteractableAttributes = () => {
                 interactable.progress2Deactive.join(','),
                 value => (interactable.progress2Deactive = value.split(',')),
                 'text',
+                null,
+                null,
+                null,
+                'The progress flags that will be deactivated if the player picks up this item. Example inputs: <b>1000</b>, <b>1000,2000,3000</b>',
             ),
         )
 
         getAttributesEl().append(
-            input('kill all', interactable.killAll, value => (interactable.killAll = String(value)), 'number'),
+            input(
+                'kill all',
+                interactable.killAll,
+                value => (interactable.killAll = String(value)),
+                'number',
+                null,
+                null,
+                null,
+                'Indicates that which enemies of the room with the render progress property equal or lower than this property must die so that this interactable will be visible to the player',
+            ),
         )
 
         if (name === 'note') {
@@ -274,6 +416,10 @@ export const renderInteractableAttributes = () => {
                     interactable.onexamine.join(','),
                     value => (interactable.onexamine = value.split(',')),
                     'text',
+                    null,
+                    null,
+                    null,
+                    'The progress flags that will be activated if the player examines this note. Example inputs: <b>1000</b>, <b>1000,2000,3000</b>',
                 ),
             )
         }

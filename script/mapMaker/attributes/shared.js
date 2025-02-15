@@ -16,11 +16,22 @@ export const attributesSidebar = () => {
     return attributesSidebar
 }
 
-export const input = (label, value, setValue, type = 'number', max = Number.MAX_SAFE_INTEGER, min = 0, step = 1) => {
+export const input = (
+    label,
+    value,
+    setValue,
+    type = 'number',
+    max = Number.MAX_SAFE_INTEGER,
+    min = 0,
+    step = 1,
+    tooltipMsg,
+) => {
     const textFieldContainer = createAndAddClass('div', 'input-container')
     const labelEl = document.createElement('label')
     labelEl.textContent = label
     labelEl.setAttribute('for', label)
+    const labelContainer = createAndAddClass('div', 'label-container')
+    labelContainer.append(labelEl, tooltip(tooltipMsg))
     const input = document.createElement(type === 'textarea' ? 'textarea' : 'input')
     addAllAttributes(input, 'type', type, 'min', min, 'max', max, 'name', label, 'id', label)
     if (type === 'textarea') input.setAttribute('rows', 15)
@@ -30,7 +41,7 @@ export const input = (label, value, setValue, type = 'number', max = Number.MAX_
         if (type === 'number') setValue(Number(e.target.value === '' ? min : checkLimits(e.target, min, max)))
         else setValue(e.target.value === '' ? null : e.target.value)
     })
-    appendAll(textFieldContainer, labelEl, input)
+    appendAll(textFieldContainer, labelContainer, input)
     return textFieldContainer
 }
 
@@ -47,11 +58,13 @@ const checkLimits = (target, min, max) => {
     return finalValue
 }
 
-export const autocomplete = (label, value, setValue, options) => {
+export const autocomplete = (label, value, setValue, options, tooltipMsg) => {
     const autocompleteContainer = createAndAddClass('div', 'input-container')
     const labelEl = document.createElement('label')
     labelEl.textContent = label
     labelEl.setAttribute('for', label)
+    const labelContainer = createAndAddClass('div', 'label-container')
+    labelContainer.append(labelEl, tooltip(tooltipMsg))
     const select = document.createElement('select')
     addAllAttributes(select, 'name', label, 'id', label)
     options.forEach(o => {
@@ -62,7 +75,7 @@ export const autocomplete = (label, value, setValue, options) => {
         select.append(option)
     })
     select.addEventListener('change', e => setValue(e.target.value))
-    appendAll(autocompleteContainer, labelEl, select)
+    appendAll(autocompleteContainer, tooltipMsg ? labelContainer : labelEl, select)
     return autocompleteContainer
 }
 
@@ -79,8 +92,8 @@ export const difficultyAutoComplete = model => {
     )
 }
 
-export const checkbox = (label, value, setValue) => {
-    const checkboxContainer = createAndAddClass('div', 'checkbox-container')
+export const checkbox = (label, value, setValue, tooltipMsg) => {
+    const checkboxContainer = createAndAddClass('div', 'input-container')
     const labelEl = document.createElement('label')
     labelEl.textContent = label
     labelEl.setAttribute('for', label)
@@ -88,7 +101,9 @@ export const checkbox = (label, value, setValue) => {
     addAllAttributes(checkbox, 'type', 'checkbox', 'name', label, 'id', label)
     if (value) checkbox.setAttribute('checked', true)
     checkbox.addEventListener('change', e => setValue(e.target.checked))
-    appendAll(checkboxContainer, labelEl, checkbox)
+    const labelContainer = createAndAddClass('div', 'label-container')
+    labelContainer.append(labelEl, checkbox, tooltip(tooltipMsg))
+    appendAll(checkboxContainer, labelContainer)
     return checkboxContainer
 }
 
@@ -107,4 +122,15 @@ export const deleteButton = onClick => {
     deleteNodeBtn.textContent = 'delete node'
     deleteNodeBtn.addEventListener('click', onClick)
     return deleteNodeBtn
+}
+
+const tooltip = message => {
+    const tooltipContainer = createAndAddClass('div', 'tooltip-container')
+    const question = new Image()
+    question.src = './assets/images/question.png'
+    const tooltip = document.createElement('div')
+    tooltip.innerHTML = message
+    if (message && message.includes('investigation') && message.includes('x coordinate')) tooltip.style.left = '0'
+    tooltipContainer.append(question, tooltip)
+    return tooltipContainer
 }

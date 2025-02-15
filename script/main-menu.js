@@ -37,9 +37,9 @@ const mainMenuHeader = () => {
 const options = () => {
     const options = createAndAddClass('div', 'main-menu-options')
     handleContinueOption(options)
-    // appendAll(options, newGame(), loadGame(), survival())
-    // handleMapMakerOption(options)
-    appendAll(options, survival(), settings(), credits(), lineBar())
+    appendAll(options, newGame(), loadGame(), survival())
+    handleMapMakerOption(options)
+    appendAll(options, settings(), credits(), lineBar())
     return options
 }
 
@@ -162,8 +162,8 @@ const survival = () =>
             addSelectedStyle(e.currentTarget)
             refreshContents(survivalOptions())
         },
-        getDelay(1),
-        getDuration(1),
+        getDelay(3),
+        getDuration(3),
     )
 
 const lineBar = () => createAndAddClass('div', 'main-menu-options-bar')
@@ -349,8 +349,8 @@ const settings = () =>
             addSelectedStyle(e.currentTarget)
             refreshContents(settingsOptions())
         },
-        getDelay(2),
-        getDuration(2),
+        getDelay(5),
+        getDuration(5),
     )
 
 const settingsOptions = () => {
@@ -561,8 +561,8 @@ const credits = () =>
             addSelectedStyle(e.currentTarget)
             refreshContents(creditsContent(), true)
         },
-        getDelay(3),
-        getDuration(3),
+        getDelay(7),
+        getDuration(7),
     )
 
 const creditsContent = () => {

@@ -8,14 +8,19 @@ import { autocomplete, checkbox, input } from './shared.js'
 export const manageLootAttribute = (model, reRenderCallback, canHaveKeyAsLoot = false) => {
     const { 'loot-name': name, 'loot-amount': amount, 'loot-active': active, 'loot-deactive': deactive } = model
     getAttributesEl().append(
-        checkbox('has loot', name, value => {
-            resetAllLootValues(model)
-            if (value) {
-                model['loot-amount'] = 1
-                model['loot-name'] = RANDOM
-            }
-            reRenderCallback()
-        }),
+        checkbox(
+            'has loot',
+            name,
+            value => {
+                resetAllLootValues(model)
+                if (value) {
+                    model['loot-amount'] = 1
+                    model['loot-name'] = RANDOM
+                }
+                reRenderCallback()
+            },
+            'Set if a loot will be appeared if you destroy this resource',
+        ),
     )
 
     if (model['loot-name']) {
@@ -54,6 +59,7 @@ export const manageLootAttribute = (model, reRenderCallback, canHaveKeyAsLoot = 
                     ...[...getGunDetails().keys()].map(gunName => new GunDrop(0, 0, gunName, 0, 1, 1, 1, 1, 1)),
                     ...(canHaveKeyAsLoot ? [{ heading: 'key', name: 'key' }] : []),
                 ]).map(item => ({ label: item.heading || item.name, value: item.name })),
+                'Select what the type of the loot is with the options available',
             ),
         )
 
@@ -66,6 +72,8 @@ export const manageLootAttribute = (model, reRenderCallback, canHaveKeyAsLoot = 
                     'number',
                     Number.MAX_SAFE_INTEGER,
                     1,
+                    null,
+                    'Set how many of the loot should be in the pack',
                 ),
             )
         }
@@ -77,15 +85,57 @@ export const manageLootAttribute = (model, reRenderCallback, canHaveKeyAsLoot = 
                 'note-data': data,
                 'note-code': code,
             } = model
-            getAttributesEl().append(input('note heading', heading, value => (model['note-heading'] = value), 'text'))
-
             getAttributesEl().append(
-                input('note description', description, value => (model['note-description'] = value), 'text'),
+                input(
+                    'note heading',
+                    heading,
+                    value => (model['note-heading'] = value),
+                    'text',
+                    null,
+                    null,
+                    null,
+                    'The heading of the note that will be visible when interacting with it (After being examined)',
+                ),
             )
 
-            getAttributesEl().append(input('note data', data, value => (model['note-data'] = value), 'textarea'))
+            getAttributesEl().append(
+                input(
+                    'note description',
+                    description,
+                    value => (model['note-description'] = value),
+                    'text',
+                    null,
+                    null,
+                    null,
+                    'A short description of the note that will be visible when interacting with it (After being examined)',
+                ),
+            )
 
-            getAttributesEl().append(input('note code', code, value => (model['note-code'] = value), 'text'))
+            getAttributesEl().append(
+                input(
+                    'note data',
+                    data,
+                    value => (model['note-data'] = value),
+                    'textarea',
+                    null,
+                    null,
+                    null,
+                    'Insert the data that the peace of paper will reveal to the player. If you wish to add a code in the text of the note, first set a name for the <b>code</b> property of the note, and the use <b>PLACE_CODE_HERE</b> in the note data so that the generated code will be revealed at the desired position',
+                ),
+            )
+
+            getAttributesEl().append(
+                input(
+                    'note code',
+                    code,
+                    value => (model['note-code'] = value),
+                    'text',
+                    null,
+                    null,
+                    null,
+                    'The code used for some doors. This property <b>MUST</b> be equal to the door code property of the desired doors. Keep in mind, <b>PLACE_CODE_HERE MUST</b> be provided in the data',
+                ),
+            )
         }
 
         if (name.includes('key')) {
@@ -95,13 +145,44 @@ export const manageLootAttribute = (model, reRenderCallback, canHaveKeyAsLoot = 
                 'key-unlocks': unlocks,
                 'key-code': code,
             } = model
-            getAttributesEl().append(input('key heading', heading, value => (model['key-heading'] = value), 'text'))
-
             getAttributesEl().append(
-                input('key description', description, value => (model['key-description'] = value), 'text'),
+                input(
+                    'key heading',
+                    heading,
+                    value => (model['key-heading'] = value),
+                    'text',
+                    null,
+                    null,
+                    null,
+                    'The heading of the key that will be visible when interacting with it',
+                ),
             )
 
-            getAttributesEl().append(input('key unlocks', unlocks, value => (model['key-unlocks'] = value), 'textarea'))
+            getAttributesEl().append(
+                input(
+                    'key description',
+                    description,
+                    value => (model['key-description'] = value),
+                    'text',
+                    null,
+                    null,
+                    null,
+                    'A short description of the key that will be visible when interacting with it',
+                ),
+            )
+
+            getAttributesEl().append(
+                input(
+                    'key unlocks',
+                    unlocks,
+                    value => (model['key-unlocks'] = value),
+                    'textarea',
+                    null,
+                    null,
+                    null,
+                    'Doors will be opened by this key if they have the same <b>key</b> property as this value',
+                ),
+            )
 
             getAttributesEl().append(
                 input(
@@ -114,16 +195,36 @@ export const manageLootAttribute = (model, reRenderCallback, canHaveKeyAsLoot = 
                     'number',
                     15,
                     1,
+                    null,
+                    'Select the shape of the key',
                 ),
             )
         }
 
         getAttributesEl().append(
-            input('loot progress to active', active, value => (model['loot-active'] = value), 'number'),
+            input(
+                'loot progress to active',
+                active,
+                value => (model['loot-active'] = value),
+                'number',
+                null,
+                null,
+                null,
+                'The progress flag that will be activated if the player picks up this item',
+            ),
         )
 
         getAttributesEl().append(
-            input('loot progress to deactive', deactive, value => (model['loot-deactive'] = value), 'number'),
+            input(
+                'loot progress to deactive',
+                deactive,
+                value => (model['loot-deactive'] = value),
+                'number',
+                null,
+                null,
+                null,
+                'The progress flag that will be deactivated if the player picks up this item',
+            ),
         )
     }
 }
