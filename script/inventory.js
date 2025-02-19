@@ -467,7 +467,7 @@ const removeDescriptionContent = e => {
     descContainer.children[1].textContent = ``
 }
 
-const optionsEvents = item => item.addEventListener('click', addOptionsEvent, true)
+export const optionsEvents = item => item.addEventListener('click', addOptionsEvent, true)
 
 const addOptionsEvent = e => {
     playClickSoundEffect()
@@ -478,19 +478,19 @@ const addOptionsEvent = e => {
     target.append(options)
 }
 
+export const isItemUsable = itemObj =>
+    ['bandage', 'antidote'].includes(itemObj.name) ||
+    isStatUpgrader(itemObj) ||
+    itemObj.name.includes('vaccine') ||
+    itemObj.name.includes('key')
+
 const renderOptions = (item, options) => {
     if (item.children[2]) return
     let renderDropOption = true
 
     const itemObj = element2Object(item)
 
-    if (
-        ['bandage', 'antidote'].includes(itemObj.name) ||
-        isStatUpgrader(itemObj) ||
-        itemObj.name.includes('vaccine') ||
-        itemObj.name.includes('key')
-    )
-        createOption(options, 'use')
+    if (isItemUsable(itemObj)) createOption(options, 'use')
 
     const allowSitchGun = !getShooting() && !getReloading()
 

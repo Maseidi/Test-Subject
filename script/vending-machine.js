@@ -261,13 +261,21 @@ const checkEnoughCoins = itemObj => {
 const addVendingMachineMessage = input =>
     addMessage(input, getPauseContainer().firstElementChild.children[4].firstElementChild)
 
+const isEnoughSpace4Purchase = itemObj => {
+    const needSpace2string = new Array(itemObj.space).fill('empty').join('')
+    const inventory2string = getInventory()
+        .flat()
+        .map((item, index) => (item === null ? (index % 4 === 3 ? 'emptyend' : 'empty') : item))
+        .join('')
+    return inventory2string.includes(needSpace2string)
+}
+
 const manageBuy = itemObj => {
     if (getIsSurvival()) {
         manageSurvivalBuy(itemObj)
         return
     }
     const loss = itemObj.price
-    const needSpace2string = new Array(itemObj.space).fill('empty').join('')
     useInventoryResource('coin', loss)
     if (itemObj.name === 'pouch') {
         upgradeInventory()
@@ -275,12 +283,7 @@ const manageBuy = itemObj => {
         return
     }
 
-    const inventory2string = getInventory()
-        .flat()
-        .map((item, index) => (item === null ? (index % 4 === 3 ? 'emptyend' : 'empty') : item))
-        .join('')
-
-    if (inventory2string.includes(needSpace2string)) {
+    if (isEnoughSpace4Purchase(itemObj)) {
         let chosenItem = getShopItems()[itemObj.id]
         if (isStatUpgrader(itemObj)) chosenItem.price = 30
         if (itemObj.name === 'armor') chosenItem.price = 50
@@ -310,7 +313,7 @@ const manageBuy = itemObj => {
 }
 
 const manageSurvivalBuy = itemObj => {
-    const { price, amount } = itemObj
+    const { name, price, amount } = itemObj
     const stashCoins = countItemStash('coin') ?? 0
     const inventoryCoins = countItem('coin') ?? 0
     if (stashCoins + inventoryCoins < price) {
@@ -322,12 +325,13 @@ const manageSurvivalBuy = itemObj => {
         if (price - inventoryCoins === 0) setStash(getStash().filter(item => item.name !== 'coin'))
         else getStash().find(item => item.name === 'coin').amount -= price - inventoryCoins
     } else useInventoryResource('coin', price)
-    if (itemObj.name === 'pouch') upgradeInventory()
+    if (name === 'pouch') upgradeInventory()
     else {
         const purchasedItem = { ...itemObj }
-        let final = handleNewWeapnPurchase(purchasedItem, itemObj.name)
-        final = handleNewThrowablePurchase(final, itemObj.name)
-        add2Stash({ ...final, price: price / amount }, amount)
+        let final = handleNewWeapnPurchase(purchasedItem, name)
+        final = handleNewThrowablePurchase(final, name)
+        if (isEnoughSpace4Purchase(itemObj)) pickupDrop(object2Element({ ...final, price: price / amount }))
+        else add2Stash({ ...final, price: price / amount }, amount)
     }
     submitPurchase(itemObj)
 }

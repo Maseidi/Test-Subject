@@ -361,9 +361,9 @@ export const tabDown = () => {
     if (getPause() && getPauseCause() !== 'inventory') return
     if (getPause() && getPauseCause() === 'inventory' && getDraggedItem()) return
     if (getPauseContainer().children.length > 1) return
+    if (!getPause()) setPauseCause('inventory')
     managePause()
     if (getPause()) {
-        setPauseCause('inventory')
         renderInventory()
         if (getToggleMenuButton()) getToggleMenuButton().style.visibility = 'hidden'
         return
@@ -384,7 +384,7 @@ const gamePaused = () => {
     stopAnimations()
     removeUi()
     getPlayingSoundEffects().forEach(effect => effect.pause())
-    if (!['save', 'stash', 'store'].includes(getPauseCause())) getPlayingMusic()?.pause()
+    if (!['save', 'stash', 'store', 'inventory'].includes(getPauseCause())) getPlayingMusic()?.pause()
 }
 
 const stopAnimations = () => {

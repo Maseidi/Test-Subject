@@ -5,7 +5,7 @@ if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('./script/sw.js')
 }
 
-Array.from(document.querySelectorAll('audio')).forEach((elem) => elem.volume = 0)
+Array.from(document.querySelectorAll('audio')).forEach(elem => (elem.volume = 0))
 
 for (let i = 0; i < 10; i++) if (!localStorage.getItem(`slot-${i + 1}`)) localStorage.setItem(`slot-${i + 1}`, 'empty')
 
@@ -23,5 +23,9 @@ else setSettings(getDefaultSettings())
 
 export const ENEMY_CAP = IS_MOBILE ? 20 : 40
 
+navigator.keyboard.lock(['Escape'])
 window.addEventListener('contextmenu', e => e.preventDefault())
+document.querySelector('body').addEventListener('click', e => {
+    e.currentTarget.requestFullscreen()
+})
 renderMainMenu()

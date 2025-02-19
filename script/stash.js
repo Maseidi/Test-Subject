@@ -2,6 +2,7 @@ import { getPauseContainer } from './elements.js'
 import {
     countItem,
     handleEquippableDrop,
+    isItemUsable,
     pickupDrop,
     removeDescriptionEvent,
     renderBlocks,
@@ -61,9 +62,8 @@ const addMoveItemEvent = item => {
 
 const applyItemMovement = e => {
     playClickSoundEffect()
-    const target = containsClass(e.currentTarget, 'stash-item-selector')
-        ? e.currentTarget.parentElement
-        : e.currentTarget
+    const isItemFromStash = containsClass(e.currentTarget, 'stash-item-selector')
+    const target = isItemFromStash ? e.currentTarget.parentElement : e.currentTarget
     if (doesPopupAlreadyExists(target)) return
     const itemObj = element2Object(target)
     const move = renderMoveComponent(itemObj)
