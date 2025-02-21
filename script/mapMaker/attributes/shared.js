@@ -89,6 +89,7 @@ export const difficultyAutoComplete = model => {
             { label: 'middle', value: difficulties.MIDDLE },
             { label: 'survival', value: difficulties.SURVIVAL },
         ],
+        'The minimum difficulty in which this entity is alowed to be visible to the player',
     )
 }
 

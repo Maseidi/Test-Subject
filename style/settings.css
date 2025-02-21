@@ -11,10 +11,6 @@ body {
     background-color: #2b2b2b;
 }
 
-body::backdrop {
-    background-color: unset !important;
-}
-
 .buffer {
     opacity: 0;
     z-index: -1;
