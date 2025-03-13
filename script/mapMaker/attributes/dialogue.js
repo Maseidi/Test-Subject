@@ -41,9 +41,9 @@ export const renderDialogueAttributes = () => {
             dialogue.renderProgress,
             value => (dialogue.renderProgress = String(value)),
             'number',
-            null,
-            null,
-            null,
+            undefined,
+            undefined,
+            undefined,
             'Indicates that which progress flag should be active so that this dialogue will be played',
         ),
     )
@@ -68,8 +68,8 @@ export const renderDialogueAttributes = () => {
             value => (dialogue.duration = value),
             'number',
             30000,
-            null,
-            null,
+            undefined,
+            undefined,
             'Set how long should this dialogue be',
         ),
     )

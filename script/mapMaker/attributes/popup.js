@@ -27,9 +27,9 @@ export const renderPopupAttributes = () => {
             popup.renderProgress,
             value => (popup.renderProgress = String(value)),
             'number',
-            null,
-            null,
-            null,
+            undefined,
+            undefined,
+            undefined,
             'Indicates that which progress flag should be active so that this popup will be visible to the player',
         ),
     )
@@ -54,8 +54,8 @@ export const renderPopupAttributes = () => {
             value => (popup.duration = value),
             'number',
             30000,
-            null,
-            null,
+            undefined,
+            undefined,
             'Set how long should this dialogue be',
         ),
     )

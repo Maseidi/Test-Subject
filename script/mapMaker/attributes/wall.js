@@ -16,10 +16,10 @@ export const renderWallAttributes = () => {
                 wall.width = value
                 getElemBeingModified().style.width = `${value}px`
             },
-            null,
-            null,
-            null,
-            null,
+            'number',
+            undefined,
+            undefined,
+            undefined,
             'Set the width of the wall',
         ),
     )
@@ -32,10 +32,10 @@ export const renderWallAttributes = () => {
                 wall.height = value
                 getElemBeingModified().style.height = `${value}px`
             },
-            null,
-            null,
-            null,
-            null,
+            'number',
+            undefined,
+            undefined,
+            undefined,
             'Set the height of the wall',
         ),
     )
@@ -51,10 +51,10 @@ export const renderWallAttributes = () => {
                 getElemBeingModified().style.right = ''
                 document.getElementById('right').value = ''
             },
-            null,
-            null,
-            null,
-            null,
+            'number',
+            undefined,
+            undefined,
+            undefined,
             'Modify the left offset of the wall, changing this setting might overwrite the right attribute',
         ),
     )
@@ -70,10 +70,10 @@ export const renderWallAttributes = () => {
                 getElemBeingModified().style.left = ''
                 document.getElementById('left').value = ''
             },
-            null,
-            null,
-            null,
-            null,
+            'number',
+            undefined,
+            undefined,
+            undefined,
             'Modify the right offset of the wall, changing this setting might overwrite the left attribute',
         ),
     )
@@ -89,10 +89,10 @@ export const renderWallAttributes = () => {
                 getElemBeingModified().style.bottom = ''
                 document.getElementById('bottom').value = ''
             },
-            null,
-            null,
-            null,
-            null,
+            'number',
+            undefined,
+            undefined,
+            undefined,
             'Modify the top offset of the wall, changing this setting might overwrite the bottom attribute',
         ),
     )
@@ -108,10 +108,10 @@ export const renderWallAttributes = () => {
                 getElemBeingModified().style.top = ''
                 document.getElementById('top').value = ''
             },
-            null,
-            null,
-            null,
-            null,
+            'number',
+            undefined,
+            undefined,
+            undefined,
             'Modify the bottom offset of the wall, changing this setting might overwrite the top attribute',
         ),
     )

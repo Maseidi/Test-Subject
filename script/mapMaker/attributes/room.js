@@ -55,7 +55,7 @@ export const renderRoomAttributes = () => {
                 'number',
                 () => room.width - 50,
                 20,
-                null,
+                undefined,
                 'Set the x coordinate of where the player spawns in the room',
             ),
         )
@@ -71,7 +71,7 @@ export const renderRoomAttributes = () => {
                 'number',
                 () => room.height - 50,
                 20,
-                null,
+                undefined,
                 'Set the y coordinate of where the player spawns in the room',
             ),
         )
@@ -88,7 +88,7 @@ export const renderRoomAttributes = () => {
             'number',
             3000,
             400,
-            null,
+            undefined,
             'Set the width of the room',
         ),
     )
@@ -104,7 +104,7 @@ export const renderRoomAttributes = () => {
             'number',
             3000,
             400,
-            null,
+            undefined,
             'Set the height of the room',
         ),
     )
@@ -136,7 +136,7 @@ export const renderRoomAttributes = () => {
             'number',
             10,
             1,
-            null,
+            undefined,
             'Used to change brightness of the room, higher is brighter.',
         ),
     )

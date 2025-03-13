@@ -149,10 +149,10 @@ export const renderInteractableAttributes = () => {
                 interactable.left = value
                 getElemBeingModified().style.left = `${value}px`
             },
-            null,
-            null,
-            null,
-            null,
+            'number',
+            undefined,
+            undefined,
+            undefined,
             'Modify the left offset of the interactable',
         ),
     )
@@ -165,10 +165,10 @@ export const renderInteractableAttributes = () => {
                 interactable.top = value
                 getElemBeingModified().style.top = `${value}px`
             },
-            null,
-            null,
-            null,
-            null,
+            'number',
+            undefined,
+            undefined,
+            undefined,
             'Modify the top offset of the interactable',
         ),
     )
@@ -184,10 +184,10 @@ export const renderInteractableAttributes = () => {
                 'amount',
                 amount,
                 value => (interactable.amount = value),
-                null,
-                null,
-                null,
-                null,
+                'number',
+                undefined,
+                undefined,
+                undefined,
                 'Set how many of the interactable should be in the pack',
             ),
         )
@@ -199,9 +199,9 @@ export const renderInteractableAttributes = () => {
                 interactable.currmag,
                 value => (interactable.currmag = value),
                 'number',
-                null,
-                null,
-                null,
+                undefined,
+                undefined,
+                undefined,
                 'Set how many bullets should this weapon have at its clip',
             ),
         )
@@ -214,7 +214,7 @@ export const renderInteractableAttributes = () => {
                 'number',
                 5,
                 1,
-                null,
+                undefined,
                 'Set the damage level of the current weapon. Should be numbers 1 to 5',
             ),
         )
@@ -227,7 +227,7 @@ export const renderInteractableAttributes = () => {
                 'number',
                 5,
                 1,
-                null,
+                undefined,
                 'Set the range level of the current weapon. Should be numbers 1 to 5',
             ),
         )
@@ -240,7 +240,7 @@ export const renderInteractableAttributes = () => {
                 'number',
                 5,
                 1,
-                null,
+                undefined,
                 'Set the reload speed level of the current weapon. Should be numbers 1 to 5',
             ),
         )
@@ -253,7 +253,7 @@ export const renderInteractableAttributes = () => {
                 'number',
                 5,
                 1,
-                null,
+                undefined,
                 'Set the max magazine capacity level of the current weapon. Should be numbers 1 to 5',
             ),
         )
@@ -266,7 +266,7 @@ export const renderInteractableAttributes = () => {
                 'number',
                 5,
                 1,
-                null,
+                undefined,
                 'Set the fire rate level of the current weapon. Should be numbers 1 to 5',
             ),
         )
@@ -281,7 +281,7 @@ export const renderInteractableAttributes = () => {
                 'number',
                 100,
                 1,
-                null,
+                undefined,
                 'Set the initial health of the stick',
             ),
         )
@@ -363,9 +363,9 @@ export const renderInteractableAttributes = () => {
                 interactable.renderProgress,
                 value => (interactable.renderProgress = String(value)),
                 'number',
-                null,
-                null,
-                null,
+                undefined,
+                undefined,
+                undefined,
                 'Indicates that which progress flag should be active so that this interactable will be visible to the player',
             ),
         )
@@ -402,9 +402,9 @@ export const renderInteractableAttributes = () => {
                 interactable.killAll,
                 value => (interactable.killAll = String(value)),
                 'number',
-                null,
-                null,
-                null,
+                undefined,
+                undefined,
+                undefined,
                 'Indicates that which enemies of the room with the render progress property equal or lower than this property must die so that this interactable will be visible to the player',
             ),
         )

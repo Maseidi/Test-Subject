@@ -72,7 +72,7 @@ export const manageLootAttribute = (model, reRenderCallback, canHaveKeyAsLoot = 
                     'number',
                     Number.MAX_SAFE_INTEGER,
                     1,
-                    null,
+                    undefined,
                     'Set how many of the loot should be in the pack',
                 ),
             )
@@ -195,7 +195,7 @@ export const manageLootAttribute = (model, reRenderCallback, canHaveKeyAsLoot = 
                     'number',
                     15,
                     1,
-                    null,
+                    undefined,
                     'Select the shape of the key',
                 ),
             )
@@ -207,9 +207,9 @@ export const manageLootAttribute = (model, reRenderCallback, canHaveKeyAsLoot = 
                 active,
                 value => (model['loot-active'] = value),
                 'number',
-                null,
-                null,
-                null,
+                undefined,
+                undefined,
+                undefined,
                 'The progress flag that will be activated if the player picks up this item',
             ),
         )
@@ -220,9 +220,9 @@ export const manageLootAttribute = (model, reRenderCallback, canHaveKeyAsLoot = 
                 deactive,
                 value => (model['loot-deactive'] = value),
                 'number',
-                null,
-                null,
-                null,
+                undefined,
+                undefined,
+                undefined,
                 'The progress flag that will be deactivated if the player picks up this item',
             ),
         )

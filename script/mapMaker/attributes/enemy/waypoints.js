@@ -48,9 +48,9 @@ const renderPointContainer = (innerValue, point, index) => {
                 }
             },
             'number',
-            null,
-            null,
-            null,
+            undefined,
+            undefined,
+            undefined,
             `Set the x coordinate of the point ${index} of the enemy's investigation path`,
         ),
     )
@@ -68,9 +68,9 @@ const renderPointContainer = (innerValue, point, index) => {
                 }
             },
             'number',
-            null,
-            null,
-            null,
+            undefined,
+            undefined,
+            undefined,
             `Set the y coordinate of the point ${index} of the enemy's investigation path`,
         ),
     )
