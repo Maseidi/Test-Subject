@@ -269,7 +269,6 @@
 .infected-container {
     top: 0;
     left: 0;
-    z-index: 60;
     width: 100vw;
     height: 100dvh;
     position: absolute;
@@ -297,6 +296,7 @@
     bottom: 10px;
     display: flex;
     position: absolute;
+    z-index: 65;
 }
 
 .infected-container > div > img {

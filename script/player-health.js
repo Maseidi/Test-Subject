@@ -230,7 +230,7 @@ export const renderVirusIcon = virusName => {
 }
 
 const alertOfVirusExistence = () => {
-    if ( getIsSurvival() ) return
+    if (getIsSurvival()) return
     if (!getPlayingDialogue() && !getPopupContainer().firstElementChild && !getProgressValueByNumber('10000000')) {
         getPopups().push(
             new Popup(
@@ -242,7 +242,6 @@ const alertOfVirusExistence = () => {
                     } of the screen indicate which virus types you are infected to`
                 },
                 { renderProgress: '10000000' },
-                10000,
             ),
         )
         activateAllProgresses('10000000')

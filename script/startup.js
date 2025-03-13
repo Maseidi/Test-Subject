@@ -59,7 +59,7 @@ export const startUp = () => {
     renderThrowButton()
     renderPauseButton()
     renderSlots()
-    if (getChaos() !== 0) renderToggleMenuButton()
+    if (getChaos() !== 0 && getIsSurvival()) renderToggleMenuButton()
     if (getIsSurvival()) playPeaceMusic()
 }
 

@@ -162,7 +162,6 @@ const notifyPlayerOfStashAndShopAndPC = () => {
         new Popup(
             `After each wave, all of the available loot will be collected automitically. You can check them in your stash.`,
             Progress.builder().setRenderProgress('9999999997').setProgress2Active('9999999998'),
-            10000,
         ),
     )
     getPopups().push(
@@ -179,14 +178,12 @@ const notifyPlayerOfStashAndShopAndPC = () => {
                 } to manage your items in stash, or buy / sell / upgrade items using the shop. The menus can be toggled if you press this button repeatedly.`
             },
             Progress.builder().setRenderProgress('9999999998').setProgress2Active('9999999999'),
-            10000,
         ),
     )
     getPopups().push(
         new Popup(
             `You can save your progress by using the computer at the top left corner of the map.`,
             Progress.builder().setRenderProgress('9999999999'),
-            10000,
         ),
     )
     activateAllProgresses('9999999997')

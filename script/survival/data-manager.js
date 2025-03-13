@@ -243,29 +243,24 @@ const initNewSurvivalPopups = () => {
     if (localStorage.getItem('survival-tutorial-done') === 'DONE') return
     getPopups().push(new Popup(`Welcome to survival mode!`, { renderProgress: '1000', progress2Active: '1001' }, 3000))
     getPopups().push(
-        new Popup(
-            `In this mode, you need to survive as many chaos waves as possible.`,
-            { renderProgress: '1001', progress2Active: '1002' },
-            10000,
-        ),
+        new Popup(`In this mode, you need to survive as many chaos waves as possible.`, {
+            renderProgress: '1001',
+            progress2Active: '1002',
+        }),
     )
     getPopups().push(
-        new Popup(
-            `To end a chaos, you need to defeat all the enemies.`,
-            { renderProgress: '1002', progress2Active: '1003' },
-            10000,
-        ),
+        new Popup(`To end a chaos, you need to defeat all the enemies.`, {
+            renderProgress: '1002',
+            progress2Active: '1003',
+        }),
     )
     getPopups().push(
-        new Popup(
-            `Earn resources and coins during fights, and spend them between waves to get stronger!`,
-            { renderProgress: '1003', progress2Active: '1004' },
-            10000,
-        ),
+        new Popup(`Earn resources and coins during fights, and spend them between waves to get stronger!`, {
+            renderProgress: '1003',
+            progress2Active: '1004',
+        }),
     )
-    getPopups().push(
-        new Popup(`Trigger a chaos by toggling the lever when you are ready.`, { renderProgress: '1004' }, 10000),
-    )
+    getPopups().push(new Popup(`Trigger a chaos by toggling the lever when you are ready.`, { renderProgress: '1004' }))
 }
 
 const initNewSurvivalDialogues = () => setDialogues([])

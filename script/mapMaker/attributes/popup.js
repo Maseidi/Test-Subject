@@ -48,19 +48,6 @@ export const renderPopupAttributes = () => {
     )
 
     getAttributesEl().append(
-        input(
-            'duration (ms)',
-            popup.duration,
-            value => (popup.duration = value),
-            'number',
-            30000,
-            undefined,
-            undefined,
-            'Set how long should this dialogue be',
-        ),
-    )
-
-    getAttributesEl().append(
         deleteButton(() => {
             const filteredPopups = getPopups().filter(item => item !== popup)
             setPopups(filteredPopups)

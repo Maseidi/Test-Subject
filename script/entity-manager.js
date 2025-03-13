@@ -14,7 +14,6 @@ import {
     getDialogueContainer,
     getInteractButton,
     getPlayer,
-    getPopupContainer,
     getRoomNameContainer,
     getShadowContainer,
     getSpeaker,
@@ -232,8 +231,7 @@ const refreshPopupIdealStyles = popup => {
 const handleStaticInteractablesIdealInteraction = (int, popup) => {
     const name = int.getAttribute('name')
     if (name === 'lever') {
-        if (getPlayingDialogue() || getPopupContainer().firstElementChild || getReloading())
-            addClass(popup, 'not-ideal')
+        if (getPlayingDialogue() || getReloading()) addClass(popup, 'not-ideal')
         else removeClass(popup, 'not-ideal')
         return
     }
@@ -521,7 +519,7 @@ const lightenEnvironment = (health, roomBrightness) => {
 }
 
 const managePopovers = () => {
-    ;[getDialogueContainer(), getRoomNameContainer(), getPopupContainer()].forEach(container => {
+    ;[getDialogueContainer(), getRoomNameContainer()].forEach(container => {
         const popover = container?.firstElementChild
         if (!popover) return
         const timer = Number(popover.getAttribute('timer'))

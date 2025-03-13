@@ -4,7 +4,6 @@ import {
     getCurrentRoomExplosions,
     getMapEl,
     getPlayer,
-    getPopupContainer,
     getShadowContainer,
 } from './elements.js'
 import { getGunDetail, getGunUpgradableDetail } from './gun-details.js'
@@ -240,10 +239,7 @@ export const difficulties = {
 }
 
 export const isAble2Interact = () =>
-    !getPlayingDialogue() &&
-    !getPopupContainer().firstElementChild &&
-    !getCurrentRoomEnemies().find(enemy => enemy.health !== 0) &&
-    !getReloading()
+    !getPlayingDialogue() && !getCurrentRoomEnemies().find(enemy => enemy.health !== 0) && !getReloading()
 
 export const getDifficultyList = difficulty => {
     if (difficulty === difficulties.MILD) return [difficulties.MILD, difficulties.MIDDLE, difficulties.SURVIVAL]

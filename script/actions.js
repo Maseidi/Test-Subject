@@ -393,30 +393,33 @@ const stopAnimations = () => {
 }
 
 const removeUi = () => {
-    getUiEl().remove()
-    getMovementJoystick()?.remove()
-    getAimJoystick()?.remove()
-    getSprintButton()?.remove()
-    getInventoryButton()?.remove()
-    getInteractButton()?.remove()
-    getHealButton()?.remove()
-    getReloadButton()?.remove()
-    getThrowButton()?.remove()
-    getPauseButton()?.remove()
-    getSlotsContainer()?.remove()
-    getPopupContainer().style.opacity = '0'
+    if (getPauseCause() !== 'popup') {
+        getUiEl().remove()
+        getMovementJoystick()?.remove()
+        getAimJoystick()?.remove()
+        getSprintButton()?.remove()
+        getInventoryButton()?.remove()
+        getInteractButton()?.remove()
+        getHealButton()?.remove()
+        getReloadButton()?.remove()
+        getThrowButton()?.remove()
+        getPauseButton()?.remove()
+        getSlotsContainer()?.remove()
+        getPopupContainer().style.opacity = '0'
+        findHealtStatusChildByClassName('infected-container').style.opacity = '0'
+    }
     getRoomNameContainer().style.opacity = '0'
     getDialogueContainer().style.opacity = '0'
-    findHealtStatusChildByClassName('infected-container').style.opacity = '0'
     if (getElementInteractedWith()?.children[1]) getElementInteractedWith().children[1].style.visibility = 'hidden'
     else if (getElementInteractedWith()?.children[0]) getElementInteractedWith().children[0].style.visibility = 'hidden'
     if (document.querySelector('.chaos-container')) document.querySelector('.chaos-container').style.display = 'none'
 }
 
 const gamePlaying = () => {
+    const cause = getPauseCause()
     setPauseCause(null)
     resumeAnimations()
-    showUi()
+    showUi(cause)
     resumePlayerActions()
     getWaitingFunctions()
         .filter(item => item.id !== 'aim-waiting-4-throw-function')
@@ -431,22 +434,24 @@ const resumeAnimations = () => {
     getAnimatedElements().forEach(elem => elem.play())
 }
 
-const showUi = () => {
-    renderUi()
-    renderMovementJoystick()
-    renderAimJoystick()
-    renderSprintButton()
-    renderInventoryButton()
-    renderInteractButton()
-    renderHealButton()
-    renderReloadButton()
-    renderThrowButton()
-    renderPauseButton()
-    renderSlots()
-    getPopupContainer().style.opacity = '1'
+const showUi = cause => {
+    if (cause !== 'popup') {
+        renderUi()
+        renderMovementJoystick()
+        renderAimJoystick()
+        renderSprintButton()
+        renderInventoryButton()
+        renderInteractButton()
+        renderHealButton()
+        renderReloadButton()
+        renderThrowButton()
+        renderPauseButton()
+        renderSlots()
+        getPopupContainer().style.opacity = '1'
+        findHealtStatusChildByClassName('infected-container').style.opacity = '1'
+    }
     getRoomNameContainer().style.opacity = '1'
     getDialogueContainer().style.opacity = '1'
-    findHealtStatusChildByClassName('infected-container').style.opacity = '1'
     if (getElementInteractedWith()?.children[1]) getElementInteractedWith().children[1].style.visibility = 'visible'
     else if (getElementInteractedWith()?.children[0])
         getElementInteractedWith().children[0].style.visibility = 'visible'
@@ -466,6 +471,7 @@ export const rDown = () => {
 }
 
 export const escapeDown = () => {
+    if ( getPauseCause() === 'popup' ) return
     if (getPauseCause() === 'game-over' && !getPauseContainer().children[1]) return
     if (!getPause()) {
         setPauseCause('pause')
