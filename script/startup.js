@@ -67,7 +67,7 @@ const renderRoomNameContainer = () => renderContainer('room-name-container', set
 
 export const renderPauseContainer = () => renderContainer('pause-container', setPauseContainer)
 
-const renderPopupContainer = () => renderContainer('popupover-container', setPopupContainer)
+const renderPopupContainer = () => renderContainer('popover-container', setPopupContainer)
 
 const renderHealthStatusContainer = () => {
     renderContainer('health-status-container', setHealthStatusContainer)

@@ -332,11 +332,11 @@ const toggleLever = () => {
     if (getPlayingDialogue() || getReloading()) return
     const toggle1 = getElementInteractedWith().getAttribute('progress2Active')
     const toggle2 = getElementInteractedWith().getAttribute('progress2Deactive')
+    if (getIsSurvival()) startChaos()
     if (!getProgress()[toggle1]) {
         activateAllProgresses(toggle1)
         deactivateAllProgresses(toggle2)
         getElementInteractedWith().firstElementChild.style.transform = `scale(-1, 1)`
-        if (getIsSurvival()) startChaos()
     } else {
         activateAllProgresses(toggle2)
         deactivateAllProgresses(toggle1)

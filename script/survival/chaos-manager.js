@@ -128,12 +128,15 @@ export const endChaos = () => {
     notifyPlayerOfStashAndShopAndPC()
 }
 
-const animateDrop = interactable => {
+const animateDrop = (interactable, index) => {
     const intObj = element2Object(interactable)
-    if (intObj.solid) {
+    if (intObj.solid || index > 50) {
         interactable.remove()
         return
     }
+
+    if (index % 2 === 0 && index <= 50) playPickup(intObj.name)
+
     const { left, top } = intObj
     const animatedInteractable = interactable.animate(
         [
@@ -144,11 +147,11 @@ const animateDrop = interactable => {
             duration: 200,
         },
     )
+
     setAnimatedElements([...getAnimatedElements(), animatedInteractable])
     interactable.setAttribute('moving-towards-player', 'true')
     animatedInteractable.addEventListener('finish', () => {
         setAnimatedElements(getAnimatedElements().filter(item => item !== animatedInteractable))
-        playPickup(interactable.getAttribute('name'))
         interactable.remove()
     })
 }
@@ -165,20 +168,17 @@ const notifyPlayerOfStashAndShopAndPC = () => {
         ),
     )
     getPopups().push(
-        new Popup(
-            () => {
-                if (IS_MOBILE) {
-                    if (!getToggleMenuButton()) renderToggleMenuButton()
-                    addClass(getToggleMenuButton(), 'glow')
-                }
-                return `Use ${
-                    IS_MOBILE
-                        ? 'the cart icon'
-                        : `<span>${getSettings().controls.toggleMenu.replace('Key', '').replace('Digit', '')}</span>`
-                } to manage your items in stash, or buy / sell / upgrade items using the shop. The menus can be toggled if you press this button repeatedly.`
-            },
-            Progress.builder().setRenderProgress('9999999998').setProgress2Active('9999999999'),
-        ),
+        new Popup(() => {
+            if (IS_MOBILE) {
+                if (!getToggleMenuButton()) renderToggleMenuButton()
+                addClass(getToggleMenuButton(), 'glow')
+            }
+            return `Use ${
+                IS_MOBILE
+                    ? 'the cart icon'
+                    : `<span>${getSettings().controls.toggleMenu.replace('Key', '').replace('Digit', '')}</span>`
+            } to manage your items in stash, or buy / sell / upgrade items using the shop. The menus can be toggled if you press this button repeatedly.`
+        }, Progress.builder().setRenderProgress('9999999998').setProgress2Active('9999999999')),
     )
     getPopups().push(
         new Popup(
