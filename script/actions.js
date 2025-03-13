@@ -329,7 +329,7 @@ const openPause = (cause, func) => {
 }
 
 const toggleLever = () => {
-    if (getPlayingDialogue() || getPopupContainer().firstElementChild || getReloading()) return
+    if (getPlayingDialogue() || getReloading()) return
     const toggle1 = getElementInteractedWith().getAttribute('progress2Active')
     const toggle2 = getElementInteractedWith().getAttribute('progress2Deactive')
     if (!getProgress()[toggle1]) {
@@ -471,7 +471,7 @@ export const rDown = () => {
 }
 
 export const escapeDown = () => {
-    if ( getPauseCause() === 'popup' ) return
+    if (getPauseCause() === 'popup') return
     if (getPauseCause() === 'game-over' && !getPauseContainer().children[1]) return
     if (!getPause()) {
         setPauseCause('pause')

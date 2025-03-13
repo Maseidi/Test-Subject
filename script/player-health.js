@@ -1,11 +1,4 @@
-import {
-    getCurrentRoomEnemies,
-    getHealButton,
-    getHealthStatusContainer,
-    getMapEl,
-    getPlayer,
-    getPopupContainer,
-} from './elements.js'
+import { getCurrentRoomEnemies, getHealButton, getHealthStatusContainer, getMapEl, getPlayer } from './elements.js'
 import { CHASE, NO_OFFENCE } from './enemy/enemy-constants.js'
 import { getPopups } from './entities.js'
 import { countItem, getInventory, useInventoryResource } from './inventory.js'
@@ -231,7 +224,7 @@ export const renderVirusIcon = virusName => {
 
 const alertOfVirusExistence = () => {
     if (getIsSurvival()) return
-    if (!getPlayingDialogue() && !getPopupContainer().firstElementChild && !getProgressValueByNumber('10000000')) {
+    if (!getPlayingDialogue() && !getProgressValueByNumber('10000000')) {
         getPopups().push(
             new Popup(
                 () => {
