@@ -330,9 +330,12 @@ const openPause = (cause, func) => {
 
 const toggleLever = () => {
     if (getPlayingDialogue() || getReloading()) return
+    if (getIsSurvival()) {
+        startChaos()
+        return
+    }
     const toggle1 = getElementInteractedWith().getAttribute('progress2Active')
     const toggle2 = getElementInteractedWith().getAttribute('progress2Deactive')
-    if (getIsSurvival()) startChaos()
     if (!getProgress()[toggle1]) {
         activateAllProgresses(toggle1)
         deactivateAllProgresses(toggle2)

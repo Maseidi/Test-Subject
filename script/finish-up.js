@@ -44,9 +44,11 @@ import {
     setToggleMenuButton,
     setUiEl,
 } from './elements.js'
+import { setPlayingMusic } from './sound-manager.js'
 import { getGameId, setGameId } from './variables.js'
 
 export const finishUp = () => {
+    setPlayingMusic(null)
     removeControls()
     removeElement(getRoomNameContainer(), setRoomNameContainer)
     removeElement(getPauseContainer(), setPauseContainer)
