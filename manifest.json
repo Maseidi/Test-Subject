@@ -3,6 +3,7 @@
     "short_name": "Test Subject",
     "start_url": ".",
     "display": "fullscreen",
+    "orientation": "landscape",
     "background_color": "#ffffff",
     "description": "A top down shooter survival horror game",
     "icons": [

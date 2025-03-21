@@ -1,7 +1,6 @@
 import { Grabber } from '../enemy/type/grabber.js'
 import { RockCrusher, SoulDrinker, Torturer } from '../enemy/type/normal-enemy.js'
 import { Ranger } from '../enemy/type/ranger.js'
-import { Scorcher } from '../enemy/type/scorcher.js'
 import { Spiker } from '../enemy/type/spiker.js'
 import { Stinger } from '../enemy/type/stinger.js'
 import { Tracker } from '../enemy/type/tracker.js'
@@ -122,7 +121,7 @@ export const manageSpawns = () => {
         else if (chance < 0.7) enemy = new Spiker(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
         else if (chance < 0.84) enemy = new Tracker(level, x, y, new Loot(RANDOM, 1))
         else enemy = new Grabber(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
-    } else if (chaos < 38) {
+    } else {
         if (chance < 0.12) enemy = new Torturer(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
         else if (chance < 0.25) enemy = new SoulDrinker(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
         else if (chance < 0.37) enemy = new RockCrusher(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
@@ -130,16 +129,6 @@ export const manageSpawns = () => {
         else if (chance < 0.62) enemy = new Spiker(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
         else if (chance < 0.75) enemy = new Tracker(level, x, y, new Loot(RANDOM, 1))
         else if (chance < 0.87) enemy = new Grabber(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
-        else enemy = new Scorcher(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
-    } else {
-        if (chance < 0.11) enemy = new Torturer(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
-        else if (chance < 0.22) enemy = new SoulDrinker(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
-        else if (chance < 0.33) enemy = new RockCrusher(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
-        else if (chance < 0.44) enemy = new Ranger(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
-        else if (chance < 0.55) enemy = new Spiker(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
-        else if (chance < 0.66) enemy = new Tracker(level, x, y, new Loot(RANDOM, 1))
-        else if (chance < 0.77) enemy = new Grabber(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
-        else if (chance < 0.88) enemy = new Scorcher(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
         else enemy = new Stinger(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))
     }
 
