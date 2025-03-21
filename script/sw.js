@@ -95,7 +95,7 @@ self.addEventListener('install', event => {
                 './assets/images/crate.png',
                 './assets/images/energydrink.png',
                 './assets/images/explosion.png',
-                './assets/images/fire.webp',
+                './assets/images/fire.png',
                 './assets/images/flashbang.png',
                 './assets/images/github.png',
                 './assets/images/glock.png',

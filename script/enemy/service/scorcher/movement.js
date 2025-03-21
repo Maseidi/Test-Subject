@@ -21,7 +21,7 @@ export class ScorcherMovementService extends AbstractMovementService {
         if (getCurrentRoomFlames().length >= 10) return
         const flame = document.createElement('img')
         addClass(flame, 'flame')
-        flame.src = `./assets/images/fire.webp`
+        flame.src = `./assets/images/fire.png`
         flame.style.left = `${this.enemy.x}px`
         flame.style.top = `${this.enemy.y}px`
         flame.setAttribute('time', 0)
