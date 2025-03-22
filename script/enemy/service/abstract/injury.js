@@ -88,7 +88,7 @@ export class AbstractInjuryService {
             'top',
             Number(this.enemy.sprite.style.top.replace('px', '')),
         )
-        dropLoot(this.enemy.sprite, true)
+        if (!getIsSurvival() || getEnemiseKilled() < 20) dropLoot(this.enemy.sprite, true)
         this.deathAnimation()
         getEnemies().get(getCurrentRoomId())[this.enemy.index].health = 0
         activateAllProgresses(this.enemy.progress2Active)

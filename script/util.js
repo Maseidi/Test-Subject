@@ -162,7 +162,7 @@ export const calculateBulletSpeed = (deg, slope, diffX, diffY, baseSpeed) => {
 export const addFireEffect = () => {
     const fire = document.createElement('img')
     addClass(fire, 'fire')
-    fire.src = `./assets/images/fire.png`
+    fire.src = `./assets/images/fire.webp`
     fire.setAttribute('draggable', false)
     return fire
 }
