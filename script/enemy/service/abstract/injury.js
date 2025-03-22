@@ -1,8 +1,10 @@
 import {
     getCurrentRoomEnemies,
     getCurrentRoomInteractables,
+    getCurrentRoomSolid,
     setCurrentRoomEnemies,
     setCurrentRoomInteractables,
+    setCurrentRoomSolid,
 } from '../../../elements.js'
 import { getEnemies } from '../../../entities.js'
 import { isGun } from '../../../gun-details.js'
@@ -89,6 +91,7 @@ export class AbstractInjuryService {
             Number(this.enemy.sprite.style.top.replace('px', '')),
         )
         if (!getIsSurvival() || getEnemiseKilled() < 20) dropLoot(this.enemy.sprite, true)
+        setCurrentRoomSolid(getCurrentRoomSolid().filter(solid => solid !== this.enemy.sprite))
         this.deathAnimation()
         getEnemies().get(getCurrentRoomId())[this.enemy.index].health = 0
         activateAllProgresses(this.enemy.progress2Active)

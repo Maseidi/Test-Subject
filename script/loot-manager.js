@@ -1,4 +1,3 @@
-import { getCurrentRoomSolid, setCurrentRoomSolid } from './elements.js'
 import { getInteractables } from './entities.js'
 import {
     Adrenaline,
@@ -71,8 +70,7 @@ export const dropLoot = (rootElem, isEnemy) => {
     if (!isEnemy) {
         removeDrop(rootElem)
         playBreakCrate()
-    } else setCurrentRoomSolid(getCurrentRoomSolid().filter(solid => solid !== rootElem.firstElementChild))
-
+    }
     const root = element2Object(rootElem)
     const {
         left,
