@@ -90,8 +90,8 @@ export class AbstractInjuryService {
             'top',
             Number(this.enemy.sprite.style.top.replace('px', '')),
         )
-        if (!getIsSurvival() || getEnemiseKilled() < 20) dropLoot(this.enemy.sprite, true)
-        setCurrentRoomSolid(getCurrentRoomSolid().filter(solid => solid !== this.enemy.sprite))
+        if (!getIsSurvival() || getEnemiseKilled() < 20) dropLoot(this.enemy.sprite, false)
+        setCurrentRoomSolid(getCurrentRoomSolid().filter(solid => solid !== this.enemy.sprite.firstElementChild))
         this.deathAnimation()
         getEnemies().get(getCurrentRoomId())[this.enemy.index].health = 0
         activateAllProgresses(this.enemy.progress2Active)

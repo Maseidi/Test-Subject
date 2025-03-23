@@ -66,8 +66,8 @@ import {
     setLuckPillsDropped,
 } from './variables.js'
 
-export const dropLoot = (rootElem, isEnemy) => {
-    if (!isEnemy) {
+export const dropLoot = (rootElem, isCrate = true) => {
+    if (isCrate) {
         removeDrop(rootElem)
         playBreakCrate()
     }
