@@ -59,6 +59,7 @@ import {
     getCurrentRoomId,
     getEnergyDrinksDropped,
     getHealthPotionsDropped,
+    getIsSurvival,
     getLuckPillsDropped,
     setAdrenalinesDropped,
     setEnergyDrinksDropped,
@@ -106,31 +107,36 @@ export const dropLoot = (rootElem, isCrate = true) => {
 
 const dropRandomLoot = (left, top) => {
     return [
-        { obj: SmgAmmo, chance: 0.3 },
-        { obj: Coin, chance: 0.4 },
-        { obj: PistolAmmo, chance: 0.5 },
-        { obj: null, chance: 0.9 },
-        { obj: PurpleVaccine, chance: 0.1 },
         { obj: Stick, chance: 0 },
+        { obj: Coin, chance: 0.4 },
+        { obj: null, chance: 0.9 },
+        { obj: SmgAmmo, chance: 0.3 },
         { obj: Bandage, chance: 0.1 },
         { obj: Antidote, chance: 0.1 },
-        { obj: Grenade, chance: 0.01 },
-        { obj: Flashbang, chance: 0.01 },
-        { obj: MagnumAmmo, chance: 0.02 },
-        { obj: HardDrive, chance: 0.04 },
-        { obj: YellowVaccine, chance: 0.1 },
-        { obj: BlueVaccine, chance: 0.1 },
-        { obj: RedVaccine, chance: 0.1 },
-        { obj: GreenVaccine, chance: 0.1 },
+        { obj: Grenade, chance: 0.02 },
         { obj: RifleAmmo, chance: 0.1 },
+        { obj: PistolAmmo, chance: 0.5 },
+        { obj: HardDrive, chance: 0.04 },
+        { obj: Flashbang, chance: 0.04 },
+        { obj: MagnumAmmo, chance: 0.02 },
         { obj: ShotgunShells, chance: 0.2 },
-        { obj: LuckPills, chance: 0.0001, predicate: getLuckPillsDropped },
-        { obj: Adrenaline, chance: 0.0001, predicate: getAdrenalinesDropped },
-        { obj: EnergyDrink, chance: 0.0001, predicate: getEnergyDrinksDropped },
-        { obj: HealthPotion, chance: 0.0001, predicate: getHealthPotionsDropped },
+        { obj: RedVaccine, chance: 0.1, predicate: () => !getIsSurvival() },
+        { obj: BlueVaccine, chance: 0.1, predicate: () => !getIsSurvival() },
+        { obj: GreenVaccine, chance: 0.1, predicate: () => !getIsSurvival() },
+        { obj: PurpleVaccine, chance: 0.1, predicate: () => !getIsSurvival() },
+        { obj: YellowVaccine, chance: 0.1, predicate: () => !getIsSurvival() },
+        {
+            obj: LuckPills,
+            chance: 0.0003,
+            predicate: () =>
+                (!getIsSurvival() && getLuckPillsDropped() < 10) || (getIsSurvival() && getLuckPillsDropped() < 30),
+        },
+        { obj: Adrenaline, chance: 0.0003, predicate: () => getAdrenalinesDropped() < 10 },
+        { obj: EnergyDrink, chance: 0.0003, predicate: () => getEnergyDrinksDropped() < 10 },
+        { obj: HealthPotion, chance: 0.0003, predicate: () => getIsSurvival() || getHealthPotionsDropped() < 10 },
     ]
         .sort(() => Math.random() - 0.5)
-        .filter(item => !item.predicate || item.predicate() < 10)
+        .filter(item => !item.predicate || item.predicate())
         .map(item =>
             decideItemDrop(
                 item.obj,

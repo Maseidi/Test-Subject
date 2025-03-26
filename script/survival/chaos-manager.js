@@ -23,11 +23,9 @@ import {
     AntidoteShopItem,
     ArmorShopItem,
     BandageShopItem,
-    BlueVaccineShopItem,
     EnergyDrinkShopItem,
     FlashbangShopItem,
     getShopItems,
-    GreenVaccineShopItem,
     GrenadeShopItem,
     GunShopItem,
     HardDriveShopItem,
@@ -36,19 +34,19 @@ import {
     MagnumAmmoShopItem,
     PistolAmmoShopItem,
     Pouch,
-    PurpleVaccineShopItem,
-    RedVaccineShopItem,
     RifleAmmoShopItem,
     ShotgunShellsShopItem,
     SmgAmmoShopItem,
-    YellowVaccineShopItem,
 } from '../shop-item.js'
 import { getPlayingMusic, playActionMusic, playPeaceMusic, playPickup } from '../sound-manager.js'
 import { add2Stash } from '../stash.js'
 import { renderToggleMenuButton } from '../user-interface.js'
 import { addClass, appendAll, createAndAddClass, element2Object } from '../util.js'
 import {
+    getAdrenalinesDropped,
     getAnimatedElements,
+    getEnergyDrinksDropped,
+    getLuckPillsDropped,
     getPlayerX,
     getPlayerY,
     getRoomLeft,
@@ -121,7 +119,7 @@ export const endChaos = () => {
     renderInteractable(pc)
     setInteractables(new Map([[1, [pc, lever]]]))
     renderchaosPopup('end')
-    add2Stash(new Coin(), Math.min(20, getChaos()))
+    add2Stash(new Coin(), Math.max(Math.floor(Math.pow(getChaos(), 2) / 10), getChaos()))
     updateShop()
     getPlayingMusic()?.pause()
     playPeaceMusic()
@@ -199,7 +197,7 @@ const renderchaosPopup = (type = 'start') => {
     if (type === 'end') {
         const coinContainer = createAndAddClass('div', 'chaos-container-coin')
         const amount = document.createElement('p')
-        amount.textContent = `${Math.min(20, getChaos())}`
+        amount.textContent = `${Math.max(Math.floor(Math.pow(getChaos(), 2) / 10), getChaos())}`
         const coinImg = new Image()
         coinImg.src = './assets/images/coin.png'
         const text2 = document.createElement('p')
@@ -214,54 +212,54 @@ const renderchaosPopup = (type = 'start') => {
 const updateShop = () => {
     const chaos = getChaos()
     const vendingMachine = getShopItems()
-    if (chaos % 10 === 1) {
-        manageRepeatedItem(RedVaccineShopItem)
-    }
+
     if (chaos % 10 === 2) {
         manageRepeatedItem(BandageShopItem)
-        manageRepeatedItem(BlueVaccineShopItem)
-        if (chaos > 10) vendingMachine.push(new HealthPotionShopItem())
     }
+
     if (chaos % 10 === 3) {
         manageRepeatedItem(HardDriveShopItem)
         manageRepeatedItem(FlashbangShopItem)
-        manageRepeatedItem(YellowVaccineShopItem)
     }
+
     if (chaos % 10 === 4) {
         manageRepeatedItem(BandageShopItem)
-        manageRepeatedItem(GreenVaccineShopItem)
-        if (chaos > 10) vendingMachine.push(new EnergyDrinkShopItem())
+        manageRepeatedItem(GrenadeShopItem)
     }
-    if (chaos % 10 === 5) {
-        manageRepeatedItem(PurpleVaccineShopItem)
-    }
+
     if (chaos % 10 === 6) {
         manageRepeatedItem(BandageShopItem)
         manageRepeatedItem(HardDriveShopItem)
-        manageRepeatedItem(RedVaccineShopItem)
     }
+
     if (chaos % 10 === 7) {
-        manageRepeatedItem(BlueVaccineShopItem)
         manageRepeatedItem(AntidoteShopItem)
+        manageRepeatedItem(FlashbangShopItem)
     }
+
     if (chaos % 10 === 8) {
         manageRepeatedItem(BandageShopItem)
         manageRepeatedItem(GrenadeShopItem)
-        manageRepeatedItem(YellowVaccineShopItem)
-        if (chaos > 10) vendingMachine.push(new LuckPillsShopItem())
     }
-    if (chaos % 10 === 9) {
-        manageRepeatedItem(HardDriveShopItem)
-        manageRepeatedItem(GreenVaccineShopItem)
-    }
+
+    if (chaos % 10 === 9) manageRepeatedItem(HardDriveShopItem)
+
     if (chaos % 10 === 0) {
         if (chaos < 80) vendingMachine.push(new Pouch())
         manageRepeatedItem(BandageShopItem)
-        manageRepeatedItem(PurpleVaccineShopItem)
-        if (chaos > 10) vendingMachine.push(new AdrenalineShopItem())
     }
 
     if (chaos === 20) vendingMachine.push(new ArmorShopItem())
+
+    if (chaos > 10) {
+        if (chaos % 10 === 1 || chaos % 10 === 6) vendingMachine.push(new HealthPotionShopItem())
+        if (chaos % 10 === 2 || (chaos % 10 === 7 && getAdrenalinesDropped() < 10))
+            vendingMachine.push(new AdrenalineShopItem())
+        if (chaos % 10 === 3 || (chaos % 10 === 8 && getEnergyDrinksDropped() < 10))
+            vendingMachine.push(new EnergyDrinkShopItem())
+        if (chaos % 10 === 4 || (chaos % 10 === 9 && getLuckPillsDropped() < 30))
+            vendingMachine.push(new LuckPillsShopItem())
+    }
 
     addWeapon2Shop()
     manageRepeatedItem(PistolAmmoShopItem)

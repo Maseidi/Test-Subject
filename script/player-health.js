@@ -206,6 +206,7 @@ const manageInfectedState = () => {
 }
 
 export const infectPlayer2SpecificVirus = virusName => {
+    if (getIsSurvival()) return
     if (!getInfection().includes(virusName)) {
         setInfection([...getInfection(), virusName])
         renderVirusIcon(virusName)

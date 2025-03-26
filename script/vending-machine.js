@@ -18,6 +18,7 @@ import { Progress } from './progress.js'
 import { getShopItems, getShopItemsWithId, GunShopItem } from './shop-item.js'
 import { addHoverSoundEffect, playClickSoundEffect, playTrade, playUpgrade } from './sound-manager.js'
 import { add2Stash, countItemStash, getStash, setStash } from './stash.js'
+import { getChaos } from './survival/variables.js'
 import { isThrowable } from './throwable-details.js'
 import { addMessage, itemNotification, renderQuit } from './user-interface.js'
 import {
@@ -107,7 +108,7 @@ const renderBuy = () => {
 }
 
 const renderBuyItems = () => {
-    const statUpgraderLimitRunner = statUpgraderOffLimit()
+    const statUpgraderLimitRunner = isStatUpgraderOffLimit()
     return getShopItemsWithId()
         .filter(item => !item.sold && getProgressValueByNumber(item.renderProgress) && statUpgraderLimitRunner(item))
         .map(item => {
@@ -121,7 +122,7 @@ const renderBuyItems = () => {
             const amount = createAndAddClass('p', 'buy-item-amount')
             amount.textContent = `${item.amount}`
             const price = createAndAddClass('p', 'buy-item-price')
-            price.textContent = `${item.price}`
+            price.textContent = `${reEvaluatePrice(item.price)}`
             const buyItemCoin = createAndAddClass('img', 'buy-item-coin')
             buyItemCoin.src = `./assets/images/coin.png`
             const info = createAndAddClass('div', 'info')
@@ -137,7 +138,10 @@ const renderBuyItems = () => {
         })
 }
 
-const statUpgraderOffLimit = () => {
+const reEvaluatePrice = originalPrice =>
+    getIsSurvival() ? (Math.floor(getChaos() / 10) + 1) * originalPrice : originalPrice
+
+const isStatUpgraderOffLimit = () => {
     let adrenalineCounter = 0
     let healthCounter = 0
     let energyCounter = 0
@@ -148,13 +152,13 @@ const statUpgraderOffLimit = () => {
         } else if (item.name === ADRENALINE && adrenalineCounter < 10 - getAdrenalinesDropped()) {
             adrenalineCounter++
             return true
-        } else if (item.name === HEALTH_POTION && healthCounter < 10 - getHealthPotionsDropped()) {
+        } else if (getIsSurvival() || (item.name === HEALTH_POTION && healthCounter < 10 - getHealthPotionsDropped())) {
             healthCounter++
             return true
         } else if (item.name === ENERGY_DRINK && energyCounter < 10 - getEnergyDrinksDropped()) {
             energyCounter++
             return true
-        } else if (item.name === LUCK_PILLS && luckCounter < 10 - getLuckPillsDropped()) {
+        } else if (item.name === LUCK_PILLS && luckCounter < (getIsSurvival() ? 30 : 10) - getLuckPillsDropped()) {
             luckCounter++
             return true
         }
@@ -163,7 +167,6 @@ const statUpgraderOffLimit = () => {
 }
 
 const buyPopup = e => {
-    playClickSoundEffect()
     lastItemClickedOn = e.currentTarget
     const itemObj = element2Object(e.currentTarget)
     renderDealPopup(itemObj, 'Purchase item?', isGun(itemObj.name) || itemObj.name === 'pouch', renderConfirmBuyBtn)
@@ -231,11 +234,13 @@ const renderExamineBtn = (itemObj, btnContainer) => {
     btnContainer.append(examine)
 }
 
-const renderConfirmBuyBtn = itemObj =>
-    renderConfirmBtn(itemObj.price, () => {
-        if (!checkEnoughCoins(itemObj) && !getIsSurvival()) return
-        manageBuy(itemObj)
+const renderConfirmBuyBtn = itemObj => {
+    const price = reEvaluatePrice(itemObj.price)
+    return renderConfirmBtn(price, () => {
+        if (!checkEnoughCoins(price) && !getIsSurvival()) return
+        manageBuy({ ...itemObj, price })
     })
+}
 
 const renderConfirmBtn = (price, cb, priceUnit = 'coin') => {
     const confirm = createAndAddClass('button', 'popup-confirm')
@@ -252,8 +257,8 @@ const renderConfirmBtn = (price, cb, priceUnit = 'coin') => {
     return confirm
 }
 
-const checkEnoughCoins = itemObj => {
-    const result = countItem('coin') >= itemObj.price
+const checkEnoughCoins = price => {
+    const result = countItem('coin') >= price
     if (!result) addVendingMachineMessage('no enough cash')
     return result
 }
@@ -433,7 +438,8 @@ const renderDetail = (weaponObj, name) => {
 const renderLevel = (weaponObj, name) => {
     const levels = createAndAddClass('div', 'upgrade-detail-level')
     const currLvl = weaponObj[`${name.replace(' ', '')}lvl`]
-    if (currLvl === 5) levels.textContent = `Max Lvl.`
+    if (currLvl === 5 && name !== 'damage') levels.textContent = `Max Lvl.`
+    else if (currLvl === 5 && !getIsSurvival()) levels.textContent = `Max Lvl.`
     else {
         const current = document.createElement('p')
         current.textContent = `Lvl.${currLvl}`
@@ -465,18 +471,18 @@ const renderValue = (weaponObj, name) => {
 const renderPrice = (weaponObj, name) => {
     const price = createAndAddClass('div', 'upgrade-detail-price')
     const currLvl = weaponObj[`${name.replace(' ', '')}lvl`]
-    if (currLvl !== 5) {
+    if (currLvl === 5 && name !== 'damage') return price
+    if (currLvl !== 5 || getIsSurvival()) {
         const img = document.createElement('img')
         img.src = `./assets/images/coin.png`
         const value = createAndAddClass('p', 'upgrade-stat-price-value')
-        value.textContent = `${9 * currLvl - 6}`
+        value.textContent = `${5 * currLvl}`
         appendAll(price, img, value)
     }
     return price
 }
 
 const upgradePopup = e => {
-    playClickSoundEffect()
     const itemObj = element2Object(e.currentTarget)
     const popupContainer = createAndAddClass('div', 'deal-popup-container', 'popup-container', 'ui-theme')
     const popup = createAndAddClass('div', 'upgrade-popup')
@@ -507,7 +513,7 @@ const upgradePopup = e => {
 
 const renderUpgradeConfirmBtn = itemObj =>
     renderConfirmBtn(itemObj.cost, () => {
-        if (!checkEnoughCoins({ price: itemObj.cost }) && !getIsSurvival()) return
+        if (!checkEnoughCoins(itemObj.cost) && !getIsSurvival()) return
         manageUpgrade(itemObj)
     })
 
