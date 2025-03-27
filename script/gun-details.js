@@ -15,7 +15,7 @@ import {
     STEYR_SSG_69,
     UZI,
 } from './loot.js'
-import { getRoundsFinished } from './variables.js'
+import { getIsSurvival, getRoundsFinished } from './variables.js'
 
 class Gun {
     constructor(
@@ -33,6 +33,7 @@ class Gun {
         description,
         price,
         knock,
+        survivalDamage,
     ) {
         this.heading = heading
         this.ammotype = ammotype
@@ -48,12 +49,21 @@ class Gun {
         this.description = description
         this.price = price
         this.knock = knock
+        this.survivalDamage = survivalDamage
     }
 }
 
 export const getGunDetail = (gunName, detail) => gunDetails.get(gunName)[detail]
 
-export const getGunUpgradableDetail = (gunName, detail, detailLevel) => gunDetails.get(gunName)[detail][detailLevel - 1]
+export const getGunUpgradableDetail = (gunName, detail, detailLevel) => {
+    if (getIsSurvival() && detail === 'damage')
+        return (
+            gunDetails.get(gunName).survivalDamage.base +
+            gunDetails.get(gunName).survivalDamage.step * (detailLevel - 1)
+        )
+
+    return gunDetails.get(gunName)[detail][detailLevel - 1]
+}
 
 const gunDetails = new Map([
     [
@@ -73,6 +83,10 @@ const gunDetails = new Map([
             'A powerful magnum handy in very special scenarios',
             100,
             250,
+            {
+                base: 1000,
+                step: 375,
+            },
         ),
     ],
     [
@@ -92,6 +106,10 @@ const gunDetails = new Map([
             'A magnum capable of tearing through every living creature',
             90,
             200,
+            {
+                base: 750,
+                step: 372,
+            },
         ),
     ],
     [
@@ -111,6 +129,10 @@ const gunDetails = new Map([
             'A high damage handgun making it a nice choice for every avid gun collector',
             15,
             50,
+            {
+                base: 30,
+                step: 22,
+            },
         ),
     ],
     [
@@ -130,6 +152,10 @@ const gunDetails = new Map([
             'Small and fast paced pistol with a pretty decent range',
             14,
             50,
+            {
+                base: 18,
+                step: 20,
+            },
         ),
     ],
     [
@@ -149,6 +175,10 @@ const gunDetails = new Map([
             'A handgun with a clip capacity that barely makes you think of reloading',
             13,
             50,
+            {
+                base: 20,
+                step: 18,
+            },
         ),
     ],
     [
@@ -168,6 +198,10 @@ const gunDetails = new Map([
             'Pretty balanced SMG useful for most cases',
             24,
             25,
+            {
+                base: 13,
+                step: 7,
+            },
         ),
     ],
     [
@@ -187,6 +221,10 @@ const gunDetails = new Map([
             'An SMG with high damage and huge capacity.',
             23,
             25,
+            {
+                base: 14,
+                step: 8,
+            },
         ),
     ],
     [
@@ -206,6 +244,10 @@ const gunDetails = new Map([
             'Decent range, fast reload and fire rate are the greatest highlights of this weapon',
             22,
             25,
+            {
+                base: 12,
+                step: 6,
+            },
         ),
     ],
     [
@@ -225,6 +267,10 @@ const gunDetails = new Map([
             'The insane fire rate and reload speed make up for its low damage',
             21,
             25,
+            {
+                base: 12,
+                step: 5,
+            },
         ),
     ],
     [
@@ -244,6 +290,10 @@ const gunDetails = new Map([
             'Long range shotgun suitable for dealing high damage from afar',
             35,
             400,
+            {
+                base: 100,
+                step: 100,
+            },
         ),
     ],
     [
@@ -263,6 +313,10 @@ const gunDetails = new Map([
             'A real boomstick ideal for shredding everything on its way',
             70,
             350,
+            {
+                base: 200,
+                step: 125,
+            },
         ),
     ],
     [
@@ -282,6 +336,10 @@ const gunDetails = new Map([
             'An automatic shotgun with an insane fire rate and magazine capacity',
             50,
             300,
+            {
+                base: 80,
+                step: 75,
+            },
         ),
     ],
     [
@@ -301,6 +359,10 @@ const gunDetails = new Map([
             'Slow paced sniper rifle focused primarily on dealing damage',
             65,
             200,
+            {
+                base: 500,
+                step: 220,
+            },
         ),
     ],
     [
@@ -320,6 +382,10 @@ const gunDetails = new Map([
             'A sniper rifle with incredibly fast fire rate making it one of a kind',
             75,
             100,
+            {
+                base: 300,
+                step: 180,
+            },
         ),
     ],
     [
@@ -339,6 +405,10 @@ const gunDetails = new Map([
             'Sniper rifle with the most balanced stats possible',
             70,
             150,
+            {
+                base: 400,
+                step: 200,
+            },
         ),
     ],
 ])

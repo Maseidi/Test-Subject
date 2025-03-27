@@ -119,7 +119,7 @@ export const endChaos = () => {
     renderInteractable(pc)
     setInteractables(new Map([[1, [pc, lever]]]))
     renderchaosPopup('end')
-    add2Stash(new Coin(), Math.max(Math.floor(Math.pow(getChaos(), 2) / 10), getChaos()))
+    add2Stash(new Coin(), getChaos() * 10)
     updateShop()
     getPlayingMusic()?.pause()
     playPeaceMusic()
@@ -197,7 +197,7 @@ const renderchaosPopup = (type = 'start') => {
     if (type === 'end') {
         const coinContainer = createAndAddClass('div', 'chaos-container-coin')
         const amount = document.createElement('p')
-        amount.textContent = `${Math.max(Math.floor(Math.pow(getChaos(), 2) / 10), getChaos())}`
+        amount.textContent = `${getChaos() * 10}`
         const coinImg = new Image()
         coinImg.src = './assets/images/coin.png'
         const text2 = document.createElement('p')
@@ -251,15 +251,16 @@ const updateShop = () => {
 
     if (chaos === 20) vendingMachine.push(new ArmorShopItem())
 
-    if (chaos > 10) {
-        if (chaos % 10 === 1 || chaos % 10 === 6) vendingMachine.push(new HealthPotionShopItem())
-        if (chaos % 10 === 2 || (chaos % 10 === 7 && getAdrenalinesDropped() < 10))
-            vendingMachine.push(new AdrenalineShopItem())
-        if (chaos % 10 === 3 || (chaos % 10 === 8 && getEnergyDrinksDropped() < 10))
-            vendingMachine.push(new EnergyDrinkShopItem())
-        if (chaos % 10 === 4 || (chaos % 10 === 9 && getLuckPillsDropped() < 30))
-            vendingMachine.push(new LuckPillsShopItem())
-    }
+    if (chaos % 10 === 1 || chaos % 10 === 6) vendingMachine.push(new HealthPotionShopItem())
+
+    if ((chaos % 10 === 2 || chaos % 10 === 7) && getAdrenalinesDropped() < 10)
+        vendingMachine.push(new AdrenalineShopItem())
+
+    if ((chaos % 10 === 3 || chaos % 10 === 8) && getEnergyDrinksDropped() < 10)
+        vendingMachine.push(new EnergyDrinkShopItem())
+
+    if ((chaos % 10 === 4 || chaos % 10 === 9) && getLuckPillsDropped() < 30)
+        vendingMachine.push(new LuckPillsShopItem())
 
     addWeapon2Shop()
     manageRepeatedItem(PistolAmmoShopItem)

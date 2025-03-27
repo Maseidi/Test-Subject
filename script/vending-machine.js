@@ -138,8 +138,7 @@ const renderBuyItems = () => {
         })
 }
 
-const reEvaluatePrice = originalPrice =>
-    getIsSurvival() ? (Math.floor(getChaos() / 10) + 1) * originalPrice : originalPrice
+const reEvaluatePrice = originalPrice => (getIsSurvival() ? getChaos() + originalPrice - 1 : originalPrice)
 
 const isStatUpgraderOffLimit = () => {
     let adrenalineCounter = 0
@@ -431,7 +430,9 @@ const renderDetail = (weaponObj, name) => {
     const price = renderPrice(weaponObj, name)
     appendAll(lower, levels, values, price)
     appendAll(upgradeDetailComponent, title, lower)
-    if (weaponObj[`${name.replace(' ', '')}lvl`] !== 5) upgradeDetailComponent.addEventListener('click', upgradePopup)
+    if ((name === 'damage' && getIsSurvival()) || weaponObj[`${name.replace(' ', '')}lvl`] !== 5) {
+        upgradeDetailComponent.addEventListener('click', upgradePopup)
+    }
     return upgradeDetailComponent
 }
 
@@ -455,7 +456,9 @@ const renderLevel = (weaponObj, name) => {
 const renderValue = (weaponObj, name) => {
     const values = createAndAddClass('div', 'upgrade-detail-value')
     const currLvl = weaponObj[`${name.replace(' ', '')}lvl`]
-    if (currLvl === 5) values.textContent = `${getGunUpgradableDetail(weaponObj.name, name.replace(' ', ''), currLvl)}`
+    if (currLvl === 5 && name !== 'damage') values.textContent = `Max Lvl.`
+    else if (currLvl === 5 && !getIsSurvival())
+        values.textContent = `${getGunUpgradableDetail(weaponObj.name, name.replace(' ', ''), currLvl)}`
     else {
         const current = document.createElement('p')
         current.textContent = `${getGunUpgradableDetail(weaponObj.name, name.replace(' ', ''), currLvl)}`
