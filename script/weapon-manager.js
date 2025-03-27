@@ -53,6 +53,7 @@ import {
     getEquippedWeaponId,
     getFoundTarget,
     getIsSearching4Target,
+    getIsSurvival,
     getNoOffenseCounter,
     getPlayerAimAngle,
     getPlayerAngle,
@@ -415,8 +416,8 @@ const unEquipThrowable = () => {
 }
 
 export const useLuckPills = pills => {
-    if (getCriticalChance() === 20) return
-    setCriticalChance(getCriticalChance() + 0.019 >= 0.19 ? 0.2 : getCriticalChance() + 0.019)
+    if (getCriticalChance() >= 0.2 && !getIsSurvival()) return
+    setCriticalChance(getCriticalChance() + 0.019)
     pills.amount -= 1
 }
 
