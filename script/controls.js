@@ -101,6 +101,8 @@ const keyUp = e => {
     }
 }
 
+const backButtonPressed = () => escapeDown()
+
 export const addControls = () => {
     window.addEventListener('keydown', keyDown, true)
     window.addEventListener('keyup', keyUp, true)
@@ -109,6 +111,7 @@ export const addControls = () => {
     window.addEventListener('mouseup', clickUp, true)
     window.addEventListener('resize', resizeWindow, true)
     window.addEventListener('wheel', wheelChange, true)
+    window.addEventListener('popstate', backButtonPressed, true)
 }
 
 export const removeControls = () => {
@@ -119,4 +122,5 @@ export const removeControls = () => {
     window.removeEventListener('mouseup', clickUp, true)
     window.removeEventListener('resize', resizeWindow, true)
     window.removeEventListener('wheel', wheelChange, true)
+    window.removeEventListener('popstate', backButtonPressed, true)
 }
