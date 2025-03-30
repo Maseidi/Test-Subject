@@ -22,4 +22,17 @@ else setSettings(getDefaultSettings())
 export const ENEMY_CAP = IS_MOBILE ? 20 : 40
 
 window.addEventListener('contextmenu', e => e.preventDefault())
+
+window.addEventListener('load', () => history.pushState({}, ''))
+let canExitApp = false
+window.addEventListener('popstate', () => {
+    if (!canExitApp) {
+        history.pushState({}, '')
+        canExitApp = true
+        setTimeout(() => {
+            canExitApp = false
+        }, 2000)
+    }
+})
+
 renderMainMenu()
