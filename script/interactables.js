@@ -394,7 +394,7 @@ export class HealthPotion extends Drop {
             amount,
             1,
             getIsSurvival()
-                ? 'Increases max health by 100 units'
+                ? 'Increases max health by 200 units'
                 : 'Refills health completely and increases max health by 10 units',
             20,
             progress,

@@ -125,12 +125,7 @@ const dropRandomLoot = (left, top) => {
         { obj: GreenVaccine, chance: 0.1, predicate: () => !getIsSurvival() },
         { obj: PurpleVaccine, chance: 0.1, predicate: () => !getIsSurvival() },
         { obj: YellowVaccine, chance: 0.1, predicate: () => !getIsSurvival() },
-        {
-            obj: LuckPills,
-            chance: 0.0003,
-            predicate: () =>
-                (!getIsSurvival() && getLuckPillsDropped() < 10) || (getIsSurvival() && getLuckPillsDropped() < 30),
-        },
+        { obj: LuckPills, chance: 0.0003, predicate: () => getLuckPillsDropped() < 10 },
         { obj: Adrenaline, chance: 0.0003, predicate: () => getAdrenalinesDropped() < 10 },
         { obj: EnergyDrink, chance: 0.0003, predicate: () => getEnergyDrinksDropped() < 10 },
         { obj: HealthPotion, chance: 0.0003, predicate: () => getIsSurvival() || getHealthPotionsDropped() < 10 },

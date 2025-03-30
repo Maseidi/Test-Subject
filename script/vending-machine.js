@@ -153,13 +153,13 @@ const isStatUpgraderOffLimit = () => {
         } else if (item.name === ADRENALINE && adrenalineCounter < 10 - getAdrenalinesDropped()) {
             adrenalineCounter++
             return true
-        } else if (getIsSurvival() || (item.name === HEALTH_POTION && healthCounter < 10 - getHealthPotionsDropped())) {
+        } else if (item.name === HEALTH_POTION && (getIsSurvival() || healthCounter < 10 - getHealthPotionsDropped())) {
             healthCounter++
             return true
         } else if (item.name === ENERGY_DRINK && energyCounter < 10 - getEnergyDrinksDropped()) {
             energyCounter++
             return true
-        } else if (item.name === LUCK_PILLS && luckCounter < (getIsSurvival() ? 30 : 10) - getLuckPillsDropped()) {
+        } else if (item.name === LUCK_PILLS && luckCounter < 10 - getLuckPillsDropped()) {
             luckCounter++
             return true
         }

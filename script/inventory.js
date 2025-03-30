@@ -444,7 +444,7 @@ const renderDescriptionContent = e => {
         if (heading === 'health potion')
             desc =
                 description +
-                `. Current Max Health: ${getMaxHealth()}, Lvl ${(getMaxHealth() - 100) / (getIsSurvival() ? 100 : 10)}`
+                `. Current Max Health: ${getMaxHealth()}, Lvl ${(getMaxHealth() - 100) / (getIsSurvival() ? 200 : 10)}`
 
         if (heading === 'luck pills')
             desc =
