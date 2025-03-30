@@ -53,7 +53,6 @@ import {
 } from './loot.js'
 import { renderInteractable } from './room-loader.js'
 import { playBreakCrate } from './sound-manager.js'
-import { getChaos } from './survival/variables.js'
 import { element2Object, isStatUpgrader, nextId } from './util.js'
 import {
     getAdrenalinesDropped,
@@ -186,7 +185,7 @@ const dropDeterminedLoot = (decision, left, top, amount) => {
 
 const decideItemDrop = (drop, chance, left, top, amount) => {
     if (!drop) return null
-    if (new drop().name === 'coin') amount = (amount % 2) + 1 + (getIsSurvival() ? getChaos() : 0)
+    if (new drop().name === 'coin') amount = (amount % 2) + 1
     if (Math.random() < chance) var result = new drop(left, top, amount)
     Array.from([
         { expected: LUCK_PILLS, setter: setLuckPillsDropped, getter: getLuckPillsDropped },
