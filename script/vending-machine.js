@@ -140,6 +140,8 @@ const renderBuyItems = () => {
 
 const reEvaluatePrice = originalPrice => (getIsSurvival() ? getChaos() + originalPrice - 1 : originalPrice)
 
+const getBasePrice = price => (getIsSurvival() ? price - getChaos() + 1 : price)
+
 const isStatUpgraderOffLimit = () => {
     let adrenalineCounter = 0
     let healthCounter = 0
@@ -318,6 +320,7 @@ const manageBuy = itemObj => {
 
 const manageSurvivalBuy = itemObj => {
     const { name, price, amount } = itemObj
+    const basePrice = getBasePrice(price)
     const stashCoins = countItemStash('coin') ?? 0
     const inventoryCoins = countItem('coin') ?? 0
     if (stashCoins + inventoryCoins < price) {
@@ -334,8 +337,8 @@ const manageSurvivalBuy = itemObj => {
         const purchasedItem = { ...itemObj }
         let final = handleNewWeapnPurchase(purchasedItem, name)
         final = handleNewThrowablePurchase(final, name)
-        if (isEnoughSpace4Purchase(itemObj)) pickupDrop(object2Element({ ...final, price: price / amount }))
-        else add2Stash({ ...final, price: price / amount }, amount)
+        if (isEnoughSpace4Purchase(itemObj)) pickupDrop(object2Element({ ...final, price: basePrice / amount }))
+        else add2Stash({ ...final, price: basePrice / amount }, amount)
     }
     submitPurchase(itemObj)
 }
@@ -583,7 +586,7 @@ const renderSell = () => {
             const amount = createAndAddClass('p', 'sell-item-amount')
             amount.textContent = `${item.amount}`
             const price = createAndAddClass('p', 'sell-item-price')
-            price.textContent = `${item.price * item.amount}`
+            price.textContent = `${reEvaluatePrice(item.price * item.amount)}`
             const sellItemCoin = createAndAddClass('img', 'sell-item-coin')
             sellItemCoin.src = `./assets/images/coin.png`
             const info = createAndAddClass('div', 'info')
@@ -640,7 +643,8 @@ const sellPopup = e => {
     renderDealPopup(itemObj, 'Sell item?', isGun(itemObj.name), renderConfirmSellBtn)
 }
 
-const renderConfirmSellBtn = itemObj => renderConfirmBtn(itemObj.price * itemObj.amount, () => manageSell(itemObj))
+const renderConfirmSellBtn = itemObj =>
+    renderConfirmBtn(reEvaluatePrice(itemObj.price * itemObj.amount), () => manageSell(itemObj))
 
 const manageSell = itemObj => {
     if (getIsSurvival()) {
@@ -667,7 +671,7 @@ const manageSell = itemObj => {
 
 const manageSurvivalSell = itemObj => {
     const { amount, price, name } = itemObj
-    const totalPrice = price * amount
+    const totalPrice = reEvaluatePrice(price * amount)
     add2Stash(new Coin(), totalPrice)
     removePopup(totalPrice)
     if (isGun(name) && !getShopItems().find(item => !item.sold && item.name === name))

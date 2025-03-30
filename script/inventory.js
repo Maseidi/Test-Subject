@@ -51,6 +51,7 @@ import {
     getEquippedTorchId,
     getEquippedWeaponId,
     getHealth,
+    getIsSurvival,
     getMaxHealth,
     getMaxStamina,
     getMouseX,
@@ -395,16 +396,13 @@ export const renderBlocks = replace => {
     }
 }
 
-export const renderHeadingAndDescription = root => {
+export const renderHeadingAndDescription = () => {
     const desc = createAndAddClass('div', 'description')
     const heading = document.createElement('h2')
     const paragraph = document.createElement('p')
     appendAll(desc, heading, paragraph)
-    if (root) root.append(desc)
-    else {
-        const background = getPauseContainer().firstElementChild
-        background.firstElementChild.append(desc)
-    }
+    const background = getPauseContainer().firstElementChild
+    background.firstElementChild.append(desc)
 }
 
 const inventoryEvents = () => {
@@ -435,14 +433,19 @@ const renderDescriptionContent = e => {
     if (description) {
         let desc = description
         if (isNote && !isExamined) desc = '????'
+
         if (heading === 'adrenaline')
             desc =
                 description +
                 `. Current Movement Speed: ${getPlayerSpeed().toFixed(1)}, Lvl ${Math.ceil(
                     (getPlayerSpeed() - 5) * 10,
                 )}`
+
         if (heading === 'health potion')
-            desc = description + `. Current Max Health: ${getMaxHealth()}, Lvl ${(getMaxHealth() - 100) / 10}`
+            desc =
+                description +
+                `. Current Max Health: ${getMaxHealth()}, Lvl ${(getMaxHealth() - 100) / (getIsSurvival() ? 100 : 10)}`
+
         if (heading === 'luck pills')
             desc =
                 description +
@@ -450,8 +453,10 @@ const renderDescriptionContent = e => {
                     (getCriticalChance() * 100 - 1) /
                     1.9
                 ).toFixed()}`
+
         if (heading === 'energy drink')
             desc = description + `. Current Max Stamina: ${getMaxStamina()}, Lvl ${(getMaxStamina() - 600) / 60}`
+
         descContainer.children[1].textContent = desc
     }
 }

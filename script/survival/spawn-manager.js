@@ -85,7 +85,7 @@ export const manageSpawns = () => {
     let enemy
     const chaos = getChaos()
     const chance = Math.random()
-    const level = chaos * 0.5
+    const level = chaos * 0.2
 
     if (chaos < 2) {
         enemy = new Torturer(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))

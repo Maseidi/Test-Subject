@@ -251,7 +251,7 @@ const updateShop = () => {
 
     if (chaos === 20) vendingMachine.push(new ArmorShopItem())
 
-    if (chaos % 10 === 1 || chaos % 10 === 6) vendingMachine.push(new HealthPotionShopItem())
+    if (chaos % 10 === 5) vendingMachine.push(new HealthPotionShopItem())
 
     if (getChaos() > 10) {
         if (chaos % 10 === 7 && getAdrenalinesDropped() < 10) vendingMachine.push(new AdrenalineShopItem())

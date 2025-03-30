@@ -183,7 +183,7 @@ const manageExplosionDamagedState = () => {
 
 export const useHealthPotion = potion => {
     if (getMaxHealth() === 200 && !getIsSurvival()) return
-    setMaxHealth(getMaxHealth() + 10)
+    setMaxHealth(getMaxHealth() + (getIsSurvival() ? 100 : 10))
     modifyHealth(getMaxHealth())
     if (!isLowHealth()) renderDangerStateEffect(removeHealthStatusChildByClassName, removeClass)
     potion.amount -= 1
