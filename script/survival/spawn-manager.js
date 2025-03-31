@@ -79,13 +79,13 @@ export const manageSpawns = () => {
 
     const { x, y } = SPAWN_LOCATIONS.filter(({ x, y }) => {
         const dist = distanceFormula(playerX, playerY, x, y)
-        return dist > 1500 && dist < 2000
+        return dist > 1000 && dist < 1500
     }).sort(() => Math.random() - 0.5)[0]
 
     let enemy
     const chaos = getChaos()
     const chance = Math.random()
-    const level = chaos * 0.2
+    const level = 0.5 + (chaos - 1) * 0.2
 
     if (chaos < 2) {
         enemy = new Torturer(level, new SinglePointPath(x, y), new Loot(RANDOM, 1))

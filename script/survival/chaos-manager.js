@@ -184,7 +184,7 @@ const notifyPlayerOfStashAndShopAndPC = () => {
             Progress.builder().setRenderProgress('9999999999'),
         ),
     )
-    activateAllProgresses('9999999997')
+    activateAllProgresses('99999979997')
 }
 
 const renderchaosPopup = (type = 'start') => {
@@ -213,9 +213,7 @@ const updateShop = () => {
     const chaos = getChaos()
     const vendingMachine = getShopItems()
 
-    if (chaos % 10 === 2) {
-        manageRepeatedItem(BandageShopItem)
-    }
+    if (chaos % 10 === 2) manageRepeatedItem(BandageShopItem)
 
     if (chaos % 10 === 3) {
         manageRepeatedItem(HardDriveShopItem)
@@ -251,14 +249,14 @@ const updateShop = () => {
 
     if (chaos === 20) vendingMachine.push(new ArmorShopItem())
 
-    if (getChaos() > 10) {
-        if (chaos % 10 === 4 && getAdrenalinesDropped() < 10) vendingMachine.push(new AdrenalineShopItem())
-
-        if (chaos % 10 === 6 && getEnergyDrinksDropped() < 10) vendingMachine.push(new EnergyDrinkShopItem())
-
-        if (chaos % 10 === 8 && getLuckPillsDropped() < 10) vendingMachine.push(new LuckPillsShopItem())
-
+    if (getChaos() >= 10) {
         if (chaos % 10 === 0) vendingMachine.push(new HealthPotionShopItem())
+
+        if (chaos % 10 === 2 && getAdrenalinesDropped() < 10) vendingMachine.push(new AdrenalineShopItem())
+
+        if (chaos % 10 === 4 && getEnergyDrinksDropped() < 10) vendingMachine.push(new EnergyDrinkShopItem())
+
+        if (chaos % 10 === 6 && getLuckPillsDropped() < 10) vendingMachine.push(new LuckPillsShopItem())
     }
 
     addWeapon2Shop()

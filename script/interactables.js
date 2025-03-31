@@ -1,7 +1,7 @@
 import { getGunDetails } from './gun-details.js'
 import { initLootValues } from './loot.js'
 import { difficulties as difficultyMap, getDifficultyList } from './util.js'
-import { getIsSurvival } from './variables.js'
+import { getMaxHealth } from './variables.js'
 
 class Interactable {
     constructor(
@@ -393,9 +393,7 @@ export class HealthPotion extends Drop {
             'health potion',
             amount,
             1,
-            getIsSurvival()
-                ? 'Increases max health by 200 units'
-                : 'Refills health completely and increases max health by 10 units',
+            `Refills health completely and increases max health by ${getMaxHealth() ? 200 : 10} units`,
             20,
             progress,
         )
