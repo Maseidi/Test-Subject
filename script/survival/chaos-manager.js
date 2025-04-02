@@ -123,7 +123,7 @@ export const endChaos = () => {
     updateShop()
     getPlayingMusic()?.pause()
     playPeaceMusic()
-    notifyPlayerOfStashAndShopAndPC()
+    notifyPlayerOfStashAndShopAndPC();
 }
 
 const animateDrop = (interactable, index) => {
