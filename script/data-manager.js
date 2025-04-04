@@ -210,7 +210,7 @@ export const initConstants = () => {
     setAimJoystickAngle(null)
 }
 
-export const initNewGameVariables = (spawnX = 200, spawnY = 600, difficulty) => {
+export const initNewGameVariables = (spawnX = 200, spawnY = 500, difficulty) => {
     const newGameVariables = {
         mapX: 0,
         mapY: 0,

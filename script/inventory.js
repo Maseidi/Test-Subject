@@ -57,6 +57,7 @@ import {
     getMouseX,
     getMouseY,
     getPause,
+    getPauseCause,
     getPlayerSpeed,
     getPlayerX,
     getPlayerY,
@@ -202,7 +203,7 @@ const checkSpecialScenarios = () => {
         if (progress2deactive) deactivateAllProgresses(progress2deactive)
     }
     if ((isThrowable(name) && !getWeaponWheel().includes(id)) || (isGun(name) && amount === 0)) updateWeaponWheel()
-    if (getPause()) return
+    if (getPause() && getPauseCause() !== 'popup') return
     if (amount === 0) removeDrop(dropElem)
     ammo4Equipped()
     handleWeaponPickup()

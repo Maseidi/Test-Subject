@@ -176,7 +176,10 @@ const handleDoorInteractables = int => {
     handleDoorWithCodeIdealInteraction(int, popup)
     if (containsClass(int, 'open')) removePopup(popup)
     else if (!interactionPredicate(int)) removePopup(popup)
-    else setAsInteractingObject(popup, int)
+    else {
+        if (!getProgressValueByNumber('1008')) activateAllProgresses('1008')
+        setAsInteractingObject(popup, int)
+    }
 }
 
 const showPopup = popup => (popup.style.display = 'block')
