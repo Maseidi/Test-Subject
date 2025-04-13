@@ -1,5 +1,4 @@
 import { getCurrentRoomSolid, getPlayer } from '../../../elements.js'
-import { activateAllProgresses, getProgressValueByNumber } from '../../../progress-manager.js'
 import { collide, containsClass, getProperty, useDeltaTime } from '../../../util.js'
 import { getIsSurvival } from '../../../variables.js'
 import { INVESTIGATE, LOST, MOVE_TO_POSITION } from '../../enemy-constants.js'
@@ -13,7 +12,6 @@ export class AbstractVisionService {
     playerSpotted() {
         const visible = this.isPlayerVisible()
         if (visible) this.enemy.notificationService.switch2ChaseMode()
-        if (visible && !getIsSurvival() && !getProgressValueByNumber('2005')) activateAllProgresses('2005')
         return visible
     }
 

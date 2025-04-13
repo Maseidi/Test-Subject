@@ -123,7 +123,7 @@ export const endChaos = () => {
     updateShop()
     getPlayingMusic()?.pause()
     playPeaceMusic()
-    notifyPlayerOfStashAndShopAndPC();
+    notifyPlayerOfStashAndShopAndPC()
 }
 
 const animateDrop = (interactable, index) => {
@@ -184,7 +184,7 @@ const notifyPlayerOfStashAndShopAndPC = () => {
             Progress.builder().setRenderProgress('9999999999'),
         ),
     )
-    activateAllProgresses('99999979997')
+    activateAllProgresses('9999999997')
 }
 
 const renderchaosPopup = (type = 'start') => {
