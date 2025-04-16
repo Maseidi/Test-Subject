@@ -59,6 +59,11 @@ export const setPlayingMusic = val => {
 export const getPlayingMusic = () => playingMusic
 
 const playSound = sound => {
+    if (playingSoudEffects.includes(sound)) {
+        sound.currentTime = 0
+        sound.play()
+        return
+    }
     sound.play()
     playingSoudEffects.push(sound)
     sound.addEventListener('ended', () => {
