@@ -1,8 +1,44 @@
-import { getGunUpgradableDetail, isGun } from './gun-details.js'
+import { getGunDetails, getGunUpgradableDetail, isGun } from './gun-details.js'
 import { IS_MOBILE } from './script.js'
 import { getSettings } from './settings.js'
 import { getChaos } from './survival/variables.js'
 import { isThrowable } from './throwable-details.js'
+
+const getWeaponSoundEffects = () => {
+    const result = []
+    for (const weaponName of getGunDetails().keys()) {
+        result.push({
+            weaponName,
+            shoot: new Audio(`./assets/audio/weapon/shoot/${weaponName}.mp3`),
+            reload: new Audio(`./assets/audio/weapon/reload/${weaponName}.mp3`),
+            equip: new Audio(`./assets/audio/weapon/equip/${weaponName}.mp3`),
+        })
+    }
+    return result
+}
+
+const sfx = {
+    footstep: new Audio('./assets/audio/footstep.mp3'),
+    emptyWeapon: new Audio('./assets/audio/empty-weapon.mp3'),
+    explosion: new Audio('./assets/audio/explosion.mp3'),
+    breakCrate: new Audio('./assets/audio/break-crate.mp3'),
+    flashbang: new Audio('./assets/audio/flashbang.mp3'),
+    coinPickup: new Audio('./assets/audio/pickup/coin-pickup.mp3'),
+    ammoPickup: new Audio('./assets/audio/pickup/ammo-pickup.mp3'),
+    gunPickup: new Audio('./assets/audio/pickup/gun-pickup.mp3'),
+    pickup: new Audio('./assets/audio/pickup/pickup.mp3'),
+    trade: new Audio('./assets/audio/ui/trade.mp3'),
+    upgrade: new Audio('./assets/audio/ui/upgrade.mp3'),
+    hover: new Audio('./assets/audio/ui/hover.mp3'),
+    click: new Audio('./assets/audio/ui/click.mp3'),
+    peace: [
+        new Audio('./assets/audio/ui/serenity.mp3'),
+        new Audio('./assets/audio/ui/save.mp3'),
+        new Audio('./assets/audio/ui/stash.mp3'),
+    ],
+    action: new Array(5).fill(null).map((item, index) => new Audio(`./assets/audio/action/action-${index + 1}.mp3`)),
+    weapons: getWeaponSoundEffects(),
+}
 
 let playingSoudEffects = []
 export const setPlayingSoundEffects = val => {
@@ -31,79 +67,73 @@ const playSound = sound => {
 }
 
 export const playFootstep = () => {
-    const footstep = new Audio('./assets/audio/footstep.mp3')
-    footstep.volume = getSettings().audio.sound
-    playSound(footstep)
+    sfx.footstep.volume = getSettings().audio.sound
+    playSound(sfx.footstep)
 }
 
-export const playEmptyWeapon = () => {
-    const empty = new Audio('./assets/audio/empty-weapon.mp3')
-    playSound(empty)
-}
+export const playEmptyWeapon = () => playSound(sfx.emptyWeapon)
 
 export const playGunShot = name => {
-    const gunShot = new Audio(`./assets/audio/weapon/shoot/${name}.mp3`)
+    const gunShot = sfx.weapons.find(item => item.weaponName === name).shoot
     gunShot.volume = getSettings().audio.sound
     playSound(gunShot)
 }
 
 export const playReload = equipped => {
     const reloadSpeed = getGunUpgradableDetail(equipped.name, 'reloadspeed', equipped.reloadspeedlvl)
-    const gunShot = new Audio(`./assets/audio/weapon/reload/${equipped.name}.mp3`)
-    gunShot.volume = getSettings().audio.sound
-    gunShot.preload = 'metadata'
-    gunShot.onloadedmetadata = () => {
-        const scaledRate = gunShot.duration / reloadSpeed
-        gunShot.playbackRate = scaledRate < 0.5 ? gunShot.duration : scaledRate
+    const reload = sfx.weapons.find(item => item.weaponName === equipped.name).reload
+    reload.volume = getSettings().audio.sound
+    reload.preload = 'metadata'
+    reload.onloadedmetadata = () => {
+        const scaledRate = reload.duration / reloadSpeed
+        reload.playbackRate = scaledRate < 0.5 ? reload.duration : scaledRate
     }
-    playSound(gunShot)
+    playSound(reload)
 }
 
 export const playEquip = name => {
     if (isThrowable(name)) return
-    const gunShot = new Audio(`./assets/audio/weapon/equip/${name}.mp3`)
-    setPlayingEquipSoundEffect(gunShot)
-    gunShot.volume = getSettings().audio.sound
-    playSound(gunShot)
+    const equip = sfx.weapons.find(item => item.weaponName === name).equip
+    setPlayingEquipSoundEffect(equip)
+    equip.volume = getSettings().audio.sound
+    playSound(equip)
 }
 
 export const playExplosion = () => {
-    const explosion = new Audio('./assets/audio/explosion.mp3')
-    explosion.volume = getSettings().audio.sound
-    playSound(explosion)
+    sfx.explosion.volume = getSettings().audio.sound
+    playSound(sfx.explosion)
 }
 
 export const playFlashbang = () => {
-    const flashbang = new Audio('./assets/audio/flashbang.mp3')
+    const flashbang = sfx.flashbang
     flashbang.currentTime = 1.5
     flashbang.volume = getSettings().audio.sound
     playSound(flashbang)
 }
 
 export const playBreakCrate = () => {
-    const breakCrate = new Audio('./assets/audio/break-crate.mp3')
+    const breakCrate = sfx.breakCrate
     breakCrate.volume = getSettings().audio.sound
     playSound(breakCrate)
 }
 
 export const playPickup = name => {
-    if (name === 'coin') var pickup = new Audio('./assets/audio/pickup/coin-pickup.mp3')
-    else if (isGun(name)) var pickup = new Audio('./assets/audio/pickup/gun-pickup.mp3')
-    else if (name.toLowerCase().includes('ammo') || name.toLowerCase() === 'shotgunshells')
-        var pickup = new Audio('./assets/audio/pickup/ammo-pickup.mp3')
-    else var pickup = new Audio('./assets/audio/pickup/pickup.mp3')
+    if (name === 'coin') var pickup = sfx.coinPickup
+    else if (isGun(name)) var pickup = sfx.gunPickup
+    else if (name.toLowerCase().includes('ammo') || name.toLowerCase() === 'shotgunshells') var pickup = sfx.ammoPickup
+    else var pickup = sfx.pickup
     pickup.volume = getSettings().audio.sound
     playSound(pickup)
 }
 
 export const playTrade = () => {
-    const trade = new Audio('./assets/audio/ui/trade.mp3')
+    const trade = sfx.trade
     trade.volume = getSettings().audio.sound
     trade.play()
 }
 
 export const playUpgrade = () => {
-    const upgrade = new Audio('./assets/audio/ui/upgrade.mp3')
+    const upgrade = sfx.upgrade
     upgrade.volume = getSettings().audio.sound
     upgrade.play()
 }
@@ -111,14 +141,14 @@ export const playUpgrade = () => {
 export const addHoverSoundEffect = element => {
     if (IS_MOBILE) return
     element.addEventListener('mouseenter', () => {
-        const hover = new Audio('./assets/audio/ui/hover.mp3')
+        const hover = sfx.hover
         hover.volume = getSettings().audio.ui
         hover.play()
     })
 }
 
 export const playClickSoundEffect = () => {
-    const click = new Audio('./assets/audio/ui/click.mp3')
+    const click = sfx.click
     click.volume = getSettings().audio.ui
     click.play()
 }
@@ -132,30 +162,20 @@ const addMusicEndEvent = (music, list) => {
     })
 }
 
-const peaceMusicCollection = [
-    new Audio('./assets/audio/ui/serenity.mp3'),
-    new Audio('./assets/audio/ui/save.mp3'),
-    new Audio('./assets/audio/ui/stash.mp3'),
-]
-
-peaceMusicCollection.forEach(music => addMusicEndEvent(music, peaceMusicCollection))
+sfx.peace.forEach(music => addMusicEndEvent(music, sfx.peace))
 
 export const playPeaceMusic = () => {
     if (getChaos() === 0) return
-    const music = peaceMusicCollection.sort(() => Math.random() - 0.5)[0]
+    const music = sfx.peace.sort(() => Math.random() - 0.5)[0]
     music.currentTime = 0
     setPlayingMusic(music)
     playMusic(music)
 }
 
-const actionMusicCollection = new Array(5)
-    .fill(null)
-    .map((item, index) => new Audio(`./assets/audio/action/action-${index + 1}.mp3`))
-
-actionMusicCollection.forEach(music => addMusicEndEvent(music, actionMusicCollection))
+sfx.action.forEach(music => addMusicEndEvent(music, sfx.action))
 
 export const playActionMusic = () => {
-    const music = actionMusicCollection.sort(() => Math.random() - 0.5)[0]
+    const music = sfx.action.sort(() => Math.random() - 0.5)[0]
     music.currentTime = 0
     setPlayingMusic(music)
     playMusic(music)
@@ -166,6 +186,6 @@ const playMusic = music => {
     music.play()
 }
 
-export const isPeaceMusicPlaying = () => peaceMusicCollection.includes(playingMusic)
+export const isPeaceMusicPlaying = () => sfx.peace.includes(playingMusic)
 
-export const isActionMusicPlaying = () => actionMusicCollection.includes(playingMusic)
+export const isActionMusicPlaying = () => sfx.action.includes(playingMusic)
