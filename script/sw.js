@@ -6,73 +6,6 @@ self.addEventListener('install', event => {
             return cache.addAll([
                 '/',
                 '/index.html',
-                '/assets/audio',
-                '/assets/audio/action/action-1.mp3',
-                '/assets/audio/action/action-2.mp3',
-                '/assets/audio/action/action-3.mp3',
-                '/assets/audio/action/action-4.mp3',
-                '/assets/audio/action/action-5.mp3',
-                '/assets/audio/break-crate.mp3',
-                '/assets/audio/empty-weapon.mp3',
-                '/assets/audio/explosion.mp3',
-                '/assets/audio/flashbang.mp3',
-                '/assets/audio/footstep.mp3',
-                '/assets/audio/pickup/ammo-pickup.mp3',
-                '/assets/audio/pickup/coin-pickup.mp3',
-                '/assets/audio/pickup/gun-pickup.mp3',
-                '/assets/audio/pickup/pickup.mp3',
-                '/assets/audio/ui/click.mp3',
-                '/assets/audio/ui/hover.mp3',
-                '/assets/audio/ui/save.mp3',
-                '/assets/audio/ui/serenity.mp3',
-                '/assets/audio/ui/stash.mp3',
-                '/assets/audio/ui/trade.mp3',
-                '/assets/audio/ui/upgrade.mp3',
-                '/assets/audio/weapon/equip/arcticwarfare.mp3',
-                '/assets/audio/weapon/equip/benellim4.mp3',
-                '/assets/audio/weapon/equip/glock.mp3',
-                '/assets/audio/weapon/equip/m1911.mp3',
-                '/assets/audio/weapon/equip/mauser.mp3',
-                '/assets/audio/weapon/equip/mp5k.mp3',
-                '/assets/audio/weapon/equip/p90.mp3',
-                '/assets/audio/weapon/equip/parkerhalem85.mp3',
-                '/assets/audio/weapon/equip/ppsh.mp3',
-                '/assets/audio/weapon/equip/remington1858.mp3',
-                '/assets/audio/weapon/equip/remington870.mp3',
-                '/assets/audio/weapon/equip/revolver.mp3',
-                '/assets/audio/weapon/equip/spas.mp3',
-                '/assets/audio/weapon/equip/steyrssg69.mp3',
-                '/assets/audio/weapon/equip/uzi.mp3',
-                '/assets/audio/weapon/reload/arcticwarfare.mp3',
-                '/assets/audio/weapon/reload/benellim4.mp3',
-                '/assets/audio/weapon/reload/glock.mp3',
-                '/assets/audio/weapon/reload/m1911.mp3',
-                '/assets/audio/weapon/reload/mauser.mp3',
-                '/assets/audio/weapon/reload/mp5k.mp3',
-                '/assets/audio/weapon/reload/p90.mp3',
-                '/assets/audio/weapon/reload/parkerhalem85.mp3',
-                '/assets/audio/weapon/reload/ppsh.mp3',
-                '/assets/audio/weapon/reload/remington1858.mp3',
-                '/assets/audio/weapon/reload/remington870.mp3',
-                '/assets/audio/weapon/reload/revolver.mp3',
-                '/assets/audio/weapon/reload/spas.mp3',
-                '/assets/audio/weapon/reload/steyrssg69.mp3',
-                '/assets/audio/weapon/reload/uzi.mp3',
-                '/assets/audio/weapon/shoot/arcticwarfare.mp3',
-                '/assets/audio/weapon/shoot/benellim4.mp3',
-                '/assets/audio/weapon/shoot/glock.mp3',
-                '/assets/audio/weapon/shoot/m1911.mp3',
-                '/assets/audio/weapon/shoot/mauser.mp3',
-                '/assets/audio/weapon/shoot/mp5k.mp3',
-                '/assets/audio/weapon/shoot/p90.mp3',
-                '/assets/audio/weapon/shoot/parkerhalem85.mp3',
-                '/assets/audio/weapon/shoot/ppsh.mp3',
-                '/assets/audio/weapon/shoot/remington1858.mp3',
-                '/assets/audio/weapon/shoot/remington870.mp3',
-                '/assets/audio/weapon/shoot/revolver.mp3',
-                '/assets/audio/weapon/shoot/spas.mp3',
-                '/assets/audio/weapon/shoot/steyrssg69.mp3',
-                '/assets/audio/weapon/shoot/uzi.mp3',
                 '/assets/fonts/JosefinSlab.ttf',
                 '/assets/fonts/kalam.ttf',
                 '/assets/images/adrenaline.png',
@@ -319,48 +252,18 @@ self.addEventListener('install', e => {
 })
 
 self.addEventListener('fetch', e => {
-    if (e.request.url.includes('mp3')) {
-        // MP3 caching strategy: Cache First, then Network
-        e.respondWith(
-            (async () => {
-                // First try to get the resource from cache
-                const cachedResponse = await caches.match(e.request)
-                if (cachedResponse) {
-                    return cachedResponse
-                }
-
-                try {
-                    // If not in cache, fetch from network
-                    const networkResponse = await fetch(e.request)
-
-                    // Cache the response for future use
-                    const cache = await caches.open(VERSION)
-                    await cache.put(e.request, networkResponse.clone())
-
-                    return networkResponse
-                } catch (error) {
-                    // If network fails, you might want to return a fallback response
-                    return new Response('', {
-                        status: 404,
-                        statusText: 'Audio not available offline',
-                    })
-                }
-            })(),
-        )
-    } else {
-        e.respondWith(
-            (async () => {
-                const r = await caches.match(e.request)
-                if (r) {
-                    return r
-                }
-                const response = await fetch(e.request)
-                const cache = await caches.open(VERSION)
-                cache.put(e.request, response.clone())
-                return response
-            })(),
-        )
-    }
+    e.respondWith(
+        (async () => {
+            const r = await caches.match(e.request)
+            if (r) {
+                return r
+            }
+            const response = await fetch(e.request)
+            const cache = await caches.open(VERSION)
+            cache.put(e.request, response.clone())
+            return response
+        })(),
+    )
 })
 
 self.addEventListener('activate', e => {

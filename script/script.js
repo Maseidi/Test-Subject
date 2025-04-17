@@ -1,5 +1,6 @@
 import { renderMainMenu } from './main-menu.js'
 import { getDefaultSettings, setSettings } from './settings.js'
+import { cacheAllAudio, retrieveAllAudio } from './sound-manager.js'
 
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('./script/sw.js')
@@ -26,4 +27,6 @@ window.addEventListener('contextmenu', e => e.preventDefault())
 history.pushState({}, '')
 window.addEventListener('popstate', () => history.pushState({}, ''))
 
+cacheAllAudio()
+retrieveAllAudio()
 renderMainMenu()
