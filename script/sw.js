@@ -1,4 +1,4 @@
-const VERSION = 'v1'
+const VERSION = '1.0.0'
 
 self.addEventListener('install', event => {
     event.waitUntil(
@@ -319,18 +319,48 @@ self.addEventListener('install', e => {
 })
 
 self.addEventListener('fetch', e => {
-    e.respondWith(
-        (async () => {
-            const r = await caches.match(e.request)
-            if (r) {
-                return r
-            }
-            const response = await fetch(e.request)
-            const cache = await caches.open(VERSION)
-            cache.put(e.request, response.clone())
-            return response
-        })(),
-    )
+    if (e.request.url.includes('mp3')) {
+        // MP3 caching strategy: Cache First, then Network
+        e.respondWith(
+            (async () => {
+                // First try to get the resource from cache
+                const cachedResponse = await caches.match(e.request)
+                if (cachedResponse) {
+                    return cachedResponse
+                }
+
+                try {
+                    // If not in cache, fetch from network
+                    const networkResponse = await fetch(e.request)
+
+                    // Cache the response for future use
+                    const cache = await caches.open(VERSION)
+                    await cache.put(e.request, networkResponse.clone())
+
+                    return networkResponse
+                } catch (error) {
+                    // If network fails, you might want to return a fallback response
+                    return new Response('', {
+                        status: 404,
+                        statusText: 'Audio not available offline',
+                    })
+                }
+            })(),
+        )
+    } else {
+        e.respondWith(
+            (async () => {
+                const r = await caches.match(e.request)
+                if (r) {
+                    return r
+                }
+                const response = await fetch(e.request)
+                const cache = await caches.open(VERSION)
+                cache.put(e.request, response.clone())
+                return response
+            })(),
+        )
+    }
 })
 
 self.addEventListener('activate', e => {
