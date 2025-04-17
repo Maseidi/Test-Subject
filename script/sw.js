@@ -309,6 +309,15 @@ self.addEventListener('install', event => {
     )
 })
 
+self.addEventListener('install', e => {
+    e.waitUntil(
+        (async () => {
+            const cache = await caches.open(cacheName)
+            await cache.addAll(contentToCache)
+        })(),
+    )
+})
+
 self.addEventListener('fetch', e => {
     e.respondWith(
         (async () => {
