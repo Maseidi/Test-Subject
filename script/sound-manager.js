@@ -59,9 +59,13 @@ export const setPlayingMusic = val => {
 export const getPlayingMusic = () => playingMusic
 
 const playSound = sound => {
-    if (playingSoudEffects.includes(sound)) {
-        sound.currentTime = 0
-        sound.play()
+    if (!sound.paused) {
+        const clone = sound.cloneNode()
+        clone.play()
+        playingSoudEffects.push(clone)
+        clone.addEventListener('ended', () => {
+            playingSoudEffects = playingSoudEffects.filter(effect => effect !== clone)
+        })
         return
     }
     sound.play()
