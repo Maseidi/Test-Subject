@@ -100,11 +100,14 @@ export const retrieveAllAudio = async () => {
             await getCachedAudio('./assets/audio/ui/save.mp3'),
             await getCachedAudio('./assets/audio/ui/stash.mp3'),
         ],
-        action: new Array(5)
-            .fill(null)
-            .map(async (item, index) => await getCachedAudio(`./assets/audio/action/action-${index + 1}.mp3`)),
-        weapons: getWeaponSoundEffects(),
+        action: await Promise.all(
+            new Array(5)
+                .fill(null)
+                .map((item, index) => getCachedAudio(`./assets/audio/action/action-${index + 1}.mp3`)),
+        ),
+        weapons: await getWeaponSoundEffects(),
     }
+
     sfx.peace.forEach(music => addMusicEndEvent(music, sfx.peace))
     sfx.action.forEach(music => addMusicEndEvent(music, sfx.action))
 }
@@ -166,15 +169,7 @@ export const setPlayingMusic = val => {
 export const getPlayingMusic = () => playingMusic
 
 const playSound = sound => {
-    if (!sound.paused) {
-        const clone = sound.cloneNode()
-        clone.play()
-        playingSoudEffects.push(clone)
-        clone.addEventListener('ended', () => {
-            playingSoudEffects = playingSoudEffects.filter(effect => effect !== clone)
-        })
-        return
-    }
+    sound.volume = getSettings().audio.sound
     sound.play()
     playingSoudEffects.push(sound)
     sound.addEventListener('ended', () => {
@@ -182,23 +177,18 @@ const playSound = sound => {
     })
 }
 
-export const playFootstep = () => {
-    sfx.footstep.volume = getSettings().audio.sound
-    playSound(sfx.footstep)
-}
+export const playFootstep = () => playSound(sfx.footstep)
 
 export const playEmptyWeapon = () => playSound(sfx.emptyWeapon)
 
 export const playGunShot = name => {
     const gunShot = sfx.weapons.find(item => item.weaponName === name).shoot
-    gunShot.volume = getSettings().audio.sound
     playSound(gunShot)
 }
 
 export const playReload = equipped => {
     const reloadSpeed = getGunUpgradableDetail(equipped.name, 'reloadspeed', equipped.reloadspeedlvl)
     const reload = sfx.weapons.find(item => item.weaponName === equipped.name).reload
-    reload.volume = getSettings().audio.sound
     reload.preload = 'metadata'
     reload.onloadedmetadata = () => {
         const scaledRate = reload.duration / reloadSpeed
@@ -211,25 +201,19 @@ export const playEquip = name => {
     if (isThrowable(name)) return
     const equip = sfx.weapons.find(item => item.weaponName === name).equip
     setPlayingEquipSoundEffect(equip)
-    equip.volume = getSettings().audio.sound
     playSound(equip)
 }
 
-export const playExplosion = () => {
-    sfx.explosion.volume = getSettings().audio.sound
-    playSound(sfx.explosion)
-}
+export const playExplosion = () => playSound(sfx.explosion)
 
 export const playFlashbang = () => {
     const flashbang = sfx.flashbang
     flashbang.currentTime = 1.5
-    flashbang.volume = getSettings().audio.sound
     playSound(flashbang)
 }
 
 export const playBreakCrate = () => {
     const breakCrate = sfx.breakCrate
-    breakCrate.volume = getSettings().audio.sound
     playSound(breakCrate)
 }
 
@@ -238,7 +222,6 @@ export const playPickup = name => {
     else if (isGun(name)) var pickup = sfx.gunPickup
     else if (name.toLowerCase().includes('ammo') || name.toLowerCase() === 'shotgunshells') var pickup = sfx.ammoPickup
     else var pickup = sfx.pickup
-    pickup.volume = getSettings().audio.sound
     playSound(pickup)
 }
 
@@ -259,6 +242,8 @@ export const addHoverSoundEffect = element => {
     element.addEventListener('mouseenter', () => {
         const hover = sfx.hover
         hover.volume = getSettings().audio.ui
+        hover.currentTime = 0
+        hover.pause = true
         hover.play()
     })
 }
@@ -266,6 +251,8 @@ export const addHoverSoundEffect = element => {
 export const playClickSoundEffect = () => {
     const click = sfx.click
     click.volume = getSettings().audio.ui
+    click.currentTime = 0
+    click.pause = true
     click.play()
 }
 
