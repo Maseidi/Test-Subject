@@ -4,151 +4,54 @@ import { getSettings } from './settings.js'
 import { getChaos } from './survival/variables.js'
 import { isThrowable } from './throwable-details.js'
 
-export const cacheAllAudio = () => {
-    cacheAudioFile('./assets/audio/footstep.mp3')
-    cacheAudioFile('./assets/audio/empty-weapon.mp3')
-    cacheAudioFile('./assets/audio/explosion.mp3')
-    cacheAudioFile('./assets/audio/break-crate.mp3')
-    cacheAudioFile('./assets/audio/flashbang.mp3')
-    cacheAudioFile('./assets/audio/pickup/coin-pickup.mp3')
-    cacheAudioFile('./assets/audio/pickup/ammo-pickup.mp3')
-    cacheAudioFile('./assets/audio/pickup/gun-pickup.mp3')
-    cacheAudioFile('./assets/audio/pickup/pickup.mp3')
-    cacheAudioFile('./assets/audio/ui/trade.mp3')
-    cacheAudioFile('./assets/audio/ui/upgrade.mp3')
-    cacheAudioFile('./assets/audio/ui/hover.mp3')
-    cacheAudioFile('./assets/audio/ui/click.mp3')
-    cacheAudioFile('./assets/audio/ui/serenity.mp3')
-    cacheAudioFile('./assets/audio/ui/save.mp3')
-    cacheAudioFile('./assets/audio/ui/stash.mp3')
-    new Array(5).fill(null).map((item, index) => cacheAudioFile(`./assets/audio/action/action-${index + 1}.mp3`))
-    cacheWeaponSoundEffects()
-}
-
-const cacheWeaponSoundEffects = () => {
-    for (const weaponName of getGunDetails().keys()) {
-        cacheAudioFile(`./assets/audio/weapon/shoot/${weaponName}.mp3`)
-        cacheAudioFile(`./assets/audio/weapon/reload/${weaponName}.mp3`)
-        cacheAudioFile(`./assets/audio/weapon/equip/${weaponName}.mp3`)
-    }
-}
-
-async function cacheAudioFile(audioUrl, dbName = 'audioCache', storeName = 'audioFiles') {
-    // Fetch the actual file data
-    const response = await fetch(audioUrl)
-    const audioBlob = await response.blob() // This gets the actual binary data
-
-    // Open IndexedDB
-    return new Promise((resolve, reject) => {
-        const request = indexedDB.open(dbName, 1)
-
-        request.onupgradeneeded = event => {
-            const db = event.target.result
-            if (!db.objectStoreNames.contains(storeName)) {
-                db.createObjectStore(storeName)
-            }
-        }
-
-        request.onsuccess = event => {
-            const db = event.target.result
-            const transaction = db.transaction(storeName, 'readwrite')
-            const store = transaction.objectStore(storeName)
-
-            // Store the actual Blob (file data)
-            const putRequest = store.put(audioBlob, audioUrl) // Using URL as key
-
-            putRequest.onsuccess = () => resolve()
-            putRequest.onerror = e => reject(e)
-        }
-
-        request.onerror = event => reject(event.target.error)
-    })
-}
-
-const getWeaponSoundEffects = async () => {
+const getWeaponSoundEffects = () => {
     const result = []
     for (const weaponName of getGunDetails().keys()) {
         result.push({
             weaponName,
-            shoot: await getCachedAudio(`./assets/audio/weapon/shoot/${weaponName}.mp3`),
-            reload: await getCachedAudio(`./assets/audio/weapon/reload/${weaponName}.mp3`),
-            equip: await getCachedAudio(`./assets/audio/weapon/equip/${weaponName}.mp3`),
+            shoot: new Audio(`./assets/audio/weapon/shoot/${weaponName}.mp3`),
+            reload: new Audio(`./assets/audio/weapon/reload/${weaponName}.mp3`),
+            equip: new Audio(`./assets/audio/weapon/equip/${weaponName}.mp3`),
         })
     }
     return result
 }
 
-let sfx
-
-export const retrieveAllAudio = async () => {
-    sfx = {
-        footstep: await getCachedAudio('./assets/audio/footstep.mp3'),
-        emptyWeapon: await getCachedAudio('./assets/audio/empty-weapon.mp3'),
-        explosion: await getCachedAudio('./assets/audio/explosion.mp3'),
-        breakCrate: await getCachedAudio('./assets/audio/break-crate.mp3'),
-        flashbang: await getCachedAudio('./assets/audio/flashbang.mp3'),
-        coinPickup: await getCachedAudio('./assets/audio/pickup/coin-pickup.mp3'),
-        ammoPickup: await getCachedAudio('./assets/audio/pickup/ammo-pickup.mp3'),
-        gunPickup: await getCachedAudio('./assets/audio/pickup/gun-pickup.mp3'),
-        pickup: await getCachedAudio('./assets/audio/pickup/pickup.mp3'),
-        trade: await getCachedAudio('./assets/audio/ui/trade.mp3'),
-        upgrade: await getCachedAudio('./assets/audio/ui/upgrade.mp3'),
-        hover: await getCachedAudio('./assets/audio/ui/hover.mp3'),
-        click: await getCachedAudio('./assets/audio/ui/click.mp3'),
-        peace: [
-            await getCachedAudio('./assets/audio/ui/serenity.mp3'),
-            await getCachedAudio('./assets/audio/ui/save.mp3'),
-            await getCachedAudio('./assets/audio/ui/stash.mp3'),
-        ],
-        action: await Promise.all(
-            new Array(5)
-                .fill(null)
-                .map((item, index) => getCachedAudio(`./assets/audio/action/action-${index + 1}.mp3`)),
-        ),
-        weapons: await getWeaponSoundEffects(),
-    }
-
-    sfx.peace.forEach(music => addMusicEndEvent(music, sfx.peace))
-    sfx.action.forEach(music => addMusicEndEvent(music, sfx.action))
+const sfx = {
+    footstep: new Audio('./assets/audio/footstep.mp3'),
+    emptyWeapon: new Audio('./assets/audio/empty-weapon.mp3'),
+    explosion: new Audio('./assets/audio/explosion.mp3'),
+    breakCrate: new Audio('./assets/audio/break-crate.mp3'),
+    flashbang: new Audio('./assets/audio/flashbang.mp3'),
+    coinPickup: new Audio('./assets/audio/pickup/coin-pickup.mp3'),
+    ammoPickup: new Audio('./assets/audio/pickup/ammo-pickup.mp3'),
+    gunPickup: new Audio('./assets/audio/pickup/gun-pickup.mp3'),
+    pickup: new Audio('./assets/audio/pickup/pickup.mp3'),
+    trade: new Audio('./assets/audio/ui/trade.mp3'),
+    upgrade: new Audio('./assets/audio/ui/upgrade.mp3'),
+    hover: new Audio('./assets/audio/ui/hover.mp3'),
+    click: new Audio('./assets/audio/ui/click.mp3'),
+    peace: [
+        new Audio('./assets/audio/ui/serenity.mp3'),
+        new Audio('./assets/audio/ui/save.mp3'),
+        new Audio('./assets/audio/ui/stash.mp3'),
+    ],
+    action: new Array(5).fill(null).map((item, index) => new Audio(`./assets/audio/action/action-${index + 1}.mp3`)),
+    weapons: getWeaponSoundEffects(),
 }
 
-async function getCachedAudio(audioUrl, dbName = 'audioCache', storeName = 'audioFiles') {
-    return new Promise((resolve, reject) => {
-        const request = indexedDB.open(dbName)
-
-        request.onsuccess = event => {
-            const db = event.target.result
-            const transaction = db.transaction(storeName, 'readonly')
-            const store = transaction.objectStore(storeName)
-            const getRequest = store.get(audioUrl)
-
-            getRequest.onsuccess = event => {
-                const audioBlob = event.target.result
-                if (!audioBlob) {
-                    reject(new Error('Audio not in cache'))
-                    return
-                }
-
-                // Create object URL from the Blob
-                const audioObjectUrl = URL.createObjectURL(audioBlob)
-
-                // Create Audio object
-                const audio = new Audio(audioObjectUrl)
-
-                // Clean up the object URL when the audio is loaded
-                audio.onloadeddata = () => {
-                    URL.revokeObjectURL(audioObjectUrl)
-                }
-
-                resolve(audio)
-            }
-
-            getRequest.onerror = event => reject(event.target.error)
-        }
-
-        request.onerror = event => reject(event.target.error)
+const addMusicEndEvent = (music, list) => {
+    music.addEventListener('ended', () => {
+        const newMusic = list.sort(() => Math.random() - 0.5)[0]
+        newMusic.currentTime = 0
+        setPlayingMusic(newMusic)
+        playMusic(newMusic)
     })
 }
+
+sfx.action.forEach(music => addMusicEndEvent(music, sfx.action))
+
+sfx.peace.forEach(music => addMusicEndEvent(music, sfx.peace))
 
 let playingSoudEffects = []
 export const setPlayingSoundEffects = val => {
@@ -169,11 +72,12 @@ export const setPlayingMusic = val => {
 export const getPlayingMusic = () => playingMusic
 
 const playSound = sound => {
-    sound.volume = getSettings().audio.sound
-    sound.play()
-    playingSoudEffects.push(sound)
-    sound.addEventListener('ended', () => {
-        playingSoudEffects = playingSoudEffects.filter(effect => effect !== sound)
+    const clone = sound.cloneNode()
+    clone.volume = getSettings().audio.sound
+    clone.play()
+    playingSoudEffects.push(clone)
+    clone.addEventListener('ended', () => {
+        playingSoudEffects = playingSoudEffects.filter(effect => effect !== clone)
     })
 }
 
@@ -181,10 +85,7 @@ export const playFootstep = () => playSound(sfx.footstep)
 
 export const playEmptyWeapon = () => playSound(sfx.emptyWeapon)
 
-export const playGunShot = name => {
-    const gunShot = sfx.weapons.find(item => item.weaponName === name).shoot
-    playSound(gunShot)
-}
+export const playGunShot = name => playSound(sfx.weapons.find(item => item.weaponName === name).shoot)
 
 export const playReload = equipped => {
     const reloadSpeed = getGunUpgradableDetail(equipped.name, 'reloadspeed', equipped.reloadspeedlvl)
@@ -199,6 +100,10 @@ export const playReload = equipped => {
 
 export const playEquip = name => {
     if (isThrowable(name)) return
+    if (getPlayingEquipSoundEffect()) {
+        getPlayingEquipSoundEffect().pause()
+        setPlayingSoundEffects(getPlayingSoundEffects().filter(effect => effect !== getPlayingEquipSoundEffect()))
+    }
     const equip = sfx.weapons.find(item => item.weaponName === name).equip
     setPlayingEquipSoundEffect(equip)
     playSound(equip)
@@ -207,15 +112,11 @@ export const playEquip = name => {
 export const playExplosion = () => playSound(sfx.explosion)
 
 export const playFlashbang = () => {
-    const flashbang = sfx.flashbang
-    flashbang.currentTime = 1.5
-    playSound(flashbang)
+    sfx.flashbang.currentTime = 1.5
+    playSound(sfx.flashbang)
 }
 
-export const playBreakCrate = () => {
-    const breakCrate = sfx.breakCrate
-    playSound(breakCrate)
-}
+export const playBreakCrate = () => playSound(sfx.breakCrate)
 
 export const playPickup = name => {
     if (name === 'coin') var pickup = sfx.coinPickup
@@ -242,8 +143,8 @@ export const addHoverSoundEffect = element => {
     element.addEventListener('mouseenter', () => {
         const hover = sfx.hover
         hover.volume = getSettings().audio.ui
+        hover.pause()
         hover.currentTime = 0
-        hover.pause = true
         hover.play()
     })
 }
@@ -251,18 +152,9 @@ export const addHoverSoundEffect = element => {
 export const playClickSoundEffect = () => {
     const click = sfx.click
     click.volume = getSettings().audio.ui
+    click.pause()
     click.currentTime = 0
-    click.pause = true
     click.play()
-}
-
-const addMusicEndEvent = (music, list) => {
-    music.addEventListener('ended', () => {
-        const newMusic = list.sort(() => Math.random() - 0.5)[0]
-        newMusic.currentTime = 0
-        setPlayingMusic(newMusic)
-        playMusic(newMusic)
-    })
 }
 
 export const playPeaceMusic = () => {

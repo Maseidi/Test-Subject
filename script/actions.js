@@ -40,14 +40,7 @@ import { renderPauseMenu } from './pause-menu.js'
 import { damagePlayer, findHealtStatusChildByClassName, heal } from './player-health.js'
 import { activateAllProgresses, deactivateAllProgresses, getProgress } from './progress-manager.js'
 import { IS_MOBILE } from './script.js'
-import {
-    getPlayingEquipSoundEffect,
-    getPlayingMusic,
-    getPlayingSoundEffects,
-    playEquip,
-    playPickup,
-    setPlayingSoundEffects,
-} from './sound-manager.js'
+import { getPlayingMusic, getPlayingSoundEffects, playEquip, playPickup } from './sound-manager.js'
 import { centralizePlayer } from './startup.js'
 import { renderStash } from './stash.js'
 import { startChaos } from './survival/chaos-manager.js'
@@ -210,8 +203,6 @@ export const weaponSlotDown = key => {
     if (getPause() || getReloading() || getShooting() || getGrabbed()) return
     const newId = getWeaponWheel()[Number(key) - 1]
     if (getEquippedWeaponId() === newId) return
-    getPlayingEquipSoundEffect()?.pause()
-    setPlayingSoundEffects(getPlayingSoundEffects().filter(effect => effect !== getPlayingEquipSoundEffect()))
     removeEquipped()
     equipWeapon(newId)
     getReloadButton()?.remove()

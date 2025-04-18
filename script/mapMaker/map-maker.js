@@ -37,7 +37,14 @@ import {
     getMapWithArrayValuesByKey,
     removeClass,
 } from '../util.js'
-import { getDifficulty, setCurrentRoomId, setDifficulty, setPlayerAngle, setRoundsFinished } from '../variables.js'
+import {
+    getDifficulty,
+    setCurrentRoomId,
+    setDifficulty,
+    setIsSurvival,
+    setPlayerAngle,
+    setRoundsFinished,
+} from '../variables.js'
 import { Wall } from '../wall.js'
 import { renderDialogueAttributes } from './attributes/dialogue.js'
 import { renderEnemyAttributes } from './attributes/enemy/enemy.js'
@@ -83,6 +90,7 @@ export let pauseFn = null
 export const renderMapMaker = () => {
     renderPauseContainer()
     setRoundsFinished(0)
+    setIsSurvival(false)
     const root = document.getElementById('root')
     const mapMakerContainer = createAndAddClass('div', 'map-maker-container')
     const mapMakerContents = createAndAddClass('div', 'map-maker-contents')
