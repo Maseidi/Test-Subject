@@ -605,21 +605,29 @@ const renderSell = () => {
 
 const getSurvivalItems = () => {
     const result = []
-    getInventory()
+    const filteredInventory = getInventory()
         .flat()
-        .filter(item => item && item !== 'empty' && item !== 'locked')
-        .forEach(item => {
-            let amount = item.amount
-            getStash().forEach(stashItem => {
-                if (item.name === stashItem.name) amount += stashItem.amount
-            })
-            const packsize = MAX_PACKSIZE[item.name]
-            while (amount >= packsize) {
-                amount -= packsize
-                result.push({ ...item, amount: packsize })
-            }
-            if (isGun(item.name)) result.push(item)
+        .filter(item => item && item !== 'empty' && item !== 'locked' && item !== 'taken')
+
+    filteredInventory.forEach(item => {
+        if (result.find(resultItem => resultItem.name === item.name)) return
+        if (isGun(item.name)) {
+            result.push(item)
+            return
+        }
+        let amount = filteredInventory
+            .filter(elem => elem.name === item.name)
+            .reduce((prev, curr) => prev + curr.amount, 0)
+
+        getStash().forEach(stashItem => {
+            if (item.name === stashItem.name) amount += stashItem.amount
         })
+        const packsize = MAX_PACKSIZE[item.name]
+        while (amount >= packsize) {
+            amount -= packsize
+            result.push({ ...item, amount: packsize })
+        }
+    })
 
     getStash().forEach(item => {
         if (result.find(resultItem => resultItem.name === item.name)) return

@@ -5,7 +5,9 @@ if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('./script/sw.js')
 }
 
-for (let i = 0; i < 10; i++) if (!localStorage.getItem(`slot-${i + 1}`)) localStorage.setItem(`slot-${i + 1}`, 'empty')
+for (let i = 0; i < 10; i++) {
+    if (!localStorage.getItem(`slot-${i + 1}`)) localStorage.setItem(`slot-${i + 1}`, 'empty')
+}
 
 for (let i = 0; i < 5; i++)
     if (!localStorage.getItem(`map-slot-${i + 1}`)) localStorage.setItem(`map-slot-${i + 1}`, 'empty')
@@ -13,8 +15,7 @@ for (let i = 0; i < 5; i++)
 for (let i = 0; i < 10; i++)
     if (!localStorage.getItem(`survival-slot-${i + 1}`)) localStorage.setItem(`survival-slot-${i + 1}`, 'empty')
 
-export const IS_MOBILE =
-    navigator.userAgent.toLowerCase().includes('android') || navigator.userAgent.toLowerCase().includes('iphone')
+export const IS_MOBILE = ['android', 'iphone'].includes(navigator.userAgent.toLowerCase())
 
 if (localStorage.getItem('settings')) setSettings(JSON.parse(localStorage.getItem('settings')))
 else setSettings(getDefaultSettings())
