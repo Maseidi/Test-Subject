@@ -176,6 +176,10 @@ const handleDoorInteractables = int => {
     handleDoorWithCodeIdealInteraction(int, popup)
     if (containsClass(int, 'open')) removePopup(popup)
     else if (!interactionPredicate(int)) removePopup(popup)
+    else {
+        showPopup(popup)
+        setAsInteractingObject(popup, int)
+    }
 }
 
 const showPopup = popup => (popup.style.display = 'block')
