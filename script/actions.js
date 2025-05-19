@@ -77,6 +77,7 @@ import {
     removeAllClasses,
     removeClass,
     removeEquipped,
+    renderErrorMessage,
     renderShadow,
 } from './util.js'
 import {
@@ -200,7 +201,11 @@ export const exitAim = () => {
 }
 
 export const weaponSlotDown = key => {
-    if (getPause() || getReloading() || getShooting() || getGrabbed()) return
+    if (getReloading()) {
+        renderErrorMessage("Can't switch while reloading")
+        return
+    }
+    if (getPause() || getShooting() || getGrabbed()) return
     const newId = getWeaponWheel()[Number(key) - 1]
     if (getEquippedWeaponId() === newId) return
     removeEquipped()
@@ -407,6 +412,8 @@ const removeUi = () => {
     if (getElementInteractedWith()?.children[1]) getElementInteractedWith().children[1].style.visibility = 'hidden'
     else if (getElementInteractedWith()?.children[0]) getElementInteractedWith().children[0].style.visibility = 'hidden'
     if (document.querySelector('.chaos-container')) document.querySelector('.chaos-container').style.display = 'none'
+    getPlayer().children[1].style.opacity = '0'
+    if (getPlayer().children[2]) getPlayer().children[2].style.visibility = 'hidden'
 }
 
 const gamePlaying = () => {
@@ -450,6 +457,8 @@ const showUi = cause => {
     else if (getElementInteractedWith()?.children[0])
         getElementInteractedWith().children[0].style.visibility = 'visible'
     if (document.querySelector('.chaos-container')) document.querySelector('.chaos-container').style.display = 'block'
+    getPlayer().children[1].style.opacity = '1'
+    if (getPlayer().children[2]) getPlayer().children[2].style.visibility = 'visible'
 }
 
 const resumePlayerActions = () => {
@@ -587,7 +596,10 @@ const manageDragItem = event => {
 
 export const clickDown = event => {
     // left click
-    if (event.button === 0) setShootPressed(true)
+    if (event.button === 0) {
+        setShootPressed(true)
+        if (getReloading() && getAimMode()) renderErrorMessage("Can't shoot while reloading")
+    }
     // right click
     else if (event.button === 2) aimDown()
 }
@@ -650,7 +662,10 @@ export const resizeWindow = () => centralizePlayer()
 
 export const spaceDown = () => {
     if (!getIsSurvival()) return
-    if (getReloading()) return
+    if (getReloading()) {
+        renderErrorMessage("Can't open menu while reloading")
+        return
+    }
     if (getCurrentChaosEnemies() === getCurrentChaosSpawned() && getEnemiseKilled() === getCurrentChaosEnemies()) {
         if (!getPause()) openStash()
         else {

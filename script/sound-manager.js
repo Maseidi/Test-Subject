@@ -71,9 +71,10 @@ export const setPlayingMusic = val => {
 }
 export const getPlayingMusic = () => playingMusic
 
-const playSound = sound => {
+const playSound = (sound, currentTime) => {
     const clone = sound.cloneNode()
     clone.volume = getSettings().audio.sound
+    if (currentTime) clone.currentTime = currentTime
     clone.play()
     playingSoudEffects.push(clone)
     clone.addEventListener('ended', () => {
@@ -91,11 +92,17 @@ export const playReload = equipped => {
     const reloadSpeed = getGunUpgradableDetail(equipped.name, 'reloadspeed', equipped.reloadspeedlvl)
     const reload = sfx.weapons.find(item => item.weaponName === equipped.name).reload
     reload.preload = 'metadata'
-    reload.onloadedmetadata = () => {
-        const scaledRate = reload.duration / reloadSpeed
-        reload.playbackRate = scaledRate < 0.5 ? reload.duration : scaledRate
+    const clone = reload.cloneNode()
+    clone.volume = getSettings().audio.sound
+    clone.onloadedmetadata = () => {
+        const scaledRate = clone.duration / reloadSpeed
+        clone.playbackRate = scaledRate < 0.7 ? reload.duration : scaledRate
     }
-    playSound(reload)
+    clone.play()
+    playingSoudEffects.push(clone)
+    clone.addEventListener('ended', () => {
+        playingSoudEffects = playingSoudEffects.filter(effect => effect !== clone)
+    })
 }
 
 export const playEquip = name => {
@@ -111,10 +118,7 @@ export const playEquip = name => {
 
 export const playExplosion = () => playSound(sfx.explosion)
 
-export const playFlashbang = () => {
-    sfx.flashbang.currentTime = 1.5
-    playSound(sfx.flashbang)
-}
+export const playFlashbang = () => playSound(sfx.flashbang, 1.5)
 
 export const playBreakCrate = () => playSound(sfx.breakCrate)
 

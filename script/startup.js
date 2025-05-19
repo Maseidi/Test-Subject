@@ -126,8 +126,18 @@ export const renderPlayer = () => {
     const playerHead = createAndAddClass('div', 'player-head')
     const rightHand = createAndAddClass('div', 'player-right-hand')
     playerBody.append(leftHand, playerHead, rightHand)
+    player.append(renderLoading())
     setPlayer(player)
     return player
+}
+
+const renderLoading = () => {
+    const loadingContainer = createAndAddClass('div', 'loading-container', 'animation')
+    const loadingBar = document.createElement('div')
+    appendAll(loadingContainer, loadingBar)
+    loadingBar.style.width = '0%'
+    loadingContainer.style.display = 'none'
+    return loadingContainer
 }
 
 export const centralizePlayer = () => {

@@ -155,8 +155,8 @@
     align-items: center;
     text-transform: capitalize;
     animation-duration: 200ms;
-    animation-name: grab-bar-message;
     animation-direction: alternate;
+    animation-name: grab-bar-message;
     animation-iteration-count: infinite;
 }
 

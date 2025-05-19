@@ -263,3 +263,10 @@ export const addSplatter = () => {
 export const getSpeedPerFrame = speed => (speed * 60) / getSettings().display.fps
 
 export const useDeltaTime = time => Math.floor((time / 60) * getSettings().display.fps)
+
+export const renderErrorMessage = text => {
+    if (getPlayer().children[2]) getPlayer().children[2].remove()
+    const message = createAndAddClass('p', 'error-message', 'animation')
+    message.textContent = text
+    getPlayer().append(message)
+}

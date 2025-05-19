@@ -351,3 +351,34 @@
 .left-leg {
     left: 0;
 }
+
+.loading-container {
+    left: 17px;
+    top: -20px;
+    width: 100px;
+    height: 10px;
+    overflow: visible;
+    position: absolute;
+    border: 2px solid black;
+    background-color: darkgrey;
+    transform: skewX(-40deg) translateX(-50%);
+}
+
+.loading-container > div {
+    height: 100%;
+}
+
+.error-message {
+    top: -45px;
+    left: 17px;
+    opacity: 0;
+    color: red;
+    font-size: 12px;
+    width: max-content;
+    position: absolute;
+    letter-spacing: 1px;
+    animation-duration: 1s;
+    transform: translateX(-50%);
+    animation-direction: alternate;
+    animation-name: error-message-animation;
+}

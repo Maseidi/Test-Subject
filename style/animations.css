@@ -402,3 +402,17 @@
         outline: 5px solid transparent;
     }
 }
+
+@keyframes error-message-animation {
+    0% {
+        top: 0;
+        opacity: 0;
+    }
+    50% {
+        top: -45px;
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}

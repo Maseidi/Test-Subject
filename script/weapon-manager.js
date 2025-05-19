@@ -44,11 +44,13 @@ import {
     isMoving,
     isThrowing,
     removeClass,
+    renderErrorMessage,
     useDeltaTime,
 } from './util.js'
 import {
     getAimJoystickAngle,
     getAimMode,
+    getAnimatedElements,
     getCriticalChance,
     getEquippedWeaponId,
     getFoundTarget,
@@ -70,6 +72,7 @@ import {
     getWaitingFunctions,
     getWeaponWheel,
     setAimMode,
+    setAnimatedElements,
     setCriticalChance,
     setEquippedWeaponId,
     setFoundTarget,
@@ -129,9 +132,38 @@ const manageAim = () => {
 
 export const setupReload = () => {
     if (isReloadDisabled()) return
-    if (!getReloading()) playReload(equipped)
-    setReloading(true)
+    if (!getReloading()) {
+        playReload(equipped)
+        displayReloadPopop()
+    }
+    if (!getReloading()) setReloading(true)
     if (getToggleMenuButton()) addClass(getToggleMenuButton(), 'disabled')
+}
+
+const displayReloadPopop = () => {
+    const reloadingContainer = getPlayer().children[1]
+    reloadingContainer.style.display = 'block'
+    const reloadSpeed = getGunUpgradableDetail(equipped.name, 'reloadspeed', equipped.reloadspeedlvl)
+    const reloadBar = reloadingContainer.firstElementChild
+    const animation = reloadBar.animate(
+        [
+            { width: '0%', backgroundColor: 'red' },
+            { backgroundColor: 'orangered' },
+            { backgroundColor: 'orange' },
+            { backgroundColor: 'yellow' },
+            { backgroundColor: 'greenyellow' },
+            { width: '100%', backgroundColor: 'green' },
+        ],
+        {
+            duration: reloadSpeed * 1000,
+            fill: 'forwards',
+        },
+    )
+    setAnimatedElements([...getAnimatedElements(), animation])
+    animation.addEventListener('finish', () => {
+        setAnimatedElements(getAnimatedElements().filter(elem => elem !== animation))
+        reloadingContainer.style.display = 'none'
+    })
 }
 
 export const isReloadDisabled = (local = true) => {
