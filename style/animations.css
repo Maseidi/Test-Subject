@@ -408,7 +408,7 @@
         top: 0;
         opacity: 0;
     }
-    50% {
+    25% {
         top: -45px;
         opacity: 1;
     }

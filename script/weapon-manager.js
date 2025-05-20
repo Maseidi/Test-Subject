@@ -44,7 +44,6 @@ import {
     isMoving,
     isThrowing,
     removeClass,
-    renderErrorMessage,
     useDeltaTime,
 } from './util.js'
 import {
@@ -157,6 +156,7 @@ const displayReloadPopop = () => {
         {
             duration: reloadSpeed * 1000,
             fill: 'forwards',
+            iterations: 1,
         },
     )
     setAnimatedElements([...getAnimatedElements(), animation])
