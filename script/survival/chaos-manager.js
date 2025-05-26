@@ -73,7 +73,7 @@ export const startChaos = () => {
     setCurrentChaosSpawned(0)
     resetRoom()
     renderInteractables()
-    renderchaosPopup()
+    renderChaosPopup()
     getPlayingMusic()?.pause()
     playActionMusic()
     getToggleMenuButton()?.remove()
@@ -118,7 +118,7 @@ export const endChaos = () => {
     renderInteractable(lever)
     renderInteractable(pc)
     setInteractables(new Map([[1, [pc, lever]]]))
-    renderchaosPopup('end')
+    renderChaosPopup('end')
     add2Stash(new Coin(), getChaos() * 5)
     updateShop()
     getPlayingMusic()?.pause()
@@ -187,7 +187,7 @@ const notifyPlayerOfStashAndShopAndPC = () => {
     activateAllProgresses('9999999997')
 }
 
-const renderchaosPopup = (type = 'start') => {
+const renderChaosPopup = (type = 'start') => {
     const lastPopup = document.querySelector('.chaos-container')
     if (lastPopup) lastPopup.remove()
     const container = createAndAddClass('div', 'chaos-container', 'ui-theme')
@@ -250,13 +250,13 @@ const updateShop = () => {
     if (chaos === 20) vendingMachine.push(new ArmorShopItem())
 
     if (getChaos() >= 15) {
-        if (chaos % 10 === 5) vendingMachine.push(new HealthPotionShopItem())
+        if (chaos % 10 === 6 && getAdrenalinesDropped() < 10) vendingMachine.push(new AdrenalineShopItem())
 
-        if (chaos % 10 === 7 && getAdrenalinesDropped() < 10) vendingMachine.push(new AdrenalineShopItem())
+        if (chaos % 10 === 8 && getEnergyDrinksDropped() < 10) vendingMachine.push(new EnergyDrinkShopItem())
 
-        if (chaos % 10 === 9 && getEnergyDrinksDropped() < 10) vendingMachine.push(new EnergyDrinkShopItem())
+        if (chaos % 10 === 0) vendingMachine.push(new HealthPotionShopItem())
 
-        if (chaos % 10 === 1 && getLuckPillsDropped() < 10) vendingMachine.push(new LuckPillsShopItem())
+        if (chaos % 10 === 2 && getLuckPillsDropped() < 10) vendingMachine.push(new LuckPillsShopItem())
     }
 
     addWeapon2Shop()
