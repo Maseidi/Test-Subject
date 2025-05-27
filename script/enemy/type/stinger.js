@@ -25,7 +25,7 @@ export class Stinger extends AbstractEnemy {
     constructor(level, waypoint, loot, progress, virus, difficulties) {
         const base = level + getRoundsFinished() * 5
         const health = Math.floor(base * 66 + Math.random() * 5)
-        const damage = Math.floor(base * 12 + Math.random() * 12)
+        const damage = Math.floor(base * 10 + Math.random() * 10)
         const maxSpeed = 2.75 + Math.random()
 
         super(STINGER, 5, waypoint, health, damage, maxSpeed, 700, 1.3, loot, progress, virus, difficulties, level, 150)
