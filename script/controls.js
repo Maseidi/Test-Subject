@@ -25,7 +25,7 @@ import {
 } from './actions.js'
 import { getSettings } from './settings.js'
 import { getPlayingMusic } from './sound-manager.js'
-import { getPause, setPause } from './variables.js'
+import { getPause, getPauseCause, setPause } from './variables.js'
 
 const keyDown = e => {
     e.preventDefault()
@@ -112,7 +112,7 @@ const visibiltyChange = () => {
             getPlayingMusic()?.pause()
         }
     } else {
-        getPlayingMusic()?.play()
+        if (getPause() && !['game-over', 'pause'].includes(getPauseCause())) getPlayingMusic()?.play()
     }
 }
 
