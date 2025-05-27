@@ -27,5 +27,6 @@ window.addEventListener('contextmenu', e => e.preventDefault())
 
 history.pushState({}, '')
 window.addEventListener('popstate', () => history.pushState({}, ''))
-
+// disable refresh on swipe down on mobile devices
+window.addEventListener('touchmove', e => e.preventDefault(), { passive: false })
 renderMainMenu()
