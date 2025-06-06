@@ -24,6 +24,8 @@ import {
     wUp,
 } from './actions.js'
 import { getSettings } from './settings.js'
+import { getPlayingMusic } from './sound-manager.js'
+import { getPause, getPauseCause, setPause } from './variables.js'
 
 const keyDown = e => {
     e.preventDefault()
@@ -103,6 +105,17 @@ const keyUp = e => {
 
 const backButtonPressed = () => escapeDown()
 
+const visibiltyChange = () => {
+    if (document.hidden) {
+        if (!getPause()) escapeDown()
+        else {
+            getPlayingMusic()?.pause()
+        }
+    } else {
+        if (getPause() && !['game-over', 'pause'].includes(getPauseCause())) getPlayingMusic()?.play()
+    }
+}
+
 export const addControls = () => {
     window.addEventListener('keydown', keyDown, true)
     window.addEventListener('keyup', keyUp, true)
@@ -112,6 +125,7 @@ export const addControls = () => {
     window.addEventListener('resize', resizeWindow, true)
     window.addEventListener('wheel', wheelChange, true)
     window.addEventListener('popstate', backButtonPressed, true)
+    window.addEventListener('visibilitychange', visibiltyChange, true)
 }
 
 export const removeControls = () => {
@@ -123,4 +137,5 @@ export const removeControls = () => {
     window.removeEventListener('resize', resizeWindow, true)
     window.removeEventListener('wheel', wheelChange, true)
     window.removeEventListener('popstate', backButtonPressed, true)
+    window.removeEventListener('visibilitychange', visibiltyChange, true)
 }

@@ -27,5 +27,4 @@ window.addEventListener('contextmenu', e => e.preventDefault())
 
 history.pushState({}, '')
 window.addEventListener('popstate', () => history.pushState({}, ''))
-
 renderMainMenu()

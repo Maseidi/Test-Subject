@@ -13,7 +13,7 @@ export class Tracker extends AbstractEnemy {
     constructor(level, x, y, loot, progress, virus, difficulties) {
         const base = level + getRoundsFinished() * 5
         const health = Math.floor(base * 202 + Math.random() * 12)
-        const damage = Math.floor(base * 15 + Math.random() * 12)
+        const damage = Math.floor(base * 9 + Math.random() * 9)
         const maxSpeed = 8 + Math.random()
 
         super(
