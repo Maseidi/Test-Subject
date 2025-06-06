@@ -119,7 +119,7 @@ export const endChaos = () => {
     renderInteractable(pc)
     setInteractables(new Map([[1, [pc, lever]]]))
     renderChaosPopup('end')
-    add2Stash(new Coin(), getChaos() * 5)
+    add2Stash(new Coin(), getChaos() * 4)
     updateShop()
     getPlayingMusic()?.pause()
     playPeaceMusic()
@@ -197,7 +197,7 @@ const renderChaosPopup = (type = 'start') => {
     if (type === 'end') {
         const coinContainer = createAndAddClass('div', 'chaos-container-coin')
         const amount = document.createElement('p')
-        amount.textContent = `${getChaos() * 5}`
+        amount.textContent = `${getChaos() * 4}`
         const coinImg = new Image()
         coinImg.src = './assets/images/coin.png'
         const text2 = document.createElement('p')
