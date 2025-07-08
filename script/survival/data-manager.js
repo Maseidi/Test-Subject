@@ -44,7 +44,7 @@ import { Progress } from '../progress.js'
 import { Room } from '../room.js'
 import { getShopItems, setShopItems } from '../shop-item.js'
 import { getStash, setStash } from '../stash.js'
-import { difficulties, object2Element } from '../util.js'
+import { difficulties, getRandomStartingPistol, object2Element } from '../util.js'
 import {
     getAdrenalinesDropped,
     getAimMode,
@@ -344,8 +344,6 @@ export const initNewSurvivalVariables = (spawnX = 1500, spawnY = 1000, difficult
     }
     setVariables(NewSurvivalVariables)
 }
-
-const getRandomStartingPistol = () => [GLOCK, M1911, MAUSER].sort(() => Math.random() - 0.5)[0]
 
 const getRandomWeaponOrder = () =>
     [

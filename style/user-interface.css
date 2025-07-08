@@ -242,6 +242,10 @@
     animation-duration: 300ms;
 }
 
+.dialogue.mobile-dialogue {
+    font-size: 22px;
+}
+
 .dialogue {
     top: 0;
     z-index: 50;

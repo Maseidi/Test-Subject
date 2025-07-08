@@ -1,3 +1,4 @@
+import { getSlotsContainer } from './elements.js'
 import { buildEnemy } from './enemy/enemy-factory.js'
 import {
     getDialogues,
@@ -15,12 +16,34 @@ import {
     setRooms,
     setWalls,
 } from './entities.js'
-import { getInitialInventory, getInventory, setInventory } from './inventory.js'
-import { dialogues, enemies, interactables, loaders, popups, rooms, shopItems, walls } from './new-game.js'
-import { getPasswords, initPasswords, setPasswords } from './password-manager.js'
+import { getGunUpgradableDetail } from './gun-details.js'
+import {
+    Antidote,
+    Bandage,
+    BlueVaccine,
+    Coin,
+    GreenVaccine,
+    GunDrop,
+    PC,
+    PistolAmmo,
+    PurpleVaccine,
+    RedVaccine,
+    ShotgunShells,
+    SmgAmmo,
+    Stash,
+    VendingMachine,
+    YellowVaccine,
+} from './interactables.js'
+import { getInitialInventory, getInventory, pickupDrop, setInventory } from './inventory.js'
+import { BottomLoader, Door, TopLoader } from './loader.js'
+import { getPasswords, setPasswords } from './password-manager.js'
 import { getInitialProgress, getProgress, setProgress } from './progress-manager.js'
+import { Progress } from './progress.js'
+import { generatePath, generateRooms } from './randomizer.js'
+import { Room } from './room.js'
 import { getShopItems, setShopItems } from './shop-item.js'
 import { getStash, setStash } from './stash.js'
+import { getRandomStartingPistol, nextId, object2Element } from './util.js'
 import {
     getAdrenalinesDropped,
     getAimMode,
@@ -119,59 +142,150 @@ import {
     setWaitingFunctions,
     setWeaponWheel,
 } from './variables.js'
+import { Wall } from './wall.js'
 
-export const prepareNewGameData = difficulty => {
-    initNewGameVariables(undefined, undefined, difficulty)
-    initNewGameRooms()
-    initNewGameWalls()
-    initPasswords()
-    initNewGameLoaders()
-    initNewGameProgress()
-    initNewGameInventory()
-    initNewGameStash()
-    initNewGameShop()
-    initNewGameEnemies()
-    initNewGameInteractables()
-    initNewGamePopups()
-    initNewGameDialogues()
+let tutorial
+export let startingPistol
+const usedWeapons = []
+
+export const prepareNewGameData = (difficulty, _tutorial = false) => {
+    tutorial = _tutorial
+    startingPistol = getRandomStartingPistol()
+    usedWeapons.push(startingPistol)
+
+    initNewGameVariables(580, 1100, difficulty)
+    setStash([])
+    setShopItems([])
+    setProgress(getInitialProgress())
+    setInventory(getInitialInventory())
+    addStaticRooms()
+    generateRooms()
+    generatePath()
     initConstants()
+    prepareItems()
 }
 
-const initNewGameRooms = () => {
-    const result = new Map()
-    JSON.parse(rooms).forEach(room => result.set(room.id, room))
-    setRooms(result)
+const prepareItems = () => {
+    getStash().push(new Bandage(null, null, 3))
+    getStash().push(new Coin(null, null, 30))
+    getStash().push(new SmgAmmo(null, null, 90))
+    getStash().push(new ShotgunShells(null, null, 20))
+    getStash().push(new RedVaccine(null, null, 3))
+    getStash().push(new GreenVaccine(null, null, 3))
+    getStash().push(new PurpleVaccine(null, null, 3))
+    getStash().push(new YellowVaccine(null, null, 3))
+    getStash().push(new BlueVaccine(null, null, 3))
+    getStash().push(new Antidote(null, null, 3))
+    if (tutorial) return
+    pickupDrop(
+        object2Element({
+            ...new GunDrop(
+                1400,
+                1200,
+                startingPistol,
+                getGunUpgradableDetail(startingPistol, 'magazine', 1),
+                1,
+                1,
+                1,
+                1,
+                1,
+            ),
+            id: nextId(),
+        }),
+    )
+    pickupDrop(object2Element(new PistolAmmo(null, null, 30)))
+    // picking up a weapon will render this once and loading the game will render it once more. I need to remove one of its kind
+    getSlotsContainer()?.remove()
 }
 
-const initNewGameWalls = () => parseStringAndSetAsData(walls, setWalls)
-
-const initNewGameLoaders = () => parseStringAndSetAsData(loaders, setLoaders)
-
-const initNewGameProgress = () => setProgress(getInitialProgress())
-
-const initNewGameInventory = () => setInventory(getInitialInventory())
-
-const initNewGameStash = () => setStash([])
-
-const initNewGameShop = () => setShopItems(JSON.parse(shopItems))
-
-const initNewGameEnemies = () => {
-    const data2Load = new Map([])
-    const data = JSON.parse(enemies)
-    Object.getOwnPropertyNames(data).forEach(name => {
-        data2Load.set(
-            Number(name),
-            data[name].map(enemy => buildEnemy(enemy)),
-        )
-    })
-    setEnemies(data2Load)
+const addStaticRooms = () => {
+    setRooms(
+        new Map([
+            [
+                100,
+                new Room(
+                    100,
+                    1200,
+                    1200,
+                    'Main Hall',
+                    10,
+                    Progress.builder().setProgress2Active(100000).setProgress2Deactive(100001),
+                ),
+            ],
+            [101, new Room(101, 100, 300, 'Exit level 1', 10, Progress.builder().setProgress2Active(101000))],
+            [102, new Room(102, 100, 300, 'Exit level 2', 10, Progress.builder().setProgress2Active(102000))],
+            [103, new Room(103, 100, 300, 'Exit level 3', 10, Progress.builder().setProgress2Active(103000))],
+            [104, new Room(104, 100, 300, 'Exit level 4', 10, Progress.builder().setProgress2Active(104000))],
+            [105, new Room(105, 100, 300, 'Exit level 5', 10, Progress.builder().setProgress2Active(105000))],
+            [106, new Room(106, 1500, 1500, 'Arena of Doom', 10, Progress.builder().setProgress2Active(106000))],
+        ]),
+    )
+    setLoaders(
+        new Map([
+            [
+                100,
+                [
+                    new TopLoader(101, 100, 550),
+                    new BottomLoader(
+                        99,
+                        100,
+                        550,
+                        new Door('Back to the bunker', '', null, Progress.builder().setRenderProgress(100001)),
+                    ),
+                ],
+            ],
+            [101, [new BottomLoader(100, 100, 0), new TopLoader(102, 100, 0)]],
+            [102, [new BottomLoader(101, 100, 0), new TopLoader(103, 100, 0)]],
+            [103, [new BottomLoader(102, 100, 0), new TopLoader(104, 100, 0)]],
+            [104, [new BottomLoader(103, 100, 0), new TopLoader(105, 100, 0)]],
+            [105, [new BottomLoader(104, 100, 0), new TopLoader(106, 100, 0)]],
+            [106, [new BottomLoader(105, 100, 700)]],
+        ]),
+    )
+    setWalls(
+        new Map([
+            [100, []],
+            [101, []],
+            [102, []],
+            [103, []],
+            [104, []],
+            [105, []],
+            [
+                106,
+                [
+                    new Wall(150, 150, 200, null, 200),
+                    new Wall(150, 150, 200, null, null, 200),
+                    new Wall(150, 150, null, 200, 200),
+                    new Wall(150, 150, null, 200, null, 200),
+                    new Wall(150, 150, 200, null, 650),
+                    new Wall(150, 150, null, 200, 650),
+                ],
+            ],
+        ]),
+    )
+    setInteractables(
+        new Map([
+            [100, [new PC(20, 20), new VendingMachine(1140, 30), new Stash(1130, 1130)]],
+            [101, []],
+            [102, []],
+            [103, []],
+            [104, []],
+            [105, []],
+            [106, []],
+        ]),
+    )
+    setEnemies(
+        new Map([
+            [100, []],
+            [101, []],
+            [102, []],
+            [103, []],
+            [104, []],
+            [105, []],
+            [106, []],
+        ]),
+    )
 }
-
-const initNewGameInteractables = () => parseStringAndSetAsData(interactables, setInteractables)
-
-const initNewGamePopups = () => setPopups(JSON.parse(popups))
-
-const initNewGameDialogues = () => setDialogues(JSON.parse(dialogues))
 
 export const initConstants = () => {
     setUpPressed(false)
@@ -200,8 +314,8 @@ export const initConstants = () => {
     setPlayingDialogue(null)
     setNoOffenseCounter(0)
     setStunnedCounter(0)
-    setPlayerAngle(0)
-    setPlayerAngleState(0)
+    setPlayerAngle(180)
+    setPlayerAngleState(4)
     setPlayerAimAngle(0)
     setAimMode(false)
     setIsSearching4Target(false)
@@ -216,10 +330,10 @@ export const initNewGameVariables = (spawnX = 200, spawnY = 500, difficulty) => 
         mapY: 0,
         playerX: 2 * spawnX,
         playerY: 2 * spawnY,
-        currentRoomId: 1,
+        currentRoomId: 100,
         roomTop: spawnY,
         roomLeft: spawnX,
-        playerSpeed: 5,
+        playerSpeed: 10,
         maxStamina: 600,
         stamina: 600,
         maxHealth: 100,

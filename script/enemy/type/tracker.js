@@ -10,7 +10,7 @@ import { TrackerVisionService } from '../service/tracker/vision.js'
 import { AbstractEnemy } from './abstract-enemy.js'
 
 export class Tracker extends AbstractEnemy {
-    constructor(level, x, y, loot, progress, virus, difficulties) {
+    constructor(level, waypoint, loot, progress, virus, difficulties) {
         const base = level + getRoundsFinished() * 5
         const health = Math.floor(base * 202 + Math.random() * 12)
         const damage = Math.floor(base * 9 + Math.random() * 9)
@@ -19,7 +19,7 @@ export class Tracker extends AbstractEnemy {
         super(
             TRACKER,
             4,
-            new SinglePointPath(x, y),
+            waypoint,
             health,
             damage,
             maxSpeed,

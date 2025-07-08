@@ -1,5 +1,6 @@
 import { getDialogueContainer } from './elements.js'
 import { getDialogues } from './entities.js'
+import { IS_MOBILE } from './script.js'
 import { getSettings } from './settings.js'
 import { addAllAttributes, addClass, createAndAddClass } from './util.js'
 import { setPlayingDialogue } from './variables.js'
@@ -20,7 +21,7 @@ export class Dialogue {
 }
 
 export const renderDialogue = progress => {
-    const dialogueObj = getDialogues()?.find(dialogue => dialogue.renderProgress === progress)
+    const dialogueObj = getDialogues()?.find(dialogue => Number(dialogue.renderProgress) === Number(progress))
     if (!dialogueObj) return
     displayDialogue(dialogueObj)
 }
@@ -28,7 +29,7 @@ export const renderDialogue = progress => {
 const displayDialogue = dialogueObj => {
     const { message, duration, progress2Active } = dialogueObj
     if (getDialogueContainer().firstElementChild) getDialogueContainer().firstElementChild.remove()
-    const dialogueContent = createAndAddClass('p', 'dialogue', 'dialogue-animation', 'animation')
+    const dialogueContent = createAndAddClass('p', 'dialogue', 'dialogue-animation', 'animation', IS_MOBILE ? 'mobile-dialogue' : '')
     const chars = message.split('')
     if (chars.length > 30) dialogueContent.style.width = '300px'
     else dialogueContent.style.width = 'max-content'

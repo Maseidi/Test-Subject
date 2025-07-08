@@ -68,19 +68,19 @@ const renderPagination = () => {
     if (page === 1) addClass(buy, 'active-page')
     buy.textContent = `buy`
     buy.setAttribute('page', 1)
-    addHoverSoundEffect(buy)
+    setTimeout(() => addHoverSoundEffect(buy), 10)
     buy.addEventListener('click', changePage)
     const upgrade = createAndAddClass('div', 'upgrade-page')
     if (page === 2) addClass(upgrade, 'active-page')
     upgrade.textContent = `upgrade`
     upgrade.setAttribute('page', 2)
-    addHoverSoundEffect(upgrade)
+    setTimeout(() => addHoverSoundEffect(upgrade), 10)
     upgrade.addEventListener('click', changePage)
     const sell = createAndAddClass('div', 'sell-page')
     if (page === 3) addClass(sell, 'active-page')
     sell.textContent = `sell`
     sell.setAttribute('page', 3)
-    addHoverSoundEffect(sell)
+    setTimeout(() => addHoverSoundEffect(sell), 10)
     sell.addEventListener('click', changePage)
     appendAll(paginationContainer, buy, upgrade, sell)
     getPauseContainer().firstElementChild.append(paginationContainer)

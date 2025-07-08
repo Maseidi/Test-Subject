@@ -5,7 +5,6 @@ import { Ranger } from './type/ranger.js'
 import { Scorcher } from './type/scorcher.js'
 import { Spiker } from './type/spiker.js'
 import { Stinger } from './type/stinger.js'
-import { Tracker } from './type/tracker.js'
 
 export const ENEMIES_BY_TYPE = new Map([
     ['ranger', Ranger],
@@ -27,11 +26,8 @@ export const buildEnemy = data => {
         .setProgress2Active(progress2Active)
         .setProgress2Deactive(progress2Deactive)
 
-    if (data.type === 'tracker') var enemy = buildTracker(data, progress)
-    else {
-        const { waypoint, loot, virus } = data
-        var enemy = new (ENEMIES_BY_TYPE.get(data.type))(level, waypoint, loot, progress, virus)
-    }
+    const { waypoint, loot, virus } = data
+    var enemy = new (ENEMIES_BY_TYPE.get(data.type))(level, waypoint, loot, progress, virus)
 
     enemy.x = x
     enemy.y = y
@@ -39,9 +35,4 @@ export const buildEnemy = data => {
     if (data.health === 0) enemy.health = 0
 
     return enemy
-}
-
-const buildTracker = (data, progress) => {
-    const { x, y, loot, virus, level } = data
-    return new Tracker(level, x, y, loot, progress, virus)
 }

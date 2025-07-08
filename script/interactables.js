@@ -73,8 +73,8 @@ export class Crate extends Interactable {
 }
 
 export class Lever extends Interactable {
-    constructor(left, top, progress) {
-        super(30, left, top, 'lever', 'lever', 'Toggle', true, null, null, null, null, progress)
+    constructor(left, top, heading, progress) {
+        super(30, left, top, 'lever', heading ?? 'lever', 'Toggle', true, null, null, null, null, progress)
     }
 }
 

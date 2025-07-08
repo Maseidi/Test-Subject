@@ -198,7 +198,7 @@ const handleEnemyInteractables = int => {
     if (int.parentElement === null) return
     const enemyElem = int.parentElement.parentElement
     const enemyObject = getEnemyObject(enemyElem)
-    if (enemyObject.health === 0) removePopup(popup)
+    if (enemyObject?.health === 0) removePopup(popup)
     else if (isEnemyNotified(enemyObject)) removePopup(popup)
     else if (!interactionPredicate(int)) removePopup(popup)
     else setAsInteractingObject(popup, int)
@@ -210,7 +210,7 @@ const getEnemyObject = enemyElem => {
     return getEnemies().get(getCurrentRoomId())[index]
 }
 
-const isEnemyNotified = enemyObj => ![LOST, INVESTIGATE, MOVE_TO_POSITION, STUNNED].includes(enemyObj.state)
+const isEnemyNotified = enemyObj => ![LOST, INVESTIGATE, MOVE_TO_POSITION, STUNNED].includes(enemyObj?.state)
 
 const hanldeRestOfInteractables = int => {
     const popup = int.children[1]

@@ -28,8 +28,8 @@ export const managePlayerMovement = () => {
 const move = () => {
     let speed = normalizeSpeed()
     if (getUpPressed()) changePosition(setMapY, getMapY, setPlayerY, getPlayerY, speed)
-    if (getDownPressed()) changePosition(setMapY, getMapY, setPlayerY, getPlayerY, -speed)
     if (getLeftPressed()) changePosition(setMapX, getMapX, setPlayerX, getPlayerX, speed)
+    if (getDownPressed()) changePosition(setMapY, getMapY, setPlayerY, getPlayerY, -speed)
     if (getRightPressed()) changePosition(setMapX, getMapX, setPlayerX, getPlayerX, -speed)
     getMapEl().style.left = `${getMapX()}px`
     getMapEl().style.top = `${getMapY()}px`

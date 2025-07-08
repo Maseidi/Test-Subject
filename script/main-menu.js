@@ -18,6 +18,7 @@ export const renderMainMenu = () => {
     appendAll(mainMenuContainer, mainMenuHeader(), options(), content())
     root.append(mainMenuContainer)
     setMainMenuEl(mainMenuContainer)
+    playWithGivenData(() => prepareNewGameData('middle'))
 }
 
 const mainMenuHeader = () => {

@@ -32,7 +32,7 @@ export class AbstractEnemy {
         this.health = health ?? 0
         this.damage = damage ?? 0
         this.maxSpeed = maxSpeed ?? 0
-        this.virus = virus ?? ['red', 'green', 'yellow', 'blue', 'purple'][Math.floor(Math.random() * 5)]
+        this.virus = virus ?? ['red', 'green', 'yellow', 'blue', 'purple'].sort(() => Math.random() - 0.5)[0]
         this.vision = vision ?? 0
         this.acceleration = acceleration ?? 0
         this.renderProgress = progress?.renderProgress ?? String(Number.MAX_SAFE_INTEGER)

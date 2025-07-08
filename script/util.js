@@ -8,7 +8,7 @@ import {
 } from './elements.js'
 import { getGunDetail, getGunUpgradableDetail } from './gun-details.js'
 import { removeWeapon } from './gun-loader.js'
-import { ADRENALINE, ENERGY_DRINK, HEALTH_POTION, LUCK_PILLS } from './loot.js'
+import { ADRENALINE, ENERGY_DRINK, GLOCK, HEALTH_POTION, LUCK_PILLS, M1911, MAUSER } from './loot.js'
 import { getSettings } from './settings.js'
 import { playExplosion } from './sound-manager.js'
 import { getThrowableDetail, isThrowable } from './throwable-details.js'
@@ -33,6 +33,10 @@ import {
 export const collide = (first, second, offset) => {
     const firstBound = first.getBoundingClientRect()
     const secondBound = second.getBoundingClientRect()
+    return AABB(firstBound, secondBound, offset)
+}
+
+export const AABB = (firstBound, secondBound, offset) => {
     return (
         firstBound.bottom > secondBound.top - offset &&
         firstBound.right > secondBound.left - offset &&
@@ -225,7 +229,7 @@ export const removeEquipped = () => {
 export const isStatUpgrader = item => [ADRENALINE, HEALTH_POTION, ENERGY_DRINK, LUCK_PILLS].includes(item.name)
 
 export const renderShadow = brightness => {
-    if (brightness === 100) return
+    if (brightness === 100) getShadowContainer().firstElementChild.style.background = `unset`
     else
         getShadowContainer().firstElementChild.style.background = `radial-gradient(circle at center,transparent,black ${
             brightness * 10
@@ -270,3 +274,5 @@ export const renderErrorMessage = text => {
     message.textContent = text
     getPlayer().append(message)
 }
+
+export const getRandomStartingPistol = () => [GLOCK, M1911, MAUSER].sort(() => Math.random() - 0.5)[0]

@@ -329,8 +329,10 @@ const renderPopUp = (int, interactable) => {
     popup.style.display = 'none'
     handleVaccinePopup(popup, interactable)
     renderHeading(popup, interactable)
-    renderLine(popup)
-    renderDescription(popup, interactable)
+    if (interactable.name !== 'door' || interactable.description) {
+        renderLine(popup)
+        renderDescription(popup, interactable)
+    }
     int.append(popup)
 }
 

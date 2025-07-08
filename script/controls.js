@@ -25,10 +25,9 @@ import {
 } from './actions.js'
 import { getSettings } from './settings.js'
 import { getPlayingMusic } from './sound-manager.js'
-import { getPause, getPauseCause, setPause } from './variables.js'
+import { getPause, getPauseCause } from './variables.js'
 
 const keyDown = e => {
-    e.preventDefault()
     if (!e.repeat) {
         switch (e.code) {
             case getSettings().controls.up:
@@ -62,6 +61,7 @@ const keyDown = e => {
                 fDown()
                 break
             case getSettings().controls.inventory:
+                e.preventDefault()
                 tabDown()
                 break
             case getSettings().controls.reload:
