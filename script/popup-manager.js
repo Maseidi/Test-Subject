@@ -15,7 +15,7 @@ export class Popup {
 }
 
 export const renderPopup = progress => {
-    const popupObj = getPopups()?.find(popup => popup.renderProgress === progress)
+    const popupObj = getPopups()?.find(popup => Number(popup.renderProgress) === Number(progress))
     if (!popupObj) return
     const { message, progress2Active } = popupObj
     if (getPopupContainer().firstElementChild) getPopupContainer().firstElementChild.remove()

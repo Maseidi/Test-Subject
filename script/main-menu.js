@@ -334,8 +334,8 @@ const playWithGivenData = (loader, survival = false) => {
     play(false, survival)
 }
 
-const loadMapMakerWithGivenData = loader => {
-    getMainMenuEl().remove()
+export const loadMapMakerWithGivenData = loader => {
+    getMainMenuEl()?.remove()
     loader()
     setDifficulty(difficulties.MIDDLE)
     renderMapMaker()

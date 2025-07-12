@@ -51,10 +51,8 @@
     right: 100%;
 }
 
-.walk > .player-collider > .player-body > .player-left-hand,
-.walk > .player-collider > .player-body > .player-right-hand,
-.run > .player-collider > .player-body > .player-left-hand,
-.run > .player-collider > .player-body > .player-right-hand {
+.player > .player-collider > .player-body > .player-left-hand,
+.player > .player-collider > .player-body > .player-right-hand {
     animation-name: walk;
     animation-fill-mode: both;
     animation-timing-function: linear;

@@ -109,6 +109,7 @@ export const renderMapMaker = () => {
 
 const setupPause = () => {
     pauseFn = e => {
+        if (e.repeat) return
         if (e.code !== 'Escape') return
         if (getPauseContainer().lastElementChild) getPauseContainer().lastElementChild.remove()
         else {

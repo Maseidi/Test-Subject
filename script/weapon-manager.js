@@ -21,6 +21,7 @@ import {
     useInventoryResource,
 } from './inventory.js'
 import { dropLoot } from './loot-manager.js'
+import { activateAllProgresses } from './progress-manager.js'
 import { IS_MOBILE } from './script.js'
 import { getSettings } from './settings.js'
 import { playEmptyWeapon, playGunShot, playReload } from './sound-manager.js'
@@ -188,6 +189,7 @@ const manageReload = () => {
         reload()
         setReloading(false)
         reloadCounter = 0
+        activateAllProgresses(6006)
         if (getToggleMenuButton()) removeClass(getToggleMenuButton(), 'disabled')
     }
 }
@@ -504,9 +506,7 @@ const getCurrentDiff = (angle2Item, joystickAngle) => {
 const autoAim2Target = () => setPlayerAimAngle(getFoundTarget() ? getSuitableTargetAngle() : getAimJoystickAngle())
 
 const shootWhenTargetDetected = () => {
-    if (!getFoundTarget() || getTargets()[0] !== getFoundTarget().firstElementChild) {
-        setShootPressed(false)
-        return
-    }
-    setShootPressed(true)
+    if (getTargets()[0]?.getAttribute('name') === 'crate') setShootPressed(true)
+    else if (!getFoundTarget() || getTargets()[0] !== getFoundTarget().firstElementChild) setShootPressed(false)
+    else setShootPressed(true)
 }

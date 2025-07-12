@@ -10,16 +10,23 @@ import {
     getThrowButton,
     getUiEl,
 } from './elements.js'
-import { getInteractables } from './entities.js'
+import { getInteractables, getPopups } from './entities.js'
 import { getGunDetails, isGun } from './gun-details.js'
 import { renderStats } from './gun-examine.js'
 import { renderGun } from './gun-loader.js'
 import { NOTE } from './loot.js'
 import { getPasswords } from './password-manager.js'
-import { useAntidote, useBandage, useHealthPotion, useVaccine } from './player-health.js'
+import { findHealtStatusChildByClassName, useAntidote, useBandage, useHealthPotion, useVaccine } from './player-health.js'
 import { useAdrenaline } from './player-movement.js'
 import { useEnergyDrink } from './player-sprint.js'
-import { activateAllProgresses, deactivateAllProgresses, toggleDoor } from './progress-manager.js'
+import { Popup } from './popup-manager.js'
+import {
+    activateAllProgresses,
+    deactivateAllProgresses,
+    getProgressValueByNumber,
+    toggleDoor,
+} from './progress-manager.js'
+import { Progress } from './progress.js'
 import { renderInteractable } from './room-loader.js'
 import { IS_MOBILE } from './script.js'
 import { playClickSoundEffect } from './sound-manager.js'
@@ -51,6 +58,7 @@ import {
     getEquippedTorchId,
     getEquippedWeaponId,
     getHealth,
+    getInfection,
     getIsSurvival,
     getMaxHealth,
     getMaxStamina,
@@ -888,6 +896,19 @@ const examine = item => {
     if (isGun(itemObj.name)) renderStats(itemObj)
     else if (itemObj.name === 'note') renderNote(item, itemObj)
     if (itemObj.onexamine) activateAllProgresses(itemObj.onexamine)
+    if (getProgressValueByNumber(5002) && !getProgressValueByNumber(100000000) && getInfection().length > 0) {
+        getPopups().push(
+            new Popup(() => {
+                const infectedContainer = findHealtStatusChildByClassName('infected-container')
+                const virusBar = infectedContainer.firstElementChild
+                addClass(virusBar, 'glow')
+                return `You are infected to a virus. You can view which viruses you are infected to at the ${
+                    IS_MOBILE ? `top` : `bottom left`
+                } of the screen. Use appropriate vaccines to defuse the desired infections.`
+            }, Progress.builder().setRenderProgress(100000000)),
+        )
+        activateAllProgresses(100000000)
+    }
 }
 
 const renderNote = (item, itemObj) => {

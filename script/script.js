@@ -1,4 +1,5 @@
-import { renderMainMenu } from './main-menu.js'
+import { loadMapMakerWithGivenData } from './main-menu.js'
+import { loadMapMakerFromSlot } from './mapMaker/data-manager.js'
 import { getDefaultSettings, setSettings } from './settings.js'
 
 if ('serviceWorker' in navigator) {
@@ -26,5 +27,11 @@ export const ENEMY_CAP = IS_MOBILE ? 20 : 40
 window.addEventListener('contextmenu', e => e.preventDefault())
 
 history.pushState({}, '')
+window.addEventListener('click', () => {
+    if (IS_MOBILE) return
+    document.body.requestFullscreen()
+})
 window.addEventListener('popstate', () => history.pushState({}, ''))
-renderMainMenu()
+// renderMainMenu()
+loadMapMakerWithGivenData(() => loadMapMakerFromSlot(2))
+navigator.keyboard.lock(['Escape'])

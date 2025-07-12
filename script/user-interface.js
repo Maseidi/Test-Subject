@@ -39,6 +39,7 @@ import {
     getInventory,
     updateInteractablePopups,
 } from './inventory.js'
+import { activateAllProgresses } from './progress-manager.js'
 import { IS_MOBILE } from './script.js'
 import { addHoverSoundEffect, playClickSoundEffect } from './sound-manager.js'
 import { countItemStash } from './stash.js'
@@ -54,6 +55,7 @@ import {
     getIsSurvival,
     getMaxHealth,
     getMaxStamina,
+    getPauseCause,
     getStamina,
     getWeaponWheel,
     setAimJoystickAngle,
@@ -146,11 +148,13 @@ export const quitPage = mapMaker => {
     playClickSoundEffect()
     last.remove()
     updateInteractablePopups()
+    if (getPauseCause() === 'inventory') var inInventory = true
     if (
         !mapMaker &&
         (getPauseContainer().children.length === 0 || (getPauseContainer().children.length === 1 && getGrabbed()))
     )
         managePause()
+    if (inInventory && getEquippedWeaponId()) activateAllProgresses(6003)
 }
 
 export const itemNotification = name => {

@@ -225,6 +225,7 @@ const equipWeapon = id => {
         const equipped = findEquippedWeaponById()
         setShootCounter(getEquippedItemDetail(equipped, 'firerate') * 60)
         playEquip(equipped.name)
+        activateAllProgresses(6003)
     }
     if (getEquippedWeaponId() && getAimMode()) equipWeaponOnAimMode()
     else equipNothing()
@@ -369,6 +370,7 @@ export const tabDown = () => {
     }
     if (getToggleMenuButton()) getToggleMenuButton().style.visibility = 'visible'
     removeInventory()
+    if (getEquippedWeaponId()) activateAllProgresses(6003)
 }
 
 export const managePause = () => {

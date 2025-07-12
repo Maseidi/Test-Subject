@@ -64,7 +64,7 @@ const add2Queue = (func, args) => {
 // Caution: Doors that need a key or code MUST have a renderProgress property!
 const toggleDoors = (number, open = true) =>
     getCurrentRoomDoors()
-        .filter(door => door.getAttribute('renderprogress') === number)
+        .filter(door => Number(door.getAttribute('renderprogress')) === Number(number))
         .forEach(door => toggleDoor(door, open))
 
 export const toggleDoor = (door, open = true) => {
@@ -103,7 +103,7 @@ const updateEnemies = number =>
         .get(getCurrentRoomId())
         .forEach(enemy => {
             if (enemy.health === 0) return
-            if (enemy.renderProgress !== number) return
+            if (Number(enemy.renderProgress) !== Number(number)) return
             spawnEnemy(enemy)
         })
 
@@ -128,7 +128,7 @@ const updateInteractables = number =>
     getInteractables()
         .get(getCurrentRoomId())
         .forEach((int, index) => {
-            if (int.renderProgress !== number) return
+            if (Number(int.renderProgress) !== Number(number)) return
             int.renderProgress = String(Number.MAX_SAFE_INTEGER)
             renderInteractable(int, index)
         })
