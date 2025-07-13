@@ -5,6 +5,7 @@ import { finishUp } from './finish-up.js'
 import { play } from './game.js'
 import { countItem, useInventoryResource } from './inventory.js'
 import { saveMapMakerAtSlot } from './mapMaker/data-manager.js'
+import { activateAllProgresses } from './progress-manager.js'
 import { addHoverSoundEffect, playClickSoundEffect } from './sound-manager.js'
 import { countItemStash, getStash, setStash } from './stash.js'
 import { loadSurvivalFromSlot, saveSurvivalAtSlot } from './survival/data-manager.js'
@@ -175,6 +176,7 @@ const confirmSave = (slotNumber, mapMaker = false) => {
         addComputerMessage('Out of hard drive memory')
         return
     }
+    activateAllProgresses(7002)
     useInventoryResource('harddrive', 1)
     saveGameAtSlot(slotNumber)
     reRenderDesktop(false)
