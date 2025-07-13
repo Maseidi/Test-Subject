@@ -2,21 +2,28 @@ import {
     getCurrentRoomEnemies,
     getCurrentRoomInteractables,
     getCurrentRoomSolid,
+    getSprintButton,
+    getUiEl,
     setCurrentRoomEnemies,
     setCurrentRoomInteractables,
     setCurrentRoomSolid,
 } from '../../../elements.js'
-import { getEnemies } from '../../../entities.js'
+import { getEnemies, getPopups } from '../../../entities.js'
 import { isGun } from '../../../gun-details.js'
 import { knockEnemy } from '../../../knock-manager.js'
 import { dropLoot } from '../../../loot-manager.js'
+import { Popup } from '../../../popup-manager.js'
 import {
     activateAllProgresses,
     deactivateAllProgresses,
+    getProgressValueByNumber,
     updateKillAllDoors,
     updateKillAllEnemies,
     updateKillAllInteractables,
 } from '../../../progress-manager.js'
+import { Progress } from '../../../progress.js'
+import { IS_MOBILE } from '../../../script.js'
+import { getSettings } from '../../../settings.js'
 import { endChaos } from '../../../survival/chaos-manager.js'
 import {
     getCurrentChaosEnemies,
@@ -68,6 +75,31 @@ export class AbstractInjuryService {
             addClass(this.enemy.sprite.firstElementChild.firstElementChild, 'damaged')
             this.enemy.damagedCounter = 1
             if (this.enemy.state === STUNNED) this.enemy.state = CHASE
+        }
+        if (isGun(name)) {
+            if (!getProgressValueByNumber(100000004) && !getIsSurvival()) {
+                getPopups().push(
+                    new Popup(() => {
+                        if (getSprintButton()) addClass(getSprintButton(), 'glow')
+                        return `Use ${
+                            IS_MOBILE ? `the sprint button` : `<span>${getSettings().controls.sprint}</span>`
+                        } to sprint.`
+                    }, Progress.builder().setRenderProgress(100000004).setProgress2Active(100000005)),
+                )
+                getPopups().push(
+                    new Popup(() => {
+                        addClass(getUiEl().children[1], 'glow')
+                        if (getSprintButton()) removeClass(getSprintButton(), 'glow')
+                        return `You can view your stamina bar at the top left corner.`
+                    }, Progress.builder().setRenderProgress(100000005).setProgress2Active(100000006)),
+                )
+                getPopups().push(
+                    new Popup(() => {
+                        return `Be careful, sprinting makes a lot of noise and may notify the enemies of your presence.`
+                    }, Progress.builder().setRenderProgress(100000006)),
+                )
+                activateAllProgresses(100000004)
+            }
         }
     }
 

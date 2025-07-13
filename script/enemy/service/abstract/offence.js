@@ -33,7 +33,7 @@ export class AbstractOffenceService {
                     addClass(virusBar, 'glow')
                     return `You are infected to a ${
                         this.enemy.virus
-                    }. You can view which viruses you are infected to at the ${
+                    } virus. You can view which viruses you are infected to at the ${
                         IS_MOBILE ? `top` : `bottom left`
                     } of the screen. Use appropriate vaccines to defuse the desired infections.`
                 }, Progress.builder().setRenderProgress(100000000)),

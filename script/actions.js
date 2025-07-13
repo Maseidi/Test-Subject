@@ -38,7 +38,12 @@ import { dropLoot } from './loot-manager.js'
 import { renderPasswordInput } from './password-manager.js'
 import { renderPauseMenu } from './pause-menu.js'
 import { damagePlayer, findHealtStatusChildByClassName, heal } from './player-health.js'
-import { activateAllProgresses, deactivateAllProgresses, getProgress } from './progress-manager.js'
+import {
+    activateAllProgresses,
+    deactivateAllProgresses,
+    getProgress,
+    getProgressValueByNumber,
+} from './progress-manager.js'
 import { IS_MOBILE } from './script.js'
 import { getPlayingMusic, getPlayingSoundEffects, playEquip, playPickup } from './sound-manager.js'
 import { centralizePlayer } from './startup.js'
@@ -201,6 +206,7 @@ export const exitAim = () => {
 }
 
 export const weaponSlotDown = key => {
+    if (!getProgressValueByNumber(6009) && !getIsSurvival()) return
     if (getReloading()) {
         renderErrorMessage("Can't switch while reloading")
         return
@@ -256,6 +262,7 @@ const equipNothing = () => {
 }
 
 export const shiftDown = () => {
+    if (!getProgressValueByNumber(100000004) && !getIsSurvival()) return
     if (getRefillStamina()) addClass(getPlayer(), 'walk')
     setSprintPressed(true)
     startSprint()

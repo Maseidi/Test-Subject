@@ -521,7 +521,7 @@
 .glow {
     animation-name: glow;
     animation-duration: 0.5s;
-    animation-iteration-count: 20;
+    animation-iteration-count: 36;
     animation-fill-mode: forwards;
     animation-direction: alternate-reverse;
 }

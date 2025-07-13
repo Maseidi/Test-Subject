@@ -29,7 +29,7 @@ window.addEventListener('contextmenu', e => e.preventDefault())
 history.pushState({}, '')
 window.addEventListener('click', () => {
     if (IS_MOBILE) return
-    document.body.requestFullscreen()
+    // document.body.requestFullscreen()
 })
 window.addEventListener('popstate', () => history.pushState({}, ''))
 // renderMainMenu()

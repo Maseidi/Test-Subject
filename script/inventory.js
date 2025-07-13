@@ -16,7 +16,13 @@ import { renderStats } from './gun-examine.js'
 import { renderGun } from './gun-loader.js'
 import { NOTE } from './loot.js'
 import { getPasswords } from './password-manager.js'
-import { findHealtStatusChildByClassName, useAntidote, useBandage, useHealthPotion, useVaccine } from './player-health.js'
+import {
+    findHealtStatusChildByClassName,
+    useAntidote,
+    useBandage,
+    useHealthPotion,
+    useVaccine,
+} from './player-health.js'
 import { useAdrenaline } from './player-movement.js'
 import { useEnergyDrink } from './player-sprint.js'
 import { Popup } from './popup-manager.js'
@@ -29,6 +35,7 @@ import {
 import { Progress } from './progress.js'
 import { renderInteractable } from './room-loader.js'
 import { IS_MOBILE } from './script.js'
+import { getSettings } from './settings.js'
 import { playClickSoundEffect } from './sound-manager.js'
 import { isThrowable } from './throwable-details.js'
 import { renderThrowable } from './throwable-loader.js'
@@ -136,6 +143,27 @@ export const pickupDrop = drop => {
     updateInteractablePopups()
     if (countItem('bandage') > 0 && getHealth() < getMaxHealth() && getHealButton())
         removeClass(getHealButton(), 'disabled')
+    handleFirstTimeBandagePickup()
+}
+
+const handleFirstTimeBandagePickup = () => {
+    if (getIsSurvival()) return
+    if (!getProgressValueByNumber(100000002) && countItem('bandage') > 0) {
+        getPopups().push(
+            new Popup(() => {
+                if (getHealButton()) addClass(getHealButton(), 'glow')
+                return `Use ${IS_MOBILE ? `the heal button` : `<span>${getSettings().controls.heal}</span>`} to heal.`
+            }, Progress.builder().setRenderProgress(100000002).setProgress2Active(100000003)),
+        )
+        getPopups().push(
+            new Popup(() => {
+                if (getHealButton()) removeClass(getHealButton(), 'glow')
+                addClass(getUiEl().children[0], 'glow')
+                return `You can view your health bar at the top left corner`
+            }, Progress.builder().setRenderProgress(100000003)),
+        )
+        activateAllProgresses(100000002)
+    }
 }
 
 const searchPack = () => {
@@ -520,7 +548,7 @@ const renderOptions = (item, options) => {
         if (getEquippedWeaponId() && itemObj.name === findEquippedWeaponById()?.name) {
             if (getReloading() || getShooting()) renderDropOption = false
         } else {
-            if (allowSitchGun) createOption(options, 'equip')
+            if (allowSitchGun && (getProgressValueByNumber(6009) || getIsSurvival())) createOption(options, 'equip')
         }
         createOption(options, 'shortcut')
         createOption(options, 'examine')
