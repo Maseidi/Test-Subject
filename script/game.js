@@ -8,7 +8,8 @@ import { getSettings } from './settings.js'
 import { startUp } from './startup.js'
 import { manageSpawns } from './survival/spawn-manager.js'
 import { setEnemyId, setSpawnCounter } from './survival/variables.js'
-import { getIsSurvival, getPause, setGameId, setIsMapMakerRoot, setIsSurvival } from './variables.js'
+import { difficulties, useDeltaTime } from './util.js'
+import { getDifficulty, getIsSurvival, getPause, setGameId, setIsMapMakerRoot, setIsSurvival } from './variables.js'
 import { manageWeaponActions } from './weapon-manager.js'
 
 export const play = (mapMaker = false, survival = false) => {

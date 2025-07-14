@@ -2,6 +2,8 @@ import { buildEnemy } from './enemy/enemy-factory.js'
 import {
     getDialogues,
     getEnemies,
+    getInitialEnemies,
+    getInitialInteractables,
     getInteractables,
     getLoaders,
     getPopups,
@@ -164,10 +166,13 @@ const initNewGameEnemies = () => {
             data[name].map(enemy => buildEnemy(enemy)),
         )
     })
-    setEnemies(data2Load)
+    setEnemies(getInitialEnemies(data2Load))
 }
 
-const initNewGameInteractables = () => parseStringAndSetAsData(interactables, setInteractables)
+const initNewGameInteractables = () => {
+    parseStringAndSetAsData(interactables, setInteractables)
+    setInteractables(getInitialInteractables(getInteractables()))
+}
 
 const initNewGamePopups = () => setPopups(JSON.parse(popups))
 
@@ -210,7 +215,7 @@ export const initConstants = () => {
     setAimJoystickAngle(null)
 }
 
-export const initNewGameVariables = (spawnX = 200, spawnY = 500, difficulty) => {
+export const initNewGameVariables = (spawnX = 225, spawnY = 600, difficulty) => {
     const newGameVariables = {
         mapX: 0,
         mapY: 0,

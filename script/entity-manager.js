@@ -31,14 +31,17 @@ import {
     NO_OFFENCE,
     STUNNED,
 } from './enemy/enemy-constants.js'
-import { getEnemies, getLoaders, getRooms } from './entities.js'
+import { getEnemies, getLoaders, getPopups, getRooms } from './entities.js'
 import { findEquippedTorchById, getInventory } from './inventory.js'
 import { knockPlayer } from './knock-manager.js'
 import { dropLoot } from './loot-manager.js'
 import { damagePlayer, infectPlayer2SpecificVirus, poisonPlayer, setPlayer2Fire } from './player-health.js'
+import { Popup } from './popup-manager.js'
 import { activateAllProgresses, getProgressValueByNumber } from './progress-manager.js'
+import { Progress } from './progress.js'
 import { loadCurrentRoom } from './room-loader.js'
 import { playFlashbang } from './sound-manager.js'
+import { noOffenseCounterLimit } from './startup.js'
 import { getThrowableDetail } from './throwable-details.js'
 import { removeTorch } from './torch-loader.js'
 import {
@@ -65,6 +68,7 @@ import {
     getEquippedTorchId,
     getExplosionDamageCounter,
     getGrabbed,
+    getIsSurvival,
     getMaxHealth,
     getNoOffenseCounter,
     getPlayingDialogue,
@@ -218,7 +222,30 @@ const hanldeRestOfInteractables = int => {
     handleStaticInteractablesIdealInteraction(int, popup)
     if (!interactionPredicate(int)) removePopup(popup)
     else if (int.getAttribute('moving-towards-player') === 'true') removePopup(popup)
-    else setAsInteractingObject(popup, int)
+    else {
+        setAsInteractingObject(popup, int)
+        if (getProgressValueByNumber(10012) && !getIsSurvival()) {
+            const name = int.getAttribute('name')
+            if (name === 'stash' && !getProgressValueByNumber(100000011)) {
+                getPopups().push(
+                    new Popup(
+                        'Use Stash to store and manage your items in a more organized environment.',
+                        Progress.builder().setRenderProgress(100000011),
+                    ),
+                )
+                activateAllProgresses(100000011)
+            }
+            if (name === 'vendingMachine' && !getProgressValueByNumber(100000012)) {
+                getPopups().push(
+                    new Popup(
+                        'Use Vending Machine to buy items, sell items, and upgrade your weapons.',
+                        Progress.builder().setRenderProgress(100000012),
+                    ),
+                )
+                activateAllProgresses(100000012)
+            }
+        }
+    }
 }
 
 const handleDoorWithCodeIdealInteraction = (int, popup) => {
@@ -238,7 +265,7 @@ const handleStaticInteractablesIdealInteraction = (int, popup) => {
         else removeClass(popup, 'not-ideal')
         return
     }
-    if (!['computer', 'stash', 'vendingMachine'].includes(int.getAttribute('name'))) return
+    if (!['computer', 'stash', 'vendingMachine'].includes(name)) return
     refreshPopupIdealStyles(popup)
 }
 
@@ -260,7 +287,7 @@ const manageEnemies = () => {
 
 const handleNoOffenceMode = () => {
     if (getNoOffenseCounter() > 0) setNoOffenseCounter(getNoOffenseCounter() + 1)
-    if (getNoOffenseCounter() < useDeltaTime(180)) return
+    if (getNoOffenseCounter() < noOffenseCounterLimit) return
     getCurrentRoomEnemies()
         .filter(elem => elem.state === NO_OFFENCE)
         .forEach(elem => (elem.state = CHASE))

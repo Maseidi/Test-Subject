@@ -32,9 +32,10 @@ import {
     renderToggleMenuButton,
     renderUi,
 } from './user-interface.js'
-import { addClass, appendAll, createAndAddClass } from './util.js'
-import { getInfection, getIsSurvival, getPlayerAngle, getPlayerX, getPlayerY, setMapX, setMapY } from './variables.js'
+import { addClass, appendAll, createAndAddClass, difficulties, useDeltaTime } from './util.js'
+import { getDifficulty, getInfection, getIsSurvival, getPlayerAngle, getPlayerX, getPlayerY, setMapX, setMapY } from './variables.js'
 
+export let noOffenseCounterLimit
 export const startUp = () => {
     addControls()
     renderRoomNameContainer()
@@ -59,6 +60,7 @@ export const startUp = () => {
     renderThrowButton()
     renderPauseButton()
     renderSlots()
+    handeNoOffenceCounterLimit()
     if (getChaos() !== 0 && getIsSurvival()) renderToggleMenuButton()
     if (getIsSurvival()) playPeaceMusic()
 }
@@ -147,4 +149,10 @@ export const centralizePlayer = () => {
     getMapEl().style.top = `${-yDiff}px`
     setMapX(-xDiff)
     setMapY(-yDiff)
+}
+
+const handeNoOffenceCounterLimit = () => {
+    if (getDifficulty() === difficulties.MILD) noOffenseCounterLimit = useDeltaTime(150)
+    else if (getDifficulty() === difficulties.MIDDLE) noOffenseCounterLimit = useDeltaTime(120)
+    else noOffenseCounterLimit = useDeltaTime(90)
 }

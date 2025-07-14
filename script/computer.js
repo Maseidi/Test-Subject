@@ -176,7 +176,7 @@ const confirmSave = (slotNumber, mapMaker = false) => {
         addComputerMessage('Out of hard drive memory')
         return
     }
-    activateAllProgresses(7002)
+    activateAllProgresses(8002)
     useInventoryResource('harddrive', 1)
     saveGameAtSlot(slotNumber)
     reRenderDesktop(false)

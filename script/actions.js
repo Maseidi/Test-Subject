@@ -262,7 +262,7 @@ const equipNothing = () => {
 }
 
 export const shiftDown = () => {
-    if (!getProgressValueByNumber(100000004) && !getIsSurvival()) return
+    // if (!getProgressValueByNumber(100000004) && !getIsSurvival()) return
     if (getRefillStamina()) addClass(getPlayer(), 'walk')
     setSprintPressed(true)
     startSprint()

@@ -75,6 +75,10 @@ const renderGameOverScreen = () => {
     const title = document.createElement('h1')
     title.textContent = getIsSurvival()
         ? `you survived ${getChaos()} ${getChaos() === 1 ? 'round' : 'rounds'}`
+        : Math.random() < 0.2
+        ? 'Skill Issue'
+        : Math.random() < 0.2
+        ? 'Git Gud'
         : 'You are dead'
     const continueOption = createAndAddClass('div', 'common-option')
     continueOption.textContent = getIsSurvival() ? `try again` : 'continue'
