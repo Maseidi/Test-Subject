@@ -1,6 +1,7 @@
 import { loadMapMakerWithGivenData } from './main-menu.js'
 import { loadMapMakerFromSlot } from './mapMaker/data-manager.js'
 import { getDefaultSettings, setSettings } from './settings.js'
+import { renderMainMenu } from './main-menu.js'
 
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('./script/sw.js')
