@@ -13,8 +13,7 @@ export class StingerMovementService extends AbstractMovementService {
         this.enemy.poisonCounter = this.enemy.poisonCounter || 0
         if (this.enemy.poisonCounter >= useDeltaTime(900)) this.addPoison()
         this.enemy.poisonCounter += 1
-        this.enemy.pathFindingService.findPath()
-        this.move2Destination()
+        super.displaceEnemy()
     }
 
     addPoison() {

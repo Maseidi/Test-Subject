@@ -53,7 +53,7 @@ export class AbstractVisionService {
         )
             return false
         const angle = getProperty(this.enemy.sprite.firstElementChild.children[1], 'transform', 'rotateZ(', 'deg)')
-        const predicateRunner = this.predicate(this.enemy.angleState, angle)
+        const predicateRunner = this.#predicate(this.enemy.angleState, angle)
         const runners = [
             predicateRunner(0, 80, -80, 0),
             predicateRunner(0, 125, -35, 0),
@@ -67,7 +67,7 @@ export class AbstractVisionService {
         return runners.reduce((a, b) => a || b)
     }
 
-    predicate(state, angle) {
+    #predicate(state, angle) {
         let stateCounter = -1
         return (s1, e1, s2, e2) => {
             stateCounter++

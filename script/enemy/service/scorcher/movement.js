@@ -13,8 +13,7 @@ export class ScorcherMovementService extends AbstractMovementService {
         this.enemy.flameCounter = this.enemy.flameCounter || 0
         if (this.enemy.flameCounter >= useDeltaTime(600)) this.addFlame()
         this.enemy.flameCounter += 1
-        this.enemy.pathFindingService.findPath()
-        this.move2Destination()
+        super.displaceEnemy()
     }
 
     addFlame() {
