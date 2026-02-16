@@ -1,4 +1,4 @@
-const VERSION = '1.0.3'
+const VERSION = '2.0.0'
 
 const contentToCache = [
     '/',
@@ -274,7 +274,7 @@ const contentToCache = [
     '/script/survival/data-manager.js',
     '/script/survival/spawn-manager.js',
     '/script/survival/variables.js',
-    '/script/sw.js',
+    '/sw.js',
     '/script/throwable-details.js',
     '/script/throwable-loader.js',
     '/script/torch-loader.js',

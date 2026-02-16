@@ -1,10 +1,8 @@
-import { loadMapMakerWithGivenData } from './main-menu.js'
-import { loadMapMakerFromSlot } from './mapMaker/data-manager.js'
 import { getDefaultSettings, setSettings } from './settings.js'
 import { renderMainMenu } from './main-menu.js'
 
 if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('./script/sw.js')
+    await navigator.serviceWorker.register('sw.js')
 }
 
 for (let i = 0; i < 10; i++) {
@@ -30,17 +28,7 @@ window.addEventListener('contextmenu', e => e.preventDefault())
 history.pushState({}, '')
 window.addEventListener('click', () => {
     if (IS_MOBILE) return
-    // document.body.requestFullscreen()
 })
 window.addEventListener('popstate', () => history.pushState({}, ''))
 renderMainMenu()
-//loadMapMakerWithGivenData(() => loadMapMakerFromSlot(2))
 navigator.keyboard.lock(['Escape'])
-// console.log(localStorage.getItem(`map-slot-${'2'}-${'interactables'}`))
-// console.log(localStorage.getItem(`map-slot-${'2'}-${'walls'}`))
-// console.log(localStorage.getItem(`map-slot-${'2'}-${'enemies'}`))
-// console.log(localStorage.getItem(`map-slot-${'2'}-${'rooms'}`))
-// console.log(localStorage.getItem(`map-slot-${'2'}-${'loaders'}`))
-// console.log(localStorage.getItem(`map-slot-${'2'}-${'popups'}`))
-// console.log(localStorage.getItem(`map-slot-${'2'}-${'dialogues'}`))
-// console.log(localStorage.getItem(`map-slot-${'2'}-${'shop-items'}`))
