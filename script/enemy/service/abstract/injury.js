@@ -74,7 +74,6 @@ export class AbstractInjuryService {
             if (knock) knockEnemy(this.enemy, knock)
             addClass(this.enemy.sprite.firstElementChild.firstElementChild, 'damaged')
             this.enemy.damagedCounter = 1
-            if (this.enemy.state === STUNNED) this.enemy.state = CHASE
         }
         if (isGun(name)) {
             if (!getProgressValueByNumber(100000004) && !getIsSurvival()) {

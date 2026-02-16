@@ -378,7 +378,7 @@ const manageThrowables = () => {
         } = throwableObj
 
         rotateThrowable(throwable, baseSpeed)
-        handleInteractability(throwable, time, name)
+        handleThrowable(throwable, time, name)
         throwable.setAttribute('acc-counter', accCounter + 1)
         const nextBaseSpeed = baseSpeed - getSpeedPerFrame(2)
 
@@ -435,16 +435,9 @@ const blindEnemies = throwable => {
     })
 }
 
-const THROWABLE_FUNCTIONALITY = new Map([
-    ['grenade', explodeGrenade],
-    ['flashbang', blindEnemies],
-])
-
-const handleInteractability = (throwable, time, name) => {
-    if (time === useDeltaTime(180)) {
-        THROWABLE_FUNCTIONALITY.get(name)(throwable)
-        throwable.remove()
-    }
+const handleThrowable = (throwable, time, name) => {
+    if (time === useDeltaTime(180) && name === 'flashbang') blindEnemies(throwable)
+    else if (time === useDeltaTime(30) && name === 'grenade') explodeGrenade(throwable)
     throwable.setAttribute('time', time + 1)
 }
 
