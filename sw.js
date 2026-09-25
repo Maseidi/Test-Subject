@@ -1,4 +1,4 @@
-const VERSION = '5.0.0'
+const VERSION = '6.1.7'
 
 const contentToCache = [
     './',
@@ -175,6 +175,8 @@ const contentToCache = [
     './script/actions.js',
     './script/angle-manager.js',
     './script/computer.js',
+    './script/campaign-builder.js',
+    './script/campaign-stats.js',
     './script/controls.js',
     './script/data-manager.js',
     './script/dialogue-manager.js',
@@ -212,6 +214,7 @@ const contentToCache = [
     './script/enemy/service/tracker/notification.js',
     './script/enemy/service/tracker/vision.js',
     './script/enemy/type/abstract-enemy.js',
+    './script/enemy/type/campaign-boss.js',
     './script/enemy/type/grabber.js',
     './script/enemy/type/normal-enemy.js',
     './script/enemy/type/ranger.js',
@@ -229,6 +232,7 @@ const contentToCache = [
     './script/gun-loader.js',
     './script/interactables.js',
     './script/inventory.js',
+    './script/item-descriptions.js',
     './script/knock-manager.js',
     './script/loader.js',
     './script/loot-manager.js',

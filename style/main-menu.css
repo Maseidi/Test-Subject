@@ -8,6 +8,60 @@
     flex-direction: column;
 }
 
+.campaign-complete {
+    top: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 200;
+    gap: 32px;
+    overflow: auto;
+    align-items: center;
+    justify-content: center;
+    background: #2b2b2b;
+    text-align: center;
+}
+
+.game-title.campaign-complete-title {
+    font-size: clamp(32px, 6vw, 64px);
+    letter-spacing: clamp(3px, 1.5vw, 16px);
+}
+
+.campaign-complete-stats {
+    width: min(480px, 100%);
+    padding: 24px;
+    color: wheat;
+    border-top: 3px solid #cb2d3e;
+    background: rgba(0, 0, 0, 0.3);
+}
+
+.campaign-complete-stat {
+    display: flex;
+    gap: 20px;
+    padding: 12px 0;
+    justify-content: space-between;
+    border-bottom: 1px solid rgba(245, 222, 179, 0.25);
+}
+
+.campaign-complete-stat:last-child {
+    border-bottom: 0;
+}
+
+.campaign-complete-continue {
+    padding: 12px 24px;
+    color: wheat;
+    cursor: pointer;
+    border: 1px solid wheat;
+    background: transparent;
+    font-size: 18px;
+    letter-spacing: 6px;
+    text-transform: uppercase;
+}
+
+.campaign-complete-continue:hover,
+.campaign-complete-continue:focus-visible {
+    background: rgba(245, 222, 179, 0.3);
+}
+
 .game-title {
     color: wheat;
     font-size: 64px;

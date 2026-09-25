@@ -11,6 +11,8 @@ import {
     getCurrentRoomPoisons,
     getCurrentRoomSolid,
     getCurrentRoomThrowables,
+    setCurrentRoomExplosions,
+    setCurrentRoomThrowables,
     getDialogueContainer,
     getInteractButton,
     getPlayer,
@@ -31,14 +33,12 @@ import {
     NO_OFFENCE,
     STUNNED,
 } from './enemy/enemy-constants.js'
-import { getEnemies, getLoaders, getPopups, getRooms } from './entities.js'
+import { getEnemies, getLoaders, getRooms } from './entities.js'
 import { findEquippedTorchById, getInventory } from './inventory.js'
 import { knockPlayer } from './knock-manager.js'
 import { dropLoot } from './loot-manager.js'
-import { damagePlayer, infectPlayer2SpecificVirus, poisonPlayer, setPlayer2Fire } from './player-health.js'
-import { Popup } from './popup-manager.js'
+import { damagePlayer, poisonPlayer, setPlayer2Fire } from './player-health.js'
 import { activateAllProgresses, getProgressValueByNumber } from './progress-manager.js'
-import { Progress } from './progress.js'
 import { loadCurrentRoom } from './room-loader.js'
 import { playFlashbang } from './sound-manager.js'
 import { noOffenseCounterLimit } from './startup.js'
@@ -68,7 +68,6 @@ import {
     getEquippedTorchId,
     getExplosionDamageCounter,
     getGrabbed,
-    getIsSurvival,
     getMaxHealth,
     getNoOffenseCounter,
     getPlayingDialogue,
@@ -177,6 +176,7 @@ const findNearInteractables = () => {
 
 const handleDoorInteractables = int => {
     const popup = int.firstElementChild
+    if (!popup || !popup.classList.contains('popup')) return
     handleDoorWithCodeIdealInteraction(int, popup)
     if (containsClass(int, 'open')) removePopup(popup)
     else if (!interactionPredicate(int)) removePopup(popup)
@@ -224,27 +224,6 @@ const hanldeRestOfInteractables = int => {
     else if (int.getAttribute('moving-towards-player') === 'true') removePopup(popup)
     else {
         setAsInteractingObject(popup, int)
-        if (getProgressValueByNumber(10012) && !getIsSurvival()) {
-            const name = int.getAttribute('name')
-            if (name === 'stash' && !getProgressValueByNumber(100000011)) {
-                getPopups().push(
-                    new Popup(
-                        'Use Stash to store and manage your items in a more organized environment.',
-                        Progress.builder().setRenderProgress(100000011),
-                    ),
-                )
-                activateAllProgresses(100000011)
-            }
-            if (name === 'vendingMachine' && !getProgressValueByNumber(100000012)) {
-                getPopups().push(
-                    new Popup(
-                        'Use Vending Machine to buy items, sell items, and upgrade your weapons.',
-                        Progress.builder().setRenderProgress(100000012),
-                    ),
-                )
-                activateAllProgresses(100000012)
-            }
-        }
     }
 }
 
@@ -324,7 +303,6 @@ const manageBullets = () => {
                 addSplatter()
                 if (containsClass(bullet, 'scorcher-bullet')) setPlayer2Fire()
                 if (containsClass(bullet, 'stinger-bullet')) poisonPlayer()
-                infectPlayer2SpecificVirus(bullet.getAttribute('virus'))
             }
             bullets2Remove.set(bullet, true)
             bullet.remove()
@@ -436,9 +414,18 @@ const blindEnemies = throwable => {
 }
 
 const handleThrowable = (throwable, time, name) => {
-    if (time === useDeltaTime(180) && name === 'flashbang') blindEnemies(throwable)
-    else if (time === useDeltaTime(30) && name === 'grenade') explodeGrenade(throwable)
-    throwable.setAttribute('time', time + 1)
+    if (time === useDeltaTime(180) && name === 'flashbang') {
+        blindEnemies(throwable)
+        removeThrowable(throwable)
+    } else if (time === useDeltaTime(60) && name === 'grenade') {
+        explodeGrenade(throwable)
+        removeThrowable(throwable)
+    } else throwable.setAttribute('time', time + 1)
+}
+
+const removeThrowable = throwable => {
+    throwable.remove()
+    setCurrentRoomThrowables(getCurrentRoomThrowables().filter(item => item !== throwable))
 }
 
 const wallIntersection = (throwable, speedX, speedY) => {
@@ -486,6 +473,7 @@ const manageExplosions = () => {
         if (time >= limit) explosion.remove()
         explosion.setAttribute('time', time + 1)
     })
+    setCurrentRoomExplosions(getCurrentRoomExplosions().filter(explosion => explosion.isConnected))
 }
 
 const explodePlayer = explosion => {
@@ -499,9 +487,12 @@ const explodePlayer = explosion => {
 }
 
 const explodeEnemies = explosion => {
+    if (!explosion.hitEnemies) explosion.hitEnemies = new WeakSet()
     for (const enemy of getCurrentRoomEnemies()) {
         if (enemy.health === 0) continue
+        if (explosion.hitEnemies.has(enemy)) continue
         if (!collide(enemy.sprite, explosion, 0)) continue
+        explosion.hitEnemies.add(enemy)
         enemy.injuryService.damageEnemy('grenade', Math.min(getThrowableDetail('grenade', 'damage'), enemy.health))
     }
 }

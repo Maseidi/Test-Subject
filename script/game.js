@@ -1,4 +1,5 @@
 import { managePlayerAngle } from './angle-manager.js'
+import { tickCampaignTime } from './campaign-stats.js'
 import { manageEntities } from './entity-manager.js'
 import { manageGameOver } from './game-over.js'
 import { manageHealthStatus } from './player-health.js'
@@ -21,6 +22,7 @@ export const play = (mapMaker = false, survival = false) => {
     startUp()
 
     const gameId = window.setInterval(() => {
+        tickCampaignTime(getPause())
         if (getPause()) return
         if (getIsSurvival()) manageSpawns()
         manageSprint()

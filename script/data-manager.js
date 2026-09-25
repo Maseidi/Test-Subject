@@ -1,4 +1,6 @@
 import { buildEnemy } from './enemy/enemy-factory.js'
+import { normalizeCampaignShopItems } from './campaign-builder.js'
+import { recordCampaignSave, resetCampaignStatistics } from './campaign-stats.js'
 import {
     getDialogues,
     getEnemies,
@@ -18,7 +20,7 @@ import {
     setWalls,
 } from './entities.js'
 import { getInitialInventory, getInventory, setInventory } from './inventory.js'
-import { dialogues, enemies, interactables, loaders, popups, rooms, shopItems, walls } from './new-game.js'
+import { createNewGameData } from './new-game.js'
 import { getPasswords, initPasswords, setPasswords } from './password-manager.js'
 import { getInitialProgress, getProgress, setProgress } from './progress-manager.js'
 import { getShopItems, setShopItems } from './shop-item.js'
@@ -122,11 +124,14 @@ import {
     setWeaponWheel,
 } from './variables.js'
 
+let rooms, walls, loaders, enemies, interactables, popups, dialogues, shopItems, passwordNames
+
 export const prepareNewGameData = difficulty => {
+    ;({ rooms, walls, loaders, enemies, interactables, popups, dialogues, shopItems, passwordNames } = createNewGameData())
     initNewGameVariables(undefined, undefined, difficulty)
     initNewGameRooms()
     initNewGameWalls()
-    initPasswords()
+    initPasswords(passwordNames)
     initNewGameLoaders()
     initNewGameProgress()
     initNewGameInventory()
@@ -216,6 +221,8 @@ export const initConstants = () => {
 }
 
 export const initNewGameVariables = (spawnX = 225, spawnY = 600, difficulty) => {
+    const playthroughId = Date.now()
+    resetCampaignStatistics(playthroughId)
     const newGameVariables = {
         mapX: 0,
         mapY: 0,
@@ -246,7 +253,7 @@ export const initNewGameVariables = (spawnX = 225, spawnY = 600, difficulty) => 
         equippedTorchId: null,
         roundsFinished: 0,
         timesSaved: 0,
-        playthroughId: Date.now(),
+        playthroughId,
         difficulty,
     }
     setVariables(newGameVariables)
@@ -290,6 +297,7 @@ const setVariables = variables => {
 
 export const saveGameAtSlot = slotNumber => {
     setTimesSaved(getTimesSaved() + 1)
+    recordCampaignSave()
     saveRooms(slotNumber)
     saveWalls(slotNumber)
     saveLoaders(slotNumber)
@@ -331,7 +339,7 @@ const saveStats = slotNumber =>
         `slot-${slotNumber}`,
         JSON.stringify({
             timeStamp: Date.now(),
-            room: getRooms().get(getCurrentRoomId()).label,
+            room: getRooms().get(getCurrentRoomId()).label || `Room ${getCurrentRoomId()}`,
             saves: getTimesSaved(),
             difficulty: getDifficulty(),
             rounds: getRoundsFinished(),
@@ -483,7 +491,8 @@ const loadEnemies = slotNumber => {
 
 const loadVariables = slotNumber => setVariables(JSON.parse(localStorage.getItem(`slot-${slotNumber}-variables`)))
 
-const loadShopItems = slotNumber => simpleLoad(slotNumber, 'shop-items', setShopItems)
+const loadShopItems = slotNumber =>
+    setShopItems(normalizeCampaignShopItems(JSON.parse(localStorage.getItem(`slot-${slotNumber}-shop-items`))))
 
 const loadInventory = slotNumber => simpleLoad(slotNumber, 'inventory', setInventory)
 

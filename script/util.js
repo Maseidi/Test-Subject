@@ -225,11 +225,10 @@ export const removeEquipped = () => {
 export const isStatUpgrader = item => [ADRENALINE, HEALTH_POTION, ENERGY_DRINK, LUCK_PILLS].includes(item.name)
 
 export const renderShadow = brightness => {
-    if (brightness === 100) return
-    else
-        getShadowContainer().firstElementChild.style.background = `radial-gradient(circle at center,transparent,black ${
-            brightness * 10
-        }px)`
+    const shadow = getShadowContainer().firstElementChild
+    shadow.style.background = brightness >= 100
+        ? 'transparent'
+        : `radial-gradient(circle at center,transparent,black ${brightness * 10}px)`
 }
 
 export const difficulties = {

@@ -10,36 +10,27 @@ import {
     getThrowButton,
     getUiEl,
 } from './elements.js'
-import { getInteractables, getPopups } from './entities.js'
+import { getInteractables } from './entities.js'
 import { getGunDetails, isGun } from './gun-details.js'
 import { renderStats } from './gun-examine.js'
+import { getItemDescription } from './item-descriptions.js'
 import { renderGun } from './gun-loader.js'
 import { NOTE } from './loot.js'
 import { getPasswords } from './password-manager.js'
-import {
-    findHealtStatusChildByClassName,
-    useAntidote,
-    useBandage,
-    useHealthPotion,
-    useVaccine,
-} from './player-health.js'
+import { useAntidote, useBandage, useHealthPotion, useVaccine } from './player-health.js'
 import { useAdrenaline } from './player-movement.js'
 import { useEnergyDrink } from './player-sprint.js'
-import { Popup } from './popup-manager.js'
 import {
     activateAllProgresses,
     deactivateAllProgresses,
-    getProgressValueByNumber,
     toggleDoor,
 } from './progress-manager.js'
-import { Progress } from './progress.js'
 import { renderInteractable } from './room-loader.js'
 import { IS_MOBILE } from './script.js'
-import { getSettings } from './settings.js'
 import { playClickSoundEffect } from './sound-manager.js'
 import { isThrowable } from './throwable-details.js'
 import { renderThrowable } from './throwable-loader.js'
-import { quitPage, renderQuit, renderReloadButton, renderSlots, renderThrowButton } from './user-interface.js'
+import { quitPage, renderQuit, renderReloadButton, renderSlots, renderThrowButton, renderWeaponUi } from './user-interface.js'
 import {
     addAllAttributes,
     addClass,
@@ -65,7 +56,6 @@ import {
     getEquippedTorchId,
     getEquippedWeaponId,
     getHealth,
-    getInfection,
     getIsSurvival,
     getMaxHealth,
     getMaxStamina,
@@ -134,37 +124,26 @@ let dropElem
 let dropObject
 export const pickupDrop = drop => {
     if (drop.lastElementChild && containsClass(drop.lastElementChild, 'not-ideal')) return
+    if (drop.getAttribute('name') === 'pouch') {
+        upgradeInventory()
+        removeDrop(drop)
+        updateInteractablePopups()
+        return
+    }
     dropElem = drop
     dropObject = element2Object(dropElem)
+    const gunsBefore = inventory.flat().filter(entry => entry && isGun(entry.name)).length
     searchPack()
     searchEmpty()
     checkSpecialScenarios()
     handleVaccinePickup(dropObject)
     updateInteractablePopups()
+    if (isGun(dropObject.name) && gunsBefore === 1 && inventory.flat().filter(entry => entry && isGun(entry.name)).length >= 2)
+        activateAllProgresses('6012')
     if (countItem('bandage') > 0 && getHealth() < getMaxHealth() && getHealButton())
         removeClass(getHealButton(), 'disabled')
-    handleFirstTimeBandagePickup()
 }
 
-const handleFirstTimeBandagePickup = () => {
-    if (getIsSurvival()) return
-    if (!getProgressValueByNumber(100000002) && countItem('bandage') > 0) {
-        getPopups().push(
-            new Popup(() => {
-                if (getHealButton()) addClass(getHealButton(), 'glow')
-                return `Use ${IS_MOBILE ? `the heal button` : `<span>${getSettings().controls.heal}</span>`} to heal.`
-            }, Progress.builder().setRenderProgress(100000002).setProgress2Active(100000003)),
-        )
-        getPopups().push(
-            new Popup(() => {
-                if (getHealButton()) removeClass(getHealButton(), 'glow')
-                addClass(getUiEl().children[0], 'glow')
-                return `You can view your health bar at the top left corner`
-            }, Progress.builder().setRenderProgress(100000003)),
-        )
-        activateAllProgresses(100000002)
-    }
-}
 
 const searchPack = () => {
     const pack = MAX_PACKSIZE[dropObject.name] || 1
@@ -252,7 +231,7 @@ export const updateInteractablePopups = () => getCurrentRoomInteractables()?.for
 
 export const updateInteractablePopup = interactable => {
     if (Array.from(interactable.classList).includes('enemy-backward-detector')) return
-    if (interactable.getAttribute('name') === 'door') return
+    if (['door', 'pouch'].includes(interactable.getAttribute('name'))) return
     const { space, name } = element2Object(interactable)
     const popup = interactable.lastElementChild
     if (isEnoughSpace(name, space)) removeClass(popup, 'not-ideal')
@@ -365,11 +344,12 @@ export const removeDrop = drop => {
 
 const updateWeaponWheel = () => {
     const index = getWeaponWheel().findIndex(item => item === null)
-    getWeaponWheel()[index] = dropObject.id
+    if (index !== -1) getWeaponWheel()[index] = dropObject.id
 }
 
 export const upgradeInventory = () => {
     const index = inventory.flat().findIndex(block => block === 'locked')
+    if (index === -1) return
     const row = Math.floor(index / 4)
     const column = index % 4
     inventory[row][column] = null
@@ -445,7 +425,7 @@ export const renderHeadingAndDescription = () => {
 const inventoryEvents = () => {
     const background = getPauseContainer().firstElementChild
     Array.from(background.firstElementChild.firstElementChild.children)
-        .filter(block => block.getAttribute('heading') && block.getAttribute('description'))
+        .filter(block => block.getAttribute('heading'))
         .forEach(item => {
             renderDescriptionEvent(item)
             removeDescriptionEvent(item)
@@ -457,7 +437,8 @@ export const renderDescriptionEvent = item => {
     const itemObj = element2Object(item)
     item.addEventListener('mouseenter', renderDescriptionContent, true)
     item.heading = `${itemObj.heading}`
-    item.description = `${itemObj.description}`
+    item.description = itemObj.description && itemObj.description !== 0 && itemObj.description !== '0'
+        ? String(itemObj.description) : getItemDescription(itemObj.name)
     item.isNote = itemObj.name === NOTE
     item.isExamined = itemObj.examined
 }
@@ -511,13 +492,31 @@ const removeDescriptionContent = e => {
 
 export const optionsEvents = item => item.addEventListener('click', addOptionsEvent, true)
 
+let optionsCloseTimer = null
+
+const removeOptions = item => item.querySelector('.options')?.remove()
+
+const scheduleOptionsClose = item => {
+    clearTimeout(optionsCloseTimer)
+    optionsCloseTimer = setTimeout(() => {
+        // never close while the pointer is actually hovering the options or the item
+        if (item.querySelector('.options')?.matches(':hover')) return
+        removeOptions(item)
+    }, 150)
+}
+
 const addOptionsEvent = e => {
+    if (e.target.closest('.options')) return
     playClickSoundEffect()
     const target = e.currentTarget
+    removeOptions(target)
+    clearTimeout(optionsCloseTimer)
     const options = createAndAddClass('div', 'options')
     renderOptions(target, options)
-    target.addEventListener('mouseleave', () => options.remove())
     target.append(options)
+    options.addEventListener('mouseenter', () => clearTimeout(optionsCloseTimer))
+    target.addEventListener('mouseleave', () => scheduleOptionsClose(target))
+    options.addEventListener('mouseleave', () => scheduleOptionsClose(target))
 }
 
 export const isItemUsable = itemObj =>
@@ -548,7 +547,7 @@ const renderOptions = (item, options) => {
         if (getEquippedWeaponId() && itemObj.name === findEquippedWeaponById()?.name) {
             if (getReloading() || getShooting()) renderDropOption = false
         } else {
-            if (allowSitchGun && (getProgressValueByNumber(6009) || getIsSurvival())) createOption(options, 'equip')
+            if (allowSitchGun) createOption(options, 'equip')
         }
         createOption(options, 'shortcut')
         createOption(options, 'examine')
@@ -804,6 +803,11 @@ const equipWeaponFromInventory = itemObj => {
     const equipped = findEquippedWeaponById()
     unequipTorch()
     setShootCounter(getEquippedItemDetail(equipped, 'firerate') * 60)
+    renderWeaponUi()
+    getReloadButton()?.remove()
+    renderReloadButton()
+    getThrowButton()?.remove()
+    renderThrowButton()
     equipWeaponFromInventoryOnAimMode(equipped.name)
 }
 
@@ -842,7 +846,7 @@ const selectAsSlot = e => {
     const selectedId = Number(e.target.getAttribute('selected-weapon'))
     const selectedSlotNum = getWeaponWheel().findIndex(x => x === selectedId)
     getWeaponWheel()[targetSlotNum] = selectedId
-    getWeaponWheel()[selectedSlotNum] = slotWeaponId
+    if (selectedSlotNum !== -1) getWeaponWheel()[selectedSlotNum] = slotWeaponId
     removeInventory()
     renderInventory()
 }
@@ -924,19 +928,6 @@ const examine = item => {
     if (isGun(itemObj.name)) renderStats(itemObj)
     else if (itemObj.name === 'note') renderNote(item, itemObj)
     if (itemObj.onexamine) activateAllProgresses(itemObj.onexamine)
-    if (getProgressValueByNumber(5002) && !getProgressValueByNumber(100000000) && getInfection().length > 0) {
-        getPopups().push(
-            new Popup(() => {
-                const infectedContainer = findHealtStatusChildByClassName('infected-container')
-                const virusBar = infectedContainer.firstElementChild
-                addClass(virusBar, 'glow')
-                return `You are infected to a virus. You can view which viruses you are infected to at the ${
-                    IS_MOBILE ? `top` : `bottom left`
-                } of the screen. Use appropriate vaccines to defuse the desired infections.`
-            }, Progress.builder().setRenderProgress(100000000)),
-        )
-        activateAllProgresses(100000000)
-    }
 }
 
 const renderNote = (item, itemObj) => {

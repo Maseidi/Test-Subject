@@ -26,9 +26,27 @@ export const ENEMY_CAP = IS_MOBILE ? 20 : 40
 window.addEventListener('contextmenu', e => e.preventDefault())
 
 history.pushState({}, '')
-window.addEventListener('click', () => {
-    if (IS_MOBILE) return
-})
+let fullscreenRequestPending = false
+const enterFullscreenOnInteraction = () => {
+    if (document.fullscreenElement || document.webkitFullscreenElement || fullscreenRequestPending) return
+
+    const page = document.documentElement
+    const requestFullscreen = page.requestFullscreen || page.webkitRequestFullscreen
+    if (!requestFullscreen) return
+
+    try {
+        fullscreenRequestPending = true
+        Promise.resolve(requestFullscreen.call(page))
+            .catch(() => {})
+            .finally(() => {
+                fullscreenRequestPending = false
+            })
+    } catch (_) {
+        fullscreenRequestPending = false
+    }
+}
+window.addEventListener('click', enterFullscreenOnInteraction, true)
+window.addEventListener('touchend', enterFullscreenOnInteraction, true)
 window.addEventListener('popstate', () => history.pushState({}, ''))
 renderMainMenu()
-navigator.keyboard.lock(['Escape'])
+navigator.keyboard?.lock?.(['Escape'])?.catch?.(() => {})

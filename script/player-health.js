@@ -1,5 +1,7 @@
 import { getCurrentRoomEnemies, getHealButton, getHealthStatusContainer, getMapEl, getPlayer } from './elements.js'
 import { CHASE, NO_OFFENCE } from './enemy/enemy-constants.js'
+import { recordCampaignDamage } from './campaign-stats.js'
+import { activateAllProgresses } from './progress-manager.js'
 import { countItem, getInventory, useInventoryResource } from './inventory.js'
 import { healthManager } from './user-interface.js'
 import {
@@ -114,6 +116,7 @@ const negateDirection = (setOppositeDir, setDir) => {
 
 export const damagePlayer = damage => {
     if (getNoOffenseCounter() !== 0) return
+    recordCampaignDamage()
     addAllClasses(getMapEl(), 'camera-shake', 'animation')
     getMapEl().addEventListener('animationend', () => removeAllClasses(getMapEl(), 'camera-shake', 'animation'))
     if (countItem('armor') > 0) damage /= 2
@@ -168,6 +171,7 @@ export const poisonPlayer = () => {
     setPoisoned(true)
     renderHealthStatusChildByClassName('poisoned-container')
     manageDizziness()
+    if (!getIsSurvival()) activateAllProgresses('6020')
 }
 
 const manageExplosionDamagedState = () => {

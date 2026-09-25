@@ -103,6 +103,10 @@
     border: 1px solid black;
 }
 
+.door[campaign="true"].open {
+    display: none;
+}
+
 .ver-1.open {
     transform: translateY(-100%);
 }

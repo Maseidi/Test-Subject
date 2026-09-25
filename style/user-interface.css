@@ -191,8 +191,12 @@
 }
 
 .hint-popup > div > p > span {
-    padding: 2px 5px;
+    display: inline-block;
+    padding: 0 8px;
+    margin: 0 2px;
     border: 1px solid wheat;
+    border-radius: 4px;
+    background: #202020;
 }
 
 .hint-popup > div > span {

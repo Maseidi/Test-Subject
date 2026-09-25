@@ -6,16 +6,16 @@ import { quitPage, renderQuit } from './user-interface.js'
 import { createAndAddClass, getProperty } from './util.js'
 import { getElementInteractedWith, setPauseCause } from './variables.js'
 
-const passwordNames = []
-
 let passwords = new Map([])
 export const setPasswords = val => {
     passwords = val
 }
 export const getPasswords = () => passwords
 
-export const initPasswords = () =>
-    passwordNames.forEach(name => passwords.set(name, Math.floor(Math.random() * 99900) + 100))
+export const initPasswords = (passwordNames = []) => {
+    passwords = new Map([])
+    passwordNames.forEach(name => passwords.set(name, Math.floor(Math.random() * 90000) + 10000))
+}
 
 export const renderPasswordInput = () => {
     const code = getElementInteractedWith().getAttribute('code')

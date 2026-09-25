@@ -3,11 +3,9 @@ import {
     Adrenaline,
     Antidote,
     Bandage,
-    BlueVaccine,
     Coin,
     EnergyDrink,
     Flashbang,
-    GreenVaccine,
     Grenade,
     GunDrop,
     HardDrive,
@@ -17,24 +15,19 @@ import {
     MagnumAmmo,
     Note,
     PistolAmmo,
-    PurpleVaccine,
-    RedVaccine,
     RifleAmmo,
     ShotgunShells,
     SmgAmmo,
     Stick,
-    YellowVaccine,
 } from './interactables.js'
 import { MAX_PACKSIZE, removeDrop } from './inventory.js'
 import {
     ADRENALINE,
     ANTIDOTE_LOOT,
     BANDAGE_LOOT,
-    BLUE_VACCINE,
     COIN_LOOT,
     ENERGY_DRINK,
     FLASHBANG_LOOT,
-    GREEN_VACCINE,
     GRENADE_LOOT,
     HARDDRIVE_LOOT,
     HEALTH_POTION,
@@ -42,14 +35,11 @@ import {
     MAGNUM_AMMO_LOOT,
     NOTE,
     PISTOL_AMMO_LOOT,
-    PURPLE_VACCINE,
     RANDOM,
-    RED_VACCINE,
     RIFLE_AMMO_LOOT,
     SHOTGUN_SHELLS_LOOT,
     SMG_AMMO_LOOT,
     STICK_LOOT,
-    YELLOW_VACCINE,
 } from './loot.js'
 import { renderInteractable } from './room-loader.js'
 import { playBreakCrate } from './sound-manager.js'
@@ -120,11 +110,6 @@ const dropRandomLoot = (left, top) => {
         { obj: Flashbang, chance: 0.04 },
         { obj: MagnumAmmo, chance: 0.02 },
         { obj: ShotgunShells, chance: 0.2 },
-        { obj: RedVaccine, chance: 0.1, predicate: () => !getIsSurvival() },
-        { obj: BlueVaccine, chance: 0.1, predicate: () => !getIsSurvival() },
-        { obj: GreenVaccine, chance: 0.1, predicate: () => !getIsSurvival() },
-        { obj: PurpleVaccine, chance: 0.1, predicate: () => !getIsSurvival() },
-        { obj: YellowVaccine, chance: 0.1, predicate: () => !getIsSurvival() },
         { obj: LuckPills, chance: 0.0003, predicate: () => getLuckPillsDropped() < 10 },
         { obj: Adrenaline, chance: 0.0003, predicate: () => getAdrenalinesDropped() < 10 },
         { obj: EnergyDrink, chance: 0.0003, predicate: () => getEnergyDrinksDropped() < 10 },
@@ -139,6 +124,7 @@ const dropRandomLoot = (left, top) => {
                 left,
                 top,
                 Math.floor(Math.random() * (item.obj ? MAX_PACKSIZE[new item.obj().name] / 2 : 1)) + 1,
+                true,
             ),
         )
         .find(drop => drop)
@@ -153,17 +139,12 @@ export const lootMap = new Map([
     [BANDAGE_LOOT, Bandage],
     [ANTIDOTE_LOOT, Antidote],
     [LUCK_PILLS, LuckPills],
-    [RED_VACCINE, RedVaccine],
     [HEALTH_POTION, HealthPotion],
     [ENERGY_DRINK, EnergyDrink],
     [GRENADE_LOOT, Grenade],
     [FLASHBANG_LOOT, Flashbang],
     [MAGNUM_AMMO_LOOT, MagnumAmmo],
     [HARDDRIVE_LOOT, HardDrive],
-    [BLUE_VACCINE, BlueVaccine],
-    [GREEN_VACCINE, GreenVaccine],
-    [PURPLE_VACCINE, PurpleVaccine],
-    [YELLOW_VACCINE, YellowVaccine],
     [RIFLE_AMMO_LOOT, RifleAmmo],
     [SHOTGUN_SHELLS_LOOT, ShotgunShells],
 ])
@@ -183,9 +164,9 @@ const dropDeterminedLoot = (decision, left, top, amount) => {
     } else return dropWeaponLoot(left, top, decision)
 }
 
-const decideItemDrop = (drop, chance, left, top, amount) => {
+const decideItemDrop = (drop, chance, left, top, amount, random = false) => {
     if (!drop) return null
-    if (new drop().name === 'coin') amount = (amount % 2) + 1
+    if (random && new drop().name === 'coin') amount = (amount % 2) + 1
     if (Math.random() < chance) var result = new drop(left, top, amount)
     Array.from([
         { expected: LUCK_PILLS, setter: setLuckPillsDropped, getter: getLuckPillsDropped },

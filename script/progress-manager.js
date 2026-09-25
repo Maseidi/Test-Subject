@@ -1,5 +1,5 @@
 import { renderDialogue } from './dialogue-manager.js'
-import { getCurrentRoomDoors } from './elements.js'
+import { getCurrentRoomDoors, getCurrentRoomSolid, setCurrentRoomSolid } from './elements.js'
 import { getEnemies, getInteractables } from './entities.js'
 import { getDoorObject } from './loader.js'
 import { renderPopup } from './popup-manager.js'
@@ -70,9 +70,11 @@ const toggleDoors = (number, open = true) =>
 export const toggleDoor = (door, open = true) => {
     if (!open) {
         removeClass(door, 'open')
+        if (!getCurrentRoomSolid().includes(door)) getCurrentRoomSolid().push(door)
         return
     }
     addClass(door, 'open')
+    setCurrentRoomSolid(getCurrentRoomSolid().filter(solid => solid !== door))
     const { renderprogress, progress2active, progress2deactive } = element2Object(door)
     if (renderprogress) activateAllProgresses(renderprogress)
     if (progress2active) activateAllProgresses(progress2active)
@@ -109,17 +111,23 @@ const updateEnemies = number =>
 
 export const updateKillAllEnemies = () => {
     const aliveEnemies = getAliveEnemies(true)
+    const bossAlive = aliveEnemies.some(enemy => enemy.type === 'campaign-boss')
     getEnemies()
         .get(getCurrentRoomId())
         .forEach((enemy, index) => {
-            if (!enemy.killAll) return
+            if (enemy.health === 0 || !enemy.killAll) return
+            if (bossAlive && !progress[enemy.killAll]) return
             if (
                 aliveEnemies.find(
-                    e => e.index !== index && (!e.killAll || Number(e.renderProgress) <= Number(enemy.killAll)),
+                    e => e.index !== index && (bossAlive
+                        ? e.type !== 'campaign-boss' && progress[e.renderProgress] &&
+                            Number(e.renderProgress) <= Number(enemy.killAll)
+                        : !e.killAll || Number(e.renderProgress) <= Number(enemy.killAll)),
                 )
             )
                 return
             enemy.killAll = null
+            progress[enemy.renderProgress] = true
             spawnEnemy(enemy)
         })
 }

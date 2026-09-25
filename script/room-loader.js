@@ -46,6 +46,7 @@ import { Wall } from './wall.js'
 
 export const loadCurrentRoom = () => {
     setStunnedCounter(0)
+    if (getCurrentRoomId() !== 41) document.querySelector('.campaign-boss-health')?.remove()
     initElements()
     renderRoom()
     renderWalls()
@@ -92,7 +93,7 @@ const manageRoomProgress = () => {
     const room = getRooms().get(getCurrentRoomId())
     commitProgressChanges(room.progress2Active, activateAllProgresses)
     commitProgressChanges(room.progress2Deactive, deactivateAllProgresses)
-    renderRoomName(room.label)
+    if (room.label) renderRoomName(room.label)
 }
 
 const commitProgressChanges = (toChange, action) => {
@@ -239,7 +240,8 @@ const enemiesLeft = object => {
     if (!killAll) return false
     return getEnemies()
         .get(getCurrentRoomId())
-        .find(enemy => enemy.health !== 0 && enemy.renderProgress <= killAll)
+        .find(enemy => enemy.health !== 0 && enemy.renderProgress <= killAll &&
+            (enemy.type !== 'campaign-boss' || typeof object.type !== 'string' || object.type === 'campaign-boss'))
 }
 
 export const renderDoor = (loader, open) => {
@@ -256,8 +258,9 @@ export const renderDoor = (loader, open) => {
     addPosition(doorElem, top, 'top', 'ver', doorObj.type)
     addPosition(doorElem, bottom, 'bottom', 'ver', doorObj.type)
     doorObj.isDoor = true
-    renderPopUp(doorElem, doorObj)
-    getCurrentRoomSolid().push(doorElem)
+    // Campaign doors convey their state visually; they have no interaction text.
+    if (doorObj.popup) renderPopUp(doorElem, doorObj)
+    if (!open) getCurrentRoomSolid().push(doorElem)
     getCurrentRoomInteractables().push(doorElem)
     getCurrentRoomDoors().push(doorElem)
     getCurrentRoom().append(doorElem)
@@ -268,7 +271,7 @@ const addPosition = (doorElem, input, direction, className, type) => {
         if (input === 26 || input === -26) return 0
         else if (input !== null) return input
     })()
-    if (output || input === 0) addClass(doorElem, `${className}-${type}`)
+    if (output !== undefined) addClass(doorElem, `${className}-${type}`)
     doorElem.style[direction] = `${output}px`
 }
 
@@ -473,7 +476,7 @@ const defineVision = element => {
 }
 
 const defineBackwardDetector = enemyObject => {
-    if (getIsSurvival() || [SPIKER, TRACKER].includes(enemyObject.type)) return
+    if (getIsSurvival() || [SPIKER, TRACKER, 'campaign-boss'].includes(enemyObject.type)) return
     const backwardDetector = createAndAddClass('div', `enemy-backward-detector`)
     addAllAttributes(
         backwardDetector,

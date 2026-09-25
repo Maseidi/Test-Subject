@@ -42,7 +42,6 @@ import {
     activateAllProgresses,
     deactivateAllProgresses,
     getProgress,
-    getProgressValueByNumber,
 } from './progress-manager.js'
 import { IS_MOBILE } from './script.js'
 import { getPlayingMusic, getPlayingSoundEffects, playEquip, playPickup } from './sound-manager.js'
@@ -206,7 +205,6 @@ export const exitAim = () => {
 }
 
 export const weaponSlotDown = key => {
-    if (!getProgressValueByNumber(6009) && !getIsSurvival()) return
     if (getReloading()) {
         renderErrorMessage("Can't switch while reloading")
         return
@@ -297,7 +295,10 @@ export const fDown = () => {
 }
 
 const breakFree = () => {
-    const slider = getGrabBar().lastElementChild
+    const grabBar = getGrabBar()
+    if (!grabBar?.isConnected) return
+    const slider = grabBar.lastElementChild
+    if (!slider) return
     const left = getProperty(slider, 'left', '%') * 10
     const first = Number(getGrabBar().getAttribute('first'))
     const second = Number(getGrabBar().getAttribute('second'))
@@ -646,6 +647,11 @@ export const wheelChange = event => {
         return
     }
     const index = getWeaponWheel().findIndex(weaponId => weaponId === getEquippedWeaponId())
+    if (index === -1) {
+        const firstSlot = getWeaponWheel().findIndex(weapon => weapon !== null)
+        if (firstSlot !== -1) weaponSlotDown(firstSlot + 1)
+        return
+    }
 
     if (event.deltaY > 0)
         var wheelMap = {

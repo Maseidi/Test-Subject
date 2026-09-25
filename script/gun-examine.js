@@ -15,7 +15,8 @@ export const renderStats = itemObj => {
     weaponStatsName.textContent = itemObj.heading
     weaponStatsName.style.color = `${getGunDetails().get(itemObj.name).antivirus}`
     const weaponStatsDesc = createAndAddClass('div', 'weapon-stats-desc')
-    weaponStatsDesc.textContent = itemObj.description
+    weaponStatsDesc.textContent = itemObj.description && itemObj.description !== 0 && itemObj.description !== '0'
+        ? itemObj.description : getGunDetails().get(itemObj.name).description
     const damage = createStat(itemObj, 'damage')
     const range = createStat(itemObj, 'range')
     const reload = createStat(itemObj, 'reload speed')

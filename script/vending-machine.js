@@ -2,6 +2,7 @@ import { getPauseContainer } from './elements.js'
 import { getGunDetails, getGunUpgradableDetail, isGun } from './gun-details.js'
 import { renderStats } from './gun-examine.js'
 import { Coin, Drop } from './interactables.js'
+import { getItemDescription } from './item-descriptions.js'
 import {
     countItem,
     getInventory,
@@ -32,6 +33,7 @@ import {
 } from './util.js'
 import {
     getAdrenalinesDropped,
+    getCurrentRoomId,
     getEnergyDrinksDropped,
     getHealthPotionsDropped,
     getIsSurvival,
@@ -110,7 +112,8 @@ const renderBuy = () => {
 const renderBuyItems = () => {
     const statUpgraderLimitRunner = isStatUpgraderOffLimit()
     return getShopItemsWithId()
-        .filter(item => !item.sold && getProgressValueByNumber(item.renderProgress) && statUpgraderLimitRunner(item))
+        .filter(item => !item.sold && (!item.roomId || item.roomId <= getCurrentRoomId()) &&
+            getProgressValueByNumber(item.renderProgress) && statUpgraderLimitRunner(item))
         .map(item => {
             const buyItem = object2Element(item)
             addClass(buyItem, 'buy-item')
@@ -186,7 +189,8 @@ const renderDealPopup = (itemObj, title, headingPredicate, confirmCb) => {
     if (headingPredicate) heading.textContent = `${itemObj.heading}`
     else heading.textContent = `${itemObj.amount} ${itemObj.heading}`
     const description = createAndAddClass('p', 'deal-popup-description')
-    description.textContent = `${itemObj.description}`
+    description.textContent = itemObj.description && itemObj.description !== 0 && itemObj.description !== '0'
+        ? itemObj.description : getItemDescription(itemObj.name)
     const btnContainer = createAndAddClass('div', 'deal-popup-btn-container')
     const cancel = renderCancelBtn(itemObj)
     btnContainer.append(cancel)
@@ -303,7 +307,7 @@ const manageBuy = itemObj => {
             heading,
             amount,
             space,
-            description,
+            description && description !== '0' ? description : getItemDescription(name),
             price / amount,
             Progress.builder().setRenderProgress(String(Number.MAX_SAFE_INTEGER)),
         )
@@ -567,6 +571,7 @@ const renderSell = () => {
     if (page !== 3) return
     const sell = createAndAddClass('div', 'sell')
     const items = getIsSurvival() ? getSurvivalItems() : getInventory().flat()
+    const campaignShop = getShopItems().some(item => item.roomId)
     items
         .filter(
             item =>
@@ -576,7 +581,10 @@ const renderSell = () => {
                 item.amount === (MAX_PACKSIZE[item.name] ?? 1),
         )
         .forEach(item => {
-            const sellItem = object2Element(item)
+            // Older campaign saves can contain drops priced per item instead of per pack.
+            const pricedItem = campaignShop && MAX_PACKSIZE[item.name] > 1
+                ? { ...item, price: 1 / MAX_PACKSIZE[item.name] } : item
+            const sellItem = object2Element(pricedItem)
             addClass(sellItem, 'sell-item')
             const wrapper = createAndAddClass('div', 'sell-wrapper')
             const img = createAndAddClass('img', 'sell-item-img')
@@ -586,7 +594,7 @@ const renderSell = () => {
             const amount = createAndAddClass('p', 'sell-item-amount')
             amount.textContent = `${item.amount}`
             const price = createAndAddClass('p', 'sell-item-price')
-            price.textContent = `${reEvaluatePrice(item.price * item.amount)}`
+            price.textContent = `${reEvaluatePrice(pricedItem.price * pricedItem.amount)}`
             const sellItemCoin = createAndAddClass('img', 'sell-item-coin')
             sellItemCoin.src = `./assets/images/coin.png`
             const info = createAndAddClass('div', 'info')
@@ -710,9 +718,11 @@ const removeStore = () => {
 }
 
 const removePopup = difference => {
+    const wasBuy = lastItemClickedOn?.classList.contains('buy-item')
     lastItemClickedOn?.remove()
     lastItemClickedOn = null
     getPauseContainer().firstElementChild.lastElementChild.remove()
     const coins = getPauseContainer().firstElementChild.firstElementChild.children[1]
     coins.textContent = Number(coins.textContent) + difference
+    if (wasBuy) getPauseContainer().firstElementChild.querySelector('.buy')?.replaceChildren(...renderBuyItems())
 }

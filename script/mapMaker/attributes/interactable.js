@@ -3,13 +3,11 @@ import {
     Adrenaline,
     Antidote,
     Bandage,
-    BlueVaccine,
     BodyArmor,
     Coin,
     Crate,
     EnergyDrink,
     Flashbang,
-    GreenVaccine,
     Grenade,
     GunDrop,
     HardDrive,
@@ -22,8 +20,6 @@ import {
     Note,
     PC,
     PistolAmmo,
-    PurpleVaccine,
-    RedVaccine,
     RifleAmmo,
     ShotgunShells,
     SmgAmmo,
@@ -31,7 +27,6 @@ import {
     Stash,
     Stick,
     VendingMachine,
-    YellowVaccine,
 } from '../../interactables.js'
 import { Loot, RANDOM } from '../../loot.js'
 import { Progress } from '../../progress.js'
@@ -68,15 +63,9 @@ const interactables = [
     EnergyDrink,
     BodyArmor,
     Note,
-    RedVaccine,
-    GreenVaccine,
-    PurpleVaccine,
-    YellowVaccine,
-    BlueVaccine,
 ]
 
 const itemsMap1 = new Map([
-    ['purplevaccine', PurpleVaccine],
     ['smgAmmo', SmgAmmo],
     ['coin', Coin],
     ['antidote', Antidote],
@@ -85,13 +74,9 @@ const itemsMap1 = new Map([
     ['harddrive', HardDrive],
     ['grenade', Grenade],
     ['flashbang', Flashbang],
-    ['redvaccine', RedVaccine],
     ['pistolAmmo', PistolAmmo],
     ['shotgunShells', ShotgunShells],
     ['magnumAmmo', MagnumAmmo],
-    ['greenvaccine', GreenVaccine],
-    ['yellowvaccine', YellowVaccine],
-    ['bluevaccine', BlueVaccine],
 ])
 
 const itemsMap2 = new Map([

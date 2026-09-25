@@ -79,6 +79,7 @@ const applyItemMovement = e => {
     appendAll(concan, confirm, bigger)
     appendAll(move, number, concan)
     target.append(move)
+    keepMovePopupOpen(target, move)
 }
 
 const doesPopupAlreadyExists = parent =>
@@ -86,7 +87,42 @@ const doesPopupAlreadyExists = parent =>
         child => containsClass(child, 'move-to-inventory') || containsClass(child, 'move-to-stash'),
     )
 
-const removeMove2StashPopupEvent = item => item.addEventListener('mouseleave', e => e.target.children[2]?.remove())
+const popupCloseTimers = new WeakMap()
+
+const getMovePopup = item =>
+    Array.from(item.children).find(
+        child => containsClass(child, 'move-to-inventory') || containsClass(child, 'move-to-stash'),
+    )
+
+const cancelMovePopupClose = item => {
+    clearTimeout(popupCloseTimers.get(item))
+    popupCloseTimers.delete(item)
+}
+
+const scheduleMovePopupClose = item => {
+    cancelMovePopupClose(item)
+    popupCloseTimers.set(
+        item,
+        setTimeout(() => {
+            const popup = getMovePopup(item)
+            if (!popup || item.matches(':hover') || popup.matches(':hover')) return
+            popup.remove()
+            popupCloseTimers.delete(item)
+        }, 150),
+    )
+}
+
+const keepMovePopupOpen = (item, popup) => {
+    popup.addEventListener('mouseenter', () => cancelMovePopupClose(item))
+    popup.addEventListener('mouseleave', () => scheduleMovePopupClose(item))
+}
+
+const addMovePopupCloseEvents = item => {
+    item.addEventListener('mouseenter', () => cancelMovePopupClose(item))
+    item.addEventListener('mouseleave', () => scheduleMovePopupClose(item))
+}
+
+const removeMove2StashPopupEvent = addMovePopupCloseEvents
 
 const renderMoveComponent = itemObj => {
     const move = createAndAddClass('div', `move-${itemObj.type}`)
@@ -222,7 +258,7 @@ const renderStashItems = () => {
 }
 
 const removeMove2InventoryPopupEvent = item => {
-    item.addEventListener('mouseleave', e => e.target.children[3]?.remove())
+    addMovePopupCloseEvents(item)
 }
 
 export const removeStash = () => getPauseContainer().firstElementChild.remove()

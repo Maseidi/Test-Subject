@@ -6,6 +6,7 @@ import { Scorcher } from './type/scorcher.js'
 import { Spiker } from './type/spiker.js'
 import { Stinger } from './type/stinger.js'
 import { Tracker } from './type/tracker.js'
+import { CampaignBoss } from './type/campaign-boss.js'
 
 export const ENEMIES_BY_TYPE = new Map([
     ['ranger', Ranger],
@@ -16,6 +17,7 @@ export const ENEMIES_BY_TYPE = new Map([
     ['scorcher', Scorcher],
     ['rock-crusher', RockCrusher],
     ['soul-drinker', SoulDrinker],
+    ['campaign-boss', CampaignBoss],
 ])
 
 export const buildEnemy = data => {
@@ -35,8 +37,11 @@ export const buildEnemy = data => {
 
     enemy.x = x
     enemy.y = y
+    enemy.knockImmune = data.knockImmune ?? false
+    enemy.healthMultiplier = data.healthMultiplier ?? 1
+    enemy.health *= enemy.healthMultiplier
     enemy.difficulties = difficulties
-    if (data.health === 0) enemy.health = 0
+    if (data.health != null) enemy.health = data.health
 
     return enemy
 }

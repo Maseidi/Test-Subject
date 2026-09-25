@@ -8,6 +8,7 @@ import {
     setGrabBar,
 } from '../../../elements.js'
 import { damagePlayer } from '../../../player-health.js'
+import { getSettings } from '../../../settings.js'
 import { renderInteractButton } from '../../../user-interface.js'
 import {
     addAllAttributes,
@@ -23,6 +24,7 @@ import {
     removeEquipped,
 } from '../../../util.js'
 import {
+    getHealth,
     getPlayerAngle,
     getSprintPressed,
     setAimMode,
@@ -49,38 +51,53 @@ export class GrabberGrabService {
     }
 
     handleGrabState() {
+        const grabBar = getGrabBar()
+        if (!grabBar || grabBar !== this.grabBar || !grabBar.isConnected) {
+            if (!grabBar || grabBar === this.grabBar) this.releasePlayer()
+            else this.enemy.state = STAND_AND_WATCH
+            return
+        }
         setNoOffenseCounter(0)
-        const slider = getGrabBar().lastElementChild
+        const slider = grabBar.lastElementChild
+        if (!slider) {
+            this.releasePlayer()
+            return
+        }
         const percent = getProperty(slider, 'left', '%')
-        if (percent >= 100) this.releasePlayer()
+        if (percent >= 100) {
+            this.releasePlayer()
+            return
+        }
         const newValue = percent + getSpeedPerFrame(0.7)
         slider.style.left = `${newValue}%`
         const current = 10 * newValue
-        this.#processPart(current, 'first')
-        this.#processPart(current, 'second')
-        this.#processPart(current, 'third')
+        this.#processPart(grabBar, current, 'first')
+        this.#processPart(grabBar, current, 'second')
+        this.#processPart(grabBar, current, 'third')
     }
 
-    #processPart(current, part) {
+    #processPart(grabBar, current, part) {
+        if (!grabBar.isConnected) return
         if (
-            current > Number(getGrabBar().getAttribute(part)) + 100 &&
-            getGrabBar().getAttribute(`${part}-done`) !== 'true'
+            current > Number(grabBar.getAttribute(part)) + 100 &&
+            grabBar.getAttribute(`${part}-done`) !== 'true'
         ) {
-            addClass(getGrabBar(), `${part}-fail`)
+            addClass(grabBar, `${part}-fail`)
             damagePlayer(this.enemy.damage / 6)
-            getGrabBar().setAttribute(`${part}-done`, true)
+            grabBar.setAttribute(`${part}-done`, true)
         }
     }
 
     grabPlayer() {
         addSplatter()
+        damagePlayer(this.enemy.damage / 2)
+        if (getHealth() === 0) return
         setGrabbed(true)
         setAimMode(false)
         exitAimModeAnimation()
         getInteractButton()?.remove()
         renderInteractButton()
         removeEquipped()
-        damagePlayer(this.enemy.damage / 2)
         if (getSprintPressed()) removeClass(getPlayer(), 'run')
         if (isMoving()) removeClass(getPlayer(), 'walk')
         addClass(this.enemy.sprite.firstElementChild.firstElementChild, 'no-transition')
@@ -103,9 +120,8 @@ export class GrabberGrabService {
             if ([RANGER, STINGER, SCORCHER].includes(elem.type) && elem.state === GO_FOR_RANGED) return
             else elem.state = STAND_AND_WATCH
         })
-        this.enemy.state = GRAB
-        this.enemy.offenceService.infectPlayer()
         this.renderQte()
+        this.enemy.state = GRAB
     }
 
     renderQte() {
@@ -125,11 +141,12 @@ export class GrabberGrabService {
         const message = createAndAddClass('p', 'grab-bar-message')
         message.textContent = 'press'
         const button = createAndAddClass('p', 'grab-bar-btn')
-        button.textContent = 'f'
+        button.textContent = getSettings().controls.interact.replace(/^(Key|Digit)/, '')
         appendAll(messageContainer, message, button)
         appendAll(grabBar, firstElem, secondElem, thirdElem, messageContainer, slider)
         addAllAttributes(grabBar, 'first', first, 'second', second, 'third', third, 'damage', this.enemy.damage / 6)
         getPauseContainer().append(grabBar)
+        this.grabBar = grabBar
         setGrabBar(grabBar)
     }
 
@@ -148,6 +165,8 @@ export class GrabberGrabService {
     }
 
     removeQte() {
-        getPauseContainer().firstElementChild.remove()
+        this.grabBar?.remove()
+        if (getGrabBar() === this.grabBar) setGrabBar(null)
+        this.grabBar = null
     }
 }

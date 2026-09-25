@@ -4,10 +4,8 @@ import {
     AntidoteShopItem,
     ArmorShopItem,
     BandageShopItem,
-    BlueVaccineShopItem,
     EnergyDrinkShopItem,
     FlashbangShopItem,
-    GreenVaccineShopItem,
     GrenadeShopItem,
     GunShopItem,
     HardDriveShopItem,
@@ -17,13 +15,10 @@ import {
     MagnumAmmoShopItem,
     PistolAmmoShopItem,
     Pouch,
-    PurpleVaccineShopItem,
-    RedVaccineShopItem,
     RifleAmmoShopItem,
     ShotgunShellsShopItem,
     SmgAmmoShopItem,
     StickShopItem,
-    YellowVaccineShopItem,
 } from '../../shop-item.js'
 import { containsClass } from '../../util.js'
 import { getAttributesEl, getSelectedToolEl } from '../elements.js'
@@ -34,6 +29,7 @@ import { autocomplete, deleteButton, input, renderAttributes } from './shared.js
 export const renderShopItemAttributes = () => {
     renderAttributes()
     const shopItem = getItemBeingModified()
+    const shopItems = getShopItemTemplates()
 
     getAttributesEl().append(
         autocomplete(
@@ -85,7 +81,8 @@ export const renderShopItemAttributes = () => {
     )
 }
 
-const shopItems = [
+let shopItemTemplates = null
+const getShopItemTemplates = () => shopItemTemplates ??= [
     new BandageShopItem(),
     new HardDriveShopItem(),
     new PistolAmmoShopItem(),
@@ -101,11 +98,6 @@ const shopItems = [
     new LuckPillsShopItem(),
     new EnergyDrinkShopItem(),
     new ArmorShopItem(),
-    new RedVaccineShopItem(),
-    new GreenVaccineShopItem(),
-    new BlueVaccineShopItem(),
-    new YellowVaccineShopItem(),
-    new PurpleVaccineShopItem(),
     new StickShopItem(),
     new AntidoteShopItem(),
     new LighterShopItem(),

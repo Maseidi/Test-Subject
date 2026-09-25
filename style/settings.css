@@ -11,8 +11,9 @@ body {
     background-color: #2b2b2b;
 }
 
-body::backdrop {
-    background: unset;
+html:fullscreen,
+html:fullscreen::backdrop {
+    background-color: #2b2b2b;
 }
 
 .buffer {

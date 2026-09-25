@@ -43,6 +43,8 @@ export class AbstractEnemy {
         this.y = this.waypoint.points[0].y ?? 0
         this.level = level ?? 1
         this.knock = knock ?? 100
+        this.knockImmune = false
+        this.healthMultiplier = 1
         this.loot = loot ?? {}
 
         this.difficulties = difficulty ? getDifficultyList(difficulty) : getDifficultyList(difficultyMap.MILD)

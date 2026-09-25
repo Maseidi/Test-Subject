@@ -3,6 +3,7 @@ import { renderDesktop } from './computer.js'
 import { loadGameFromSlot, prepareNewGameData } from './data-manager.js'
 import { getGrabBar, getPauseContainer, getPlayer } from './elements.js'
 import { finishUp } from './finish-up.js'
+import { recordCampaignDeath } from './campaign-stats.js'
 import { play } from './game.js'
 import { playTest } from './mapMaker/map-maker.js'
 import { return2MainMenu, return2MapMaker } from './pause-menu.js'
@@ -21,6 +22,7 @@ import {
 
 export const manageGameOver = () => {
     if (getHealth() !== 0) return
+    recordCampaignDeath()
     removeSavedSurvivals()
     setTimeout(() => renderGameOverScreen(), 1000)
     setPauseCause('game-over')
