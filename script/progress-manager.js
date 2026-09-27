@@ -1,156 +1,93 @@
-import { renderDialogue } from './dialogue-manager.js'
-import { getCurrentRoomDoors, getCurrentRoomSolid, setCurrentRoomSolid } from './elements.js'
-import { getEnemies, getInteractables } from './entities.js'
-import { getDoorObject } from './loader.js'
-import { renderPopup } from './popup-manager.js'
-import { renderInteractable, spawnEnemy } from './room-loader.js'
-import { addClass, element2Object, removeClass } from './util.js'
-import { getCurrentRoomId, getPause, getWaitingFunctions, setWaitingFunctions } from './variables.js'
+import { getCurrentRoomEnemies } from './elements.js'
+import { getEnemies } from './entities.js'
+import { refillAllAmmo } from './loadout.js'
+import { clearPlayerStatusEffects, restoreHealth } from './player-health.js'
+import { spawnEnemyAtFarthestPoint, setRoomDoorsOpen } from './room-loader.js'
+import { getSettings } from './settings.js'
+import { renderWeaponUi, staminaManager } from './user-interface.js'
+import {
+    getCurrentRoomId,
+    getMaxStamina,
+    setStamina,
+} from './variables.js'
 
-let progress = null
-export const setProgress = val => {
-    progress = val
-}
-export const getProgress = () => progress
+const SPAWN_INTERVAL_SECONDS = 1
 
-export const getInitialProgress = () => ({
-    [Number.MAX_SAFE_INTEGER]: true,
-})
+let progress = {}
+let spawnCounter = 0
+let autoSaveHandler = () => {}
 
-export const getProgressValueByNumber = number => progress[number]
+export const roomEnteredFlag = room => `ROOM_${room}_ENTERED`
+export const roomCombatActiveFlag = room => `ROOM_${room}_COMBAT_ACTIVE`
+export const roomClearedFlag = room => `ROOM_${room}_CLEARED`
 
-export const activateAllProgresses = numbers => {
-    if (!numbers) return
+export const setProgress = value => (progress = value ?? {})
+export const getProgress = () => ({ ...progress })
+export const getInitialProgress = () => ({})
+export const hasProgress = flag => Boolean(progress[flag])
+export const setAutoSaveHandler = handler => (autoSaveHandler = handler)
 
-    if (numbers === '9999999999') localStorage.setItem('survival-tutorial-done', 'DONE')
-
-    const progresses2Active = String(numbers).split(',')
-
-    for (const progress2Active of progresses2Active) {
-        if (progress[progress2Active]) continue
-        progress = {
-            ...progress,
-            [progress2Active]: true,
-        }
-        add2Queue(renderPopup, [progress2Active])
-        add2Queue(toggleDoors, [progress2Active])
-        add2Queue(updateEnemies, [progress2Active])
-        add2Queue(renderDialogue, [progress2Active])
-        add2Queue(updateInteractables, [progress2Active])
-    }
+export const activateProgress = flag => {
+    if (flag) progress[flag] = true
 }
 
-export const deactivateAllProgresses = numbers => {
-    if (!numbers) return
+export const initializeRoomCombat = () => {
+    const roomId = getCurrentRoomId()
+    activateProgress(roomEnteredFlag(roomId))
+    spawnCounter = 0
 
-    const progresses2Deactive = String(numbers).split(',')
-
-    for (const progress2Deactive of progresses2Deactive) {
-        if (!progress[progress2Deactive]) continue
-        progress = {
-            ...progress,
-            [progress2Deactive]: false,
-        }
-        add2Queue(toggleDoors, [progress2Deactive, false])
-    }
-}
-
-const add2Queue = (func, args) => {
-    if (getPause()) setWaitingFunctions([...getWaitingFunctions(), { fn: func, args }])
-    else func(...args)
-}
-
-// Note: Doors with kill all NEVER need a renderProgress property
-// Caution: Doors that need a key or code MUST have a renderProgress property!
-const toggleDoors = (number, open = true) =>
-    getCurrentRoomDoors()
-        .filter(door => Number(door.getAttribute('renderprogress')) === Number(number))
-        .forEach(door => toggleDoor(door, open))
-
-export const toggleDoor = (door, open = true) => {
-    if (!open) {
-        removeClass(door, 'open')
-        if (!getCurrentRoomSolid().includes(door)) getCurrentRoomSolid().push(door)
+    if (hasProgress(roomClearedFlag(roomId))) {
+        setRoomDoorsOpen(true)
         return
     }
-    addClass(door, 'open')
-    setCurrentRoomSolid(getCurrentRoomSolid().filter(solid => solid !== door))
-    const { renderprogress, progress2active, progress2deactive } = element2Object(door)
-    if (renderprogress) activateAllProgresses(renderprogress)
-    if (progress2active) activateAllProgresses(progress2active)
-    if (progress2deactive) deactivateAllProgresses(progress2deactive)
+
+    activateProgress(roomCombatActiveFlag(roomId))
+    setRoomDoorsOpen(false)
+    spawnNextPendingEnemy(roomId)
 }
 
-const getAliveEnemies = (needIndex = false) =>
-    (() => {
-        var currEnemies = getEnemies().get(getCurrentRoomId())
-        if (needIndex) currEnemies = currEnemies.map((enemy, index) => ({ ...enemy, index }))
-        return currEnemies
-    })().filter(enemy => enemy.health !== 0)
+export const manageRoomCombat = () => {
+    const roomId = getCurrentRoomId()
+    if (hasProgress(roomClearedFlag(roomId))) return
 
-export const updateKillAllDoors = () => {
-    const aliveEnemies = getAliveEnemies()
-    getCurrentRoomDoors().forEach(door => {
-        const killAll = door.getAttribute('killAll')
-        if (!killAll || aliveEnemies.find(enemy => !enemy.killAll && Number(enemy.renderProgress) <= Number(killAll)))
-            return
-        door.removeAttribute('killAll')
-        getDoorObject(door).killAll = null
-        toggleDoor(door)
-    })
+    const allEnemies = getEnemies().get(roomId)
+    const pending = allEnemies.filter(enemy => enemy.health > 0 && enemy.spawnState === 'pending')
+    if (pending.length) {
+        spawnCounter++
+        const interval = Math.max(1, Math.round(getSettings().display.fps * SPAWN_INTERVAL_SECONDS))
+        if (spawnCounter >= interval) {
+            spawnNextPendingEnemy(roomId)
+            spawnCounter = 0
+        }
+        return
+    }
+
+    if (getCurrentRoomEnemies().some(enemy => enemy.health > 0)) return
+    completeRoom(roomId)
 }
 
-const updateEnemies = number =>
-    getEnemies()
-        .get(getCurrentRoomId())
-        .forEach(enemy => {
-            if (enemy.health === 0) return
-            if (Number(enemy.renderProgress) !== Number(number)) return
-            spawnEnemy(enemy)
-        })
-
-export const updateKillAllEnemies = () => {
-    const aliveEnemies = getAliveEnemies(true)
-    const bossAlive = aliveEnemies.some(enemy => enemy.type === 'campaign-boss')
-    getEnemies()
-        .get(getCurrentRoomId())
-        .forEach((enemy, index) => {
-            if (enemy.health === 0 || !enemy.killAll) return
-            if (bossAlive && !progress[enemy.killAll]) return
-            if (
-                aliveEnemies.find(
-                    e => e.index !== index && (bossAlive
-                        ? e.type !== 'campaign-boss' && progress[e.renderProgress] &&
-                            Number(e.renderProgress) <= Number(enemy.killAll)
-                        : !e.killAll || Number(e.renderProgress) <= Number(enemy.killAll)),
-                )
-            )
-                return
-            enemy.killAll = null
-            progress[enemy.renderProgress] = true
-            spawnEnemy(enemy)
-        })
+const spawnNextPendingEnemy = roomId => {
+    const allEnemies = getEnemies().get(roomId)
+    const enemy = allEnemies.find(candidate => candidate.health > 0 && candidate.spawnState === 'pending')
+    if (!enemy) return false
+    enemy.index = allEnemies.indexOf(enemy)
+    spawnEnemyAtFarthestPoint(enemy)
+    return true
 }
 
-const updateInteractables = number =>
-    getInteractables()
-        .get(getCurrentRoomId())
-        .forEach((int, index) => {
-            if (Number(int.renderProgress) !== Number(number)) return
-            int.renderProgress = String(Number.MAX_SAFE_INTEGER)
-            renderInteractable(int, index)
-        })
+const completeRoom = roomId => {
+    progress[roomCombatActiveFlag(roomId)] = false
+    activateProgress(roomClearedFlag(roomId))
+    setRoomDoorsOpen(true)
+    refillPlayerForNextRoom()
+    autoSaveHandler()
+}
 
-export const updateKillAllInteractables = () => {
-    const aliveEnemies = getAliveEnemies()
-    getInteractables()
-        .get(getCurrentRoomId())
-        .forEach((int, index) => {
-            if (!int.killAll) return
-            if (aliveEnemies.find(enemy => !enemy.killAll && Number(enemy.renderProgress) <= Number(int.killAll)))
-                return
-            int.killAll = null
-            int.renderProgress = String(Number.MAX_SAFE_INTEGER)
-            renderInteractable(int, index)
-        })
+const refillPlayerForNextRoom = () => {
+    restoreHealth()
+    setStamina(getMaxStamina())
+    clearPlayerStatusEffects()
+    refillAllAmmo()
+    staminaManager(getMaxStamina())
+    renderWeaponUi()
 }

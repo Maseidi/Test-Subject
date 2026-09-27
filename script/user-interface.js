@@ -3,61 +3,44 @@ import {
     aimUp,
     escapeDown,
     fDown,
-    hDown,
+    flashbangDown,
+    grenadeDown,
     managePause,
     movePlayer,
     rDown,
     shiftDown,
     shiftUp,
-    spaceDown,
     stopMovement,
-    tabDown,
     weaponSlotDown,
 } from './actions.js'
 import {
+    getFlashbangButton,
+    getGrenadeButton,
     getPauseContainer,
-    getToggleMenuButton,
     getUiEl,
     setAimJoystick,
-    setHealButton,
+    setFlashbangButton,
+    setGrenadeButton,
     setInteractButton,
-    setInventoryButton,
     setMovementJoystick,
     setPauseButton,
     setReloadButton,
     setSlotsContainer,
     setSprintButton,
-    setThrowButton,
-    setToggleMenuButton,
     setUiEl,
 } from './elements.js'
-import {
-    calculateThrowableAmount,
-    calculateTotalAmmo,
-    countItem,
-    findEquippedWeaponById,
-    getInventory,
-    updateInteractablePopups,
-} from './inventory.js'
-import { activateAllProgresses } from './progress-manager.js'
-import { IS_MOBILE } from './script.js'
+import { getReserveAmmo, getThrowableCount, getWeaponById, getWeaponInSlot } from './loadout.js'
+import { IS_MOBILE } from './platform.js'
 import { addHoverSoundEffect, playClickSoundEffect } from './sound-manager.js'
-import { countItemStash } from './stash.js'
-import { isThrowable } from './throwable-details.js'
-import { addClass, angleOf2Points, appendAll, containsClass, createAndAddClass, removeClass } from './util.js'
+import { addClass, angleOf2Points, appendAll, containsClass, createAndAddClass } from './util.js'
 import {
     getAimMode,
-    getDraggedItem,
-    getElementInteractedWith,
     getEquippedWeaponId,
     getGrabbed,
     getHealth,
-    getIsSurvival,
     getMaxHealth,
     getMaxStamina,
-    getPauseCause,
     getStamina,
-    getWeaponWheel,
     setAimJoystickAngle,
     setFoundTarget,
     setIsSearching4Target,
@@ -67,114 +50,64 @@ import {
 import { isReloadDisabled } from './weapon-manager.js'
 
 export const renderUi = () => {
-    renderBackground()
-    renderHealthBar()
-    renderStaminaBar()
+    const ui = createAndAddClass('div', 'ui', 'ui-theme')
+    setUiEl(ui)
+    document.getElementById('root').append(ui)
+    const healthBar = createAndAddClass('div', 'health-bar')
+    healthBar.append(createAndAddClass('div', 'health'))
+    const staminaBar = createAndAddClass('div', 'stamina-bar')
+    staminaBar.append(createAndAddClass('div', 'stamina'))
+    appendAll(ui, healthBar, staminaBar)
+    healthManager(getHealth())
+    staminaManager(getStamina())
     renderWeaponUi()
 }
 
-const renderBackground = () => {
-    const root = document.getElementById('root')
-    const ui = createAndAddClass('div', 'ui', 'ui-theme')
-    setUiEl(ui)
-    root.append(ui)
+export const healthManager = health => {
+    const bar = getUiEl()?.querySelector('.health')
+    if (bar) bar.style.width = `${Math.max(0, Math.min(100, (health / getMaxHealth()) * 100))}%`
 }
 
-const renderHealthBar = () => {
-    const healthBarEl = createAndAddClass('div', 'health-bar')
-    const healthEl = createAndAddClass('div', 'health')
-    healthBarEl.append(healthEl)
-    getUiEl().append(healthBarEl)
-    healthManager(getHealth())
+export const staminaManager = stamina => {
+    const bar = getUiEl()?.querySelector('.stamina')
+    if (bar) bar.style.width = `${Math.max(0, Math.min(100, (stamina / getMaxStamina()) * 100))}%`
 }
-
-export const healthManager = inputHealth =>
-    abstractManager(inputHealth, getUiEl().firstElementChild.firstElementChild, getMaxHealth())
-
-const renderStaminaBar = () => {
-    const staminaBarEl = createAndAddClass('div', 'stamina-bar')
-    const staminaEl = createAndAddClass('div', 'stamina')
-    staminaBarEl.append(staminaEl)
-    getUiEl().append(staminaBarEl)
-    staminaManager(getStamina())
-}
-
-export const staminaManager = inputStamina =>
-    abstractManager(inputStamina, getUiEl().children[1].firstElementChild, getMaxStamina())
-
-const abstractManager = (input, elem, max) => (elem.style.width = `${(input / max) * 100}%`)
 
 export const renderWeaponUi = () => {
-    if (getUiEl().children[2]) getUiEl().children[2].remove()
-    if (!getEquippedWeaponId()) return
-    const equippedWeapon = findEquippedWeaponById()
-    const throwable = isThrowable(equippedWeapon.name)
-    const weaponContainer = createAndAddClass('div', 'weapon-container')
-    const weaponIcon = createAndAddClass('img', 'weapon-icon')
-    weaponIcon.src = `./assets/images/${equippedWeapon.name}.png`
-    addClass(weaponIcon, 'weapon-icon')
-    const ammoCount = createAndAddClass('div', 'ammo-count')
-    if (!throwable) {
-        var mag = document.createElement('p')
-        mag.textContent = `${equippedWeapon.currmag}`
-    }
-    const total = document.createElement('p')
-    total.textContent = throwable ? calculateThrowableAmount() : calculateTotalAmmo()
-    if (!throwable) ammoCount.append(mag)
-    ammoCount.append(total)
-    appendAll(weaponContainer, weaponIcon, ammoCount)
-    getUiEl().append(weaponContainer)
+    getUiEl()?.querySelector('.weapon-container')?.remove()
+    const weapon = getWeaponById(getEquippedWeaponId())
+    if (!weapon || !getUiEl()) return
+    const container = createAndAddClass('div', 'weapon-container')
+    const icon = createAndAddClass('img', 'weapon-icon')
+    icon.src = `./assets/images/${weapon.name}.png`
+    icon.alt = weapon.name
+    const ammo = createAndAddClass('div', 'ammo-count')
+    const magazine = document.createElement('p')
+    magazine.textContent = weapon.currmag
+    const reserve = document.createElement('p')
+    reserve.textContent = getReserveAmmo(weapon)
+    appendAll(ammo, magazine, reserve)
+    appendAll(container, icon, ammo)
+    getUiEl().append(container)
 }
 
-export const removeUi = () => getUiEl().remove()
+export const removeUi = () => getUiEl()?.remove()
 
-export const renderQuit = (mapMaker = false) => {
-    const quitContainer = createAndAddClass('div', 'quit')
-    const quitBtn = document.createElement('p')
-    quitBtn.textContent = 'esc'
-    const quitText = document.createElement('p')
-    quitText.textContent = 'quit'
-    appendAll(quitContainer, quitBtn, quitText)
-    addHoverSoundEffect(quitContainer)
-    quitContainer.addEventListener('click', () => quitPage(mapMaker))
-    getPauseContainer().lastElementChild.append(quitContainer)
+export const renderQuit = () => {
+    const quit = createAndAddClass('div', 'quit')
+    quit.append(Object.assign(document.createElement('p'), { textContent: 'esc' }))
+    quit.append(Object.assign(document.createElement('p'), { textContent: 'quit' }))
+    addHoverSoundEffect(quit)
+    quit.addEventListener('click', quitPage)
+    getPauseContainer().lastElementChild.append(quit)
 }
 
-export const quitPage = mapMaker => {
-    if (getDraggedItem()) return
-    const last = getPauseContainer().lastElementChild
-    if (Array.from(last.children).find(child => containsClass(child, 'popup-container'))) return
-    if (getToggleMenuButton()) getToggleMenuButton().style.visibility = 'visible'
+export const quitPage = () => {
+    const page = getPauseContainer()?.lastElementChild
+    if (!page) return
     playClickSoundEffect()
-    last.remove()
-    updateInteractablePopups()
-    if (getPauseCause() === 'inventory') var inInventory = true
-    if (
-        !mapMaker &&
-        (getPauseContainer().children.length === 0 || (getPauseContainer().children.length === 1 && getGrabbed()))
-    )
-        managePause()
-    if (inInventory && getEquippedWeaponId()) activateAllProgresses(6003)
-}
-
-export const itemNotification = name => {
-    const container = createAndAddClass('div', 'item-container')
-    const item = createAndAddClass('img', 'item-img')
-    item.src = `./assets/images/${name}.png`
-    const amount = createAndAddClass('p', 'item-amount')
-    amount.textContent = getIsSurvival() ? countItem(name) + (countItemStash(name) ?? 0) : countItem(name)
-    appendAll(container, item, amount)
-    return container
-}
-
-export const addMessage = (input, popup) => {
-    const message = popup.lastElementChild
-    message.textContent = input
-    addClass(message, 'message-animation')
-    message.addEventListener('animationend', () => {
-        removeClass(message, 'message-animation')
-        message.textContent = ''
-    })
+    page.remove()
+    managePause()
 }
 
 export const renderMovementJoystick = () => renderJoystick('movement', movePlayer, stopMovement, setMovementJoystick)
@@ -183,108 +116,93 @@ export const renderAimJoystick = () =>
     renderJoystick(
         'aim',
         angle => {
-            if (angle) setAimJoystickAngle(angle)
+            setAimJoystickAngle(angle)
             if (!getAimMode()) aimDown()
-            if (!isThrowable(findEquippedWeaponById()?.name)) setIsSearching4Target(true)
-            else setPlayerAimAngle(angle)
+            setIsSearching4Target(true)
+            setPlayerAimAngle(angle)
         },
         () => {
             aimUp()
             setShootPressed(false)
             setIsSearching4Target(false)
-            setFoundTarget(false)
+            setFoundTarget(null)
         },
         setAimJoystick,
     )
 
-const renderJoystick = (type, onTouchMove, onTouchEnd, setter) => {
+const renderJoystick = (type, onMove, onEnd, setter) => {
     if (!IS_MOBILE) return
-    const root = document.getElementById('root')
     const joystick = createAndAddClass('div', `${type}-joystick`, 'joystick', 'ui-theme')
     const handle = createAndAddClass('div', 'joystick-handle')
-    joystick.append(handle)
     const center = createAndAddClass('div', 'joystick-center')
-    joystick.append(center)
-    joystick.addEventListener('touchmove', e => {
-        e.preventDefault()
-        const { x, y } = joystick.getBoundingClientRect()
-        let { x: centerX, y: centerY, width: centerW, height: centerH } = center.getBoundingClientRect()
-        centerX -= centerW / 2
-        centerY -= centerH / 2
-        const newX = e.targetTouches[0].pageX
-        const newY = e.targetTouches[0].pageY
-        handle.style.left = `${newX - x}px`
-        handle.style.top = `${newY - y}px`
-        const angle = angleOf2Points(centerX, centerY, newX, newY)
-        onTouchMove(angle)
+    joystick.append(handle, center)
+    joystick.addEventListener('touchmove', event => {
+        event.preventDefault()
+        const bounds = joystick.getBoundingClientRect()
+        const centerBounds = center.getBoundingClientRect()
+        const x = event.targetTouches[0].pageX
+        const y = event.targetTouches[0].pageY
+        handle.style.left = `${x - bounds.x}px`
+        handle.style.top = `${y - bounds.y}px`
+        onMove(angleOf2Points(centerBounds.x, centerBounds.y, x, y))
     })
     joystick.addEventListener('touchend', () => {
-        onTouchEnd?.()
+        onEnd?.()
         handle.style = ''
     })
     setter(joystick)
-    root.append(joystick)
+    document.getElementById('root').append(joystick)
 }
 
-export const renderSprintButton = () => renderButton('sprint', null, shiftUp, setSprintButton, shiftDown)
-
-export const renderInventoryButton = () => renderButton('inventory', tabDown, null, setInventoryButton)
-
-export const renderInteractButton = () =>
-    renderButton('interact', fDown, null, setInteractButton, null, getElementInteractedWith() === null && !getGrabbed())
-
-export const renderHealButton = () =>
-    renderButton('heal', hDown, null, setHealButton, null, getHealth() >= getMaxHealth() || countItem('bandage') === 0)
-
-export const renderReloadButton = () =>
-    renderButton('reload', rDown, null, setReloadButton, null, isReloadDisabled(false))
-
+export const renderSprintButton = () => renderButton('sprint', shiftDown, shiftUp, setSprintButton)
 export const renderPauseButton = () => renderButton('pause', escapeDown, null, setPauseButton)
+export const renderReloadButton = () => renderButton('reload', rDown, null, setReloadButton, isReloadDisabled())
 
-export const renderThrowButton = () => {
-    if (!isThrowable(findEquippedWeaponById()?.name)) return
-    renderButton('throw', () => setShootPressed(true), null, setThrowButton, null, !getAimMode())
+export const renderInteractButton = () => {
+    if (!getGrabbed()) return
+    renderButton('interact', fDown, null, setInteractButton)
 }
 
-export const renderToggleMenuButton = () => renderButton('cart', spaceDown, null, setToggleMenuButton)
-
-const renderButton = (name, onTouchStart, onTouchEnd, setter, onTouchEvenOnDisabled, disabledPredicate) => {
-    const root = document.getElementById('root')
-    const button = getButton(name, onTouchStart, onTouchEnd, setter, onTouchEvenOnDisabled, disabledPredicate)
-    if (!button) return
-    root.append(button)
+export const renderThrowableButtons = () => {
+    getGrenadeButton()?.remove()
+    getFlashbangButton()?.remove()
+    renderButton('grenade', grenadeDown, null, setGrenadeButton, getThrowableCount('grenade') === 0)
+    renderButton('flashbang', flashbangDown, null, setFlashbangButton, getThrowableCount('flashbang') === 0)
 }
 
-const getButton = (name, onTouchStart, onTouchEnd, setter, onTouchEvenOnDisabled, disabledPredicate) => {
+const renderButton = (name, onStart, onEnd, setter, disabled = false) => {
     if (!IS_MOBILE) return
     const button = createAndAddClass('div', 'mobile-control-btn', `mobile-${name}-btn`, 'ui-theme')
     const image = new Image()
     image.src = `./assets/images/${name}.png`
+    image.alt = name
     button.append(image)
-    if (disabledPredicate === true) addClass(button, 'disabled')
-    button.addEventListener('touchstart', e => {
-        e.preventDefault()
-        onTouchEvenOnDisabled?.()
-        if (!containsClass(e.currentTarget, 'disabled')) onTouchStart?.()
+    if (disabled) addClass(button, 'disabled')
+    button.addEventListener('touchstart', event => {
+        event.preventDefault()
+        if (!containsClass(button, 'disabled')) onStart?.()
     })
-    if (onTouchEnd) button.addEventListener('touchend', onTouchEnd)
-    setter?.(button)
-    return button
+    if (onEnd) button.addEventListener('touchend', onEnd)
+    setter(button)
+    document.getElementById('root').append(button)
 }
 
 export const renderSlots = () => {
     if (!IS_MOBILE) return
-    const root = document.getElementById('root')
-    const slotsContainer = createAndAddClass('div', 'slot-container')
-    for (let i = 0; i < 4; i++) {
-        const button = getButton(`slot-${i + 1}`, () => weaponSlotDown(i + 1))
-        if (getWeaponWheel()[i] !== null) {
-            const flattenedInventory = getInventory().flat()
-            const name = flattenedInventory.find(item => item?.id === getWeaponWheel()[i]).name
-            button.firstElementChild.src = `./assets/images/${name}.png`
-        }
-        slotsContainer.append(button)
+    const container = createAndAddClass('div', 'slot-container')
+    for (let slot = 1; slot <= 5; slot++) {
+        const weapon = getWeaponInSlot(slot)
+        const button = createAndAddClass('div', 'mobile-control-btn', `mobile-slot-${slot}-btn`, 'ui-theme')
+        const image = new Image()
+        image.src = `./assets/images/${weapon.name}.png`
+        image.alt = `slot ${slot}: ${weapon.name}`
+        button.append(image)
+        button.addEventListener('touchstart', event => {
+            event.preventDefault()
+            weaponSlotDown(slot)
+        })
+        container.append(button)
     }
-    setSlotsContainer(slotsContainer)
-    root.append(slotsContainer)
+    setSlotsContainer(container)
+    document.getElementById('root').append(container)
 }

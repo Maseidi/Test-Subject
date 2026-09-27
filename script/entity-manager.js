@@ -1,86 +1,57 @@
-import { unequipTorch } from './actions.js'
-import { sources } from './dialogue-manager.js'
 import {
     getCurrentRoom,
     getCurrentRoomBullets,
     getCurrentRoomEnemies,
     getCurrentRoomExplosions,
     getCurrentRoomFlames,
-    getCurrentRoomInteractables,
     getCurrentRoomLoaders,
     getCurrentRoomPoisons,
+    getCurrentRoomPowerUps,
     getCurrentRoomSolid,
     getCurrentRoomThrowables,
-    setCurrentRoomExplosions,
-    setCurrentRoomThrowables,
-    getDialogueContainer,
-    getInteractButton,
     getPlayer,
-    getRoomNameContainer,
-    getShadowContainer,
-    getSpeaker,
     setCurrentRoomBullets,
+    setCurrentRoomExplosions,
     setCurrentRoomFlames,
     setCurrentRoomPoisons,
+    setCurrentRoomPowerUps,
+    setCurrentRoomThrowables,
 } from './elements.js'
-import {
-    CHASE,
-    GO_FOR_RANGED,
-    GRAB,
-    INVESTIGATE,
-    LOST,
-    MOVE_TO_POSITION,
-    NO_OFFENCE,
-    STUNNED,
-} from './enemy/enemy-constants.js'
-import { getEnemies, getLoaders, getRooms } from './entities.js'
-import { findEquippedTorchById, getInventory } from './inventory.js'
+import { CHASE, GRAB, LOST, NO_OFFENCE, STUNNED } from './enemy/enemy-constants.js'
+import { getLoaders, getRooms } from './entities.js'
+import { refillAllAmmo } from './loadout.js'
 import { knockPlayer } from './knock-manager.js'
-import { dropLoot } from './loot-manager.js'
-import { damagePlayer, poisonPlayer, setPlayer2Fire } from './player-health.js'
-import { activateAllProgresses, getProgressValueByNumber } from './progress-manager.js'
+import { damagePlayer, poisonPlayer, restoreHealth, setPlayer2Fire } from './player-health.js'
 import { loadCurrentRoom } from './room-loader.js'
-import { playFlashbang } from './sound-manager.js'
+import { playFlashbang, playPickup } from './sound-manager.js'
 import { noOffenseCounterLimit } from './startup.js'
 import { getThrowableDetail } from './throwable-details.js'
-import { removeTorch } from './torch-loader.js'
+import { renderThrowableButtons, renderWeaponUi } from './user-interface.js'
 import {
-    addAllAttributes,
-    addClass,
+    addAllClasses,
     addExplosion,
     addSplatter,
-    calculateBulletSpeed,
     collide,
     containsClass,
     createAndAddClass,
-    distance,
-    element2Object,
     getProperty,
     getSpeedPerFrame,
-    isAble2Interact,
     removeClass,
-    renderShadow,
     useDeltaTime,
 } from './util.js'
 import {
     getCurrentRoomId,
-    getElementInteractedWith,
-    getEquippedTorchId,
     getExplosionDamageCounter,
     getGrabbed,
     getMaxHealth,
     getNoOffenseCounter,
-    getPlayingDialogue,
-    getReloading,
     getRoomLeft,
     getRoomTop,
     getStunnedCounter,
     setAllowMove,
     setCurrentRoomId,
-    setElementInteractedWith,
     setExplosionDamageCounter,
     setNoOffenseCounter,
-    setPlayingDialogue,
     setRoomLeft,
     setRoomTop,
     setStunnedCounter,
@@ -89,214 +60,77 @@ import {
 export const manageEntities = () => {
     manageSolidObjects()
     manageLoaders()
-    manageInteractables()
     manageEnemies()
     manageBullets()
     manageFlames()
     managePoisons()
     manageThrowables()
     manageExplosions()
-    manageTorch()
-    managePopovers()
-    manageDialogues()
+    managePowerUps()
 }
 
 const manageSolidObjects = () => {
-    setAllowMove(true)
-    const collision = getCurrentRoomSolid().find(solid => collide(getPlayer().firstElementChild.children[1], solid, 12))
-    if (collision) setAllowMove(false)
+    const blockingSolid = getCurrentRoomSolid().find(
+        solid => !containsClass(solid, 'enemy-collider') && collide(getPlayer().firstElementChild.children[1], solid, 12),
+    )
+    setAllowMove(!blockingSolid)
 }
 
-let prevRoomId
+let previousRoomId = null
 const manageLoaders = () => {
-    const loader = getCurrentRoomLoaders().find(loader => collide(getPlayer().firstElementChild, loader, 0))
+    const loader = getCurrentRoomLoaders().find(
+        candidate => candidate.dataset.open === 'true' && collide(getPlayer().firstElementChild, candidate, 0),
+    )
     if (!loader) return
-    prevRoomId = getCurrentRoomId()
+    previousRoomId = getCurrentRoomId()
     setCurrentRoomId(Number(loader.classList[0]))
-    calculateNewRoomLeftAndTop(loader)
+    calculateNewRoomPosition(loader)
     getCurrentRoom().remove()
     loadCurrentRoom()
 }
 
-const calculateNewRoomLeftAndTop = prevLoader => {
-    const newRoom = getRooms().get(getCurrentRoomId())
-    const loader = getLoaders()
+const calculateNewRoomPosition = previousLoader => {
+    const room = getRooms().get(getCurrentRoomId())
+    const matchingLoader = getLoaders()
         .get(getCurrentRoomId())
-        .find(loader => loader.className === prevRoomId)
-
-    if (loader.bottom !== null)
-        var top =
-            loader.bottom === -26
-                ? newRoom.height - loader.height - loader.bottom - 52
-                : newRoom.height - loader.height - loader.bottom
-
-    if (loader.right !== null)
-        var left =
-            loader.right === -26
-                ? newRoom.width - loader.width - loader.right - 52
-                : newRoom.width - loader.width - loader.right
-
-    if (loader.top !== null) var top = loader.top === -26 ? loader.top + 52 : loader.top
-
-    if (loader.left !== null) var left = loader.left === -26 ? loader.left + 52 : loader.left
-
-    setRoomLeft(getRoomLeft() - left + getProperty(prevLoader, 'left', 'px'))
-    setRoomTop(getRoomTop() - top + getProperty(prevLoader, 'top', 'px'))
-}
-
-let interactables2Check = []
-let interactableDistanceCounter = -1
-const manageInteractables = () => {
-    findNearInteractables()
-    setElementInteractedWith(null)
-    interactables2Check.forEach(int => {
-        switch (int.getAttribute('name')) {
-            case 'speaker':
-                return
-            case 'door':
-                handleDoorInteractables(int)
-                break
-            case 'enemy-back':
-                handleEnemyInteractables(int)
-                break
-            default:
-                hanldeRestOfInteractables(int)
-        }
-    })
-    handleInteractButtonRender()
-}
-
-const findNearInteractables = () => {
-    interactableDistanceCounter++
-    if (interactableDistanceCounter >= useDeltaTime(20)) {
-        interactables2Check = getCurrentRoomInteractables().filter(int => distance(int, getPlayer()) < 200)
-        interactableDistanceCounter = 0
-    }
-}
-
-const handleDoorInteractables = int => {
-    const popup = int.firstElementChild
-    if (!popup || !popup.classList.contains('popup')) return
-    handleDoorWithCodeIdealInteraction(int, popup)
-    if (containsClass(int, 'open')) removePopup(popup)
-    else if (!interactionPredicate(int)) removePopup(popup)
-    else {
-        showPopup(popup)
-        setAsInteractingObject(popup, int)
-    }
-}
-
-const showPopup = popup => (popup.style.display = 'block')
-
-const removePopup = popup => (popup.style.display = 'none')
-
-const interactionPredicate = int => collide(getPlayer().firstElementChild, int, 20) && !getElementInteractedWith()
-
-const setAsInteractingObject = (popup, int) => {
-    showPopup(popup)
-    setElementInteractedWith(int)
-}
-
-const handleEnemyInteractables = int => {
-    if (!getProgressValueByNumber(3003)) return
-    const popup = int.firstElementChild
-    if (int.parentElement === null) return
-    const enemyElem = int.parentElement.parentElement
-    const enemyObject = getEnemyObject(enemyElem)
-    if (enemyObject?.health === 0) removePopup(popup)
-    else if (isEnemyNotified(enemyObject)) removePopup(popup)
-    else if (!interactionPredicate(int)) removePopup(popup)
-    else setAsInteractingObject(popup, int)
-}
-
-const getEnemyObject = enemyElem => {
-    const enemyPath = enemyElem.previousSibling.id
-    const index = Number(enemyPath.replace('path-', ''))
-    return getEnemies().get(getCurrentRoomId())[index]
-}
-
-const isEnemyNotified = enemyObj => ![LOST, INVESTIGATE, MOVE_TO_POSITION, STUNNED].includes(enemyObj?.state)
-
-const hanldeRestOfInteractables = int => {
-    const popup = int.children[1]
-    handleStaticInteractablesIdealInteraction(int, popup)
-    if (!interactionPredicate(int)) removePopup(popup)
-    else if (int.getAttribute('moving-towards-player') === 'true') removePopup(popup)
-    else {
-        setAsInteractingObject(popup, int)
-    }
-}
-
-const handleDoorWithCodeIdealInteraction = (int, popup) => {
-    if (!int.getAttribute('value')) return
-    refreshPopupIdealStyles(popup)
-}
-
-const refreshPopupIdealStyles = popup => {
-    if (isAble2Interact()) removeClass(popup, 'not-ideal')
-    else addClass(popup, 'not-ideal')
-}
-
-const handleStaticInteractablesIdealInteraction = (int, popup) => {
-    const name = int.getAttribute('name')
-    if (name === 'lever') {
-        if (getPlayingDialogue() || getReloading()) addClass(popup, 'not-ideal')
-        else removeClass(popup, 'not-ideal')
-        return
-    }
-    if (!['computer', 'stash', 'vendingMachine'].includes(name)) return
-    refreshPopupIdealStyles(popup)
-}
-
-const handleInteractButtonRender = () => {
-    if (!getInteractButton()) return
-    if (getElementInteractedWith()) {
-        var popup = getElementInteractedWith().children[1] ?? getElementInteractedWith().firstElementChild
-        if (containsClass(popup, 'not-ideal')) var disabled = true
-    }
-    if ((getElementInteractedWith() && !disabled) || getGrabbed()) removeClass(getInteractButton(), 'disabled')
-    else addClass(getInteractButton(), 'disabled')
+        .find(loader => loader.className === previousRoomId)
+    let top
+    let left
+    if (matchingLoader.bottom !== null)
+        top = matchingLoader.bottom === -26 ? room.height - matchingLoader.height - 26 : room.height - matchingLoader.height - matchingLoader.bottom
+    if (matchingLoader.right !== null)
+        left = matchingLoader.right === -26 ? room.width - matchingLoader.width - 26 : room.width - matchingLoader.width - matchingLoader.right
+    if (matchingLoader.top !== null) top = matchingLoader.top === -26 ? 26 : matchingLoader.top
+    if (matchingLoader.left !== null) left = matchingLoader.left === -26 ? 26 : matchingLoader.left
+    setRoomLeft(getRoomLeft() - left + getProperty(previousLoader, 'left', 'px'))
+    setRoomTop(getRoomTop() - top + getProperty(previousLoader, 'top', 'px'))
 }
 
 const manageEnemies = () => {
-    handleNoOffenceMode()
-    handleStunnedMode()
-    handleEnemies()
-}
-
-const handleNoOffenceMode = () => {
     if (getNoOffenseCounter() > 0) setNoOffenseCounter(getNoOffenseCounter() + 1)
-    if (getNoOffenseCounter() < noOffenseCounterLimit) return
-    getCurrentRoomEnemies()
-        .filter(elem => elem.state === NO_OFFENCE)
-        .forEach(elem => (elem.state = CHASE))
-    setNoOffenseCounter(0)
-}
-
-const handleStunnedMode = () => {
+    if (getNoOffenseCounter() >= noOffenseCounterLimit) {
+        getCurrentRoomEnemies()
+            .filter(enemy => enemy.state === NO_OFFENCE)
+            .forEach(enemy => (enemy.state = CHASE))
+        setNoOffenseCounter(0)
+    }
     if (getStunnedCounter() > 0) setStunnedCounter(getStunnedCounter() + 1)
-    if (getStunnedCounter() < useDeltaTime(600)) return
-    getCurrentRoomEnemies().forEach(elem => {
-        elem.state = LOST
-        elem.lostCounter = 1
-    })
-    setStunnedCounter(0)
+    if (getStunnedCounter() >= useDeltaTime(600)) {
+        getCurrentRoomEnemies().forEach(enemy => {
+            enemy.state = LOST
+            enemy.lostCounter = 1
+        })
+        setStunnedCounter(0)
+    }
+    getCurrentRoomEnemies().forEach(enemy => enemy.behave())
 }
-
-const handleEnemies = () =>
-    getCurrentRoomEnemies()
-        .sort(() => Math.random() - 0.5)
-        .forEach(elem => elem.behave())
 
 const manageBullets = () => {
-    const bullets2Remove = new Map()
+    const survivors = []
     for (const bullet of getCurrentRoomBullets()) {
-        const x = getProperty(bullet, 'left', 'px')
-        const y = getProperty(bullet, 'top', 'px')
-        const speedX = Number(bullet.getAttribute('speed-x'))
-        const speedY = Number(bullet.getAttribute('speed-y'))
-        bullet.style.left = `${x + speedX}px`
-        bullet.style.top = `${y + speedY}px`
+        bullet.style.left = `${getProperty(bullet, 'left', 'px') + Number(bullet.getAttribute('speed-x'))}px`
+        bullet.style.top = `${getProperty(bullet, 'top', 'px') + Number(bullet.getAttribute('speed-y'))}px`
+        let removed = false
         if (collide(bullet, getPlayer().firstElementChild, 0)) {
             if (!getGrabbed() && getNoOffenseCounter() === 0) {
                 damagePlayer(Number(bullet.getAttribute('damage')))
@@ -304,172 +138,86 @@ const manageBullets = () => {
                 if (containsClass(bullet, 'scorcher-bullet')) setPlayer2Fire()
                 if (containsClass(bullet, 'stinger-bullet')) poisonPlayer()
             }
-            bullets2Remove.set(bullet, true)
-            bullet.remove()
-            continue
-        }
-        for (const solid of getCurrentRoomSolid()) {
-            if (!containsClass(solid, 'enemy-collider') && collide(bullet, solid, 0)) {
-                bullets2Remove.set(bullet, true)
-                bullet.remove()
-            }
-        }
-        if (!collide(bullet, getCurrentRoom(), 0)) {
-            bullets2Remove.set(bullet, true)
-            bullet.remove()
-        }
+            removed = true
+        } else if (
+            getCurrentRoomSolid().some(
+                solid => !containsClass(solid, 'enemy-collider') && collide(bullet, solid, 0),
+            ) ||
+            !collide(bullet, getCurrentRoom(), 0)
+        )
+            removed = true
+        if (removed) bullet.remove()
+        else survivors.push(bullet)
     }
-    setCurrentRoomBullets(getCurrentRoomBullets().filter(bullet => !bullets2Remove.get(bullet)))
+    setCurrentRoomBullets(survivors)
 }
 
-const manageFlames = () => handleObstacles(getCurrentRoomFlames, 900, setPlayer2Fire, setCurrentRoomFlames)
+const manageFlames = () => manageHazards(getCurrentRoomFlames, setCurrentRoomFlames, 900, setPlayer2Fire)
+const managePoisons = () => manageHazards(getCurrentRoomPoisons, setCurrentRoomPoisons, 600, poisonPlayer)
 
-const managePoisons = () => handleObstacles(getCurrentRoomPoisons, 600, poisonPlayer, setCurrentRoomPoisons)
-
-const handleObstacles = (getItems, time, harmPlayer, setItems) => {
-    const obstacles2Remove = new Map()
-    getItems().forEach(item => {
-        const theTime = Number(item.getAttribute('time'))
-        if (theTime >= useDeltaTime(time)) {
-            obstacles2Remove.set(item, true)
-            item.remove()
+const manageHazards = (getter, setter, duration, harmPlayer) => {
+    const survivors = []
+    getter().forEach(item => {
+        const time = Number(item.getAttribute('time')) + 1
+        item.setAttribute('time', time)
+        if (time >= useDeltaTime(duration)) item.remove()
+        else {
+            if (collide(item, getPlayer(), 0)) harmPlayer()
+            survivors.push(item)
         }
-        item.setAttribute('time', theTime + 1)
-        if (collide(item, getPlayer(), 0)) harmPlayer()
     })
-    setItems(getItems().filter(item => !obstacles2Remove.get(item)))
+    setter(survivors)
 }
 
 const manageThrowables = () => {
-    for (const throwable of getCurrentRoomThrowables()) {
-        const throwableObj = element2Object(throwable)
-        let {
-            deg,
-            time,
-            name,
-            'speed-y': speedY,
-            'diff-x': diffX,
-            'base-speed': baseSpeed,
-            'speed-x': speedX,
-            'diff-y': diffY,
-            'acc-counter': accCounter,
-        } = throwableObj
-
-        rotateThrowable(throwable, baseSpeed)
-        handleThrowable(throwable, time, name)
-        throwable.setAttribute('acc-counter', accCounter + 1)
-        const nextBaseSpeed = baseSpeed - getSpeedPerFrame(2)
-
-        if (accCounter >= useDeltaTime(15) && nextBaseSpeed >= 0) {
-            const newSpeed = calculateBulletSpeed(deg, diffY / diffX, diffX, diffY, nextBaseSpeed)
-            speedX = Math.sign(speedX) * Math.abs(newSpeed.speedX)
-            speedY = Math.sign(speedY) * Math.abs(newSpeed.speedY)
-            addAllAttributes(
-                throwable,
-                'acc-counter',
-                0,
-                'speed-x',
-                speedX,
-                'speed-y',
-                speedY,
-                'base-speed',
-                nextBaseSpeed,
-            )
-        }
-
+    for (const throwable of [...getCurrentRoomThrowables()]) {
+        const speedX = Number(throwable.getAttribute('speed-x'))
+        const speedY = Number(throwable.getAttribute('speed-y'))
         throwable.style.left = `${getProperty(throwable, 'left', 'px') + speedX}px`
         throwable.style.top = `${getProperty(throwable, 'top', 'px') + speedY}px`
-        wallIntersection(throwable, speedX, speedY)
+        throwable.setAttribute('distance', Number(throwable.getAttribute('distance')) + Math.hypot(speedX, speedY))
+        const hitSolid = getCurrentRoomSolid().some(solid => collide(throwable, solid, 0))
+        const outside = !collide(throwable, getCurrentRoom(), 0)
+        if (!hitSolid && !outside) continue
+        impactThrowable(throwable)
     }
 }
 
-const rotateThrowable = (throwable, baseSpeed) => {
-    const angle = getProperty(throwable.firstElementChild, 'transform', 'rotateZ(', 'deg)') || 0
-    let newAngle = Number(angle) + Math.floor(Math.random() * baseSpeed * 10)
-    if (newAngle > 360) newAngle = 0
-    throwable.firstElementChild.style.transform = `rotateZ(${newAngle}deg)`
-}
-
-const explodeGrenade = throwable => {
-    const left = getProperty(throwable, 'left', 'px')
-    const top = getProperty(throwable, 'top', 'px')
-    addExplosion(left, top)
-}
-
-const blindEnemies = throwable => {
-    if (!collide(getCurrentRoom(), throwable, 0)) return
-    playFlashbang()
-    getCurrentRoomEnemies().forEach(enemy => {
-        if (enemy.state === GRAB) enemy.grabService.releasePlayer()
-        setStunnedCounter(1)
-        if (enemy.state !== GO_FOR_RANGED) enemy.state = STUNNED
-    })
-    const flashbang = createAndAddClass('div', 'flashbang', 'animation')
-    document.getElementById('root').append(flashbang)
-    const cloneShadow = getShadowContainer().firstElementChild.cloneNode()
-    flashbang.addEventListener('animationend', () => {
-        flashbang.remove()
-        getShadowContainer().append(cloneShadow)
-    })
-}
-
-const handleThrowable = (throwable, time, name) => {
-    if (time === useDeltaTime(180) && name === 'flashbang') {
-        blindEnemies(throwable)
-        removeThrowable(throwable)
-    } else if (time === useDeltaTime(60) && name === 'grenade') {
-        explodeGrenade(throwable)
-        removeThrowable(throwable)
-    } else throwable.setAttribute('time', time + 1)
-}
-
-const removeThrowable = throwable => {
+const impactThrowable = throwable => {
+    const name = throwable.getAttribute('name')
+    if (name === 'grenade') addExplosion(getProperty(throwable, 'left', 'px'), getProperty(throwable, 'top', 'px'))
+    else blindEnemies()
     throwable.remove()
     setCurrentRoomThrowables(getCurrentRoomThrowables().filter(item => item !== throwable))
 }
 
-const wallIntersection = (throwable, speedX, speedY) => {
-    const walls = getCurrentRoomSolid().filter(solid => !containsClass(solid, 'enemy-collider'))
-    for (const wall of walls) {
-        const stateX = speedX < 0 ? 10 : 20
-        const stateY = speedY < 0 ? 1 : 2
-        switch (stateX + stateY) {
-            case 11:
-                updateThrowableSpeed(throwable, wall, throwable.children[2], throwable.children[1], speedX, speedY)
-                break
-            case 12:
-                updateThrowableSpeed(throwable, wall, throwable.children[2], throwable.children[4], speedX, speedY)
-                break
-            case 21:
-                updateThrowableSpeed(throwable, wall, throwable.children[3], throwable.children[1], speedX, speedY)
-                break
-            case 22:
-                updateThrowableSpeed(throwable, wall, throwable.children[3], throwable.children[4], speedX, speedY)
-                break
-        }
-    }
-}
-
-const updateThrowableSpeed = (throwable, wall, colliderX, colliderY, speedX, speedY) => {
-    if (collide(colliderX, wall, 0)) {
-        throwable.setAttribute('speed-x', -speedX)
-        throwable.firstElementChild.style.transform = `scale(-1, 1)`
-    } else if (collide(colliderY, wall, 0)) {
-        throwable.setAttribute('speed-y', -speedY)
-        throwable.firstElementChild.style.transform = `scale(1, -1)`
-    }
+const blindEnemies = () => {
+    playFlashbang()
+    getCurrentRoomEnemies().forEach(enemy => {
+        if (enemy.state === GRAB) enemy.grabService?.releasePlayer()
+        enemy.state = STUNNED
+    })
+    setStunnedCounter(1)
+    const flash = createAndAddClass('div', 'flashbang', 'animation')
+    document.getElementById('root').append(flash)
+    flash.addEventListener(
+        'animationend',
+        () => {
+            flash.remove()
+        },
+        { once: true },
+    )
 }
 
 const manageExplosions = () => {
     getCurrentRoomExplosions().forEach(explosion => {
         explodePlayer(explosion)
         explodeEnemies(explosion)
-        explodeCrates(explosion)
         const time = Number(explosion.getAttribute('time'))
-        const scale = getProperty(explosion, 'transform', 'scale(', ')')
+        const scale = getProperty(explosion, 'transform', 'scale(', ')') || 1
         const limit = useDeltaTime(30)
-        if (time < Math.floor(limit / 3)) explosion.style.transform = `scale(${scale + getSpeedPerFrame(2)})`
-        else if (time < Math.floor((limit / 3) * 2)) explosion.style.transform = `scale(${scale - getSpeedPerFrame(2)})`
+        if (time < limit / 3) explosion.style.transform = `scale(${scale + getSpeedPerFrame(2)})`
+        else if (time < (limit * 2) / 3) explosion.style.transform = `scale(${scale - getSpeedPerFrame(2)})`
         if (time >= limit) explosion.remove()
         explosion.setAttribute('time', time + 1)
     })
@@ -477,99 +225,41 @@ const manageExplosions = () => {
 }
 
 const explodePlayer = explosion => {
-    if (getExplosionDamageCounter() !== 0) return
-    if (!collide(getPlayer(), explosion, 0)) return
+    if (getExplosionDamageCounter() !== 0 || !collide(getPlayer(), explosion, 0)) return
     damagePlayer((80 * getMaxHealth()) / 100)
-    knockPlayer(['U', 'L', 'R', 'D'].sort(() => Math.random() - 0.5)[0], 500)
+    knockPlayer(['U', 'L', 'R', 'D'][Math.floor(Math.random() * 4)], 500)
     addSplatter()
     setExplosionDamageCounter(1)
     setNoOffenseCounter(1)
 }
 
 const explodeEnemies = explosion => {
-    if (!explosion.hitEnemies) explosion.hitEnemies = new WeakSet()
-    for (const enemy of getCurrentRoomEnemies()) {
-        if (enemy.health === 0) continue
-        if (explosion.hitEnemies.has(enemy)) continue
-        if (!collide(enemy.sprite, explosion, 0)) continue
+    explosion.hitEnemies ??= new WeakSet()
+    getCurrentRoomEnemies().forEach(enemy => {
+        if (enemy.health <= 0 || explosion.hitEnemies.has(enemy) || !collide(enemy.sprite, explosion, 0)) return
         explosion.hitEnemies.add(enemy)
         enemy.injuryService.damageEnemy('grenade', Math.min(getThrowableDetail('grenade', 'damage'), enemy.health))
-    }
-}
-
-const explodeCrates = explosion => {
-    for (const int of getCurrentRoomInteractables()) {
-        if (int.getAttribute('name') !== 'crate') continue
-        if (!collide(explosion, int, 0)) continue
-        dropLoot(int)
-    }
-}
-
-let torchCounter = 0
-const manageTorch = () => {
-    if (!getEquippedTorchId()) return
-    const limit = useDeltaTime(180)
-    if (torchCounter < limit) torchCounter++
-    if (torchCounter !== limit) return
-    const torchOfInventory = findEquippedTorchById()
-    torchOfInventory.health--
-    const health = torchOfInventory.health
-    const roomBrightness = getRooms().get(getCurrentRoomId()).brightness * 10
-    if (health === 0) killTorch(torchOfInventory.row, torchOfInventory.column, roomBrightness)
-    else lightenEnvironment(health, roomBrightness)
-    torchCounter = 0
-}
-
-const killTorch = (row, column, brightness) => {
-    removeTorch()
-    unequipTorch()
-    getInventory()[row][column] = null
-    renderShadow(brightness)
-}
-
-const lightenEnvironment = (health, roomBrightness) => {
-    const brightness = (health / 100) * 40
-    renderShadow(Math.max(roomBrightness, brightness + 20))
-}
-
-const managePopovers = () => {
-    ;[getDialogueContainer(), getRoomNameContainer()].forEach(container => {
-        const popover = container?.firstElementChild
-        if (!popover) return
-        const timer = Number(popover.getAttribute('timer'))
-        const duration = Number(popover.getAttribute('duration'))
-        if (timer === duration) removePopover(popover)
-        popover.setAttribute('timer', timer + 1)
     })
 }
 
-const removePopover = popover => {
-    const progress2Active = popover.getAttribute('progress2active')
-    addClass(popover, 'fade-out')
-    const fadeOut = Number(popover.getAttribute('fade-out'))
-    popover.style.animationDuration = `${fadeOut}ms`
-    popover.addEventListener('animationend', () => {
-        popover.remove()
-        if (containsClass(popover, 'dialogue')) setPlayingDialogue(null)
-        activateAllProgresses(progress2Active)
+const managePowerUps = () => {
+    const remaining = []
+    getCurrentRoomPowerUps().forEach(powerUp => {
+        if (!collide(powerUp, getPlayer(), 0)) {
+            remaining.push(powerUp)
+            return
+        }
+        if (powerUp.dataset.powerUp === 'health') {
+            restoreHealth()
+            playPickup('bandage')
+        } else {
+            refillAllAmmo()
+            renderWeaponUi()
+            renderThrowableButtons()
+            playPickup('smgAmmo')
+        }
+        addAllClasses(powerUp, 'power-up-collected')
+        powerUp.remove()
     })
-}
-
-const manageDialogues = () => {
-    if (!getPlayingDialogue()) return
-
-    const { x, y, width } = (() => {
-        if (getPlayingDialogue().source === sources.MAIN) var src = getPlayer()
-        else if (getSpeaker() && getPlayingDialogue().source === sources.SPEAKER) var src = getSpeaker()
-        return src.getBoundingClientRect()
-    })()
-
-    if (x === undefined || y === undefined || width === undefined) return
-    const { width: dialogueWidth, height: dialogueHeight } =
-        getDialogueContainer().firstElementChild.getBoundingClientRect()
-    const newX =
-        x + width < 10 ? 10 : x + width + dialogueWidth > innerWidth - 10 ? innerWidth - 10 - dialogueWidth : x + width
-    const newY = y < 200 ? 200 : y + dialogueHeight > innerHeight + 20 ? innerHeight + 20 - dialogueHeight : y
-    getDialogueContainer().firstElementChild.style.left = `${newX}px`
-    getDialogueContainer().firstElementChild.style.top = `${newY}px`
+    setCurrentRoomPowerUps(remaining)
 }

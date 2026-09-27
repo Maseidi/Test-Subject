@@ -1,4 +1,3 @@
-import { getRoundsFinished } from '../../variables.js'
 import {
     CHASE,
     GRAB,
@@ -20,13 +19,13 @@ import { NormalReturnService } from '../service/normal/return.js'
 import { AbstractEnemy } from './abstract-enemy.js'
 
 export class Grabber extends AbstractEnemy {
-    constructor(level, path, loot, progress, virus, difficulties) {
-        const base = level + getRoundsFinished() * 5
+    constructor(level, path, virus) {
+        const base = level
         const health = Math.floor(base * 75 + Math.random() * 38)
         const damage = Math.floor(base * 8 + Math.random() * 8)
         const maxSpeed = 3 + Math.random()
 
-        super(GRABBER, 4, path, health, damage, maxSpeed, 400, 1.4, loot, progress, virus, difficulties, level, 125)
+        super(GRABBER, 4, path, health, damage, maxSpeed, 400, 1.4, virus, level, 125)
 
         this.injuryService = new GrabberInjuryService(this)
         this.movementService = new GrabberMovementService(this)

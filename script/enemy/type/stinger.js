@@ -1,4 +1,3 @@
-import { getIsSurvival, getRoundsFinished } from '../../variables.js'
 import {
     CHASE,
     GO_FOR_RANGED,
@@ -22,13 +21,13 @@ import { StingerShootingService } from '../service/stinger/shooting.js'
 import { AbstractEnemy } from './abstract-enemy.js'
 
 export class Stinger extends AbstractEnemy {
-    constructor(level, waypoint, loot, progress, virus, difficulties) {
-        const base = level + getRoundsFinished() * 5
+    constructor(level, waypoint, virus) {
+        const base = level
         const health = Math.floor(base * 66 + Math.random() * 5)
         const damage = Math.floor(base * 10 + Math.random() * 10)
         const maxSpeed = 2.75 + Math.random()
 
-        super(STINGER, 5, waypoint, health, damage, maxSpeed, 700, 1.3, loot, progress, virus, difficulties, level, 150)
+        super(STINGER, 5, waypoint, health, damage, maxSpeed, 700, 1.3, virus, level, 150)
 
         this.injuryService = new GrabberInjuryService(this)
         this.movementService = new StingerMovementService(this)
@@ -48,7 +47,7 @@ export class Stinger extends AbstractEnemy {
                 this.investigationService.handleInvestigationState()
                 break
             case CHASE:
-                if (getIsSurvival() && this.wallInTheWay !== false) {
+                if (this.wallInTheWay !== false) {
                     this.chaseService.handleChaseState()
                     return
                 }

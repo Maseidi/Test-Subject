@@ -1,4 +1,3 @@
-import { getIsSurvival, getRoundsFinished } from '../../variables.js'
 import {
     CHASE,
     GO_FOR_RANGED,
@@ -18,14 +17,14 @@ import { RangerShootingService } from '../service/ranger/shooting.js'
 import { AbstractEnemy } from '../type/abstract-enemy.js'
 
 export class Ranger extends AbstractEnemy {
-    constructor(level, waypoint, loot, progress, virus, difficulties) {
-        const base = level + getRoundsFinished() * 5
+    constructor(level, waypoint, virus) {
+        const base = level
         const health = Math.floor(base * 84 + Math.random() * 14)
         const damage = Math.floor(base * 9 + Math.random() * 5)
         const maxSpeed = 4 + Math.random()
         const vision = Math.floor(500 + Math.random() * 300)
 
-        super(RANGER, 6, waypoint, health, damage, maxSpeed, vision, 2, loot, progress, virus, difficulties, level, 75)
+        super(RANGER, 6, waypoint, health, damage, maxSpeed, vision, 2, virus, level, 75)
 
         this.investigationService = new NormalInvestigationService(this)
         this.chaseService = new NormalChaseService(this)
@@ -42,7 +41,7 @@ export class Ranger extends AbstractEnemy {
                 this.investigationService.handleInvestigationState()
                 break
             case CHASE:
-                if (getIsSurvival() && this.wallInTheWay !== false) {
+                if (this.wallInTheWay !== false) {
                     this.chaseService.handleChaseState()
                     return
                 }

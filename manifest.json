@@ -5,7 +5,7 @@
     "display": "fullscreen",
     "orientation": "landscape",
     "background_color": "#ffffff",
-    "description": "A top down shooter survival horror game",
+    "description": "A 50-room top-down action shooter",
     "icons": [
         {
             "src": "./assets/images/icon-desktop.png",

@@ -1,5 +1,4 @@
 import { SinglePointPath } from '../../path.js'
-import { getRoundsFinished } from '../../variables.js'
 import { CHASE, GUESS_SEARCH, LOST, TRACKER } from '../enemy-constants.js'
 import { TrackerChaseService } from '../service/tracker/chase.js'
 import { TrackerGuessSearchService } from '../service/tracker/guess-search.js'
@@ -10,8 +9,8 @@ import { TrackerVisionService } from '../service/tracker/vision.js'
 import { AbstractEnemy } from './abstract-enemy.js'
 
 export class Tracker extends AbstractEnemy {
-    constructor(level, x, y, loot, progress, virus, difficulties) {
-        const base = level + getRoundsFinished() * 5
+    constructor(level, x, y, virus) {
+        const base = level
         const health = Math.floor(base * 202 + Math.random() * 12)
         const damage = Math.floor(base * 9 + Math.random() * 9)
         const maxSpeed = 8 + Math.random()
@@ -25,10 +24,7 @@ export class Tracker extends AbstractEnemy {
             maxSpeed,
             500,
             maxSpeed * 0.8,
-            loot,
-            progress,
             virus,
-            difficulties,
             level,
             200,
         )

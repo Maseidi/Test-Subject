@@ -1,209 +1,88 @@
 let mapEl = null
-export const setMapEl = val => {
-    mapEl = val
-}
-export const getMapEl = () => mapEl
-
 let roomContainer = null
-export const setRoomContainer = val => {
-    roomContainer = val
-}
-export const getRoomContainer = () => roomContainer
-
 let pauseContainer = null
-export const setPauseContainer = val => {
-    pauseContainer = val
-}
-export const getPauseContainer = () => pauseContainer
-
 let uiEl = null
-export const setUiEl = val => {
-    uiEl = val
-}
-export const getUiEl = () => uiEl
-
 let currentRoom = null
-export const setCurrentRoom = val => {
-    currentRoom = val
-}
-export const getCurrentRoom = () => currentRoom
-
-let currentRoomSolid = null
-export const setCurrentRoomSolid = val => {
-    currentRoomSolid = val
-}
-export const getCurrentRoomSolid = () => currentRoomSolid
-
-let currentRoomLoaders = null
-export const setCurrentRoomLoaders = val => {
-    currentRoomLoaders = val
-}
-export const getCurrentRoomLoaders = () => currentRoomLoaders
-
-let currentRoomInteractables = null
-export const setCurrentRoomInteractables = val => {
-    currentRoomInteractables = val
-}
-export const getCurrentRoomInteractables = () => currentRoomInteractables
-
-let currentRoomEnemies = null
-export const setCurrentRoomEnemies = val => {
-    currentRoomEnemies = val
-}
-export const getCurrentRoomEnemies = () => currentRoomEnemies
-
-let currentRoomBullets = null
-export const setCurrentRoomBullets = val => {
-    currentRoomBullets = val
-}
-export const getCurrentRoomBullets = () => currentRoomBullets
-
-let currentRoomFlames = null
-export const setCurrentRoomFlames = val => {
-    currentRoomFlames = val
-}
-export const getCurrentRoomFlames = () => currentRoomFlames
-
-let currentRoomPoisons = null
-export const setCurrentRoomPoisons = val => {
-    currentRoomPoisons = val
-}
-export const getCurrentRoomPoisons = () => currentRoomPoisons
-
-let currentRoomThrowables = null
-export const setCurrentRoomThrowables = val => {
-    currentRoomThrowables = val
-}
-export const getCurrentRoomThrowables = () => currentRoomThrowables
-
-let currentRoomExplosions = null
-export const setCurrentRoomExplosions = val => {
-    currentRoomExplosions = val
-}
-export const getCurrentRoomExplosions = () => currentRoomExplosions
-
-let currentRoomDoors = null
-export const setCurrentRoomDoors = val => {
-    currentRoomDoors = val
-}
-export const getCurrentRoomDoors = () => currentRoomDoors
-
+let currentRoomSolid = []
+let currentRoomLoaders = []
+let currentRoomEnemies = []
+let currentRoomBullets = []
+let currentRoomFlames = []
+let currentRoomPoisons = []
+let currentRoomThrowables = []
+let currentRoomExplosions = []
+let currentRoomDoors = []
+let currentRoomPowerUps = []
 let player = null
-export const setPlayer = val => {
-    player = val
-}
-export const getPlayer = () => player
-
 let grabBar = null
-export const setGrabBar = val => {
-    grabBar = val
-}
-export const getGrabBar = () => grabBar
-
-let popupContainer = null
-export const setPopupContainer = val => {
-    popupContainer = val
-}
-export const getPopupContainer = () => popupContainer
-
-let roomNameContainer = null
-export const setRoomNameContainer = val => {
-    roomNameContainer = val
-}
-export const getRoomNameContainer = () => roomNameContainer
-
 let healthStatusContainer = null
-export const setHealthStatusContainer = val => {
-    healthStatusContainer = val
-}
-export const getHealthStatusContainer = () => healthStatusContainer
-
 let shadowContainer = null
-export const setShadowContainer = val => {
-    shadowContainer = val
-}
-export const getShadowContainer = () => shadowContainer
-
-let speaker = null
-export const setSpeaker = val => {
-    speaker = val
-}
-export const getSpeaker = () => speaker
-
-let dialogueContainer = null
-export const setDialogueContainer = val => {
-    dialogueContainer = val
-}
-export const getDialogueContainer = () => dialogueContainer
-
 let mainMenuEl = null
-export const setMainMenuEl = val => {
-    mainMenuEl = val
-}
-export const getMainMenuEl = () => mainMenuEl
-
 let movementJoyStick = null
-export const setMovementJoystick = val => {
-    movementJoyStick = val
-}
-export const getMovementJoystick = () => movementJoyStick
-
 let aimJoyStick = null
-export const setAimJoystick = val => {
-    aimJoyStick = val
-}
-export const getAimJoystick = () => aimJoyStick
-
 let sprintButton = null
-export const setSprintButton = val => {
-    sprintButton = val
-}
-export const getSprintButton = () => sprintButton
-
-let inventoryButton = null
-export const setInventoryButton = val => {
-    inventoryButton = val
-}
-export const getInventoryButton = () => inventoryButton
-
 let interactButton = null
-export const setInteractButton = val => {
-    interactButton = val
-}
-export const getInteractButton = () => interactButton
-
-let healButton = null
-export const setHealButton = val => {
-    healButton = val
-}
-export const getHealButton = () => healButton
-
 let pauseButton = null
-export const setPauseButton = val => {
-    pauseButton = val
-}
-export const getPauseButton = () => pauseButton
-
 let reloadButton = null
-export const setReloadButton = val => {
-    reloadButton = val
-}
-export const getReloadButton = () => reloadButton
-
 let slotsContainer = null
-export const setSlotsContainer = val => {
-    slotsContainer = val
-}
+let grenadeButton = null
+let flashbangButton = null
+
+export const getMapEl = () => mapEl
+export const setMapEl = value => (mapEl = value)
+export const getRoomContainer = () => roomContainer
+export const setRoomContainer = value => (roomContainer = value)
+export const getPauseContainer = () => pauseContainer
+export const setPauseContainer = value => (pauseContainer = value)
+export const getUiEl = () => uiEl
+export const setUiEl = value => (uiEl = value)
+export const getCurrentRoom = () => currentRoom
+export const setCurrentRoom = value => (currentRoom = value)
+export const getCurrentRoomSolid = () => currentRoomSolid
+export const setCurrentRoomSolid = value => (currentRoomSolid = value)
+export const getCurrentRoomLoaders = () => currentRoomLoaders
+export const setCurrentRoomLoaders = value => (currentRoomLoaders = value)
+export const getCurrentRoomEnemies = () => currentRoomEnemies
+export const setCurrentRoomEnemies = value => (currentRoomEnemies = value)
+export const getCurrentRoomBullets = () => currentRoomBullets
+export const setCurrentRoomBullets = value => (currentRoomBullets = value)
+export const getCurrentRoomFlames = () => currentRoomFlames
+export const setCurrentRoomFlames = value => (currentRoomFlames = value)
+export const getCurrentRoomPoisons = () => currentRoomPoisons
+export const setCurrentRoomPoisons = value => (currentRoomPoisons = value)
+export const getCurrentRoomThrowables = () => currentRoomThrowables
+export const setCurrentRoomThrowables = value => (currentRoomThrowables = value)
+export const getCurrentRoomExplosions = () => currentRoomExplosions
+export const setCurrentRoomExplosions = value => (currentRoomExplosions = value)
+export const getCurrentRoomDoors = () => currentRoomDoors
+export const setCurrentRoomDoors = value => (currentRoomDoors = value)
+export const getCurrentRoomPowerUps = () => currentRoomPowerUps
+export const setCurrentRoomPowerUps = value => (currentRoomPowerUps = value)
+export const getPlayer = () => player
+export const setPlayer = value => (player = value)
+export const getGrabBar = () => grabBar
+export const setGrabBar = value => (grabBar = value)
+export const getHealthStatusContainer = () => healthStatusContainer
+export const setHealthStatusContainer = value => (healthStatusContainer = value)
+export const getShadowContainer = () => shadowContainer
+export const setShadowContainer = value => (shadowContainer = value)
+export const getMainMenuEl = () => mainMenuEl
+export const setMainMenuEl = value => (mainMenuEl = value)
+export const getMovementJoystick = () => movementJoyStick
+export const setMovementJoystick = value => (movementJoyStick = value)
+export const getAimJoystick = () => aimJoyStick
+export const setAimJoystick = value => (aimJoyStick = value)
+export const getSprintButton = () => sprintButton
+export const setSprintButton = value => (sprintButton = value)
+export const getInteractButton = () => interactButton
+export const setInteractButton = value => (interactButton = value)
+export const getPauseButton = () => pauseButton
+export const setPauseButton = value => (pauseButton = value)
+export const getReloadButton = () => reloadButton
+export const setReloadButton = value => (reloadButton = value)
 export const getSlotsContainer = () => slotsContainer
-
-let throwButton = null
-export const setThrowButton = val => {
-    throwButton = val
-}
-export const getThrowButton = () => throwButton
-
-let toggleMenuButton = null
-export const setToggleMenuButton = val => {
-    toggleMenuButton = val
-}
-export const getToggleMenuButton = () => toggleMenuButton
+export const setSlotsContainer = value => (slotsContainer = value)
+export const getGrenadeButton = () => grenadeButton
+export const setGrenadeButton = value => (grenadeButton = value)
+export const getFlashbangButton = () => flashbangButton
+export const setFlashbangButton = value => (flashbangButton = value)

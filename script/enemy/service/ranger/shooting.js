@@ -1,10 +1,10 @@
 import { manageAimModeAngle } from '../../../angle-manager.js'
 import { getCurrentRoom, getCurrentRoomBullets } from '../../../elements.js'
+import { getPredictedShot } from '../../../player-targeting.js'
 import {
     addAllAttributes,
     addClass,
     angleOf2Points,
-    calculateBulletSpeed,
     createAndAddClass,
     getProperty,
     getSpeedPerFrame,
@@ -14,10 +14,6 @@ import {
 import {
     getAnimatedElements,
     getGrabbed,
-    getPlayerX,
-    getPlayerY,
-    getRoomLeft,
-    getRoomTop,
     getStunnedCounter,
     setAnimatedElements,
 } from '../../../variables.js'
@@ -98,19 +94,16 @@ export class RangerShootingService {
             x: getProperty(this.enemy.sprite, 'left', 'px') + 16,
             y: getProperty(this.enemy.sprite, 'top', 'px') + 16,
         }
-        const { x: destX, y: destY } = { x: getPlayerX() - getRoomLeft() + 17, y: getPlayerY() - getRoomTop() + 17 }
-        const deg = angleOf2Points(srcX, srcY, destX, destY)
-        const diffY = destY - srcY
-        const diffX = destX - srcX
-        const slope = Math.abs(diffY / diffX)
-        const { speedX, speedY } = calculateBulletSpeed(deg, slope, diffY, diffX, 10)
+        const bulletSpeed = getSpeedPerFrame(10)
+        const { destinationX, destinationY, speedX, speedY } = getPredictedShot(srcX, srcY, bulletSpeed)
+        const deg = angleOf2Points(srcX, srcY, destinationX, destinationY)
         const bullet = createAndAddClass('div', 'ranger-bullet')
         addAllAttributes(
             bullet,
             'speed-x',
-            getSpeedPerFrame(speedX),
+            speedX,
             'speed-y',
-            getSpeedPerFrame(speedY),
+            speedY,
             'damage',
             this.enemy.damage,
             'virus',

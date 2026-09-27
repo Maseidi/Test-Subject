@@ -1,395 +1,251 @@
-let mapX = null
-export const setMapX = val => {
-    mapX = val
+const state = {
+    mapX: 0,
+    mapY: 0,
+    playerX: 0,
+    playerY: 0,
+    currentRoomId: 1,
+    roomTop: 0,
+    roomLeft: 0,
+    upPressed: false,
+    downPressed: false,
+    rightPressed: false,
+    leftPressed: false,
+    playerSpeed: 5,
+    allowMove: true,
+    sprint: false,
+    playerAngle: 0,
+    playerAngleState: 0,
+    playerAimAngle: 0,
+    maxHealth: 300,
+    health: 300,
+    maxStamina: 600,
+    stamina: 600,
+    refillStamina: false,
+    sprintPressed: false,
+    aimMode: false,
+    weaponWheel: [],
+    equippedWeaponId: null,
+    pause: false,
+    pauseCause: null,
+    mouseX: null,
+    mouseY: null,
+    reloading: false,
+    shootPressed: false,
+    shooting: false,
+    shootCounter: 0,
+    noOffenseCounter: 0,
+    stunnedCounter: 0,
+    grabbed: false,
+    burning: 0,
+    poisoned: false,
+    poisonCounter: 0,
+    explosionDamageCounter: 0,
+    criticalChance: 0.01,
+    animatedElements: [],
+    waitingFunctions: [],
+    timesSaved: 0,
+    gameId: null,
+    playthroughId: null,
+    targets: [],
+    aimJoystickAngle: null,
+    foundTarget: null,
+    suitableTargetAngle: null,
+    isSearching4Target: false,
+}
+
+const accessors = [
+    'mapX',
+    'mapY',
+    'playerX',
+    'playerY',
+    'currentRoomId',
+    'roomTop',
+    'roomLeft',
+    'upPressed',
+    'downPressed',
+    'rightPressed',
+    'leftPressed',
+    'playerSpeed',
+    'allowMove',
+    'sprint',
+    'playerAngle',
+    'playerAngleState',
+    'playerAimAngle',
+    'maxHealth',
+    'health',
+    'maxStamina',
+    'stamina',
+    'refillStamina',
+    'sprintPressed',
+    'aimMode',
+    'weaponWheel',
+    'equippedWeaponId',
+    'pause',
+    'pauseCause',
+    'mouseX',
+    'mouseY',
+    'reloading',
+    'shootPressed',
+    'shooting',
+    'shootCounter',
+    'noOffenseCounter',
+    'stunnedCounter',
+    'grabbed',
+    'burning',
+    'poisoned',
+    'poisonCounter',
+    'explosionDamageCounter',
+    'criticalChance',
+    'animatedElements',
+    'waitingFunctions',
+    'timesSaved',
+    'gameId',
+    'playthroughId',
+    'targets',
+    'aimJoystickAngle',
+    'foundTarget',
+    'suitableTargetAngle',
+    'isSearching4Target',
+]
+
+// Explicit named exports below keep ES-module consumers statically analyzable.
+export const getMapX = () => state.mapX
+export const setMapX = value => (state.mapX = value)
+export const getMapY = () => state.mapY
+export const setMapY = value => (state.mapY = value)
+export const getPlayerX = () => state.playerX
+export const setPlayerX = value => (state.playerX = value)
+export const getPlayerY = () => state.playerY
+export const setPlayerY = value => (state.playerY = value)
+export const getCurrentRoomId = () => state.currentRoomId
+export const setCurrentRoomId = value => (state.currentRoomId = value)
+export const getRoomTop = () => state.roomTop
+export const setRoomTop = value => (state.roomTop = value)
+export const getRoomLeft = () => state.roomLeft
+export const setRoomLeft = value => (state.roomLeft = value)
+export const getUpPressed = () => state.upPressed
+export const setUpPressed = value => (state.upPressed = value)
+export const getDownPressed = () => state.downPressed
+export const setDownPressed = value => (state.downPressed = value)
+export const getRightPressed = () => state.rightPressed
+export const setRightPressed = value => (state.rightPressed = value)
+export const getLeftPressed = () => state.leftPressed
+export const setLeftPressed = value => (state.leftPressed = value)
+export const getPlayerSpeed = () => state.playerSpeed
+export const setPlayerSpeed = value => (state.playerSpeed = value)
+export const getAllowMove = () => state.allowMove
+export const setAllowMove = value => (state.allowMove = value)
+export const getSprint = () => state.sprint
+export const setSprint = value => (state.sprint = value)
+export const getPlayerAngle = () => state.playerAngle
+export const setPlayerAngle = value => (state.playerAngle = value)
+export const getPlayerAngleState = () => state.playerAngleState
+export const setPlayerAngleState = value => (state.playerAngleState = value)
+export const getPlayerAimAngle = () => state.playerAimAngle
+export const setPlayerAimAngle = value => (state.playerAimAngle = value)
+export const getMaxHealth = () => state.maxHealth
+export const setMaxHealth = value => (state.maxHealth = value)
+export const getHealth = () => state.health
+export const setHealth = value => (state.health = value)
+export const getMaxStamina = () => state.maxStamina
+export const setMaxStamina = value => (state.maxStamina = value)
+export const getStamina = () => state.stamina
+export const setStamina = value => (state.stamina = value)
+export const getRefillStamina = () => state.refillStamina
+export const setRefillStamina = value => (state.refillStamina = value)
+export const getSprintPressed = () => state.sprintPressed
+export const setSprintPressed = value => (state.sprintPressed = value)
+export const getAimMode = () => state.aimMode
+export const setAimMode = value => (state.aimMode = value)
+export const getWeaponWheel = () => state.weaponWheel
+export const setWeaponWheel = value => (state.weaponWheel = value)
+export const getEquippedWeaponId = () => state.equippedWeaponId
+export const setEquippedWeaponId = value => (state.equippedWeaponId = value)
+export const getPause = () => state.pause
+export const setPause = value => (state.pause = value)
+export const getPauseCause = () => state.pauseCause
+export const setPauseCause = value => (state.pauseCause = value)
+export const getMouseX = () => state.mouseX
+export const setMouseX = value => (state.mouseX = value)
+export const getMouseY = () => state.mouseY
+export const setMouseY = value => (state.mouseY = value)
+export const getReloading = () => state.reloading
+export const setReloading = value => (state.reloading = value)
+export const getShootPressed = () => state.shootPressed
+export const setShootPressed = value => (state.shootPressed = value)
+export const getShooting = () => state.shooting
+export const setShooting = value => (state.shooting = value)
+export const getShootCounter = () => state.shootCounter
+export const setShootCounter = value => (state.shootCounter = value)
+export const getNoOffenseCounter = () => state.noOffenseCounter
+export const setNoOffenseCounter = value => (state.noOffenseCounter = value)
+export const getStunnedCounter = () => state.stunnedCounter
+export const setStunnedCounter = value => (state.stunnedCounter = value)
+export const getGrabbed = () => state.grabbed
+export const setGrabbed = value => (state.grabbed = value)
+export const getBurning = () => state.burning
+export const setBurning = value => (state.burning = value)
+export const getPoisoned = () => state.poisoned
+export const setPoisoned = value => (state.poisoned = value)
+export const getPoisonCounter = () => state.poisonCounter
+export const setPoisonCounter = value => (state.poisonCounter = value)
+export const getExplosionDamageCounter = () => state.explosionDamageCounter
+export const setExplosionDamageCounter = value => (state.explosionDamageCounter = value)
+export const getCriticalChance = () => state.criticalChance
+export const setCriticalChance = value => (state.criticalChance = value)
+export const getAnimatedElements = () => state.animatedElements
+export const setAnimatedElements = value => (state.animatedElements = value)
+export const getWaitingFunctions = () => state.waitingFunctions
+export const setWaitingFunctions = value => (state.waitingFunctions = value)
+export const getTimesSaved = () => state.timesSaved
+export const setTimesSaved = value => (state.timesSaved = value)
+export const getGameId = () => state.gameId
+export const setGameId = value => (state.gameId = value)
+export const getPlaythroughId = () => state.playthroughId
+export const setPlaythroughId = value => (state.playthroughId = value)
+export const getTargets = () => state.targets
+export const setTargets = value => (state.targets = value)
+export const getAimJoystickAngle = () => state.aimJoystickAngle
+export const setAimJoystickAngle = value => (state.aimJoystickAngle = value)
+export const getFoundTarget = () => state.foundTarget
+export const setFoundTarget = value => (state.foundTarget = value)
+export const getSuitableTargetAngle = () => state.suitableTargetAngle
+export const setSuitableTargetAngle = value => (state.suitableTargetAngle = value)
+export const getIsSearching4Target = () => state.isSearching4Target
+export const setIsSearching4Target = value => (state.isSearching4Target = value)
+
+export const getSerializableVariables = () =>
+    Object.fromEntries(accessors.filter(key => !['gameId', 'animatedElements', 'waitingFunctions', 'targets'].includes(key)).map(key => [key, state[key]]))
+
+export const restoreSerializableVariables = values => {
+    Object.entries(values ?? {}).forEach(([key, value]) => {
+        if (accessors.includes(key)) state[key] = value
+    })
+}
+
+export const resetTransientVariables = () => {
+    ;[
+        'upPressed',
+        'downPressed',
+        'rightPressed',
+        'leftPressed',
+        'sprint',
+        'sprintPressed',
+        'aimMode',
+        'pause',
+        'reloading',
+        'shootPressed',
+        'shooting',
+        'grabbed',
+        'isSearching4Target',
+    ].forEach(key => (state[key] = false))
+    state.pauseCause = null
+    state.targets = []
+    state.animatedElements = []
+    state.waitingFunctions = []
+    state.foundTarget = null
+    state.suitableTargetAngle = null
+    state.noOffenseCounter = 0
+    state.stunnedCounter = 0
+    state.explosionDamageCounter = 0
 }
-export const getMapX = () => mapX
-
-let mapY = null
-export const setMapY = val => {
-    mapY = val
-}
-export const getMapY = () => mapY
-
-let playerX = null
-export const setPlayerX = val => {
-    playerX = val
-}
-export const getPlayerX = () => playerX
-
-let playerY = null
-export const setPlayerY = val => {
-    playerY = val
-}
-export const getPlayerY = () => playerY
-
-let currentRoomId = null
-export const setCurrentRoomId = val => {
-    currentRoomId = val
-}
-export const getCurrentRoomId = () => currentRoomId
-
-let roomTop = null
-export const setRoomTop = val => {
-    roomTop = val
-}
-export const getRoomTop = () => roomTop
-
-let roomLeft = null
-export const setRoomLeft = val => {
-    roomLeft = val
-}
-export const getRoomLeft = () => roomLeft
-
-let upPressed = null
-export const setUpPressed = val => {
-    upPressed = val
-}
-export const getUpPressed = () => upPressed
-
-let downPressed = null
-export const setDownPressed = val => {
-    downPressed = val
-}
-export const getDownPressed = () => downPressed
-
-let rightPressed = null
-export const setRightPressed = val => {
-    rightPressed = val
-}
-export const getRightPressed = () => rightPressed
-
-let leftPressed = null
-export const setLeftPressed = val => {
-    leftPressed = val
-}
-export const getLeftPressed = () => leftPressed
-
-let playerSpeed = null
-export const setPlayerSpeed = val => {
-    playerSpeed = val
-}
-export const getPlayerSpeed = () => playerSpeed
-
-let allowMove = null
-export const setAllowMove = val => {
-    allowMove = val
-}
-export const getAllowMove = () => allowMove
-
-let sprint = null
-export const setSprint = val => {
-    sprint = val
-}
-export const getSprint = () => sprint
-
-let playerAngle = null
-export const setPlayerAngle = val => {
-    playerAngle = val
-}
-export const getPlayerAngle = () => playerAngle
-
-let playerAngleState = null
-export const setPlayerAngleState = val => {
-    playerAngleState = val
-}
-export const getPlayerAngleState = () => playerAngleState
-
-let playerAimAngle = null
-export const setPlayerAimAngle = val => {
-    playerAimAngle = val
-}
-export const getPlayerAimAngle = () => playerAimAngle
-
-let maxStamina = null
-export const setMaxStamina = val => {
-    maxStamina = val
-}
-export const getMaxStamina = () => maxStamina
-
-let stamina = null
-export const setStamina = val => {
-    stamina = val
-}
-export const getStamina = () => stamina
-
-let maxHealth = null
-export const setMaxHealth = val => {
-    maxHealth = val
-}
-export const getMaxHealth = () => maxHealth
-
-let health = null
-export const setHealth = val => {
-    health = val
-}
-export const getHealth = () => health
-
-let refillStamina = null
-export const setRefillStamina = val => {
-    refillStamina = val
-}
-export const getRefillStamina = () => refillStamina
-
-let sprintPressed = null
-export const setSprintPressed = val => {
-    sprintPressed = val
-}
-export const getSprintPressed = () => sprintPressed
-
-let aimMode = null
-export const setAimMode = val => {
-    aimMode = val
-}
-export const getAimMode = () => aimMode
-
-let weaponWheel = [null, null, null, null]
-export const setWeaponWheel = val => {
-    weaponWheel = val
-}
-export const getWeaponWheel = () => weaponWheel
-
-let equippedWeaponId = null
-export const setEquippedWeaponId = val => {
-    equippedWeaponId = val
-}
-export const getEquippedWeaponId = () => equippedWeaponId
-
-let intObj = null
-export const setElementInteractedWith = val => {
-    intObj = val
-}
-export const getElementInteractedWith = () => intObj
-
-let targets = null
-export const setTargets = val => {
-    targets = val
-}
-export const getTargets = () => targets
-
-let pause = null
-export const setPause = val => {
-    pause = val
-}
-export const getPause = () => pause
-
-let pauseCause = null
-export const setPauseCause = val => {
-    pauseCause = val
-}
-export const getPauseCause = () => pauseCause
-
-let draggedItem = null
-export const setDraggedItem = val => {
-    draggedItem = val
-}
-export const getDraggedItem = () => draggedItem
-
-let mouseX = null
-export const setMouseX = val => {
-    mouseX = val
-}
-export const getMouseX = () => mouseX
-
-let mouseY = null
-export const setMouseY = val => {
-    mouseY = val
-}
-export const getMouseY = () => mouseY
-
-let reloading = null
-export const setReloading = val => {
-    reloading = val
-}
-export const getReloading = () => reloading
-
-let shootPressed = null
-export const setShootPressed = val => {
-    shootPressed = val
-}
-export const getShootPressed = () => shootPressed
-
-let shooting = null
-export const setShooting = val => {
-    shooting = val
-}
-export const getShooting = () => shooting
-
-let shootCounter = null
-export const setShootCounter = val => {
-    shootCounter = val
-}
-export const getShootCounter = () => shootCounter
-
-let noOffenseCounter = null
-export const setNoOffenseCounter = val => {
-    noOffenseCounter = val
-}
-export const getNoOffenseCounter = () => noOffenseCounter
-
-let stunnedCounter = null
-export const setStunnedCounter = val => {
-    stunnedCounter = val
-}
-export const getStunnedCounter = () => stunnedCounter
-
-let entityId = null
-export const setEntityId = val => {
-    entityId = val
-}
-export const getEntityId = () => entityId
-
-let grabbed = null
-export const setGrabbed = val => {
-    grabbed = val
-}
-export const getGrabbed = () => grabbed
-
-let burning = null
-export const setBurning = val => {
-    burning = val
-}
-export const getBurning = () => burning
-
-let poisoned = null
-export const setPoisoned = val => {
-    poisoned = val
-}
-export const getPoisoned = () => poisoned
-
-let throwCounter = null
-export const setThrowCounter = val => {
-    throwCounter = val
-}
-export const getThrowCounter = () => throwCounter
-
-let explosionDamageCounter = null
-export const setExplosionDamageCounter = val => {
-    explosionDamageCounter = val
-}
-export const getExplosionDamageCounter = () => explosionDamageCounter
-
-let criticalChance = null
-export const setCriticalChance = val => {
-    criticalChance = val
-}
-export const getCriticalChance = () => criticalChance
-
-let adrenalinesDropped = null
-export const setAdrenalinesDropped = val => {
-    adrenalinesDropped = val
-}
-export const getAdrenalinesDropped = () => adrenalinesDropped
-
-let healthPotionsDropped = null
-export const setHealthPotionsDropped = val => {
-    healthPotionsDropped = val
-}
-export const getHealthPotionsDropped = () => healthPotionsDropped
-
-let LuckPillsDropped = null
-export const setLuckPillsDropped = val => {
-    LuckPillsDropped = val
-}
-export const getLuckPillsDropped = () => LuckPillsDropped
-
-let energyDrinksDropped = null
-export const setEnergyDrinksDropped = val => {
-    energyDrinksDropped = val
-}
-export const getEnergyDrinksDropped = () => energyDrinksDropped
-
-let infection = null
-export const setInfection = val => {
-    infection = val
-}
-export const getInfection = () => infection
-
-let animatedElements = null
-export const setAnimatedElements = val => {
-    animatedElements = val
-}
-export const getAnimatedElements = () => animatedElements
-
-let equippedTorchId = null
-export const setEquippedTorchId = val => {
-    equippedTorchId = val
-}
-export const getEquippedTorchId = () => equippedTorchId
-
-let waitingFunctions = null
-export const setWaitingFunctions = val => {
-    waitingFunctions = val
-}
-export const getWaitingFunctions = () => waitingFunctions
-
-let playingDialogue = null
-export const setPlayingDialogue = val => {
-    playingDialogue = val
-}
-export const getPlayingDialogue = () => playingDialogue
-
-let roundsFinished = null
-export const setRoundsFinished = val => {
-    roundsFinished = val
-}
-export const getRoundsFinished = () => roundsFinished
-
-let difficulty = null
-export const setDifficulty = val => {
-    difficulty = val
-}
-export const getDifficulty = () => difficulty
-
-let timesSaved = null
-export const setTimesSaved = val => {
-    timesSaved = val
-}
-export const getTimesSaved = () => timesSaved
-
-let gameId = null
-export const setGameId = val => {
-    gameId = val
-}
-export const getGameId = () => gameId
-
-let playthroughId = null
-export const setPlaythroughId = val => {
-    playthroughId = val
-}
-export const getPlaythroughId = () => playthroughId
-
-let isMapMakerRoot = null
-export const setIsMapMakerRoot = val => {
-    isMapMakerRoot = val
-}
-export const getIsMapMakerRoot = () => isMapMakerRoot
-
-let isSurvival = null
-export const setIsSurvival = val => {
-    isSurvival = val
-}
-export const getIsSurvival = () => isSurvival
-
-let isSearching4Target = null
-export const setIsSearching4Target = val => {
-    isSearching4Target = val
-}
-export const getIsSearching4Target = () => isSearching4Target
-
-let foundTarget = null
-export const setFoundTarget = val => {
-    foundTarget = val
-}
-export const getFoundTarget = () => foundTarget
-
-let suitableTargetAngle = null
-export const setSuitableTargetAngle = val => {
-    suitableTargetAngle = val
-}
-export const getSuitableTargetAngle = () => suitableTargetAngle
-
-let aimJoystickAngle = null
-export const setAimJoystickAngle = val => {
-    aimJoystickAngle = val
-}
-export const getAimJoystickAngle = () => aimJoystickAngle

@@ -1,34 +1,11 @@
-import {
-    getCurrentRoomEnemies,
-    getCurrentRoomInteractables,
-    getCurrentRoomSolid,
-    setCurrentRoomEnemies,
-    setCurrentRoomInteractables,
-    setCurrentRoomSolid,
-} from '../../../elements.js'
+import { getCurrentRoomSolid, setCurrentRoomSolid } from '../../../elements.js'
 import { getEnemies } from '../../../entities.js'
-import { isGun } from '../../../gun-details.js'
+import { getGunDetail, isGun } from '../../../gun-details.js'
 import { knockEnemy } from '../../../knock-manager.js'
-import { dropLoot } from '../../../loot-manager.js'
+import { spawnPowerUp } from '../../../room-loader.js'
 import {
-    activateAllProgresses,
-    deactivateAllProgresses,
-    updateKillAllDoors,
-    updateKillAllEnemies,
-    updateKillAllInteractables,
-} from '../../../progress-manager.js'
-import { endChaos } from '../../../survival/chaos-manager.js'
-import {
-    getCurrentChaosEnemies,
-    getCurrentChaosSpawned,
-    getEnemiseKilled,
-    setEnemiesKilled,
-} from '../../../survival/variables.js'
-import {
-    addAllAttributes,
     addAllClasses,
     addClass,
-    containsClass,
     createAndAddClass,
     removeAllClasses,
     removeClass,
@@ -38,10 +15,8 @@ import {
     getAnimatedElements,
     getCriticalChance,
     getCurrentRoomId,
-    getIsSurvival,
     setAnimatedElements,
 } from '../../../variables.js'
-import { CHASE, STUNNED } from '../../enemy-constants.js'
 
 export class AbstractInjuryService {
     constructor(enemy) {
@@ -49,20 +24,17 @@ export class AbstractInjuryService {
         this.enemy.damagedCounter = 0
     }
 
-    damageEnemy(name, damage, antivirus, knock = false) {
-        if (isGun(name) && this.enemy.virus === antivirus) {
-            damage *= 1.2
-            var sameVirus = this.enemy.virus
+    damageEnemy(name, damage, knock = false) {
+        let colorMatch = false
+        if (isGun(name)) {
+            colorMatch = this.enemy.virus === getGunDetail(name, 'antivirus')
+            damage *= colorMatch ? 10 : 0.1
         }
-        if (Math.random() <= getCriticalChance()) {
-            damage *= 2
-            var critical = true
-        }
-        this.addDamagePopup(damage, critical, sameVirus)
-        const enemyHealth = this.enemy.health
-        const newHealth = enemyHealth - damage
-        this.enemy.health = newHealth
-        if (newHealth <= 0) this.killEnemy()
+        const critical = Math.random() <= getCriticalChance()
+        if (critical) damage *= 2
+        this.addDamagePopup(damage, critical, colorMatch)
+        this.enemy.health = Math.max(0, this.enemy.health - damage)
+        if (this.enemy.health <= 0) this.killEnemy()
         else {
             if (knock && !this.enemy.knockImmune) knockEnemy(this.enemy, knock)
             addClass(this.enemy.sprite.firstElementChild.firstElementChild, 'damaged')
@@ -70,53 +42,37 @@ export class AbstractInjuryService {
         }
     }
 
-    addDamagePopup(damage, critical, virus) {
-        const damageEl = createAndAddClass('p', 'enemy-damage-container')
-        if (critical) addClass(damageEl, 'critical')
-        if (virus) damageEl.style.color = virus
-        if (virus === 'yellow') addClass(damageEl, 'yellow')
-        damageEl.textContent = Math.floor(damage)
-        addAllClasses(damageEl, `enemy-damage-container-${Math.ceil(Math.random() * 6)}`, 'animation')
-        this.enemy.sprite.append(damageEl)
-        damageEl.addEventListener('animationend', () => damageEl.remove())
+    addDamagePopup(damage, critical, colorMatch) {
+        const damageElement = createAndAddClass('p', 'enemy-damage-container')
+        if (critical) addClass(damageElement, 'critical')
+        if (colorMatch) {
+            damageElement.style.color = this.enemy.virus
+            if (this.enemy.virus === 'yellow') addClass(damageElement, 'yellow')
+        }
+        damageElement.textContent = Math.max(1, Math.floor(damage))
+        addAllClasses(damageElement, `enemy-damage-container-${Math.ceil(Math.random() * 6)}`, 'animation')
+        this.enemy.sprite.append(damageElement)
+        damageElement.addEventListener('animationend', () => damageElement.remove(), { once: true })
     }
 
     killEnemy() {
-        addAllAttributes(
-            this.enemy.sprite,
-            'left',
-            Number(this.enemy.sprite.style.left.replace('px', '')),
-            'top',
-            Number(this.enemy.sprite.style.top.replace('px', '')),
+        if (this.enemy.spawnState === 'dead') return
+        this.enemy.health = 0
+        this.enemy.spawnState = 'dead'
+        const roomEnemies = getEnemies().get(getCurrentRoomId())
+        if (roomEnemies[this.enemy.index]) {
+            roomEnemies[this.enemy.index].health = 0
+            roomEnemies[this.enemy.index].spawnState = 'dead'
+        }
+        setCurrentRoomSolid(
+            getCurrentRoomSolid().filter(solid => solid !== this.enemy.sprite.firstElementChild),
         )
-        if (!getIsSurvival() || getEnemiseKilled() < 20) dropLoot(this.enemy.sprite, false)
-        setCurrentRoomSolid(getCurrentRoomSolid().filter(solid => solid !== this.enemy.sprite.firstElementChild))
+        if (Math.random() < 0.01) {
+            const type = Math.random() < 0.5 ? 'health' : 'ammo'
+            spawnPowerUp(type, this.enemy.x, this.enemy.y)
+        }
         this.deathAnimation()
-        getEnemies().get(getCurrentRoomId())[this.enemy.index].health = 0
-        activateAllProgresses(this.enemy.progress2Active)
-        deactivateAllProgresses(this.enemy.progress2Deactive)
-        updateKillAllEnemies()
-        updateKillAllDoors()
-        updateKillAllInteractables()
-        this.removePopup()
         this.enemy.sprite.style.zIndex = '34'
-        if (getIsSurvival()) {
-            setEnemiesKilled(getEnemiseKilled() + 1)
-            setCurrentRoomEnemies(getCurrentRoomEnemies().filter(enemy => enemy !== this.enemy))
-        }
-        if (
-            getIsSurvival() &&
-            getCurrentChaosEnemies() === getCurrentChaosSpawned() &&
-            getEnemiseKilled() === getCurrentChaosEnemies()
-        ) {
-            endChaos()
-        }
-    }
-
-    removePopup() {
-        const backwardDetector = this.enemy.sprite.firstElementChild.lastElementChild
-        setCurrentRoomInteractables(getCurrentRoomInteractables().filter(int => int !== backwardDetector))
-        backwardDetector.remove()
     }
 
     deathAnimation() {
@@ -124,25 +80,22 @@ export class AbstractInjuryService {
         const body = this.enemy.sprite.firstElementChild.firstElementChild
         removeAllClasses(body, 'body-transition', 'no-transition')
         Array.from(body.children).forEach(limb => {
-            if (containsClass(limb, 'fire')) limb.style.opacity = 0
-            const animatedLimb = limb.animate(
+            const animation = limb.animate(
                 [{ transform: 'rotateZ(0deg)' }, { transform: `rotateZ(${Math.floor(Math.random() * 360 - 180)}deg)` }],
-                {
-                    duration: 500,
-                    fill: 'forwards',
-                },
+                { duration: 500, fill: 'forwards' },
             )
-            addClass(limb, 'animation')
-            setAnimatedElements([...getAnimatedElements(), animatedLimb])
-            animatedLimb.addEventListener('finish', () => {
-                setAnimatedElements(getAnimatedElements().filter(elem => elem !== animatedLimb))
-            })
+            setAnimatedElements([...getAnimatedElements(), animation])
+            animation.addEventListener(
+                'finish',
+                () => setAnimatedElements(getAnimatedElements().filter(item => item !== animation)),
+                { once: true },
+            )
         })
     }
 
     manageDamagedMode() {
         if (this.enemy.damagedCounter === 0) return
-        this.enemy.damagedCounter += 1
+        this.enemy.damagedCounter++
         if (this.enemy.damagedCounter < useDeltaTime(6)) return
         removeClass(this.enemy.sprite.firstElementChild.firstElementChild, 'damaged')
         this.enemy.damagedCounter = 0

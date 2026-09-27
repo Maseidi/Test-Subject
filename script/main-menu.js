@@ -1,626 +1,186 @@
-import { savedSlotContent } from './computer.js'
-import { loadGameFromSlot, prepareNewGameData } from './data-manager.js'
+import { hasAutoSave, loadAutoSave, prepareNewGameData } from './data-manager.js'
 import { getMainMenuEl, setMainMenuEl } from './elements.js'
 import { play } from './game.js'
-import { loadMapMakerFromSlot, prepareNewMapMakerData } from './mapMaker/data-manager.js'
-import { renderMapMaker } from './mapMaker/map-maker.js'
-import { IS_MOBILE } from './script.js'
+import { IS_MOBILE } from './platform.js'
 import { getDefaultSettings, getSettings, setSettings } from './settings.js'
 import { addHoverSoundEffect, playClickSoundEffect } from './sound-manager.js'
-import { loadSurvivalFromSlot, prepareNewSurvivalData } from './survival/data-manager.js'
-import { addClass, appendAll, containsClass, createAndAddClass, difficulties, removeClass } from './util.js'
-import { setDifficulty } from './variables.js'
+import { addClass, appendAll, createAndAddClass, removeClass } from './util.js'
 
-let isContinueIncluded = null
 export const renderMainMenu = () => {
-    const root = document.getElementById('root')
-    const mainMenuContainer = createAndAddClass('div', 'ui-theme', 'main-menu')
-    appendAll(mainMenuContainer, mainMenuHeader(), options(), content())
-    root.append(mainMenuContainer)
-    setMainMenuEl(mainMenuContainer)
+    const menu = createAndAddClass('div', 'ui-theme', 'main-menu')
+    appendAll(menu, renderTitle(), renderOptions(), createAndAddClass('div', 'main-menu-content'))
+    document.getElementById('root').append(menu)
+    setMainMenuEl(menu)
 }
 
-const mainMenuHeader = () => {
-    const gameTitle = createAndAddClass('div', 'game-title')
-    const gameName = 'test subject'
-    const chars = gameName.split('')
-    for (let i = 0; i < chars.length; i++) {
-        const char = chars[i]
-        const charEl = document.createElement('span')
-        charEl.textContent = char
-        charEl.style.animationDelay = `${Math.floor(Math.random() * 1000) + 1000}ms`
-        gameTitle.append(charEl)
-    }
-    return gameTitle
+const renderTitle = () => {
+    const title = createAndAddClass('div', 'game-title')
+    title.textContent = 'test subject'
+    return title
 }
 
-const options = () => {
+const renderOptions = () => {
     const options = createAndAddClass('div', 'main-menu-options')
-    handleContinueOption(options)
-    appendAll(options, newGame(), loadGame(), survival())
-    handleMapMakerOption(options)
-    appendAll(options, settings(), credits(), lineBar())
+    if (hasAutoSave()) options.append(menuOption('continue', () => startGame(loadAutoSave)))
+    options.append(
+        menuOption('new game', () => startGame(prepareNewGameData)),
+        menuOption('settings', showSettings),
+        createAndAddClass('div', 'main-menu-options-bar'),
+    )
     return options
 }
 
-const handleContinueOption = options => {
-    for (let i = 0; i < 10; i++) {
-        if (
-            localStorage.getItem('slot-' + (i + 1)) !== 'empty' ||
-            localStorage.getItem('survival-slot-' + (i + 1)) !== 'empty'
-        ) {
-            options.append(continueOption())
-            isContinueIncluded = true
-            break
-        }
-    }
-    isContinueIncluded = false
-}
-
-const continueOption = () =>
-    mainMenuOption(
-        'continue',
-        e => {
-            playClickSoundEffect()
-            addSelectedStyle(e.currentTarget)
-            loadLatestSavedSlot()
-        },
-        getDelay(0),
-        getDuration(0),
-    )
-
-const handleMapMakerOption = options => options.append(mapMaker())
-
-const mapMaker = () =>
-    mainMenuOption(
-        'map maker',
-        e => {
-            playClickSoundEffect()
-            addSelectedStyle(e.currentTarget)
-            refreshContents(mapMakerOptions())
-        },
-        getDelay(4),
-        getDuration(4),
-    )
-
-const getDelay = number => 2 + (isContinueIncluded ? number : number - 1) * 0.1
-
-const getDuration = number => 0.5 + (isContinueIncluded ? number : number - 1) * 0.25
-
-const loadLatestSavedSlot = () =>
-    playWithGivenData(() => {
-        const latestSlot = localStorage.getItem('last-slot-used')
-        if (latestSlot.includes('main-game')) loadGameFromSlot(Number(latestSlot.replace('main-game-', '')))
-        else loadSurvivalFromSlot(Number(latestSlot.replace('survival-', '')))
-    }, localStorage.getItem('last-slot-used').includes('survival'))
-
-const mainMenuOption = (textContent, onClick, delay, duration) => {
+const menuOption = (label, action) => {
     const option = createAndAddClass('div', 'main-menu-option')
-    option.textContent = textContent
-    option.addEventListener('animationend', () => {
-        addHoverSoundEffect(option)
-        option.style.cursor = 'pointer'
-        option.addEventListener('click', onClick)
+    option.textContent = label
+    addHoverSoundEffect(option)
+    option.addEventListener('click', event => {
+        playClickSoundEffect()
+        selectOption(event.currentTarget)
+        action()
     })
-    option.style.animationDelay = delay + 's'
-    option.style.animationDuration = duration + 's'
     return option
 }
 
-const newGame = () =>
-    mainMenuOption(
-        'new game',
-        e => {
-            playClickSoundEffect()
-            addSelectedStyle(e.currentTarget)
-            refreshContents(newGameOptions())
-        },
-        getDelay(1),
-        getDuration(1),
-    )
-
-const addSelectedStyle = elem => {
-    Array.from(getMainMenuEl().children[1].children).forEach(child => removeClass(child, 'selected-main-menu-option'))
-    addClass(elem, 'selected-main-menu-option')
-}
-
-const refreshContents = (content, credits = false) => {
-    clearContent(credits)
-    removeRenderedSettings()
-    renderNewContent(content)
-}
-
-const clearContent = credits =>
-    Array.from(getMainMenuEl().children[2].children)
-        .filter(child => !credits || !containsClass(child, 'credits-container'))
-        .forEach(child => child.remove())
-
-const renderNewContent = content => {
-    const currentContent = getMainMenuEl().children[2]
-    const contentContainer = currentContent?.firstElementChild
-    if (contentContainer && containsClass(contentContainer, 'credits-container')) return
-    currentContent.append(content)
-}
-
-const loadGame = () =>
-    mainMenuOption(
-        'load game',
-        e => {
-            playClickSoundEffect()
-            addSelectedStyle(e.currentTarget)
-            refreshContents(loadGameOptions())
-        },
-        getDelay(2),
-        getDuration(2),
-    )
-
-const survival = () =>
-    mainMenuOption(
-        'survival',
-        e => {
-            playClickSoundEffect()
-            addSelectedStyle(e.currentTarget)
-            refreshContents(survivalOptions())
-        },
-        getDelay(3),
-        getDuration(3),
-    )
-
-const lineBar = () => createAndAddClass('div', 'main-menu-options-bar')
-
-const content = () => createAndAddClass('div', 'main-menu-content')
-
-const newGameOptions = () => {
-    const newGameOptionsContainer = createAndAddClass('div', 'new-game-options')
-    Array.from([
-        newGameOption(difficulties.MILD),
-        newGameOption(difficulties.MIDDLE),
-        newGameOption(difficulties.SURVIVAL),
-    ]).forEach(option => {
-        addHoverSoundEffect(option)
-        option.addEventListener('click', e => {
-            playClickSoundEffect()
-            playWithGivenData(() => prepareNewGameData(e.target.textContent))
-        })
-        newGameOptionsContainer.append(option)
-    })
-    return newGameOptionsContainer
-}
-
-const newGameOption = difficulty => {
-    const option = document.createElement('p')
-    option.textContent = difficulty
-    return option
-}
-
-const loadGameOptions = () => {
-    const loadGameOptionsContainer = createAndAddClass('div', 'load-game-options')
-    for (let i = 0; i < 10; i++) {
-        const option = loadGameOption(i + 1)
-        loadGameOptionsContainer.append(option)
-    }
-    addWheelEvent(loadGameOptionsContainer)
-    return loadGameOptionsContainer
-}
-
-const survivalOptions = () => {
-    const survivalContainer = createAndAddClass('div', 'load-game-options')
-    survivalContainer.append(newSurvivalOption())
-    for (let i = 0; i < 10; i++) {
-        const option = survivalOption(i + 1)
-        survivalContainer.append(option)
-    }
-    addWheelEvent(survivalContainer)
-    return survivalContainer
-}
-
-const mapMakerOptions = () => {
-    const mapMakerOptionsContainer = createAndAddClass('div', 'load-game-options')
-    mapMakerOptionsContainer.append(newMapMakerOption())
-    for (let i = 0; i < 5; i++) {
-        const option = mapMakerOption(i + 1)
-        mapMakerOptionsContainer.append(option)
-    }
-    addWheelEvent(mapMakerOptionsContainer)
-    return mapMakerOptionsContainer
-}
-
-const newMapMakerOption = () => {
-    const slot = createAndAddClass('div', 'load-game-option-empty-slot', 'map-maker-new-game')
-    slot.setAttribute('data-testid', 'new-map-maker')
-    const word1 = document.createElement('p')
-    word1.textContent = 'start'
-    const word2 = document.createElement('p')
-    word2.textContent = 'new'
-    const word3 = document.createElement('p')
-    word3.textContent = 'map'
-    slot.append(word1, word2, word3)
-    addHoverSoundEffect(slot)
-    slot.addEventListener('click', () => {
-        playClickSoundEffect()
-        getMainMenuEl().remove()
-        prepareNewMapMakerData()
-        setDifficulty(difficulties.MIDDLE)
-        renderMapMaker()
-    })
-    return slot
-}
-
-const newSurvivalOption = () => {
-    const slot = createAndAddClass('div', 'load-game-option-empty-slot', 'map-maker-new-game')
-    const word1 = document.createElement('p')
-    word1.textContent = 'start'
-    const word2 = document.createElement('p')
-    word2.textContent = 'new'
-    const word3 = document.createElement('p')
-    word3.textContent = 'game'
-    slot.append(word1, word2, word3)
-    addHoverSoundEffect(slot)
-    slot.addEventListener('click', () => {
-        playClickSoundEffect()
-        playWithGivenData(prepareNewSurvivalData, true)
-    })
-    return slot
-}
-
-const addWheelEvent = element => {
-    element.addEventListener(
-        'wheel',
-        e => {
-            if (e.deltaX !== 0) return
-            if (e.deltaY > 0) element.scrollLeft += 100
-            else element.scrollLeft -= 100
-        },
-        { passive: true },
-    )
-}
-
-const loadGameOption = slotNumber => {
-    const slotData = localStorage.getItem('slot-' + slotNumber)
-    if (slotData === 'empty') return noSavedDataSlot()
-    else return slotWithData(slotData, slotNumber)
-}
-
-const mapMakerOption = slotNumber => {
-    const slotData = localStorage.getItem('map-slot-' + slotNumber)
-    if (slotData === 'empty') return noSavedDataSlot()
-    else return slotWithData(slotData, slotNumber, true)
-}
-
-const survivalOption = slotNumber => {
-    const slotData = localStorage.getItem('survival-slot-' + slotNumber)
-    if (slotData === 'empty') return noSavedDataSlot()
-    else return slotWithData(slotData, slotNumber, false, true)
-}
-
-const noSavedDataSlot = () => {
-    const slot = createAndAddClass('div', 'load-game-option-empty-slot')
-    const word1 = document.createElement('p')
-    word1.textContent = 'no'
-    const word2 = document.createElement('p')
-    word2.textContent = 'saved'
-    const word3 = document.createElement('p')
-    word3.textContent = 'data'
-    slot.append(word1, word2, word3)
-    return slot
-}
-
-const slotWithData = (slotData, slotNumber, mapMaker, survival) => {
-    const elements = savedSlotContent(slotData, mapMaker, survival)
-    const slot = createAndAddClass('div', 'load-game-option-full-slot')
-    elements.forEach(elem => slot.append(elem))
-    addHoverSoundEffect(slot)
-    if (mapMaker)
-        slot.addEventListener('click', () => {
-            playClickSoundEffect()
-            loadMapMakerWithGivenData(() => loadMapMakerFromSlot(slotNumber))
-        })
-    else if (survival)
-        slot.addEventListener('click', () => {
-            playClickSoundEffect()
-            playWithGivenData(() => loadSurvivalFromSlot(slotNumber), true)
-        })
-    else
-        slot.addEventListener('click', () => {
-            playClickSoundEffect()
-            playWithGivenData(() => loadGameFromSlot(slotNumber))
-        })
-    return slot
-}
-
-const playWithGivenData = (loader, survival = false) => {
-    getMainMenuEl().remove()
-    loader()
-    play(false, survival)
-}
-
-export const loadMapMakerWithGivenData = loader => {
-    getMainMenuEl()?.remove()
-    loader()
-    setDifficulty(difficulties.MIDDLE)
-    renderMapMaker()
-}
-
-const settings = () =>
-    mainMenuOption(
-        'settings',
-        e => {
-            playClickSoundEffect()
-            addSelectedStyle(e.currentTarget)
-            refreshContents(settingsOptions())
-        },
-        getDelay(5),
-        getDuration(5),
-    )
-
-const settingsOptions = () => {
-    const settingsContainer = createAndAddClass('div', 'new-game-options')
-    Array.from(
-        IS_MOBILE
-            ? [
-                  settingOption('Audio', renderAudioSettings),
-                  settingOption('Display', renderDisplaySettings),
-                  settingOption('reset settings', resetAllSettings),
-              ]
-            : [
-                  settingOption('Audio', renderAudioSettings),
-                  settingOption('Display', renderDisplaySettings),
-                  settingOption('Controls', renderControlsSetting),
-                  settingOption('reset settings', resetAllSettings),
-              ],
-    ).forEach(option => {
-        addHoverSoundEffect(option)
-        settingsContainer.append(option)
-    })
-    return settingsContainer
-}
-
-const refreshSettings = option => {
+const selectOption = option => {
     Array.from(option.parentElement.children).forEach(child => removeClass(child, 'selected-main-menu-option'))
     addClass(option, 'selected-main-menu-option')
 }
 
-const settingOption = (textContent, onClick) => {
-    const option = document.createElement('p')
-    option.textContent = textContent
-    option.addEventListener('click', e => {
-        playClickSoundEffect()
-        refreshSettings(e.currentTarget)
-        removeRenderedSettings()
-        onClick(e)
-    })
-    return option
+const startGame = loader => {
+    getMainMenuEl().remove()
+    loader()
+    play()
 }
 
-const removeRenderedSettings = () => {
-    if (
-        getMainMenuEl().lastElementChild &&
-        containsClass(getMainMenuEl().lastElementChild, 'setting-options-container')
-    )
-        getMainMenuEl().lastElementChild.remove()
+const showSettings = () => {
+    const content = getMainMenuEl().querySelector('.main-menu-content')
+    content.replaceChildren()
+    const categories = createAndAddClass('div', 'new-game-options')
+    const choices = [
+        ['Audio', renderAudioSettings],
+        ['Display', renderDisplaySettings],
+        ...(!IS_MOBILE ? [['Controls', renderControlSettings]] : []),
+        ['reset settings', resetSettings],
+    ]
+    choices.forEach(([label, action]) => {
+        const option = document.createElement('p')
+        option.textContent = label
+        addHoverSoundEffect(option)
+        option.addEventListener('click', () => {
+            playClickSoundEffect()
+            getMainMenuEl().querySelector('.setting-options-container')?.remove()
+            action()
+        })
+        categories.append(option)
+    })
+    content.append(categories)
+}
+
+const settingsPanel = () => {
+    const panel = createAndAddClass('div', 'setting-options-container')
+    getMainMenuEl().append(panel)
+    return panel
 }
 
 const renderAudioSettings = () => {
-    const audioSettingsContainer = createAndAddClass('div', 'setting-options-container')
-    const sound = soundRange()
-    const music = musicRange()
-    const ui = uiSoundRange()
-    appendAll(audioSettingsContainer, sound, ui, music)
-    getMainMenuEl().append(audioSettingsContainer)
+    const panel = settingsPanel()
+    panel.append(
+        rangeSetting('Sound effects', getSettings().audio.sound, value => (getSettings().audio.sound = value)),
+        rangeSetting('UI sound effects', getSettings().audio.ui, value => (getSettings().audio.ui = value)),
+        rangeSetting('Music', getSettings().audio.music, value => (getSettings().audio.music = value)),
+    )
 }
 
-const soundRange = () =>
-    renderRange('Sound effects', 'sound-range', getSettings().audio.sound, value => (getSettings().audio.sound = value))
-
-const uiSoundRange = () =>
-    renderRange('UI Sound effects', 'ui-range', getSettings().audio.ui, value => (getSettings().audio.ui = value))
-
-const musicRange = () =>
-    renderRange('Music', 'music-range', getSettings().audio.music, value => (getSettings().audio.music = value))
-
-const renderRange = (labelText, id, value, onChange) => {
-    const container = createAndAddClass('div', 'setting-option')
+const rangeSetting = (labelText, value, update) => {
+    const row = createAndAddClass('div', 'setting-option')
     const label = document.createElement('label')
-    label.htmlFor = id
     label.textContent = labelText
     const input = document.createElement('input')
-    input.id = id
     input.type = 'range'
     input.min = 0
     input.max = 1
     input.step = 0.1
-    input.setAttribute('value', value)
-    input.addEventListener('change', e => {
-        onChange(e.target.value)
-        localStorage.setItem('settings', JSON.stringify(getSettings()))
+    input.value = value
+    input.addEventListener('change', event => {
+        update(Number(event.target.value))
+        persistSettings()
     })
-    appendAll(container, label, input)
-    return container
+    row.append(label, input)
+    return row
 }
 
 const renderDisplaySettings = () => {
-    const displaySettingsContainer = createAndAddClass('div', 'setting-options-container')
-    const fps = fpsAutocomplete(getSettings().display.fps, value => (getSettings().display.fps = value))
-    appendAll(displaySettingsContainer, fps)
-    getMainMenuEl().append(displaySettingsContainer)
-}
-
-const fpsAutocomplete = (value, onChange) => {
-    const container = createAndAddClass('div', 'setting-option')
+    const panel = settingsPanel()
+    const row = createAndAddClass('div', 'setting-option')
     const label = document.createElement('label')
-    label.htmlFor = 'fps'
     label.textContent = 'FPS'
     const select = document.createElement('select')
-    select.id = 'fps'
-    Array.from([30, 45, 60, 90, 120, 144, 165, 240]).forEach(item => {
+    ;[30, 45, 60, 90, 120, 144, 165, 240].forEach(value => {
         const option = document.createElement('option')
-        option.textContent = item
-        option.value = item
+        option.value = value
+        option.textContent = value
         select.append(option)
     })
-    select.addEventListener('change', e => {
-        onChange(e.target.value)
-        localStorage.setItem('settings', JSON.stringify(getSettings()))
+    select.value = getSettings().display.fps
+    select.addEventListener('change', event => {
+        getSettings().display.fps = Number(event.target.value)
+        persistSettings()
     })
-    select.value = value
-    appendAll(container, label, select)
-    return container
+    row.append(label, select)
+    panel.append(row)
 }
 
-let waitingControl = null
-const renderControlsSetting = () => {
-    const controlSettingsContainer = createAndAddClass('div', 'setting-options-container', 'control-options-cotainer')
-    const btn = controlBtnGenerator()
-    const up = btn('move up', 'up')
-    const left = btn('move left', 'left')
-    const down = btn('move down', 'down')
-    const right = btn('move right', 'right')
-    const heal = btn('heal', 'heal')
-    const reload = btn('reload', 'reload')
-    const slot1 = btn('slot1', 'slot1')
-    const slot2 = btn('slot2', 'slot2')
-    const slot3 = btn('slot3', 'slot3')
-    const slot4 = btn('slot4', 'slot4')
-    const interact = btn('interact', 'interact')
-    const inventory = btn('inventory', 'inventory')
-    const sprint = btn('sprint', 'sprint')
-    const toggleMenu = btn('toggle menu', 'toggleMenu')
-    // const lightUp = btn('light up torch', 'lightUp')
-    controlSettingsContainer.append(
-        up,
-        left,
-        down,
-        right,
-        heal,
-        reload,
-        slot1,
-        slot2,
-        slot3,
-        slot4,
-        interact,
-        inventory,
-        sprint,
-        toggleMenu,
-        // lightUp,
-    )
-    getMainMenuEl().append(controlSettingsContainer)
+const CONTROL_LABELS = {
+    up: 'move up',
+    left: 'move left',
+    down: 'move down',
+    right: 'move right',
+    sprint: 'sprint',
+    reload: 'reload',
+    slot1: 'pistol',
+    slot2: 'shotgun',
+    slot3: 'rifle',
+    slot4: 'smg',
+    slot5: 'magnum',
+    grenade: 'grenade',
+    flashbang: 'flashbang',
+    breakFree: 'break free',
 }
 
-const controlBtnGenerator = () => {
-    let counter = 0
-    return (textContent, value) => {
-        counter++
-        return controlBtn(textContent, value, counter)
-    }
+const renderControlSettings = () => {
+    const panel = settingsPanel()
+    panel.classList.add('control-options-cotainer')
+    Object.entries(CONTROL_LABELS).forEach(([key, label]) => panel.append(controlSetting(key, label)))
 }
 
-const formatButtonText = value => value.replace('Digit', '').replace('Key', '')
-const controlBtn = (textContent, key, index) => {
-    const container = createAndAddClass('div', 'control-setting-container')
-    container.setAttribute('tabindex', index)
-    const text = createAndAddClass('p', 'control-setting-text')
-    text.textContent = textContent
-    const btn = createAndAddClass('div', 'control-setting-btn')
-    btn.id = `${key}-control-btn`
-    btn.textContent = formatButtonText(getSettings().controls[key])
-    appendAll(container, text, btn)
-    addHoverSoundEffect(container)
-    container.addEventListener('click', e => {
-        playClickSoundEffect()
-        addClass(e.currentTarget, 'waiting')
-        waitingControl = e.currentTarget
-    })
-    container.addEventListener('keydown', e => {
-        e.preventDefault()
-        if (e.code === 'Escape') return
-        if (!containsClass(container, 'waiting')) return
-        const repeated = Object.entries(getSettings().controls).find(([prop, value]) => value === e.code)
-        if (repeated) {
-            const prop = repeated[0]
-            document.getElementById(`${prop}-control-btn`).textContent = formatButtonText(getSettings().controls[key])
-            getSettings().controls[prop] = getSettings().controls[key]
+const controlSetting = (key, label) => {
+    const row = createAndAddClass('div', 'control-setting-container')
+    row.tabIndex = 0
+    row.append(Object.assign(createAndAddClass('p', 'control-setting-text'), { textContent: label }))
+    const button = createAndAddClass('div', 'control-setting-btn')
+    button.textContent = formatKey(getSettings().controls[key])
+    row.append(button)
+    row.addEventListener('click', () => addClass(row, 'waiting'))
+    row.addEventListener('keydown', event => {
+        event.preventDefault()
+        if (event.code === 'Escape' || !row.classList.contains('waiting')) return
+        for (const [otherKey, value] of Object.entries(getSettings().controls)) {
+            if (value === event.code) getSettings().controls[otherKey] = getSettings().controls[key]
         }
-        getSettings().controls[key] = e.code
-        btn.textContent = formatButtonText(e.code)
-        localStorage.setItem('settings', JSON.stringify(getSettings()))
+        getSettings().controls[key] = event.code
+        button.textContent = formatKey(event.code)
+        removeClass(row, 'waiting')
+        persistSettings()
     })
-    container.addEventListener('focusout', e => removeClass(e.currentTarget, 'waiting'))
-    return container
+    row.addEventListener('focusout', () => removeClass(row, 'waiting'))
+    return row
 }
 
-const resetAllSettings = () => {
+const formatKey = value => value.replace(/^(Digit|Key)/, '')
+const persistSettings = () => localStorage.setItem('settings', JSON.stringify(getSettings()))
+const resetSettings = () => {
     setSettings(getDefaultSettings())
     localStorage.removeItem('settings')
-}
-
-const credits = () =>
-    mainMenuOption(
-        'credits',
-        e => {
-            playClickSoundEffect()
-            addSelectedStyle(e.currentTarget)
-            refreshContents(creditsContent(), true)
-        },
-        getDelay(7),
-        getDuration(7),
-    )
-
-const creditsContent = () => {
-    const creditsContainer = createAndAddClass('div', 'credits-container')
-    const myImg = createAndAddClass('img', 'profile-img')
-    myImg.src = './assets/images/profile.png'
-    const creditNamesContainer = createAndAddClass('div', 'credit-names')
-    const programmer = createCredit('Programmer', [{ title: 'Mohammad Ali Seidi' }])
-    const icons = createCredit('visual assets', [
-        { title: 'icons8', link: 'https://icons8.com' },
-        { title: 'The noun project', link: 'https://thenounproject.com' },
-    ])
-    const audio = createCredit('Audio assets', [{ title: 'pixabay', link: 'https://pixabay.com' }])
-    const contact = createCredit('Conact me', [
-        { img: 'github', link: 'https://github.com/Maseidi' },
-        { img: 'linkedin', link: 'https://www.linkedin.com/in/mohammad-ali-seidi-b2ba61286' },
-        {
-            img: 'gmail',
-            link: 'https://mail.google.com/mail/?view=cm&fs=1&to=joanxerinho@gmail.com',
-        },
-        {
-            img: 'instagram',
-            link: 'https://www.instagram.com/maseidi_17?igsh=MTF6dG9lZTZhY3NjZw==',
-        },
-    ])
-    appendAll(creditNamesContainer, programmer, icons, audio, contact)
-    appendAll(creditsContainer, myImg, creditNamesContainer)
-    myImg.addEventListener('animationend', () => {
-        creditNamesContainer.style.visibility = 'visible'
-    })
-    return creditsContainer
-}
-
-const createCredit = (role, names) => {
-    const container = createAndAddClass('div', 'credit-name')
-    if (names[0].img) addClass(container, 'row-credit-name')
-    const roleText = document.createElement('p')
-    roleText.textContent = role
-    const namesContainer = document.createElement('div')
-    names.forEach(({ title, link, img }) => {
-        if (img) {
-            var nameText = document.createElement('a')
-            const image = document.createElement('img')
-            image.src = `./assets/images/${img}.png`
-            nameText.append(image)
-            nameText.href = link
-            nameText.target = '_blank'
-        } else if (link) {
-            var nameText = document.createElement('a')
-            nameText.textContent = title
-            nameText.href = link
-            nameText.target = '_blank'
-        } else {
-            var nameText = document.createElement('p')
-            nameText.textContent = title
-        }
-        namesContainer.append(nameText)
-    })
-    appendAll(container, roleText, namesContainer)
-    return container
+    showSettings()
 }

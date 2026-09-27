@@ -165,163 +165,10 @@
     border: 1px solid white;
 }
 
-.hint-popup {
-    width: 100%;
-    height: 100%;
-    z-index: 65;
-    display: grid;
-    font-size: 20px;
-    line-height: 30px;
-    place-items: center;
-}
-
-.hint-popup > div {
-    gap: 10px;
-    width: 500px;
-    display: flex;
-    padding: 20px;
-    border-radius: 5px;
-    flex-direction: column;
-    border: 1px solid wheat;
-    background-color: black;
-}
-
-.hint-popup > div > p {
-    color: wheat;
-}
-
-.hint-popup > div > p > span {
-    display: inline-block;
-    padding: 0 8px;
-    margin: 0 2px;
-    border: 1px solid wheat;
-    border-radius: 4px;
-    background: #202020;
-}
-
-.hint-popup > div > span {
-    padding: 5px;
-    color: white;
-    align-self: end;
-    transition: 300ms;
-    width: max-content;
-    text-transform: capitalize;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
-    border-bottom: 1px solid white;
-}
-
-.hint-popup > div > span:hover {
-    background-color: rgba(255, 255, 255, 0.1);
-}
-
-.room-name-animation {
-    animation-duration: 500ms;
-    animation-direction: alternate;
-    animation-name: room-name-popup;
-}
-
-.room-name-popup {
-    left: 100%;
-    bottom: 10px;
-    padding: 20px;
-    color: wheat;
-    width: max-content;
-    border-top-left-radius: 5px;
-    transform: translateX(-100%);
-    border-bottom-left-radius: 5px;
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.9);
-}
-
-.room-name-popup > span,
-.dialogue > span {
-    opacity: 0;
-    animation-name: fade-in;
-    animation-fill-mode: forwards;
-    animation-direction: alternate;
-}
-
-.room-name-popup > span {
-    margin-left: 2px;
-    margin-right: 2px;
-    animation-duration: 300ms;
-}
-
-.dialogue {
-    top: 0;
-    z-index: 50;
-    padding: 10px;
-    color: white;
-    font-size: 20px;
-    position: fixed;
-    border-radius: 2px;
-    letter-spacing: 2px;
-    border: 1px solid white;
-    box-shadow: 0 0 5px black;
-    transform: translateY(-100%);
-    background-color: lightblue;
-    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
-}
-
-.dialogue-animation {
-    animation-duration: 400ms;
-    animation-fill-mode: forwards;
-    animation-direction: alternate;
-    animation-name: dialogue-animation;
-}
-
-.dialogue > span {
-    animation-duration: 10ms;
-}
-
 .fade-out {
     animation-name: fade-out;
     animation-fill-mode: forwards;
     animation-direction: alternate;
-}
-
-.item-container {
-    gap: 30px;
-    top: 20px;
-    left: 40px;
-    z-index: 80;
-    display: flex;
-    color: wheat;
-    position: fixed;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.item-img {
-    width: 40px;
-}
-
-.popup-cancel:hover,
-.popup-confirm:hover,
-.popup-examine:hover {
-    color: white;
-    filter: brightness(110%);
-    box-shadow: 5px 5px 25px white;
-}
-
-.popup-cancel:hover {
-    background-color: crimson;
-}
-
-.popup-cancel,
-.popup-confirm,
-.popup-examine {
-    border: none;
-    padding: 10px;
-    color: white;
-    border-radius: 3px;
-    letter-spacing: 2px;
-    text-transform: capitalize;
-}
-
-.popup-cancel {
-    color: lightgrey;
-    background-color: darkred;
 }
 
 .common-popup-container {
@@ -350,8 +197,51 @@
 }
 
 .common-popup > .common-buttons {
+    gap: 16px;
     display: flex;
     justify-content: space-between;
+}
+
+.common-button {
+    min-width: 120px;
+    padding: 10px 22px;
+    color: wheat;
+    cursor: pointer;
+    font: inherit;
+    font-size: 16px;
+    letter-spacing: 2px;
+    border: 1px solid wheat;
+    border-radius: 3px;
+    text-transform: uppercase;
+    background: rgba(245, 222, 179, 0.08);
+    transition: color 100ms, background-color 100ms, transform 100ms;
+}
+
+.common-button:hover,
+.common-button:focus-visible {
+    color: #17130d;
+    outline: none;
+    background-color: wheat;
+}
+
+.common-button:focus-visible {
+    box-shadow: 0 0 0 3px rgba(245, 222, 179, 0.3);
+}
+
+.common-button:active {
+    transform: translateY(1px);
+}
+
+.common-button-confirm {
+    color: #17130d;
+    font-weight: bold;
+    background-color: wheat;
+}
+
+.common-button-confirm:hover,
+.common-button-confirm:focus-visible {
+    color: wheat;
+    background-color: #7e1f2d;
 }
 
 .common-options {
@@ -374,40 +264,6 @@
     padding-left: 30px;
     border: 1px solid wheat;
     background-color: rgb(245, 222, 179, 0.1);
-}
-
-.chaos-container {
-    gap: 20px;
-    left: 50%;
-    top: 75px;
-    opacity: 0;
-    padding: 20px;
-    display: flex;
-    color: wheat;
-    position: fixed;
-    text-align: center;
-    border-radius: 10px;
-    letter-spacing: 5px;
-    flex-direction: column;
-    animation-name: fade-in;
-    border: 2px solid wheat;
-    animation-duration: 300ms;
-    text-transform: capitalize;
-    transform: translateX(-50%);
-    animation-fill-mode: forwards;
-    animation-direction: alternate;
-    background-color: black !important;
-}
-
-.chaos-container-coin {
-    gap: 10px;
-    display: flex;
-    align-items: center;
-}
-
-.chaos-container-coin > img {
-    width: 25px;
-    display: block;
 }
 
 .joystick {
@@ -465,32 +321,10 @@
     bottom: 50px;
 }
 
-.mobile-throw-btn {
-    left: 320px;
-    bottom: 50px;
-}
-
-.mobile-cart-btn {
-    left: 10px;
-    bottom: 10px;
-}
-
-.mobile-inventory-btn {
-    left: unset;
-    right: 330px;
-    bottom: 150px;
-}
-
 .mobile-interact-btn {
     left: unset;
     right: 310px;
     bottom: 250px;
-}
-
-.mobile-heal-btn {
-    left: unset;
-    right: 230px;
-    bottom: 310px;
 }
 
 .mobile-reload-btn {
@@ -502,6 +336,16 @@
 .mobile-pause-btn {
     left: 50px;
     bottom: 310px;
+}
+
+.mobile-grenade-btn {
+    left: 320px;
+    bottom: 50px;
+}
+
+.mobile-flashbang-btn {
+    left: 230px;
+    bottom: 50px;
 }
 
 .mobile-control-btn.disabled {

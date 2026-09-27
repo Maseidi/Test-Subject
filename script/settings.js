@@ -1,8 +1,18 @@
-import { IS_MOBILE } from './script.js'
+import { IS_MOBILE } from './platform.js'
 
 let settings = null
 export const setSettings = val => {
-    settings = val
+    const defaults = getDefaultSettings()
+    const controls = Object.fromEntries(
+        Object.keys(defaults.controls).map(key => [key, val?.controls?.[key] ?? defaults.controls[key]]),
+    )
+    settings = {
+        ...defaults,
+        ...val,
+        audio: { ...defaults.audio, ...val?.audio },
+        display: { ...defaults.display, ...val?.display },
+        controls,
+    }
     settings.display.fps = Number(settings.display.fps)
 }
 export const getSettings = () => settings
@@ -20,17 +30,16 @@ export const getDefaultSettings = () => ({
         up: 'KeyW',
         left: 'KeyA',
         down: 'KeyS',
-        heal: 'KeyH',
         right: 'KeyD',
         reload: 'KeyR',
         slot1: 'Digit1',
         slot2: 'Digit2',
         slot3: 'Digit3',
         slot4: 'Digit4',
-        lightUp: 'KeyQ',
-        interact: 'KeyF',
-        inventory: 'Tab',
+        slot5: 'Digit5',
+        breakFree: 'KeyF',
+        grenade: 'KeyG',
+        flashbang: 'KeyZ',
         sprint: 'ShiftLeft',
-        toggleMenu: 'Space',
     },
 })
