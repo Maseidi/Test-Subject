@@ -1,6 +1,74 @@
 import { getCurrentRoomSolid } from '../../../elements.js'
-import { collide, containsClass, getProperty } from '../../../util.js'
-import { getIsSurvival } from '../../../variables.js'
+import { getRooms } from '../../../entities.js'
+import { containsClass, getProperty } from '../../../util.js'
+import { getCurrentRoomId } from '../../../variables.js'
+
+const wallRect = (wall, padding = 0) => ({
+    left: getProperty(wall, 'left', 'px') - padding,
+    top: getProperty(wall, 'top', 'px') - padding,
+    right: getProperty(wall, 'left', 'px') + getProperty(wall, 'width', 'px') + padding,
+    bottom: getProperty(wall, 'top', 'px') + getProperty(wall, 'height', 'px') + padding,
+    wall,
+})
+
+const segmentHitsRect = (x1, y1, x2, y2, rect) => {
+    const dx = x2 - x1
+    const dy = y2 - y1
+    let near = 0
+    let far = 1
+    for (const [start, delta, min, max] of [
+        [x1, dx, rect.left, rect.right],
+        [y1, dy, rect.top, rect.bottom],
+    ]) {
+        if (delta === 0) {
+            if (start < min || start > max) return false
+            continue
+        }
+        const first = (min - start) / delta
+        const second = (max - start) / delta
+        near = Math.max(near, Math.min(first, second))
+        far = Math.min(far, Math.max(first, second))
+        if (near > far) return false
+    }
+    return far >= 0 && near <= 1
+}
+
+const navigationWalls = () =>
+    getCurrentRoomSolid().filter(
+        solid => containsClass(solid, 'wall') || (containsClass(solid, 'door') && !containsClass(solid, 'open')),
+    )
+
+const rectanglesOverlap = (first, second) =>
+    first.left < second.right &&
+    first.right > second.left &&
+    first.top < second.bottom &&
+    first.bottom > second.top
+
+export const findBlockingWall = (x1, y1, x2, y2, padding = 4) =>
+    navigationWalls()
+        .map(wall => wallRect(wall, padding))
+        .filter(rect => segmentHitsRect(x1, y1, x2, y2, rect))
+        .sort((a, b) => {
+            const distanceTo = rect =>
+                Math.hypot(
+                    Math.max(rect.left - x1, 0, x1 - rect.right),
+                    Math.max(rect.top - y1, 0, y1 - rect.bottom),
+                )
+            return distanceTo(a) - distanceTo(b)
+        })[0]?.wall ?? null
+
+export const hasLineOfSight = (x1, y1, x2, y2, padding = 4) =>
+    !findBlockingWall(x1, y1, x2, y2, padding)
+
+export const isEnemyPositionBlocked = (x, y, width, height, padding = 1) => {
+    const candidate = {
+        left: x - padding,
+        top: y - padding,
+        right: x + width + padding,
+        bottom: y + height + padding,
+    }
+    return navigationWalls().some(wall => rectanglesOverlap(candidate, wallRect(wall)))
+}
 
 export class AbstractPathFindingService {
     constructor(enemy) {
@@ -8,300 +76,108 @@ export class AbstractPathFindingService {
     }
 
     findPath() {
-        const wall = this.#findWall()
-        if (!wall) return
-        const enemyWidth = getProperty(this.enemy.sprite, 'width', 'px')
-        const { wallX, wallY, wallW, wallH } = this.#getWallCoordinates(wall)
-        let enemyState = this.#getPositionState(this.enemy.x, this.enemy.y, enemyWidth, wallX, wallY, wallW, wallH)
-        let destState = this.#getPositionState(
-            this.enemy.destX,
-            this.enemy.destY,
-            this.enemy.destWidth,
-            wallX,
-            wallY,
-            wallW,
-            wallH,
+        const width = getProperty(this.enemy.sprite, 'width', 'px') || this.enemy.sprite.offsetWidth || 40
+        const height = getProperty(this.enemy.sprite, 'height', 'px') || this.enemy.sprite.offsetHeight || width
+        const radius = Math.max(width, height) / 2
+        const collisionPadding = Math.max(2, radius - 4)
+        const enemyCenterX = this.enemy.x + width / 2
+        const enemyCenterY = this.enemy.y + height / 2
+        const destinationX = this.enemy.destX + (this.enemy.destWidth ?? 0) / 2
+        const destinationY = this.enemy.destY + (this.enemy.destWidth ?? 0) / 2
+        const blockingWall = findBlockingWall(
+            enemyCenterX,
+            enemyCenterY,
+            destinationX,
+            destinationY,
+            collisionPadding,
         )
-        const trackerMap = new Map([])
-        Array.from(wall.children).forEach(tracker => trackerMap.set(tracker.classList[0], tracker))
-        this.#managePathFindingState(enemyState, destState, trackerMap, wallX, wallY, wallW, wallH)
-    }
 
-    #findWall() {
-        for (const solid of getCurrentRoomSolid()) {
-            if (containsClass(solid.parentElement, 'enemy')) continue
-            if (solid.getAttribute('side') === 'true') continue
-            if (solid === this.enemy.sprite.firstElementChild) continue
-            if (!collide(this.enemy.sprite, solid, 50)) continue
-            var wall = solid
-            break
+        if (!blockingWall) {
+            this.clearPath()
+            return
         }
-        return wall
-    }
 
-    #getWallCoordinates(wall) {
-        const wallX = getProperty(wall, 'left', 'px')
-        const wallY = getProperty(wall, 'top', 'px')
-        const wallW = getProperty(wall, 'width', 'px')
-        const wallH = getProperty(wall, 'height', 'px')
-        return { wallX, wallY, wallW, wallH }
-    }
+        if (this.hasReachableWaypoint(enemyCenterX, enemyCenterY, width, height, collisionPadding)) return
 
-    #getPositionState(left, top, width, wallX, wallY, wallW, wallH) {
-        let positionState
-        const height = width
-        if (left + width < wallX + 5) positionState = 10
-        else if (left + width >= wallX + 5 && left < wallX + wallW - 5) positionState = 20
-        else positionState = 30
+        const room = getRooms().get(getCurrentRoomId())
+        const clearance = radius + 16
+        const rect = wallRect(blockingWall, clearance)
+        const candidates = [
+            { x: rect.left, y: rect.top },
+            { x: rect.right, y: rect.top },
+            { x: rect.left, y: rect.bottom },
+            { x: rect.right, y: rect.bottom },
+        ]
+            .map(point => ({
+                centerX: Math.max(radius + 8, Math.min(room.width - radius - 8, point.x)),
+                centerY: Math.max(radius + 8, Math.min(room.height - radius - 8, point.y)),
+            }))
+            .map(point => ({
+                ...point,
+                x: point.centerX - width / 2,
+                y: point.centerY - height / 2,
+            }))
+            .filter(point => !isEnemyPositionBlocked(point.x, point.y, width, height, 2))
+            .filter(point =>
+                hasLineOfSight(
+                    enemyCenterX,
+                    enemyCenterY,
+                    point.centerX,
+                    point.centerY,
+                    collisionPadding,
+                ),
+            )
+            .sort(
+                (a, b) =>
+                    this.routeScore(a, enemyCenterX, enemyCenterY, destinationX, destinationY, collisionPadding) -
+                    this.routeScore(b, enemyCenterX, enemyCenterY, destinationX, destinationY, collisionPadding),
+            )
 
-        if (top + height < wallY + 5) positionState += 1
-        else if (top + height >= wallY + 5 && top < wallY + wallH - 5) positionState += 2
-        else positionState += 3
-
-        return positionState
-    }
-
-    #managePathFindingState(enemyState, destState, trackerMap, wallX, wallY, wallW, wallH) {
-        switch (enemyState) {
-            case 11:
-                this.#handleTopLeftState(destState, wallX, wallY, wallW, wallH)
-                break
-            case 12:
-                this.#handleLeftState(destState, trackerMap, wallX, wallY, wallH)
-                break
-            case 13:
-                this.#handleBottomLeftState(destState, wallX, wallY, wallW, wallH)
-                break
-            case 21:
-                this.#handleTopState(destState, trackerMap, wallX, wallY, wallW)
-                break
-            case 23:
-                this.#handleBottomState(destState, trackerMap, wallX, wallY, wallW, wallH)
-                break
-            case 31:
-                this.#handleTopRightState(destState, wallX, wallY, wallW, wallH)
-                break
-            case 32:
-                this.#handleRightState(destState, trackerMap, wallX, wallY, wallW, wallH)
-                break
-            case 33:
-                this.#handleBottomRightState(destState, wallX, wallY, wallW, wallH)
-                break
+        const waypoint = candidates[0]
+        if (!waypoint) {
+            this.clearPath()
+            return
         }
+        this.enemy.pathFindingX = waypoint.x
+        this.enemy.pathFindingY = waypoint.y
     }
 
-    #handleTopLeftState(destState, wallX, wallY, wallW, wallH) {
-        switch (destState) {
-            case 23:
-                this.#addPathFinding(wallX - 50, wallY + wallH + 50)
-                break
-            case 32:
-                this.#addPathFinding(wallX + wallW + 50, wallY - 50)
-                break
-            case 33:
-                if (Math.random() < 0.5) {
-                    if (this.enemy.pathFindingX === wallX - 50 && this.enemy.pathFindingY === wallY + wallH + 50) return
-                    this.#addPathFinding(wallX + wallW + 50, wallY - 50)
-                    return
-                }
-                if (this.enemy.pathFindingX === wallX + wallW + 50 && this.enemy.pathFindingY === wallY - 50) return
-                this.#addPathFinding(wallX - 50, wallY + wallH + 50)
-                break
-            default:
-                this.#addPathFinding(null, null)
+    hasReachableWaypoint(enemyCenterX, enemyCenterY, width, height, collisionPadding) {
+        if (!Number.isFinite(this.enemy.pathFindingX) || !Number.isFinite(this.enemy.pathFindingY)) return false
+        const waypointX = this.enemy.pathFindingX + width / 2
+        const waypointY = this.enemy.pathFindingY + height / 2
+        if (Math.hypot(waypointX - enemyCenterX, waypointY - enemyCenterY) <= 8) {
+            this.clearPath()
+            return false
         }
-    }
-
-    #handleLeftState(destState, trackerMap, wallX, wallY, wallH) {
-        switch (destState) {
-            case 21:
-            case 31:
-                this.#addPathFinding(wallX - 50, wallY - 50)
-                break
-            case 32:
-                if (!trackerMap.has('tl')) this.#addPathFinding(wallX - 50, wallY + wallH + 50)
-                else if (!trackerMap.has('bl')) this.#addPathFinding(wallX - 50, wallY - 50)
-                else if (trackerMap.has('tl') && trackerMap.has('bl')) {
-                    if (Math.random() < 0.5) {
-                        if (this.enemy.pathFindingX === wallX - 50 && this.enemy.pathFindingY === wallY - 50) return
-                        this.#addPathFinding(wallX - 50, wallY + wallH + 50)
-                        return
-                    }
-                    if (this.enemy.pathFindingX === wallX - 50 && this.enemy.pathFindingY === wallY + wallH + 50) return
-                    this.#addPathFinding(wallX - 50, wallY - 50)
-                }
-                break
-            case 23:
-            case 33:
-                this.#addPathFinding(wallX - 50, wallY + wallH + 50)
-                break
-            default:
-                this.#addPathFinding(null, null)
+        if (isEnemyPositionBlocked(this.enemy.pathFindingX, this.enemy.pathFindingY, width, height, 2)) {
+            this.clearPath()
+            return false
         }
+        return hasLineOfSight(
+            enemyCenterX,
+            enemyCenterY,
+            waypointX,
+            waypointY,
+            collisionPadding,
+        )
     }
 
-    #handleBottomLeftState(destState, wallX, wallY, wallW, wallH) {
-        switch (destState) {
-            case 21:
-                this.#addPathFinding(wallX - 50, wallY - 50)
-                break
-            case 31:
-                if (Math.random() < 0.5) {
-                    if (this.enemy.pathFindingX === wallX - 50 && this.enemy.pathFindingY === wallY - 50) return
-                    this.#addPathFinding(wallX + wallW + 50, wallY + wallH + 50)
-                    return
-                }
-                if (this.enemy.pathFindingX === wallX + wallW + 50 && this.enemy.pathFindingY === wallY + wallH + 50)
-                    return
-                this.#addPathFinding(wallX - 50, wallY - 50)
-                break
-            case 32:
-                this.#addPathFinding(wallX + wallW + 50, wallY + wallH + 50)
-                break
-            default:
-                this.#addPathFinding(null, null)
-        }
+    routeScore(point, enemyX, enemyY, destinationX, destinationY, collisionPadding) {
+        const firstLeg = Math.hypot(point.centerX - enemyX, point.centerY - enemyY)
+        const secondLeg = Math.hypot(destinationX - point.centerX, destinationY - point.centerY)
+        const anotherWall = findBlockingWall(
+            point.centerX,
+            point.centerY,
+            destinationX,
+            destinationY,
+            collisionPadding,
+        )
+        return firstLeg + secondLeg + (anotherWall ? 1000 : 0)
     }
 
-    #handleTopState(destState, trackerMap, wallX, wallY, wallW) {
-        switch (destState) {
-            case 12:
-            case 13:
-                this.#addPathFinding(wallX - 50, wallY - 50)
-                break
-            case 23:
-                if (!trackerMap.has('tl')) this.#addPathFinding(wallX + wallW + 50, wallY - 50)
-                else if (!trackerMap.has('tr')) this.#addPathFinding(wallX - 50, wallY - 50)
-                else if (trackerMap.has('tl') && trackerMap.has('tr')) {
-                    if (Math.random() < 0.5) {
-                        if (this.enemy.pathFindingX === wallX - 50 && this.enemy.pathFindingY === wallY - 50) return
-                        this.#addPathFinding(wallX + wallW + 50, wallY - 50)
-                        return
-                    }
-                    if (this.enemy.pathFindingX === wallX + wallW + 50 && this.enemy.pathFindingY === wallY - 50) return
-                    this.#addPathFinding(wallX - 50, wallY - 50)
-                }
-                break
-            case 32:
-            case 33:
-                this.#addPathFinding(wallX + wallW + 50, wallY - 50)
-                break
-            default:
-                this.#addPathFinding(null, null)
-        }
-    }
-
-    #handleBottomState(destState, trackerMap, wallX, wallY, wallW, wallH) {
-        switch (destState) {
-            case 11:
-            case 12:
-                this.#addPathFinding(wallX - 50, wallY + wallH + 50)
-                break
-            case 21:
-                if (!trackerMap.has('bl')) this.#addPathFinding(wallX + wallW + 50, wallY + wallH + 50)
-                else if (!trackerMap.has('br')) this.#addPathFinding(wallX - 50, wallY + wallH + 50)
-                else if (trackerMap.has('bl') && trackerMap.has('br')) {
-                    if (Math.random() < 0.5) {
-                        if (this.enemy.pathFindingX === wallX - 50 && this.enemy.pathFindingY === wallY + wallH + 50)
-                            return
-                        this.#addPathFinding(wallX + wallW + 50, wallY + wallH + 50)
-                        return
-                    }
-                    if (
-                        this.enemy.pathFindingX === wallX + wallW + 50 &&
-                        this.enemy.pathFindingY === wallY + wallH + 50
-                    )
-                        return
-                    this.#addPathFinding(wallX - 50, wallY + wallH + 50)
-                }
-                break
-            case 31:
-            case 32:
-                this.#addPathFinding(wallX + wallW + 50, wallY + wallH + 50)
-                break
-            default:
-                this.#addPathFinding(null, null)
-        }
-    }
-
-    #handleTopRightState(destState, wallX, wallY, wallW, wallH) {
-        switch (destState) {
-            case 12:
-                this.#addPathFinding(wallX - 50, wallY - 50)
-                break
-            case 13:
-                if (Math.random() < 0.5) {
-                    if (this.enemy.pathFindingX === wallX - 50 && this.enemy.pathFindingY === wallY - 50) return
-                    this.#addPathFinding(wallX + wallW + 50, wallY + wallH + 50)
-                    return
-                }
-                if (this.enemy.pathFindingX === wallX + wallW + 50 && this.enemy.pathFindingY === wallY + wallH + 50)
-                    return
-                this.#addPathFinding(wallX - 50, wallY - 50)
-                break
-            case 23:
-                this.#addPathFinding(wallX + wallW + 50, wallY + wallH + 50)
-                break
-            default:
-                this.#addPathFinding(null, null)
-        }
-    }
-
-    #handleRightState(destState, trackerMap, wallX, wallY, wallW, wallH) {
-        switch (destState) {
-            case 11:
-            case 21:
-                this.#addPathFinding(wallX + wallW + 50, wallY - 50)
-                break
-            case 12:
-                if (!trackerMap.has('tr')) this.#addPathFinding(wallX + wallW + 50, wallY + wallH + 50)
-                else if (!trackerMap.has('br')) this.#addPathFinding(wallX + wallW + 50, wallY - 50)
-                else if (trackerMap.has('bl') && trackerMap.has('br')) {
-                    if (Math.random() < 0.5) {
-                        if (
-                            this.enemy.pathFindingX === wallX + wallW + 50 &&
-                            this.enemy.pathFindingY === wallY + wallH + 50
-                        )
-                            return
-                        this.#addPathFinding(wallX + wallW + 50, wallY - 50)
-                        return
-                    }
-                    if (this.enemy.pathFindingX === wallX + wallW + 50 && this.enemy.pathFindingY === wallY - 50) return
-                    this.#addPathFinding(wallX + wallW + 50, wallY + wallH + 50)
-                }
-                break
-            case 13:
-            case 23:
-                this.#addPathFinding(wallX + wallW + 50, wallY + wallH + 50)
-                break
-            default:
-                this.#addPathFinding(null, null)
-        }
-    }
-
-    #handleBottomRightState(destState, wallX, wallY, wallW, wallH) {
-        switch (destState) {
-            case 12:
-                this.#addPathFinding(wallX - 50, wallY + wallH + 50)
-                break
-            case 11:
-                if (Math.random() < 0.5) {
-                    if (this.enemy.pathFindingX === wallX - 50 && this.enemy.pathFindingY === wallY + wallH + 50) return
-                    this.#addPathFinding(wallX + wallW + 50, wallY - 50)
-                    return
-                }
-                if (this.enemy.pathFindingX === wallX + wallW + 50 && this.enemy.pathFindingY === wallY - 50) return
-                this.#addPathFinding(wallX - 50, wallY + wallH + 50)
-            case 21:
-                this.#addPathFinding(wallX + wallW + 50, wallY - 50)
-                break
-            default:
-                this.#addPathFinding(null, null)
-        }
-    }
-
-    #addPathFinding(x, y) {
-        this.enemy.pathFindingX = x
-        this.enemy.pathFindingY = y
+    clearPath() {
+        this.enemy.pathFindingX = null
+        this.enemy.pathFindingY = null
     }
 }

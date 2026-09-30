@@ -1,86 +1,35 @@
 import { removeControls } from './controls.js'
-import {
-    getAimJoystick,
-    getCurrentRoom,
-    getDialogueContainer,
-    getHealButton,
-    getHealthStatusContainer,
-    getInteractButton,
-    getInventoryButton,
-    getMapEl,
-    getMovementJoystick,
-    getPauseButton,
-    getPauseContainer,
-    getPlayer,
-    getPopupContainer,
-    getReloadButton,
-    getRoomContainer,
-    getRoomNameContainer,
-    getShadowContainer,
-    getSlotsContainer,
-    getSprintButton,
-    getThrowButton,
-    getToggleMenuButton,
-    getUiEl,
-    setAimJoystick,
-    setCurrentRoom,
-    setDialogueContainer,
-    setHealButton,
-    setHealthStatusContainer,
-    setInteractButton,
-    setMapEl,
-    setMovementJoystick,
-    setPauseButton,
-    setPauseContainer,
-    setPlayer,
-    setPopupContainer,
-    setReloadButton,
-    setRoomContainer,
-    setRoomNameContainer,
-    setShadowContainer,
-    setSlotsContainer,
-    setSprintButton,
-    setThrowButton,
-    setToggleMenuButton,
-    setUiEl,
-} from './elements.js'
+import * as elements from './elements.js'
 import { setPlayingMusic } from './sound-manager.js'
 import { getGameId, setGameId } from './variables.js'
+
+const removableElements = [
+    ['getPauseContainer', 'setPauseContainer'],
+    ['getHealthStatusContainer', 'setHealthStatusContainer'],
+    ['getShadowContainer', 'setShadowContainer'],
+    ['getUiEl', 'setUiEl'],
+    ['getCurrentRoom', 'setCurrentRoom'],
+    ['getRoomContainer', 'setRoomContainer'],
+    ['getPlayer', 'setPlayer'],
+    ['getMapEl', 'setMapEl'],
+    ['getMovementJoystick', 'setMovementJoystick'],
+    ['getAimJoystick', 'setAimJoystick'],
+    ['getSprintButton', 'setSprintButton'],
+    ['getInteractButton', 'setInteractButton'],
+    ['getReloadButton', 'setReloadButton'],
+    ['getGrenadeButton', 'setGrenadeButton'],
+    ['getFlashbangButton', 'setFlashbangButton'],
+    ['getPauseButton', 'setPauseButton'],
+    ['getSlotsContainer', 'setSlotsContainer'],
+]
 
 export const finishUp = () => {
     setPlayingMusic(null)
     removeControls()
-    removeElement(getRoomNameContainer(), setRoomNameContainer)
-    removeElement(getPauseContainer(), setPauseContainer)
-    removeElement(getPopupContainer(), setPopupContainer)
-    removeElement(getHealthStatusContainer(), setHealthStatusContainer)
-    removeElement(getShadowContainer(), setShadowContainer)
-    removeElement(getDialogueContainer(), setDialogueContainer)
-    removeElement(getUiEl(), setUiEl)
-    removeElement(getCurrentRoom(), setCurrentRoom)
-    removeElement(getRoomContainer(), setRoomContainer)
-    removeElement(getPlayer(), setPlayer)
-    removeElement(getMapEl(), setMapEl)
-    removeElement(getMovementJoystick(), setMovementJoystick)
-    removeElement(getAimJoystick(), setAimJoystick)
-    removeElement(getSprintButton(), setSprintButton)
-    removeElement(getInventoryButton(), setSprintButton)
-    removeElement(getInteractButton(), setInteractButton)
-    removeElement(getHealButton(), setHealButton)
-    removeElement(getReloadButton(), setReloadButton)
-    removeElement(getThrowButton(), setThrowButton)
-    removeElement(getPauseButton(), setPauseButton)
-    removeElement(getSlotsContainer(), setSlotsContainer)
-    removeElement(getToggleMenuButton(), setToggleMenuButton)
-    endSession()
-}
-
-const removeElement = (elem, setter) => {
-    elem?.remove()
-    setter(null)
-}
-
-const endSession = () => {
+    removableElements.forEach(([getter, setter]) => {
+        elements[getter]()?.remove()
+        elements[setter](null)
+    })
     window.clearInterval(getGameId())
     setGameId(null)
 }

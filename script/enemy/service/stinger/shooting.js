@@ -1,14 +1,13 @@
 import { getCurrentRoom, getCurrentRoomBullets } from '../../../elements.js'
+import { getPredictedShot } from '../../../player-targeting.js'
 import {
     addAllAttributes,
     angleOf2Points,
-    calculateBulletSpeed,
     createAndAddClass,
     getProperty,
     getSpeedPerFrame,
     useDeltaTime,
 } from '../../../util.js'
-import { getPlayerX, getPlayerY, getRoomLeft, getRoomTop } from '../../../variables.js'
 import { RangerShootingService } from '../ranger/shooting.js'
 
 export class StingerShootingService extends RangerShootingService {
@@ -22,19 +21,15 @@ export class StingerShootingService extends RangerShootingService {
             x: getProperty(this.enemy.sprite, 'left', 'px') + 25,
             y: getProperty(this.enemy.sprite, 'top', 'px') + 25,
         }
-        const { x: destX, y: destY } = { x: getPlayerX() - getRoomLeft() + 17, y: getPlayerY() - getRoomTop() + 17 }
-        const deg = angleOf2Points(srcX, srcY, destX, destY)
-        const diffY = destY - srcY
-        const diffX = destX - srcX
-        const slope = Math.abs(diffY / diffX)
-        const { speedX, speedY } = calculateBulletSpeed(deg, slope, diffY, diffX, 10)
+        const bulletSpeed = getSpeedPerFrame(10)
+        const { speedX, speedY } = getPredictedShot(srcX, srcY, bulletSpeed)
         const bullet = createAndAddClass('div', 'stinger-bullet')
         addAllAttributes(
             bullet,
             'speed-x',
-            getSpeedPerFrame(speedX),
+            speedX,
             'speed-y',
-            getSpeedPerFrame(speedY),
+            speedY,
             'damage',
             this.enemy.damage,
             'virus',

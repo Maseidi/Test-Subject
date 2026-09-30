@@ -69,11 +69,6 @@
     animation-direction: alternate-reverse;
 }
 
-.torch > .player-collider > .player-body > .player-right-hand {
-    height: 14px !important;
-    animation-duration: 0s !important;
-}
-
 .walk > .player-collider > .player-body > .player-left-hand,
 .walk > .player-collider > .player-body > .player-right-hand {
     animation-duration: 600ms;
@@ -146,31 +141,7 @@
     transform-style: preserve-3d;
 }
 
-.throwable {
-    top: 0px;
-    z-index: 70;
-    left: -3px;
-    position: absolute;
-}
-
-.throwable-img {
-    top: -20px;
-    left: -5px;
-    width: 10px;
-    position: absolute;
-    transform: rotateZ(-5deg);
-}
-
-.torch-img {
-    top: 8px;
-    width: 30px;
-    left: -100%;
-    position: absolute;
-    transform: rotateZ(180deg) translateX(-2px);
-}
-
-.laser,
-.throwable-laser {
+.laser {
     top: 0;
     left: 50%;
     width: 0.25px;
@@ -193,13 +164,7 @@
     transform: translateX(-50%);
 }
 
-.throwable-laser {
-    transform-origin: top;
-    transform: translateX(-50%) translateZ(-10px) rotateZ(-5deg);
-}
-
-.laser > div,
-.throwable-laser > div {
+.laser > div {
     height: 1%;
     width: 100%;
 }
@@ -211,14 +176,6 @@
 
 .throwable-image {
     width: 100%;
-}
-
-.throw-target {
-    top: 300px;
-    left: 22px;
-    width: 10px;
-    height: 10px;
-    position: absolute;
 }
 
 .top-collider,

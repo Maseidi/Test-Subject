@@ -68,7 +68,9 @@ export class GrabberGrabService {
             this.releasePlayer()
             return
         }
-        const newValue = percent + getSpeedPerFrame(0.7)
+        this.grabElapsed = (this.grabElapsed ?? 0) + 1
+        const acceleration = Math.min(1, this.grabElapsed / Math.max(1, getSettings().display.fps * 3))
+        const newValue = percent + getSpeedPerFrame(0.08 + acceleration * acceleration * 0.92)
         slider.style.left = `${newValue}%`
         const current = 10 * newValue
         this.#processPart(grabBar, current, 'first')
@@ -121,6 +123,7 @@ export class GrabberGrabService {
             else elem.state = STAND_AND_WATCH
         })
         this.renderQte()
+        this.grabElapsed = 0
         this.enemy.state = GRAB
     }
 
@@ -141,7 +144,8 @@ export class GrabberGrabService {
         const message = createAndAddClass('p', 'grab-bar-message')
         message.textContent = 'press'
         const button = createAndAddClass('p', 'grab-bar-btn')
-        button.textContent = getSettings().controls.interact.replace(/^(Key|Digit)/, '')
+        const breakFreeKey = getSettings()?.controls?.breakFree ?? 'KeyF'
+        button.textContent = String(breakFreeKey).replace(/^(Key|Digit)/, '')
         appendAll(messageContainer, message, button)
         appendAll(grabBar, firstElem, secondElem, thirdElem, messageContainer, slider)
         addAllAttributes(grabBar, 'first', first, 'second', second, 'third', third, 'damage', this.enemy.damage / 6)
@@ -168,5 +172,6 @@ export class GrabberGrabService {
         this.grabBar?.remove()
         if (getGrabBar() === this.grabBar) setGrabBar(null)
         this.grabBar = null
+        this.grabElapsed = 0
     }
 }

@@ -1,6 +1,6 @@
 import { getProperty, getSpeedPerFrame } from '../../../util.js'
 import { INVESTIGATE, NO_OFFENCE } from '../../enemy-constants.js'
-import { AbstractMovementService } from '../abstract/movement.js'
+import { AbstractMovementService, moveEnemyWithCollisions } from '../abstract/movement.js'
 
 export class SpikerMovementService extends AbstractMovementService {
     constructor(enemy) {
@@ -10,7 +10,7 @@ export class SpikerMovementService extends AbstractMovementService {
     move2Destination() {
         if (this.playerInRange()) return
         const enemyWidth = getProperty(this.enemy.sprite, 'width', 'px')
-        const { destX, destY, destWidth } = this.destinationCoordinates()
+        const { destX, destY, destWidth } = this.destinationCoordinates(enemyWidth)
         const { xMultiplier, yMultiplier } = this.decideDirection(enemyWidth, destX, destY, destWidth)
         if (xMultiplier === null && xMultiplier !== this.xMultiplier && this.enemy.axis === 1) {
             this.enemy.axis = 2
@@ -21,11 +21,15 @@ export class SpikerMovementService extends AbstractMovementService {
         this.yMultiplier = yMultiplier
         this.enemy.angleService.calculateAngle(xMultiplier, yMultiplier)
         const speed = this.calculateSpeed()
-        if (!xMultiplier && !yMultiplier) this.reachedDestination()
-        this.enemy.x += this.enemy.axis === 2 ? 0 : xMultiplier ? speed * xMultiplier : 0
-        this.enemy.y += this.enemy.axis === 1 ? 0 : yMultiplier ? speed * yMultiplier : 0
-        this.enemy.sprite.style.left = `${this.enemy.x}px`
-        this.enemy.sprite.style.top = `${this.enemy.y}px`
+        if (!xMultiplier && !yMultiplier) {
+            this.reachedDestination()
+            return
+        }
+        moveEnemyWithCollisions(
+            this.enemy,
+            this.enemy.axis === 2 ? 0 : xMultiplier ? speed * xMultiplier : 0,
+            this.enemy.axis === 1 ? 0 : yMultiplier ? speed * yMultiplier : 0,
+        )
     }
 
     calculateSpeed() {

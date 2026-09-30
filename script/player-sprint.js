@@ -9,54 +9,52 @@ import {
     getMaxStamina,
     getNoOffenseCounter,
     getRefillStamina,
-    getSprint,
     getSprintPressed,
     getStamina,
-    setMaxStamina,
     setRefillStamina,
     setSprint,
     setStamina,
 } from './variables.js'
 
+const RECOVERY_THRESHOLD = 0.05
+
 export const manageSprint = () => {
+    const minimumRecovery = getMaxStamina() * RECOVERY_THRESHOLD
+    if (getRefillStamina() && getStamina() >= minimumRecovery) setRefillStamina(false)
+
+    const canSprint =
+        getSprintPressed() &&
+        !getAimMode() &&
+        isMoving() &&
+        !getGrabbed() &&
+        !getRefillStamina() &&
+        getAllowMove()
+
+    if (canSprint) {
+        setSprint(true)
+        addClass(getPlayer(), 'run')
+        setStamina(Math.max(0, getStamina() - getSpeedPerFrame(2)))
+        if (getStamina() <= 0) {
+            setSprint(false)
+            setRefillStamina(true)
+            removeClass(getPlayer(), 'run')
+        }
+        notifyEnemies()
+    } else {
+        setSprint(false)
+        removeClass(getPlayer(), 'run')
+        setStamina(Math.min(getMaxStamina(), getStamina() + getSpeedPerFrame(1)))
+    }
+
     if (getSprintButton()) {
         if (getRefillStamina()) addClass(getSprintButton(), 'disabled')
         else removeClass(getSprintButton(), 'disabled')
     }
-
-    if (getSprintPressed() && !getAimMode() && isMoving() && !getGrabbed()) {
-        if (!getRefillStamina() && getAllowMove()) {
-            handleSprintAndStamina(true, addClass, -2, getRefillStamina())
-            if (getStamina() <= 0) handleSprintAndStamina(getSprint(), removeClass, -getStamina(), true)
-            return
-        }
-        handleSprintAndStamina(false, removeClass, 1, getRefillStamina())
-        if (getStamina() >= getMaxStamina())
-            handleSprintAndStamina(getSprint(), null, getMaxStamina() - getStamina(), false)
-        return
-    }
-    handleSprintAndStamina(false, removeClass, 1, getRefillStamina())
-    if (getStamina() >= getMaxStamina())
-        handleSprintAndStamina(getSprint(), null, getMaxStamina() - getStamina(), false)
-}
-
-const handleSprintAndStamina = (sprint, animator, stamina, refill) => {
-    setSprint(sprint)
-    if (animator) animator(getPlayer(), 'run')
-    setStamina(getStamina() + getSpeedPerFrame(stamina))
-    setRefillStamina(refill)
     staminaManager(getStamina())
-    if (sprint)
-        getCurrentRoomEnemies().forEach(elem => {
-            if (elem.type === TRACKER) {
-                if (getNoOffenseCounter() === 0) elem.notificationService.notifyEnemy(1500)
-            } else elem.notificationService.notifyEnemy(400)
-        })
 }
 
-export const useEnergyDrink = energydrink => {
-    if (getMaxStamina() === 1200) return
-    setMaxStamina(getMaxStamina() + 60)
-    setStamina(getMaxStamina())
-    energydrink.amount -= 1
-}
+const notifyEnemies = () =>
+    getCurrentRoomEnemies().forEach(enemy => {
+        if (enemy.type !== TRACKER || getNoOffenseCounter() === 0)
+            enemy.notificationService.notifyEnemy(enemy.type === TRACKER ? 1500 : 400)
+    })

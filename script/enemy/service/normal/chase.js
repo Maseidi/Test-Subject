@@ -1,5 +1,3 @@
-import { GUESS_SEARCH } from '../../enemy-constants.js'
-
 export class NormalChaseService {
     constructor(enemy) {
         this.enemy = enemy
@@ -7,12 +5,7 @@ export class NormalChaseService {
 
     handleChaseState() {
         this.enemy.movementService.accelerateEnemy()
-        if (this.enemy.visionService.isPlayerVisible())
-            this.enemy.notificationService.notifyEnemy(Number.MAX_SAFE_INTEGER)
-        else {
-            this.enemy.state = GUESS_SEARCH
-            this.enemy.guessCounter = 1
-        }
+        this.enemy.notificationService.updateDestination2Player()
         this.enemy.movementService.displaceEnemy()
     }
 }

@@ -1,4 +1,4 @@
-import { IS_MOBILE } from '../../../script.js'
+import { IS_MOBILE } from '../../../platform.js'
 import { AbstractVisionService } from '../abstract/vision.js'
 
 export class TrackerVisionService extends AbstractVisionService {
@@ -7,11 +7,11 @@ export class TrackerVisionService extends AbstractVisionService {
     }
 
     getWallInTheWay() {
-        if ( IS_MOBILE ) super.getWallInTheWay()
+        if (IS_MOBILE) super.getWallInTheWay()
     }
 
     vision2Player() {
-        if ( IS_MOBILE ) super.vision2Player()
+        if (IS_MOBILE) super.vision2Player()
         return
     }
 }

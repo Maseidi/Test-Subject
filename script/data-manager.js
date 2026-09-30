@@ -1,503 +1,141 @@
+import { buildCampaign } from './campaign-builder.js'
+import { resetCampaignStatistics, recordCampaignSave } from './campaign-stats.js'
 import { buildEnemy } from './enemy/enemy-factory.js'
-import { normalizeCampaignShopItems } from './campaign-builder.js'
-import { recordCampaignSave, resetCampaignStatistics } from './campaign-stats.js'
+import { getEnemies, getLoaders, getRooms, getWalls, setEnemies, setLoaders, setRooms, setWalls } from './entities.js'
+import { getLoadoutState, getWeaponWheel, resetLoadout, restoreLoadoutState } from './loadout.js'
+import { getInitialProgress, getProgress, setAutoSaveHandler, setProgress } from './progress-manager.js'
 import {
-    getDialogues,
-    getEnemies,
-    getInitialEnemies,
-    getInitialInteractables,
-    getInteractables,
-    getLoaders,
-    getPopups,
-    getRooms,
-    getWalls,
-    setDialogues,
-    setEnemies,
-    setInteractables,
-    setLoaders,
-    setPopups,
-    setRooms,
-    setWalls,
-} from './entities.js'
-import { getInitialInventory, getInventory, setInventory } from './inventory.js'
-import { createNewGameData } from './new-game.js'
-import { getPasswords, initPasswords, setPasswords } from './password-manager.js'
-import { getInitialProgress, getProgress, setProgress } from './progress-manager.js'
-import { getShopItems, setShopItems } from './shop-item.js'
-import { getStash, setStash } from './stash.js'
-import {
-    getAdrenalinesDropped,
-    getAimMode,
-    getBurning,
-    getCriticalChance,
-    getCurrentRoomId,
-    getDifficulty,
-    getEnergyDrinksDropped,
-    getEntityId,
-    getEquippedTorchId,
-    getEquippedWeaponId,
-    getHealth,
-    getHealthPotionsDropped,
-    getInfection,
-    getLuckPillsDropped,
-    getMapX,
-    getMapY,
-    getMaxHealth,
-    getMaxStamina,
-    getPlayerAimAngle,
-    getPlayerAngle,
-    getPlayerAngleState,
-    getPlayerSpeed,
-    getPlayerX,
-    getPlayerY,
-    getPlaythroughId,
-    getPoisoned,
-    getRefillStamina,
-    getRoomLeft,
-    getRoomTop,
-    getRoundsFinished,
-    getStamina,
-    getTimesSaved,
-    getWeaponWheel,
-    setAdrenalinesDropped,
-    setAimJoystickAngle,
-    setAimMode,
-    setAllowMove,
-    setAnimatedElements,
-    setBurning,
-    setCriticalChance,
+    getSerializableVariables,
+    resetTransientVariables,
+    restoreSerializableVariables,
     setCurrentRoomId,
-    setDifficulty,
-    setDownPressed,
-    setDraggedItem,
-    setElementInteractedWith,
-    setEnergyDrinksDropped,
-    setEntityId,
-    setEquippedTorchId,
     setEquippedWeaponId,
-    setExplosionDamageCounter,
-    setFoundTarget,
-    setGrabbed,
     setHealth,
-    setHealthPotionsDropped,
-    setInfection,
-    setIsSearching4Target,
-    setLeftPressed,
-    setLuckPillsDropped,
     setMapX,
     setMapY,
     setMaxHealth,
     setMaxStamina,
-    setMouseX,
-    setMouseY,
-    setNoOffenseCounter,
-    setPause,
-    setPauseCause,
-    setPlayerAimAngle,
-    setPlayerAngle,
-    setPlayerAngleState,
-    setPlayerSpeed,
     setPlayerX,
     setPlayerY,
-    setPlayingDialogue,
     setPlaythroughId,
-    setPoisoned,
-    setRefillStamina,
-    setReloading,
-    setRightPressed,
     setRoomLeft,
     setRoomTop,
-    setRoundsFinished,
-    setShootCounter,
-    setShooting,
-    setShootPressed,
-    setSprint,
-    setSprintPressed,
     setStamina,
-    setStunnedCounter,
-    setSuitableTargetAngle,
-    setTargets,
-    setThrowCounter,
     setTimesSaved,
-    setUpPressed,
-    setWaitingFunctions,
     setWeaponWheel,
 } from './variables.js'
 
-let rooms, walls, loaders, enemies, interactables, popups, dialogues, shopItems, passwordNames
+const AUTO_SAVE_KEY = 'test-subject-autosave'
 
-export const prepareNewGameData = difficulty => {
-    ;({ rooms, walls, loaders, enemies, interactables, popups, dialogues, shopItems, passwordNames } = createNewGameData())
-    initNewGameVariables(undefined, undefined, difficulty)
-    initNewGameRooms()
-    initNewGameWalls()
-    initPasswords(passwordNames)
-    initNewGameLoaders()
-    initNewGameProgress()
-    initNewGameInventory()
-    initNewGameStash()
-    initNewGameShop()
-    initNewGameEnemies()
-    initNewGameInteractables()
-    initNewGamePopups()
-    initNewGameDialogues()
-    initConstants()
+const mapToObject = map => Object.fromEntries(map.entries())
+const objectToMap = object => new Map(Object.entries(object ?? {}).map(([key, value]) => [Number(key), value]))
+
+const enemyData = enemy => ({
+    type: enemy.type,
+    waypoint: enemy.waypoint,
+    x: enemy.x,
+    y: enemy.y,
+    level: enemy.level,
+    spawnState: enemy.health <= 0 ? 'dead' : enemy.spawnState,
+    virus: enemy.virus,
+    knockImmune: enemy.knockImmune,
+    healthMultiplier: enemy.healthMultiplier,
+    health: enemy.health,
+    maxHealth: enemy.maxHealth,
+})
+
+const serializeEnemies = () =>
+    Object.fromEntries(
+        Array.from(getEnemies().entries(), ([roomId, enemies]) => [roomId, enemies.map(enemyData)]),
+    )
+
+const hydrateEnemies = input =>
+    new Map(
+        Object.entries(input ?? {}).map(([roomId, enemies]) => [
+            Number(roomId),
+            enemies.map(enemy => buildEnemy(enemy)),
+        ]),
+    )
+
+const initializeCampaign = campaign => {
+    setRooms(campaign.rooms)
+    setWalls(campaign.walls)
+    setLoaders(campaign.loaders)
+    setEnemies(
+        new Map(
+            Array.from(campaign.enemies.entries(), ([roomId, enemies]) => [
+                roomId,
+                enemies.map(enemy => buildEnemy(enemy)),
+            ]),
+        ),
+    )
 }
 
-const initNewGameRooms = () => {
-    const result = new Map()
-    JSON.parse(rooms).forEach(room => result.set(room.id, room))
-    setRooms(result)
-}
-
-const initNewGameWalls = () => parseStringAndSetAsData(walls, setWalls)
-
-const initNewGameLoaders = () => parseStringAndSetAsData(loaders, setLoaders)
-
-const initNewGameProgress = () => setProgress(getInitialProgress())
-
-const initNewGameInventory = () => setInventory(getInitialInventory())
-
-const initNewGameStash = () => setStash([])
-
-const initNewGameShop = () => setShopItems(JSON.parse(shopItems))
-
-const initNewGameEnemies = () => {
-    const data2Load = new Map([])
-    const data = JSON.parse(enemies)
-    Object.getOwnPropertyNames(data).forEach(name => {
-        data2Load.set(
-            Number(name),
-            data[name].map(enemy => buildEnemy(enemy)),
-        )
-    })
-    setEnemies(getInitialEnemies(data2Load))
-}
-
-const initNewGameInteractables = () => {
-    parseStringAndSetAsData(interactables, setInteractables)
-    setInteractables(getInitialInteractables(getInteractables()))
-}
-
-const initNewGamePopups = () => setPopups(JSON.parse(popups))
-
-const initNewGameDialogues = () => setDialogues(JSON.parse(dialogues))
-
-export const initConstants = () => {
-    setUpPressed(false)
-    setDownPressed(false)
-    setLeftPressed(false)
-    setRightPressed(false)
-    setAllowMove(true)
-    setSprint(false)
-    setSprintPressed(false)
-    setElementInteractedWith(null)
-    setTargets([])
-    setPause(false)
-    setPauseCause(null)
-    setDraggedItem(null)
-    setMouseX(null)
-    setMouseY(null)
-    setReloading(false)
-    setShootPressed(false)
-    setShooting(false)
-    setShootCounter(0)
-    setGrabbed(false)
-    setThrowCounter(0)
-    setExplosionDamageCounter(0)
-    setAnimatedElements([])
-    setWaitingFunctions([])
-    setPlayingDialogue(null)
-    setNoOffenseCounter(0)
-    setStunnedCounter(0)
-    setPlayerAngle(0)
-    setPlayerAngleState(0)
-    setPlayerAimAngle(0)
-    setAimMode(false)
-    setIsSearching4Target(false)
-    setFoundTarget(null)
-    setSuitableTargetAngle(null)
-    setAimJoystickAngle(null)
-}
-
-export const initNewGameVariables = (spawnX = 225, spawnY = 600, difficulty) => {
+export const prepareNewGameData = () => {
     const playthroughId = Date.now()
+    initializeCampaign(buildCampaign())
+    resetLoadout()
+    setProgress(getInitialProgress())
+    resetTransientVariables()
+    setMapX(0)
+    setMapY(0)
+    setRoomLeft(200)
+    setRoomTop(200)
+    setPlayerX(700)
+    setPlayerY(700)
+    setCurrentRoomId(1)
+    setMaxStamina(600)
+    setStamina(600)
+    setMaxHealth(300)
+    setHealth(300)
+    setTimesSaved(0)
+    setPlaythroughId(playthroughId)
+    setWeaponWheel(getWeaponWheel())
+    setEquippedWeaponId(getWeaponWheel()[0])
     resetCampaignStatistics(playthroughId)
-    const newGameVariables = {
-        mapX: 0,
-        mapY: 0,
-        playerX: 2 * spawnX,
-        playerY: 2 * spawnY,
-        currentRoomId: 1,
-        roomTop: spawnY,
-        roomLeft: spawnX,
-        playerSpeed: 5,
-        maxStamina: 600,
-        stamina: 600,
-        maxHealth: 100,
-        health: 100,
-        refillStamina: false,
-        weaponWheel: [null, null, null, null],
-        equippedWeaponId: null,
-        noOffenseCounter: 0,
-        stunnedCounter: 0,
-        entityId: 6,
-        burning: 0,
-        poisoned: false,
-        criticalChance: 0.01,
-        adrenalinesDropped: 0,
-        healthPotionsDropped: 0,
-        luckPillsDropped: 0,
-        energyDrinksDropped: 0,
-        infection: [],
-        equippedTorchId: null,
-        roundsFinished: 0,
-        timesSaved: 0,
-        playthroughId,
-        difficulty,
-    }
-    setVariables(newGameVariables)
+    localStorage.removeItem(AUTO_SAVE_KEY)
 }
 
-const setVariables = variables => {
-    setMapX(variables.mapX)
-    setMapY(variables.mapY)
-    setPlayerX(variables.playerX)
-    setPlayerY(variables.playerY)
-    setCurrentRoomId(variables.currentRoomId)
-    setRoomTop(variables.roomTop)
-    setRoomLeft(variables.roomLeft)
-    setPlayerSpeed(variables.playerSpeed)
-    setPlayerAngle(variables.playerAngle)
-    setPlayerAngleState(variables.playerAngleState)
-    setPlayerAimAngle(variables.playerAimAngle)
-    setMaxStamina(variables.maxStamina)
-    setStamina(variables.stamina)
-    setMaxHealth(variables.maxHealth)
-    setHealth(variables.health)
-    setRefillStamina(variables.refillStamina)
-    setAimMode(variables.aimMode), setWeaponWheel(variables.weaponWheel)
-    setEquippedWeaponId(variables.equippedWeaponId)
-    setStunnedCounter(variables.stunnedCounter)
-    setEntityId(variables.entityId)
-    setBurning(variables.burning)
-    setPoisoned(variables.poisoned)
-    setCriticalChance(variables.criticalChance)
-    setAdrenalinesDropped(variables.adrenalinesDropped)
-    setHealthPotionsDropped(variables.healthPotionsDropped)
-    setLuckPillsDropped(variables.luckPillsDropped)
-    setEnergyDrinksDropped(variables.energyDrinksDropped)
-    setInfection(variables.infection)
-    setEquippedTorchId(variables.equippedTorchId)
-    setRoundsFinished(variables.roundsFinished)
-    setDifficulty(variables.difficulty)
+export const autoSaveGame = () => {
+    const variables = getSerializableVariables()
+    variables.timesSaved = (variables.timesSaved ?? 0) + 1
     setTimesSaved(variables.timesSaved)
-    setPlaythroughId(variables.playthroughId)
-}
-
-export const saveGameAtSlot = slotNumber => {
-    setTimesSaved(getTimesSaved() + 1)
+    const snapshot = {
+        version: 3,
+        savedAt: Date.now(),
+        rooms: mapToObject(getRooms()),
+        walls: mapToObject(getWalls()),
+        loaders: mapToObject(getLoaders()),
+        enemies: serializeEnemies(),
+        progress: getProgress(),
+        loadout: getLoadoutState(),
+        variables,
+    }
+    localStorage.setItem(AUTO_SAVE_KEY, JSON.stringify(snapshot))
     recordCampaignSave()
-    saveRooms(slotNumber)
-    saveWalls(slotNumber)
-    saveLoaders(slotNumber)
-    savePasswords(slotNumber)
-    saveStats(slotNumber)
-    saveProgress(slotNumber)
-    saveInteractables(slotNumber)
-    saveEnemies(slotNumber)
-    saveVariables(slotNumber)
-    saveShopItems(slotNumber)
-    saveInventory(slotNumber)
-    saveStash(slotNumber)
-    saveDialogues(slotNumber)
-    savePopups(slotNumber)
-    localStorage.setItem('last-slot-used', 'main-game-' + slotNumber)
 }
 
-const saveRooms = slotNumber => saveMapAsString(slotNumber, 'rooms', getRooms())
+export const hasAutoSave = () => Boolean(localStorage.getItem(AUTO_SAVE_KEY))
 
-const saveWalls = slotNumber => saveMapAsString(slotNumber, 'walls', getWalls())
-
-const saveLoaders = slotNumber => saveMapAsString(slotNumber, 'loaders', getLoaders())
-
-const savePasswords = slotNumber => saveMapAsString(slotNumber, 'passwords', getPasswords())
-
-const saveMapAsString = (slotNumber, entityType, entities) => {
-    let data2save = {}
-    for (const [key, entitiesOfKey] of entities.entries()) {
-        data2save = {
-            ...data2save,
-            [key]: entitiesOfKey,
-        }
-    }
-    localStorage.setItem(`slot-${slotNumber}-${entityType}`, JSON.stringify(data2save))
-}
-
-const saveStats = slotNumber =>
-    localStorage.setItem(
-        `slot-${slotNumber}`,
-        JSON.stringify({
-            timeStamp: Date.now(),
-            room: getRooms().get(getCurrentRoomId()).label || `Room ${getCurrentRoomId()}`,
-            saves: getTimesSaved(),
-            difficulty: getDifficulty(),
-            rounds: getRoundsFinished(),
-        }),
-    )
-
-const saveProgress = slotNumber => simpleSave(slotNumber, 'progress', getProgress())
-
-const saveInteractables = slotNumber => saveMapAsString(slotNumber, 'interactables', getInteractables())
-
-const simpleSave = (slotNumber, postfix, data2save) =>
-    localStorage.setItem(`slot-${slotNumber}-${postfix}`, JSON.stringify(data2save))
-
-const saveEnemies = slotNumber => {
-    let data2save = {}
-    for (const [roomId, enemies] of getEnemies().entries()) {
-        data2save = {
-            ...data2save,
-            [roomId]: enemies.map(enemy => {
-                let result = {}
-                Object.getOwnPropertyNames(enemy).forEach(name => {
-                    if (name.toLowerCase().includes('service')) return
-                    result = {
-                        ...result,
-                        [name]: enemy[name],
-                    }
-                })
-                return result
-            }),
-        }
-    }
-
-    localStorage.setItem(`slot-${slotNumber}-enemies`, JSON.stringify(data2save))
-}
-
-const saveVariables = slotNumber => {
-    localStorage.setItem(
-        `slot-${slotNumber}-variables`,
-        JSON.stringify({
-            mapX: getMapX(),
-            mapY: getMapY(),
-            playerX: getPlayerX(),
-            playerY: getPlayerY(),
-            currentRoomId: getCurrentRoomId(),
-            roomTop: getRoomTop(),
-            roomLeft: getRoomLeft(),
-            playerSpeed: getPlayerSpeed(),
-            playerAngle: getPlayerAngle(),
-            playerAngleState: getPlayerAngleState(),
-            playerAimAngle: getPlayerAimAngle(),
-            maxStamina: getMaxStamina(),
-            stamina: getStamina(),
-            maxHealth: getMaxHealth(),
-            health: getHealth(),
-            refillStamina: getRefillStamina(),
-            aimMode: getAimMode(),
-            weaponWheel: getWeaponWheel(),
-            equippedWeaponId: getEquippedWeaponId(),
-            entityId: getEntityId(),
-            burning: getBurning(),
-            poisoned: getPoisoned(),
-            criticalChance: getCriticalChance(),
-            adrenalinesDropped: getAdrenalinesDropped(),
-            healthPotionsDropped: getHealthPotionsDropped(),
-            luckPillsDropped: getLuckPillsDropped(),
-            energyDrinksDropped: getEnergyDrinksDropped(),
-            infection: getInfection(),
-            equippedTorchId: getEquippedTorchId(),
-            roundsFinished: getRoundsFinished(),
-            timesSaved: getTimesSaved(),
-            difficulty: getDifficulty(),
-            playthroughId: getPlaythroughId(),
-        }),
-    )
-}
-
-const saveShopItems = slotNumber => simpleSave(slotNumber, 'shop-items', getShopItems())
-
-const saveInventory = slotNumber => simpleSave(slotNumber, 'inventory', getInventory())
-
-const saveStash = slotNumber => simpleSave(slotNumber, 'stash', getStash())
-
-const saveDialogues = slotNumber => simpleSave(slotNumber, 'dialogues', getDialogues())
-
-const savePopups = slotNumber => simpleSave(slotNumber, 'popups', getPopups())
-
-export const loadGameFromSlot = slotNumber => {
-    initConstants()
-    loadRooms(slotNumber)
-    loadPasswords(slotNumber)
-    loadLoaders(slotNumber)
-    loadWalls(slotNumber)
-    loadStats(slotNumber)
-    loadProgress(slotNumber)
-    loadInteractables(slotNumber)
-    loadEnemies(slotNumber)
-    loadVariables(slotNumber)
-    loadShopItems(slotNumber)
-    loadInventory(slotNumber)
-    loadStash(slotNumber)
-    loadDialogues(slotNumber)
-    loadPopups(slotNumber)
-    localStorage.setItem('last-slot-used', 'main-game-' + slotNumber)
-}
-
-const loadRooms = slotNumber => loadStringAsMap(slotNumber, 'rooms', setRooms)
-
-const loadWalls = slotNumber => loadStringAsMap(slotNumber, 'walls', setWalls)
-
-const loadLoaders = slotNumber => loadStringAsMap(slotNumber, 'loaders', setLoaders)
-
-const loadPasswords = slotNumber => loadStringAsMap(slotNumber, 'passwords', setPasswords, false)
-
-const loadStringAsMap = (slotNumber, entityType, setter, toNumber = true) =>
-    parseStringAndSetAsData(localStorage.getItem(`slot-${slotNumber}-${entityType}`), setter, toNumber)
-
-const parseStringAndSetAsData = (string, setter, toNumber = true) => {
-    const data2Load = new Map([])
-    const data = JSON.parse(string)
-    Object.getOwnPropertyNames(data).forEach(name => data2Load.set(toNumber ? Number(name) : name, data[name]))
-    setter(data2Load)
-}
-
-const loadStats = slotNumber => {
-    const { saves, difficulty, rounds } = JSON.parse(localStorage.getItem(`slot-${slotNumber}`))
-    setTimesSaved(saves)
-    setDifficulty(difficulty)
-    setRoundsFinished(rounds)
-}
-
-const loadProgress = slotNumber => simpleLoad(slotNumber, 'progress', setProgress)
-
-const simpleLoad = (slotNumber, postfix, setter) =>
-    setter(JSON.parse(localStorage.getItem(`slot-${slotNumber}-${postfix}`)))
-
-const loadInteractables = slotNumber => loadStringAsMap(slotNumber, 'interactables', setInteractables)
-
-const loadEnemies = slotNumber => {
-    const data2Load = new Map([])
-    const data = JSON.parse(localStorage.getItem(`slot-${slotNumber}-enemies`))
-    Object.getOwnPropertyNames(data).forEach(name => {
-        data2Load.set(
-            Number(name),
-            data[name].map(enemy => buildEnemy(enemy)),
-        )
+export const loadAutoSave = () => {
+    const snapshot = JSON.parse(localStorage.getItem(AUTO_SAVE_KEY))
+    if (!snapshot) throw new Error('No autosave exists')
+    const rooms = objectToMap(snapshot.rooms)
+    const generatedRooms = buildCampaign().rooms
+    rooms.forEach((room, roomId) => {
+        if (!room.spawnPoints?.length) room.spawnPoints = generatedRooms.get(roomId)?.spawnPoints ?? []
     })
-    setEnemies(data2Load)
+    setRooms(rooms)
+    setWalls(objectToMap(snapshot.walls))
+    setLoaders(objectToMap(snapshot.loaders))
+    setEnemies(hydrateEnemies(snapshot.enemies))
+    setProgress(snapshot.progress)
+    restoreLoadoutState(snapshot.loadout)
+    restoreSerializableVariables(snapshot.variables)
+    resetTransientVariables()
+    setWeaponWheel(getWeaponWheel())
+    if (!getLoadoutState().weapons.some(weapon => weapon.id === snapshot.variables?.equippedWeaponId))
+        setEquippedWeaponId(getWeaponWheel()[0])
 }
 
-const loadVariables = slotNumber => setVariables(JSON.parse(localStorage.getItem(`slot-${slotNumber}-variables`)))
-
-const loadShopItems = slotNumber =>
-    setShopItems(normalizeCampaignShopItems(JSON.parse(localStorage.getItem(`slot-${slotNumber}-shop-items`))))
-
-const loadInventory = slotNumber => simpleLoad(slotNumber, 'inventory', setInventory)
-
-const loadStash = slotNumber => simpleLoad(slotNumber, 'stash', setStash)
-
-const loadDialogues = slotNumber => simpleLoad(slotNumber, 'dialogues', setDialogues)
-
-const loadPopups = slotNumber => simpleLoad(slotNumber, 'popups', setPopups)
+setAutoSaveHandler(autoSaveGame)

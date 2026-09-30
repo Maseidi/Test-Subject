@@ -1,4 +1,3 @@
-import { getIsSurvival, getRoundsFinished } from '../../variables.js'
 import {
     CHASE,
     GO_FOR_RANGED,
@@ -22,8 +21,8 @@ import { ScorcherShootingService } from '../service/scorcher/shooting.js'
 import { AbstractEnemy } from './abstract-enemy.js'
 
 export class Scorcher extends AbstractEnemy {
-    constructor(level, waypoint, loot, progress, virus, difficulties) {
-        const base = level + getRoundsFinished() * 5
+    constructor(level, waypoint, virus) {
+        const base = level
         const health = Math.floor(base * 102 + Math.random() * 12)
         const damage = Math.floor(base * 8 + Math.random() * 8)
         const maxSpeed = 2.5 + Math.random()
@@ -37,10 +36,7 @@ export class Scorcher extends AbstractEnemy {
             maxSpeed,
             600,
             1.1,
-            loot,
-            progress,
             virus,
-            difficulties,
             level,
             150,
         )
@@ -63,7 +59,7 @@ export class Scorcher extends AbstractEnemy {
                 this.investigationService.handleInvestigationState()
                 break
             case CHASE:
-                if (getIsSurvival() && this.wallInTheWay !== false) {
+                if (this.wallInTheWay !== false) {
                     this.chaseService.handleChaseState()
                     return
                 }

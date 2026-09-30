@@ -16,7 +16,6 @@ import {
     getUpPressed,
     setMapX,
     setMapY,
-    setPlayerSpeed,
     setPlayerX,
     setPlayerY,
 } from './variables.js'
@@ -58,8 +57,3 @@ const normalizeSpeed = () => {
     return getSpeedPerFrame(speed)
 }
 
-export const useAdrenaline = adrenaline => {
-    if (getPlayerSpeed() === 6) return
-    setPlayerSpeed(getPlayerSpeed() + 0.1 >= 6 ? 6 : getPlayerSpeed() + 0.1)
-    adrenaline.amount -= 1
-}

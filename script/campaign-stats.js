@@ -1,4 +1,4 @@
-import { getIsMapMakerRoot, getIsSurvival, getPlaythroughId } from './variables.js'
+import { getPlaythroughId } from './variables.js'
 
 const key = id => `campaign-statistics-${id}`
 const read = id => {
@@ -9,7 +9,7 @@ let timerId = null
 let lastTick = 0
 let elapsedMs = 0
 let lastPersisted = 0
-const activeCampaign = () => !getIsSurvival() && !getIsMapMakerRoot() && Boolean(getPlaythroughId())
+const activeCampaign = () => Boolean(getPlaythroughId())
 const save = stats => localStorage.setItem(key(getPlaythroughId()), JSON.stringify(stats))
 
 export const resetCampaignStatistics = id => {

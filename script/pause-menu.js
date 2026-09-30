@@ -1,127 +1,69 @@
-import { renderDesktop } from './computer.js'
 import { getPauseContainer } from './elements.js'
+import { setEnemies, setLoaders, setRooms, setWalls } from './entities.js'
 import { finishUp } from './finish-up.js'
 import { renderMainMenu } from './main-menu.js'
-import { getMapMakerEl } from './mapMaker/elements.js'
-import { pauseFn, renderMapMaker } from './mapMaker/map-maker.js'
-import {
-    setDialogues,
-    setEnemies,
-    setInteractables,
-    setLoaders,
-    setPopups,
-    setRooms,
-    setShop,
-    setWalls,
-} from './mapMaker/variables.js'
 import { addHoverSoundEffect, playClickSoundEffect } from './sound-manager.js'
 import { quitPage, renderQuit } from './user-interface.js'
 import { appendAll, createAndAddClass } from './util.js'
-import { getIsMapMakerRoot, setIsMapMakerRoot } from './variables.js'
 
-// NOTE: Map maker in arguments says that the pause menu is opened at map maker environment
-// NOTE: Variable isMapMakerRoot indicates that the game is being play tested through the map maker engine
-export const renderPauseMenu = (mapMaker = false) => {
+export const renderPauseMenu = () => {
     const background = createAndAddClass('div', 'ui-theme', 'full', 'common')
     background.style.padding = '100px'
-    background.append(renderOptionsContainer(mapMaker))
-    getPauseContainer().append(background)
-    renderQuit(mapMaker)
-}
-
-const renderOptionsContainer = mapMaker => {
     const options = createAndAddClass('div', 'common-options')
-    appendAll(options, ...renderOptions(mapMaker))
-    return options
+    options.append(menuButton('resume', quitPage), menuButton('return to main menu', renderReturnConfirmation))
+    background.append(options)
+    getPauseContainer().append(background)
+    renderQuit()
 }
 
-const renderOptions = mapMaker => {
-    const options = []
-    const resume = createAndAddClass('div', 'common-option')
-    resume.textContent = 'resume'
-    addHoverSoundEffect(resume)
-    if (mapMaker)
-        resume.addEventListener('click', () => {
-            playClickSoundEffect()
-            getPauseContainer().lastElementChild.remove()
-        })
-    else
-        resume.addEventListener('click', () => {
-            playClickSoundEffect()
-            quitPage()
-        })
-    options.push(resume)
-    const loadGame = createAndAddClass('div', 'common-option')
-    loadGame.textContent = 'load game'
-    if (!getIsMapMakerRoot() && !mapMaker) options.push(loadGame)
-    addHoverSoundEffect(loadGame)
-    loadGame.addEventListener('click', () => {
+const menuButton = (label, action) => {
+    const button = createAndAddClass('div', 'common-option')
+    button.textContent = label
+    addHoverSoundEffect(button)
+    button.addEventListener('click', () => {
         playClickSoundEffect()
-        renderDesktop(true)
+        action()
     })
-    const mainMenu = createAndAddClass('div', 'common-option')
-    mainMenu.textContent = getIsMapMakerRoot() ? 'return to map maker' : 'return to main menu'
-    addHoverSoundEffect(mainMenu)
-    mainMenu.addEventListener('click', () => {
-        playClickSoundEffect()
-        renderConfirmReturn2MainMenu(mapMaker)
-    })
-    options.push(mainMenu)
-    return options
+    return button
 }
 
-const renderConfirmReturn2MainMenu = mapMaker => {
-    const returnPopupContainer = createAndAddClass('div', 'common-popup-container', 'ui-theme', 'popup-container')
-    const returnPopup = createAndAddClass('div', 'common-popup')
-    const title = createAndAddClass('p', 'return-title')
-    title.textContent = 'Are you sure you wish to return?'
-    const helper = createAndAddClass('p', 'return-helper')
-    helper.textContent = 'All unsaved progress will be lost'
+const renderReturnConfirmation = () => {
+    const overlay = createAndAddClass('div', 'common-popup-container', 'ui-theme', 'popup-container')
+    const popup = createAndAddClass('div', 'common-popup')
+    const title = Object.assign(document.createElement('p'), { textContent: 'Return to the main menu?' })
+    title.className = 'return-title'
+    const helper = Object.assign(document.createElement('p'), {
+        textContent: 'Progress is saved automatically after each completed room.',
+    })
+    helper.className = 'return-helper'
     const buttons = createAndAddClass('div', 'common-buttons')
-    const cancel = createAndAddClass('button', 'popup-cancel')
+    const cancel = createAndAddClass('button', 'common-button', 'common-button-cancel')
+    const confirm = createAndAddClass('button', 'common-button', 'common-button-confirm')
+    cancel.type = 'button'
+    confirm.type = 'button'
+    cancel.textContent = 'cancel'
+    confirm.textContent = 'yes'
     addHoverSoundEffect(cancel)
+    addHoverSoundEffect(confirm)
     cancel.addEventListener('click', () => {
         playClickSoundEffect()
-        closeReturnPopup()
+        overlay.remove()
     })
-    cancel.textContent = 'cancel'
-    const confirm = createAndAddClass('button', 'popup-confirm')
-    confirm.textContent = 'yes'
-    addHoverSoundEffect(confirm)
     confirm.addEventListener('click', () => {
         playClickSoundEffect()
-        if (getIsMapMakerRoot()) return2MapMaker()
-        else return2MainMenu(mapMaker)
+        return2MainMenu()
     })
-    getPauseContainer().append(returnPopup)
     appendAll(buttons, cancel, confirm)
-    appendAll(returnPopup, title, helper, buttons)
-    returnPopupContainer.append(returnPopup)
-    getPauseContainer().lastElementChild.append(returnPopupContainer)
+    appendAll(popup, title, helper, buttons)
+    overlay.append(popup)
+    getPauseContainer().lastElementChild.append(overlay)
 }
 
-const closeReturnPopup = () => getPauseContainer().lastElementChild.lastElementChild?.remove()
-
-export const return2MainMenu = mapMaker => {
-    setRooms([])
-    setEnemies(new Map([]))
-    setWalls(new Map([]))
-    setInteractables(new Map([]))
-    setLoaders(new Map([]))
-    setDialogues([])
-    setPopups([])
-    setShop([])
-
-    if (mapMaker) {
-        window.removeEventListener('keydown', pauseFn, true)
-        getPauseContainer().remove()
-        getMapMakerEl().remove()
-    } else finishUp()
-    renderMainMenu()
-}
-
-export const return2MapMaker = () => {
-    setIsMapMakerRoot(false)
+export const return2MainMenu = () => {
+    setRooms(new Map())
+    setEnemies(new Map())
+    setWalls(new Map())
+    setLoaders(new Map())
     finishUp()
-    renderMapMaker()
+    renderMainMenu()
 }

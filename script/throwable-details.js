@@ -1,22 +1,6 @@
-class Throwable {
-    constructor(name, damage, price) {
-        this.name = name
-        this.heading = name
-        this.space = 1
-        this.damage = damage
-        this.range = 300
-        this.price = price
-        this.firerate = 0.5
-    }
-}
+const throwableDetails = Object.freeze({
+    grenade: Object.freeze({ damage: 3000, range: 300 }),
+    flashbang: Object.freeze({ damage: 0, range: 300 }),
+})
 
-export const getThrowableDetail = (throwableName, statName) => throwableDetails.get(throwableName)[statName]
-
-const throwableDetails = new Map([
-    ['grenade', new Throwable('grenade', 3000, 1 / 2)],
-    ['flashbang', new Throwable('flashbang', 0, 1 / 3)],
-])
-
-export const getThrowableDetails = () => throwableDetails
-
-export const isThrowable = name => throwableDetails.has(name)
+export const getThrowableDetail = (name, property) => throwableDetails[name]?.[property]

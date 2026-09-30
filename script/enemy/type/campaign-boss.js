@@ -1,30 +1,16 @@
-import {
-    getCurrentRoom,
-    getCurrentRoomBullets,
-    getCurrentRoomEnemies,
-    getCurrentRoomInteractables,
-    getCurrentRoomSolid,
-    getGrabBar,
-    getHealthStatusContainer,
-    setCurrentRoomEnemies,
-    setCurrentRoomInteractables,
-    setCurrentRoomSolid,
-} from '../../elements.js'
-import { getEnemies } from '../../entities.js'
-import { activateAllProgresses } from '../../progress-manager.js'
+import { getCurrentRoom, getCurrentRoomBullets, getHealthStatusContainer } from '../../elements.js'
+import { getRooms } from '../../entities.js'
 import { damagePlayer } from '../../player-health.js'
-import { addAllAttributes, createAndAddClass, getSpeedPerFrame, removeClass } from '../../util.js'
+import { addAllAttributes, createAndAddClass, getSpeedPerFrame } from '../../util.js'
 import { getCurrentRoomId, getGrabbed, getPlayerX, getPlayerY, getRoomLeft, getRoomTop } from '../../variables.js'
 import { AbstractEnemy } from './abstract-enemy.js'
-
-const MAX_HEALTH = 50000
-const DEFEATED_PROGRESS = '10419'
-const phaseFlag = phase => String(10410 + (phase === 1 ? 0 : phase === 2 ? 2 : 4))
+import { moveEnemyWithCollisions } from '../service/abstract/movement.js'
 
 export class CampaignBoss extends AbstractEnemy {
-    constructor(level, waypoint, loot, progress, virus) {
-        super('campaign-boss', 1, waypoint, MAX_HEALTH, 12, 4, 0, 4, loot, progress, virus, null, level, 0)
-        this.health = MAX_HEALTH
+    constructor(level, waypoint, virus) {
+        const maxHealth = Math.floor(20000 * level)
+        super('campaign-boss', 1, waypoint, maxHealth, 8 * level, 4, 0, 4, virus, level, 0)
+        this.maxHealth = maxHealth
         this.knockImmune = true
         this.phase = 1
         this.mode = 0
@@ -34,41 +20,26 @@ export class CampaignBoss extends AbstractEnemy {
         this.shotTime = 0
         this.spin = 0
         this.contactTime = 0
-        this.contactUntil = 0
-        const originalKill = this.injuryService.killEnemy.bind(this.injuryService)
-        this.injuryService.killEnemy = () => {
-            removeClass(this.sprite.firstElementChild.firstElementChild, 'damaged')
-            this.clearAdds()
-            originalKill()
-            this.updateHealthBar()
-            activateAllProgresses(DEFEATED_PROGRESS)
-        }
     }
 
     behave() {
-        if (this.health <= 0) return
+        if (this.health <= 0) {
+            this.updateHealthBar()
+            return
+        }
         this.injuryService.manageDamagedMode()
-        this.updatePhase()
+        this.phase = this.health <= this.maxHealth / 3 ? 3 : this.health <= (this.maxHealth * 2) / 3 ? 2 : 1
         this.updateHealthBar()
         if (getGrabbed()) return
         const now = performance.now()
         if (now >= this.modeUntil) {
-            this.mode = (this.mode + 1 + Math.floor(Math.random() * 2)) % 3
-            this.modeUntil = now + 10000 + Math.random() * 10000
+            this.mode = (this.mode + 1) % 3
+            this.modeUntil = now + 8000
         }
         this.move(now)
-        if (now < this.contactUntil) return
         if (now >= this.shotTime) {
             this.fire()
             this.shotTime = now + [0, 1600, 1250, 1000][this.phase]
-        }
-    }
-
-    updatePhase() {
-        const next = this.health <= MAX_HEALTH / 3 ? 3 : this.health <= MAX_HEALTH * 2 / 3 ? 2 : 1
-        while (this.phase < next) {
-            this.phase++
-            activateAllProgresses(phaseFlag(this.phase))
         }
     }
 
@@ -81,111 +52,72 @@ export class CampaignBoss extends AbstractEnemy {
             root.append(track)
             getHealthStatusContainer().append(root)
         }
-        root.querySelector('.campaign-boss-health-fill').style.width = `${Math.max(0, this.health) / MAX_HEALTH * 100}%`
-        if (this.health <= 0) root.classList.add('defeated')
-    }
-
-    clearAdds() {
-        for (const enemy of getEnemies().get(getCurrentRoomId())) {
-            if (enemy !== this) enemy.health = 0
-        }
-        const adds = getCurrentRoomEnemies().filter(enemy => enemy !== this)
-        for (const add of adds) {
-            if (getGrabbed() && add.grabService?.grabBar && add.grabService.grabBar === getGrabBar())
-                add.grabService.releasePlayer()
-        }
-        for (const add of adds) add.sprite?.remove()
-        const colliders = new Set(adds.map(add => add.sprite?.firstElementChild))
-        setCurrentRoomSolid(getCurrentRoomSolid().filter(solid => !colliders.has(solid)))
-        setCurrentRoomInteractables(getCurrentRoomInteractables().filter(int => !adds.some(add => add.sprite?.contains(int))))
-        setCurrentRoomEnemies(getCurrentRoomEnemies().filter(enemy => enemy === this))
+        root.querySelector('.campaign-boss-health-fill').style.width = `${(Math.max(0, this.health) / this.maxHealth) * 100}%`
+        root.classList.toggle('defeated', this.health <= 0)
     }
 
     move(now) {
+        const room = getRooms().get(getCurrentRoomId())
+        this.notificationService.updateDestination2Player()
+        this.pathFindingService.findPath()
+        const followingPath = Number.isFinite(this.pathFindingX)
+        const targetX = followingPath ? this.pathFindingX + 45 : this.destX + this.destWidth / 2
+        const targetY = followingPath ? this.pathFindingY + 45 : this.destY + this.destWidth / 2
         const playerX = getPlayerX() - getRoomLeft() + 17
         const playerY = getPlayerY() - getRoomTop() + 17
         const centerX = this.x + 45
         const centerY = this.y + 45
-        const clearance = 76
-        const distance = Math.hypot(playerX - centerX, playerY - centerY)
-        if (distance <= clearance) {
-            if (distance < clearance) this.separateFromPlayer(playerX, playerY, clearance)
-            this.contact(now)
+        const playerDistance = Math.hypot(playerX - centerX, playerY - centerY) || 1
+        if (playerDistance <= 76) {
+            if (now >= this.contactTime) {
+                damagePlayer(this.damage)
+                this.contactTime = now + 900
+            }
             return
         }
-        if (now < this.contactUntil) return
+        const targetDistance = Math.hypot(targetX - centerX, targetY - centerY) || 1
         const speed = getSpeedPerFrame([0, 2.4, 3.6, 4.8][this.phase])
-        let dx = 0, dy = 0
-        if (this.mode === 0) { // Torturer: pursue the player directly.
-            dx = (playerX - centerX) / distance * speed
-            dy = (playerY - centerY) / distance * speed
-        } else if (this.mode === 1) { // Spiker: move on one axis at a time.
-            if (Math.abs(playerX - centerX) > Math.abs(playerY - centerY)) dx = Math.sign(playerX - centerX) * speed
-            else dy = Math.sign(playerY - centerY) * speed
-        } else { // Ricochet diagonally from the room walls.
+        let dx = 0
+        let dy = 0
+        if (this.mode === 0) {
+            dx = ((targetX - centerX) / targetDistance) * speed
+            dy = ((targetY - centerY) / targetDistance) * speed
+        } else if (this.mode === 1) {
+            if (Math.abs(targetX - centerX) > Math.abs(targetY - centerY)) dx = Math.sign(targetX - centerX) * speed
+            else dy = Math.sign(targetY - centerY) * speed
+        } else {
             dx = this.directionX * speed * 0.707
             dy = this.directionY * speed * 0.707
-            if (this.x + dx < 20 || this.x + dx > 900) { this.directionX *= -1; dx *= -1 }
-            if (this.y + dy < 20 || this.y + dy > 900) { this.directionY *= -1; dy *= -1 }
         }
-        const nextX = Math.max(20, Math.min(900, this.x + dx))
-        const nextY = Math.max(20, Math.min(900, this.y + dy))
-        if (Math.hypot(playerX - nextX - 45, playerY - nextY - 45) <= clearance) {
-            if (this.mode === 2) {
-                this.directionX *= -1
-                this.directionY *= -1
-            }
-            this.contact(now)
-            return
-        }
-        this.x = nextX
-        this.y = nextY
-        this.sprite.style.left = `${this.x}px`
-        this.sprite.style.top = `${this.y}px`
-    }
-
-    contact(now) {
-        this.contactUntil = now + 650
-        if (now >= this.contactTime) {
-            damagePlayer(this.damage)
-            this.contactTime = now + 900
-        }
-    }
-
-    separateFromPlayer(playerX, playerY, clearance) {
-        const candidates = [
-            [playerX + clearance - 45, playerY - 45],
-            [playerX - clearance - 45, playerY - 45],
-            [playerX - 45, playerY + clearance - 45],
-            [playerX - 45, playerY - clearance - 45],
-        ].filter(([x, y]) => x >= 20 && x <= 900 && y >= 20 && y <= 900)
-        candidates.sort(([ax, ay], [bx, by]) =>
-            Math.hypot(ax - this.x, ay - this.y) - Math.hypot(bx - this.x, by - this.y))
-        if (!candidates.length) return
-        ;[this.x, this.y] = candidates[0]
-        this.sprite.style.left = `${this.x}px`
-        this.sprite.style.top = `${this.y}px`
+        const boundedX = Math.max(20, Math.min(room.width - 110, this.x + dx)) - this.x
+        const boundedY = Math.max(20, Math.min(room.height - 110, this.y + dy)) - this.y
+        const moved = moveEnemyWithCollisions(this, boundedX, boundedY)
+        if (this.mode === 2 && !moved.movedX) this.directionX *= -1
+        if (this.mode === 2 && !moved.movedY) this.directionY *= -1
     }
 
     fire() {
-        const cx = this.x + 45, cy = this.y + 45
-        const target = Math.atan2(getPlayerY() - getRoomTop() - cy, getPlayerX() - getRoomLeft() - cx)
-        // Alternating aimed fans and rotating spiral arms.
-        if (Math.floor(performance.now() / 4000) % 2 === 0) {
-            const count = 5 + this.phase * 2
-            for (let i = 0; i < count; i++) this.bullet(cx, cy, target + (i - (count - 1) / 2) * 0.18)
-        } else {
-            const arms = 5 + this.phase
-            for (let i = 0; i < arms; i++) this.bullet(cx, cy, this.spin + i * Math.PI * 2 / arms)
-            this.spin += 0.24
-        }
+        const x = this.x + 45
+        const y = this.y + 45
+        const target = Math.atan2(getPlayerY() - getRoomTop() - y, getPlayerX() - getRoomLeft() - x)
+        const count = 5 + this.phase * 2
+        for (let index = 0; index < count; index++)
+            this.bullet(x, y, target + (index - (count - 1) / 2) * 0.18 + this.spin)
+        this.spin = (this.spin + 0.08) % (Math.PI * 2)
     }
 
     bullet(x, y, angle) {
         const bullet = createAndAddClass('div', 'campaign-boss-bullet')
         const speed = getSpeedPerFrame(4 + this.phase * 1.5)
-        addAllAttributes(bullet, 'speed-x', Math.cos(angle) * speed, 'speed-y', Math.sin(angle) * speed,
-            'damage', 8 + this.phase * 4)
+        addAllAttributes(
+            bullet,
+            'speed-x',
+            Math.cos(angle) * speed,
+            'speed-y',
+            Math.sin(angle) * speed,
+            'damage',
+            8 + this.phase * 4,
+        )
         bullet.style.left = `${x}px`
         bullet.style.top = `${y}px`
         getCurrentRoom().append(bullet)

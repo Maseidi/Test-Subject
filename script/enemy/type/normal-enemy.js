@@ -1,4 +1,3 @@
-import { getRoundsFinished } from '../../variables.js'
 import {
     CHASE,
     GUESS_SEARCH,
@@ -27,10 +26,7 @@ class NormalEnemy extends AbstractEnemy {
         maxSpeed,
         vision,
         acceleration,
-        loot,
-        progress,
         virus,
-        difficulties,
         level,
         knock,
     ) {
@@ -43,10 +39,7 @@ class NormalEnemy extends AbstractEnemy {
             maxSpeed,
             vision,
             acceleration,
-            loot,
-            progress,
             virus,
-            difficulties,
             level,
             knock,
         )
@@ -81,8 +74,8 @@ class NormalEnemy extends AbstractEnemy {
 }
 
 export class Torturer extends NormalEnemy {
-    constructor(level, waypoint, loot, progress, virus, difficulties) {
-        const base = level + getRoundsFinished() * 5
+    constructor(level, waypoint, virus) {
+        const base = level
         const health = Math.floor(base * 135 + Math.random() * 15)
         const damage = Math.floor(base * 10 + Math.random() * 10)
         const maxSpeed = 3.5 + Math.random()
@@ -96,10 +89,7 @@ export class Torturer extends NormalEnemy {
             maxSpeed,
             600,
             1.5,
-            loot,
-            progress,
             virus,
-            difficulties,
             level,
             100,
         )
@@ -107,8 +97,8 @@ export class Torturer extends NormalEnemy {
 }
 
 export class SoulDrinker extends NormalEnemy {
-    constructor(level, waypoint, loot, progress, virus, difficulties) {
-        const base = level + getRoundsFinished() * 5
+    constructor(level, waypoint, virus) {
+        const base = level
         const health = Math.floor(base * 68 + Math.random() * 12)
         const damage = Math.floor(base * 8 + Math.random() * 8)
         const maxSpeed = 4.5 + Math.random()
@@ -122,10 +112,7 @@ export class SoulDrinker extends NormalEnemy {
             maxSpeed,
             400,
             0.9,
-            loot,
-            progress,
             virus,
-            difficulties,
             level,
             50,
         )
@@ -133,8 +120,8 @@ export class SoulDrinker extends NormalEnemy {
 }
 
 export class RockCrusher extends NormalEnemy {
-    constructor(level, waypoint, loot, progress, virus, difficulties) {
-        const base = level + getRoundsFinished() * 5
+    constructor(level, waypoint, virus) {
+        const base = level
         const health = Math.floor(base * 270 + Math.random() * 35)
         const damage = Math.floor(base * 15 + Math.random() * 5)
         const maxSpeed = 2.5 + Math.random()
@@ -148,10 +135,7 @@ export class RockCrusher extends NormalEnemy {
             maxSpeed,
             800,
             1.8,
-            loot,
-            progress,
             virus,
-            difficulties,
             level,
             300,
         )

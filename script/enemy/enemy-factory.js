@@ -1,4 +1,3 @@
-import { Progress } from '../progress.js'
 import { Grabber } from './type/grabber.js'
 import { RockCrusher, SoulDrinker, Torturer } from './type/normal-enemy.js'
 import { Ranger } from './type/ranger.js'
@@ -11,6 +10,7 @@ import { CampaignBoss } from './type/campaign-boss.js'
 export const ENEMIES_BY_TYPE = new Map([
     ['ranger', Ranger],
     ['spiker', Spiker],
+    ['tracker', Tracker],
     ['grabber', Grabber],
     ['stinger', Stinger],
     ['torturer', Torturer],
@@ -21,32 +21,21 @@ export const ENEMIES_BY_TYPE = new Map([
 ])
 
 export const buildEnemy = data => {
-    const { x, y, killAll, renderProgress, progress2Active, progress2Deactive, difficulties, level } = data
+    const Enemy = ENEMIES_BY_TYPE.get(data.type)
+    if (!Enemy) throw new Error(`Unknown enemy type: ${data.type}`)
 
-    const progress = Progress.builder()
-        .setKillAll(killAll)
-        .setRenderProgress(renderProgress)
-        .setProgress2Active(progress2Active)
-        .setProgress2Deactive(progress2Deactive)
+    const enemy =
+        data.type === 'tracker'
+            ? new Enemy(data.level, data.x, data.y, data.virus)
+            : new Enemy(data.level, data.waypoint, data.virus)
 
-    if (data.type === 'tracker') var enemy = buildTracker(data, progress)
-    else {
-        const { waypoint, loot, virus } = data
-        var enemy = new (ENEMIES_BY_TYPE.get(data.type))(level, waypoint, loot, progress, virus)
-    }
-
-    enemy.x = x
-    enemy.y = y
-    enemy.knockImmune = data.knockImmune ?? false
+    enemy.x = data.x
+    enemy.y = data.y
+    enemy.spawnState = data.spawnState ?? 'pending'
+    enemy.knockImmune = data.knockImmune ?? enemy.knockImmune
     enemy.healthMultiplier = data.healthMultiplier ?? 1
     enemy.health *= enemy.healthMultiplier
-    enemy.difficulties = difficulties
     if (data.health != null) enemy.health = data.health
-
+    enemy.maxHealth = data.maxHealth ?? enemy.health
     return enemy
-}
-
-const buildTracker = (data, progress) => {
-    const { x, y, loot, virus, level } = data
-    return new Tracker(level, x, y, loot, progress, virus)
 }

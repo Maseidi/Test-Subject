@@ -1,5 +1,4 @@
 import { getProperty, getSpeedPerFrame, useDeltaTime } from '../../util.js'
-import { getRoundsFinished } from '../../variables.js'
 import { CHASE, GUESS_SEARCH, INVESTIGATE, LOST, MOVE_TO_POSITION, NO_OFFENCE, SPIKER } from '../enemy-constants.js'
 import { NormalChaseService } from '../service/normal/chase.js'
 import { NormalGuessSearchService } from '../service/normal/guess-search.js'
@@ -11,8 +10,8 @@ import { SpikerVisionService } from '../service/spiker/vision.js'
 import { AbstractEnemy } from './abstract-enemy.js'
 
 export class Spiker extends AbstractEnemy {
-    constructor(level, waypoint, loot, progress, virus, difficulties) {
-        const base = level + getRoundsFinished() * 5
+    constructor(level, waypoint, virus) {
+        const base = level
         const health = Math.floor(base * 26 + Math.random() * 6)
         const damage = Math.floor(base * 8 + Math.random() * 8)
         const maxSpeed = 6 + Math.random()
@@ -26,10 +25,7 @@ export class Spiker extends AbstractEnemy {
             maxSpeed,
             400,
             maxSpeed,
-            loot,
-            progress,
             virus,
-            difficulties,
             level,
             25,
         )
